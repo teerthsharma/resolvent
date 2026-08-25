@@ -335,3 +335,29 @@ pivot - dense = -0.2099, 95% CI **[-0.7497, +0.2651]**, which does not exclude
 zero. Pivot routing stays dead (both arms far past the -0.3 bar); that sentence
 does not, and it appears in every document written since round 2.
 
+
+## ROUND 4 - CEQ v6'. THE CHOSEN-SIGN ROUND. Items freeze on first test.
+
+| id | item | status |
+|---|---|---|
+| X4 | **VALUATION INSTRUMENT, precedes both arms.** `sign_flip` on (valuation, mantissa) pairs; **floor DELETED, not defaulted**. Calibration: reproduces every published `floor=0` number exactly. Must-fire: a planted **30-order-spread** arm read correctly where the float instrument **provably misreads it**. | UNTESTED |
+| A | **DIFFERENCE-SET SCHEDULE (X1).** Cyclic Singer (v,k,1), k~sqrt(s). Birth gates: `\|D-D\| = v-1` as a VALUE; flipper **uniformly at random**, never on the schedule; off-schedule flip rate within CI of on-schedule. Kill: any bitwise-identical gradient pair, OR `\|slope\| >= 0.01` over s=512->2048 on X4, OR M3 fail at 8192. | UNTESTED |
+| B | **DISCREPANCY-STEERED SIGNS (X2, certified vs X3).** Sign head minimises `\|sum eps_p t_p\|`; Lovett-Meka reference; **Spencer 6*sqrt(k) printed beside the measured background at every s**. Birth gates: P(+) in [0.35,0.65], corr < 0.2, `E\|sum eps t\| <= c*sqrt(k)` with c pinned, **FKG-escape tested** (shuffle selection order; signs must NOT move). Kill: background > 3x Spencer, OR task loss past the 1.10 bar, OR M3 fail at 8192. | UNTESTED |
+| M5' | **Difference-set coverage lemma in Lean** - finite, decidable. Replaces the N=n mismatch item as this round's proof deliverable. | UNTESTED |
+| M8 | **FKG-escape certificate.** Replaces the bare diversity gate. | UNTESTED |
+| G7 | **Event-change >= 1% pre-build, both arms** - the test that struck R5/R8 at 0/20000 before they cost anything. | UNTESTED |
+
+**F16 BINDS THIS ROUND.** At the harness geometry (logits `|w|` mean **2.682399e-03**)
+`_causal_sgate_operator(lam=0.10)` is **entrywise non-negative**, min entry exactly
+`0.000e+00`. lambda is a **threshold at 1.0**, not a dial. **Every prior
+signed-vs-unsigned comparison at this geometry is void as sign evidence.**
+
+**F17.** A sign measurement without its **logit scale** is not a measurement:
+frustration read **0.2779** at unit scale and **0.000000** at harness scale, same operator.
+
+**F18 SURVIVES F16.** `pivot_unsigned` was always the non-negative arm, so routing beating
+softmax - **0.747528 [0.696849, 0.797716]** against **0.877168 [0.830455, 0.924226]**,
+disjoint, 4769 params each - stands.
+
+**F19.** M3 readings below `n_train=8192` rank overfitting: 128->2.116579, 512->1.316514,
+2048->0.949529, 8192->0.877168.

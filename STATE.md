@@ -1,59 +1,51 @@
 # State
 
-**Updated: 2026-08-25 - ROUND 3 open under CEQ v5. Iteration 0 (the room) complete.**
+**Updated: 2026-08-25 - ROUND 4 open under CEQ v6', the chosen-sign round.**
 
 | field | value |
 |---|---|
-| round | **3** - CEQ v5, 30 iterations, promise `SCALEFREE` |
-| iteration | **18 complete, 19 next** |
-| phase | **Phase 0 - M3 on the windowed arm. Capability before statistics.** |
+| round | **4** - CEQ v6', promise `CHOSENSIGN` |
+| iteration | **0 (round 4) complete, 1 next** |
+| phase | **X4 instrument first - everything downstream reads through it** |
+| goal | **match or SUPERSEDE self-attention**; next-equilibrium predictor, not token predictor |
 | calibration | GREEN [RUN] `run_calib.py --self-test` exit 0, 4/4 bit-identical |
-| inspector | `python inspector.py` - 8 checks, 8 must-fire controls, exits nonzero if any control stays SILENT |
+| inspector | tri-state; INDETERMINATE exits nonzero |
 | repo | https://github.com/teerthsharma/resolvent (private) |
 
-## THE ONE NEXT ACTION (iteration 19)
+## THE ONE NEXT ACTION (round 4, iteration 1)
 
-**Reconcile Cameron's mechanism spec and Wilson's four engineering results, and
-record both** - the policy requires it, and iteration 18 dispatched them.
+**Build the X4 valuation instrument. Everything downstream reads through it, so
+it is first and nothing is measured before it exists.**
 
-The round now has a positive result to build on for the first time: **routing
-beats softmax with disjoint CIs**, and the claim is a ROUTING claim. What is
-missing is the mechanism that uses all of it at once - routing, a
-non-magnitude selection rule, co-prime dilated composition, and the batched
-path that makes it affordable.
+The float instrument is provably wrong at depth: median `|grad|` **2.8e-32**, and
+`floor = 1e-6` discarded **100%** of a live arm's flips (0.386719 at floor=0
+against 0.000000 floored). A float comparison cannot straddle 30 orders.
 
-**Do not soften G4 while that lands.** The paired test was the favourable one and
-it included zero. If the synthesised mechanism recovers a sign contribution, that
-is a NEW measurement on a NEW arm and it re-enters at M3 - it does not
-retroactively rescue `pivot_signed`.
+Two calibration ends, both required before any reading:
+  * **must reproduce** every published `floor=0` number **exactly**;
+  * **must-fire** - a planted **30-order-spread** arm read correctly where the
+    float instrument **provably misreads it**. Not "differently". Provably.
+
+All prior floored numbers stay quoted as **historical instrument readings**, not
+withdrawn - they were correct readings of a float instrument.
 
 ## Open REDs
 
-**M3 bar - RED [Chase].** Two of three checks are identities; calibrates on a
-task with no long-range dependence; no model-level positive control.
-
-**M3w BLOCKED [Chase].** `d(out)/d(x[flipper]) = 0.0` exactly - reach `2w=16`
-against a sweep of `d=24..54`.
-
-**COGS capability number - SCOPE BROKEN [Foreman].** The run trained
-`(0.9, 1.0, 3)`, not the parity point: row sums exactly 0, mixing 9.9x below the
-softmax arm, hop-2 mass 4.04e-03. **The headline 0/512 vs 15/512 is not a
-measurement of the parity operator.**
-
-R5 and R8 remain STRUCK before build (0/20000).
+**F16 - the signed arm was not signed at harness scale.** Every signed-vs-unsigned
+comparison there is void as sign evidence. This is round 4's entry point, not a
+defect to repair: lam=1.00 gives bulk negative fraction **0.500564** and
+frustration **0.520525**.
 
 ## Carried, and load-bearing
 
-- **The withdrawn claim.** *"Routing is worse than dense"* is unsupported:
-  bootstrap 95% CI **[-0.7497, +0.2651]** includes zero. Do not repeat it.
-- **The twin test was vacuous** and is rebuilt with a NOT-VACUOUS third arm.
-- **The ECDF has zero gradient a.e.** R7 is not trainable as written; the soft
-  surrogate is sign-blind natively, so the rebuilt twin test runs on the SOFT arm
-  before any training number is believed.
-- **TACTiS is owed as a G1 fetch** before the name "Copula Attention" is written.
-- **Nine structure instruments failed; three value instruments never have.**
-  Run `inspector.py`; do not retype its checks into shell.
+- **A sign measurement without its logit scale is not a measurement** (F17).
+- **Routing beats softmax and survives F16** (F18) - the one live positive result.
+- **n_train >= 8192 or the reading ranks overfitting** (F19).
+- **Co-prime severance 0.1277 at unchanged support** (F20); severance is INERT,
+  never UNREACHED - an influence defect.
+- **Batched hop-2 is bitwise and 374x on fwd+bwd** (F21); gradients bound to n <= 64.
+- **G1 owed before any name.** Six novelty claims have already died here.
 
 ## Board in flight
 
-Phase 0 M3w -> Phase 1 R7 (R6 behind it) -> Phase 2 M6, M7 -> Phase 3 write-up.
+X4 instrument -> G1 fetches -> arm A birth gates -> arm B reference pass -> M3 at 8192.

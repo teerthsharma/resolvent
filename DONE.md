@@ -1,3 +1,42 @@
+### ROUND 4, ITERATION 0 - 2026-08-25 - CEQ v6' INSTALLED. The chosen-sign round.
+
+CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.
+
+ACTION (one): installed the round-4 contract as `LOOP_PROMPT.md`; v5 archived to
+`LOOP_PROMPT_ROUND3_ARCHIVE.md`.
+
+**THE ROUND ATTACKS `epsilon`. Rounds 1-3 attacked `t_p`** - the term count
+(pivot routing, -1.298), the scale (R5/R8, struck at 0/20000 before they cost
+anything), the rank (R7). All three died. The remaining factor in
+`flip(s) = P[|t_c| > |sum_{p!=c} eps_p t_p|]` is the SIGNS, and they have never
+been attacked.
+
+**TWO OF THE FOUR X-CLAIMS RETRO-EXPLAIN ROUND-3 MEASUREMENTS**, which is why the
+contract is adopted rather than debated:
+  * **X3 (FKG)** - selection-coupled signs MUST align. Iteration 6 measured the
+    top-k set at **99.98% positive, uncentered pairwise product 0.9993** and
+    attributed it to the operator's lambda. **FKG says it is FORCED.** It was
+    never an accident of one operator.
+  * **X4 (Levi-Civita valuations)** - at depth, median `|grad|` is **2.8e-32**
+    and `floor = 1e-6` discarded **100%** of a live arm's flips. **A float
+    comparison cannot straddle 30 orders of magnitude.**
+
+**X1 (difference sets) SUBSUMES round 3's co-prime finding.** `[1,3,5,7]` cut
+severance 0.5745 -> 0.1277 empirically; difference sets make coverage a
+**counting theorem** with a finite, decidable Lean lemma as this round's M5.
+
+**X2 (Spencer) is the entry F16 opens.** The signed arm was non-negative at the
+scale it was scored, so the sign channel was never exercised. `|sum eps t| <=
+6*sqrt(k)` says the signs can be **CHOSEN to cancel** rather than left to align.
+
+**THE GOAL IS NARROWED, by the user:** not the best token predictor - the
+**next-equilibrium predictor** - and **the module must survive equal to
+self-attention or supersede it.**
+
+CHECKLIST: round-4 block appended. X4, A, B, M5', M8, G7 UNTESTED. F16-F22 bind.
+
+---
+
 # DONE - Round 3, under CEQ v5
 
 Round 2 archived below its own header; round-1 archive at `DONE_ARCHIVE_ROUND1.md`.

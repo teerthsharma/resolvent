@@ -52,6 +52,27 @@ def fwd_mlp_slice(model, x):
     return model.readout(model.mlp(z[:, s - 1])).squeeze(-1)
 
 
+def fwd_mlp_slice_contig(model, x):
+    """Candidate 1b: the same slice, made CONTIGUOUS first.
+
+    Candidate 1 failed the bind and the isolation run says why, in two parts:
+    a bare `mm` changes bits when `m` drops from 4096 to 64 but NOT when it drops
+    from 131072 to 2048, and -- separately -- a pure ELEMENTWISE `gelu` changes
+    bits between a contiguous input and a strided one, while
+    `gelu(z)[:, -1] == gelu(z[:, -1].contiguous())` is exactly equal at every n
+    tested. So the residual difference at large n is not the GEMM at all; it is
+    PyTorch taking a different vectorised path over a strided view. One
+    `.contiguous()` removes that half.
+    """
+    n, s, _ = x.shape
+    q, k = model.wq(x), model.wk(x)
+    a = model._operator(q, k)
+    z = x + a @ x
+    hop2 = batched_pivot_hop2(a, batched_select_pivots(k, model.k_pivots))
+    z = z + hop2 @ x
+    return model.readout(model.mlp(z[:, s - 1].contiguous())).squeeze(-1)
+
+
 def fwd_last_row(model, x):
     """Candidate 2: only the 1 + k rows of `a` that can reach the output.
 
@@ -131,7 +152,7 @@ def main() -> int:
           f"torch={torch.__version__}")
 
     print("\n=== BIND: torch.equal against the shipped Arm.forward ===")
-    print(f"{'n':>7} {'candidate':>12} {'fwd equal':>10} {'fwd maxdiff':>14} "
+    print(f"{'n':>7} {'candidate':>18} {'fwd equal':>10} {'fwd maxdiff':>14} "
           f"{'grad equal':>11} {'grad maxdiff':>14}")
     for n in (1, 8, 64, 512, a.n):
         x, y, _, _ = make_batch(n, a.s, a.d, d_model=D_MODEL, seed=0)
@@ -140,7 +161,9 @@ def main() -> int:
         yq = torch.zeros(n)
         ref = model(x)
         gref = grads(model, model.__call__, x, yq)
-        for name, raw in (("mlp-slice", fwd_mlp_slice), ("last-row", fwd_last_row)):
+        for name, raw in (("mlp-slice", fwd_mlp_slice),
+                          ("mlp-slice-contig", fwd_mlp_slice_contig),
+                          ("last-row", fwd_last_row)):
             fn = (lambda xx, _r=raw: _r(model, xx))
             got = fn(x)
             gg = grads(model, fn, x, yq)
@@ -148,18 +171,18 @@ def main() -> int:
             fd = float((ref - got).abs().max())
             ge = all(torch.equal(p, q) for p, q in zip(gref, gg))
             gd = max(float((p - q).abs().max()) for p, q in zip(gref, gg))
-            print(f"{n:>7} {name:>12} {str(fe):>10} {fd:>14.6e} "
+            print(f"{n:>7} {name:>18} {str(fe):>10} {fd:>14.6e} "
                   f"{str(ge):>11} {gd:>14.6e}")
 
     print(f"\n=== SPEED, fwd+bwd, median of {a.reps} after 1 warmup ===")
-    print(f"{'n':>7} {'shipped s':>11} {'mlp-slice s':>13} {'last-row s':>12} "
-          f"{'mlp x':>8} {'last x':>8}")
+    print(f"{'n':>7} {'shipped s':>11} {'mlp-contig s':>14} {'last-row s':>12} "
+          f"{'contig x':>10} {'last x':>8}")
     for n in (2048, 8192):
         x, _, _, _ = make_batch(n, a.s, a.d, d_model=D_MODEL, seed=0)
         torch.manual_seed(0)
         model = Arm(a.arm, a.s)
         t0 = timeit(model.__call__, x, a.reps)
-        t1 = timeit(lambda xx: fwd_mlp_slice(model, xx), x, a.reps)
+        t1 = timeit(lambda xx: fwd_mlp_slice_contig(model, xx), x, a.reps)
         t2 = timeit(lambda xx: fwd_last_row(model, xx), x, a.reps)
         print(f"{n:>7} {t0:>11.4f} {t1:>13.4f} {t2:>12.4f} "
               f"{t0/t1:>7.2f}x {t0/t2:>7.2f}x")
