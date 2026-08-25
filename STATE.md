@@ -5,29 +5,36 @@
 | field | value |
 |---|---|
 | round | **4** - CEQ v6', promise `CHOSENSIGN` |
-| iteration | **6 (round 4) complete, 7 next** |
+| iteration | **7 (round 4) complete, 8 next** |
 | phase | **X4 instrument first - everything downstream reads through it** |
 | goal | **match or SUPERSEDE self-attention**; next-equilibrium predictor, not token predictor |
 | calibration | GREEN [RUN] `run_calib.py --self-test` exit 0, 4/4 bit-identical |
 | inspector | tri-state; INDETERMINATE exits nonzero |
 | repo | https://github.com/teerthsharma/resolvent (private) |
 
-## THE ONE NEXT ACTION (round 4, iteration 7)
+## THE ONE NEXT ACTION (round 4, iteration 8)
 
-**Continue the census - it resumes, so this is one more bucket, not a restart.**
+**Repair the replay instrument, and the repair is NOT a better constant.**
 
-`python scale/journal_census.py --budget 420` at `OMP_NUM_THREADS=1`, then the
-same at 2. It skips what is already journalled, so each call is pure progress.
+No thread count among 1, 2, 4, 8, 16, 20, 24 replays the whole journal:
+`s1024/b0` needs 1 or 4, `s128` needs none of them. `JOURNAL_THREADS = 2` is
+unfixable by choosing differently.
 
-**The sharpest single question is `s128`**, which drifted at 1 thread here and at
-Wilson's count. If it drifts at 1, 2, 4 and 8, it is not reduction order and that
-unit's journal is stale - which is a different defect with a different remedy
-(re-journal that unit, do not re-pin a thread count). That is four cheap runs of
-one unit and it can go in the same bucket.
+Two honest forms, and the second is what the evidence supports:
+  * **per-unit thread counts recorded in the journal** - correct, but it
+    re-journals 37 units against code that may itself have moved;
+  * **assert on `rate` alone, report `sigma`/`term` as advisory.** `rate` has
+    matched on every unit at every count tried, it is an integer, and **every
+    published M2 number is built from it**. The float reductions carry no claim.
 
-**Hold the distinction that is already earned:** `rate` has matched on every unit
-at every count tried. Any statement of the form "the journal drifts" must carry
-"in `sigma`/`term`, not in `rate`", or it impeaches numbers that are sound.
+Take the second, and say plainly in the check's own docstring that it is a
+WEAKER assertion than it was - a replay that no longer verifies float
+reproducibility is not the same instrument, and pretending otherwise is how a
+check becomes decoration.
+
+**Then the must-fire control has to change with it**: mutating `rate` must fail,
+and mutating only `sigma` must NOT - otherwise the new check would still be
+claiming what it no longer verifies.
 
 ## Open REDs
 

@@ -1,3 +1,56 @@
+### ROUND 4, ITERATION 7 - 2026-08-25 - NO SINGLE THREAD COUNT REPLAYS THE JOURNAL. Bitwise replay is not a single-setting check.
+
+CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.
+
+ACTION (one): resolved `s128` across seven thread counts - the question the
+census flagged as sharpest, and four cheap runs of one small unit.
+
+**[RUN] `dense_signed__at_pivots/s128`, sigma at each count:**
+
+    OMP=1    0.3833030191586593        OMP=8    0.3833030183276024
+    OMP=2    0.38330301849340376       OMP=16   D
+    OMP=4    0.3833030187607026        OMP=20   D
+    journal  0.3833030187701487        OMP=24   D
+
+**NONE of 1, 2, 4, 8, 16, 20, 24 reproduces it.** And all four measured values
+differ from each other, so `sigma` **is** thread-sensitive - it is just that no
+tested count lands on the journalled value.
+
+**[RUN] `dense_signed__at_pivots/s1024/b0` matches at 1 and 4 ONLY** - not at 2,
+8, 16, 20 or 24.
+
+**THE SECOND AND THIRD PRE-REGISTERED OUTCOMES FIRE TOGETHER.**
+  * **Different units need different counts** -> **bitwise replay is NOT
+    available as a single-setting check.** `b0` needs 1 or 4; `s128` needs none
+    of seven. `inspector.py`'s `JOURNAL_THREADS = 2` cannot be repaired by
+    choosing a better constant, because **no constant exists** among those tried.
+  * **`s128` reproduces at NO count** -> stale-journal candidate.
+
+**THE CAUSE IS STATED AT ITS EVIDENCE CLASS, AND IT IS DERIVED, NOT RUN.**
+[CITED - Wilson] `results/m2.jsonl` mtime **12:38:59**, `scale/m2_units.py` mtime
+**16:22:33** - the code postdates the journal by **3h44m**. **The repository's
+git history begins AFTER the journal was written**, so the code that produced it
+cannot be diffed. *"Most likely a code change"* is an inference from mtimes and
+is labelled one. It is not established.
+
+**AND THE DISTINCTION THAT PROTECTS THE PUBLISHED WORK HOLDS EVERYWHERE.**
+`rate` matched on **every unit at every count** - 4/4 in the census, and both
+units across all seven counts here. **Every published M2 number is built from
+`rate`.** The drift is confined to `sigma` and `term`, which no claim uses.
+**The journal's data is intact; its float summary statistics are not
+reproducible.** Reporting this as "the journal drifts" without that clause would
+impeach numbers that are sound, and reporting it as "nothing is wrong" would hide
+an instrument that cannot do what it says.
+
+**WHAT THIS COSTS THE INSTRUMENT.** Bitwise replay is one of three instruments
+here that has never given a false READING - and it still has not. What it has
+lost is its **claim to be a single-setting check**. The honest form is either
+per-unit thread counts recorded in the journal, or a replay assertion on `rate`
+alone with `sigma`/`term` reported as advisory.
+
+CHECKLIST: **`JOURNAL_THREADS` cannot be fixed by a better constant.** Replay is
+per-unit or rate-only. `s128` stale-journal candidate, cause DERIVED not RUN.
+
 ### ROUND 4, ITERATION 6 - 2026-08-25 - Journal census opened, BUCKETED. rate matches 4/4; one unit drifts at every count tried.
 
 CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.
