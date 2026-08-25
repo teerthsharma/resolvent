@@ -5,53 +5,50 @@
 | field | value |
 |---|---|
 | round | **5** - CEQ v7, promise `TWOSPHERES`, **30 iterations** |
-| iteration | **15 complete, 16 next** |
+| iteration | **16 complete, 17 next** |
 | phase | **ARM A under the escalation chain; autonomous to iteration 30** |
 | goal | **match or SUPERSEDE self-attention**; next-equilibrium predictor |
 | calibration | GREEN [RUN] `run_calib.py --self-test` exit 0, 4/4 bit-identical |
 | inspector | tri-state; INDETERMINATE exits nonzero |
 | repo | https://github.com/teerthsharma/resolvent (private) |
 
-## THE ONE NEXT ACTION (round 5, iteration 16)
+## THE ONE NEXT ACTION (round 5, iteration 17)
 
-**K1 HAS FIRED. The round's shape is now decided, and the next action is to say
-so in the document that ships.**
+**Wait for the Health Inspector's verdicts, and while he runs, close the
+self-satisfying provenance bind - it is the last live hazard in the tree.**
 
-Wilson resolved K1's `D_FR` clause with an interval: **-0.4137 [-0.4579, -0.3704]**
-and **-0.4654 [-0.5173, -0.4160]**, **both entirely below -0.30**. The
-pre-registered trigger *"displacement dies with flip -> no leap"* **FIRES**.
-**ARM A has not survived K1**, so per `LOOP_PROMPT.md:162` **ARM B is not
-authorized** and **`TWOSPHERES: KEPT` is not available.**
+**THE HAZARD, from Wilson:** `1.44x`, `1.0334`, `0.379x` and `3,319,296` now
+appear in `DONE.md` exactly once each - **inside the text of the finding that
+reported their absence.** `tests/chase/test_hub_package_hardening.py` asserts
+`"3,319,296" in done`. **That assertion can now be satisfied by the report of the
+absence itself.** It is the same class as the fabricated number: a bind that
+passes for the wrong reason. **A provenance test must match a MEASUREMENT, not a
+mention** - the fix is to require the number to appear in a context that carries
+its own run evidence, or to point the bind at the archive where the measurement
+actually lives.
 
-**Deletion, not defense.** The contract also says an honest **BROKEN outranks an
-unfinished KEPT**, and that **D1 ships either way**.
+**THE ROUND'S SHAPE IS DECIDED AND SHOULD NOT BE RE-ARGUED.** K1's `D_FR` clause
+is resolved against an interval - **-0.4137 [-0.4579,-0.3704]** and **-0.4654
+[-0.5173,-0.4160]**, both entirely below **-0.30** - so the pre-registered *"no
+leap"* branch has **FIRED**, **ARM A has not survived K1**, and **ARM B is not
+authorized**. `TWOSPHERES: KEPT` is **not available**.
 
-**BEFORE the promise is emitted, two rungs remain unfinished and the chain does
-not permit skipping them:**
-  1. **The Health Inspector has not audited THIS tier.** He audits the LOG - every
-     claimed GREEN re-run, every finding matched to a RED, nobody contradicting
-     Wilson. Chase's four findings, Cameron's six, Foreman's six and my five
-     probes have not been through him.
-  2. **DR HOUSE IS STILL NOT TRIGGERED, and it matters that this is stated
-     rather than assumed.** K1 died of **EVIDENCE** - a measured slope with an
-     interval - not of missing innovation. The skill is explicit: *"Wilson
-     refuted it with a verified fact - dead is dead, and no leap un-refutes a
-     fact."* Releasing him here would be using a leap to argue with a
-     measurement.
+**B1 is doubly settled and neither settlement helps ARM B:** it is **not** a
+rename of the key-norm (R1 = -0.025318, reproduced twice), **and** it is
+**ill-posed as written** - the top-k it selects retains **5.4%** at k=8 under a
+change of the very token the selector is forbidden to see.
 
-**THE ONE THING STILL GENUINELY OPEN AND WORTH A PROBE:** B1. Wilson and I
-disagree, and it is a disagreement about **which object was measured**. He infers
-collapse from `rho(||k_c||, theta) = 0.45-0.58` - key-norm against the masked
-token's **displacement**. I measured key-norm against **shadow mass per
-candidate**, the quantity B1 actually proposes: `rho = -0.024620`, overlap below
-chance at every k, three controls firing including a monotone-transform detector.
-**One probe settles it; an argument will not.**
+**DR HOUSE REMAINS IN THE BOX, and the reason must be stated rather than
+assumed.** K1 died of **EVIDENCE** - a measured slope with an interval. The skill
+is explicit: *"Wilson refuted it with a verified fact - dead is dead, and no leap
+un-refutes a fact."* Releasing him here would be using a leap to argue with a
+measurement.
 
-**AND ONE HAZARD THAT MUST NOT BE LEFT STANDING:** Wilson showed `DONE.md` now
-contains `1.44x`, `1.0334`, `0.379x`, `3,319,296` exactly once each - **inside the
-text of the finding that reported their absence.** The provenance test would pass
-**on the report of the absence**. That is a self-satisfying bind and it is the
-same class as the fabricated number.
+**WHAT STILL WANTS AN ANSWER AND IS NOT BLOCKED:** the aggregator win is **real,
+large and unexplained** (+1.1347 / +0.9355 / +0.4959, CIs excluding zero, Wilson
+confirming Cameron) - and **it is not a sphere result**, since the sphere-vs-TV
+term at the same aggregator is only **~5%** of it. **That is the live thread, and
+it belongs to whatever comes after this round.**
 
 ## Open REDs
 

@@ -1,3 +1,88 @@
+### ROUND 5, ITERATION 16 - 2026-08-26 - Health Inspector dispatched. B1 decomposed: Wilson and I were BOTH right, my hypothesis is REFUTED, and B1 turns out ILL-POSED for a reason neither of us raised.
+
+CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.
+
+ACTION (one): **the HEALTH INSPECTOR went out** - the chain's third rung, mandatory
+before any prognosis. He audits the LOG, not the science: re-runs every claimed
+GREEN, checks every finding has a matching RED, checks nobody contradicts Wilson.
+**He was pointed hardest at MY OWN six probes**, which nobody has independently
+checked, and at the self-satisfying provenance bind.
+
+**BUILT ALONGSIDE:** `scale/b1_decomposition.py`, to settle the one disagreement
+between Wilson and me by measurement rather than argument.
+
+**[RUN] s=1024, d=16, 80 draws, threads pinned to 2. 3/3 controls fired.**
+
+    R1  rho(||k_p||, ||xi_p||)  per candidate  = -0.025318 [-0.0322, -0.0181]
+    R2  rho(||k_c||, D_FR)      per draw       = +0.570980
+    R3  rho(A[p,c], ||xi_p||)   live rows      = +0.144930 [+0.1174, +0.1728]
+
+**BOTH MEASUREMENTS REPRODUCE, ON THE SAME DRAWS.** R1 reproduces my iteration-12
+figure (-0.024620 then, -0.025318 now). R2 lands **squarely inside Wilson's
+reported +0.45 to +0.58**. **We were both right about our own object, and the
+objects are different** - his is the key-norm of THE MASKED TOKEN against the
+whole draw's aggregate displacement, one number per draw; mine is the key-norm of
+EACH CANDIDATE against THAT candidate's shadow mass. **The disagreement was never
+about a number.**
+
+**MY OWN HYPOTHESIS IS REFUTED AND THAT IS THE HONEST HEADLINE OF THE PROBE.** I
+predicted `|R3| > 0.6` - that shadow mass is essentially a read of attention-to-c.
+**It reads +0.144930.** So **what `||xi_p||` actually tracks is NOT established**,
+and I do not get to declare "different objects, case closed" when my own
+pre-registered threshold was not met. **The probe prints AMBIGUOUS and that stands.**
+
+**CAUSALITY CONFIRMED, ASSERTED RATHER THAN ASSUMED.** `||xi_p|| = 0` for
+**68.04%** of candidates, and the maximum below `c` is **4.371e-07** - float dust,
+not structural mass. Row `p` can only move if it attended to `c`, which needs
+`p > c`. **That is where the zero fraction comes from**, and it corroborates
+Cameron's independent 53-58%-of-moved-rows reading from a third direction.
+
+---
+
+**AND THE THING NEITHER WILSON NOR CHASE RAISED, WHICH IS WORSE THAN EITHER
+"RENAME" OR "NOT A RENAME": B1 IS ILL-POSED AS WRITTEN.**
+
+`xi` is defined **relative to a chosen `c`**. `select_pivots`'s own docstring says
+the selector *"USES ONLY CONTENT -- never `c`, never `i`, `j`."* **A criterion
+that needs `c` cannot choose pivots before `c` is known.** So the question is
+whether the `||xi_p||` ranking survives a change of `c` on the SAME draw:
+
+    top-8   overlap across c = 0.054167   (chance 0.007835)
+    top-32  overlap across c = 0.196094   (chance 0.031342)
+    top-128 overlap across c = 0.631510   (chance 0.125367)
+
+**At k=8, changing which token is masked retains 5.4% of the selection.** Above
+chance - but a selector that keeps a twentieth of its picks when you vary
+something it is forbidden to see **is not a selector.** This is **a defect in the
+contract's sentence**, not in the idea of shadow-based selection, and it is the
+cheapest possible moment to find it: **ARM B does not exist.**
+
+**A DEFECT OF MINE, AND THE PROBE'S OWN OUTPUT CAUGHT IT.** My first verdict rule
+gated well-posedness on the **bulk rank stability**, which reads **+0.891716**,
+and printed *"well-posedness survives."* **Wrong statistic.** The bulk Spearman is
+high **because ~68% of the vector is exact zeros and zeros tie with zeros
+regardless of `c`.** `select_pivots` does not consume a bulk ranking - **it takes
+a top-k.** Gate moved to the top-k overlap, and the verdict reverses.
+
+**THE SAME k-INDEPENDENCE SHAPE I ALREADY FIXED ONCE.** R1, R3 and the bulk R4 do
+not depend on `k`, so the table prints three identical rows for them. **Only the
+top-k overlap is k-dependent, and it is the one that decides.** Noted rather than
+left to be misread as three measurements.
+
+**WILSON CLOSED OUT CLEAN:** `results/arm_a_k1.jsonl` **48/48 units**,
+`results/wilson_arms.jsonl` **36/36**, both drivers exit 0, all bucket locks
+released. He also names a loose end unprompted: his first nurse (an F16 document
+search) never returned, and **nothing in his report rests on it** - the F16 scope
+claims were verified by his own greps at `CHECKLIST.md:350-353` and
+`scale/negation_scope.py:82`.
+
+CHECKLIST: **Health Inspector DISPATCHED** (rung 3 of 4). **B1 decomposition: R1
+and R2 BOTH reproduce - different objects, both readings correct.** **My R3
+hypothesis REFUTED (+0.144930 against a >0.6 threshold); verdict AMBIGUOUS by my
+own pre-registration.** **B1 is ILL-POSED as written** - top-k selection retains
+**5.4%** under a change of `c` at k=8. My verdict rule gated on the wrong
+statistic and is fixed.
+
 ### ROUND 5, ITERATION 15 - 2026-08-26 - INSPECTOR NOW STATES ITS OWN COVERAGE. AND WILSON LANDS: K1's D_FR CLAUSE IS RESOLVED AND THE PRE-REGISTERED "NO LEAP" BRANCH HAS FIRED.
 
 CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.

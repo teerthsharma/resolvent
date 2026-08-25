@@ -589,3 +589,14 @@ Replayed ARM A's own draw stream (published `D_FR causal` reproduced to 6 dp at 
 |---|---|
 | **Chase F5** | **EXACT, verified twice independently.** `--collect-only` = **1278**; `check_suites` = **107**. **8.37%.** |
 | the repair | `inspector.py` **now prints its own coverage** with the sentence *"a CLEAN result above is a statement about these 107 tests and about NOTHING ELSE"*, a **must-fire control that the fraction is measured not assumed 100%**, and an **INDETERMINATE** if collection fails. **The misreading cannot recur.** |
+
+**B1 DECOMPOSITION [RUN, r5 iter 16] - `scale/b1_decomposition.py`, exit 0, 3/3 controls fired.**
+
+| item | status |
+|---|---|
+| the Wilson/coordinator disagreement | **SETTLED: different objects, both readings correct.** R1 `rho(\|\|k_p\|\|, \|\|xi_p\|\|)` per candidate = **-0.025318 [-0.0322,-0.0181]** (reproduces my iter-12 -0.024620); R2 `rho(\|\|k_c\|\|, D_FR)` per draw = **+0.570980** (inside Wilson's +0.45 to +0.58). **Measured on the same draws.** |
+| **my own hypothesis** | **REFUTED.** I predicted `\|R3\| > 0.6` - that shadow mass is a read of attention-to-c. It reads **+0.144930 [+0.1174,+0.1728]**. **What `\|\|xi_p\|\|` tracks is NOT established**, and the probe prints **AMBIGUOUS** by my own pre-registration rather than claiming the branch I wanted. |
+| causality | **CONFIRMED, asserted not assumed.** `\|\|xi_p\|\| = 0` for **68.04%** of candidates; max below `c` = **4.371e-07** (float dust). Row `p` moves only if it attended to `c`, which needs `p > c`. Corroborates Cameron's 53-58% from a third direction. |
+| **B1 IS ILL-POSED AS WRITTEN** | **NEW, and neither Wilson nor Chase raised it.** `xi` is defined **relative to a chosen `c`**, but `select_pivots` is documented *"USES ONLY CONTENT -- never `c`, never `i`, `j`"*. Top-k overlap across a change of `c` on the SAME draw: **0.054167 / 0.196094 / 0.631510** (chance 0.007835 / 0.031342 / 0.125367). **At k=8 the selection retains 5.4% of its picks.** A defect in the **contract sentence**, found before ARM B exists. |
+| my verdict-rule defect | **CAUGHT BY THE PROBE'S OWN OUTPUT.** The first gate used **bulk rank stability (+0.891716)** and printed *"well-posedness survives"*. The bulk Spearman is high **because ~68% of the vector is exact zeros tying with zeros regardless of `c`**. `select_pivots` takes a **top-k**, not a bulk ranking. Gate moved; **verdict reverses**. |
+| k-independence, noted not hidden | R1, R3 and bulk R4 **do not depend on k**, so three identical rows print for them. **Only the top-k overlap is k-dependent, and it is the deciding one.** |
