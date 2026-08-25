@@ -2,6 +2,61 @@
 
 Round 2 archived below its own header; round-1 archive at `DONE_ARCHIVE_ROUND1.md`.
 
+### ROUND 3, ITERATION 6 - 2026-08-25 - A_8 = 2.187500 IS STRUCK. sgate's selected signs do not cancel.
+
+CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.
+Probe archived at `scale/sign_dependence_probe.py`.
+
+ACTION (one): tested the sign-independence assumption behind `A_8 = 2.187500`.
+**I pinned that constant, and it is wrong for the shipped operator.**
+
+**CALIBRATED BOTH ENDS BEFORE BEING BELIEVED** - a plain Gaussian row MUST read
+independent, and a planted correlation MUST be detected:
+
+    independent   E|sum eps| = 2.1830  (0.998x A_8)   pair corr -0.0011
+    30% aligned   E|sum eps| = 2.5080  (1.147x A_8)   pair corr +0.0377
+    all aligned   E|sum eps| = 8.0000  (3.657x A_8)   pair corr +1.0000
+
+**[RUN] MEASURED, 4000 draws per cell, k=8, top-k by |A| (salience):**
+
+    operator    s   E|sum eps|   vs A_8     P(+)    pair corr
+    gaussian   16     2.2185    1.014x    0.4983     +0.0033
+    gaussian  128     2.1695    0.992x    0.4960     -0.0020
+    gaussian  512     2.1990    1.005x    0.4993     +0.0009
+    sgate      16     7.7065    3.52x     0.9817     +0.9284
+    sgate     128     7.9850    3.65x     0.9991     +0.9963
+    sgate     512     7.9970    3.66x     0.9998     +0.9993
+
+The Gaussian control reads independence exactly where theory requires it, so the
+probe is not broken. **sgate reads 7.997 against the all-aligned control's
+8.000.** At s=512 the selected signs are **99.98% positive**, pairwise
+correlation **0.9993**. **THEY DO NOT CANCEL AT ALL.**
+
+**WHY, and it is structural.** `A = rho(softmax(w) - lam*softmax(-w))/(1+lam)`
+at `lam = 0.10`. The negative half is scaled down TENFOLD, so the
+largest-magnitude entries are the large POSITIVE ones, and selecting top-k by
+`|A|` selects exactly those. **The operator is SIGNED IN NAME while its large
+entries are essentially all one sign** - which is precisely the integrity failure
+the arsenal's frustration / switching-class item exists to catch, and that check
+had never been run on this operator.
+
+**WHAT IT COSTS AND WHAT IT DOES NOT - both halves, neither quotable alone:**
+  * `A_8 = 2.187500` **STRUCK as a certificate for sgate**. Measured background
+    is **~k = 8**, not `sqrt(k) ~ 2.19` - **3.66x larger**. The perturbed token
+    competes against 8, not 2.19.
+  * **Boundedness survives unconditionally**: `|B_k| <= k` is sign-free, only the
+    constant moves - exactly what the pre-registration said would happen if
+    dependence were found.
+  * **The s-dependence gets FLATTER, not steeper**: measured E|sum eps| grows
+    7.7065 -> 7.9970 over s = 16 -> 512, ratio **1.038**, against the **1.357**
+    the independent model predicts. Sign alignment SATURATES.
+
+The absolute flip rate is worse than the independent model implies; the SLOPE -
+what M2'' actually measures - is better. **Report both or neither.**
+
+CHECKLIST: A_8 certificate STRUCK for sgate. M2n's KILL 1 must be re-derived
+under the measured sign law before any R7 reading is taken.
+
 ### ROUND 3, ITERATION 5 - 2026-08-25 - INSPECTOR CLEAN (8/8, 8 controls fired). Prognosis challenge filed.
 
 **[RUN] `python inspector.py 5` -> exit 0. CLEAN: 8 checks, 8 controls all fired.**

@@ -5,31 +5,29 @@
 | field | value |
 |---|---|
 | round | **3** - CEQ v5, 30 iterations, promise `SCALEFREE` |
-| iteration | **5 complete, 6 next** |
+| iteration | **6 complete, 7 next** |
 | phase | **Phase 0 - M3 on the windowed arm. Capability before statistics.** |
 | calibration | GREEN [RUN] `run_calib.py --self-test` exit 0, 4/4 bit-identical |
 | inspector | `python inspector.py` - 8 checks, 8 must-fire controls, exits nonzero if any control stays SILENT |
 | repo | https://github.com/teerthsharma/resolvent (private) |
 
-## THE ONE NEXT ACTION (iteration 6)
+## THE ONE NEXT ACTION (iteration 7)
 
-**Test the sign-independence assumption behind `A_8 = 2.187500`. It is mine and
-it is owed.**
+**Run the frustration / switching-class integrity audit on every signed arm.**
+Iteration 6 found sgate is **signed in name only** at the entries that matter:
+99.98% of its top-k-by-magnitude entries are positive, pairwise correlation
+0.9993. The arsenal has carried this exact check since round 1 - *"frustration ~0
+= signed-in-name-only; this item is itself a kill"* - and it has never been run.
 
-That constant was enumerated over 256 sign patterns **assuming Rademacher
-independence**. Under top-k salience selection the surviving signs are
-**concomitants of order statistics** and may be dependent. The v5 prompt already
-requires this - *"Sign-independence is TESTED, not assumed"* - and the
-requirement was written and then not honoured.
+If sgate's frustration index is ~0, then every signed-vs-unsigned comparison in
+three rounds compared an unsigned arm against an **effectively unsigned** arm,
+and the whole signedness axis was never actually exercised. That would explain
+Cameron's open contradiction - softmax 15/512 against the signed operator's
+0/512 - without any appeal to trainability.
 
-RED-first. Measure the joint law of (rank, sign) among selected tokens:
-  * `E|B_k|` under the MEASURED sign law vs the independent enumeration;
-  * a must-fire control - a deliberately correlated sign pattern must move it
-    VISIBLY, or the test cannot detect dependence and its green means nothing.
-
-If dependence is found, `A_k` is re-derived under the measured copula and the
-boundedness claim survives regardless, since `|B_k| <= k` is sign-free - only the
-constant moves. **Pin whatever comes out at abs=5e-7.**
+Cheap: it is a property of the operator at init, no training, CPU minutes.
+RED-first: a deliberately balanced signed matrix must read HIGH frustration, and
+an all-positive one must read ~0.
 
 ## Open REDs
 
