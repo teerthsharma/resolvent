@@ -900,3 +900,51 @@ torch 2.5.1+cu121  torch.get_num_threads()=2  device=cpu (no .cuda() anywhere in
 === PARAM MATCH (arm 1 vs 2/3, must be within 10%) ===
 
 === WALL CLOCK: 95.123 s ===
+
+=== RUN 2026-08-25 19:34:49 s=64 d=24 steps=150 n_train=8192 n_eval=512 seed=0 arms=['pivot_signed'] ===
+torch 2.5.1+cu121  torch.get_num_threads()=2  device=cpu (no .cuda() anywhere in this file)
+
+=== BAR CALIBRATION (must pass before any arm is credited) ===
+      predict_the_mean 1.000000
+          payload_only 1.366459
+                oracle 0.000000
+    flipper_dependence 2.000000
+   trained_two_feature 0.047149
+  BAR CALIBRATED  -- BAR CALIBRATED
+
+=== DATA (same train/eval batches reused across every arm) ===
+  train: n=8192 seed=0  flipper@39 payload@62
+  eval : n=512 seed=12345 (DIFFERENT seed)  flipper@39 payload@62
+
+=== TRAIN + EVAL per arm ===
+
+  [pivot_signed]  n_params=4769
+    RED  0-step NRMSE  train=1.003282  eval=1.000329  [OK]
+    POST steps=150  train NRMSE=0.664873   eval NRMSE=0.673762
+    eval bootstrap_ci (n_boot=400) = [0.632559, 0.715564]
+
+=== WALL CLOCK: 300.856 s ===
+
+=== RUN 2026-08-25 19:40:16 s=64 d=24 steps=150 n_train=8192 n_eval=512 seed=0 arms=['pivot_unsigned'] ===
+torch 2.5.1+cu121  torch.get_num_threads()=2  device=cpu (no .cuda() anywhere in this file)
+
+=== BAR CALIBRATION (must pass before any arm is credited) ===
+      predict_the_mean 1.000000
+          payload_only 1.366459
+                oracle 0.000000
+    flipper_dependence 2.000000
+   trained_two_feature 0.047149
+  BAR CALIBRATED  -- BAR CALIBRATED
+
+=== DATA (same train/eval batches reused across every arm) ===
+  train: n=8192 seed=0  flipper@39 payload@62
+  eval : n=512 seed=12345 (DIFFERENT seed)  flipper@39 payload@62
+
+=== TRAIN + EVAL per arm ===
+
+  [pivot_unsigned]  n_params=4769
+    RED  0-step NRMSE  train=1.003285  eval=1.000335  [OK]
+    POST steps=150  train NRMSE=0.732424   eval NRMSE=0.747528
+    eval bootstrap_ci (n_boot=400) = [0.696849, 0.797716]
+
+=== WALL CLOCK: 217.575 s ===

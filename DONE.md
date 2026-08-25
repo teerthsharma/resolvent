@@ -2,6 +2,66 @@
 
 Round 2 archived below its own header; round-1 archive at `DONE_ARCHIVE_ROUND1.md`.
 
+### ROUND 3, ITERATION 17 - 2026-08-25 - ALL THREE ARMS CLEAR THE BAR. And G4 FIRES: the capability is ROUTING, not SIGN.
+
+CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.
+Bar: `flipper_dependence 2.000000`, `trained_two_feature 0.047149`, CALIBRATED.
+
+ACTION (one): the 8192 reading, bucketed one arm per call with `python -u` so a
+death leaves partial evidence rather than an empty buffer - the actual lesson
+from iteration 15's two 0-byte files.
+
+**[RUN] s=64 d=24 steps=150 n_train=8192 n_eval=512 seed=0, n_params=4769 for
+every arm, softmax TIMESTAMPED FIRST:**
+
+    arm              train      eval       bootstrap CI            wall
+    softmax         0.820513   0.877168   [0.830455, 0.924226]     95 s
+    pivot_unsigned  0.732424   0.747528   [0.696849, 0.797716]    218 s
+    pivot_signed    0.664873   0.673762   [0.632559, 0.715564]    301 s
+
+**ALL THREE CLEAR THE 1.0 ABSOLUTE BAR.** Before this iteration **no arm had ever
+passed it** in this project, at any setting, in three rounds. The data budget was
+the whole story.
+
+**ROUTING BEATS SOFTMAX ON ITS OWN.** `pivot_unsigned` [0.6968, 0.7977] against
+softmax [0.8305, 0.9242] - **DISJOINT**, at identical parameter count, identical
+data, identical steps and lr, with softmax measured first.
+
+**AND G4 FIRES.** `pivot_signed` [0.6326, 0.7156] against `pivot_unsigned`
+[0.6968, 0.7977] - **THE INTERVALS OVERLAP** on [0.6968, 0.7156]. M3's third kill
+clause is explicit: *"or the unsigned ablation matches (then routing is the
+contribution - rewrite claim as routing result and re-enter at M3)."*
+
+**THE CAPABILITY IS IN THE ROUTING, NOT IN THE SIGN**, and that is a finding
+against this project's central thesis. Three rounds have been spent on
+signedness; the arm that carries the win here is the one with **no signed
+content at all** - `pivot_unsigned` uses `_softmax_operator` and differs from the
+softmax baseline **only by routing hop 2 through k content-selected pivots**.
+
+**HOW CLOSE IT IS, stated exactly rather than characterised.** Each point
+estimate lies OUTSIDE the other's interval - signed's 0.673762 is below
+unsigned's lower bound 0.696849, and unsigned's 0.747528 is above signed's upper
+bound 0.715564 - while the intervals themselves overlap by **0.0188**. So the
+sign contribution is **suggestive and not established**. It is exactly the case
+M3's **5-seed** requirement exists to settle, and this is **1 seed**.
+
+**A METHODOLOGICAL LIMIT THAT CUTS TOWARD MORE OVERLAP, not less.** These are
+per-arm bootstrap intervals over eval predictions, **not a paired comparison**.
+Both arms see the identical eval batch, so a paired bootstrap on the per-example
+difference would be materially tighter and could separate them. **The current
+test is the conservative one**, and reporting it as "overlapping" is the reading
+that makes the signed claim harder rather than easier.
+
+**WHAT THIS IS NOT.** `d = 24`, and **M3 proper requires d in {256, 512, 1024}**;
+`s = 64` cannot host them (`make_batch` caps `d < s-1 = 62`). One seed against
+M3's five. So this is a **budget-corrected reading at the harness's own
+distance** and it is NOT M3. It does not credit or discredit M3; it is the first
+reading in this project taken where the harness can produce a pass at all.
+
+CHECKLIST: M3w - all three arms pass the absolute bar; routing beats softmax with
+disjoint CIs; **G4 FIRES - sign vs routing not separated at 1 seed.** Claim to be
+rewritten as a ROUTING result pending the paired test and 5 seeds.
+
 ### ROUND 3, ITERATION 16 - 2026-08-25 - Batched hop-2 landed, bitwise. And my iteration-15 diagnosis was WRONG.
 
 CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.

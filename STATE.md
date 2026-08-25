@@ -5,32 +5,34 @@
 | field | value |
 |---|---|
 | round | **3** - CEQ v5, 30 iterations, promise `SCALEFREE` |
-| iteration | **16 complete, 17 next** |
+| iteration | **17 complete, 18 next** |
 | phase | **Phase 0 - M3 on the windowed arm. Capability before statistics.** |
 | calibration | GREEN [RUN] `run_calib.py --self-test` exit 0, 4/4 bit-identical |
 | inspector | `python inspector.py` - 8 checks, 8 must-fire controls, exits nonzero if any control stays SILENT |
 | repo | https://github.com/teerthsharma/resolvent (private) |
 
-## THE ONE NEXT ACTION (iteration 17)
+## THE ONE NEXT ACTION (iteration 18)
 
-**Re-run the 8192 reading now that the backward is ~linear - BUCKETED, per
-ADR-001, which iteration 15 broke.**
+**Settle sign-vs-routing with the PAIRED test and more seeds - it is the one
+question the round now turns on, and the current test is the wrong one.**
 
-The batched path turns 24.56 s per hop-2 backward into 0.066 s at n=2048, a 374x
-difference, and the per-example autograd graph count was the memory cost that
-killed the run. That removes the likely cause; it does not prove the run
-survives.
+Both arms see the IDENTICAL eval batch, so per-arm bootstrap intervals are
+needlessly wide. A **paired bootstrap on the per-example difference**
+`|pred_signed - y| - |pred_unsigned - y|` removes the shared batch variance and
+is the correct test for "does sign add anything on top of routing".
 
-**Bucket it.** `scale/bucket.py` exists so a death leaves a journal, and the last
-attempt bypassed it and left 0 bytes in two files. Never again by hand.
+Pre-register before running:
+  * **paired CI excludes 0** -> sign contributes on top of routing, G4 does not
+    fire, and the claim keeps its signedness;
+  * **paired CI includes 0** -> G4 stands, the capability is routing, and the
+    claim is rewritten as a routing result - which is a finding against three
+    rounds of this project's own thesis and must be reported as one.
 
-Arms: `pivot_signed`, `pivot_unsigned` against softmax's already-timestamped
-eval **0.877168**, CI **[0.830455, 0.924226]**. **NOT `windowed_signed`** - dead
-twice over. Label the result **d=24, not M3 proper**.
+Then seeds. M3 wants **5**; this is 1. Run seeds 1..4 for both arms bucketed, one
+arm-seed per call at ~300 s each.
 
-If it dies again with the backward linearised, the cause is not the hop-2 loop
-and the next suspect is the full-batch operator itself - `[8192,64,64]` plus
-autograd saves - which is what gradient accumulation was for.
+**Do not soften G4 while that runs.** As it stands the intervals overlap and the
+honest headline is ROUTING.
 
 ## Open REDs
 
