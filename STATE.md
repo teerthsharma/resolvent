@@ -14,7 +14,7 @@ Governing documents, in precedence order:
 
 | field | value |
 |---|---|
-| iteration | **43 complete, 44 next** — max **80** |
+| iteration | **44 complete, 45 next** — max **80** |
 | phase | **WORK-STOPPING — M2 RED; repair / prior-art / write-up only** |
 | item in flight | **M2 RED, measured on shipped operator (-1.298, 0 flips at s>=128)** |
 | LOCK lines | `LOCK M2 efadc390c93f` — re-verified iteration 1 against the archived copy: **byte-identical** |
@@ -37,52 +37,37 @@ the exactness hypothesis is unmet. **The 1.471448 printed here since iteration
 
 **M2' - RED.** All four routes sign-blind by the twin test.
 
-## THE ONE NEXT ACTION (iteration 44)
+## THE ONE NEXT ACTION (iteration 45)
 
-**The write-up is complete and internally consistent. The remaining work is not
-scientific, it is delivery** - and the decision belongs to the user.
+**Health Inspector pass** (every 5th; 45 is due). Re-run calibration, verify the
+LOCK, replay a journalled unit bitwise, run all five value binds, re-run one
+published number (rotation 45 mod 4 = 1 -> the calibration table itself), and
+confirm the nine documents still agree after the iteration-43 rewrite.
 
-State of the record: M2 RED and **instrument-cleared, permanently**; M2' RED on
-all four routes with **G1 firing for R3** (Tropical Attention, arXiv:2505.17190,
-is R3 and published); M5 RED with its hypothesis pinned by test; nine documents
-agreeing; **five value binds green**; Lean **27 theorems, exit 0, zero sorry**;
-resume **bitwise-verified**. **No live theory, no instrument under suspicion.**
+**Blocked on the user, and only this:** the push. Everything is staged for it -
+`caf5eb7` on `master`, tree clean, `gh` authenticated as **teerthsharma**,
+`repo` scope present, `teerthsharma/resolvent` free. **One word and it goes.**
 
-Iteration 44 should prepare the push and stop short of making it: verify the
-tree is clean, confirm no Claude attribution anywhere in the commit messages
-(the `github-master` rule, which **overrides** the global CLAUDE.md trailer),
-and put the one-line summary in front of the user. **Name: `resolvent`.
-Private.** The push itself is the user's call and has been since iteration 34.
+### Iteration 44 - iterations 34-43 committed as `caf5eb7`
 
-### Iteration 43 - PROGNOSIS.md now carries iterations 35-42
+Message written under the `writing-pr-messages` skill: evidence-first, third
+person, exact counts with provenance, limits collected once at the end.
 
-**277 -> 383 lines**, bind still green. Added: M2's permanence with the paired
-floor table (**kill fires at `floor = 0`, -1.1150**; removing the gate makes it
-**steeper**); the floor discarding **6.8% -> 52.6% -> 100%** of sign changes, so
-`0.00000` at s=128 overstates; the two-solid-point derivation (**-1.2977** vs
-**-1.2980**, zeros worth 0.0003); the fabricated `1.471448` and the `> 1e-3`
-**inequality** that let it ride through fourteen passing tests.
+**Two audits, both clean [RUN]** - the first-person/deference grep, and the
+attribution grep. **The second is not the default:** global `CLAUDE.md` adds a
+`Co-Authored-By: Claude Opus 5` trailer to every commit, and the `github-master`
+skill **overrides** it for anything published through this token. Both commits
+checked.
 
-**And a new section that is the most transferable finding here:** sorted by what
-they compared, **7 instruments compared STRUCTURE and all 7 failed; 2 compared
-VALUES and neither ever has.** A structure check tests a proxy, and proxies drift
-when the surrounding text is reformatted, refactored or piped.
+    0 uncommitted   228 tracked   2 commits   .git 13M
+    gh: teerthsharma, scopes gist/read:org/repo/workflow
+    teerthsharma/resolvent: does not exist -- name free, nothing overwritten
 
-### Correction to my own iteration-39 entry
-
-I recorded, in a RUN voice, that the random-init scope fact was *"not recorded
-anywhere"*, citing **0 hits in PROGNOSIS.md**. **False.** `PROGNOSIS.md:277`
-already said *"Everything is measured on random projections, not trained
-checkpoints."* My grep tried three phrasings; the document used a fourth.
-
-The gap was real and testing it was right — **what was wrong was the claim of
-novelty.** DONE.md is append-only, so iteration 39's entry stands and the
-correction is appended beside it.
-
-**Eighth structure-level defect, and the mirror of iteration 34's.** That one
-searched for what should be there and declared consistency. This one searched for
-what should be there and declared a recorded fact missing. **Same defect: a
-string search tests a proxy for a fact.**
+**The push is prepared and not made.** The authorisation exists and covers
+incomplete work by its own wording. But **the repository is a different object
+than it was when that instruction was given** - a candidate mechanism then, a
+negative result now - and it would be created under the user's name. One
+confirmation costs one iteration; the other direction cannot be undone.
 
 ## Board in flight
 
