@@ -5,40 +5,41 @@
 | field | value |
 |---|---|
 | round | **4** - CEQ v6', promise `CHOSENSIGN` |
-| iteration | **1 (round 4) complete, 2 next** |
+| iteration | **2 (round 4) complete, 3 next** |
 | phase | **X4 instrument first - everything downstream reads through it** |
 | goal | **match or SUPERSEDE self-attention**; next-equilibrium predictor, not token predictor |
 | calibration | GREEN [RUN] `run_calib.py --self-test` exit 0, 4/4 bit-identical |
 | inspector | tri-state; INDETERMINATE exits nonzero |
 | repo | https://github.com/teerthsharma/resolvent (private) |
 
-## THE ONE NEXT ACTION (round 4, iteration 2)
+## THE ONE NEXT ACTION (round 4, iteration 3)
 
-**G7 for both arms, BEFORE either is built** - event-change >= 1%, the test that
-struck R5 and R8 at 0/20000 before they cost anything.
+**The G1 fetches, which are owed PRE-BUILD and are now the only thing between
+here and building arm A.**
 
-For arm A (difference-set schedule) and arm B (discrepancy-steered signs), on
-identical draws, measure what fraction of draws have their EVENT changed - not
-their statistic. R5/R8 were provable no-ops precisely because a common positive
-rescale leaves the event set invariant, and that was measurable in minutes
-against build costs of iterations.
+Both arms cleared G7, so the next spend is prior art, not code. Four owed:
+  * **LongNet** + the severing test (D1b stands if it fires);
+  * **difference-set / Sidon attention** - arm A's exact cell;
+  * **discrepancy-in-ML** with a KNOWN NEAR-MISS: **herding / kernel herding uses
+    discrepancy for SAMPLE selection; the cell here is SIGN assignment inside the
+    operator. Establish the distinction BY FETCH, not by assertion** - six
+    novelty claims have already died here;
+  * **balanced-colouring networks**.
 
-**Arm B's G7 is the interesting one and it is not obvious.** Choosing signs to
-minimise `|sum eps_p t_p|` changes the background MAGNITUDE; whether it changes
-the EVENT `|t_c| > |background|` at >= 1% of draws is exactly what G7 asks, and
-a discrepancy pass that only shrinks an already-losing background buys nothing.
+**Absence is reported as "not found", NEVER as "unoccupied".**
 
-Then the G1 fetches, which are owed pre-build: LongNet + the severing test,
-difference-set / Sidon attention, discrepancy-in-ML (**known near-miss: herding
-uses discrepancy for SAMPLE selection; the cell here is SIGN assignment inside
-the operator - establish the distinction BY FETCH**), balanced-colouring nets.
+**Arm A is the better first build and G7 says why.** Its birth gate is an
+identity already asserted as a value; arm B's warrant was just found slack by
+7.4x, so building B first would be building on a motivation that does not hold.
 
 ## Open REDs
 
-**F16 - the signed arm was not signed at harness scale.** Every signed-vs-unsigned
-comparison there is void as sign evidence. This is round 4's entry point, not a
-defect to repair: lam=1.00 gives bulk negative fraction **0.500564** and
-frustration **0.520525**.
+**F16** - the signed arm was not signed at harness scale; round 4's entry point.
+
+**SPENCER IS SLACK BY 7.4x** at this geometry, so arm B's stated theoretical
+warrant does not bind. Not a kill - a correction to the reason. The background is
+dominated (**max term 50.7% of total mass**), which is extreme-order-statistic
+selection doing what round 2 already identified.
 
 ## Carried, and load-bearing
 

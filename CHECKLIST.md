@@ -345,7 +345,7 @@ does not, and it appears in every document written since round 2.
 | B | **DISCREPANCY-STEERED SIGNS (X2, certified vs X3).** Sign head minimises `\|sum eps_p t_p\|`; Lovett-Meka reference; **Spencer 6*sqrt(k) printed beside the measured background at every s**. Birth gates: P(+) in [0.35,0.65], corr < 0.2, `E\|sum eps t\| <= c*sqrt(k)` with c pinned, **FKG-escape tested** (shuffle selection order; signs must NOT move). Kill: background > 3x Spencer, OR task loss past the 1.10 bar, OR M3 fail at 8192. | UNTESTED |
 | M5' | **Difference-set coverage lemma in Lean** - finite, decidable. Replaces the N=n mismatch item as this round's proof deliverable. | UNTESTED |
 | M8 | **FKG-escape certificate.** Replaces the bare diversity gate. | UNTESTED |
-| G7 | **Event-change >= 1% pre-build, both arms** - the test that struck R5/R8 at 0/20000 before they cost anything. | UNTESTED |
+| G7 | **Event-change >= 1% pre-build, both arms** - the test that struck R5/R8 at 0/20000 before they cost anything. | **GREEN [RUN, r4 iter 2]** — arm B event-change **20.93%** (harness) / **14.43%** (unit), far above 1%. Arm A `|D-D| = v-1` exact for all five Singer sets. **BUT Spencer is VACUOUS here**: scaled by max|t| it is **4.039e-06** against a natural background of **3.000e-07** — already **7.4× below the bound**. One term carries **50.7%** of background mass (equal terms would be 14.3%), so optimal sign choice buys only **18%**. Arm B is buildable; its stated warrant is not operative. |
 
 **F16 BINDS THIS ROUND.** At the harness geometry (logits `|w|` mean **2.682399e-03**)
 `_causal_sgate_operator(lam=0.10)` is **entrywise non-negative**, min entry exactly

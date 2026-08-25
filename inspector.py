@@ -359,17 +359,55 @@ def check_tri_state() -> None:
             verdict([("p", PASS, "")], [("c", False)]) == 1)
 
 
+# ------------------------------------------- 10 the rotation selector, unmasked
+
+#: FOUND BY THIS FILE'S OWN VERIFICATION RUN, and it is instrument class #9 all
+#: over again -- a regex compared against PROSE. The old pattern required the
+#: word `complete` to follow the digits immediately:
+#:
+#:     r"\| iteration \| \*\*(\d+) complete"
+#:
+#: The round-four rewrite of STATE.md made the line read
+#: `| iteration | **0 (round 4) complete, 1 next** |`. The pattern stopped
+#: matching and `int(m.group(1)) + 1 if m else 0` SILENTLY fell back to 0 --
+#: a legal iteration number, so nothing looked wrong while the journal replay and
+#: the published-number rotation both selected ground nobody chose. A default
+#: that is indistinguishable from a reading is the same defect as a killed
+#: subprocess reported as a failure, so it gets the same state.
+ITERATION_RE = re.compile(r"\| iteration \| \*\*(\d+)\b")
+
+
+def _iteration_from_state(text: str) -> tuple[int, bool]:
+    """(iteration, resolved). `resolved` False means STATE.md did not parse and
+    the returned 0 is a DEFAULT, not a reading."""
+    m = ITERATION_RE.search(text)
+    return (int(m.group(1)) + 1, True) if m else (0, False)
+
+
+def check_rotation(iteration: int, resolved: bool) -> None:
+    check("iteration resolved (selects the replay + published rotations)",
+          PASS if resolved else INDET,
+          f"iteration={iteration}"
+          + ("" if resolved else " is a DEFAULT -- STATE.md did not parse"))
+    # MUST-FIRE: the selector must refuse prose it cannot read rather than
+    # default, and must still read the round-four wording.
+    control("rotation selector refuses an unparseable STATE.md",
+            _iteration_from_state("| iteration | in flight |") == (0, False)
+            and _iteration_from_state(
+                "| iteration | **0 (round 4) complete, 1 next** |") == (1, True))
+
+
 # ---------------------------------------------------------------------- driver
 
 def main() -> int:
     if len(sys.argv) > 1:
-        iteration = int(sys.argv[1])
+        iteration, resolved = int(sys.argv[1]), True
     else:
-        m = re.search(r"\| iteration \| \*\*(\d+) complete",
-                      (ROOT / "STATE.md").read_text(encoding="utf-8"))
-        iteration = int(m.group(1)) + 1 if m else 0
+        iteration, resolved = _iteration_from_state(
+            (ROOT / "STATE.md").read_text(encoding="utf-8"))
 
     print(f"HEALTH INSPECTOR  iteration {iteration}\n")
+    check_rotation(iteration, resolved)
     for fn, arg in ((check_calibration, None), (check_lock, None),
                     (check_replay, iteration), (check_published, iteration),
                     (check_suites, None), (check_lean, None),

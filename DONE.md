@@ -1,3 +1,67 @@
+### ROUND 4, ITERATION 2 - 2026-08-25 - G7 BOTH ARMS. A passes as a VALUE. B changes events but SPENCER IS VACUOUS.
+
+CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.
+Probe: `scale/g7_event_change.py`.
+
+ACTION (one): ran G7 for both arms **before either is built** - the test that
+struck R5 and R8 at **0/20000** in minutes against build costs of iterations.
+
+**ARM A BIRTH GATE PASSES AS A VALUE, not a hope.** Every cyclic Singer
+(v,k,1)-difference set has each nonzero residue mod v occurring exactly once as a
+difference, so `|D-D| = v-1` is an identity to ASSERT:
+
+    v=7   k=3  D=[1,2,4]                    |D-D|=6   v-1=6    OK
+    v=13  k=4  D=[0,1,3,9]                  |D-D|=12  v-1=12   OK
+    v=21  k=5  D=[0,1,4,14,16]              |D-D|=20  v-1=20   OK
+    v=31  k=6  D=[1,5,11,24,25,27]          |D-D|=30  v-1=30   OK
+    v=57  k=8  D=[0,1,3,13,32,36,43,52]     |D-D|=56  v-1=56   OK
+
+**ARM B CLEARS G7:** event-change **20.9333%** at harness scale, **14.4333%** at
+unit scale, both far above the **1%** threshold. Choosing the background signs
+changes the EVENT in roughly one draw in five. **It is not a no-op.**
+
+**BUT ITS STATED WARRANT IS VACUOUS AT THIS GEOMETRY, and G7 is exactly where
+that should surface.**
+
+**[RUN] TWO NUMBERS IN MY OWN FIRST TABLE WERE WRONG AND I CHASED THEM.**
+I printed Spencer's `6*sqrt(k) = 16.9706` **unnormalised** beside a background of
+`3.00e-07`. **The bound assumes `|t_p| <= 1`**, so it must be scaled by
+`max|t_p|` or it is not comparable to anything. And optimal sign choice reduced
+the background only **18%** (3.000136e-07 -> 2.458163e-07), where exhaustive
+optimisation over 7 terms should do far better - **unless one term dominates.**
+
+    scale             mean max|t|/sum|t|   best|sum eps t|/sum|t|   Spencer*max|t|
+    harness (x0.1)                0.5068                   0.1491     4.039002e-06
+    unit                          0.5684                   0.2304     3.806427e-02
+
+**ONE TERM CARRIES ~51% OF THE BACKGROUND'S TOTAL MASS**, against **1/7 =
+0.1429** for equal terms. That is exactly what **extreme-order-statistic
+selection** produces - the same mechanism round 2 identified as the cause of the
+scale inheritance - and it is why optimal sign choice bought only 18%: **you
+cannot cancel a term that outweighs all the others combined.**
+
+**AND SPENCER, SCALED CORRECTLY, IS 4.039002e-06 AGAINST A MEASURED NATURAL
+BACKGROUND OF 3.000136e-07 - the background is ALREADY 7.4x BELOW THE BOUND.**
+`6*sqrt(k)` is not a target to reach here; it is a **ceiling far above where the
+arm already sits**. X2's promise - *"signs may be CHOSEN with |Σ ε t| <= 6√k"* -
+offers nothing at this geometry, because nothing is pressing against it.
+
+**THESE ARE SEPARATE VERDICTS AND BOTH ARE RECORDED.** G7 asks *"does the arm
+change the event"* and the answer is **YES, 20.9%**. The Spencer motivation asks
+*"is the bound the reason it would help"* and the answer is **NO** - the bound is
+slack by 7.4x before any sign is chosen. **Arm B is buildable and its stated
+theoretical warrant is not operative.** If it helps, it will be for the measured
+18% and the 20.9% event change, not for Spencer.
+
+F17 OBSERVED: **both logit scales stated**, since the same operator read
+frustration 0.2779 at unit scale and 0.000000 at harness scale. lam=1.00
+throughout, the regime where the operator is genuinely signed (bulk negative
+fraction 0.500564).
+
+CHECKLIST: **G7 GREEN both arms.** A's `|D-D| = v-1` birth gate GREEN as a value.
+B's Spencer warrant recorded as **VACUOUS at this geometry** - not a kill, a
+correction to the reason.
+
 ### ROUND 4, ITERATION 1 - 2026-08-25 - X4 VALUATION INSTRUMENT BUILT. Both calibration ends pass.
 
 CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.
