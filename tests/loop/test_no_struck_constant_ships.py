@@ -63,6 +63,17 @@ STRUCK: dict[float, str] = {
         "Measured: 0.880500 at hops=2, 0.882030 at hops=4."
     ),
     1.343174: "M5 tail norm at s=512, same fabrication. Measured: 1.292741.",
+    5.4944e-13: ("Karcher residual in float64. STRUCK by the health inspection at "
+        "round 5 iteration 21: asserted in a [RUN] voice with NO LIVE PRODUCER. "
+        "It appeared only in a code comment and in prose. It came from a "
+        "throwaway float64 check whose OWN output was defective -- that script "
+        "printed `nan` for both means because it omitted the norm clamp the "
+        "probe has, and 5.4944e-13 was its `min` at settings nobody recorded. "
+        "The probe reproduces 7.481e-09 / 8.155e-09 / 8.405e-09 at published "
+        "settings, and 7.307e-13 / 7.958e-13 / 8.405e-13 at --tol 1e-15 "
+        "--steps 400. 5.4944e-13 is not the mean, min or max at any k. Order of "
+        "magnitude right, so stale rather than fabricated -- but a number "
+        "asserted [RUN] with no producer is the 1.471448 class."),
 }
 
 #: Words that mark a mention as a citation-of-a-strike rather than an assertion.

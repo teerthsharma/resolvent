@@ -1,3 +1,121 @@
+### ROUND 5, ITERATION 21 - 2026-08-26 - THE HEALTH INSPECTOR REPORTED. 37 CLAIMS AUDITED, 3 STRUCK - AND ONE OF THEM IS A NUMBER OF MINE ASSERTED [RUN] WITH NO PRODUCER.
+
+CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.
+
+ACTION (one): repaired the self-satisfying provenance bind - **and then the
+Inspector landed and his strikes were applied the same iteration.**
+
+---
+
+## S1 - A NUMBER OF MINE IS STRUCK, AND IT IS THE 1.471448 CLASS
+
+**`5.4944e-13` DOES NOT REPRODUCE.** [RUN, his] `tau_trajectory.py` prints **no
+residual at all**; the figure lived **only in a code comment** at
+`scale/equilibrium_probe.py:121` and in prose marked `[RUN]` at
+`CHECKLIST.md:468`, `DONE.md`, and `LOOP_PROMPT.md:120`. I confirmed it myself:
+`grep -rn "5.4944e-13" --include=*.py .` returns **exactly one hit, a comment.**
+
+At published settings the probe reads **7.481e-09 / 8.155e-09 / 8.405e-09**;
+forced to `--tol 1e-15 --steps 400` it reads **7.307e-13 / 7.958e-13 /
+8.405e-13**. **5.4944e-13 is not the mean, min, or max at any k.**
+
+**WHERE IT CAME FROM, since the provenance is the point.** It was the `min` of a
+**throwaway float64 check** I ran at iteration 8 - a script whose **own output was
+defective**, printing `nan` for both means because it **omitted the norm clamp the
+probe has**. I took a number out of a broken scratch script and propagated it in a
+RUN voice for thirteen iterations. **Order of magnitude right, so stale rather
+than fabricated - but a number asserted `[RUN]` with no live producer is exactly
+the defect this project exists to prevent, and it is mine.**
+
+**APPLIED, NOT ARGUED:**
+  * **added to the `STRUCK` registry** alongside `1.471448` and `-1.389`, with its
+    full provenance written into the entry;
+  * the bare comment in `scale/equilibrium_probe.py` **replaced with the
+    reproducible figures** and a note that a struck number stood there;
+  * `LOOP_PROMPT.md` and `CHECKLIST.md` marked.
+  * **The registry then caught two MORE unmarked assertions in `CHECKLIST.md`**
+    that I had missed - lines 468 and 476 - which is the registry doing precisely
+    its job. Marked. [RUN] `pytest tests/loop/test_no_struck_constant_ships.py`
+    -> **13 passed, exit 0.**
+
+## S2 - A SENTENCE OF MINE, STRUCK, AND IT MISREPRESENTED A FELLOW
+
+`DONE.md` recorded *"His 'collapses to 1.1019 OVERLAP' does not reproduce, nor his
+9.3869 baseline."* **Both reproduce to four decimals** on Chase's own bound probe -
+`A vs B = 9.3869 DISJOINT`, `A vs C = 1.1019 OVERLAP`, control N fired, exit 1.
+
+**Wilson measured Cohen's d; Chase's figure is a D_FR ratio. DIFFERENT
+QUANTITIES.** I turned *"Wilson measured a different quantity and got a different
+number"* into *"Chase's number does not reproduce"*, which is a claim about
+Chase's competence that the evidence does not support. **The Inspector struck the
+SENTENCE and left Wilson's measurement untouched** - and he noted this is the same
+structure Wilson himself named for Cameron's `gamma_1` (*"He did not run her
+pipeline"*). Struck in `CHECKLIST.md`.
+
+## S3 - THE PROVENANCE BIND, CONFIRMED AND WORSE THAN REPORTED
+
+*"Delete those two lines and ALL FOUR assertions go False."* And **nine more
+figures are missing outright**: `1.32x`, `1287.5`, `487.7`, `2.8e-05`,
+`3,652,096`, ratios `2.65`/`4.45`, rate `0.17480`. **Every one is present in
+`DONE_ARCHIVE_ROUND1.md`.** The defect is document rotation, and **the repair is
+to re-point the bind at the archive, NOT to paste numbers into `DONE.md`.**
+
+**REPAIRED THIS ITERATION, at the class rather than the instance:**
+  * the corpus is now **every `DONE*.md`**, so rotation cannot orphan a bind;
+  * a hit counts **only inside a paragraph carrying run evidence** - a `[RUN]`
+    marker or a markdown table row. **Prose about a number's absence has
+    neither**, so the report of a failure can no longer satisfy the check.
+  * [RUN] the repaired bind now **FAILS listing nine real absences** instead of
+    passing on a mention. **That failure is the correct behaviour** and it is left
+    RED rather than papered over.
+
+**A DEFECT IN MY OWN MUST-FIRE CONTROL, and it is a new shape.** The control fed
+literal paragraphs to `_measured`, but `_measured` was a **bare containment test**
+- the evidence filter lived in the corpus builder that reads files. **So the
+control could not reach the logic it was guarding, and it FAILED.** Moved the
+filter into `_measured`; the control now passes and the three earlier gate defects
+were about testing the *wrong statistic*, while this one was about a control that
+**could not reach its subject at all**.
+
+---
+
+## WHAT THE INSPECTOR CLEARED
+
+**All six of my probes re-run, every one exit 0**, with figures exact:
+`gate3_audit` (109/384 LIVE, control 0/48 bitwise), `equilibrium_probe`
+(0.599101/0.388587/0.321843, 28.43/44.02/52.55, uniqueness 0.9333/0.8167/0.5167),
+`tau_trajectory` (`||tau||` and angle clean; residual struck), `k3_concavity_control`
+(theta **LOSES at k=8, -0.0643 CI [-0.0981,-0.0159]**), `b1_collapse_test`
+(`rho = -0.02462002982679213`, overlap below chance at every k),
+`max_row_mechanism` (**BIND 6/6 published fields**).
+
+**Claimed-greens verified:** `run_calib` rc 0; `inspector.py` CLEAN at 10, 15 and
+bare; **coverage 107/1278 = 8.37%**; `--collect-only` **1278**. **Chase F5 exact.**
+**No unbound finding** - every named RED exists and fails. **No fellow contradicts
+Wilson.**
+
+## TWO THINGS HE FOUND THAT NOBODY HAD RECORDED
+
+1. **`test_hub_package_hardening.py` has TWO INDEPENDENT FAILURES, not one.** rc 1,
+   4 failed = 2 tests x 2 devices. **The second was attributed to the first.**
+2. **The archive count for `3,319,296` is 5, not 4** - one line carries it twice.
+   **Chase and Wilson both counted LINES, not OCCURRENCES.** Not a strike; the
+   substance is right.
+
+## AND A CAVEAT THAT BEARS ON K1
+
+**`arm_a_k1.py` and `wilson_probes.py` REPLAYED CACHED JOURNALS** - *"48/48 units
+already journalled, 0 remaining, ran_this_bucket: 0"*. **Replay MATCH is real; a
+fresh derivation of the slope was not attempted.** So K1's **-0.4137
+[-0.4579,-0.3704]** rests on a journal replay rather than a recomputation, and
+that is now on the record where the verdict can see it.
+
+CHECKLIST: **Inspector reported - 37 audited, 3 STRUCK, all applied this
+iteration.** **`5.4944e-13` STRUCK and in the registry** (mine, `[RUN]` with no
+producer). **A sentence misrepresenting Chase STRUCK** (mine). **Provenance bind
+repaired at the class** - corpus is all `DONE*.md`, hits must carry run evidence,
+and it now **fails listing nine real absences**.
+
 ### ROUND 5, ITERATION 20 - 2026-08-26 - INSPECTOR PASS. D1 was written yesterday and was OUTSIDE the struck-constant scan; the document count was a typo.
 
 CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.

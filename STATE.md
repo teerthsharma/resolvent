@@ -5,44 +5,43 @@
 | field | value |
 |---|---|
 | round | **5** - CEQ v7, promise `TWOSPHERES`, **30 iterations** |
-| iteration | **20 complete, 21 next** |
+| iteration | **21 complete, 22 next** |
 | phase | **ARM A under the escalation chain; autonomous to iteration 30** |
 | goal | **match or SUPERSEDE self-attention**; next-equilibrium predictor |
 | calibration | GREEN [RUN] `run_calib.py --self-test` exit 0, 4/4 bit-identical |
 | inspector | tri-state; INDETERMINATE exits nonzero |
 | repo | https://github.com/teerthsharma/resolvent (private) |
 
-## THE ONE NEXT ACTION (round 5, iteration 21)
+## THE ONE NEXT ACTION (round 5, iteration 22)
 
-**Close the self-satisfying provenance bind. It is the last live hazard, and the
-Health Inspector has been auditing that file long enough that racing him is no
-longer the risk - shipping the hazard is.**
+**All four rungs are done. Apply the strikes to `D1.md`, then write the prognosis
+and emit the promise.**
 
-**THE HAZARD, from Wilson [r5 iter 15]:** `1.44x`, `1.0334`, `0.379x` and
-`3,319,296` now appear in `DONE.md` exactly once each - **inside the text of the
-finding that reported them missing.** `tests/chase/test_hub_package_hardening.py`
-asserts `"3,319,296" in done`. **That assertion can now be satisfied by the report
-of the absence itself**, and Wilson named the sharper form: were `1.74` added, the
-remaining provenance assertions would pass **only on F4's own report text**.
+**THE CHAIN IS COMPLETE:** fellows (Foreman, Chase, Cameron) -> Wilson -> Health
+Inspector. **37 claims audited, 3 struck, all applied at iteration 21.**
 
-**A provenance test must match a MEASUREMENT, not a mention.** Two repairs are
-available and the second is the real one:
-  1. Point the bind at `DONE_ARCHIVE_ROUND1.md`, where the measurements actually
-     live (counts **2 / 7 / 2 / 4**, verified twice).
-  2. Require the number to appear in a line that also carries **run evidence** -
-     a table row or a `[RUN]` marker - so a mention inside a meta-discussion
-     cannot satisfy it. **This is the one that fixes the CLASS**, not the
-     instance.
+**`D1.md` HAS NOT BEEN UPDATED FOR THE STRIKES and must not ship until it is.**
+Its closing limit currently says the audit had not returned. It has. Three edits
+are owed:
+  1. **`5.4944e-13` appears in D1's "what survives" section.** It is **STRUCK**.
+     Replace with the reproducible **7.307e-13 to 8.405e-13** at `--tol 1e-15
+     --steps 400`, and add the strike to D1's own defect ledger - **a number of
+     mine asserted `[RUN]` with no producer, thirteen iterations old.**
+  2. **Add the Inspector's two unrecorded findings**: `test_hub_package_hardening`
+     has **two** independent failures, not one; and the archive count for
+     `3,319,296` is **5 on 4 lines**, both agents having counted lines.
+  3. **Add the K1 caveat**: the slope rests on a **journal replay**, not a fresh
+     derivation. That belongs in Limits, beside the draw counts.
 
-**Then, and only then, the prognosis.** `D1.md` exists with the round-5 chapter;
-its closing limit already states that **nothing in it has passed an independent
-audit**. `TWOSPHERES: BROKEN` is what the evidence supports - K1's displacement
-clause resolved at **-0.4137 [-0.4579,-0.3704]** and **-0.4654 [-0.5173,-0.4160]**,
-both entirely below **-0.30** - but **the promise is emitted AFTER the audit lands
-and its strikes are applied**, not before.
+**THEN THE PROGNOSIS AND THE PROMISE.** `TWOSPHERES: BROKEN` is what the evidence
+supports and it is now **audited** evidence: K1's displacement clause resolved at
+**-0.4137 [-0.4579,-0.3704]** and **-0.4654 [-0.5173,-0.4160]**, both entirely
+below **-0.30**, the pre-registered *"no leap"* branch **FIRED**, ARM A did not
+survive, ARM B was never authorized.
 
-**Dr House stays in the box.** Every kill this round fired from a measurement with
-an interval. *"Dead is dead, and no leap un-refutes a fact."*
+**Dr House is NOT released, and the reason is now doubly on the record.** Every
+kill fired from a measurement with an interval, and the Inspector cleared the
+probes that produced them. *"Dead is dead, and no leap un-refutes a fact."*
 
 ## Open REDs
 

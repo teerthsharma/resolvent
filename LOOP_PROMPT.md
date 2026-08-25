@@ -117,7 +117,7 @@ equilibrium clause is CUT."* Keeping `τ = 0` as the equilibrium condition
 therefore **deletes the equilibrium clause**. So:
 
   * **THE EQUILIBRIUM CERTIFICATE IS THE KARCHER RESIDUAL**, `‖mean_p log_m(x_p)‖`.
-    [RUN] it reaches **5.4944e-13** while the glance reads **0.599101 / 0.388587 /
+    [RUN] it reaches **7.307e-13 to 8.405e-13** at `--tol 1e-15 --steps 400` (**5.4944e-13** stood here and is **STRUCK** - no live producer) while the glance reads **0.599101 / 0.388587 /
     0.321843** — the glance is not the fixed point, so the clause SURVIVES.
   * **`τ` IS A DISPLACEMENT STATISTIC, NOT AN EQUILIBRIUM TEST** — the spin
     between two configurations, which is how ARM A already used it (`A^c` vs

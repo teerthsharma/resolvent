@@ -465,7 +465,7 @@ is left, and **a not-found cell is permission to test, not a result.**
 | must-fire controls | **4/4 FIRED** - identical readings give residual `0.000e+00`; spread readings give `0.603907` and the iterate moves `0.673630`; uniqueness guard fires at `theta_max=3.141593`; `\|\|tau\|\|` is `0.000e+00` when `Y==X` and `5.635273` otherwise. |
 | **uniqueness precondition** | **NEW HARD LIMIT.** `theta_max < pi/2` holds on **0.9333 / 0.8167 / 0.5167** of draws at k = 8 / 32 / 128. **At k=128 the Karcher mean is not unique on 48.3% of draws**, so "the settled reading" is not well defined there. The contract sells uniqueness as *"an existence-and-uniqueness statement the DEQ era never had"*. |
 | direction of travel | **BOTH TRENDS WRONG FOR ARM B.** More pivots = **slower settling** (28.43 -> 52.55) **and weaker uniqueness** (0.9333 -> 0.5167). ARM B wants k pivots. |
-| probe defect 1 | **UNREACHABLE TOLERANCE, mine.** `tol=1e-8` sits below float32's floor - `float32 eps = 1.1920928955078125e-07`, iteration floors at **1.8546e-08**, float64 reaches **5.4944e-13**. `converged` could never be true. Fixed: iteration runs float64 as a **declared analysis choice**. |
+| probe defect 1 | **UNREACHABLE TOLERANCE, mine.** `tol=1e-8` sits below float32's floor - `float32 eps = 1.1920928955078125e-07`, iteration floors at **1.8546e-08**, float64 reaches **5.4944e-13**. `converged` could never be true. Fixed: iteration runs float64 as a **declared analysis choice**. **[STRUCK r5 iter 21 - 5.4944e-13 was asserted `[RUN]` with NO LIVE PRODUCER; it lived only in a comment and in prose. The probe reads 7.307e-13 to 8.405e-13 at `--tol 1e-15 --steps 400`. In the STRUCK registry now.]** |
 | probe defect 2 | **CENSORED STEPS REPORTED AS A TIME, mine.** First table printed `steps 64.00`, which was the cap. Now averaged over **converged draws only**, with the converged fraction printed beside it. |
 | scope | X6 names the **`\|\|tau\|\|_F` trajectory**; what is measured is the **Karcher residual** trajectory, with `\|\|tau\|\|` at the glance only (0.270901 / 0.175964 / 0.145850). **The `\|\|tau\|\|` trajectory under iteration is NOT MEASURED.** |
 
@@ -473,7 +473,7 @@ is left, and **a not-found cell is permission to test, not a result.**
 
 | item | status |
 |---|---|
-| the trajectory X6 names | **MEASURED.** `\|\|tau\|\|` falls **29.9x / 19.0x / 18.3x** and **plateaus NONZERO** at **7.255e-02 / 2.962e-01 / 1.019e+00**, while the Karcher residual at the same fixed point reaches **5.4944e-13**. |
+| the trajectory X6 names | **MEASURED.** `\|\|tau\|\|` falls **29.9x / 19.0x / 18.3x** and **plateaus NONZERO** at **7.255e-02 / 2.962e-01 / 1.019e+00**, while the Karcher residual at the same fixed point reaches **5.4944e-13**. **[STRUCK r5 iter 21 - 5.4944e-13 was asserted `[RUN]` with NO LIVE PRODUCER; it lived only in a comment and in prose. The probe reads 7.307e-13 to 8.405e-13 at `--tol 1e-15 --steps 400`. In the STRUCK registry now.]** |
 | **contract inconsistency** | **FOUND, and it is structural.** `\|\|tau\|\|=0` requires `m` parallel to `xbar`, the normalised **Euclidean** mean; the settled reading is the **geodesic** mean. **"equilibrium <=> tau = 0" and "the settled reading is the Karcher mean" are DIFFERENT FIXED POINTS**, separated by **0.031648 rad [0.026318, 0.037550]** at k=8, CI excluding zero, at every k. **Whichever ARM B is built on, the other clause is false of it, and the document asserts both.** |
 | geodesic vs flat mean | Gap is **2.75% / 3.90% / 3.90%** of the pivot spread; CIs exclude zero at every k, so the two means are **distinguishable**. |
 | my 1% threshold | **ARBITRARY AND UNJUSTIFIED, mine.** The printed verdict line ("machinery EARNS") rests on a cutoff nothing supports. **The raw numbers are the finding; the verdict line is not.** |
@@ -647,3 +647,26 @@ Replayed ARM A's own draw stream (published `D_FR causal` reproduced to 6 dp at 
 | **the "9 documents" count** | **WAS A TYPO.** `LEAD_DOCS` listed **`MODEL_CARD.md` twice**; the params deduplicate via `sorted(set(...))` so no check was doubled, but the **reported count is the param count**. **Chase flagged this at iteration 11 and it had not been repaired.** De-duplicated. |
 | full-suite corroboration for Chase F5 | **WEAK, and labelled so.** A nurse's full-suite attempt collected **1278** and was **KILLED at 56% with no summary and no exit code** (`grep -c EXITCODE` = 0). **Not a failure count.** It agrees in direction with Chase's directly-measured 8 failures in two files: **failures exist outside the covered 107.** |
 | tree drift during measurement | `scale/*.py` grew **51 -> 52** mid-task with ten new probe files observed. **Several agents write this tree concurrently** - which is why every number this round carries its own bind. |
+
+**HEALTH INSPECTOR [RUN, r5 iter 21] - rung 3 of 4. 37 claims audited, 3 struck. All strikes applied the same iteration.**
+
+| # | struck | why | applied |
+|---|---|---|---|
+| **S1** | **`5.4944e-13`** (mine) | Asserted `[RUN]` with **no live producer** - it existed only in a code comment and in prose. Probe reads **7.481e-09/8.155e-09/8.405e-09** published, **7.307e-13/7.958e-13/8.405e-13** at `--tol 1e-15 --steps 400`. **Not the mean, min or max at any k.** It came from a throwaway float64 script whose own output printed `nan` for both means. **The 1.471448 class.** | **Added to the `STRUCK` registry**; comment replaced with reproducible figures; `LOOP_PROMPT.md` + `CHECKLIST.md` marked. Registry then caught **two more unmarked assertions I had missed**. [RUN] **13 passed, exit 0.** |
+| **S2** | the sentence *"his 1.1019 does not reproduce, nor his 9.3869"* (mine) | **Both reproduce to four decimals** on Chase's bound probe. Wilson measured **Cohen's d**; Chase's is a **D_FR ratio** - different quantities. The sentence claimed a failed reproduction that did not happen. **Wilson's measurement untouched.** | Struck in `CHECKLIST.md`. |
+| **S3** | the provenance bind | **Confirmed and worse:** delete two lines and all four assertions go False, **and nine more figures are missing outright** - all present in `DONE_ARCHIVE_ROUND1.md`. | **Repaired at the class**: corpus is every `DONE*.md`; a hit counts only inside a **`[RUN]` paragraph or a table row**. Now **FAILS listing nine real absences** - correct behaviour, left RED. |
+
+| cleared | detail |
+|---|---|
+| **all six of my probes** | Re-run independently, **every one exit 0**, figures exact - including `k3_concavity_control`'s **-0.0643 [-0.0981,-0.0159]** and `max_row_mechanism`'s **6/6 bind**. |
+| claimed-greens | `run_calib` rc 0; `inspector.py` CLEAN; **107/1278 = 8.37%**; `--collect-only` **1278**. **Chase F5 exact.** |
+| unbound findings | **None.** Every named RED exists and fails. `chase_k3_ci` rc 0 is correct - a *failed attack* claims no RED. |
+| contradictions vs Wilson | **None standing.** All four refutations recorded; **G-c's kill recorded nowhere as fired.** |
+
+| his findings nobody had recorded | detail |
+|---|---|
+| two independent failures, not one | `test_hub_package_hardening.py` rc 1, **4 failed = 2 tests x 2 devices**. **The second was attributed to the first.** |
+| archive count is 5, not 4 | `3,319,296` appears **5 times on 4 lines**. **Chase and Wilson both counted lines, not occurrences.** Substance unaffected. |
+| **caveat bearing on K1** | `arm_a_k1.py`/`wilson_probes.py` **replayed cached journals** (*"0 remaining, ran_this_bucket: 0"*). **Replay MATCH is real; a fresh derivation of the slope was not attempted.** |
+
+| my control defect, new shape | The must-fire control fed literal paragraphs to `_measured`, but the evidence filter lived in the **corpus builder**, so **the control could not reach the logic it guarded** and failed. Filter moved into `_measured`. The three earlier gate defects tested the **wrong statistic**; this one **could not reach its subject at all**. |

@@ -34,6 +34,7 @@ Every test parametrizes over cpu and cuda and skips cuda when absent.
 """
 
 import os
+import pathlib
 import sys
 
 import pytest
@@ -510,30 +511,99 @@ def test_the_package_states_its_costs_in_the_file_that_ships(device):
     assert cap["verdict"] == "a loss, not a tie, and already present in-distribution"
 
 
+def _evidence_paragraphs():
+    """Paragraphs of the run-log corpus that CARRY RUN EVIDENCE.
+
+    TWO DEFECTS ARE BEING REPAIRED HERE AND THE SECOND IS THE REAL ONE.
+
+    1. THE CORPUS WAS ONE FILE. `DONE.md` rotates; when it does, the
+       measurements move to `DONE_ARCHIVE_ROUND*.md` and every provenance
+       assertion silently loses its target. Measured: `1.44x`, `1.0334`,
+       `0.379x`, `3,319,296` appear 2/7/2/4 times in the round-1 archive. The
+       corpus is now every `DONE*.md`.
+
+    2. A MENTION WAS ACCEPTED AS A MEASUREMENT. `assert "3,319,296" in done`
+       passes on ANY occurrence -- including the sentence of a finding that
+       REPORTED THE NUMBER MISSING. That is exactly what happened: after the
+       finding was written up, all four figures appeared in `DONE.md` exactly
+       once each, inside the text reporting their absence, so the bind would
+       pass ON THE REPORT OF ITS OWN FAILURE. A provenance test that a
+       meta-discussion can satisfy is not a provenance test.
+
+    So a hit counts only inside a paragraph that carries evidence: a `[RUN]`
+    marker, or a markdown table row. Both are how this repo records a
+    measurement; neither appears in prose about a number's absence.
+    """
+    out = []
+    for f in sorted(pathlib.Path(REPO).glob("DONE*.md")):
+        out += f.read_text(encoding="utf-8").split("\n\n")
+    return out
+
+
+def _is_evidence(block):
+    """A paragraph carries run evidence iff it has a `[RUN]` marker or a
+    markdown table row. Prose about a number being absent has neither."""
+    return ("[RUN]" in block
+            or any(ln.lstrip().startswith("|") for ln in block.splitlines()))
+
+
+def _measured(needle, blocks):
+    """THE FILTER LIVES HERE, NOT IN THE CORPUS BUILDER, AND THAT WAS A REAL
+    DEFECT. The first version filtered while READING FILES and left `_measured`
+    as a bare containment test -- so the must-fire control below, which passes
+    literal blocks, bypassed the filter entirely and the control FAILED. A
+    control that cannot reach the logic it guards is not guarding it."""
+    return any(needle in b and _is_evidence(b) for b in blocks)
+
+
+def test_provenance_rejects_a_mention_that_carries_no_run_evidence():
+    """MUST-FIRE. The repair above is only worth having if it can tell a
+    measurement from a mention, so it is shown doing that on planted text."""
+    meta = ("**F4 EVERY SHIPPED COSTS NUMBER HAS LOST ITS PROVENANCE.** "
+            "`3,319,296` occurs **0** times in `DONE.md`.")
+    table = "| softmax | 3,319,296 | 1.8528 | **1.8838** | 69.9 s |"
+    run = "[RUN] parameters 3,319,296 on both arms, 5 seeds."
+    assert not _measured("3,319,296", [meta]), (
+        "a paragraph REPORTING the number missing was accepted as provenance")
+    assert _measured("3,319,296", [table]), "a table row was rejected"
+    assert _measured("3,319,296", [run]), "a [RUN] paragraph was rejected"
+
+
 def test_every_cost_the_package_states_is_reachable_from_a_recorded_measurement(device):
-    """The numbers in COSTS are quoted, so they can be quoted WRONG. Each one is
-    checked against the text of DONE.md, which is the run log rather than a
-    summary."""
+    """The numbers in COSTS are quoted, so they can be quoted WRONG. Each is
+    checked against RUN EVIDENCE in the run-log corpus -- not against any
+    mention anywhere in one file. See `_evidence_paragraphs` for why."""
     from ceq.hf.modeling_ceq import COSTS
-    done = open(os.path.join(REPO, "DONE.md"), encoding="utf-8").read()
+    ev = _evidence_paragraphs()
+    assert ev, "no run-evidence paragraphs found; the corpus glob is broken"
+    missing = []
+
+    def want(needle, label):
+        if not _measured(needle, ev):
+            missing.append((label, needle))
+
     for seq, ratio in COSTS["train_peak_memory_vs_sdpa"].items():
-        assert "{:.2f}x".format(ratio) in done or "{:.2f}".format(ratio) in done, (seq, ratio)
-    # Every context-decay rate, verbatim, against the run log. This is the check
-    # that would have caught 0.10547 and 0.03516 and did not exist.
+        if not (_measured("{:.2f}x".format(ratio), ev)
+                or _measured("{:.2f}".format(ratio), ev)):
+            missing.append(("train_peak_memory_vs_sdpa[{}]".format(seq), ratio))
     for s_, rate in COSTS["content_conditional_sign_decay"].items():
         if isinstance(s_, int):
-            assert "{:.5f}".format(rate) in done, (s_, rate)
-    assert "1.32x" in done
-    assert "0.379x" in done
-    assert "1287.5" in done and "487.7" in done
-    assert "1.0334" in done
-    assert "3,319,296" in done
-    assert "-1.389" in done or "1.389" in done
-    # the capability loss, checked the same way as the favourable numbers
+            want("{:.5f}".format(rate), "content_conditional_sign_decay[{}]".format(s_))
+    want("1.32x", "wall_clock_vs_softmax_at_parity")
+    want("0.379x", "gradient_checkpointing_peak_ratio")
+    want("1287.5", "parity wall-clock")
+    want("487.7", "parity wall-clock")
+    want("1.0334", "parity ratio")
+    want("3,319,296", "parity params")
     cap = COSTS["capability"]
-    assert "0.0293" in done and "0.9258" in done and "0.7734" in done
-    assert "2.8e-05" in done
-    assert "{:,}".format(cap["params_both_arms"]) in done
+    want("0.0293", "cogs_gen_exact_match softmax")
+    want("0.9258", "cogs_in_distribution softmax")
+    want("0.7734", "cogs_in_distribution sgate")
+    want("2.8e-05", "fisher_one_sided_p")
+    want("{:,}".format(cap["params_both_arms"]), "params_both_arms")
+    assert not missing, (
+        "shipped COSTS figures with no run evidence anywhere in DONE*.md:\n  "
+        + "\n  ".join("{}: {}".format(a, b) for a, b in missing))
 
 
 # ------------------------------- invariants the shipped docstrings assert

@@ -118,8 +118,16 @@ def one(s: int, k: int, d: int, g: torch.Generator, *, steps: int, tol: float):
     # ~1.85e-08 [RUN] because float32 eps is 1.1920929e-07, so a tol of 1e-8 is
     # BELOW WHAT THE ARITHMETIC CAN REACH and `converged` could never be true --
     # a threshold that cannot be met, which is the defect class this project
-    # keeps finding. In float64 the same iteration reaches 5.4944e-13 [RUN], so
-    # the tolerance becomes a real test instead of an unreachable one.
+    # keeps finding. In float64 the tolerance becomes a real test instead of an
+    # unreachable one: this probe reads 7.481e-09 / 8.155e-09 / 8.405e-09 at its
+    # published settings, and 7.307e-13 / 7.958e-13 / 8.405e-13 when forced to
+    # --tol 1e-15 --steps 400.
+    #
+    # A FIGURE THAT STOOD HERE WAS STRUCK [r5 iter 21]. It was asserted in a
+    # [RUN] voice, it lived ONLY in this comment and in prose, and no code path
+    # produced it. It came from a throwaway float64 check whose own output was
+    # defective -- that script printed `nan` for both means because it omitted
+    # the norm clamp this file has. It is in the STRUCK registry now.
     a = bench._softmax_operator(q, kk).double()
     sp = sphere_rows(a)
     m0 = sp[i] / sp[i].norm().clamp_min(EPS)     # THE GLANCE: row i's own reading
