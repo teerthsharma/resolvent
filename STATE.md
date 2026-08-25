@@ -5,27 +5,30 @@
 | field | value |
 |---|---|
 | round | **3** - CEQ v5, 30 iterations, promise `SCALEFREE` |
-| iteration | **2 complete, 3 next** |
+| iteration | **3 complete, 4 next** |
 | phase | **Phase 0 - M3 on the windowed arm. Capability before statistics.** |
 | calibration | GREEN [RUN] `run_calib.py --self-test` exit 0, 4/4 bit-identical |
 | inspector | `python inspector.py` - 8 checks, 8 must-fire controls, exits nonzero if any control stays SILENT |
 | repo | https://github.com/teerthsharma/resolvent (private) |
 
-## THE ONE NEXT ACTION (iteration 3)
+## THE ONE NEXT ACTION (iteration 4)
 
-**Add the windowed arm - `windowed_signed`, on `sgate` with `window=8`** - to
-`m3_capability.ARMS`. It is Phase 0's whole subject and the harness has never
-carried it, which is precisely why F4 has never been capability-tested.
+**Take the first capability reading, and take SOFTMAX first.** The harness is
+now correct: four arms, all on shipped operators, all at n_params=4769, bar
+already calibrated RED-first (`predict_the_mean` 1.000000, `payload_only`
+1.414204 failing, `oracle` 0.000000).
 
-Built on **sgate**, not tgate: [READ, DONE_ARCHIVE_ROUND1:1272] F4's flatness
-was measured on the shipped operator. `_causal_sgate_operator` already takes
-`window` natively, so this is an argument, not new operator code.
+Run at the SMALL setting first (s=64, d=24) to reproduce the harness end to end
+on the shipped operator, with **softmax written to `results/` before any signed
+arm runs** so the timestamps prove the order. That reading is not M3 - M3 needs
+d in {256,512,1024} and 5 seeds - it is the check that the corrected harness
+still runs and that the bar still fires.
 
-Its hop-2 term is **dense within the band** (`a @ a`), NOT `pivot_hop2` - the
-claim is *windowed signed multi-hop*, and routing through pivots is a different
-arm that is already dead. The G3 bind (`hops=0` bitwise identity) ships with it,
-and `test_the_windowed_arm_that_phase_0_needs_does_not_exist_yet` must be
-UPDATED rather than deleted when it lands - it is written to fail on arrival.
+**Pre-register the reading before running it.** Round 2's habit: on the old
+tgate harness every arm sat ABOVE the 1.0 bar (best 1.342215, 34% worse than
+predicting the mean). If the sgate arms also sit above it, that is Outcome B for
+Phase 0 - flatness does not produce capability - and it must be read that way
+rather than as a tuning problem.
 
 ## Open REDs
 

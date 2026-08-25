@@ -41,7 +41,7 @@ SEED = 0
 #: Operators the module actually ships. `sgate` is the signed one
 #: (`ceq/attention.py`); `softmax` is the baseline every table must carry.
 #: `tgate` is deliberately absent — that absence is the whole test.
-SHIPPED = ("softmax", "sgate")
+SHIPPED = ("softmax", "sgate", "sgate_w8")
 
 
 def _inputs():
@@ -51,10 +51,20 @@ def _inputs():
 
 
 def _shipped_tensors(q, k, arm):
+    """The shipped operator family.
+
+    `sgate` and `sgate_w8` are the SAME function with one argument different.
+    That is deliberate: the windowed arm must not be allowed to become a
+    separate operator, because then F4's flatness and F4's capability would be
+    measured on two different objects -- which is instrument #17 with the parts
+    swapped.
+    """
     out = {"softmax": bench._softmax_operator(q, k)}
     try:
         out["sgate"] = bench._causal_sgate_operator(
             q, k, rho=M3.SGATE_RHO, lam=M3.SGATE_LAM)
+        out[f"sgate_w{M3.W_WINDOW}"] = bench._causal_sgate_operator(
+            q, k, rho=M3.SGATE_RHO, lam=M3.SGATE_LAM, window=M3.W_WINDOW)
     except Exception as e:                       # signature drift is a failure
         pytest.fail(f"cannot build the shipped sgate operator: {e!r}")
     return out
@@ -103,18 +113,74 @@ def test_the_comparison_can_actually_fail():
     )
 
 
-def test_the_windowed_arm_that_phase_0_needs_does_not_exist_yet():
-    """F4's windowed arm is the Phase-0 subject and is absent from the harness.
+def test_the_windowed_arm_is_sgate_with_a_band_and_nothing_else():
+    """F4's arm has landed. This is the assertion the placeholder promised.
 
-    `bench._causal_mask(window=w)` exists and F4's flatness was measured on
-    `sgate` at w=8 [round-1 archive], but `m3_capability.ARMS` has never carried
-    a windowed arm — which is exactly why F4 has never been capability-tested.
-    This test records the gap and MUST be updated, not deleted, when the arm
-    lands.
+    Three things must hold, all by VALUE:
+      1. the operator is bitwise the SHIPPED sgate with `window=W_WINDOW` --
+         not a new operator, not a re-derivation;
+      2. it is genuinely banded, so the arm is not silently the dense arm;
+      3. it is NOT bitwise the unbounded sgate, so the band is load-bearing
+         rather than decorative at this sequence length.
     """
-    windowed = [a for a in M3.ARMS if "window" in a]
-    assert not windowed, (
-        f"a windowed arm now exists ({windowed}). Update this test to assert its "
-        f"operator is sgate-with-window and that its hop-2 term is dense within "
-        f"the band, then re-point Phase 0 at it."
+    assert "windowed_signed" in M3.ARMS
+    torch.manual_seed(SEED)
+    arm = M3.Arm("windowed_signed", s=S)
+    x = _inputs()
+    q, k = arm.wq(x), arm.wk(x)
+    with torch.no_grad():
+        got = arm._operator(q, k)
+        shipped = _shipped_tensors(q, k, arm)
+
+    key = f"sgate_w{M3.W_WINDOW}"
+    assert torch.equal(got, shipped[key]), (
+        f"windowed_signed is not bitwise the shipped sgate at window="
+        f"{M3.W_WINDOW}. The windowed arm must be the same operator with one "
+        f"argument different, or F4's flatness and F4's capability are being "
+        f"measured on two different objects."
+    )
+    assert not torch.equal(got, shipped["sgate"]), (
+        "windowed_signed is bitwise identical to the UNBOUNDED sgate, so the "
+        "band does nothing at this length and the arm is the dense arm wearing "
+        "F4's name."
+    )
+
+    # the band, checked on entries rather than on the mask that built them
+    i = torch.arange(S).view(-1, 1)
+    j = torch.arange(S).view(1, -1)
+    outside = (i - j > M3.W_WINDOW) | (j >= i)
+    assert float(got[:, outside].abs().max()) == 0.0, (
+        "windowed_signed has nonzero mass outside the causal band; it is not "
+        "the bounded receptive field F4 measured."
+    )
+
+
+def test_windowed_hop2_reaches_exactly_two_windows():
+    """The bounded receptive field IS the arm's content, so pin its extent.
+
+    `a` is banded to `w`, so `a @ a` must reach `2w` and no further. If hop 2
+    ever reaches further, the arm has stopped being windowed and every
+    comparison against F4's flat statistic is void. Checked as a VALUE on the
+    product, not as a property of the code that built it.
+    """
+    torch.manual_seed(SEED)
+    arm = M3.Arm("windowed_signed", s=S)
+    x = _inputs()
+    q, k = arm.wq(x), arm.wk(x)
+    with torch.no_grad():
+        a = arm._operator(q, k)
+        hop2 = a @ a
+
+    w = M3.W_WINDOW
+    i = torch.arange(S).view(-1, 1)
+    j = torch.arange(S).view(1, -1)
+    beyond = (i - j > 2 * w) | (j >= i)
+    assert float(hop2[:, beyond].abs().max()) == 0.0, (
+        f"hop 2 reaches beyond {2 * w} positions; the arm is no longer windowed."
+    )
+    # and it must actually USE the second window, or hop 2 is doing nothing
+    ring = (i - j > w) & (i - j <= 2 * w)
+    assert float(hop2[:, ring].abs().max()) > 0.0, (
+        f"hop 2 has no mass between {w} and {2 * w} positions, so the second hop "
+        f"buys no reach at all and the arm is one hop in disguise."
     )

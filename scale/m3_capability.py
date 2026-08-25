@@ -48,7 +48,19 @@ from ceq import bench
 from scale.negation_scope import make_batch, nrmse, bootstrap_ci, calibrate_bar
 from scale.pivot_probe import select_pivots, pivot_hop2
 
-ARMS = ("softmax", "pivot_signed", "pivot_unsigned")
+ARMS = ("softmax", "pivot_signed", "pivot_unsigned", "windowed_signed")
+
+#: F4's arm, and Phase 0's whole subject. Windowed signed multi-hop is the ONE
+#: construction in this project already measured FLAT across a 64x growth in
+#: context -- the exact property the scale-free routes are chasing -- and it has
+#: never been capability-tested. That gap is why it is here: a flat statistic
+#: that never produced a capability is a counterexample to the gate, and the
+#: cheapest way to find out is to run the capability test on it.
+#:
+#: Built on `sgate`, NOT `tgate`: the round-1 archive records the flatness on
+#: "every windowed sgate interval" (DONE_ARCHIVE_ROUND1.md:1272). Copying the
+#: sibling arm's operator would have measured a different object under F4's name.
+W_WINDOW = 8
 D_MODEL = 16          # fixed per task spec
 HIDDEN = 128           # MLP hidden width, SAME for every arm (fair capacity).
                         # pivot_signed's extra params are g[s]+tau(1), which
@@ -103,15 +115,27 @@ class Arm(nn.Module):
         """
         if self.kind == "softmax" or self.kind == "pivot_unsigned":
             return bench._softmax_operator(q, k)              # [n,s,s], batched
-        # pivot_signed: the SHIPPED signed operator, at its shipped defaults.
-        return bench._causal_sgate_operator(q, k, rho=SGATE_RHO, lam=SGATE_LAM)
+        # `window=0` is the unbounded causal row; `window=W_WINDOW` is F4's
+        # banded receptive field. Both are the SAME shipped operator with one
+        # argument different, which is the point -- the windowed arm is not a
+        # new operator and must not become one.
+        w = W_WINDOW if self.kind == "windowed_signed" else 0
+        return bench._causal_sgate_operator(q, k, rho=SGATE_RHO, lam=SGATE_LAM,
+                                            window=w)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         n, s, _ = x.shape
         q, k = self.wq(x), self.wk(x)
         a = self._operator(q, k)                               # [n,s,s]
         z = x + a @ x
-        if self.kind != "softmax":
+        if self.kind == "windowed_signed":
+            # DENSE within the band, NOT pivot-routed. F4's claim is *windowed
+            # signed multi-hop*; routing hop 2 through k content-selected pivots
+            # is a different construction and it is already dead (-1.298).
+            # `a` is banded by the operator, so `a @ a` reaches 2w and no
+            # further -- the bounded receptive field is the arm's whole content.
+            z = z + a @ (a @ x)
+        elif self.kind != "softmax":
             # pivots are content-selected PER EXAMPLE (key differs per row), so
             # pivot_hop2 -- which only accepts a single 2D [s,s] operator --
             # loops over the batch. `a` itself was already built batched above.

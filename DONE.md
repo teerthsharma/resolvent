@@ -2,6 +2,54 @@
 
 Round 2 archived below its own header; round-1 archive at `DONE_ARCHIVE_ROUND1.md`.
 
+### ROUND 3, ITERATION 3 - 2026-08-25 - F4's windowed arm is IN the capability harness, bound by value.
+
+CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.
+
+ACTION (one): added `windowed_signed` to `m3_capability.ARMS`. Phase 0's subject
+has existed as a STATISTIC since round 1 and has never been in the harness that
+measures CAPABILITY - which is the entire reason F4 was never capability-tested.
+
+**BUILT AS THE SHIPPED OPERATOR WITH ONE ARGUMENT DIFFERENT**, not as new code:
+
+    w = W_WINDOW if self.kind == "windowed_signed" else 0
+    return bench._causal_sgate_operator(q, k, rho=SGATE_RHO, lam=SGATE_LAM, window=w)
+
+`_causal_sgate_operator` already takes `window`, so the windowed arm is an
+argument. **This is deliberate and it is a defence:** if the windowed arm were a
+separate operator, F4's flatness and F4's capability would be measured on two
+different objects - **instrument #17 with the parts swapped.**
+
+**ON sgate, NOT tgate** [READ, DONE_ARCHIVE_ROUND1.md:1272] - *"every windowed
+**sgate** interval overlaps every other"*. Copying the sibling arm's operator
+would have measured a different object under F4's name.
+
+**HOP 2 IS DENSE WITHIN THE BAND, NOT PIVOT-ROUTED.** F4's claim is *windowed
+signed multi-hop*; routing hop 2 through k content-selected pivots is a different
+construction and it is already dead at -1.298. The arm computes `a @ (a @ x)`.
+
+**THE PLACEHOLDER TEST WAS UPDATED, NOT DELETED**, as its own docstring
+required. It has become four value assertions [RUN, 7 passed]:
+  * `windowed_signed` is **bitwise** the shipped sgate at `window=8`
+  * it is **NOT** bitwise the unbounded sgate - so the band is load-bearing at
+    this length rather than decorative
+  * **zero mass outside the causal band**, checked on the ENTRIES rather than on
+    the mask that produced them
+  * **hop 2 reaches exactly 2w and no further**, AND has nonzero mass in the ring
+    between w and 2w - so the second hop buys real reach and the arm is not one
+    hop in disguise
+
+That last pair is the one worth keeping: a windowed arm whose hop 2 bought no
+extra reach would pass every structural check and be a one-hop arm wearing a
+multi-hop name.
+
+**[RUN] ALL FOUR ARMS AT n_params = 4769 EXACTLY.** The windowed arm adds no
+parameters either, so the matched-params requirement holds across the full
+table by construction.
+
+CHECKLIST: M3w - arm now EXISTS and is bound. Status still UNTESTED: no
+capability reading has been taken.
+
 ### ROUND 3, ITERATION 2 - 2026-08-25 - Capability harness moved onto the SHIPPED operator. Bind GREEN, and the param match became exact.
 
 CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.
