@@ -5,51 +5,44 @@
 | field | value |
 |---|---|
 | round | **5** - CEQ v7, promise `TWOSPHERES`, **30 iterations** |
-| iteration | **18 complete, 19 next** |
+| iteration | **19 complete, 20 next** |
 | phase | **ARM A under the escalation chain; autonomous to iteration 30** |
 | goal | **match or SUPERSEDE self-attention**; next-equilibrium predictor |
 | calibration | GREEN [RUN] `run_calib.py --self-test` exit 0, 4/4 bit-identical |
 | inspector | tri-state; INDETERMINATE exits nonzero |
 | repo | https://github.com/teerthsharma/resolvent (private) |
 
-## THE ONE NEXT ACTION (round 5, iteration 19)
+## THE ONE NEXT ACTION (round 5, iteration 20)
 
-**The round has no surviving positive claim. Begin D1 - the negative result -
-which the contract makes a DELIVERABLE regardless of outcome.**
+**Iteration 20 is an Inspector-command pass (every 5th). Run it, and then hold
+for the Health Inspector AGENT, who is a different thing and has not reported.**
 
-**EVERYTHING IS NOW RESOLVED EXCEPT THE INSPECTOR'S AUDIT:**
-  * **K1** - `D_FR` slope **-0.4137 [-0.4579,-0.3704]** and **-0.4654
-    [-0.5173,-0.4160]**, both entirely below **-0.30**: the pre-registered *"no
-    leap"* branch **FIRED**. The flip half is alive but unresolved at 8/2400.
-  * **K3** - theta beats **raw** TV but **loses at k=8 to a held-out `TV^p`**;
-    the identity `theta = arcsin(sqrt(TV))` makes K3 unable to distinguish
-    geometry from row-wise concavity **by construction**.
-  * **the aggregator** - real as a comparison, but **keeps 2.9% against a
-    key-norm-matched filler at k=8**, worse than the **35%** the mean retained.
-  * **B1** - not a rename (rho = -0.0253, reproduced twice), **and ill-posed as
-    written**: its top-k retains **5.4%** under a change of the token the
-    selector may not see.
-  * **X6** - the equilibrium clause **survives** on the Karcher residual, and the
-    contract's `tau = 0` sentence was **repaired by measurement** because it has
-    a one-pass closed form.
+**D1 EXISTS NOW** (`D1.md`) with acceptance criteria and the round-5 chapter. Its
+closing limit is the binding one: **nothing in it has passed an independent
+audit.**
 
-**So `TWOSPHERES: KEPT` is not available and `TWOSPHERES: BROKEN` is what the
-evidence supports.** The contract: *"An honest BROKEN outranks an unfinished
-KEPT, and D1 ships either way."*
+**THE PROMISE IS NOT EMITTED AND THE REASON IS PROCEDURAL, NOT COSMETIC.** The
+chain is fellows -> Wilson -> Health Inspector -> Dr House. Three rungs are done.
+**The Inspector was pointed hardest at MY OWN SIX PROBES**, which nobody has
+independently checked, and at the self-satisfying provenance bind. **His strikes
+are strikes** - no appeal, straight to Open - and a struck claim must not stand in
+D1 as though it had survived. **`TWOSPHERES: BROKEN` is what the evidence
+supports, but it is emitted AFTER the audit, not before.**
 
-**D1 DOES NOT EXIST AS A DOCUMENT.** Chase established this: `LOOP_PROMPT.md:30`
-and `:262` name it, the only definition is in the round-4 archive, and
-`PROGNOSIS.md` is D1 in substance under another name with **no acceptance
-criteria and no round-5 chapter**. **Write the round-5 chapter**: what died, by
-which number, with its interval; the instrument defects and which of them were
-self-caught; and what survives audit.
+**WHEN HE REPORTS, the order of work is fixed:**
+  1. Apply every strike to `D1.md`, `CHECKLIST.md` and `DONE.md` **without
+     re-arguing any of them**.
+  2. Close the **self-satisfying provenance bind** - four shipped cost figures now
+     appear in `DONE.md` exactly once each, **inside the text of the finding that
+     reported them missing**, so `assert "3,319,296" in done` can pass on the
+     report of the absence. **A provenance test must match a MEASUREMENT, not a
+     mention.** This was deliberately not touched while he audited that file.
+  3. Then, and only then, write the prognosis and emit the promise.
 
-**DO NOT EMIT THE PROMISE YET.** The Health Inspector has not reported. **His
-strikes are strikes** - no appeal, straight to Open - and a claim he strikes must
-not appear in D1 as though it stood. **Write the chapter; hold the promise.**
-
-**Dr House stays in the box.** Nothing died of missing innovation. Every kill this
-round was fired by a measurement with an interval.
+**Dr House stays in the box, and the reason is on the record.** Every kill this
+round fired from a measurement with an interval. *"Dead is dead, and no leap
+un-refutes a fact."* He is for a gap in INNOVATION, and this round has a gap in
+RESULTS, which is not the same thing.
 
 ## Open REDs
 

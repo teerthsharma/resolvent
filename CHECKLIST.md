@@ -625,3 +625,15 @@ Replayed ARM A's own draw stream (published `D_FR causal` reproduced to 6 dp at 
 | **the pattern, now three** | iter 16 gated on **bulk rank** when selection takes a **top-k**; iter 17 tested the identity on **argmax** when it claims **values**; iter 18 tested **half** a two-part gate. **Each measured something ADJACENT to what was pre-registered, and each erred in the flattering direction.** All three self-caught by the probe's own output. |
 | bind defect, also self-caught | First read MISMATCH at all three k - comparing a **160-draw** mean to a **120-draw** published one. A statement about denominators, not the stream. Now asserts on the **first 120**. |
 | limit travelling with the result | The match is by **RANK, not value**: band/causal key-norm **0.9120 / 0.8900 / 0.8347**. The residual gap is **uncontrolled**, so **2.9% is an UPPER bound** on what survives. |
+
+**D1 [WRITTEN, r5 iter 19] - `D1.md`.**
+
+| item | status |
+|---|---|
+| D1 as a document | **CREATED.** It did not exist: named twice in `LOOP_PROMPT.md`, defined only in the round-4 archive, with `PROGNOSIS.md` serving as D1 in substance for rounds 1-4 under another name. |
+| **acceptance criteria** | **SUPPLIED** - the part that was actually missing. Five conditions: kills named with **intervals** not point estimates; defects recorded **with attribution of who caught them**; withdrawn claims recorded **with replacements**; survivals stated separately and **unpadded**; limits collected **once**. |
+| round-5 chapter | **WRITTEN.** Verdict: **the central kill fired, no positive claim survives.** Covers K1 (fired, both intervals below -0.30), K3 (passes and cannot mean what it meant), the aggregator (2.9% retained), gate 3 (failed on a measurement), B1 (not a rename, ill-posed). |
+| what survives, unpadded | X6's equilibrium clause; the contract contradiction **repaired by measurement**; two frame-independent facts about softmax attention. |
+| defect ledger | **10 defects of mine tabulated with where each was introduced**, plus the shape the last four share. **4 defects found by other agents listed separately** so the record does not read as self-discovery. |
+| withdrawn claims | **5 tabulated with what replaced them**, including two of mine that erred in the generous direction. |
+| **promise** | **HELD.** The chapter's closing limit states that the Health Inspector had not returned, so **nothing in D1 has passed an independent audit yet**, and a struck claim must not stand in it as though it had survived. |

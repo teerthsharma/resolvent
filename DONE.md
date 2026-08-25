@@ -1,3 +1,73 @@
+### ROUND 5, ITERATION 19 - 2026-08-26 - D1 EXISTS. The negative result is written, with the acceptance criteria it never had.
+
+CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.
+
+ACTION (one): wrote **`D1.md`** - the contract's own deliverable, which **did not
+exist as a document.** Chase established that: `LOOP_PROMPT.md:30` and `:262` name
+it, the **only** definition was in `LOOP_PROMPT_ROUND4_ARCHIVE.md:125`, and
+`PROGNOSIS.md` is D1 in substance under another name for rounds 1-4 **with no
+acceptance criteria and no round-5 chapter.**
+
+**IT NOW HAS ACCEPTANCE CRITERIA, which is the part that was missing rather than
+the prose.** D1 is complete when: every fired kill is named with **the number and
+its INTERVAL**, not a point estimate; every instrument defect is recorded
+**including which were self-caught and which were caught by someone else**; every
+withdrawn claim is recorded **with what replaced it**; what survives is stated
+separately from what died **and neither is padded**; and limits collect **once**,
+at the end.
+
+**THE ROUND-5 CHAPTER, written to those criteria.** Its verdict sentence: **the
+round's central kill fired and no positive claim survives.**
+
+  * **K1 FIRED** - `D_FR` slope **-0.4137 [-0.4579,-0.3704]** as computed and
+    **-0.4654 [-0.5173,-0.4160]** live-rows-only, **both entirely below -0.30**,
+    both failing K1's own bar of `>= -0.10`. **ARM B was never authorized and was
+    never built.** The flip clause is alive but unresolved at **8/2400**, and its
+    CI is **count discreteness** - the unsigned arm's exact interval CONTAINS the
+    signed arm's rate.
+  * **K3 passes as written and cannot mean what it was written to mean.**
+    `theta_i = arcsin(sqrt(TV_i))` exactly - measured three ways, float32
+    **8.457280e-04**, float64 **6.828570e-08**, TV residual **2.980e-07**. So K3
+    compares **two aggregations of one number** and can only win by Jensen.
+    Against a held-out `TV^p` it **LOSES at k=8, -0.0643 [-0.0981,-0.0159]**.
+    **The curvature is a LIABILITY**: chord beats geodesic by 0.86/0.65/1.25%,
+    `sqrt(TV)` by 3.97/2.87/5.70%.
+  * **The aggregator is real as a comparison and largely confounded as a result** -
+    **+1.1347 [+0.7833,+1.5877]** over the mean, but **2.9% / 13.3% / 58.9%**
+    retained against a key-norm-matched filler, against the mean's **35%**.
+  * **Gate 3 FAILED on a measurement, not a theorem** - the off-schedule cell is
+    LIVE, 109/384 differing, max separation **1.505102e-02**.
+  * **B1 is not a rename** (rho **-0.0253**) **and ill-posed as written** - its
+    top-k retains **5.4%** under a change of the token the selector may not see.
+
+**WHAT SURVIVES, stated separately and not padded:** X6's equilibrium clause
+survives its own kill (residual at the glance **0.599101 / 0.388587 / 0.321843**,
+100% converged in 28-53 steps); a **contradiction inside the contract was repaired
+by measurement** (`tau = 0` has a one-pass closed form reading **2.454507e-16**,
+so it cannot be the equilibrium condition without deleting the clause); and two
+facts about softmax attention that do not depend on the frame at all - peak
+attention **0.884602 vs 0.160338**, and shadow mass **exactly zero for 68.04%** of
+candidates by causality.
+
+**TEN INSTRUMENT DEFECTS OF MINE ARE TABULATED, each with where it was
+introduced**, and the chapter states plainly that **the last four share a shape:
+each gate measured something ADJACENT to what was pre-registered, and each erred
+toward the flattering reading.** Four defects found by other agents are listed
+separately, so the record does not read as though I found everything.
+
+**FIVE WITHDRAWN CLAIMS ARE TABULATED WITH THEIR REPLACEMENTS**, including two of
+mine that were wrong in the generous direction (*"untested, not failed"*; *"`lam`
+is a threshold at 1.0"*).
+
+**AND THE LAST LIMIT IS THE ONE THAT MATTERS RIGHT NOW:** *"the health inspection
+of this round's own claims had not returned when this chapter was written, so
+nothing here should be read as having passed an independent audit."* **The
+promise is NOT emitted.** The Inspector's strikes are strikes, and a struck claim
+must not stand in D1 as though it had survived.
+
+CHECKLIST: **`D1.md` WRITTEN** with acceptance criteria and the round-5 chapter.
+**Promise HELD pending the Inspector.**
+
 ### ROUND 5, ITERATION 18 - 2026-08-26 - THE AGGREGATOR FINDING LARGELY DISSOLVES. Key-norm matching leaves 2.9% of it at k=8 - the aggregator is MORE confounded by the selector than the mean it replaced.
 
 CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.
