@@ -361,3 +361,5 @@ disjoint, 4769 params each - stands.
 
 **F19.** M3 readings below `n_train=8192` rank overfitting: 128->2.116579, 512->1.316514,
 2048->0.949529, 8192->0.877168.
+
+**F20 — G1 FIRED [CITED, r4 iter 3].** Co-prime spacing is PRIOR ART: arXiv 2606.28560 compares a **"coprime (anti-gridding) reassignment"**. Round 3's severance repair is not novel. Difference sets / Sidon sets are **NOT MENTIONED** there and NOT FOUND in search — arm A proceeds as the **difference-set coverage theorem**, never as "co-prime spacing".

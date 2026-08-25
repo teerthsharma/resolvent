@@ -1,3 +1,62 @@
+### ROUND 4, ITERATION 3 - 2026-08-25 - G1 FIRES ON CO-PRIME. Round 3's schedule finding is PUBLISHED.
+
+CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.
+
+ACTION (one): ran the G1 prior-art fetches owed pre-build. **They fired, and on
+the thing round 3 was proudest of.**
+
+**[CITED] arXiv 2606.28560, Capps, *"Depth-Staggered Fibonacci Spacing for Sparse
+Attention: Static Schedules Beat Learned Dilation and Extrapolate Where Dense
+Attention Fails"*.** Verbatim from the abstract: *"sparse self-attention in which
+each query attends to a dense local window plus a set of Fibonacci-spaced
+offsets"*, and among its four compared configurations is a
+**"coprime (anti-gridding) reassignment"**.
+
+**"ANTI-GRIDDING" IS EXACTLY THE MECHANISM I MEASURED.** Round 3, iteration 14:
+power-of-two dilations sever 41-57% of positions; `[1,3,5,7]` cuts severance
+**0.5745 -> 0.1277** at unchanged support. That is a grid being broken, and the
+published work names the motivation in one word. **Round 3's co-prime repair is
+PRIOR ART.** Had a name been written for it, that would have been **novelty claim
+number seven to die in this project.**
+
+**WHAT IS NOT OCCUPIED, and the distinction is real.** The same fetch reports the
+paper **"does not mention Sidon sets or difference sets"**. Arm A's construction
+is not "spacing chosen to be coprime" - it is a **cyclic Singer (v,k,1)-difference
+set**, where `|D-D| = v-1` makes coverage a **counting THEOREM** rather than an
+empirical improvement. [RUN, iter 2] that identity holds exactly at v = 7, 13,
+21, 31, 57. **Co-prime is a heuristic that reduces gridding; a difference set
+PROVES every nonzero residue is covered exactly once.** Those are different
+claims, and only the second is Lean-provable.
+
+**[CITED] LongNet, arXiv 2307.02486** - abstract only: *"dilated attention, which
+expands the attentive field exponentially as the distance grows"*. **Exponential
+expansion is a GEOMETRIC schedule**, which is the family measured to sever
+41-57%. **D1b stands as a live candidate**: the severing test applies to
+LongNet's schedule and has not been run against it. The full dilation definition
+was not extractable from the abstract page and is **NOT ESTABLISHED** - the
+severing claim against LongNet remains a hypothesis, not a finding.
+
+**[CITED] Kernel herding** - Chen/Welling/Smola, and arXiv 2511.02706
+*"Optimizing Kernel Discrepancies via Subset Selection"*. Herding produces a
+**"super-sample"** by greedily aligning kernel mean embeddings; the subset-selection
+line **"select[s] an m-element subset from a large population"**. **Both are
+SAMPLE selection.** Arm B's cell is **SIGN assignment inside the operator**, on a
+fixed selected set. **The distinction is established by fetch, as the contract
+required, and not by assertion.**
+
+**Difference-set / Sidon attention: NOT FOUND.** Reported as **not found**, never
+as *"unoccupied"* - the search covered sparse-attention offset literature and did
+not surface the construction. Absence of a search hit is not absence of prior art.
+
+**THIS IS WHY G1 RUNS BEFORE BUILD.** The fetch cost one iteration and removed a
+novelty claim that three rounds of instinct would have made. **Arm A must be
+built and described as the DIFFERENCE-SET COVERAGE construction, with the theorem
+as the claim - never as "co-prime spacing", which is taken.**
+
+CHECKLIST: **G1 FIRED for co-prime spacing** (2606.28560). Difference-set
+construction NOT FOUND - proceed, with the coverage theorem as the claim.
+Herding distinction ESTABLISHED. LongNet severing = hypothesis, unestablished.
+
 ### ROUND 4, ITERATION 2 - 2026-08-25 - G7 BOTH ARMS. A passes as a VALUE. B changes events but SPENCER IS VACUOUS.
 
 CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.

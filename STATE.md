@@ -5,32 +5,31 @@
 | field | value |
 |---|---|
 | round | **4** - CEQ v6', promise `CHOSENSIGN` |
-| iteration | **2 (round 4) complete, 3 next** |
+| iteration | **3 (round 4) complete, 4 next** |
 | phase | **X4 instrument first - everything downstream reads through it** |
 | goal | **match or SUPERSEDE self-attention**; next-equilibrium predictor, not token predictor |
 | calibration | GREEN [RUN] `run_calib.py --self-test` exit 0, 4/4 bit-identical |
 | inspector | tri-state; INDETERMINATE exits nonzero |
 | repo | https://github.com/teerthsharma/resolvent (private) |
 
-## THE ONE NEXT ACTION (round 4, iteration 3)
+## THE ONE NEXT ACTION (round 4, iteration 4)
 
-**The G1 fetches, which are owed PRE-BUILD and are now the only thing between
-here and building arm A.**
+**Build arm A as the DIFFERENCE-SET COVERAGE construction - and describe it that
+way, never as "co-prime spacing", which G1 has taken.**
 
-Both arms cleared G7, so the next spend is prior art, not code. Four owed:
-  * **LongNet** + the severing test (D1b stands if it fires);
-  * **difference-set / Sidon attention** - arm A's exact cell;
-  * **discrepancy-in-ML** with a KNOWN NEAR-MISS: **herding / kernel herding uses
-    discrepancy for SAMPLE selection; the cell here is SIGN assignment inside the
-    operator. Establish the distinction BY FETCH, not by assertion** - six
-    novelty claims have already died here;
-  * **balanced-colouring networks**.
+The birth gates are already specified and one is already GREEN:
+  * `|D-D| = v-1` as a VALUE - **GREEN**, exact at v = 7, 13, 21, 31, 57;
+  * **flipper placed UNIFORMLY AT RANDOM, never on the schedule** - the
+    discipline `carpet_probe.py:24` demanded and round 3 broke, which is how a
+    lattice-aligned `c` produced a flat reading that was an artifact;
+  * **off-schedule flip rate within CI of on-schedule** - the exact test that
+    killed the dilation, promoted to a birth gate.
 
-**Absence is reported as "not found", NEVER as "unoccupied".**
+Kill: any bitwise-identical gradient pair (severing), OR `|slope| >= 0.01` over
+s=512->2048 **on the X4 instrument**, OR M3 fail at n=8192.
 
-**Arm A is the better first build and G7 says why.** Its birth gate is an
-identity already asserted as a value; arm B's warrant was just found slack by
-7.4x, so building B first would be building on a motivation that does not hold.
+**Read it on X4, not on the float path.** The float statistic misses flips whose
+product underflows, and at depth median |grad| is 2.8e-32.
 
 ## Open REDs
 
