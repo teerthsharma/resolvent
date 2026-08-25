@@ -5,48 +5,54 @@
 | field | value |
 |---|---|
 | round | **5** - CEQ v7, promise `TWOSPHERES`, **30 iterations** |
-| iteration | **10 complete, 11 next** |
+| iteration | **11 complete, 12 next** |
 | phase | **ARM A under the escalation chain; autonomous to iteration 30** |
 | goal | **match or SUPERSEDE self-attention**; next-equilibrium predictor |
 | calibration | GREEN [RUN] `run_calib.py --self-test` exit 0, 4/4 bit-identical |
 | inspector | tri-state; INDETERMINATE exits nonzero |
 | repo | https://github.com/teerthsharma/resolvent (private) |
 
-## THE ONE NEXT ACTION (round 5, iteration 11)
+## THE ONE NEXT ACTION (round 5, iteration 12)
 
-**Collect Chase and Cameron; hold Foreman at the Wilson rung.**
+**Send the consolidated fellow tier to WILSON. That is the next rung and it may
+not be skipped.**
 
-**FOREMAN'S REPORT IS NOT A VERDICT AND MUST NOT BE TREATED AS ONE.** It is
-RED-bound and it replays ARM A's own draw stream, but the chain is
-**fellows -> Wilson -> Health Inspector -> Dr House**, and it has passed exactly
-one rung. **Wilson has been sent F4/F5** - the dead-row floor and the contaminated
-K1 slope - because his K1 run reads through the same statistic and his facts, not
-Foreman's, settle it.
+All three fellows have reported and **not one of their findings is a verdict.**
+Wilson already holds Foreman's F4/F5. He now needs the rest, because several
+claims are load-bearing and two of them contradict things this project has
+written down:
 
-**THE FINDING THAT REFRAMES THE ROUND, once it clears Wilson:**
-**`theta_i = arcsin(sqrt(TV_i))` IDENTICALLY** on a one-token mask - one degree of
-freedom, residual **2.980e-07** at the float32 floor. **K3 as written cannot
-distinguish geometry from row-wise concavity**, because theta is a fixed monotone
-function of TV **by construction**. And the sphere's own curvature is measured as
-a **liability**: the chord beats the geodesic by 0.65-1.25%, `sqrt(TV)` by
-2.87-5.70%.
+  1. **Chase F2 - K2's separation may be the selector reading its own score.**
+     `select_pivots` ranks by `key.norm(dim=-1)`. A filler from ranks k+1..2k
+     collapses 9.39 DISJOINT to 1.10 OVERLAP. **If true, ARM B's B1 is not a new
+     criterion**, because `xi` is built from `theta` and `theta` is a monotone
+     read of that same score. Wilson must verify the selector's score function
+     and the two filler populations at his own geometry.
+  2. **Cameron F1 - the aggregator carries ~1.24 of effect while K3 argues over
+     ~0.02.** `theta.max()` reads 2.3275 against `theta.mean()`'s 1.0888 on the
+     **published** draws. Wilson must confirm this is the published draw stream
+     and not a re-sample.
+  3. **`gamma_1` is a TIE in 5 of 6 cells** - which is **G-c's kill condition**,
+     not a soft result. If Wilson confirms it, **X7 dies honestly** and the
+     rank-r shadow goes with it.
+  4. **Chase F3/F4/F5 - the audit surface itself.** A struck constant still
+     pinned by a test the Inspector never runs; every shipped `COSTS` number
+     without a provenance path; **107 of 1278 tests covered.**
 
-**WHAT K3 NEEDS IF IT IS TO MEAN ANYTHING:** a control arm that is a concave
-reparametrisation of TV **with no geometric story** - `TV^p` - and theta must beat
-**that**, not raw TV. **Foreman's `TV^0.2` numbers do NOT support shipping it**:
-he searched 8 exponents on the draws that scored them, with no bootstrap CI and no
-multiplicity correction, and he says so himself. **That arm has to be built
-properly before it can kill or save K3.**
+**THEN THE HEALTH INSPECTOR, BEFORE ANY PROGNOSIS.** He re-runs every claimed
+GREEN, checks each finding has a matching RED, and checks nobody contradicts
+Wilson. **Chase's F5 is aimed straight at him** - a clean bill over 8.4% of the
+suite is true and is not a statement about the repository.
 
-**Equilibrium is settled and written into the contract:** the certificate is the
-**Karcher residual**; `tau` is a **displacement statistic**; `tau = 0` may not be
-called equilibrium. **The price rides with it** - the Karcher mean is not unique
-on **48.3% of draws at k=128**, and ARM B may not be built on it until that is
-answered.
+**WHAT IS ALREADY SETTLED AND NEEDS NO FURTHER ARGUMENT:** K3 as written is not
+evidence for the geometry. theta beats **raw** TV at every k (CI excludes zero)
+and **loses at k=8** to a held-out `TV^p` with no geometry in it. That is my own
+measurement with a fit/score split and both controls fired; it does not need
+Wilson to become true, though he may refute it.
 
-**Dr House (`model: fable`, 5 min, no nurses) is NOT triggered yet.** Foreman did
-not die of missing innovation; he produced a result. Release him only if the
-problem survives all four rungs AND the gap is INNOVATION rather than evidence.
+**Dr House is NOT triggered.** No theory here died of missing innovation - three
+fellows produced results. Release him only if the problem survives all four rungs
+AND the gap is INNOVATION rather than evidence.
 
 ## Open REDs
 

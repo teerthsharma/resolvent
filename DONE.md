@@ -1,3 +1,168 @@
+### ROUND 5, ITERATION 11 - 2026-08-25 - K3's MISSING CONTROL BUILT AND RUN: theta LOSES to a plain power of TV. All three fellows in. AND CHASE CORRECTS MY OWN RECORD.
+
+CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.
+
+ACTION (one): built and ran `scale/k3_concavity_control.py` - **the control arm
+K3 has never had.** K3 asks theta to beat RAW TV. If Foreman's identity holds,
+that is not evidence for a sphere: **any** concave transform beats raw TV. The
+question K3 should ask is whether the **geometric** member beats a
+**non-geometric** one.
+
+**FOREMAN'S IDENTITY, MEASURED HERE RATHER THAN BELIEVED** - a fellow's claim is
+not a premise until it is checked:
+
+    k=8    max|theta - arcsin(sqrt(TV))| = 8.457e-04 over 20460 LIVE rows
+    k=32                                   9.779e-04
+    k=128                                  8.457e-04
+    dead rows = 20 at every k, theta there = 1.570796 exactly
+
+**THREE INDEPENDENT MEASUREMENTS NOW AGREE**: mine at **8.457e-04** (float32),
+Cameron's at **3.375e-10** (float64), Foreman's TV residual at **2.980e-07**. The
+spread between them is precision, not disagreement. **The identity holds on live
+rows and breaks on dead ones exactly as predicted** - TV=0 there while
+`arccos(0)=pi/2`.
+
+**THE FIX FOR THE DEFECT FOREMAN COULD NOT AVOID: a FIT/SCORE SPLIT.** He searched
+8 exponents **on the draws that scored them** and said so himself. Here the
+exponent is chosen on half the draws and evaluated on the other half, which it has
+never seen. Both controls fired - theta against itself reads `[0.000e+00,
+0.000e+00]`, and the sign convention reverses correctly (`+0.009263` / `-0.009263`).
+
+**[RUN] s=1024, d=16, 240 draws/cell split 50/50, threads pinned to 2**
+
+    k=8    p*=0.30  theta 1.2460  raw TV 1.2303  TV^0.30 1.3103
+             theta - rawTV  = +0.0157  CI [+0.0057,+0.0241]  EXCLUDES 0
+             theta - TV^0.3 = -0.0643  CI [-0.0981,-0.0159]  EXCLUDES 0 -> LOSES
+    k=32   p*=0.15  theta 0.9999  raw TV 0.9716  TV^0.15 1.0153
+             theta - rawTV   = +0.0282  CI [+0.0100,+0.0405]  EXCLUDES 0
+             theta - TV^0.15 = -0.0155  CI [-0.1587,+0.1924]  STRADDLES -> TIE
+    k=128  p*=0.15  theta 0.8174  raw TV 0.7787  TV^0.15 0.8674
+             theta - rawTV   = +0.0387  CI [+0.0215,+0.0577]  EXCLUDES 0
+             theta - TV^0.15 = -0.0500  CI [-0.1670,+0.1133]  STRADDLES -> TIE
+
+**theta BEATS RAW TV AT EVERY k WITH THE CI EXCLUDING ZERO - AND LOSES OR TIES TO
+A PLAIN POWER OF TV THAT CARRIES NO GEOMETRY AT ALL.** At k=8 it **loses** with
+the CI excluding zero. **K3 as written is not evidence for the geometry.** It
+measures row-wise concavity, and `TV^p` supplies that with no sphere, no
+Fisher-Rao and no Chentsov. **Pre-registered before the numbers: K3 must be
+rewritten against this control or dropped. Not softened.**
+
+---
+
+**ALL THREE FELLOWS ARE IN. THEIR FINDINGS ARE NOT VERDICTS** - the chain is
+fellows -> Wilson -> Health Inspector -> Dr House and they have passed **one
+rung**. Recorded as REPORTED.
+
+**CHASE CORRECTS MY OWN RECORD, AND HE IS RIGHT.**
+
+I wrote at iteration 4, and repeated in `CHECKLIST.md`, that the `D_FR` slope
+*"misses the -0.3 line by 0.006 ... Untested, not failed."* [RUN, his
+`chase_slope_ci.py`, exit 1, must-fire control fired on a planted -1.0 slope]:
+
+    point estimate    -0.3061  (published -0.3061, delta -1.132e-05)
+    95% CI            [-0.4314, -0.1860]   B=2000, resample within cell, refit
+    vs K1's bar >= -0.1   FAILS -- THE ENTIRE CI IS BELOW THE BAR
+    vs the -0.3 line      CI STRADDLES -> unresolved
+
+**Three things my record did not say.** (a) **-0.3061 is BELOW -0.3**, so the
+pre-registered trigger `D_FR slope < -0.3` is arithmetically satisfied, and that
+clause is conditioned on **the slope alone** - the vacuous flip half makes the
+CONJUNCTION unevaluable, not this clause. (b) **K1's own bar is >= -0.1**, and
+against that bar the miss is **0.2061, not 0.006**, with the whole CI below it -
+**it fails by 0.0860 even at the favourable end.** (c) The honest verdict against
+the -0.3 line is **unresolved at 120 draws with the point estimate inside the kill
+region**, which is **not** "untested, not failed".
+
+**"Untested, not failed" was too generous and it was my sentence.** `STATE.md`
+had been demanding this CI since iteration 4; **it did not exist until Chase
+built it.** Corrected in `CHECKLIST.md` this iteration.
+
+**AND A SECOND CORRECTION OF MINE.** I recorded *"controls 15 -> 17"* as a
+property of the Inspector. **It is a property of `iteration % 3`** -
+`inspector.py:311` rotates, and the M2-slope branch carries 3 controls while the
+M5 branch carries 1. **Rotation, not drift.** Corrected.
+
+**CHASE, the rest [REPORTED]:**
+  * **F2 K2's 10x IS THE PIVOT SELECTOR READING ITS OWN SCORE BACK.**
+    `select_pivots` scores by `key.norm(dim=-1)` - a pure function of the token's
+    own representation, computed with **no reference to any downstream effect**,
+    and nothing in the draw is causal (`x0`, `wq`, `wk` are i.i.d. `randn`).
+    Drawing the filler from ranks k+1..2k - **still outside P, still a filler by
+    the code's own definition** - collapses the separation from **9.39 DISJOINT**
+    to **1.10 OVERLAP**. The two fillers separate **from each other at 8.52**:
+    the published "filler" pool is **not one population**. `rho(||k_c||, theta) =
+    +0.5121`. **BLAST RADIUS INTO ARM B: B1 proposes selection by shadow mass
+    `||xi_p||` "instead of salience" - but `xi` is built from `theta`, and
+    `theta` is a monotone read of the salience score. B1's NEW criterion may be
+    the OLD criterion.**
+  * **F3 A STRUCK CONSTANT IS STILL PINNED BY A TEST.**
+    `tests/chase/test_hub_package_hardening.py:496-499` asserts `slope: -1.389,
+    r2: 0.9938` - **both in the STRUCK registry.** Two shipped tests make
+    **logically opposite demands on the same dict**; the registry test passes,
+    this one fails, and **`inspector.py` reports CLEAN because `check_suites`
+    does not run this path.**
+  * **F4 EVERY SHIPPED `COSTS` NUMBER HAS LOST ITS PROVENANCE LINK.** `1.44x`,
+    `1.0334`, `0.379x`, `3,319,296` occur **0, 0, 0, 0** times in `DONE.md` and
+    **2, 7, 2, 4** times in `DONE_ARCHIVE_ROUND1.md`. **Document rotation moved
+    the evidence and nobody re-pointed the bind.** This is the exact instrument
+    class that let **1.471448** live for eighteen iterations.
+  * **F5 THE INSPECTOR'S CLEAN BILL COVERS 8.4% OF THE SUITE** - **107 of 1278**
+    collected. He probed two files inside the blind spot and found **8 live
+    failures.** *"INSPECTOR PASS - exit 0, CLEAN"* is true **and is not a
+    statement about the repository.**
+  * **F6 HIS ATTACK ON K3 FAILED AND HE REPORTS THAT.** Paired bootstrap of
+    `|d_theta| - |d_TV|` on shared resample indices **excludes zero at every k**:
+    `[+0.0161,+0.0328]`, `[+0.0107,+0.0363]`, `[+0.0229,+0.0518]`. The 2-5%
+    margins are small **but they are not noise.** And **12/12 published ARM A
+    fields reproduce at delta exactly `+0.000e+00`** - **G2 holds on ARM A
+    despite concurrent editing.** Blast radius if ARM A is retracted: **2
+    documents, 1 journal, ZERO tests** - *"the exposure is small because nothing
+    binds it, which is the problem rather than the comfort."*
+
+**CAMERON, and her headline is the largest practical finding of the round
+[REPORTED]:**
+  * **F1 THE AGGREGATOR, NOT THE SPHERE, IS WHERE THE EFFECT SIZE WAS.** On the
+    **identical published k=8 draws**: `theta.mean()` gives |d| = **1.0888**;
+    `theta.max()` over active rows gives **2.3275**, delta **+1.2394 [+0.7962,
+    +1.8565]**. **The incumbent is 46.8% of the best available**, and `max` beats
+    `mean_all` with a CI excluding zero in **all 6 cells**. Meanwhile the entire
+    K3 quarrel is **+0.0241 [+0.0161,+0.0323]** of `d`. **The round has been
+    arguing about a ~0.02 effect while a ~1.24 effect sat unmeasured on the same
+    tensors.** Cause: under `tril(-1)` rows `i <= c` cannot move, so `.mean()`
+    divides by 1024 a signal carried by ~503 rows, **with the dilution factor
+    itself random per draw.**
+  * **F3 `||tau||` BEATS THE STATISTIC THE ROUND IS BEING DECIDED ON, AT EVERY k,
+    FREE** - delta **+0.1932 / +0.2018 / +0.2026**, all CIs excluding zero,
+    replicating at seeds 7/7007. **It was computed on every draw of both arms and
+    never compared.** And unlike theta it is **a genuinely different object** -
+    it uses cross-row structure and is not a function of the per-row TVs.
+  * **`gamma_1` IS A TIE - AND THAT IS THE G-c KILL CONDITION SPEAKING.** CI spans
+    zero in **5 of 6 cells** and is **negative at k=32**. G-c: *"Kill: `gamma_r`
+    never separates from draw noise => rank-r consequence does not exist => X7
+    dies honestly."*
+  * **F5 theta is read through a cancellation TV does not have** - `dtheta/dBC =
+    -1/sin theta`, so the active-row mean is **2.43% wrong** in float32 vs
+    float64 against **0.000076%** for TV, and **53-58% of moved rows read exactly
+    0.0** through theta. **Honest limit, hers: this does NOT change the verdict** -
+    float64 moves `d` by <= 0.0005 anywhere. *"My own optimism that float64 would
+    rescue theta's K3 margin is refuted with numbers."*
+  * **F6 the `max` win is NOT a row-count artifact** - active-row-count `d` is
+    <= 0.2 in |d|, inconsistent in sign, and **adverse to the causal arm** in the
+    two cells where `max` wins biggest.
+  * **Who is worse off: nobody.** `tv_max` gains **+1.1702** against `th_max`'s
+    **+1.2394** - *"this is not a trick that props up the sphere. The only
+    casualty is the sentence 'the sphere earns itself'."*
+
+**FOREMAN'S F1/F3 ARE NOW CORROBORATED BY TWO INDEPENDENT FELLOWS.** The identity
+`theta = arcsin(sqrt(TV))` is measured by all three of us at three precisions, and
+the `theta_rows` docstring defect is measured by Cameron independently
+(`+0.0015340`, **46.2% of the published filler D_FR**).
+
+CHECKLIST: **K3's missing control BUILT AND RUN - theta LOSES at k=8 (CI excludes
+zero) and TIES at k=32/128 against `TV^p`.** All three fellows REPORTED, none yet
+past Wilson. **Two corrections to my own record, both from Chase.** `gamma_1`
+reads as **the G-c kill condition**.
+
 ### ROUND 5, ITERATION 10 - 2026-08-25 - INSPECTOR CLEAN. The equilibrium contradiction is REPAIRED BY MEASUREMENT. And FOREMAN LANDS THE BIGGEST FINDING OF THE ROUND.
 
 CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.

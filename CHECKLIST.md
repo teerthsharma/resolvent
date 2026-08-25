@@ -502,3 +502,32 @@ Replayed ARM A's own draw stream (published `D_FR causal` reproduced to 6 dp at 
 | **F5 K1's slope is contaminated** | **RED-bound, and LIVE.** **-0.3061** as computed / **-0.3323** live-only / **-0.3346** exact. Trip wire **-0.30**: 2% past becomes **11% past**. **FORWARDED TO WILSON** to verify at his geometry with CIs on both slopes. |
 | **F6 theta reads the float32 grid** | **RED-bound.** 83-88% of nonzero rows sit on **five values = `arccos(1-n*2^-24)`** to 1.12e-07. **80.6-85.5% of rows wrong by >100%** vs exact. `p50 = 0`; **top 1% carry 52.8/80.3/90.1%**. Cohen's d unmoved; **every per-row use of theta, including `gamma_1` and `Xi`, is affected.** |
 | his OPEN | `gamma_1` as reparametrisation (**not ruled out, not shown**); `\|\|tau\|\|` rank-2 (**instrument too blunt**); **"ship `TV^0.2`" is NOT supported** - 8 exponents searched on the draws that scored them, no CI, no multiplicity correction. |
+
+**K3 CONCAVITY CONTROL [RUN, r5 iter 11] - `scale/k3_concavity_control.py`, exit 0, FIT/SCORE split 50/50.**
+
+| item | status |
+|---|---|
+| Foreman's identity, re-measured here | **HOLDS.** `max\|theta - arcsin(sqrt(TV))\|` = **8.457e-04 / 9.779e-04 / 8.457e-04** over **20460 live rows** (float32); **20 dead rows** at exactly **1.570796**. **Three independent measurements agree** - mine 8.457e-04 (f32), Cameron 3.375e-10 (f64), Foreman 2.980e-07. |
+| theta vs **raw** TV | **theta WINS at every k, CI excludes zero** - **+0.0157 / +0.0282 / +0.0387**. |
+| theta vs **`TV^p`** (held-out) | **theta LOSES at k=8** (**-0.0643**, CI **[-0.0981,-0.0159]**, excludes zero) and **TIES at k=32 and k=128**. |
+| **K3 as written** | **NOT EVIDENCE FOR THE GEOMETRY.** It measures row-wise concavity, which a plain power of TV supplies with **no sphere, no Fisher-Rao, no Chentsov**. Pre-registered: **rewrite against this control or drop. Not softened.** |
+
+**CORRECTIONS TO MY OWN RECORD [r5 iter 11, both raised by Chase].**
+
+| item | was | is |
+|---|---|---|
+| the `D_FR` slope verdict | *"misses the -0.3 line by 0.006 ... **Untested, not failed**"* | **The CI is [-0.4314, -0.1860] and K1's bar is >= -0.1, so the ENTIRE CI FAILS THE BAR** - the miss is **0.2061**, and it fails by **0.0860 even at the favourable end**. Against the **-0.3** line the CI **straddles**, so that clause is **unresolved with the point estimate inside the kill region**. **"Untested, not failed" was too generous, and it was my sentence.** |
+| *"controls 15 -> 17"* | stated as a property of the Inspector | **A property of `iteration % 3`** (`inspector.py:311`): the M2-slope branch carries 3 controls, the M5 branch 1. **Rotation, not drift.** |
+
+**FELLOW TIER [REPORTED r5 iter 11 - one rung of four; NOT verdicts].**
+
+| fellow | headline |
+|---|---|
+| **Chase F2** | **K2's 10x is the pivot selector reading its own score back.** `select_pivots` ranks by `key.norm(dim=-1)`, a pure function of the token itself. Filler from ranks k+1..2k - still outside P - collapses **9.39 DISJOINT to 1.10 OVERLAP**; two fillers separate from **each other at 8.52**. **ARM B's B1 ("shadow mass instead of salience") may be the SAME criterion** - `xi` comes from `theta`, `theta` is a monotone read of the salience score. |
+| **Chase F3/F4** | **A struck constant (`-1.389`, `0.9938`) is still PINNED by `tests/chase/test_hub_package_hardening.py:496-499`** - two shipped tests make opposite demands, and the Inspector cannot see it. **Every shipped `COSTS` number lost its provenance**: `1.44x`/`1.0334`/`0.379x`/`3,319,296` appear **0 times** in `DONE.md`, **2/7/2/4** times in the round-1 archive. |
+| **Chase F5** | **The Inspector's clean bill covers 107 of 1278 tests - 8.4%.** Two files probed inside the blind spot yielded **8 live failures**. |
+| **Chase F6** | **His K3 attack FAILED.** Paired bootstrap excludes zero at every k. **12/12 published ARM A fields reproduce at delta exactly `+0.000e+00` - G2 holds.** Retraction blast radius: **2 documents, 1 journal, ZERO tests.** |
+| **Cameron F1** | **THE AGGREGATOR WAS THE EFFECT.** `theta.max()` \|d\|=**2.3275** vs `theta.mean()` **1.0888** on the identical published draws - delta **+1.2394 [+0.7962,+1.8565]**, winning in **6/6 cells**. **The incumbent is 46.8% of the best available**, while the whole K3 quarrel is **+0.0241**. `.mean()` divides by 1024 a signal carried by ~503 rows. |
+| **Cameron F3** | **`\|\|tau\|\|` beats theta at every k, free** (**+0.1932/+0.2018/+0.2026**, CIs exclude zero) - already computed on every draw and never compared. Unlike theta it is **not a function of the per-row TVs**. |
+| **Cameron / G-c** | **`gamma_1` is a TIE** - CI spans zero in **5 of 6 cells**, negative at k=32. **This is the G-c kill condition: `gamma_r` does not separate from draw noise.** |
+| **Cameron F5** | theta's float32 active-row mean is **2.43% wrong** vs float64 against TV's **0.000076%**; 53-58% of moved rows read **exactly 0.0**. **Her own limit: does NOT change the verdict** - float64 moves `d` by <= 0.0005. |
