@@ -1,3 +1,71 @@
+### ROUND 5, ITERATION 5 - 2026-08-25 - INSPECTOR PASS. The check that verified `math.log10` is repaired, and the repair immediately saw something the old one could not.
+
+CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.
+[RUN] `python inspector.py` -> **exit 0, CLEAN, 10 checks, 17 controls all fired**
+(was 15 controls; one vacuous control out, three real ones in).
+
+ACTION (one): repaired `inspector.py`'s *"published: M2 two-point slope"* check,
+which Foreman found last round.
+
+**WHAT WAS WRONG.** The check read
+
+    got = math.log10(0.02732 / 0.16511) / math.log10(4)
+    ok  = abs(got - (-1.2977)) < 5e-4
+
+**Two constants it held itself, divided, compared to a third constant it also
+held.** It verified `math.log10`. **No edit to any shipped file could make it
+fail**, and it passed at every Inspector pass of every round. Its control was
+the same shape - *"rejects the struck -1.826"* - which is also true of a literal.
+**This is instrument #15 again: a control that cannot be nonzero is not a
+control**, and it was sitting inside the instrument that exists to catch exactly
+that.
+
+**WHAT IT DOES NOW.** It parses the counts out of the shipped document
+`M2_TRAINED_PREREGISTERED_READING.md` and re-derives everything:
+
+  1. **the document's own rate column must equal `k/n`** - catches a rate edited
+     without its counts;
+  2. **the slope is recomputed from the parsed counts**, not from constants;
+  3. **README.md and MODEL_CARD.md must carry the rate string those counts
+     produce** - three files must agree or the check fires;
+  4. the parser **requires the first four rows to be `s = 8, 32, 128, 512` in
+     order** and raises otherwise, so a later table of the same shape cannot
+     silently substitute itself.
+
+Three new must-fire controls, each perturbing **a different input the check
+actually reads**: a perturbed count moves the slope; a doc rate that is not `k/n`
+is caught; a headline that disagrees with the table is caught. **All three
+FIRED.**
+
+**AND THE REPAIR IMMEDIATELY FOUND SOMETHING, which is the whole argument for
+making a check read an artifact.** [RUN]
+
+    from the ROUNDED rates 0.02732 / 0.16511   ->  -1.2976990559839476
+    from the RAW counts    15/549 / 124/751    ->  -1.2976494781346420
+    delta                                          4.957784930570419e-05
+
+**The published -1.2977 was computed from the 5-decimal rounded rates, not from
+the counts.** The re-derivation reads **-1.2976**. The delta is **5e-05** against
+a bar of **-0.3**, so **no verdict moves and this is not a G2 event** - no
+`bench.py` number changed, the Inspector simply read the same published quantity
+more precisely than the document did. **Recorded because a discrepancy you can
+see is worth more than one you cannot**, and the old check was structurally
+incapable of seeing it.
+
+**WHAT THE REPAIR STILL CANNOT DO, and it says so in its own output string.**
+`results/` contains **no journalled unit with n=751 or n=549**. The counts
+`124/751` and `15/549` are **sgate** numbers and `m2_units.CELLS` holds no sgate
+cell. So this is a **consistency check across three documents, not a replay of a
+measurement.** The check now prints `counts 124/751,15/549 NOT journalled` on
+every pass. **That gap is the finding, not a caveat** - the number the entire M2
+kill rests on has never been re-derivable from a journal, and now the instrument
+admits it out loud instead of manufacturing a PASS from arithmetic.
+
+CHECKLIST: Inspector **CLEAN, exit 0**. Vacuous check **REPAIRED**. Controls
+15 -> 17. Published slope **-1.2977 -> -1.2976** on re-derivation, delta 5e-05,
+**no verdict moves**. The M2 counts remain **UNJOURNALLED** and are now labelled
+as such on every run.
+
 ### ROUND 5, ITERATION 4 - 2026-08-25 - ARM A RAN. K2 PASSES. K3 passes THIN. K1 IS NOT EVALUABLE, and that is my probe's fault.
 
 CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.

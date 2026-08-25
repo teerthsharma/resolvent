@@ -417,3 +417,12 @@ is left, and **a not-found cell is permission to test, not a result.**
 | K1 dual slope | **NOT EVALUABLE.** `flip` = 0.00000 at every k **by F1** - `pivot_unsigned`'s Jacobian `I+A+hop2` has **no negative entry, min exactly 0.000000e+00** - so the flip half was never alive on an unsigned arm. `D_FR` slope **-0.3061** misses the -0.3 line by **0.006** on a 3-point fit. **Untested, not failed.** |
 | K2 filler twin | **GREEN** - causal vs filler CIs **DISJOINT at every k**, ~**10x** separation (0.030850 vs 0.003317 at k=8). The statistic can lose to a filler. |
 | K3 geometry earns itself | **GREEN, THIN** - theta beats TV at every k but by **2.3% / 2.1% / 4.7%**. Passes the stated criterion; a 2% edge is not "clearly", and the contract's point was that TV ships otherwise. |
+
+**INSPECTOR PASS [RUN, r5 iter 5] - exit 0, CLEAN, 10 checks / 17 controls.**
+
+| item | status |
+|---|---|
+| `inspector.py` *"published: M2 two-point slope"* | **REPAIRED.** Was `log10(0.02732/0.16511)/log10(4)` compared to `-1.2977` - **three constants the file held itself**, verifying `math.log10`, unfailable by any edit to any shipped file. Now parses `M2_TRAINED_PREREGISTERED_READING.md`, re-derives the slope from the counts, checks the doc's rate column equals `k/n`, and requires README + MODEL_CARD to carry the rate string those counts produce. |
+| its controls | **15 -> 17.** One vacuous control removed (*"rejects the struck -1.826"*, also true of a literal); three added, each perturbing a different input the check reads. **All fired.** |
+| what the repair found | Published **-1.2977** came from the **rounded** rates; from the raw counts it is **-1.2976**. Delta **4.96e-05** against a **-0.3** bar - **no verdict moves, not a G2 event.** The old check could not have seen it. |
+| the M2 counts themselves | **STILL UNJOURNALLED.** `results/` holds no unit with n=751 or n=549. The check now prints `NOT journalled` every run rather than passing silently. |

@@ -5,32 +5,41 @@
 | field | value |
 |---|---|
 | round | **5** - CEQ v7, promise `TWOSPHERES`, **30 iterations** |
-| iteration | **4 complete, 5 next** |
+| iteration | **5 complete, 6 next** |
 | phase | **G1 fetches, then ARM A (the torque probe)** |
 | goal | **match or SUPERSEDE self-attention**; next-equilibrium predictor |
 | calibration | GREEN [RUN] `run_calib.py --self-test` exit 0, 4/4 bit-identical |
 | inspector | tri-state; INDETERMINATE exits nonzero |
 | repo | https://github.com/teerthsharma/resolvent (private) |
 
-## THE ONE NEXT ACTION (round 5, iteration 5)
+## THE ONE NEXT ACTION (round 5, iteration 6)
 
-**Iteration 5 is an Inspector pass (every 5th) - and it has a repair to make
-that Foreman found.**
+**Read Wilson's K1-on-a-signed-arm report and act on TASK 4 FIRST.**
 
-`inspector.py:299`'s *"published: M2 two-point slope"* check computes
-`log10(0.02732/0.16511)/log10(4)` **from two constants it holds itself** and
-compares to a third constant. **It re-verifies `math.log10`. It has never checked
-a measurement**, and it has passed at every pass this round. Those two numbers
-are **sgate** values that appear in **no journalled unit** - grep returns zero
-hits, and no unit carries n=751 or n=549.
+Wilson is running `scale/arm_a_k1.py`. **The order of reading is fixed by the
+contract and by this project's own history: if his planted-sign-change control
+did not read nonzero, the flip instrument is broken and every other number in
+his report is void.** That is read before the slopes, not after.
 
-**Then re-run K1 on a SIGNED arm.** The flip half is vacuous on `pivot_unsigned`
-by F1 - Jacobian min entry exactly 0.000000e+00 - so K1 needs `pivot_signed` at
-`lam=1.00`, the regime where the operator is genuinely signed (bulk negative
-fraction 0.500564). And more draws and more k points: **-0.3061 against a -0.3
-line on a 3-point fit is noise, in either direction.**
+If the control fired, then K1 has a real reading for the first time:
 
-**Do not read a verdict out of that margin while it stands.** K1 is UNTESTED.
+  * **the flip half** measured on `_causal_sgate_operator` at whichever `lam`
+    is genuinely signed at this geometry - **F16 says `lam=0.10` has min entry
+    exactly 0.000e+00 at harness scale, so `lam` is a threshold at 1.0, not a
+    dial**, and Wilson is verifying or refuting that first;
+  * **the D_FR half** on 6 k points and >=400 draws, **with a bootstrap CI on
+    the slope itself**. The only reason K1 was voided is that **-0.3061 against
+    a -0.3 line had no error bar.** Read whether the CI **excludes**, **includes**
+    or **straddles** -0.3, and do not round toward a verdict in either direction.
+
+**Do not declare the pre-registered "no leap" branch on a point estimate.** The
+unfavourable reading taken from noise is worth exactly as little as the
+favourable one, and this project has already spent two rounds learning that.
+
+**Cameron's arm_a_rebuild landed and its gate 3 FAILED** - on-schedule X4
+0.044271 [0.027821, 0.069748] vs off-schedule 0.000000 [0, 0.009905], CIs
+disjoint. That is the test that killed the dilation arm firing again, and it
+needs its own iteration; it does not get folded into K1's.
 
 ## Open REDs
 

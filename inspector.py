@@ -47,6 +47,7 @@ from __future__ import annotations
 import hashlib
 import json
 import pathlib
+import math
 import re
 import subprocess
 import sys
@@ -267,6 +268,43 @@ def check_replay(iteration: int) -> None:
 
 # -------------------------------------------------------- 4 published rotation
 
+M2_DOC = "M2_TRAINED_PREREGISTERED_READING.md"
+#: `| 8 | 124/751 | 0.16511 | [0.13925, 0.19364] |` -- s, k, n, and the rate the
+#: document STATES, kept separate from k/n so the two can be compared.
+M2_ROW = re.compile(r"^\|\s*(\d+)\s*\|\s*(\d+)/(\d+)\s*\|\s*([0-9.]+)\s*\|",
+                    re.M)
+M2_S = (8, 32, 128, 512)
+
+
+def _m2_table(text: str) -> dict:
+    """{s: (k, n, stated_rate)} parsed out of the SHIPPED document.
+
+    Takes the FIRST four rows and requires their `s` column to be exactly
+    M2_S in order. A later table of the same shape therefore cannot silently
+    substitute itself, and a reordered or truncated table raises rather than
+    reading as a pass.
+    """
+    rows = M2_ROW.findall(text)[:4]
+    got = tuple(int(r[0]) for r in rows)
+    if got != M2_S:
+        raise ValueError(f"{M2_DOC}: expected s={M2_S}, parsed {got}")
+    return {int(s): (int(k), int(n), float(r)) for s, k, n, r in rows}
+
+
+def _m2_slope(tab: dict) -> float:
+    """Two-point slope RECOMPUTED from the parsed counts. s=8 and s=32 are the
+    only well-measured points; the tail zeros rest on 213 and 60 draws and move
+    the slope by 0.0003, which the document states itself."""
+    r0 = tab[8][0] / tab[8][1]
+    r1 = tab[32][0] / tab[32][1]
+    return math.log10(r1 / r0) / math.log10(32 / 8)
+
+
+def _m2_headline(tab: dict) -> str:
+    """The rate string README and MODEL_CARD must carry, built from the counts."""
+    return " / ".join(f"{tab[s][0] / tab[s][1]:.5f}" for s in M2_S)
+
+
 def check_published(iteration: int) -> None:
     import torch
     from ceq import bench
@@ -295,12 +333,42 @@ def check_published(iteration: int) -> None:
         control("tail-norm check rejects the struck 1.471448",
                 not abs(got[(128, 2)] - 1.471448) < 5e-7)
     else:                                           # M2's two-point derivation
-        import math
-        got = math.log10(0.02732 / 0.16511) / math.log10(4)
-        ok = abs(got - (-1.2977)) < 5e-4
-        check("published: M2 two-point slope", ok, f"{got:.4f} vs -1.2977")
-        control("slope check rejects the struck -1.826",
-                not abs(got - (-1.826)) < 5e-4)
+        # REPAIRED. The previous form computed log10(0.02732/0.16511)/log10(4)
+        # from two constants it held ITSELF and compared the answer to a third
+        # constant it also held. It verified `math.log10`. It could not fail for
+        # any edit to any shipped file, and it passed at every pass of every
+        # round -- the same shape as instrument #15, a control that cannot be
+        # nonzero.
+        #
+        # It now RE-DERIVES the slope from the counts parsed out of the shipped
+        # document, and requires README and MODEL_CARD to carry the rates that
+        # those same counts produce. Edit any of the three and this fires.
+        #
+        # WHAT IT STILL CANNOT DO, stated rather than hidden: the underlying
+        # draws are NOT journalled -- `results/` holds no unit with n=751 or
+        # n=549 -- so this is a consistency check across three documents, not a
+        # replay of a measurement. That gap is the finding, not a caveat.
+        tab = _m2_table((ROOT / M2_DOC).read_text(encoding="utf-8"))
+        cols = all(abs(k / n - r) < 5e-6 for k, n, r in tab.values())
+        got = _m2_slope(tab)
+        head = _m2_headline(tab)
+        agree = {f: head in (ROOT / f).read_text(encoding="utf-8")
+                 for f in ("README.md", "MODEL_CARD.md")}
+        ok = cols and all(agree.values()) and abs(got - (-1.2977)) < 5e-4
+        check("published: M2 slope RE-DERIVED from the shipped table", ok,
+              f"{got:.4f} vs -1.2977 | rate col={cols} | "
+              + " ".join(f"{f.split('.')[0]}={v}" for f, v in agree.items())
+              + f" | counts {tab[8][0]}/{tab[8][1]},{tab[32][0]}/{tab[32][1]}"
+                " NOT journalled")
+        # Three controls, each perturbing a DIFFERENT input the check reads.
+        bad = dict(tab); bad[32] = (16, 549, 16 / 549)
+        control("slope check moves when a parsed COUNT is perturbed",
+                abs(_m2_slope(bad) - got) > 5e-4)
+        control("rate-column check catches a doc rate that is not k/n",
+                not all(abs(k / n - r) < 5e-6
+                        for k, n, r in {**tab, 8: (124, 751, 0.16611)}.values()))
+        control("headline check catches a README that disagrees with the table",
+                _m2_headline({**tab, 8: (125, 751, 125 / 751)}) != head)
 
 
 # ------------------------------------------------------------------- 5/6/7 sub
