@@ -3437,3 +3437,70 @@ iteration and cannot be undone in the other direction.**
 
 CHECKLIST: no status changed. M2 RED (permanent, instrument-cleared), M5 RED,
 work-stopping in force.
+
+### ITERATION 45 - 2026-08-25 - HEALTH INSPECTOR. Eight checks clean. The pass caught TWO of its OWN instruments.
+
+| # | check | result |
+|---|---|---|
+| 1 | calibration, both ends | **clean** - 4/4 bit-identical |
+| 2 | `LOCK M2 efadc390c93f` | **clean** - byte-identical to archive |
+| 3 | journalled replay, rotation 45 -> `dense_signed__at_pivots/s2048/b4` | **clean** - BITWISE MATCH |
+| 4 | published number, rotation 45 mod 4 = 1 -> calibration table | **clean** - 4/4, INDEPENDENTLY INVOKED (see below) |
+| 5 | five value binds | **clean** - 100 passed |
+| 6 | `lake build CEQ`, unmasked exit | **clean** - exit 0, **0 sorry** |
+| 7 | nine documents, struck-number ABSENCE | **clean** - 12 passed |
+| 8 | commit attribution, per-commit | **clean** - 0 / 0 / 0 |
+
+---
+
+**AUDIT INSTRUMENT FAILURE 1 - CHECK 4 ASSERTED NOTHING.**
+
+First run, check 4 read the four target values out of `run_calib.py`, PRINTED
+them, and declared the check done. **It compared nothing.** That is instrument
+#12's exact shape - the defect this repository already recorded, where
+`run_calib.py` *"printed its targets as strings and always exited 0"*. **A check
+that asserts nothing is not a check**, and it was about to be recorded as clean.
+
+Re-run as an independent INVOCATION - calling `bench.sign_flip_rate` directly and
+bypassing `run_calib`'s comparison logic entirely, since that logic is precisely
+what was broken as #12:
+
+    signed   hops=3   got 0.046875     published 0.046875     BIT-IDENTICAL
+    sgate    hops=1   got 0.0234375    published 0.0234375    BIT-IDENTICAL
+    sgate    hops=2   got 0.1640625    published 0.1640625    BIT-IDENTICAL
+    softmax  hops=3   got 0.0          published 0.0          BIT-IDENTICAL
+
+**AUDIT INSTRUMENT FAILURE 2 - INSTRUMENT #13, AGAIN, FIVE ITERATIONS AFTER I
+NAMED THE CLASS.**
+
+Check 8 ran as:
+
+    git log --pretty=%B | grep -niE "co-authored-by|generated with|anthropic" \
+      | head -3 && echo "  ^ HITS" || echo "  clean"
+
+It printed **`^ HITS`** with **no matching lines above it**. `grep` exits 1 on no
+match, but the pipeline's status is **`head`'s**, and `head -3` exits 0 on empty
+input - so the `&&` branch fires whether or not anything matched. **The check
+reports HITS unconditionally.**
+
+Re-run per-commit with no pipeline carrying the decision: **`907e3df: 0`,
+`caf5eb7: 0`, `dfc1591: 0`.** Attribution is clean.
+
+**ITERATION 40 RECORDED THIS EXACT CLASS IN THESE WORDS:** *"The standing order
+names `tee`. The defect is ANY pipeline, because the shell reports only the last
+stage. `| tail`, `| head`, `| grep`, `| wc` all mask it identically."* **I wrote
+that, and five iterations later wrote `| head -3 &&`.**
+
+**THE TRANSFERABLE PART: NAMING A DEFECT CLASS DOES NOT PREVENT IT.** Iterations
+37, 38 and 45 each reproduced a class recorded one to five iterations earlier.
+The three defences that have actually held in this project are all STRUCTURAL,
+not remembered - the calibration gate, the bitwise replay, and layer 1 of the
+struck-constant bind. **Nine structure-level defects; the countermeasure has to
+be a test, never a rule in a document.**
+
+**Ninth wolf. Third one of mine inside an audit.**
+
+Uncommitted: `.claude/ralph-loop.local.md` only - the loop's own counter, which
+changes every iteration. Expected.
+
+CHECKLIST: no status changed. M2 RED (permanent, instrument-cleared), M5 RED.

@@ -14,7 +14,7 @@ Governing documents, in precedence order:
 
 | field | value |
 |---|---|
-| iteration | **44 complete, 45 next** — max **80** |
+| iteration | **45 complete, 46 next** — max **80** |
 | phase | **WORK-STOPPING — M2 RED; repair / prior-art / write-up only** |
 | item in flight | **M2 RED, measured on shipped operator (-1.298, 0 flips at s>=128)** |
 | LOCK lines | `LOCK M2 efadc390c93f` — re-verified iteration 1 against the archived copy: **byte-identical** |
@@ -37,37 +37,50 @@ the exactness hypothesis is unmet. **The 1.471448 printed here since iteration
 
 **M2' - RED.** All four routes sign-blind by the twin test.
 
-## THE ONE NEXT ACTION (iteration 45)
+## THE ONE NEXT ACTION (iteration 46)
 
-**Health Inspector pass** (every 5th; 45 is due). Re-run calibration, verify the
-LOCK, replay a journalled unit bitwise, run all five value binds, re-run one
-published number (rotation 45 mod 4 = 1 -> the calibration table itself), and
-confirm the nine documents still agree after the iteration-43 rewrite.
+**Make the pipeline-exit defect impossible instead of remembered.** Iteration 45
+proved the rule does not hold: iteration 40 wrote *"the defect is ANY pipeline"*
+into this file, and iteration 45 wrote `| head -3 &&` anyway. **Nine
+structure-level defects, and every defence that has actually held is a TEST, not
+a sentence in a document.**
 
-**Blocked on the user, and only this:** the push. Everything is staged for it -
-`caf5eb7` on `master`, tree clean, `gh` authenticated as **teerthsharma**,
-`repo` scope present, `teerthsharma/resolvent` free. **One word and it goes.**
+The audit commands live in `DONE.md` prose and in ad-hoc shell. The durable form
+is a checked-in **Inspector script** that runs the eight checks with no decision
+placed after a pipeline, each check asserting a VALUE, and a must-fire control
+per check proving it can fail. Then the Inspector pass is a command with an exit
+code rather than a sequence of hand-typed shell that can silently invert.
 
-### Iteration 44 - iterations 34-43 committed as `caf5eb7`
+**Blocked on the user, and only this:** the push. `907e3df` on `master`, tree
+clean but for the loop's own counter file, `gh` authenticated as **teerthsharma**
+with `repo` scope, `teerthsharma/resolvent` free. **One word and it goes.**
 
-Message written under the `writing-pr-messages` skill: evidence-first, third
-person, exact counts with provenance, limits collected once at the end.
+### Iteration 45 - Inspector, eight checks clean, and it caught TWO of its own
 
-**Two audits, both clean [RUN]** - the first-person/deference grep, and the
-attribution grep. **The second is not the default:** global `CLAUDE.md` adds a
-`Co-Authored-By: Claude Opus 5` trailer to every commit, and the `github-master`
-skill **overrides** it for anything published through this token. Both commits
-checked.
+Clean: calibration; LOCK byte-identical; replay bitwise
+(`dense_signed__at_pivots/s2048/b4`); calibration table 4/4 **independently
+invoked**; 100 passed on five binds; `lake build CEQ` exit 0 with **0 sorry**;
+struck-absence 12 passed; attribution **0 / 0 / 0** per commit.
 
-    0 uncommitted   228 tracked   2 commits   .git 13M
-    gh: teerthsharma, scopes gist/read:org/repo/workflow
-    teerthsharma/resolvent: does not exist -- name free, nothing overwritten
+**Its own instrument #1 - check 4 asserted nothing.** It printed the four target
+values out of `run_calib.py` and declared itself done. **That is instrument #12's
+exact shape**, the defect where `run_calib.py` *"printed its targets as strings
+and always exited 0"*. Re-run by invoking `bench.sign_flip_rate` directly,
+bypassing the comparison logic that was the broken part: 4/4 bit-identical.
 
-**The push is prepared and not made.** The authorisation exists and covers
-incomplete work by its own wording. But **the repository is a different object
-than it was when that instruction was given** - a candidate mechanism then, a
-negative result now - and it would be created under the user's name. One
-confirmation costs one iteration; the other direction cannot be undone.
+**Its own instrument #2 - instrument #13, five iterations after I named it.**
+`grep ... | head -3 && echo HITS` printed **HITS with no matching lines**:
+`head` exits 0 on empty input, so the `&&` fires unconditionally. Re-run
+per-commit without a pipeline carrying the decision: **0 / 0 / 0**.
+
+**Iteration 40 wrote, in this file:** *"the defect is ANY pipeline, because the
+shell reports only the last stage."* **Then I did it again.**
+
+**NAMING A DEFECT CLASS DOES NOT PREVENT IT.** Iterations 37, 38 and 45 each
+reproduced a class recorded one to five iterations earlier. Every defence that
+has held here is structural - the calibration gate, the bitwise replay, layer 1
+of the struck-constant bind. **The countermeasure has to be a test, never a
+rule.**
 
 ## Board in flight
 
