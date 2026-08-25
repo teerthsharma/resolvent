@@ -5,33 +5,29 @@
 | field | value |
 |---|---|
 | round | **3** - CEQ v5, 30 iterations, promise `SCALEFREE` |
-| iteration | **13 complete, 14 next** |
+| iteration | **14 complete, 15 next** |
 | phase | **Phase 0 - M3 on the windowed arm. Capability before statistics.** |
 | calibration | GREEN [RUN] `run_calib.py --self-test` exit 0, 4/4 bit-identical |
 | inspector | `python inspector.py` - 8 checks, 8 must-fire controls, exits nonzero if any control stays SILENT |
 | repo | https://github.com/teerthsharma/resolvent (private) |
 
-## THE ONE NEXT ACTION (iteration 14)
+## THE ONE NEXT ACTION (iteration 15)
 
-**Test the repair Cameron named and never tried: co-prime / randomised dilations
-against the severed fraction.**
+**Iteration 15 is an Inspector pass (every 5th) - `python inspector.py`.**
 
-Severance is a property of the **rigid power-of-two lattice**, not of bounded row
-width - so the reach result (support exactly `s`, row width exactly 8) may
-survive a schedule that is not a geometric series. The probe already exists
-(`tests/cameron/severed_fraction.py`, exhaustive over every legal `c`), and
-`log_schedule` is the one function to change.
+Then, immediately after: **the flip rate under the co-prime schedule.** Severance
+falling from 0.5745 to 0.1277 at unchanged support is NECESSARY for the route,
+not SUFFICIENT. What decides it is whether the sign-flip rate stays flat in `s`
+when the positions can actually move it.
 
-**PRE-REGISTERED, fixed before running:**
-  * co-prime dilations **lower the severed fraction WITHOUT lowering gradient
-    support** -> the repair is real, and the composition route is alive again;
-  * they lower severance **and** support -> **not a repair, a different arm** -
-    reach was traded away, which is the tradeoff the round already refused;
-  * severance is unchanged -> it is not the lattice, it is bounded row width
-    itself, and the whole composition family closes.
+Pre-register before running, and note the floor: **Cameron measured that at depth
+the `1e-6` floor discards 100% of a composed arm's flips** (0.386719 at floor=0
+against 0.000000 floored, median |grad| 2.8e-32 at depth 4). **The co-prime flip
+rate must be read at `floor=0`**, with the floored number reported beside it as
+the artifact it is.
 
-Baselines in the same table: `[1,2,4,8]` (measured: 0.4130 at s=64, 0.5745 at
-s=128) and a contiguous `[1,1,1,1]` control.
+Baselines in the same table, same draws: pow2, contiguous, and dense depth-1
+(which reproduces the published M2 kill and is the must-fire control).
 
 ## Open REDs
 

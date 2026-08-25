@@ -2,6 +2,69 @@
 
 Round 2 archived below its own header; round-1 archive at `DONE_ARCHIVE_ROUND1.md`.
 
+### ROUND 3, ITERATION 14 - 2026-08-25 - CO-PRIME DILATIONS REPAIR THE SEVERANCE. 0.5745 -> 0.1277 at unchanged support.
+
+CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.
+Probe: `tests/cameron/schedule_sweep.py`, exhaustive over every legal `c`.
+
+ACTION (one): tested the repair Cameron named and never ran - severance is a
+property of the RIGID power-of-two lattice, not of bounded row width, so a
+non-geometric schedule may keep the reach and lose the severance.
+
+**MATCHED DEPTH ENFORCED.** Comparing `[1,2,4,8]` against `[1,3,5,7]` at
+different depths would confound schedule with depth, and **this project has
+already published one number that confounded an operator with its parameter
+point** (the COGS run). Every schedule at a given `s` has the same length.
+
+**[RUN] s=128, depth 4, window 8:**
+
+    schedule            unreach   inert   live   severed   support
+    pow2      [1,2,4,8]       0      54     40    0.5745    1.0000
+    coprime   [1,3,5,7]       0      12     82    **0.1277**  1.0000
+    coprime-b [1,2,3,5]       0      16     78    0.1702    1.0000
+    contiguous[1,1,1,1]      94       0      0    1.0000    **0.0000**
+
+**s=64, depth 3:** pow2 **0.4130** -> coprime **0.0870**, support **1.0000**
+throughout.
+
+**THE PRE-REGISTERED FAVOURABLE BRANCH FIRES.** *"severance falls AND support
+holds -> the lattice was the defect, route lives."* Severance falls **4.5x** and
+support is **unchanged at exactly 1.0000**. Cameron predicted the mechanism and
+did not test it; it holds.
+
+**THE CONTIGUOUS CONTROL PROVES THE PROBE DISCRIMINATES** - support **0.0000** at
+s=128, independently reproducing Cameron's contiguous collapse. Without it, a
+low severance number could have meant a blind probe.
+
+**AND THE DECOMPOSITION CORRECTS MY OWN ITERATION-12 DIAGNOSIS.** That probe
+reported "severed" as a single number, conflating two states. Split properly:
+
+    UNREACHED   lo == hi == 0.0     edge absent from the graph
+    INERT       lo == hi != 0.0     reached, but perturbing c moves nothing
+    LIVE        lo != hi            c can actually move the sign
+
+**`UNREACHED` is 0 for every dilated schedule.** All of that 0.5745 was
+**INERT**. The NUMBER was right; the DIAGNOSIS it invited was wrong. It was never
+a reach problem - purely an influence problem - **which is exactly why a schedule
+change repairs it without touching support**, and iteration 12 could not have
+known that from one conflated figure.
+
+**WHAT THIS IS NOT, stated because it is the first positive structural result in
+three rounds and will be over-read otherwise:**
+  * a **capability**. It is a geometric property of the operator at random
+    initialization. Nothing has been trained, and F7 stands.
+  * **novel**. **G1 HAS NOT BEEN RUN.** Dilated/strided attention is heavily
+    occupied - LongNet, Sparse Transformer, BigBird - and co-prime dilation
+    schedules specifically must be fetched before any name is written. *"Absence
+    = not found, never unoccupied."* **Six novelty claims have already died
+    here.**
+  * **sufficient**. Severance is 0.1277, not 0, and reducing severance is
+    NECESSARY but not sufficient for a flip rate that survives context. The flip
+    rate under a co-prime schedule is the next measurement and it is unmeasured.
+
+CHECKLIST: composition route ALIVE - the lattice was the defect, the repair is a
+schedule change, support unchanged. G1 owed before any name.
+
 ### ROUND 3, ITERATION 13 - 2026-08-25 - Wilson's Job 1 VERIFIED BY ME: bitwise identical, 4-9x faster.
 
 CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.
