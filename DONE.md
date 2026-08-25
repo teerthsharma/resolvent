@@ -1,3 +1,158 @@
+### ROUND 5, ITERATION 3 - 2026-08-25 - Torque probe built. And Wilson corrects my premise about the thread pin.
+
+CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.
+
+ACTION (one): built `scale/torque_probe.py` - ARM A's measurement module. Not yet
+run. It states in its own docstring that **the geometry is textbook** (square-root
+map, Cencov uniqueness) and that **K3 is decisive because the TV ablation probe is
+occupied**: if theta cannot beat raw TV on identical draws, this round is
+classical geometry pointed at an existing probe.
+
+Carpet discipline is enforced in the code, not the comments: `c` and `j` are drawn
+**uniformly at random**, which is what two rounds broke.
+
+---
+
+**WILSON REPORTED FOUR JOBS. ONE CORRECTS MY PREMISE, AND THE CORRECTION IS THE
+IMPORTANT PART.**
+
+**W-J2. I SAID `m3_capability.py` NEVER PINNED THREADS AND THAT ITS PUBLISHED
+NUMBERS WERE THEREFORE UNPINNED. HALF WRONG.** The file pinned nothing - true -
+**but the published run already ran at 2 threads**: [READ]
+`results/m3_capability.txt:930` prints `torch.get_num_threads()=2`. **The thread
+count came from the LAUNCHER'S ENVIRONMENT, not the file.**
+
+**And the log mixes at least three values of it.** The same command appears at
+**20 threads at 14 places** (lines 3, 39, 75, ... 741) and at **3 threads** (lines
+681, 777). **One file, one command, three thread counts, and nothing in the file
+said which one a number was taken at.**
+
+**[RUN] PINNED RE-RUN REPRODUCES EVERY PUBLISHED DIGIT:**
+
+    published (19:40:16)   train 0.732424  eval 0.747528  CI [0.696849, 0.797716]
+    pinned    (22:22:49)   train 0.732424  eval 0.747528  CI [0.696849, 0.797716]
+    20-thread (22:27:55)   train 0.731080  eval 0.747062  CI [0.696544, 0.797743]
+
+**The headline survives, and it was reproducible only by accident of how the
+shell happened to be set.** Delta at 20 threads is **-4.66e-04** against a CI
+half-width of ~0.050, so **it moves no verdict** - unsigned's upper 0.797716
+against softmax's lower 0.830455 stays disjoint by **0.0327** either way.
+**Reported as a reproducibility fact, not a result change**, which is the correct
+class.
+
+**W-J1. MASK CACHE APPLIED AND BITWISE.** 24 operator cells (4 operators x
+window in {0,8} x n in {1,64,2048}) and 24 arm cells (4 arms x n in
+{1,8,64,512,2048,8192}), **forward AND gradient, maxdiff 0.000000e+00
+everywhere**. Calibration still 4/4 exact, so **G2 does not fire**.
+
+**But the 1.019x did NOT reproduce** - observed **0.924x to 1.061x**, +-7% on a
+claimed 2% effect, with 8-10 competing python jobs on the box. He calls it **a
+measurement failure, not evidence against the optimisation**, and that is the
+right call: correctness is bitwise-certain, the speed claim is **unresolved**.
+
+**W-J3. THE MASKING COSTS MORE THAN THE SOFTMAXES.** Measured share of operator
+build: **two softmaxes 21.9%-26.2%**, **four `masked_fill`s 30.6%-33.1%** - and
+the backward half of the masking alone is **20.8%**. The obvious target was the
+wrong one.
+
+**No bitwise derivation of the second softmax from the first**: the reciprocal
+route reads maxdiff **8.94e-08**, and he reports that rather than proposing it
+anyway. **Two other routes ARE bitwise** - feeding the second softmax the
+already-masked `w`, and dropping the post-softmax `masked_fill` plus zeroing the
+single fully-masked row. Neither applied; both measured for equality only, with
+no timed A/B.
+
+**W-J4. ADDITIVE BASES: NOT FOUND, with HARD ZEROS.** arXiv API
+`all:"additive basis" AND all:"attention"` -> **totalResults 0**;
+`all:"Sidon set" AND all:"attention"` -> **0**. Full-text sweeps for "additive
+basis", "Sidon", "difference set", "number theor" came back **absent** in
+LongNet, Sparse Transformer, Big Bird, 2606.02680 and 2606.28560.
+
+**Nearest occupied cells, all non-number-theoretic:** 2006.04862 *"every token
+can attend to all the other tokens, either directly or indirectly"* -
+graph/path-theoretic; Big Bird via expanders; 2606.09951 *Hasse Diagrams for
+Attention* - mask design as a partial-order supergraph problem.
+
+**And perfect difference sets ARE applied - to a DIFFERENT FIELD.** Parhami &
+Rakov, *Perfect Difference Networks*, IEEE TPDS 16(8):714-724, 2005 -
+interconnection network topology, no attention connection in any of them. He
+labels the body text **unverified** (PDF returned binary) and declines to quote
+the "diameter 2" characterisation because it appeared only in search-summary
+text.
+
+**A DEFECT OF MINE HE IS RIGHT TO RAISE.** My `git add -A` swept his working tree
+into commit `119265e` - `ceq/bench.py` (+64) and `scale/m3_capability.py` (+11),
+his mask cache and his thread pin, committed under a message about the
+displacement leap. **He committed nothing; I committed his work under the wrong
+title.** Recorded so the provenance is not lost.
+
+CHECKLIST: torque probe BUILT, not run. Thread pin applied and the published
+number REPRODUCES pinned. Mask cache applied, bitwise, speedup unresolved.
+Additive basis NOT FOUND with hard zeros.
+
+**FOREMAN REPORTED, AND HE OVERTURNS MY OWN ROUND-4 CONCLUSION. 5 failed, 6
+passed - the 6 passes are controls at s=8/16/32, so nothing fails trivially.**
+
+**THE 13 UNITS ARE NOT STALE AND THEIR CODE DID NOT CHANGE.** Each was journalled
+under a different BLAS thread count than the census used, and **all three cells
+replay BITWISE once the right one is supplied**:
+
+    dense_signed__at_pivots    -> **3 threads**   4/4 confirmed
+    pivot_signed__not_in_P     -> **3 threads**   2/2
+    pivot_signed__in_P         -> **4 threads**   4/4 tried
+
+    threads=1  sigma=0.3833030191586593
+    threads=2  sigma=0.38330301849340376
+    threads=3  sigma=0.3833030187701487   <- THE JOURNAL
+    threads=4  sigma=0.3833030187607026
+
+**I SWEPT 1, 2, 4, 8, 16, 20, 24 AND CONCLUDED "NO THREAD COUNT REPRODUCES IT".
+I NEVER TRIED 3.** An incomplete sweep read as an impossibility proof, and I
+wrote it into the governing prompt as a withdrawn rule. **The real defect is
+smaller and sharper than I said: the unit key never contained the reduction
+schedule.**
+
+**AND `rate`'s INVARIANCE IS INFORMATION-FREE - I TREATED IT AS EVIDENCE.**
+`rate` is a threshold functional. Measured with an instrument bound bitwise to
+`run_arm` on all five fields: **the nearest any of 4096 draws comes to a sign
+crossing is 4.40e-04 (pivot) / 1.01e-03 (dense)**, against a perturbation of
+**~1e-9**. **`rate` has about five orders of magnitude of slack - it would
+survive a perturbation 10,000x larger.** Its bit-identity at all 37 says nothing
+about reproducibility, and **nobody measured the margin before leaning on it.**
+I leaned on it in three consecutive iterations.
+
+**THE TWO VERDICT NUMBERS WERE NEVER JOURNALLED AT ALL.** `0.16511 = 124/751`
+and `0.02732 = 15/549` are **sgate** numbers; `m2_units.CELLS` contains no sgate
+cell, and `pivot_signed` dispatches to `_causal_tgate_operator`. `grep` for
+either literal across `results/` and `scale/` returns **zero hits**; no journalled
+unit has n=751, n=549, k=124 or k=15. **They are among neither the 13 nor the 24.**
+
+**They live in prose and as two hardcoded literals at `inspector.py:299`** - where
+my own *"published: M2 two-point slope"* check computes
+`log10(0.02732/0.16511)/log10(4)` **from constants it holds itself** and compares
+to a third constant. **It re-verifies `math.log10`. It has never checked a
+measurement.** That check has passed at every Inspector pass this round.
+
+**Two smaller corrections, both of mine:** the *"sigma 13/13 vs term 11/13"*
+asymmetry is an artifact - the two units drifting in sigma alone are exactly the
+ones where `term` is **structurally 0.0** and cannot drift; both floats drift in
+13/13 of the units where they can. And **11 of 16 `pivot_signed__in_P/s2048`
+batches reproduce bitwise at 2 threads**, same code, same cell, differing only in
+seed - **a code change would move all 16**, so the mtime lead is not merely
+unsupported but positively contradicted.
+
+**HE ALSO FOUND THE SAME SHAPE ELSEWHERE:** `results/s2.jsonl` holds today's
+2-thread value where m2 holds the 3-thread one; `results/r2.jsonl`'s producer
+never imports `require_complete`; `results/capability.json` has no journal
+machinery at all, merge-then-overwrite rather than append-only, and was measured
+on `device: "cuda"` so **it is not reproducible on this box in principle**.
+
+**Undone, declared:** 3 of 13 untested (`pivot_signed__in_P/s2048/b2,b3,b4`,
+`/s1024` at ~245 s each) - **"10/13" is measured, "13/13" is not.** Why 3 and 4
+specifically is unverified; candidate is `MKL_DYNAMIC` defaulting TRUE with no
+`OMP_NUM_THREADS` set, so the count was chosen at runtime per bucket.
+
+
 ### ROUND 5, ITERATION 2 - 2026-08-25 - G1 COMPLETE, 6/6. FIVE CELLS OCCUPIED. Two left, and one fetch brought a gift.
 
 CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.

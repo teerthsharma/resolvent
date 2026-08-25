@@ -5,39 +5,31 @@
 | field | value |
 |---|---|
 | round | **5** - CEQ v7, promise `TWOSPHERES`, **30 iterations** |
-| iteration | **2 complete, 3 next** |
+| iteration | **3 complete, 4 next** |
 | phase | **G1 fetches, then ARM A (the torque probe)** |
 | goal | **match or SUPERSEDE self-attention**; next-equilibrium predictor |
 | calibration | GREEN [RUN] `run_calib.py --self-test` exit 0, 4/4 bit-identical |
 | inspector | tri-state; INDETERMINATE exits nonzero |
 | repo | https://github.com/teerthsharma/resolvent (private) |
 
-## THE ONE NEXT ACTION (round 5, iteration 3)
+## THE ONE NEXT ACTION (round 5, iteration 4)
 
-**ARM A. The torque probe. Pure measurement, no training, no build.**
+**RUN ARM A.** The module exists (`scale/torque_probe.py`); nothing has been
+measured yet.
 
-G1 is complete at 6/6 and the gate is passed. Two cells survive - the additive-
-basis coverage theorem and the Procrustes torque as a ROUTING OBJECTIVE - and
-**both owe their kills**, which ARM A is.
+Bucketed - 20000 draws at four sizes will not fit one call, and two unbucketed
+runs have already died here. Start at `k in {8, 32}` with a declared draw count,
+journal it, then extend.
 
-Per draw on the LIVE `pivot_unsigned` arm: `A^c` and `A^0`; `theta_i` per row;
-`D_FR = E_i[theta_i]`; `||tau||_F`; rank profile and `gamma_r` of `Xi`.
-`k in {8,32,128,512}`, 20000 draws, **`c` and `j` uniform at random** - the
-carpet discipline that two rounds broke.
+Three kills, and after the G1 round **K3 decides whether the round has
+anything**: the sphere map is textbook and the TV ablation probe is occupied, so
+theta must beat raw TV by standardized effect on identical draws or **TV ships**.
 
-**Three kills, and K3 decides whether the round has anything:**
-  * **K1** `flip(s)` slope <= -0.4 AND `D_FR` slope >= -0.1 on the SAME draws.
-    **`D_FR` slope < -0.3 means "no leap".**
-  * **K2** `D_FR(causal c)` vs `D_FR(filler c)` with DISJOINT CIs, or the
-    statistic cannot lose to a filler and the table is VOID.
-  * **K3** `theta` must beat raw TV by standardized effect on identical draws.
-    **After this fetch round K3 is decisive:** the sphere map is textbook and the
-    TV ablation probe is occupied, so if `theta` does not beat TV, the round is
-    classical geometry pointed at an existing probe and **TV ships instead.**
-
-Read on X4. **No multiplication inside any sign decision** (G8). Bucket it -
-20000 draws at four sizes will not fit one call, and two unbucketed runs have
-already died here.
+**Pin the thread count in the probe itself.** Wilson's finding is that
+`m3_capability.py`'s published numbers were reproducible only because the shell
+happened to be set to 2 - the file said nothing, and the same log carries the
+same command at 20 threads (14 runs) and 3 threads (2 runs). **A probe that does
+not pin is a probe whose number is a function of its launcher.**
 
 ## Open REDs
 

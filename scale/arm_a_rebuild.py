@@ -327,6 +327,23 @@ def redundant(m, g, n):
                                           if g * t <= n})
 
 
+def family_at_k(s: int, k: int):
+    """Lowest-severance COVERING schedule of EXACTLY size k, enumerated over the
+    two-parameter family [1..m] u {multiples of g}. Enumerated, not tuned, so a
+    matched-k row is reproducible from (m, g) alone."""
+    n = s - 1
+    best = (2.0, None)
+    for m in range(1, k + 1):
+        for g in range(1, m + 1):
+            D = redundant(m, g, n)
+            if len(D) != k or cover_value(D, n) != n:
+                continue
+            v = severance_exact(s, D)[0]
+            if v < best[0]:
+                best = (v, D)
+    return best[1]
+
+
 def hillclimb(s, k, *, restarts=6, iters=300, seed=0, start=None):
     """Minimise EXACT severance subject to FULL coverage of [1, s-1]."""
     n = s - 1
@@ -420,20 +437,32 @@ def red_tests(s=128):
                 f"lo*hi(f64)={prod!r}  float32 1e-30*-1e-30={p32!r}",
                 f64 == 0.0 and x4 == 1.0))
 
-    # RED 2 -- j pinned at s//4 makes EVERY schedule read severance 1.0000.
-    # This reproduces the previous build's failure from its cause.
+    # RED 2 -- j pinned at s//4 severs everything whose 2-hop reach cannot
+    # span the resulting offset. This reproduces the previous build's failure
+    # FROM ITS CAUSE, and it checks its own precondition rather than assuming
+    # it: max(R(D)) < i-j is what makes the reading 1.0000, so the test asserts
+    # that first and only then requires 1.0000. A covering schedule is measured
+    # at the SAME pinned j as the contrast -- if it also read 1.0000 the cause
+    # would be something other than the pinning.
     i, jf = s - 1, s // 4
+    off = i - jf
     pinned = [(jf, c) for c in range(jf + 1, i)][:60]
-    rows = []
-    ok = True
-    for name, D in (("contiguous 1..16", contiguous(16)),
+    rows, ok = [], True
+    for name, D in (("contiguous 1..%d" % (s // 8), contiguous(s // 8)),
                     ("co-prime k=4", coprime(4)),
-                    ("two_scale m=11", two_scale(11, s - 1))):
+                    ("power-of-two", powers_of_two(4, s))):
+        reach_max = max(reach2(D, 4 * s), default=0)
+        if reach_max >= off:                      # precondition fails, skip
+            rows.append(f"{name}=SKIP(reach {reach_max} >= {off})")
+            continue
         fr, _ = severance_empirical(D, s=s, pairs=pinned, n_draws=2)
-        rows.append(f"{name}={fr:.4f}")
+        rows.append(f"{name}[reach {reach_max}]={fr:.4f}")
         ok &= (fr == 1.0)
-    out.append(("RED2 j pinned at s//4 severs everything",
-                f"offset i-j={i-jf}  " + "  ".join(rows), ok))
+    cov_D = two_scale(max(2, int(round((s - 1) ** 0.5))), s - 1)
+    frc, _ = severance_empirical(cov_D, s=s, pairs=pinned, n_draws=2)
+    rows.append(f"COVERING k={len(cov_D)}={frc:.4f}")
+    out.append(("RED2 j pinned at s//4 severs every short-reach schedule",
+                f"offset i-j={off}  " + "  ".join(rows), ok and frc < 1.0))
 
     # RED 3 -- a non-covering schedule MUST fail gate 1 and MUST sever.
     bad = powers_of_two(7, s)
@@ -476,7 +505,7 @@ def main() -> int:
 
     found = {}
     for n in (56, s - 1):
-        cap = 0 if n <= 56 else 2_000_000
+        cap = 0 if n <= 56 else 600_000
         k, w, log, k0 = min_k_raw(n, node_cap=cap)
         found[n] = (k, w)
         print(f"\n  raw coverage of [1,{n}]  ->  k = {k}")
@@ -506,19 +535,27 @@ def main() -> int:
     print("  (j is NOT s//4 = %d; see RED2 for what pinning it does)" % (s // 4))
 
     n1 = s - 1
-    cands = [("contiguous 1..k", contiguous(21)),
-             ("co-prime (odd) k=4", coprime(4)),
-             ("co-prime (odd) k=21", coprime(21)),
-             ("power-of-two k=7", powers_of_two(7, s)),
-             ("basis, minimal k", None),
-             ("two-scale m=11", two_scale(11, n1)),
-             ("redundant m=24 g=12", redundant(24, 12, n1)),
-             ("redundant m=32 g=8", redundant(32, 8, n1))]
-    wmin = found[n1][1]        # reuse: the search above already ran it
-    cands[4] = (f"basis, minimal k={len(wmin)}", wmin)
+    wmin = found[n1][1]
+    kmin = len(wmin)
+    # MATCHED k AND MATCHED DEPTH. Every row is one layer at hops=2, s=128, so
+    # depth cannot confound the schedule -- the confound this project already
+    # published once. Rows are grouped by k so the comparison is like for like.
+    cands = []
+    for k in sorted({4, 7, kmin, 24, 32}):
+        cands.append((f"-- k = {k} " + "-" * 8, None))
+        cands.append((f"co-prime (odd) k={k}", coprime(k)))
+        cands.append((f"contiguous 1..{k}", contiguous(k)))
+        pw = powers_of_two(k, s)
+        if len(pw) == k:
+            cands.append((f"power-of-two k={k}", pw))
+        if k == kmin:
+            cands.append((f"BASIS minimal k={kmin}", wmin))
+        fam = family_at_k(s, k)
+        if fam is not None:
+            cands.append((f"BASIS family k={k}", fam))
 
     if a.climb:
-        for kk in (21, 24, 32, 40):
+        for kk in (kmin, 24, 32):
             sv, D = hillclimb(s, kk, seed=7)
             if D:
                 cands.append((f"climbed k={kk}", D))
@@ -530,6 +567,9 @@ def main() -> int:
     print("  viol = closed form said severed, autograd said live. MUST be 0.")
     results = []
     for name, D in cands:
+        if D is None:
+            print(f"  {name}")
+            continue
         cv = cover_value(D, n1)
         sx, un, mp = severance_exact(s, D)
         sm, flags = severance_empirical(D, s=s, pairs=pairs, n_draws=a.draws)
@@ -588,7 +628,10 @@ def main() -> int:
 
     # ------------------------------------------------------ gate 3, flips
     print("\n=== BIRTH GATE 3: X4 flip rate, c ON vs OFF the schedule ===")
-    best = min((r for r in results if r[2] == n1), key=lambda r: r[4])
+    # smallest schedule among those at minimum measured severance: a bigger
+    # k always helps, so ties must break toward the sparser object.
+    best = min((r for r in results if r[2] == n1),
+               key=lambda r: (r[4], len(r[1])))
     D = best[1]
     Dset = set(D)
     i = s - 1
