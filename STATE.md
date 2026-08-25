@@ -1,62 +1,54 @@
 # State
 
-**Updated: 2026-08-25 - ROUND 4 open under CEQ v6', the chosen-sign round.**
+**Updated: 2026-08-25 - ROUND 5 open under CEQ v7, the two-spheres round.**
 
 | field | value |
 |---|---|
-| round | **4** - CEQ v6', promise `CHOSENSIGN` |
-| iteration | **8 (round 4) complete, 9 next** |
-| phase | **X4 instrument first - everything downstream reads through it** |
-| goal | **match or SUPERSEDE self-attention**; next-equilibrium predictor, not token predictor |
+| round | **5** - CEQ v7, promise `TWOSPHERES`, **30 iterations** |
+| iteration | **0 complete, 1 next** |
+| phase | **G1 fetches, then ARM A (the torque probe)** |
+| goal | **match or SUPERSEDE self-attention**; next-equilibrium predictor |
 | calibration | GREEN [RUN] `run_calib.py --self-test` exit 0, 4/4 bit-identical |
 | inspector | tri-state; INDETERMINATE exits nonzero |
 | repo | https://github.com/teerthsharma/resolvent (private) |
 
-## THE ONE NEXT ACTION (round 4, iteration 9)
+## THE ONE NEXT ACTION (round 5, iteration 1)
 
-**Back to the round's actual subject: arm A, rebuilt as an ADDITIVE BASIS OF
-ORDER 2.** The instrument work is done - the replay asserts what it verifies, the
-census is recorded, and `rate` is intact at all 37, so the published verdict
-stands.
+**G1 fetches, BEFORE any build.** Six owed, and two are known near-misses that
+must be settled by fetch rather than assertion:
+  * information-geometry attention (Fisher-Rao / sphere / Hellinger)
+  * **Procrustes in deep nets** - representational-similarity Procrustes is an
+    ANALYSIS tool, not a routing objective. **Establish the distinction BY
+    FETCH.**
+  * **attention-ablation TV probes** - the interpretability lineage. **The PROBE
+    may be occupied even where the OBJECTIVE is not**, and that is a different
+    claim from "not found".
+  * Karcher-mean pooling
+  * additive-basis / sumset schedules (owed since round 4)
+  * Star-Transformer delta - what it never measured: content-selected pivots on
+    a calibrated causal bar at matched params.
 
-Arm A needs `D + D` covering `Z_v`, not `D - D`. In a causal DAG both hops point
-the same way, so only sums compose - measured: `|D-D| = 56/56` while
-`|D+D| = 36/57` for the same Singer set. Two corrections travel with it:
-  * **`j` must stop being fixed at `s//4`.** That pins the offset at `3s/4`,
-    unreachable for any bounded-offset schedule at low hop count, which is what
-    made every schedule read severance 1.0000. The uniform-at-random discipline
-    `carpet_probe.py:24` demands for `c` applies to `j`.
-  * **read on X4**, not the float path.
-
-Search for a small additive 2-basis mod v directly - for v = 57 a greedy or
-exhaustive search over k = 8..12 offsets is cheap, and the coverage condition is
-a VALUE to assert exactly as `|D-D| = v-1` was.
+**Absence recorded as "not found", NEVER "unoccupied".** Seven novelty claims
+have died in this project; most died to a fetch that was owed and skipped.
 
 ## Open REDs
 
-**JOURNAL DRIFT [Wilson, r4 iter 4].** `dense_signed__at_pivots/s1024/b0` and
-`/s128` do not replay bitwise. Journal mtime 12:38:59, code mtime 16:22:33.
-G2-class. Census running.
-
-**F16** - the signed arm was not signed at harness scale; round 4's entry point.
-
-**X3 DOES NOT BIND AS STATED.** At lam=1.00 the selected set reads P(+) 0.4968,
-pairwise correlation **-0.039893**. The alignment measured at iteration 6 was
-**lambda, not FKG**.
-
-**ARM A REDIRECTED.** Difference sets describe differences; causal composition
-uses sums. Target is an additive basis of order 2.
+None new. Round-4 carries: F-core (every additive route dead), F-cover (arm A
+redirected to an additive basis of order 2), F-journ (13/37 drift in sigma/term,
+rate intact 37/37).
 
 ## Carried, and load-bearing
 
-- **A sign measurement without its logit scale is not a measurement** (F17).
-- **Routing beats softmax and survives F16** (F18) - the one live positive result.
-- **n_train >= 8192 or the reading ranks overfitting** (F19).
-- **Co-prime severance 0.1277 at unchanged support** (F20); severance is INERT,
-  never UNREACHED - an influence defect.
-- **Batched hop-2 is bitwise and 374x on fwd+bwd** (F21); gradients bound to n <= 64.
-- **G1 owed before any name.** Six novelty claims have already died here.
+- **F-green is the only positive result in four rounds, and it is UNSIGNED.**
+- **A sign measurement without its logit scale is not a measurement.**
+- **n_train >= 8192 or the reading ranks overfitting.**
+- **No multiplication inside a sign decision** (G8, new) - `lo*hi` underflows to
+  exactly -0.0 in float32 while both factors are healthy.
+- **A leap binds before it counts.** House's displacement frame is MOTIVATION
+  until a fellow writes the RED test.
 
 ## Board in flight
 
-X4 instrument -> G1 fetches -> arm A birth gates -> arm B reference pass -> M3 at 8192.
+G1 fetches -> ARM A torque probe (K1 dual slope, K2 filler twin, K3 geometry
+earns itself) -> G-b reproducible summation in parallel -> ARM B birth gates ->
+M3 at n_train=8192.

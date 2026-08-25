@@ -136,7 +136,7 @@ def _causal_mask_pair(s: int, window: int, device: str):
     micro-kernel runs and therefore the accumulation order. This changes no
     tensor shape and no arithmetic op.
 
-    TWO COSTS, DECLARED.
+    THREE COSTS, DECLARED.
       1. The cached tensors are SHARED, not copied. Every caller in this repo
          only reads them (`masked_fill`, `sum`, `torch.equal`), so nothing
          mutates one today; an in-place write by a future caller would corrupt
@@ -146,6 +146,10 @@ def _causal_mask_pair(s: int, window: int, device: str):
          one device. Harmless (they build identical masks) and irrelevant on
          this CPU-only path, but it is a key collision by string and not by
          identity, so it is written down rather than assumed away.
+      3. The cache PINS memory: `maxsize=32` entries of `2 * s * s` bytes each,
+         so 8 KB per entry at `s = 64` and 128 MB per entry at `s = 8192`. Fine
+         at every `s` this repo runs; a caller sweeping large `s` should call
+         `_causal_mask_pair.cache_clear()`.
     """
     m = torch.ones(s, s, dtype=torch.bool, device=device).tril(-1)
     m = m if window <= 0 else m.triu(-window)

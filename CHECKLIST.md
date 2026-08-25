@@ -363,3 +363,24 @@ disjoint, 4769 params each - stands.
 2048->0.949529, 8192->0.877168.
 
 **F20 — G1 FIRED [CITED, r4 iter 3].** Co-prime spacing is PRIOR ART: arXiv 2606.28560 compares a **"coprime (anti-gridding) reassignment"**. Round 3's severance repair is not novel. Difference sets / Sidon sets are **NOT MENTIONED** there and NOT FOUND in search — arm A proceeds as the **difference-set coverage theorem**, never as "co-prime spacing".
+
+## ROUND 5 - CEQ v7. THE TWO-SPHERES ROUND. Items freeze on first test.
+
+| id | item | status |
+|---|---|---|
+| K1 | **DUAL SLOPE.** `flip(s)` slope <= -0.4 on X4 AND `D_FR` slope >= -0.1 on the SAME draws. **If `D_FR` slope < -0.3, displacement dies with flip and the answer was "no leap".** | UNTESTED |
+| K2 | **FILLER TWIN.** `D_FR(causal c)` vs `D_FR(filler c)` must separate with DISJOINT CIs. A displacement statistic that cannot lose to a filler is M2-clause-2 again and **VOIDS the table**. | UNTESTED |
+| K3 | **GEOMETRY EARNS ITSELF.** `theta` must separate causal-vs-filler with a LARGER standardized effect than raw TV on identical draws, **else the sphere is notation and TV ships**. | UNTESTED |
+| M2q | Scale-free consequence: K1-K3 GREEN on X4, floor deleted, CP intervals everywhere, every zero with its discard count. | UNTESTED |
+| M3 | **THE DECIDING ITEM.** ARM B vs softmax at n=8192, softmax first, 5 seeds, CIs excluding zero. **An arm passing M3 but failing M2q is a ROUTING result - claim rewritten, still shipped.** | UNTESTED |
+| M5p | Lean: additive-basis coverage lemma; truncation identity at shipped hops; torque-symmetry as the equilibrium condition. | UNTESTED |
+| M8 | Integrity: reproducible-summation journals bitwise at ANY thread count; `gamma_r` printed beside every shadow number; must-fire controls seen firing. | UNTESTED |
+| G8 | **NEW. No multiplication inside any sign/flip decision** - the `lo*hi` underflow class, mechanised as a lint over probe code with a must-fire example. | UNTESTED |
+
+**X6 IS PRE-REGISTERED TO CUT ITSELF.** If ONE pass already gives
+`||tau||_F ~ 0`, the equilibrium clause is **CUT** and every document says so.
+That is the R1 lesson written in before the measurement.
+
+**F-green BINDS:** `pivot_unsigned` **0.747528** [0.696849, 0.797716] vs softmax
+**0.877168** [0.830455, 0.924226], DISJOINT, 4769 params each, softmax first.
+The one positive result in four rounds, and it is UNSIGNED.

@@ -1,185 +1,223 @@
-# CEQ v6′ — ROUND 4 LOOP PROMPT. The chosen-sign round. Read in full, follow exactly.
+# CEQ v7 — ROUND 5. THE TWO-SPHERES ROUND. Read in full, follow exactly.
 
-**Promise word `CHOSENSIGN`.** Supersedes v5, archived at
-`LOOP_PROMPT_ROUND3_ARCHIVE.md`. Rounds 1–3 facts carry over.
+**30 iterations. Promise word `TWOSPHERES`.** Supersedes v6′, archived at
+`LOOP_PROMPT_ROUND4_ARCHIVE.md`. Rounds 1–4 facts carry over.
 `CHECKLIST.md` outranks this file; this file outranks `CONTRACT.md`.
 
-**THE GOAL, restated by the user and narrower than "attention that works":** not
-the best token predictor — the **next-equilibrium predictor**. Attention that
-understands causality and consequences on Turing-grade problems at the smallest
-scale, and **the module must survive equal to self-attention or supersede it.**
+**Displacement-Equilibrium Attention (DEA).** Not the best token predictor — the
+**next-equilibrium predictor**. The module must **survive equal to
+self-attention or supersede it.**
 
-## THE ALGEBRA THIS ROUND EXECUTES
+## THE CONSTITUTION — ten ideals; every clause answers to them
 
-    flip(s) = P[ |t_c| > |Σ_{p≠c} ε_p t_p| ]
+1. **Consequence over similarity** — weight reflects what a token DOES
+   downstream, not what it resembles.
+2. **Equilibrium over glance** — the reading is a fixed point with a
+   certificate, or the word "equilibrium" is cut.
+3. **Scale-free by construction, never by tuning** — statistics live on objects
+   that cannot grow: radius-1 spheres, ranks, valuations.
+4. **The event, not the statistic** — a route changes what happens in ≥1% of
+   draws (G7) before it may be built.
+5. **Measured object = shipped object** — nine violations on record; binds cover
+   the QUESTION, not the call site.
+6. **Value comparisons only**; every checker ships a must-fire control SEEN to
+   fire; exact pins `abs=5e-7`; no decision downstream of a shell pipeline.
+7. **Pre-registered kills; deletion, not defense.**
+8. **A leap binds before it counts** — House proposes, a fellow writes the RED
+   test. **Reinterpreted dead numbers are MOTIVATION, never EVIDENCE.**
+9. **Obscure mathematics enters by live fetch** as theorems with hooks and kills
+   — never from memory, never as decoration.
+10. **The negative result ships regardless** — D1 is a deliverable.
 
-Rounds 1–3 attacked **`t_p`** — the term count, the scale, the rank. All three
-died. **Round 4 attacks `ε`.**
+## STATE — binding, do not relitigate
 
-- **X₁** reachability holes are a *counting necessity*, cured exactly by
-  (v,k,λ)-difference sets. Co-prime dilation was the empirical shadow of this.
-- **X₂** signs may be **CHOSEN**: `|Σ ε t| ≤ 6√k` (Spencer [U]).
-- **X₃** selection-coupled signs **MUST** align (FKG [V]).
-- **X₄** the instrument must compare **valuations**, not floats (Levi-Civita [V]).
+**F-core.** Every additive-frame route is dead: term count (pivot, **−1.298** vs
+bar −0.3), scale (rank/copula lineage), non-Archimedean (occupied), Dyson (no
+crossing), SNS/group-testing (sign-blind), chosen signs (Spencer slack **7.4×**,
+optimal signs buy **18%**, one term carries **50.7%** of mass), FKG warrant
+(alignment was λ, not a correlation law: λ=1 reads P(+) **0.4968**, corr
+**−0.0399**).
 
-**X₃ RETRO-EXPLAINS ROUND 3's OWN MEASUREMENT AS A THEOREM.** Iteration 6 read
-the top-k selected set at **99.98% positive, uncentered pairwise product
-0.9993**, and attributed it to the operator's `λ`. FKG says it is forced by the
-coupling between selection and sign. It was never an accident.
+**F-green.** `pivot_unsigned` BEATS softmax at n_train=8192: **0.747528**
+[0.696849, 0.797716] vs **0.877168** [0.830455, 0.924226], **DISJOINT**, 4769
+params every arm, softmax measured first, calibrated gate (flipper_dependence
+2.0/0.0, trained_two_feature 0.047). **The one positive result in four rounds.
+It is UNSIGNED.** Every earlier M3 zero was an `n_train=128` budget artifact.
 
-**X₄ EXPLAINS THE FLOOR.** At depth, median `|grad|` is **2.8e-32** and
-`floor = 1e-6` discarded **100%** of a live arm's flips. A float comparison
-cannot straddle 30 orders of magnitude.
+**F-frame.** House's displacement frame, **awaiting binding**: consequence as
+REALLOCATION on the softmax simplex (zero-sum budget), not a sign in an
+unnormalised sum. Predicts (i) flip(s) dies on schedule, (ii) displacement is
+O(1) in k because the simplex does not grow, (iii) the signed−unsigned CI
+**[−0.0458, +0.0063]** straddling zero — a measured empty channel.
 
-## ROUND-3 FACTS THAT BIND THIS ROUND
+**F-cover.** `D−D` was the wrong composition law for causal hops (both hops point
+one way): **|D−D| = 56/56** but **|D+D| = 36/57**, and the probe offset sat in
+neither — severance **1.0000 uniform across schedules**. The needed object is an
+**ADDITIVE BASIS OF ORDER 2**. `j` and `c` are drawn **uniformly at random**,
+never placed on any schedule — carpet discipline, contractual.
 
-**F16 — THE SIGNED ARM WAS NOT SIGNED, AND THIS IS THE ROUND'S ENTRY POINT.**
-At the harness geometry (`make_batch` scales `x` by 0.1; logits `|w|` mean
-**2.682399e-03**), `_causal_sgate_operator(lam=0.10)` is **entrywise
-non-negative** — min entry exactly `0.000e+00`, bulk negative fraction
-`0.000000`. **λ is a THRESHOLD at 1.0, not a dial**: at `w ≈ 0`, `pp ≈ pm`, so
-`A ∝ (1−λ)/i` stays positive until λ crosses 1, where row sums are exactly zero
-(absmax 2.403e-07). **Every prior signed-vs-unsigned comparison at this geometry
-compared two non-negative operators and is void as sign evidence.**
+**F-instr.** The flip statistic had TWO defects: the `1e-6` floor (discards up to
+**100%** of true flips; median |grad| **2.8e-32** at depth 4) and **`lo*hi`
+PRODUCT UNDERFLOW** (`1e-30 * −1e-30 = −0.0` exactly, flip counted as no-flip;
+**deleting the floor does not fix this — only not multiplying does**). The **X₄
+valuation instrument is GREEN**, calibrated 4/4 exact.
 
-**F17 — EVERY OPERATOR AUDIT MUST STATE ITS LOGIT SCALE.** Round 3's frustration
-audit read **0.2779** on unit-scale `torch.randn` projections and **0.000000** at
-harness scale. Same operator, opposite answers. **A sign measurement without its
-logit scale is not a measurement.**
+**F-journ.** 13/37 journal units drift in `sigma`/`term` only (~1e-9,
+bidirectional, accumulation order); **`rate`/`k`/`n` bit-identical 37/37**; no
+thread count reproduces all cells; `check_replay` was a **sampling** instrument
+(65% pass chance while a third drifted) and now says so in its own output.
 
-**F18 — ROUTING BEATS SOFTMAX, and that comparison SURVIVES F16** because
-`pivot_unsigned` was always the non-negative arm. At `n_train=8192`, 4769 params
-each, softmax first: softmax **0.877168** [0.830455, 0.924226], pivot_unsigned
-**0.747528** [0.696849, 0.797716] — **disjoint**.
+**F-depth.** **1.71×** is the honest separation frame: sgate depth-2 **0.09375**
+vs softmax_gelu depth-2 **0.0546875**, closing from both sides. Supporting claim
+only; **both depths travel with every table that carries it.**
 
-**F19 — THE BUDGET IS THE BAR.** No arm had ever passed the absolute bar in three
-rounds because every reading was at `n_train=128`, where 4769 params memorise:
-`128 → 2.116579`, `512 → 1.316514`, `2048 → 0.949529`, `8192 → 0.877168`.
-**M3 readings below n_train=8192 rank overfitting, not capability.**
+**F-cites.** Star-Transformer (1902.09113) owns relay/pivot routing;
+anti-gridding co-prime dilation is prior art (2606.28560; 1702.08502 verbatim).
+Kernel herding is SAMPLE selection, not sign/pivot assignment — by fetch.
 
-**F20 — CO-PRIME DILATION.** `[1,3,5,7]` cuts severance `0.5745 → 0.1277` at
-s=128 with gradient support unchanged at exactly **1.0000**; power-of-two severs
-41–57%. Severance is **INERT, never UNREACHED** — an influence defect, not a
-reach defect. Identical under weight sharing (0.065217 / 0.127660).
+## THE GEOMETRY — the two spheres
 
-**F21 — THE BATCHED PATH IS FREE.** `batched_pivot_hop2` / `batched_select_pivots`
-are **bitwise** equal to the loop (`torch.equal`, forward 12 cases, gradients
-maxdiff 0.0 at n=8) and **374×** faster on forward+backward at n=2048.
-Declared limit: gradients bound only to n ≤ 64; at 2048/8192 the bind is
-forward-only.
+Verified live [V]: Fisher information metric + Chentsov uniqueness; Hellinger /
+Bhattacharyya; orthogonal Procrustes; Fréchet/Karcher mean; holonomy; additive
+basis (order-2 definition verbatim); postage stamp problem; Kahan compensated
+summation; Davis–Kahan via eigengap; Weyl's inequality; low-rank approximation;
+spectral sparsification [V-t, BSS interior U].
+**Owed [U]:** Eckart–Young statement, log-map source, sphere injectivity radius,
+Ruzsa thin bases, Demmel–Nguyen reproducible summation, sum-to-max limit law, BSS.
 
-**F22 — THE BAR IS REPAIRED.** `calibrate_bar` + `bar_verdict` carry
-`flipper_dependence` (exactly **2.0** real / **0.0** flipper-blind) and a
-**trained** two-feature control (**0.047149**). Two of the old three checks were
-algebraic identities. One gate, one copy.
+**THE MAP.** Row `i`'s attention is a point of the simplex; `φ(p) = √p` embeds it
+isometrically (factor 2, Fisher–Rao) onto the positive orthant of the **UNIT
+SPHERE** `S^{s−1}`. The c-present and c-masked readings are two configurations on
+spheres of **radius 1 at every s**: displacement is an **ANGLE**, and angles
+cannot inherit scale. By **Chentsov**, this metric is the unique invariant choice
+— canonical, not one option among statistics.
 
-## ARMS — TWO. NO THIRD WITHOUT AN AMENDMENT NAMING ITS X.
+    X = √A(·|c),   Y = √A(·|∅)
 
-**A. DIFFERENCE-SET SCHEDULE (solves X₁).** Hop offsets = cyclic Singer
-(v,k,1)-difference set, `k ≈ √s`.
-*Birth gates:* `|D−D| = v−1` asserted as a **VALUE**; flipper placed **uniformly
-at random**, never on the schedule; off-schedule flip rate within CI of
-on-schedule — **the exact test that killed the dilation, promoted to a birth
-gate**. Lean target: the coverage lemma, finite and decidable — this round's M5.
-*Kill:* any bitwise-identical gradient pair (severing), OR `|slope| ≥ 0.01` over
-s=512→2048 on the X₄ instrument, OR M3 fail at n=8192.
+**THE BRIDGE.** Orthogonal Procrustes: `YᵀX = UΣVᵀ ⇒ R* = UVᵀ` — one SVD.
 
-**B. DISCREPANCY-STEERED SIGNS (solves X₂, certified against X₃).** Sign head
-carries a discrepancy regulariser minimising `|Σ_{p≠c} ε_p t_p|` over the
-background while the task loss owns `ε_c`. Reference assignment from a
-constructive discrepancy pass (Lovett–Meka [U]); **Spencer's `6√k` printed beside
-the measured background at every s**.
-*Birth gates (M8):* `P(+) ∈ [0.35, 0.65]`, pairwise corr `< 0.2`, measured
-`E|Σ ε t| ≤ c√k` with `c` pinned; **FKG-escape documented** — the sign source must
-be decoupled from the salience order, stated and tested (shuffle the selection
-order; **signs must not move**).
-*Kill:* trained background exceeds **3×** the Spencer reference, OR the
-regulariser degrades task loss past the **1.10** tuning bar, OR M3 fail at n=8192.
+**SPIN UNLESS EQUILIBRIUM.** `τ = ½(YᵀX − XᵀY)`; equilibrium ⇔ `τ = 0` ⇔ `YᵀX R*`
+symmetric PSD. Global form: the settled reading is the **Karcher/Fréchet mean**
+of its pivot readings, **UNIQUE for θ < π/2** (injectivity radius) — an
+existence-and-uniqueness statement the DEQ era never had. Loop version:
+c-present → c-masked → c-present failing to return the frame is **HOLONOMY**.
 
-## INSTRUMENT UPGRADE (X₄) — PRECEDES BOTH ARMS
+**THE VECTOR SHADOW.**
 
-`sign_flip` rebuilt on **(valuation, mantissa)** pairs. **The floor is DELETED,
-not defaulted.** Calibration: reproduces every published `floor=0` number
-exactly. Must-fire: a planted **30-order-spread** arm must be read correctly
-where the float instrument **provably misreads it**. All prior floored numbers
-remain quoted as **historical instrument readings**.
+    ξ_i = (θ_i / sin θ_i)(y_i − cos θ_i · x_i)
+    θ_i = arccos⟨x_i, y_i⟩ = arccos Σ_j √(A_ij^c · A_ij^∅)
 
-## CHECKLIST DELTA
+Rank-r SVD of `Ξ` transmits `r(s+d)` numbers instead of `s·d`, error **exactly
+σ_{r+1}** (Eckart–Young [U]). **Davis–Kahan [V]**: the shadow subspace rotates
+≤ ‖ΔΞ‖/γ_r with eigengap `γ_r = σ_r − σ_{r+1}`; **Weyl [V]** bounds the σ_i.
+**γ_r is a MANDATORY printed diagnostic — a shadow with γ_r inside draw noise is
+noise.**
 
-- **M2‴** measured **only** on the X₄ instrument.
-- **M3** unchanged: `n_train=8192`, **softmax pass reproduced first**, 5 seeds,
-  unsigned ablation, CIs excluding zero.
-- **M5** = the difference-set coverage lemma in Lean — this round's proof
-  deliverable, replacing the N=n mismatch item.
-- **M8** = the FKG-escape certificate, replacing the bare diversity gate.
-- **G1 fetches owed PRE-BUILD:** LongNet + the severing test (D1b stands);
-  difference-set / Sidon attention; discrepancy-in-ML (**KNOWN NEAR-MISS:
-  herding / kernel herding [U] uses discrepancy for SAMPLE selection — the cell
-  here is SIGN assignment inside the operator; establish the distinction by
-  fetch**); balanced-colouring networks.
-- **G7** event-change **≥ 1%** pre-build, both arms — the test that struck R5/R8
-  at 0/20000 before they cost anything.
+**X₅** scale-free statistic → `θ`, TV as cross-check, Hellinger bounding one by
+the other. Scale-free **BY RADIUS**, not by tuning.
+**X₆** falsifiable equilibrium → `‖τ‖_F` trajectory under iteration. **If ONE
+pass already gives `‖τ‖_F ≈ 0`, the equilibrium clause is CUT** — the R1 lesson,
+pre-registered.
+**X₇** least-cost fetch → rank-r shadow; the **effective rank of Ξ is a NEW
+measurable** — consequence is low-rank or it is not, and either is a finding.
 
-## DELIVERABLES
+## GAP-FILLING MATHEMATICS
 
-- **D1** (unconditional): the negative result, the instrument taxonomy, the Lean
-  core, plus the round-3 chapter and the X₁–X₄ algebra.
-- **D1b**: the LongNet severing note if the test fires.
-- **D2** (iff birth gates + M2‴ + M3): *"coverage by difference set [theorem],
-  background bounded by chosen-sign discrepancy [Spencer], measured flat on a
-  valuation instrument, capability at the budget where softmax passes"* — four
-  clauses, each with its own kill already survived.
+- **G-a COVERAGE.** Additive basis of order 2, `D+D ⊇ ℤ_v` [V]. Counting:
+  `C(|D|,2) ≳ v ⇒ |D| ≥ √(2v)(1+o(1))`; thin `O(√v)` bases exist [U: Ruzsa].
+  Postage stamp [V] generalises to hops > 2. **Lean target: the finite coverage
+  lemma.** Kill: any bitwise-identical gradient pair off-schedule.
+- **G-b DETERMINISM.** Kahan compensated summation [V] + reproducible summation
+  [U: Demmel–Nguyen] makes `sigma`/`term` **order-independent** — bitwise replay
+  at ANY thread count, deleting the no-valid-constant problem. **Must-fire: a
+  deliberately permuted accumulation must reproduce bitwise.**
+- **G-c SHADOW TRAINABILITY.** Davis–Kahan + Weyl. Kill: `γ_r` never separates
+  from draw noise ⇒ rank-r consequence does not exist ⇒ X₇ dies honestly.
+- **G-d WHY k PIVOTS SUFFICE.** Spectral sparsification [V-t; BSS U] — faithful
+  reweighted sub-forms exist at `O(d/ε²)`. **Prediction: BSS pivots carry
+  WEIGHTS; unweighted top-k is the crude cousin.** Kill: reweighting fails to
+  beat unweighted with disjoint CIs ⇒ report as structure only.
+- **G-e CONCENTRATION LAW.** `max|t|/Σ|t| = 0.507` gets its limit law [U:
+  sum-to-max, regular variation]. **Concentration is FUEL for displacement**,
+  monitored not mourned.
+- **G-f DEPTH FRAME.** 1.71× stays supporting-only; both depths travel.
 
-## STANDING POLICY — NEVER BLOCK ON A MEASUREMENT
+## ARMS
 
-**If a measurement is running, something is being BUILT alongside it.**
-**WILSON MANAGES THE NURSES** — inference engineers and senior compiler
-engineers, who always have something to optimise. Long measurement launched →
-Wilson + nurses dispatched in the **same turn**. Every optimisation ships a
-**bitwise equivalence bind**; a faster path that changes a number is a **new
-arm**, not an optimisation. Declared cheats only.
+**ARM A — THE TORQUE PROBE.** Pure measurement, no training, on the round-4
+harness through the X₄ instrument. Per draw on the LIVE `pivot_unsigned` arm:
+`A^c`, `A^∅`; `θ_i` per row; `D_FR = E_i[θ_i]`; `‖τ‖_F`; rank profile and `γ_r`
+of `Ξ`. `k ∈ {8,32,128,512}`, **20000 draws**, `c` and `j` uniform at random.
 
-**FELLOWS MAY ASK FOR A CHEAPER PATH.** A fellow who finds the assigned route
-long or expensive is expected to say so and propose the faster one, with its
-cost. Grinding a costly path silently because it was assigned is how an iteration
-is spent rather than used.
+- **K1 DUAL SLOPE** (House's bind, geometrised): `flip(s)` slope **≤ −0.4** on X₄
+  **AND** `D_FR` slope **≥ −0.1** on the SAME draws. **If `D_FR` slope < −0.3,
+  displacement dies with flip and the answer was "no leap."**
+- **K2 FILLER TWIN** (vacuity gate): `D_FR(causal c)` vs `D_FR(filler c)` must
+  separate with **DISJOINT CIs**. A displacement statistic that cannot lose to a
+  filler is M2-clause-2 again and **VOIDS the table**.
+- **K3 THE GEOMETRY MUST EARN ITSELF:** `θ` must separate causal-vs-filler with a
+  **LARGER standardized effect than raw TV** on identical draws, **else the
+  sphere is notation and TV ships**.
 
-**DR HOUSE IS RELEASED ON DEMAND WHEN THE GAP IS INNOVATION, NOT EVIDENCE.** All
-three trigger conditions still hold as written. **A round whose own mathematical
-warrants have been measured non-operative is an innovation gap** - X2 was found
-slack by 7.4x and X3 measured not to bind, while eight iterations went to
-instrument repair. Five minutes, one leap or "no leap", output is a HYPOTHESIS
-that re-enters the differential and is bound by a fellow with a RED test. **It
-never enters a verdict unbound.**
+**ARM B — DEA v0.** Build only if ARM A survives K1–K3. `pivot_unsigned`
+structure unchanged; three upgrades, each with its own ablation at matched
+everything: **B1** selection by SHADOW MASS `‖ξ_p‖` instead of salience `|t_p|`
+(the criterion that died at −1.298 was magnitude); **B2** BSS-style pivot
+REWEIGHTING; **B3** hop schedule = additive basis of order 2 with the Lean
+coverage lemma; `j`, `c` never on the schedule.
+Equilibrium per X₆: iterate reading → Karcher mean, stop at `‖τ‖_F < tol`; **CUT
+the clause if one pass suffices, and say so in every document.**
+KILLS: M3 at n_train=8192, softmax reproduced FIRST, 5 seeds, CIs excluding zero;
+ablation ladder salience/shadow × weighted/unweighted, every rung reported and
+pinned; wall-clock ≤ **1.5×** softmax or the SVD moves to randomized rank-r and is
+re-measured; severing birth gate before any capability number.
 
-## INSTRUMENT LAW — nine structure failures, three value survivors
+## CHECKLIST v7
 
-**COMPARE VALUES, NEVER STRUCTURE.** No decision downstream of a shell pipeline
-(`$?` after a pipe is the last stage's). Every checker ships a must-fire control
-**seen to fire**. Pin exact values at `abs=5e-7` — **inequalities protect
-nothing**. Every zero carries its CP interval and its floor-discard count. The
-**"journal replays bitwise at `OMP_NUM_THREADS=2`" is WITHDRAWN as unproven [RUN, r4 iter 5]** — generalised from ONE unit in round 2. Measured on `dense_signed__at_pivots/s1024/b0`: MATCH at 1 and 4 threads, **DRIFT at 2**, exactly backwards. `rate` (integer, and what every published number rests on) matches at every count; only `sigma`/`term` drift. **No single count is KNOWN to replay the whole journal.** Census owed, bucketed. Long runs go through
-`scale/bucket.py` — **ADR-001 was bypassed once and cost two 0-byte files.**
-`inspector.py` is the pattern: run it, do not retype it. It is now **tri-state** —
-an INDETERMINATE check exits nonzero, because an unmeasured check is not a clean
-one.
+- **M1** GREEN standing; travels with the 1.71× frame.
+- **M2⁗** scale-free consequence: K1–K3 GREEN on X₄, floor deleted, CP intervals
+  everywhere, every zero with its discard count.
+- **M3** THE DECIDING ITEM: ARM B vs softmax at n=8192. **An arm passing M3 but
+  failing M2⁗ is a routing result — claim rewritten, still shipped.**
+- **M5** Lean: additive-basis coverage lemma; truncation identity at shipped
+  hops; torque-symmetry as the equilibrium condition (statement-level first).
+- **M8** integrity: reproducible-summation journals bitwise at any thread count;
+  `γ_r` printed beside every shadow number; must-fire controls seen firing.
 
-## GOVERNANCE
+## GLOBAL STOPS
 
-One iteration = exactly ONE of: write a RED test / turn one RED test GREEN by the
-minimum change / repair one instrument with proof / one G1 fetch / write-up. Then
-update `STATE.md`, `DONE.md`, `CHECKLIST.md` status, and stop. Any MANDATORY item
-RED stops build work. **A RED is overturned only by convicting the INSTRUMENT,
-never by adjusting the arm.** Every 5th iteration: `python inspector.py`.
+**G1** fetches BEFORE build: information-geometry attention (Fisher–Rao /
+sphere / Hellinger); Procrustes in deep nets (**KNOWN NEAR-MISS:
+representational-similarity Procrustes is an ANALYSIS tool, not a routing
+objective — establish by fetch**); attention-ablation TV probes (**the PROBE may
+be occupied even where the OBJECTIVE is not**); Karcher-mean pooling;
+additive-basis / sumset schedules; Star-Transformer delta. **Absence recorded as
+"not found", never "unoccupied".**
+**G2** published numbers immutable. **G3** hops=0 bitwise-identity RED bind at
+every arm's birth. **G5** no conclusion sentence broader than its measured
+object. **G6** no comparative sentence without a bootstrap CI excluding zero.
+**G7** event-change ≥ 1% pre-build. **G8 (NEW)** **no multiplication inside any
+sign/flip decision** — the `lo*hi` underflow class, mechanised as a lint over
+probe code with a must-fire example.
+
+## STANDING POLICY
+
+**Never block on a measurement** — if one is running, something is being BUILT
+alongside it. **Wilson manages the nurses** (inference and senior compiler
+engineers). Every optimisation ships a **bitwise** bind; a faster path that moves
+a number is a **new arm**. Declared cheats only. **Fellows may ask for a cheaper
+path.** **Dr House released on demand when the gap is INNOVATION, not evidence**
+— five minutes, one leap or "no leap", and it binds before it counts. Long runs
+go through `scale/bucket.py`; ADR-001 was bypassed twice and cost two 0-byte
+files. `inspector.py` is tri-state — an INDETERMINATE check exits nonzero.
 
 ## COMPLETION — line 1 of `DONE.md`
 
-`CHOSENSIGN: KEPT` requires **M3 GREEN at n_train=8192 with softmax reproduced
-first in the same table, 5 seeds, the unsigned ablation, and CIs excluding
-zero**, plus one arm's birth gates passed and M2‴ on the X₄ instrument.
+`TWOSPHERES: KEPT` requires **ARM A K1–K3 GREEN** and **ARM B M3 GREEN at
+n_train=8192 with softmax reproduced first, 5 seeds, CIs excluding zero**.
 **A slope is not a capability. KEPT on a statistic is a false promise.**
 
-`CHOSENSIGN: BROKEN — <item> <which kill fired>` after the write-up with its
-numbers. **An honest BROKEN outranks an unfinished KEPT.**
+`TWOSPHERES: BROKEN — <item> <which kill fired>` after the write-up with its
+numbers. **An honest BROKEN outranks an unfinished KEPT**, and D1 ships either way.
 
-Emit `<promise>CHOSENSIGN</promise>` only when one is completely true.
+Emit `<promise>TWOSPHERES</promise>` only when one is completely true.

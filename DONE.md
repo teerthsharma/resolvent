@@ -1,3 +1,55 @@
+### ROUND 5, ITERATION 0 - 2026-08-25 - CEQ v7 INSTALLED. The two-spheres round.
+
+CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.
+
+ACTION (one): installed the round-5 contract as `LOOP_PROMPT.md`; v6' archived to
+`LOOP_PROMPT_ROUND4_ARCHIVE.md`. Iteration reset to 0; 30 iterations; promise
+word `TWOSPHERES`.
+
+**THE ROUND BINDS HOUSE'S LEAP INSTEAD OF ADOPTING IT.** The displacement frame
+arrived as a HYPOTHESIS and the contract keeps it there - constitution clause 8:
+*"a leap binds before it counts... reinterpreted dead numbers are MOTIVATION,
+never EVIDENCE."* ARM A is a pure MEASUREMENT arm with three kills, one of them
+(**K1**) House's own bind geometrised. **Nothing is built until it survives.**
+
+**THE GEOMETRY ANSWERS CONSTITUTION CLAUSE 3** - *scale-free by construction,
+never by tuning.* Row `i`'s attention is a point of the simplex; `phi(p) =
+sqrt(p)` embeds it isometrically onto the **unit sphere**. The c-present and
+c-masked readings are two configurations on spheres of **radius 1 at every s**,
+so displacement is an **ANGLE**, and **angles cannot inherit scale.** Four rounds
+died to statistics that inherited scale. By **Chentsov** the metric is the unique
+invariant choice - canonical, not one option among statistics.
+
+**THREE KILLS, AND K3 IS THE ONE THAT KEEPS THE MATHEMATICS HONEST:**
+  * **K1 DUAL SLOPE** - `flip(s)` must die on schedule (<= -0.4) while `D_FR`
+    stays flat (>= -0.1). **If `D_FR` slope < -0.3 the answer was "no leap".**
+  * **K2 FILLER TWIN** - `D_FR` must LOSE to a filler `c` with disjoint CIs. A
+    statistic that cannot lose to a filler is **M2 clause 2 again**, the control
+    that was zero by construction.
+  * **K3 GEOMETRY EARNS ITSELF** - `theta` must beat raw TV on identical draws,
+    **else the sphere is notation and TV ships.** That clause is the contract's
+    own constitution turned into a number, and it is the one that stops obscure
+    mathematics from becoming decoration.
+
+**X6 IS PRE-REGISTERED TO CUT ITSELF.** If one pass already gives
+`||tau||_F ~ 0`, the equilibrium clause is CUT. The R1 lesson - a claim that
+cannot fail is not a claim - written in BEFORE the measurement rather than after.
+
+**G8 IS NEW AND IT COMES FROM ROUND 4's OWN FINDING:** no multiplication inside
+any sign decision. `np.float32(1e-30) * np.float32(-1e-30)` is **exactly -0.0**
+while both factors are normal and eight orders above underflow, so `lo*hi < 0`
+reads False and a real flip is lost. Mechanised as a lint with a must-fire
+example.
+
+**RUNNING FROM ROUND 4, feeding this round:** Cameron on the additive basis of
+order 2 plus `TRAINING.md` (exact parameter counts, free tiers only); Foreman on
+the 13/37 drift root cause; Wilson and the nurses on the mask cache, the unpinned
+thread count in the capability harness, and the owed additive-basis fetch.
+
+CHECKLIST: round-5 block appended. K1, K2, K3, M2q, M3, M5p, M8, G8 UNTESTED.
+
+---
+
 ### ROUND 4, ITERATION 9 - 2026-08-25 - DR HOUSE RELEASED. The leap: the FRAME is the mistake.
 
 CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.

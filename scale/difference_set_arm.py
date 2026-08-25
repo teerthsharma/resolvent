@@ -71,9 +71,18 @@ def op_masked(q, k, m, *, rho=1.5, lam=1.00):
     return rho * (pp - lam * pm) / (1.0 + lam)
 
 
-def draws(offsets, *, s, i, j, c, n_draws, seed=0, d=16, hops=2, scale=1.0):
+def draws(offsets, *, s, i, j, c, n_draws, seed=0, d=16, hops=2, scale=1.0,
+          lam=1.00):
     """(lo, hi) gradient pairs at two values of token c. Same shape as the
-    shipped probe, but the mask is an arbitrary offset set."""
+    shipped probe, but the mask is an arbitrary offset set.
+
+    `lam` keeps its historical 1.00 here so this dead arm's recorded numbers
+    do not silently move. THE SHIPPED OPERATOR IS lam = 0.10
+    (`ceq/bench.py:192`), and at lam = 1.00 the sgate is antisymmetric --
+    a single-key row gives pp = pm = 1 and the entry collapses to exactly 0
+    rather than a constant. Callers measuring the shipped operator must pass
+    lam=0.10; `scale/arm_a_rebuild.py` does.
+    """
     g = torch.Generator().manual_seed(seed)
     dev = torch.device("cpu")
     m = offset_mask(s, offsets, dev)
@@ -87,7 +96,7 @@ def draws(offsets, *, s, i, j, c, n_draws, seed=0, d=16, hops=2, scale=1.0):
             x = x0.clone()
             x[c] = cval
             v = v0.clone().requires_grad_(True)
-            a = op_masked(x @ wq, x @ wk, m)
+            a = op_masked(x @ wq, x @ wk, m, lam=lam)
             h, term = v, v
             for _ in range(hops):
                 term = a @ term
