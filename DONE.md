@@ -2,6 +2,66 @@
 
 Round 2 archived below its own header; round-1 archive at `DONE_ARCHIVE_ROUND1.md`.
 
+### ROUND 3, ITERATION 5 - 2026-08-25 - INSPECTOR CLEAN (8/8, 8 controls fired). Prognosis challenge filed.
+
+**[RUN] `python inspector.py 5` -> exit 0. CLEAN: 8 checks, 8 controls all fired.**
+
+    calibration (bench invoked directly)              4 values bit-identical
+    LOCK M2 efadc390c93f                              hash matches
+    bitwise replay dense_signed__at_pivots/s2048/b1   37 journalled, match
+    published: M2 two-point slope                     -1.2977 vs -1.2977
+    value binds + resume                              107 passed
+    lake build CEQ (unmasked exit) + zero sorry       exit=0 sorry=0
+    struck-constant absence (9 docs + shipped code)   12 passed
+    no Claude attribution in any commit               11 commits, 0 hits
+
+**The rotation landed on the number that carries the entire kill** - M2's
+two-point slope - and it reproduces to four decimals. Every must-fire control
+fired, so no check was blind.
+
+---
+
+**PROGNOSIS CHALLENGE FILED (user).** A representation-theorem argument against
+the Prognosis's terminal claim. It enters the differential as a **HYPOTHESIS**,
+on the same terms as Dr House's leap: no RED test, no verdict.
+
+**T1 IS THE LOAD-BEARING CLAIM AND IT RETRODICTS A MEASUREMENT TAKEN BEFORE IT
+WAS FILED.** If the maximal invariant of G (common strictly-monotone
+rescalings) on magnitudes is the RANK VECTOR, then every element of Fix(G)
+factors through (signs, ranks), and every magnitude-covariant route lies outside
+the solution set **by theorem**. [RUN, iteration 0 of this round] R5/R8 changed
+the event in **0/20000** draws; the ECDF transform changed it in **723/20000**.
+**The theorem predicts exactly that split.** A theory that explains a number
+taken before the theory existed is worth more than one fitted to it.
+
+This converts the graveyard from *five samples of a complement* into **five
+corollaries** - a categorically different claim - and makes T3 (signed Sugeno /
+weighted-median, the ordinal chart) a **pre-registered reserve INSIDE the
+solution set** rather than the next ad-hoc route. This project has never had a
+principled place to go when the current arm dies.
+
+**T6(b) IS A CORRECTION TO MY OWN WORK, AND I OWE IT.** `A_8 = 2.187500` was
+enumerated over 256 sign patterns **assuming Rademacher independence**.
+Causal-ECDF ranks under salience selection are **DEPENDENT** - concomitants of
+order statistics. So the constant is an incomplete certificate. Worse: the v5
+prompt already says *"Sign-independence is TESTED, not assumed"* and it was
+written and then not honoured. **Next action.**
+
+**TWO CAUTIONS, both mine to discharge rather than objections:**
+  * **T1 must be BOUND, not cited.** "Maximal invariant under strictly-increasing
+    transforms = ranks" is standard, but the needed version is over FINITE index
+    sets with TIES and a CAUSAL position-dependent ECDF - which is exactly where
+    the clean statement can fail. D1 proposes it in Lean; it is short enough.
+  * **K6 is owed before any public name.** Sugeno integrals have a neural
+    literature. *"Absence = not found, never unoccupied"* is a rule this repo has
+    already broken once.
+
+**GOAL RESTATED BY THE USER, and it is narrower than "attention that works":**
+not the best token predictor but the **next-equilibrium predictor** - understands
+causality and consequences, on Turing-grade problems, at the smallest scale.
+
+CHECKLIST: no status changed. Inspector CLEAN. Four fellows still running.
+
 ### ROUND 3, ITERATION 4 - 2026-08-25 - House mode dispatched on the capability question. Reading HELD pending the audit.
 
 CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.

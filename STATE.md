@@ -5,27 +5,31 @@
 | field | value |
 |---|---|
 | round | **3** - CEQ v5, 30 iterations, promise `SCALEFREE` |
-| iteration | **4 complete, 5 next** |
+| iteration | **5 complete, 6 next** |
 | phase | **Phase 0 - M3 on the windowed arm. Capability before statistics.** |
 | calibration | GREEN [RUN] `run_calib.py --self-test` exit 0, 4/4 bit-identical |
 | inspector | `python inspector.py` - 8 checks, 8 must-fire controls, exits nonzero if any control stays SILENT |
 | repo | https://github.com/teerthsharma/resolvent (private) |
 
-## THE ONE NEXT ACTION (iteration 5)
+## THE ONE NEXT ACTION (iteration 6)
 
-**Iteration 5 is an Inspector pass (every 5th): `python inspector.py`.** It is
-also the mandatory pre-prognosis audit for the house-mode run, so the two
-coincide - re-run every test the fellows claim green, and check every finding has
-a matching RED before it.
+**Test the sign-independence assumption behind `A_8 = 2.187500`. It is mine and
+it is owed.**
 
-Then reconcile the four reports into ONE prognosis. Contradictions get resolved,
-not averaged: Wilson's verified facts settle any factual dispute, and anything
-genuinely undecided goes to Open rather than into the verdict.
+That constant was enumerated over 256 sign patterns **assuming Rademacher
+independence**. Under top-k salience selection the surviving signs are
+**concomitants of order statistics** and may be dependent. The v5 prompt already
+requires this - *"Sign-independence is TESTED, not assumed"* - and the
+requirement was written and then not honoured.
 
-**The first capability reading stays HELD until the audit clears the harness.**
-The specific blocker to clear is Chase's: at s=64, w=8, hop-2 reaches 16
-positions - if the task's flipper-to-payload distance exceeds that, the windowed
-arm cannot see the flipper and its reading is predetermined.
+RED-first. Measure the joint law of (rank, sign) among selected tokens:
+  * `E|B_k|` under the MEASURED sign law vs the independent enumeration;
+  * a must-fire control - a deliberately correlated sign pattern must move it
+    VISIBLY, or the test cannot detect dependence and its green means nothing.
+
+If dependence is found, `A_k` is re-derived under the measured copula and the
+boundedness claim survives regardless, since `|B_k| <= k` is sign-free - only the
+constant moves. **Pin whatever comes out at abs=5e-7.**
 
 ## Open REDs
 
