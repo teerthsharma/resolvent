@@ -426,3 +426,22 @@ is left, and **a not-found cell is permission to test, not a result.**
 | its controls | **15 -> 17.** One vacuous control removed (*"rejects the struck -1.826"*, also true of a literal); three added, each perturbing a different input the check reads. **All fired.** |
 | what the repair found | Published **-1.2977** came from the **rounded** rates; from the raw counts it is **-1.2976**. Delta **4.96e-05** against a **-0.3** bar - **no verdict moves, not a G2 event.** The old check could not have seen it. |
 | the M2 counts themselves | **STILL UNJOURNALLED.** `results/` holds no unit with n=751 or n=549. The check now prints `NOT journalled` every run rather than passing silently. |
+
+**GATE 3 AUDIT [RUN, r5 iter 6] - `scale/gate3_audit.py`, exit 0.**
+
+| item | status |
+|---|---|
+| is gate 3's `0/384` a theorem? | **NO. The cell is LIVE.** 109/384 off-schedule draws have `lo != hi`, max separation **1.505102e-02** = **3.7%** of the on-schedule maximum **4.044973e-01** and ~13 orders above float64 rounding. Real influence. |
+| gate 3 verdict | **FAILS, and the FAIL STANDS.** Off-schedule `c` moves the gradient 109 times and the sign never flips; on-schedule it flips 17/384. **The flip capability tracks lattice placement, not content** - the placement-artifact class that killed the dilation arm. |
+| audit control 1 (must see influence) | **FIRED** - on-schedule live 269/384. |
+| audit control 2 (must read EQUAL) | **WRONG FIRST.** Used `c = i`, which is the *opposite* of inert - it moves `q[i]` and the whole row - and read **live 96/96**. Repaired with the condition derived from the code: `c != i`, `(i-c) not in D`, and no `p` with `(i-p in D and p-j in D)` has `p == c` or `(p-c) in D`. **Now FIRES: live 0/48, max\|lo-hi\| exactly 0.000000e+00.** |
+| side effect | That control **binds Cameron's severance closed form** in the direction it claims - structural disconnection implies bitwise identity. One-directional; a single-visible-key row softmaxes to 1.0 and cannot move even when connected. |
+
+**WILSON [RUN, r5 iter 6] - TASK 1 and TASK 4 in, TASK 2/3 still bucketing.**
+
+| item | status |
+|---|---|
+| flip instrument calibration (TASK 4, ran first) | **PASS.** Planted sign change reads `flip=True` (`+2.849876e+00` / `-2.849876e+00`); softmax reads `flip=False` with `min(I+A+hop2)=0.000000e+00`; at `1e-200` the float path reads `lo*hi = -0.0` and misses a flip the valuation catches. |
+| `scale/valuation.py` docstring | **DEFECT.** Its worked example argues the underflow with float32's `1.18e-38`, but the function takes a **Python float64**, where `1e-30 * -1e-30` is represented fine. **The instrument is right; its stated reason does not reproduce at the stated magnitude.** |
+| **F16 (`lam` is a threshold at 1.0)** | **DOES NOT GENERALISE.** At ARM A's geometry `_causal_sgate_operator` is signed at **every** lam including 0.10 - **30/30** readings, `min A = -1.363636e-01`, negative fraction 0.2322-0.2495, `I+A+pivot_hop2` negative in 5/5 seeds at every `(s, lam)`. Cause is **logit scale**: mean causal \|w\| **1.171e+01** / **1.320e+01** vs the harness's **2.682399e-03**. F16 was true of one geometry and I generalised it - **ninth appearance of correct statement, wrong object.** |
+| K1's flip half | **NOW EVALUABLE** - the signed arm's Jacobian is genuinely negative here, so `flip` is a measurement rather than a theorem. TASK 2/3 numbers **not in**; nothing claimed. |

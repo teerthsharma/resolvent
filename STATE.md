@@ -5,41 +5,46 @@
 | field | value |
 |---|---|
 | round | **5** - CEQ v7, promise `TWOSPHERES`, **30 iterations** |
-| iteration | **5 complete, 6 next** |
+| iteration | **6 complete, 7 next** |
 | phase | **G1 fetches, then ARM A (the torque probe)** |
 | goal | **match or SUPERSEDE self-attention**; next-equilibrium predictor |
 | calibration | GREEN [RUN] `run_calib.py --self-test` exit 0, 4/4 bit-identical |
 | inspector | tri-state; INDETERMINATE exits nonzero |
 | repo | https://github.com/teerthsharma/resolvent (private) |
 
-## THE ONE NEXT ACTION (round 5, iteration 6)
+## THE ONE NEXT ACTION (round 5, iteration 7)
 
-**Read Wilson's K1-on-a-signed-arm report and act on TASK 4 FIRST.**
+**Read Wilson's TASK 2/3 K1 numbers when the buckets land, and read the D_FR
+slope's CI before its point estimate.**
 
-Wilson is running `scale/arm_a_k1.py`. **The order of reading is fixed by the
-contract and by this project's own history: if his planted-sign-change control
-did not read nonzero, the flip instrument is broken and every other number in
-his report is void.** That is read before the slopes, not after.
+TASK 1 and TASK 4 are in and both changed the ground:
+  * **the flip instrument is calibrated** - planted sign change fires, softmax
+    reads zero, and the `1e-200` case shows the float path missing a flip the
+    valuation catches;
+  * **F16 does not generalise.** `_causal_sgate_operator` is signed at **every**
+    lam including 0.10 at ARM A's geometry - 30/30 readings, `min A =
+    -1.363636e-01` - because the mean causal `|w|` here is **1.171e+01** against
+    the harness's **2.682399e-03**. **`lam` is a threshold at 1.0 only when the
+    logits are near zero.** K1's flip half is therefore a measurement now.
 
-If the control fired, then K1 has a real reading for the first time:
+**The reading order is fixed:** whether the `D_FR` slope's bootstrap CI
+**excludes**, **includes** or **straddles** the pre-registered **-0.3** line
+comes before the point estimate. Iteration 4 read **-0.3061** with no error bar
+and that is the entire reason K1 was voided. **Do not round toward a verdict in
+either direction** - an unfavourable reading pulled out of noise is worth exactly
+what a favourable one is.
 
-  * **the flip half** measured on `_causal_sgate_operator` at whichever `lam`
-    is genuinely signed at this geometry - **F16 says `lam=0.10` has min entry
-    exactly 0.000e+00 at harness scale, so `lam` is a threshold at 1.0, not a
-    dial**, and Wilson is verifying or refuting that first;
-  * **the D_FR half** on 6 k points and >=400 draws, **with a bootstrap CI on
-    the slope itself**. The only reason K1 was voided is that **-0.3061 against
-    a -0.3 line had no error bar.** Read whether the CI **excludes**, **includes**
-    or **straddles** -0.3, and do not round toward a verdict in either direction.
+**Gate 3 is closed and it is a FAIL, not a void.** The audit's repaired control
+fires at 0/48 with separation exactly zero, so the 109/384 live off-schedule
+draws are the arm, not the probe. **The additive-basis arm's flip behaviour
+tracks lattice placement rather than content.** That does not touch the basis's
+COVERAGE result - k=12 proven for `[1,56]`, k=18 for `[1,127]`, unreachable
+fraction driven to exactly 0.0000 - which is a separate object and survives.
 
-**Do not declare the pre-registered "no leap" branch on a point estimate.** The
-unfavourable reading taken from noise is worth exactly as little as the
-favourable one, and this project has already spent two rounds learning that.
-
-**Cameron's arm_a_rebuild landed and its gate 3 FAILED** - on-schedule X4
-0.044271 [0.027821, 0.069748] vs off-schedule 0.000000 [0, 0.009905], CIs
-disjoint. That is the test that killed the dilation arm firing again, and it
-needs its own iteration; it does not get folded into K1's.
+**A defect to repair when the instrument is next opened:** `scale/valuation.py`'s
+docstring argues the underflow with float32's `1.18e-38` while the function takes
+a Python float64. The instrument is GREEN; **its stated reason does not reproduce
+at the magnitude it names.**
 
 ## Open REDs
 

@@ -1,3 +1,115 @@
+### ROUND 5, ITERATION 6 - 2026-08-25 - Gate 3 audited. My vacuity hypothesis was WRONG, my first control was WRONG, and the FAIL stands.
+
+CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.
+
+ACTION (one): built and ran `scale/gate3_audit.py` against Cameron's birth gate 3,
+which read
+
+    on-schedule   X4 = 0.044271  [0.027821, 0.069748]  (17/384)
+    off-schedule  X4 = 0.000000  [0.000000, 0.009905]  ( 0/384)   -> FAIL
+
+**WHY I SUSPECTED IT.** An exact `0/384` is the signature this project has now
+been bitten by twice. Two iterations ago I voided ARM A's K1 because its `flip`
+column read exactly 0.00000 at every k - **not a statistic decaying, but a
+non-negative Jacobian making a sign change impossible before any draw was
+taken.** A control that cannot be nonzero is not a control. So the question was
+never *did it flip*; it was **could it have flipped.**
+
+**THE TEST THAT SETTLES IT.** For each off-schedule pair, are the two gradient
+branches **bitwise equal**? `lo == hi` means `c` moved nothing and a flip was
+impossible. `lo != hi` means `c` moved something and the sign held.
+
+**[RUN] `python scale/gate3_audit.py` -> exit 0**
+
+    cell               live/total     max|lo-hi|   flips
+    on-schedule           269/384   4.044973e-01      17
+    off-schedule          109/384   1.505102e-02       0
+
+**MY HYPOTHESIS WAS WRONG AND THE CELL IS LIVE.** `109` of `384` off-schedule
+draws have `lo != hi`. The largest off-schedule separation is **1.505102e-02** -
+**3.7% of the on-schedule maximum 4.044973e-01**, and thirteen orders of
+magnitude above float64 rounding at that scale. **That is real influence, not
+numerical noise.**
+
+**SO GATE 3 FAILS AND THE FAIL STANDS.** Off the schedule `c` genuinely moves the
+gradient in 109 draws and the sign **never once** flips; on the schedule it flips
+17 times. **The flip capability is a function of where `c` sits on the offset
+lattice, not of what `c` is.** That is the placement-artifact class, and it is
+the same test that killed the dilation arm.
+
+**AND MY FIRST CONTROL WAS WRONG, WHICH IS RECORDED RATHER THAN QUIETLY
+REPLACED.** The probe needs a case where it MUST read equal, or a `live` reading
+could be the probe rather than the arm. I first used **`c = i`**, reasoning that
+`i` is the query row. **`c = i` is the exact opposite of inert** - it is the one
+position that moves `q[i]` and therefore the entire row - and it read **live
+96/96**. [RUN] `[DID NOT FIRE] probe reads EQUAL on a structurally inert c (c=i:
+live 96/96)`. **I built a false-positive control out of a guaranteed positive.**
+
+**THE REPAIRED CONTROL IS DERIVED FROM THE CODE, NOT GUESSED.** `draws` computes
+`h = v + A v + A^2 v` with `A` masked so query `a` attends key `b` iff
+`(a-b) in D`. So `d(h[i])/d(v[j])` reads `A[i,j]` and every `A[i,p]A[p,j]`, and
+`x[c]` enters `A[a,b]` only via `q[a]` and via row `a`'s softmax normalisation,
+which contains `c` iff `(a-c) in D`. Hence
+
+    c is provably inert  <=>  c != i  and  (i-c) not in D  and
+                              no p with (i-p in D and p-j in D)
+                              has p == c or (p-c) in D
+
+[RUN] `[FIRED] probe reads BITWISE EQUAL on a provably inert c (live 0/48,
+max|lo-hi| 0.000000e+00, 2 such pairs found)`. **48 draws, every one bitwise
+identical, maximum separation exactly zero.**
+
+**THAT CONTROL IS ALSO A BIND ON CAMERON'S SEVERANCE CLOSED FORM**, in the
+direction the closed form actually claims: structural disconnection implies
+bitwise identity. It is **one-directional** and the file says so - the converse
+is false, because a row with a single visible key softmaxes to 1.0 and cannot
+move even when connected.
+
+---
+
+**WILSON REPORTED TASK 1 AND TASK 4, AND TASK 1 OVERTURNS A PREMISE I WAS
+CARRYING INTO EVERY ITERATION OF THIS ROUND.**
+
+**W-T4 THE FLIP INSTRUMENT IS CALIBRATED, and it ran FIRST as required.**
+  * C1 planted sign change: `flip=True`, `g0=+2.849876e+00`, `g1=-2.849876e+00`.
+  * C2 softmax: `flip=False`, `g0=-4.249142e-06`, `g1=-4.249579e-06`,
+    `min(I+A+hop2)=0.000000e+00`.
+  * C3 valuation vs float at `lo=1e-200, hi=-1e-200`: float reads `lo*hi = -0.0`
+    -> no flip; **valuation reads flip.** The defect is real at that magnitude.
+
+**AND HE CORRECTS `scale/valuation.py`'s OWN DOCSTRING.** At `1e-30` the float
+path is **CORRECT** - float64 represents `-1e-60` without trouble. The docstring
+argues the defect using float32's `1.18e-38`, but **the function takes a Python
+float64**, so **its own worked example does not reproduce.** The instrument is
+right; its stated reason is wrong at the stated magnitude. That is a documentation
+defect in a GREEN instrument and it is logged as one.
+
+**W-T1 F16 DOES NOT TRANSFER TO ARM A's GEOMETRY. `lam` is not a threshold
+here.** F16 recorded that `_causal_sgate_operator(lam=0.10)` has min entry
+exactly `0.000e+00` at harness scale, and I concluded `lam` is a threshold at 1.0
+rather than a dial. **At ARM A's geometry it is signed at EVERY lam tested,
+including 0.10**, at both `s`, all 5 seeds - **30/30 readings**, `min A =
+-1.363636e-01` at `lam=0.10`, mean negative fraction **0.2322-0.2495**, and
+`I + A + pivot_hop2` negative in **5/5** seeds at every `(s, lam)`.
+
+**THE CAUSE IS LOGIT SCALE, which is F17's point.** ARM A's mean causal `|w|` is
+**1.171e+01** at s=256 and **1.320e+01** at s=1024, against the harness's
+**2.682399e-03**. **`lam` is a threshold at 1.0 only when `w` is approximately
+zero.** F16 was a true reading of one geometry that I generalised into a property
+of the operator - **the ninth appearance of correct statement, wrong object, and
+this one is mine.**
+
+**WHAT THIS BUYS: K1's flip half is EVALUABLE.** The reason iteration 4 could not
+read it was a non-negative Jacobian on `pivot_unsigned`. On the signed arm at ARM
+A's geometry the Jacobian **is** negative, so `flip` can be nonzero and the slope
+is a measurement rather than a theorem. Buckets are running (7/48 units at
+~16.5 s/unit); **TASK 2/3 numbers are NOT in and nothing is claimed for them.**
+
+CHECKLIST: **GATE 3 FAILS, unconditionally** - off-schedule cell LIVE at 109/384,
+max separation 1.505102e-02, zero flips. Audit's own false-positive control was
+**wrong first, repaired, and now FIRES at 0/48 with separation exactly zero.**
+**F16 does not generalise**; the signed arm IS signed at ARM A's geometry.
+
 ### ROUND 5, ITERATION 5 - 2026-08-25 - INSPECTOR PASS. The check that verified `math.log10` is repaired, and the repair immediately saw something the old one could not.
 
 CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.
