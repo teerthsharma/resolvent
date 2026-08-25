@@ -2,6 +2,68 @@
 
 Round 2 archived below its own header; round-1 archive at `DONE_ARCHIVE_ROUND1.md`.
 
+### ROUND 3, ITERATION 9 - 2026-08-25 - The M3 gate is repaired and REFUSES Chase's broken task. Softmax measured FIRST.
+
+CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.
+
+ACTION (one): repaired the bar Chase reported RED, and ran softmax through it
+first, as Phase 0 requires.
+
+**WHAT WAS WRONG.** Two of three checks were algebraic identities:
+`predict_the_mean = nrmse(y.mean(), y)` is 1.0 by the definition of nrmse, and
+`oracle = nrmse(oracle(x,f,p), y)` is `nrmse(t, t)` because
+[READ, negation_scope.py:92] `make_batch` RETURNS `oracle(x,f,p)` as `y`. Only
+`payload_only` read the task, and it only requires the label to differ from the
+payload. **A flipper-blind label passed and printed BAR CALIBRATED.**
+
+**TWO CHECKS ADDED, both VALUES with known answers at BOTH ends:**
+
+  * **`flipper_dependence`** - negate the flipper, require the label to move.
+    For `y = payload * sign` the label negates, so the answer is **exactly 2.0**;
+    for a flipper-blind label it is **exactly 0.0**. This is the check that
+    refuses a task which is not this task.
+  * **`trained_two_feature`** - a MODEL, trained at the harness's own budget,
+    given only the two oracle features. Without it *"this arm failed"* and
+    *"this harness cannot produce a pass"* were the same printout.
+
+**[RUN] RED-FIRST, all three ends seen:**
+
+    task                              flipper_dep  trained_2f  verdict
+    real                                 2.000000    0.047149  BAR CALIBRATED
+    Chase's flipper-blind (|payload|)    0.000000    0.099695  REFUSED
+    label = payload exactly                    --          --  REFUSED
+
+The refusal messages name the clause: *"flipper_dependence=0.000000 -- the label
+barely moves when the flipper is negated, so this is NOT the negation-scope
+task"* and *"payload_only=0.000000 BEATS the bar -- the label is the payload"*.
+
+**ONE GATE, NOT TWO.** `bar_verdict()` now lives in `negation_scope.py` and
+`m3_capability.py` calls it. The harness previously held a **private copy** of
+the pass condition - the exact shape of round 2's defect where `report()` and
+`_verdict()` disagreed and the tested copy was the correct one.
+
+**[RUN] SOFTMAX MEASURED FIRST, s=64 d=24 steps=150 n_train=128 n_eval=256:**
+
+    flipper_dependence   2.000000     trained_two_feature  0.036698
+    [softmax] n_params=4769
+      RED 0-step   train=1.003153  eval=1.008951  [OK]
+      POST         train=0.196599  eval=**2.116579**  CI [1.791078, 2.411601]
+
+**THE READING IS AN OVERFIT, NOT AN OPERATOR VERDICT.** 4769 parameters against
+**128 training examples**: train 0.197, eval 2.117. Chase's C4 was *"no arm has
+ever passed"* - this says why, and it is not the operator.
+
+**A LIMITATION OF MY OWN CONTROL, STATED BECAUSE IT WOULD OTHERWISE BE READ TOO
+STRONGLY.** `trained_two_feature = 0.036698` proves the **TASK** is learnable at
+this step budget. It does **NOT** prove the **ARM's** budget is adequate: it sees
+2 hand-picked scalar features and 256 examples, while the arms must learn from
+raw `x` at n_train=128. Those are different claims and the second is still
+unestablished. A control matching the arms' data budget and architecture class
+would be needed, and it does not exist yet.
+
+CHECKLIST: M3 bar REPAIRED - was RED [Chase], now refuses both broken tasks with
+named clauses. M3w still BLOCKED on reach (`d(out)/d(x[flipper]) = 0.0`).
+
 ### ROUND 3, ITERATION 8 - 2026-08-25 - F1 IS SCOPED TO A STACK NOBODY SHIPS. Foreman resolves the open contradiction.
 
 CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.

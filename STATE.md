@@ -5,30 +5,29 @@
 | field | value |
 |---|---|
 | round | **3** - CEQ v5, 30 iterations, promise `SCALEFREE` |
-| iteration | **8 complete, 9 next** |
+| iteration | **9 complete, 10 next** |
 | phase | **Phase 0 - M3 on the windowed arm. Capability before statistics.** |
 | calibration | GREEN [RUN] `run_calib.py --self-test` exit 0, 4/4 bit-identical |
 | inspector | `python inspector.py` - 8 checks, 8 must-fire controls, exits nonzero if any control stays SILENT |
 | repo | https://github.com/teerthsharma/resolvent (private) |
 
-## THE ONE NEXT ACTION (iteration 9)
+## THE ONE NEXT ACTION (iteration 10)
 
-**Repair the M3 bar - it is still the gate that guards the round, and Chase
-showed two of its three checks are algebraic identities.**
+**Find a data budget at which ANY arm can generalise, before comparing arms at
+all.** Softmax reads train **0.196599** against eval **2.116579** at
+n_train=128 with 4769 parameters. That is a 10.8x train/eval gap: the arms are
+memorising, and at that point the eval number ranks overfitting, not capability.
 
-`predict_the_mean = nrmse(y.mean(), y)` is identically 1.0. `oracle =
-nrmse(oracle(x,f,p), y)` is `nrmse(t,t)`, identically 0.0, because **y was
-produced by that same call** (`negation_scope.py:92`: `return x, oracle(x,f,p),
-f, p`). Only `payload_only` reads the task, and the bar printed **BAR
-CALIBRATED** on a label with zero flipper dependence.
+Sweep `n_train` upward (512 / 2048 / 8192) on **softmax alone**, and find the
+smallest budget where eval NRMSE goes below 1.0. Two outcomes, both useful:
+  * **a budget exists** -> that is the setting every arm must be compared at,
+    and every prior M3 reading in this repo was taken below it;
+  * **no budget makes softmax generalise** -> the task as constructed is not
+    learnable by this architecture class at this scale, and M3 must be
+    re-specified before any arm is credited or blamed.
 
-Two additions, both RED-first against Chase's own broken-task case:
-  * **TASK-DEPENDENCE CHECK** - perturb `x[:, f, :]` and require `y` to move.
-    A label that does not respond to the flipper is not this task.
-  * **MODEL-LEVEL POSITIVE CONTROL** - something TRAINED that must pass, so
-    *"arm failed"* and *"harness cannot produce a pass"* stop being the same
-    printout. Today no arm has ever passed and the oracle is an identity, not a
-    model.
+This is cheap, it is softmax-only so it moves no signed number, and it decides
+whether the whole M3 axis is measuring capability or memorisation.
 
 ## Open REDs
 

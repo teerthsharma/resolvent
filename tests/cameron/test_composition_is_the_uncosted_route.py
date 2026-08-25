@@ -165,6 +165,51 @@ def test_the_instrument_still_reads_the_m2_decay():
     assert sl <= M2_BAR, f"CONTROL SILENT: glob_1 slope={sl:.6f}  {row}"
 
 
+@pytest.mark.parametrize("s", [32, 128, 512, 2048])
+def test_the_row_width_is_constant_and_the_support_is_the_whole_context(s):
+    """The two numbers the tradeoff says cannot both hold. Pinned, not argued.
+
+    `workdone2.md` section 7 states the mechanism: the background `B_k(s)`
+    inherits the scale of tokens promoted by a selection ranging over `s`, so
+    what is needed is an aggregation whose surviving background does not. A row
+    that sums over a FIXED `w` entries at every `s` has no such selection --
+    there is nothing ranging over `s` to promote.
+
+    So this pins both halves at once, as exact integers rather than bounds:
+
+      * `max_j nnz(A[i, :])` over every layer -- must be exactly `window`, at
+        every `s`. This is the quantity that decays the global arm.
+      * `|{ j : d(out_i)/d(v_j) != 0 }|` -- must be exactly `s`. This is REACH,
+        and `s` is not "most of the context", it is all of it.
+
+    `RESEARCH.md:158` voided the published windowed row because `out_i` read
+    only `[i-16, i]` and so could not vary with `s`. The second number here is
+    the direct refutation of that failure mode for this arm: the support is the
+    whole context and it GROWS with `s`, 32 -> 2048.
+    """
+    sch = D.log_schedule(s)
+    masks = [D.dilated_mask(s, DEV, 8, dl) for dl in sch]
+    assert max(int(m.sum(-1).max()) for m in masks) == 8
+
+    g = torch.Generator().manual_seed(0)
+    d, i, depth = 16, s - 1, len(sch)
+    rnd = lambda *sh: torch.randn(*sh, generator=g)
+    wq = [rnd(d, d) for _ in range(depth)]
+    wk = [rnd(d, d) for _ in range(depth)]
+    wo = [rnd(d, d) for _ in range(depth)]
+    x, v = rnd(s, d), rnd(s, d).requires_grad_(True)
+    h = v
+    for layer in range(depth):
+        a = D.sgate_masked(x @ wq[layer], x @ wk[layer], masks[layer])
+        acc, term = h, h
+        for _ in range(2):
+            term = a @ term
+            acc = acc + term
+        h = acc @ wo[layer]
+    grad, = torch.autograd.grad(h[i].sum(), v)
+    assert int((grad.abs().sum(-1) > 0).sum()) == s
+
+
 # ---------------------------------------------------------------------------
 # THE VERDICT TESTS. These assert the repository's stated position.
 # ---------------------------------------------------------------------------

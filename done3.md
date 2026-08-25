@@ -213,6 +213,45 @@ does not survive is *"softmax cannot do this at all."* The honest number is
 
 ---
 
-*Updated through round 3, iteration 8. Four house-mode agents still running;
+## Iteration 9 — the gate that guards the round was two identities
+
+Chase reported the M3 bar RED. Two of its three checks could not fail:
+`predict_the_mean = nrmse(y.mean(), y)` is 1.0 by the definition of nrmse, and
+`oracle = nrmse(oracle(x,f,p), y)` is `nrmse(t, t)` because `make_batch` returns
+`oracle(x,f,p)` **as** `y`. Only `payload_only` read the task at all — and a
+label with no flipper dependence whatsoever passed and printed BAR CALIBRATED.
+
+Two checks added, both values with known answers at both ends:
+
+| task | flipper_dependence | trained_two_feature | verdict |
+|---|---|---|---|
+| real | **2.000000** | 0.047149 | BAR CALIBRATED |
+| flipper-blind (`|payload|`) | **0.000000** | 0.099695 | **REFUSED** |
+| label = payload | — | — | **REFUSED** |
+
+`flipper_dependence` is exactly 2.0 on the real task because negating the sign
+negates the label, and exactly 0.0 when the label ignores the flipper.
+`trained_two_feature` is a **model** trained at the harness's own budget on the
+two oracle features — without it, "this arm failed" and "this harness cannot
+produce a pass" were the same printout.
+
+The gate now lives in one place. The harness had held a private copy of the pass
+condition, which is the exact shape of round 2's defect where the tested copy was
+correct and the copy that executed was not.
+
+**Softmax, measured first as Phase 0 requires:** train **0.196599**, eval
+**2.116579**, CI [1.791078, 2.411601], at 4769 parameters against **128 training
+examples**. That is an overfit, not an operator verdict — and it explains Chase's
+"no arm has ever passed" without implicating any operator.
+
+One limitation of my own control, stated so it is not read too strongly:
+`trained_two_feature` proves the **task** is learnable at this step budget. It
+does not prove the **arm's** budget is adequate — it sees two hand-picked scalar
+features and 256 examples while the arms learn from raw `x` at 128. That second
+claim is still unestablished.
+
+---
+
+*Updated through round 3, iteration 9. Four house-mode agents still running;
 their findings and the representation-theorem challenge reconcile into a
 prognosis when they land.*

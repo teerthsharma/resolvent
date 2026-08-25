@@ -45,7 +45,8 @@ import torch.nn as nn
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
 from ceq import bench
-from scale.negation_scope import make_batch, nrmse, bootstrap_ci, calibrate_bar
+from scale.negation_scope import (make_batch, nrmse, bootstrap_ci, calibrate_bar,
+                                  bar_verdict)
 from scale.pivot_probe import select_pivots, pivot_hop2
 
 ARMS = ("softmax", "pivot_signed", "pivot_unsigned", "windowed_signed")
@@ -238,13 +239,18 @@ def main():
               f"device=cpu (no .cuda() anywhere in this file)")
 
         print("\n=== BAR CALIBRATION (must pass before any arm is credited) ===")
-        cal = calibrate_bar(n=a.n_eval, s=a.s, d=a.d)
+        cal = calibrate_bar(n=a.n_eval, s=a.s, d=a.d, steps=a.steps, lr=LR)
         for name, v in cal.items():
-            print(f"  {name:>18} NRMSE {v:.6f}")
-        cal_ok = (abs(cal["predict_the_mean"] - 1.0) < 1e-6
-                  and cal["payload_only"] >= 1.0
-                  and cal["oracle"] < 1e-6)
-        print(f"  BAR {'CALIBRATED' if cal_ok else 'BROKEN'}")
+            print(f"  {name:>20} {v:.6f}")
+        # ONE gate, owned by `negation_scope`. This block used to hold a private
+        # copy of the pass condition, and two of its three clauses were algebraic
+        # identities -- `nrmse(y.mean(), y)` is 1.0 by definition and
+        # `nrmse(oracle(x,f,p), y)` is `nrmse(t, t)` because `make_batch` RETURNS
+        # `oracle(x,f,p)` as `y`. A flipper-blind label passed it. Round 2 also
+        # shipped a verdict whose tested copy was right while the copy that ran
+        # was wrong; two copies of one rule is that defect waiting.
+        cal_ok, why = bar_verdict(cal)
+        print(f"  BAR {'CALIBRATED' if cal_ok else 'BROKEN'}  -- {why}")
         if not cal_ok:
             print("ABORT: calibration bar failed.")
             return 1

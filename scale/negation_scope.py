@@ -120,29 +120,101 @@ def bootstrap_ci(pred, y, *, n_boot: int = 400, seed: int = 0, alpha=0.05):
 # CALIBRATION OF THE BAR -- run before any arm is credited with beating it
 # ==========================================================================
 
-def calibrate_bar(n: int = 2048, s: int = 512, d: int = 256) -> dict:
-    """Three reference predictors pin the scale at both ends.
+def calibrate_bar(n: int = 2048, s: int = 512, d: int = 256, *,
+                  oracle_fn=None, steps: int = 150, lr: float = 0.02,
+                  seed: int = 0) -> dict:
+    """Five reference points pin the scale AND prove the task and budget are real.
 
-    An instrument that has only ever been seen reporting good numbers is not an
-    instrument. Eleven in this project were internally consistent and externally
-    wrong, including the calibration gate itself.
+    THE THREE ORIGINAL CHECKS WERE NOT ALL MEASUREMENTS. Two were algebraic
+    identities:
+
+        predict_the_mean = nrmse(y.mean(), y)          == 1.0 by definition of nrmse
+        oracle           = nrmse(oracle(x,f,p), y)     == 0.0 because `make_batch`
+                                                          RETURNS oracle(x,f,p) as y
+
+    so `nrmse(t, t)` is being compared to zero. Only `payload_only` read the task
+    at all, and it only requires the label to differ from the payload. A label
+    with NO dependence on the flipper -- the entire premise of this task removed --
+    passed the gate and printed BAR CALIBRATED. That is this project's
+    "zero BY CONSTRUCTION mapped to GREEN" defect, sitting in the gate that
+    decides whether any arm is credited.
+
+    Two checks are added, and both compare VALUES with known answers at both ends.
+
+    4. FLIPPER DEPENDENCE. Negate the flipper and require the label to move.
+       For `y = payload * sign` the label negates, so the relative movement is
+       exactly 2.0; for a flipper-blind label it is exactly 0.0. This is the
+       check that refuses a task which is not this task.
+
+    5. TRAINED POSITIVE CONTROL. A small model, trained at the harness's own
+       budget, given ONLY the two oracle features. It must beat the bar. Without
+       it "this arm failed" and "this harness cannot produce a pass" are the same
+       printout -- and in this repository no arm has ever passed, while the
+       `oracle` entry is an identity rather than a trained model.
     """
-    x, y, f, p = make_batch(n, s, d, seed=0)
+    ofn = oracle_fn or oracle
+    x, y, f, p = make_batch(n, s, d, seed=seed)
+    if oracle_fn is not None:
+        y = ofn(x, f, p)
     out = {}
 
-    # 1. predict-the-mean. MUST be exactly 1.0 -- that IS the definition of the
-    #    bar, so if this is not 1.0 the metric is mis-implemented.
+    # 1. predict-the-mean. Identically 1.0 -- kept because it DEFINES the bar,
+    #    and labelled so nobody reads it as evidence about the task.
     out["predict_the_mean"] = nrmse(y.mean().expand_as(y), y)
 
-    # 2. flipper-blind: sees the payload, cannot see the sign. The best it can
-    #    do is guess, so it must land AT OR ABOVE the bar. This is the arm shape
-    #    every W4 arm actually had.
+    # 2. flipper-blind: sees the payload, cannot see the sign.
     out["payload_only"] = nrmse(x[:, p, CH_PAYLOAD], y)
 
-    # 3. the oracle itself, recomputed. MUST be ~0 -- if a perfect predictor
-    #    does not read 0 the task is unsolvable and no arm could ever pass.
-    out["oracle"] = nrmse(oracle(x, f, p), y)
+    # 3. the oracle, recomputed. Identically 0.0 when `y` came from `ofn`.
+    out["oracle"] = nrmse(ofn(x, f, p), y)
+
+    # 4. FLIPPER DEPENDENCE -- the check that a flipper-blind task cannot pass.
+    xf = x.clone()
+    xf[:, f, CH_FLIP] = -xf[:, f, CH_FLIP]
+    moved = float((ofn(xf, f, p) - y).abs().mean())
+    scale = float(y.abs().mean())
+    out["flipper_dependence"] = moved / scale if scale > 0 else float("nan")
+
+    # 5. TRAINED POSITIVE CONTROL -- model-level, at the harness's own budget.
+    g = torch.Generator().manual_seed(seed)
+    feats = torch.stack([x[:, f, CH_FLIP], x[:, p, CH_PAYLOAD]], dim=-1)
+    net = torch.nn.Sequential(torch.nn.Linear(2, 32), torch.nn.GELU(),
+                              torch.nn.Linear(32, 1))
+    for layer in net:
+        if isinstance(layer, torch.nn.Linear):
+            torch.nn.init.normal_(layer.weight, 0.0, 0.5, generator=g)
+            torch.nn.init.zeros_(layer.bias)
+    opt = torch.optim.Adam(net.parameters(), lr=lr)
+    for _ in range(steps):
+        opt.zero_grad()
+        loss = ((net(feats).squeeze(-1) - y) ** 2).mean()
+        loss.backward()
+        opt.step()
+    with torch.no_grad():
+        out["trained_two_feature"] = nrmse(net(feats).squeeze(-1), y)
     return out
+
+
+#: The gate, in ONE place. `m3_capability.py` used to hold a private copy of the
+#: pass condition; round 2 shipped a verdict whose tested copy was correct while
+#: the copy that executed was not, and two copies of one rule is that defect
+#: waiting to happen.
+def bar_verdict(cal: dict) -> tuple[bool, str]:
+    """(ok, reason). Every clause must be EVALUABLE and must be able to fail."""
+    if abs(cal["predict_the_mean"] - 1.0) > 1e-6:
+        return False, f"predict_the_mean={cal['predict_the_mean']:.6f}, not 1.0 -- nrmse is mis-implemented"
+    if not (cal["payload_only"] >= 1.0):
+        return False, f"payload_only={cal['payload_only']:.6f} BEATS the bar -- the label is the payload"
+    if not (cal["oracle"] < 1e-6):
+        return False, f"oracle={cal['oracle']:.6f}, not ~0 -- the task is unsolvable"
+    if not (cal["flipper_dependence"] > 0.5):
+        return False, (f"flipper_dependence={cal['flipper_dependence']:.6f} -- the label barely "
+                       f"moves when the flipper is negated, so this is NOT the negation-scope task")
+    if not (cal["trained_two_feature"] < 1.0):
+        return False, (f"trained_two_feature={cal['trained_two_feature']:.6f} >= 1.0 -- a model "
+                       f"given the ORACLE FEATURES cannot beat the bar at this budget, so no arm "
+                       f"can, and every arm reading is uninterpretable")
+    return True, "BAR CALIBRATED"
 
 
 def main():
