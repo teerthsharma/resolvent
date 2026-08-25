@@ -637,3 +637,13 @@ Replayed ARM A's own draw stream (published `D_FR causal` reproduced to 6 dp at 
 | defect ledger | **10 defects of mine tabulated with where each was introduced**, plus the shape the last four share. **4 defects found by other agents listed separately** so the record does not read as self-discovery. |
 | withdrawn claims | **5 tabulated with what replaced them**, including two of mine that erred in the generous direction. |
 | **promise** | **HELD.** The chapter's closing limit states that the Health Inspector had not returned, so **nothing in D1 has passed an independent audit yet**, and a struck claim must not stand in it as though it had survived. |
+
+**INSPECTOR PASS + SCAN COVERAGE [RUN, r5 iter 20].**
+
+| item | status |
+|---|---|
+| `python inspector.py` | **CLEAN, exit 0, 11 checks / 18 controls all fired.** Coverage line holds at **107/1278 = 8.37%**. |
+| **`D1.md` in the struck-constant scan** | **WAS ABSENT, NOW ADDED.** Written at iteration 19, it is the contract's negative-result **deliverable** and it **ships** - and `LEAD_DOCS` did not list it. **A shipped document outside this scan is how `1.471448` survived eighteen iterations.** [RUN] 13 passed, exit 0; **D1.md carries no struck value.** |
+| **the "9 documents" count** | **WAS A TYPO.** `LEAD_DOCS` listed **`MODEL_CARD.md` twice**; the params deduplicate via `sorted(set(...))` so no check was doubled, but the **reported count is the param count**. **Chase flagged this at iteration 11 and it had not been repaired.** De-duplicated. |
+| full-suite corroboration for Chase F5 | **WEAK, and labelled so.** A nurse's full-suite attempt collected **1278** and was **KILLED at 56% with no summary and no exit code** (`grep -c EXITCODE` = 0). **Not a failure count.** It agrees in direction with Chase's directly-measured 8 failures in two files: **failures exist outside the covered 107.** |
+| tree drift during measurement | `scale/*.py` grew **51 -> 52** mid-task with ten new probe files observed. **Several agents write this tree concurrently** - which is why every number this round carries its own bind. |

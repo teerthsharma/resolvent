@@ -73,7 +73,18 @@ STRIKE_MARKERS = (
 )
 
 #: Documents a stranger reads as current claims.
-LEAD_DOCS = ("README.md", "MODEL_CARD.md", "MODEL_CARD.md", "PROGNOSIS.md",
+#: TWO REPAIRS HERE, both of them coverage rather than logic.
+#:
+#: 1. `MODEL_CARD.md` WAS LISTED TWICE. The parametrisation deduplicates via
+#:    `sorted(set(...))`, so the duplicate never doubled a check -- but the
+#:    Inspector reports "9 documents" from the PARAM COUNT, which made the tuple
+#:    look like it covered one more document than it did. A count that is a
+#:    property of a typo is not a count.
+#: 2. `D1.md` WAS NOT COVERED AT ALL. It is the contract's negative-result
+#:    DELIVERABLE (`LOOP_PROMPT.md` clause 10) and it ships. A shipped document
+#:    outside the struck-constant scan is exactly how `1.471448` survived
+#:    eighteen iterations -- a number in an artifact nothing checked.
+LEAD_DOCS = ("README.md", "MODEL_CARD.md", "PROGNOSIS.md", "D1.md",
              "CHECKLIST.md", "LOOP_PROMPT.md", "STATE.md")
 
 #: Source that ships.

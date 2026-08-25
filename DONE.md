@@ -1,3 +1,57 @@
+### ROUND 5, ITERATION 20 - 2026-08-26 - INSPECTOR PASS. D1 was written yesterday and was OUTSIDE the struck-constant scan; the document count was a typo.
+
+CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.
+[RUN] `python inspector.py` -> **exit 0, CLEAN, 11 checks, 18 controls all
+fired.** The coverage line added at iteration 15 holds: **107/1278 = 8.37%**.
+
+ACTION (one): the Inspector pass **and the gap it exposed.**
+
+**TWO DEFECTS IN THE STRUCK-CONSTANT SCAN'S COVERAGE, both found by reading what
+the check actually enumerates rather than trusting its summary line.**
+
+**1. `D1.md` WAS NOT COVERED AT ALL.** It was written at iteration 19, it is the
+contract's **negative-result DELIVERABLE** (`LOOP_PROMPT.md` clause 10), and it
+**ships**. `LEAD_DOCS` did not contain it. **A shipped document outside the
+struck-constant scan is exactly how `1.471448` survived eighteen iterations** - a
+number in an artifact that nothing checked. **Fixed the day after the document was
+created, which is the only reason it is a footnote rather than a chapter.**
+
+**2. THE "9 DOCUMENTS" IN THE INSPECTOR'S OUTPUT WAS A TYPO.** [READ]
+`tests/loop/test_no_struck_constant_ships.py:76` listed **`MODEL_CARD.md` twice.**
+The parametrisation deduplicates through `sorted(set(...))`, so **the duplicate
+never doubled a check** - but the reported count comes from the **param count**,
+so the tuple looked like it covered one more document than it did. **Chase flagged
+this at iteration 11** (*"MODEL_CARD.md is listed twice in LEAD_DOCS, so '9
+documents' is the param count, not the document count"*) **and it had not been
+repaired.** **A count that is a property of a typo is not a count.**
+
+**[RUN] after the repair:** `pytest tests/loop/test_no_struck_constant_ships.py`
+-> **exit 0, 13 passed** (was 12). **`D1.md` passes the scan**, so writing it
+introduced no struck value.
+
+---
+
+**CORROBORATION FOR CHASE'S F5, and it is reported with its limits.** A nurse
+task attempting the **full suite** returned: **1278 tests collected**, and the
+run was **KILLED by the harness at 56% with no summary and no exit code**. Its
+captured progress line shows **many `F` marks across the covered range.**
+
+**THAT IS NOT A FAILURE COUNT AND MUST NOT BE READ AS ONE.** No summary line was
+written, no tracebacks were captured, and `grep -c "EXITCODE"` on the output reads
+**0**. What it does establish, weakly and in the same direction as Chase's
+directly-measured 8 failures in two files, is that **failures exist outside the
+Inspector's 107.** The Inspector now prints that limit itself.
+
+**THE NURSE ALSO RECORDED TREE DRIFT DURING ITS OWN RUN** - `scale/*.py` went
+from 51 to 52 files mid-task, naming ten probe files that appeared while it
+worked. **Several agents are writing this tree concurrently**, which is why every
+number this round carries its own bind rather than trusting a directory listing.
+
+CHECKLIST: **Inspector CLEAN, 11 checks / 18 controls, coverage 8.37% printed.**
+**`D1.md` ADDED to the struck-constant scan** - it shipped uncovered for one
+iteration. **`MODEL_CARD.md` de-duplicated in `LEAD_DOCS`**, so the reported
+document count is no longer a typo. 12 -> 13 params, exit 0.
+
 ### ROUND 5, ITERATION 19 - 2026-08-26 - D1 EXISTS. The negative result is written, with the acceptance criteria it never had.
 
 CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.
