@@ -7,8 +7,11 @@ No name is coined. The G1 fetch for this cell is OWED.
     |R(D)| on raw [1,56]               = 24   (need 56)   <- what a causal 2-hop actually reaches
     |D+D| mod 57 (incl. 0)             = 36   (v = 57)
 
-  raw coverage of [1,56]  ->  smallest k = 12
+  raw coverage of [1,56]  ->  k = 12
     witness D = [1, 2, 3, 4, 8, 12, 16, 20, 24, 26, 27, 29]
     coverage as a VALUE  |R(D) cap [1,56]| = 56   (need 56)
-    refutation at k=11: no witness, 407051 nodes, EXHAUSTIVE
-    (witness found in 934038 nodes)
+    counting lower bound k >= 10  (k(k+3)/2 >= 56)
+      k=10: REFUTED        2912 nodes
+      k=11: REFUTED      407051 nodes
+      k=12: WITNESS      934038 nodes
+    MINIMUM PROVEN -- every smaller k refuted exhaustively

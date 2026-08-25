@@ -1,3 +1,82 @@
+### ROUND 5, ITERATION 1 - 2026-08-25 - G1 FIRES ON THREE CELLS. Severance is published. The geometry is textbook.
+
+CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.
+
+ACTION (one): ran the G1 fetches the contract owes BEFORE any build. **Three
+cells come back occupied, and one of them is round 3's and round 4's own
+severance work.**
+
+**FIRE 1 - REACHABILITY / SEVERANCE IS PUBLISHED.**
+[CITED] arXiv **2606.02680**, *"Locality Does Not Imply Reachability: Boundary
+Repair in Block-Sparse Causal Attention"*. Abstract opens: *"Sparse causal
+attention is usually described by sequence locality: nearby tokens should remain
+easy to access, while distant..."* It carries **"phase-conditioned coverage
+functions"**, **"coverage laws"**, **"coverage-aligned diagnostics"**, and states
+the failure directly: **"two adjacent tokens can be disconnected in the attention
+graph at every depth."**
+
+**That is severance, published.** Round 3 measured 41-57% of positions severed
+under a power-of-two lattice and round 4 built an arm around repairing it.
+**The PHENOMENON is not ours.** Its repair is *"Boundary Bridge Attention"* -
+*"zero-additional-parameter auxiliary causal edges near block boundaries using
+shared projections."*
+
+**WHAT IT DOES NOT CONTAIN:** *"No mention of additive bases, sumsets, difference
+sets, or Sidon sets appears."* So the **CONSTRUCTION** may still be open even
+though the **PHENOMENON** is closed. That is exactly the distinction the contract
+warned about in the other direction - *"the PROBE may be occupied even where the
+OBJECTIVE is not"* - and here it is the phenomenon that is occupied.
+
+**FIRE 2 - THE GEOMETRY IS TEXTBOOK, and that is FINE but must be SAID.**
+[CITED] the simplex-to-sphere map is classical information geometry: *"The
+Fisher-Rao metric is the pullback of the L2 metric by the square-root
+transform"*; *"through Cencov's theorem, it is uniquely characterized as the only
+metric invariant under sufficient statistic transformations"*; *"the probability
+simplex under the Fisher-Rao metric is isometric to the positive orthant of the
+d-dimensional hypersphere"*, with *"Fisher-Rao distances reduce to spherical
+angles"*.
+
+**Nothing about the map is new, and the contract already tags it [V] rather than
+novel.** The uniqueness by Chentsov is a REASON to use it, not a claim to make.
+**Any sentence implying the sphere embedding is this project's idea is false.**
+
+**FIRE 3 - PROCRUSTES IN DEEP NETS IS HEAVILY OCCUPIED AS AN ANALYSIS TOOL**,
+exactly as the contract predicted: representational-similarity Procrustes,
+Generalized Procrustes Analysis across models, Geometry-Corrected Procrustes
+Alignment, latent-space alignment. *"Procrustes alignment minimizes the Frobenius
+norm between whitened activation matrices subject to an orthogonal
+transformation."* **The distinction is now established BY FETCH: every hit is a
+MEASUREMENT of similarity between trained networks. None is a ROUTING OBJECTIVE
+inside an operator.** That cell is **not found** occupied - which is not the same
+as unoccupied.
+
+**FIRE 4 - TV ABLATION PROBES ARE OCCUPIED AS INTERPRETABILITY.** Total variation
+distance appears in attention-interpretability work, and ablation is a standard
+technique - *"altering or removing specific components to understand their
+contribution"*. **The PROBE is occupied.** The contract predicted this and it is
+confirmed: `D_FR` may be a new statistic, but *"measure how the attention
+distribution changes when a component is ablated"* is an existing practice.
+
+**STILL OWED, NOT YET FETCHED:** Karcher-mean pooling; the Star-Transformer delta
+(what 1902.09113 never measured - content-selected pivots on a calibrated causal
+bar at matched params).
+
+**WHAT THIS COSTS AND WHAT IT LEAVES.**
+  * Round 3/4's severance work is **prior art as a phenomenon** and may only be
+    cited as reproduction, never as discovery. **That is the eighth novelty claim
+    to fall in this project, and it fell to a fetch - which is the cheap way.**
+  * The sphere embedding is **classical** and must be presented as an
+    application, not an invention.
+  * The Procrustes **torque as a routing objective** and the **additive-basis
+    coverage theorem** are the two cells not found occupied. They are what is
+    left to claim, and both still owe their kills.
+
+**ABSENCE IS RECORDED AS "NOT FOUND", NEVER "UNOCCUPIED".** Searches covered
+sparse-attention offset literature, information-geometry attention, and
+representational-alignment Procrustes.
+
+CHECKLIST: G1 partial - 4 of 6 fetched, 3 cells OCCUPIED, 2 not found, 2 owed.
+
 ### ROUND 5, ITERATION 0 - 2026-08-25 - CEQ v7 INSTALLED. The two-spheres round.
 
 CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.

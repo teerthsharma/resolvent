@@ -5,31 +5,35 @@
 | field | value |
 |---|---|
 | round | **5** - CEQ v7, promise `TWOSPHERES`, **30 iterations** |
-| iteration | **0 complete, 1 next** |
+| iteration | **1 complete, 2 next** |
 | phase | **G1 fetches, then ARM A (the torque probe)** |
 | goal | **match or SUPERSEDE self-attention**; next-equilibrium predictor |
 | calibration | GREEN [RUN] `run_calib.py --self-test` exit 0, 4/4 bit-identical |
 | inspector | tri-state; INDETERMINATE exits nonzero |
 | repo | https://github.com/teerthsharma/resolvent (private) |
 
-## THE ONE NEXT ACTION (round 5, iteration 1)
+## THE ONE NEXT ACTION (round 5, iteration 2)
 
-**G1 fetches, BEFORE any build.** Six owed, and two are known near-misses that
-must be settled by fetch rather than assertion:
-  * information-geometry attention (Fisher-Rao / sphere / Hellinger)
-  * **Procrustes in deep nets** - representational-similarity Procrustes is an
-    ANALYSIS tool, not a routing objective. **Establish the distinction BY
-    FETCH.**
-  * **attention-ablation TV probes** - the interpretability lineage. **The PROBE
-    may be occupied even where the OBJECTIVE is not**, and that is a different
-    claim from "not found".
-  * Karcher-mean pooling
-  * additive-basis / sumset schedules (owed since round 4)
-  * Star-Transformer delta - what it never measured: content-selected pivots on
-    a calibrated causal bar at matched params.
+**Finish G1 - two owed - then ARM A. Do not build before both land.**
 
-**Absence recorded as "not found", NEVER "unoccupied".** Seven novelty claims
-have died in this project; most died to a fetch that was owed and skipped.
+Owed: **Karcher-mean pooling** (is a Frechet mean already used as a pooling or
+aggregation operator in nets?) and the **Star-Transformer delta** (1902.09113
+owns relay/pivot routing - state precisely what it never measured: content-
+selected pivots on a calibrated causal bar at matched params, softmax first).
+
+**Then ARM A, and it is pure measurement.** K1 dual slope, K2 filler twin, K3 the
+geometry must beat raw TV. **Nothing is built until all three survive.**
+
+**Two things the fetch changed, and they bind the write-up:**
+  * severance is **reproduction**, not discovery - arXiv 2606.02680 has it, with
+    a repair;
+  * the sphere embedding is **classical** - Cencov uniqueness is a REASON to use
+    it, never a claim to make.
+
+**K3 matters more after this fetch, not less.** If `theta` cannot beat raw TV on
+identical draws, then the round is applying textbook geometry to an occupied
+probe and has nothing left - **the sphere would be notation, and TV, which is
+already the interpretability standard, ships instead.**
 
 ## Open REDs
 

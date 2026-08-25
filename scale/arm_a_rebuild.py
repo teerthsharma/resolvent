@@ -143,15 +143,33 @@ def search_raw(n: int, k: int, *, stop_on_first: bool = True, node_cap: int = 0)
     return found[0], nodes[0], capped[0]
 
 
+def counting_bound(n: int) -> int:
+    """k singles plus k(k+1)/2 sums are at most k(k+3)/2 distinct values, so no
+    k below this can cover [1,n]. A PROOF, not a heuristic -- it is what lets the
+    search start above 1 without leaving a gap."""
+    k = 1
+    while k * (k + 3) // 2 < n:
+        k += 1
+    return k
+
+
 def min_k_raw(n: int, kmax: int = 26, node_cap: int = 0):
-    """Smallest k with a witness, plus the EXHAUSTIVE refutation at k-1."""
-    for k in range(1, kmax + 1):
-        w, nodes, _ = search_raw(n, k, stop_on_first=True)
+    """Smallest k with a witness. Returns (k, witness, log, k0).
+
+    `log` records EVERY k tried and how it ended: WITNESS, REFUTED (the search
+    ran to completion and found nothing), or CAPPED (it hit `node_cap` first, so
+    nothing is refuted and the minimum is NOT established). Reporting a minimum
+    off a capped search would be asserting an inequality the run never proved.
+    """
+    k0 = counting_bound(n)
+    log = []
+    for k in range(k0, kmax + 1):
+        w, nodes, cap = search_raw(n, k, stop_on_first=True, node_cap=node_cap)
         if w is not None:
-            ref, rn, rc = search_raw(n, k - 1, stop_on_first=False,
-                                     node_cap=node_cap)
-            return k, w, nodes, rn, rc, ref
-    return None, None, 0, 0, False, None
+            log.append((k, "WITNESS", nodes))
+            return k, w, log, k0
+        log.append((k, "CAPPED" if cap else "REFUTED", nodes))
+    return None, None, log, k0
 
 
 def search_mod(v: int, k: int, *, restarts: int = 200, iters: int = 3000, seed: int = 0):
@@ -458,19 +476,19 @@ def main() -> int:
 
     found = {}
     for n in (56, s - 1):
-        # node_cap only bounds the REFUTATION at k-1; the witness search is
-        # always run to completion. A capped refutation is reported as NOT
-        # PROVEN, never as a minimum.
-        cap = 0 if n <= 56 else 4_000_000
-        k, w, nodes, rn, rc, _ = min_k_raw(n, node_cap=cap)
+        cap = 0 if n <= 56 else 2_000_000
+        k, w, log, k0 = min_k_raw(n, node_cap=cap)
         found[n] = (k, w)
-        tag = "EXHAUSTIVE" if not rc else f"CAPPED at {rn} nodes -- NOT proven"
-        print(f"\n  raw coverage of [1,{n}]  ->  smallest k = {k}")
+        print(f"\n  raw coverage of [1,{n}]  ->  k = {k}")
         print(f"    witness D = {w}")
         print(f"    coverage as a VALUE  |R(D) cap [1,{n}]| = {cover_value(w, n)}"
               f"   (need {n})")
-        print(f"    refutation at k={k-1}: no witness, {rn} nodes, {tag}")
-        print(f"    (witness found in {nodes} nodes)")
+        print(f"    counting lower bound k >= {k0}  (k(k+3)/2 >= {n})")
+        for kk, how, nn in log:
+            print(f"      k={kk:>2}: {how:<8} {nn:>10} nodes")
+        proven = all(h == "REFUTED" for _, h, _ in log[:-1])
+        print(f"    MINIMUM {'PROVEN' if proven else 'NOT PROVEN'} -- "
+              f"{'every smaller k refuted exhaustively' if proven else 'a smaller k hit the node cap; k is an UPPER BOUND only'}")
 
     print("\n  wraparound, for contrast only -- a causal mask CANNOT wrap:")
     for k in (8, 9, 10, 11, 12):

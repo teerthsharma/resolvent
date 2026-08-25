@@ -384,3 +384,17 @@ That is the R1 lesson written in before the measurement.
 **F-green BINDS:** `pivot_unsigned` **0.747528** [0.696849, 0.797716] vs softmax
 **0.877168** [0.830455, 0.924226], DISJOINT, 4769 params each, softmax first.
 The one positive result in four rounds, and it is UNSIGNED.
+
+**G1 [CITED, r5 iter 1] - 4 of 6 fetched.**
+
+| cell | verdict |
+|---|---|
+| reachability / severance in causal sparse attention | **OCCUPIED** - arXiv 2606.02680, *"two adjacent tokens can be disconnected in the attention graph at every depth"*, with coverage laws and a Boundary Bridge repair. **Round 3/4 severance is reproduction, not discovery.** |
+| simplex -> sphere Fisher-Rao map | **TEXTBOOK** - Cencov uniqueness, square-root transform, isometry to the positive orthant. Use it; never claim it. |
+| Procrustes in deep nets | **OCCUPIED AS ANALYSIS** (RSA, GPA, GCPA, latent alignment). **NOT FOUND as a routing objective inside an operator.** |
+| TV ablation probe | **OCCUPIED as interpretability practice.** `D_FR` may be new; "ablate and measure the attention change" is not. |
+| additive basis / sumset schedule for attention offsets | **NOT FOUND** - 2606.02680 explicitly has no additive bases, sumsets, difference sets or Sidon sets. |
+| Karcher-mean pooling; Star-Transformer delta | **OWED** |
+
+**What is left to claim:** the Procrustes torque as a ROUTING OBJECTIVE, and the
+additive-basis COVERAGE THEOREM. Both still owe their kills.
