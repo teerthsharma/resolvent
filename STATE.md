@@ -5,29 +5,33 @@
 | field | value |
 |---|---|
 | round | **4** - CEQ v6', promise `CHOSENSIGN` |
-| iteration | **0 (round 4) complete, 1 next** |
+| iteration | **1 (round 4) complete, 2 next** |
 | phase | **X4 instrument first - everything downstream reads through it** |
 | goal | **match or SUPERSEDE self-attention**; next-equilibrium predictor, not token predictor |
 | calibration | GREEN [RUN] `run_calib.py --self-test` exit 0, 4/4 bit-identical |
 | inspector | tri-state; INDETERMINATE exits nonzero |
 | repo | https://github.com/teerthsharma/resolvent (private) |
 
-## THE ONE NEXT ACTION (round 4, iteration 1)
+## THE ONE NEXT ACTION (round 4, iteration 2)
 
-**Build the X4 valuation instrument. Everything downstream reads through it, so
-it is first and nothing is measured before it exists.**
+**G7 for both arms, BEFORE either is built** - event-change >= 1%, the test that
+struck R5 and R8 at 0/20000 before they cost anything.
 
-The float instrument is provably wrong at depth: median `|grad|` **2.8e-32**, and
-`floor = 1e-6` discarded **100%** of a live arm's flips (0.386719 at floor=0
-against 0.000000 floored). A float comparison cannot straddle 30 orders.
+For arm A (difference-set schedule) and arm B (discrepancy-steered signs), on
+identical draws, measure what fraction of draws have their EVENT changed - not
+their statistic. R5/R8 were provable no-ops precisely because a common positive
+rescale leaves the event set invariant, and that was measurable in minutes
+against build costs of iterations.
 
-Two calibration ends, both required before any reading:
-  * **must reproduce** every published `floor=0` number **exactly**;
-  * **must-fire** - a planted **30-order-spread** arm read correctly where the
-    float instrument **provably misreads it**. Not "differently". Provably.
+**Arm B's G7 is the interesting one and it is not obvious.** Choosing signs to
+minimise `|sum eps_p t_p|` changes the background MAGNITUDE; whether it changes
+the EVENT `|t_c| > |background|` at >= 1% of draws is exactly what G7 asks, and
+a discrepancy pass that only shrinks an already-losing background buys nothing.
 
-All prior floored numbers stay quoted as **historical instrument readings**, not
-withdrawn - they were correct readings of a float instrument.
+Then the G1 fetches, which are owed pre-build: LongNet + the severing test,
+difference-set / Sidon attention, discrepancy-in-ML (**known near-miss: herding
+uses discrepancy for SAMPLE selection; the cell here is SIGN assignment inside
+the operator - establish the distinction BY FETCH**), balanced-colouring nets.
 
 ## Open REDs
 

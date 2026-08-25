@@ -1,3 +1,73 @@
+### ROUND 4, ITERATION 1 - 2026-08-25 - X4 VALUATION INSTRUMENT BUILT. Both calibration ends pass.
+
+CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.
+Instrument: `scale/valuation.py`.
+
+ACTION (one): built the X4 instrument. Everything downstream reads through it,
+so nothing else is measured until it exists.
+
+**THE DEFECT IS SHARPER THAN "THE FLOOR IS TOO HIGH", AND THE SECOND HALF HAD
+NEVER BEEN NAMED.** The shipped statistic is
+
+    if lo * hi < 0 and min(abs(lo), abs(hi)) > floor:  flips += 1
+
+  1. **THE FLOOR** discards true flips by magnitude. Measured at depth: a
+     composed arm reads **0.386719** at floor=0 and **0.000000** floored -
+     100% discarded, median |grad| **2.8e-32** at depth 4. Deleting the floor
+     fixes this.
+  2. **`lo * hi` MULTIPLIES, and the PRODUCT underflows when neither FACTOR
+     does.** [RUN] `np.float32(1e-30) * np.float32(-1e-30)` = **-0.000e+00**,
+     **exactly zero**, with both operands normal and ~8 orders above float32's
+     smallest normal. So `lo*hi < 0` is **False** and a genuine, unambiguous
+     sign flip is counted as **NO FLIP**. **Deleting the floor does NOT fix
+     this. Only not multiplying does.**
+
+Defect 2 is why X4 is a valuation instrument and not "the same test at floor=0".
+A valuation carries `(sign, exponent, mantissa)` separately, so the sign of a
+product is the **product of the signs** - an exact operation on {-1,0,+1} with no
+dynamic range, which cannot underflow at any depth.
+
+**A PRECISION ABOUT MY OWN DEMONSTRATION, stated because it would otherwise
+overclaim.** Python floats are float64, where `1e-30 * -1e-30 = -1e-60` is
+perfectly fine. **The underflow is a float32 phenomenon - which is what torch
+uses by default.** So the misread lives in the TENSOR pipeline, not in the
+Python-level comparison, and my `float_flip_rate` does not reproduce it.
+
+**[RUN] MUST-FIRE FIRES, AND PROVABLY:**
+
+    lo=1.000e-30  hi=-1.000e-30      both finite and NORMAL in float32
+    f32 product   = -0.000e+00       exactly zero
+    shipped test (lo*hi < 0)  -> False    <- MISSED FLIP
+    v_opposite_signs          -> True     <- CORRECT
+
+Not *"reads differently"* - **provably wrong**: the float32 product is
+demonstrably a flushed zero while both operands are healthy.
+
+**[RUN] CALIBRATION END 1 - reproduces the published table EXACTLY, 4/4:**
+
+    case          valuation    published     floor=0    discarded
+    signed h3      0.046875     0.046875    0.046875        0.0%
+    sgate  h1     0.0234375    0.0234375   0.0546875     **57.1%**
+    sgate  h2     0.1640625    0.1640625   0.1640625        0.0%
+    softmax h3          0.0          0.0         0.0           -
+
+**A NEW INSTRUMENT THAT MOVES AN OLD NUMBER IS A NEW ARM. This one moves none.**
+
+**AND A FINDING ABOUT THE PROJECT'S MOST TRUSTED INSTRUMENT.** [READ]
+`bench.sign_flip_rate` has **`floor: float = 1e-06` as its DEFAULT**, so
+**the calibration table `run_calib.py` gates on is a FLOORED reading.** That is
+fine for the job it does - detecting drift, which it has done without a single
+false reading - **but its absolute values are not flip rates and must never be
+quoted as such.**
+
+**The floor is NOT uniformly conservative:** it discards **57.1%** of `sgate h1`
+and **0.0%** of `signed h3` and `sgate h2`. A gate that bites one case hard and
+two not at all is not a uniform safety margin; it is a per-case distortion, and
+which cases it distorts was never recorded.
+
+CHECKLIST: **X4 GREEN** - both calibration ends pass, must-fire provable.
+M2''' may now be measured, and only on this instrument.
+
 ### ROUND 4, ITERATION 0 - 2026-08-25 - CEQ v6' INSTALLED. The chosen-sign round.
 
 CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.
