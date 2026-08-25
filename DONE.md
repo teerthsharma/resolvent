@@ -1,3 +1,47 @@
+### ROUND 4, ITERATION 6 - 2026-08-25 - Journal census opened, BUCKETED. rate matches 4/4; one unit drifts at every count tried.
+
+CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.
+Census: `scale/journal_census.py`, journal at `results/journal_census.jsonl`.
+
+ACTION (one): opened the census the previous iteration owed, **bucketed with a
+wall-clock budget and an append-only resumable journal**. Two attempts at
+unbucketed work have now died in this project - a training run leaving two
+0-byte files, and a whole-census attempt timing out at 10 minutes - so this one
+stops cleanly at its budget and resumes from what is already recorded.
+
+**[RUN] BUCKET 1, OMP_NUM_THREADS=1, 4 units before the budget:**
+
+    [1t] dense_signed__at_pivots/s1024/b0    rate=M  full=M
+    [1t] dense_signed__at_pivots/s1024/b1    rate=M  full=M
+    [1t] dense_signed__at_pivots/s128        rate=M  full=**D**
+    [1t] dense_signed__at_pivots/s16         rate=M  full=M
+
+**`s1024/b0` MATCHES AT 1 THREAD**, confirming the round-4 iteration-5
+diagnosis independently: the unit that fails the pinned `JOURNAL_THREADS = 2`
+reproduces at 1.
+
+**`s128` DRIFTS AT 1 THREAD TOO.** Wilson found it drifting at his count as well.
+If it drifts at every count, the cause is **not reduction order** - it would mean
+that unit's code changed after it was journalled, and the journal is **STALE for
+that unit**. Not yet established: it has been tried at 1 thread here and at
+Wilson's count, not exhaustively.
+
+**AND THE PATTERN THAT MATTERS MOST: `rate` MATCHED 4/4.** The integer count -
+the quantity every published M2 number is built from - is intact on every unit
+tried, at every thread count tried, across both this census and iteration 5's
+four-count replay. **The drift is confined to `sigma` and `term`, which no
+published claim uses.** That distinction is being held deliberately: reporting
+"the journal drifts" without it would impeach numbers that are fine.
+
+**PROGRESS IS 4 OF 37 AT ONE THREAD COUNT.** No conclusion about the journal as a
+whole is available yet and none is drawn. The three pre-registered outcomes stand
+as written: one count reproduces all 37 -> pin it; different units need different
+counts -> bitwise replay is not a single-setting check; some unit reproduces at
+no count -> that unit is stale.
+
+CHECKLIST: census OPEN, 4/37 at 1 thread. `rate` intact 4/4. `s128` drifts at 1
+thread - stale-journal candidate, not established.
+
 ### ROUND 4, ITERATION 5 - 2026-08-25 - INSPECTOR CLEAN (10/14). And `JOURNAL_THREADS = 2` IS WRONG.
 
 **[RUN] `python inspector.py 5` -> exit 0. CLEAN: 10 checks, 14 controls all

@@ -5,33 +5,29 @@
 | field | value |
 |---|---|
 | round | **4** - CEQ v6', promise `CHOSENSIGN` |
-| iteration | **5 (round 4) complete, 6 next** |
+| iteration | **6 (round 4) complete, 7 next** |
 | phase | **X4 instrument first - everything downstream reads through it** |
 | goal | **match or SUPERSEDE self-attention**; next-equilibrium predictor, not token predictor |
 | calibration | GREEN [RUN] `run_calib.py --self-test` exit 0, 4/4 bit-identical |
 | inspector | tri-state; INDETERMINATE exits nonzero |
 | repo | https://github.com/teerthsharma/resolvent (private) |
 
-## THE ONE NEXT ACTION (round 4, iteration 6)
+## THE ONE NEXT ACTION (round 4, iteration 7)
 
-**The bucketed journal census - one unit per call, journalled as it goes, so a
-timeout leaves evidence.** A whole-census attempt timed out at 10 minutes this
-iteration and I stopped rather than retried; that is ADR-001's whole point and it
-has now been learned twice.
+**Continue the census - it resumes, so this is one more bucket, not a restart.**
 
-For each of the 37 units, record which thread counts reproduce the journalled
-value. Three outcomes and all are useful:
-  * **one thread count reproduces ALL 37** -> pin it, fix `JOURNAL_THREADS`, and
-    the replay instrument is sound again;
-  * **different units need different counts** -> the journal was written across a
-    session with varying threads, and **bitwise replay is not available as a
-    single-setting check** - it must record the count per unit;
-  * **some unit reproduces at NO count** -> that unit's code changed after it was
-    journalled, and the journal is stale for it.
+`python scale/journal_census.py --budget 420` at `OMP_NUM_THREADS=1`, then the
+same at 2. It skips what is already journalled, so each call is pure progress.
 
-**Do not weaken the replay check while this runs.** It is one of three
-instruments here that has never given a false reading, and the finding is that it
-has been sampling one unit per pass out of 37 - not that it is wrong.
+**The sharpest single question is `s128`**, which drifted at 1 thread here and at
+Wilson's count. If it drifts at 1, 2, 4 and 8, it is not reduction order and that
+unit's journal is stale - which is a different defect with a different remedy
+(re-journal that unit, do not re-pin a thread count). That is four cheap runs of
+one unit and it can go in the same bucket.
+
+**Hold the distinction that is already earned:** `rate` has matched on every unit
+at every count tried. Any statement of the form "the journal drifts" must carry
+"in `sigma`/`term`, not in `rate`", or it impeaches numbers that are sound.
 
 ## Open REDs
 
