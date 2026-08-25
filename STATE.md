@@ -5,32 +5,27 @@
 | field | value |
 |---|---|
 | round | **3** - CEQ v5, 30 iterations, promise `SCALEFREE` |
-| iteration | **10 complete, 11 next** |
+| iteration | **11 complete, 12 next** |
 | phase | **Phase 0 - M3 on the windowed arm. Capability before statistics.** |
 | calibration | GREEN [RUN] `run_calib.py --self-test` exit 0, 4/4 bit-identical |
 | inspector | `python inspector.py` - 8 checks, 8 must-fire controls, exits nonzero if any control stays SILENT |
 | repo | https://github.com/teerthsharma/resolvent (private) |
 
-## THE ONE NEXT ACTION (iteration 11)
+## THE ONE NEXT ACTION (iteration 12)
 
-**Run the M3 table at n_train=8192 - the budget where the harness can produce a
-pass - with softmax already timestamped there and the signed arms measured
-against it.**
+**Reconcile both in-flight streams and record both** - the policy requires it:
+*"measurement lands -> reconcile both, record both."*
 
-Softmax reads eval **0.877168**, CI **[0.830455, 0.924226]**, entirely below the
-1.0 bar. That is the first pass in this project and it makes an arm comparison
-meaningful for the first time: at n_train=128 every arm was ranking overfitting.
+  * `results/r3_it11_pivot_8192.log` - the signed and unsigned arms at the budget
+    where softmax reads eval **0.877168**, CI **[0.830455, 0.924226]**. The M3
+    kill applies: NRMSE > 1.0, or CIs overlap softmax, or the unsigned ablation
+    matches. **Label it clearly as d=24, NOT M3 proper** - M3 wants
+    d in {256,512,1024} and s=64 cannot host them.
+  * Wilson's three diffs, each with its bitwise bind.
 
-Arms: `softmax` (done), `pivot_signed`, `pivot_unsigned`. **NOT
-`windowed_signed`** - it is dead twice over (Chase: `d(out)/d(x[flipper]) = 0.0`;
-Cameron: `RESEARCH.md:158` shows F4's flat row was taken where the measured
-quantity *cannot* vary with s). Running it would produce a number that means
-nothing.
-
-The M3 kill applies unchanged: NRMSE > 1.0, or CIs overlap softmax at all
-d >= 256, or the unsigned ablation matches. Note d=24 here is far below M3's
-d in {256,512,1024} - this is the budget-corrected reading at the harness's own
-distance, **not** M3 proper, and must be labelled so.
+**If the pivot run died again**, that is Job 1's answer arriving by failure
+rather than by measurement, and the vectorised path becomes the prerequisite
+rather than an optimisation.
 
 ## Open REDs
 

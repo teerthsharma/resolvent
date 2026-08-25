@@ -2,6 +2,61 @@
 
 Round 2 archived below its own header; round-1 archive at `DONE_ARCHIVE_ROUND1.md`.
 
+### ROUND 3, ITERATION 11 - 2026-08-25 - STANDING POLICY: never block on a measurement. Wilson manages the nurses.
+
+CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.
+
+ACTION (one): adopted a standing policy into `LOOP_PROMPT.md` and applied it in
+the same turn.
+
+**THE POLICY, verbatim into the governing prompt:**
+*"If a measurement is running, something is being BUILT alongside it. An
+iteration that spends its wall clock watching a probe finish has spent it.
+**WILSON MANAGES THE NURSES.** The nurses are ENGINEERS - inference engineers and
+senior compiler engineers - and they always have something to optimise. Wilson
+has no stance and no angle, which is exactly why he owns them: he assigns
+mechanical work and judges what came back by whether it is verifiably true."*
+
+**Every optimisation ships a BITWISE EQUIVALENCE BIND** against what it replaces.
+A faster path that changes a number is not an optimisation, it is a new arm, and
+**this repository has published one of those before** (instrument #17). Declared
+cheats only - an undeclared shortcut is a fabricated result.
+
+**APPLIED IMMEDIATELY, both launched in one turn:**
+  * MEASUREMENT: `pivot_signed` + `pivot_unsigned` at **n_train=8192** - the
+    budget where softmax first cleared the bar - backgrounded to
+    `results/r3_it11_pivot_8192.log`.
+  * WILSON + NURSES: three engineering jobs, all fenced off from the files the
+    measurement reads, all returning **diffs** rather than edits.
+
+**A CORRECTION TO MY OWN CLAIM ONE ITERATION EARLIER.** I called the batched
+hop-2 Python loop a blocker, then measured **0.043s at n=512**, concluded
+*"nothing to optimize"*, and ran the 8192 job - **which died.** The extrapolation
+was wrong because **backward dominates** and I timed only the forward pass under
+`torch.no_grad()`. Job 1 is real work, not a non-problem, and the error was mine:
+**a forward-only timing does not predict a training step.**
+
+**WILSON'S THREE JOBS:**
+  1. **Vectorise the batched hop-2 path.** `Arm.forward` loops over the batch in
+     Python - 8192 iterations per forward, x150 steps, x(fwd+bwd). Gather pivot
+     columns and rows, one `bmm`. **The bind is `torch.equal` - BITWISE, not
+     allclose** - and if it is not bitwise, report the max difference plainly
+     rather than relaxing the tolerance, because a tolerance there hides exactly
+     the class of defect that matters here.
+  2. **`inspector.py` reports FAIL where the honest verdict is INDETERMINATE.**
+     Under four-agent load: `[FAIL] value binds + resume -- ? passed`, exit 1;
+     standalone the same command gave **107 passed**, exit 0. **The `? passed` is
+     the tell** - the regex found no count, so the subprocess was killed, not
+     failed. A checker that cannot separate *"it failed"* from *"I could not
+     measure it"* is worse than one that fails cleanly. It must still exit
+     nonzero: **an unmeasured check is not a clean one.**
+  3. **The stale docstring.** `m3_capability.py:8` names `_causal_tgate_operator`
+     while line ~124 returns `_causal_sgate_operator` - my leftover from
+     iteration 2, and precisely the presence/absence asymmetry that has bitten
+     this repo repeatedly [W6].
+
+CHECKLIST: no status changed. Measurement and engineering both in flight.
+
 ### ROUND 3, ITERATION 10 - 2026-08-25 - SOFTMAX PASSES THE ABSOLUTE BAR. First time in this project. Cameron kills F4.
 
 CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.

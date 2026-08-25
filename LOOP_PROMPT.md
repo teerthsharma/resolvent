@@ -112,6 +112,30 @@ change in flip-rate moving any capability number in either direction.** F7
 concedes val-loss under 3% does not predict capability; the same standard has
 never been turned on flip-slope. Phase 0 is the first honest test of it.
 
+## STANDING POLICY - NEVER BLOCK ON A MEASUREMENT
+
+**If a measurement is running, something is being BUILT alongside it.** An
+iteration that spends its wall clock watching a probe finish has spent it.
+
+**WILSON MANAGES THE NURSES.** The nurses are ENGINEERS - inference engineers and
+senior compiler engineers - and they always have something to optimise. Wilson
+has no stance and no angle, which is exactly why he owns them: he assigns
+mechanical work and judges what came back by whether it is verifiably true, not
+by whether it is interesting.
+
+    long measurement launched   ->   Wilson + nurses dispatched in the SAME turn
+    measurement lands           ->   reconcile both, record both
+
+**Nurse work is engineering, not opinion.** Vectorise a Python loop over a batch;
+kill a quadratic; cache what is recomputed; fix an instrument that reports FAIL
+where the honest verdict is INDETERMINATE. Every optimisation ships a **bitwise
+equivalence bind** against the implementation it replaces - a faster path that
+changes a number is not an optimisation, it is a new arm, and this repository has
+published one of those before.
+
+**Declared cheats.** A nurse that subsamples, caches, or approximates DECLARES it
+with its cost. An undeclared shortcut is a fabricated result.
+
 ## INSTRUMENT LAW — nine failures, three survivors
 
 **COMPARE VALUES, NEVER STRUCTURE.** Nine structure-comparing instruments (regex,
