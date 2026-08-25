@@ -1,3 +1,123 @@
+### ROUND 4, ITERATION 5 - 2026-08-25 - INSPECTOR CLEAN (10/14). And `JOURNAL_THREADS = 2` IS WRONG.
+
+**[RUN] `python inspector.py 5` -> exit 0. CLEAN: 10 checks, 14 controls all
+fired.** The tri-state classifier is live and its four INDETERMINATE controls
+fire: a total failure files FAIL not INDET; a killed run files INDET not FAIL;
+exit 5 files INDET not PASS; one INDET with zero FAIL still exits NONZERO.
+
+---
+
+**THE JOURNAL DRIFT IS DIAGNOSED, AND IT OVERTURNS A RULE THIS REPOSITORY HAS
+BEEN ENFORCING.**
+
+Wilson found `dense_signed__at_pivots/s1024/b0` failing bitwise replay with a
+diagnostic signature: **`rate` matched EXACTLY while `sigma` and `term`
+drifted.** `rate` is an integer count over n; sigma and term are float
+reductions. **Integer exact, float drifting, reproducible in-process** is the
+signature of REDUCTION ORDER, which means thread count.
+
+**[RUN] REPLAYED AT FOUR THREAD COUNTS:**
+
+    OMP=1   MATCH   sigma = 2.9093518966758096   <- the journalled value
+    OMP=2   DRIFT   sigma = 2.9093518977946347
+    OMP=4   MATCH   sigma = 2.9093518966758096
+    OMP=8   DRIFT   sigma = 2.90935189222511
+
+**`inspector.py` pins `JOURNAL_THREADS = 2`, and `LOOP_PROMPT.md` states the rule
+as *"the journal replays bitwise ONLY at `OMP_NUM_THREADS=2`"*. For this unit
+that is EXACTLY BACKWARDS** - it matches at 1 and 4 and drifts at 2.
+
+**WHERE THE RULE CAME FROM.** Round 2, iteration 46: I replayed
+`dense_signed__at_pivots/s2048/b5`, found MATCH at 2 and DRIFT at 1, and wrote
+*"the journal is only bitwise-reproducible at OMP_NUM_THREADS=2"* into the
+governing prompt. **That was ONE unit, generalised to 37.** Different units have
+different reduction shapes and match at different thread counts.
+
+**AND THE CONSEQUENCE IS WORSE THAN A WRONG CONSTANT.** The bitwise replay is one
+of only THREE instruments in this project that has never given a false reading.
+It passes at every Inspector pass - including this one, at
+`dense_signed__at_pivots/s2048/b1`. **But it rotates by iteration, so it has been
+sampling ONE unit per pass out of 37, and a unit that happens to match at 2
+threads is indistinguishable from a journal that is sound.** The check has been
+partly passing by ROTATION LUCK.
+
+**WHAT IS NOT YET ESTABLISHED, and I will not assert it.** How many of the 37
+units match at which thread counts. A census at 8 units x 2 thread counts
+**timed out at 10 minutes** - ADR-001 again, and this time I stopped rather than
+retried whole. It must be bucketed, one unit per call, journalled as it goes.
+Until that census exists, **the correct statement is that there is no single
+thread count KNOWN to replay the whole journal**, not that none exists.
+
+**THE JOURNAL ITSELF IS NOT IMPEACHED.** `rate` - the quantity every published
+M2 number is built from - matched exactly at every thread count tried. The drift
+is confined to `sigma` and `term`, which no published claim rests on. **This is
+an instrument defect, not a data defect**, and saying otherwise would overstate
+it in the other direction.
+
+CHECKLIST: Inspector CLEAN. **`JOURNAL_THREADS = 2` is WRONG for at least one
+unit and the "bitwise at 2" rule is withdrawn as unproven.** Census owed,
+bucketed.
+
+### ROUND 4, ITERATION 5 - 2026-08-25 - INSPECTOR CLEAN (10/14). And `JOURNAL_THREADS = 2` IS WRONG.
+
+**[RUN] `python inspector.py 5` -> exit 0. CLEAN: 10 checks, 14 controls all
+fired.** The tri-state classifier is live and its four INDETERMINATE controls
+fire: a total failure files FAIL not INDET; a killed run files INDET not FAIL;
+exit 5 files INDET not PASS; one INDET with zero FAIL still exits NONZERO.
+
+---
+
+**THE JOURNAL DRIFT IS DIAGNOSED, AND IT OVERTURNS A RULE THIS REPOSITORY HAS
+BEEN ENFORCING.**
+
+Wilson found `dense_signed__at_pivots/s1024/b0` failing bitwise replay with a
+diagnostic signature: **`rate` matched EXACTLY while `sigma` and `term`
+drifted.** `rate` is an integer count over n; sigma and term are float
+reductions. **Integer exact, float drifting, reproducible in-process** is the
+signature of REDUCTION ORDER, which means thread count.
+
+**[RUN] REPLAYED AT FOUR THREAD COUNTS:**
+
+    OMP=1   MATCH   sigma = 2.9093518966758096   <- the journalled value
+    OMP=2   DRIFT   sigma = 2.9093518977946347
+    OMP=4   MATCH   sigma = 2.9093518966758096
+    OMP=8   DRIFT   sigma = 2.90935189222511
+
+**`inspector.py` pins `JOURNAL_THREADS = 2`, and `LOOP_PROMPT.md` states the rule
+as *"the journal replays bitwise ONLY at `OMP_NUM_THREADS=2`"*. For this unit
+that is EXACTLY BACKWARDS** - it matches at 1 and 4 and drifts at 2.
+
+**WHERE THE RULE CAME FROM.** Round 2, iteration 46: I replayed
+`dense_signed__at_pivots/s2048/b5`, found MATCH at 2 and DRIFT at 1, and wrote
+*"the journal is only bitwise-reproducible at OMP_NUM_THREADS=2"* into the
+governing prompt. **That was ONE unit, generalised to 37.** Different units have
+different reduction shapes and match at different thread counts.
+
+**AND THE CONSEQUENCE IS WORSE THAN A WRONG CONSTANT.** The bitwise replay is one
+of only THREE instruments in this project that has never given a false reading.
+It passes at every Inspector pass - including this one, at
+`dense_signed__at_pivots/s2048/b1`. **But it rotates by iteration, so it has been
+sampling ONE unit per pass out of 37, and a unit that happens to match at 2
+threads is indistinguishable from a journal that is sound.** The check has been
+partly passing by ROTATION LUCK.
+
+**WHAT IS NOT YET ESTABLISHED, and I will not assert it.** How many of the 37
+units match at which thread counts. A census at 8 units x 2 thread counts
+**timed out at 10 minutes** - ADR-001 again, and this time I stopped rather than
+retried whole. It must be bucketed, one unit per call, journalled as it goes.
+Until that census exists, **the correct statement is that there is no single
+thread count KNOWN to replay the whole journal**, not that none exists.
+
+**THE JOURNAL ITSELF IS NOT IMPEACHED.** `rate` - the quantity every published
+M2 number is built from - matched exactly at every thread count tried. The drift
+is confined to `sigma` and `term`, which no published claim rests on. **This is
+an instrument defect, not a data defect**, and saying otherwise would overstate
+it in the other direction.
+
+CHECKLIST: Inspector CLEAN. **`JOURNAL_THREADS = 2` is WRONG for at least one
+unit and the "bitwise at 2" rule is withdrawn as unproven.** Census owed,
+bucketed.
+
 ### ROUND 4, ITERATION 4 - 2026-08-25 - ARM A's THEOREM DESCRIBES THE WRONG OBJECT. My error, caught by my own probe.
 
 CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.

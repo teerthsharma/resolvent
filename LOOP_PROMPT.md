@@ -145,7 +145,7 @@ arm**, not an optimisation. Declared cheats only.
 (`$?` after a pipe is the last stage's). Every checker ships a must-fire control
 **seen to fire**. Pin exact values at `abs=5e-7` — **inequalities protect
 nothing**. Every zero carries its CP interval and its floor-discard count. The
-journal replays bitwise **only at `OMP_NUM_THREADS=2`**. Long runs go through
+**"journal replays bitwise at `OMP_NUM_THREADS=2`" is WITHDRAWN as unproven [RUN, r4 iter 5]** — generalised from ONE unit in round 2. Measured on `dense_signed__at_pivots/s1024/b0`: MATCH at 1 and 4 threads, **DRIFT at 2**, exactly backwards. `rate` (integer, and what every published number rests on) matches at every count; only `sigma`/`term` drift. **No single count is KNOWN to replay the whole journal.** Census owed, bucketed. Long runs go through
 `scale/bucket.py` — **ADR-001 was bypassed once and cost two 0-byte files.**
 `inspector.py` is the pattern: run it, do not retype it. It is now **tri-state** —
 an INDETERMINATE check exits nonzero, because an unmeasured check is not a clean

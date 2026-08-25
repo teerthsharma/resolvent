@@ -5,31 +5,33 @@
 | field | value |
 |---|---|
 | round | **4** - CEQ v6', promise `CHOSENSIGN` |
-| iteration | **4 (round 4) complete, 5 next** |
+| iteration | **5 (round 4) complete, 6 next** |
 | phase | **X4 instrument first - everything downstream reads through it** |
 | goal | **match or SUPERSEDE self-attention**; next-equilibrium predictor, not token predictor |
 | calibration | GREEN [RUN] `run_calib.py --self-test` exit 0, 4/4 bit-identical |
 | inspector | tri-state; INDETERMINATE exits nonzero |
 | repo | https://github.com/teerthsharma/resolvent (private) |
 
-## THE ONE NEXT ACTION (round 4, iteration 5)
+## THE ONE NEXT ACTION (round 4, iteration 6)
 
-**Iteration 5 is an Inspector pass (every 5th) - and it is not routine this
-time.** Wilson found a journalled unit that **does not replay bitwise**:
-`dense_signed__at_pivots/s1024/b0`, `sigma` 2.9093518977946347 against
-2.9093518966758096, self-reproducible in-process so it is **drift against the
-journal, not nondeterminism**. The journal predates the code by **3h44m**.
+**The bucketed journal census - one unit per call, journalled as it goes, so a
+timeout leaves evidence.** A whole-census attempt timed out at 10 minutes this
+iteration and I stopped rather than retried; that is ADR-001's whole point and it
+has now been learned twice.
 
-**That is a G2-class question and it outranks the arm work.** Either the code
-changed under a journal that was never re-generated - in which case every
-journalled number is a reading of an older object - or the journal is fine and
-the replay is not. The 37-unit census Wilson started decides which.
+For each of the 37 units, record which thread counts reproduce the journalled
+value. Three outcomes and all are useful:
+  * **one thread count reproduces ALL 37** -> pin it, fix `JOURNAL_THREADS`, and
+    the replay instrument is sound again;
+  * **different units need different counts** -> the journal was written across a
+    session with varying threads, and **bitwise replay is not available as a
+    single-setting check** - it must record the count per unit;
+  * **some unit reproduces at NO count** -> that unit's code changed after it was
+    journalled, and the journal is stale for it.
 
-Then: **arm A's redirect.** The object is an **additive basis of order 2**
-(`D + D ⊇ Z_v`), not a difference set - in a causal DAG both hops point the same
-way, so only sums compose. And `j = s//4` must stop being fixed: the same
-uniform-at-random discipline `carpet_probe.py:24` demands for `c` applies to `j`,
-and not applying it is what made every schedule read 1.0000.
+**Do not weaken the replay check while this runs.** It is one of three
+instruments here that has never given a false reading, and the finding is that it
+has been sampling one unit per pass out of 37 - not that it is wrong.
 
 ## Open REDs
 
