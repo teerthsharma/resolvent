@@ -14,7 +14,7 @@ Governing documents, in precedence order:
 
 | field | value |
 |---|---|
-| iteration | **45 complete, 46 next** — max **80** |
+| iteration | **46 complete, HOUSE MODE ENDED by user** — max **80** |
 | phase | **WORK-STOPPING — M2 RED; repair / prior-art / write-up only** |
 | item in flight | **M2 RED, measured on shipped operator (-1.298, 0 flips at s>=128)** |
 | LOCK lines | `LOCK M2 efadc390c93f` — re-verified iteration 1 against the archived copy: **byte-identical** |

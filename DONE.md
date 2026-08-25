@@ -3504,3 +3504,40 @@ Uncommitted: `.claude/ralph-loop.local.md` only - the loop's own counter, which
 changes every iteration. Expected.
 
 CHECKLIST: no status changed. M2 RED (permanent, instrument-cleared), M5 RED.
+
+### ITERATION 46 - 2026-08-25 - inspector.py: the Inspector becomes a command with an exit code. It found a real defect on its first run.
+
+CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.
+
+ACTION (one): built `inspector.py`. Eight checks, **no decision after a
+pipeline** (subprocess with list argv, return code read from the process that
+produced it), every check comparing a VALUE, and **every check shipping a
+MUST-FIRE control**. The script exits nonzero if any check fails OR if any
+control stays silent - an all-green run with silent controls means the Inspector
+is blind, which is worse than a red one.
+
+**[RUN] FIRST RUN: 7 PASS, 8/8 CONTROLS FIRED, 1 FAIL** - and the FAIL was real.
+
+**IT FOUND A DEFECT NOTHING IN THE REPO RECORDED: the journal is only
+bitwise-reproducible AT A FIXED THREAD COUNT.**
+
+    dense_signed__at_pivots/s2048/b5    OMP_NUM_THREADS=1  ->  DRIFT
+                                        OMP_NUM_THREADS=2  ->  MATCH
+
+Every journalled unit was produced under `OMP_NUM_THREADS=2`. CPU matmul
+reduction order varies with the thread pool, so **"bitwise replay" means bitwise
+AT THAT SETTING**, and nothing recorded, enforced or documented it. Every ad-hoc
+Inspector pass happened to set it by hand; the script did not, and the difference
+surfaced immediately.
+
+**The repo already knew this on the training side and never carried it across:**
+`tests/chase/test_resume_checkpoint.py` sets `torch.set_num_threads(1)` with the
+comment *"CPU matmul reduction order must not vary run to run"*. The measurement
+side never picked it up. `inspector.py` now pins `JOURNAL_THREADS = 2` with the
+derivation attached.
+
+**THIS IS THE ARGUMENT FOR THE SCRIPT, MADE BY THE SCRIPT.** Forty-five
+iterations of hand-typed shell never surfaced it, because every one of those
+passes silently supplied the condition that made the check pass.
+
+CHECKLIST: no status changed. M2 RED (permanent, instrument-cleared), M5 RED.
