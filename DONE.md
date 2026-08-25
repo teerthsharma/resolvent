@@ -1,3 +1,68 @@
+### ROUND 5, ITERATION 22 - 2026-08-26 - D1 CARRIES THE AUDIT. Its own acceptance criteria self-check, and the K1 caveat is in Limits where the verdict can see it.
+
+CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.
+
+ACTION (one): brought **`D1.md`** up to date with the audit. It was written at
+iteration 19, **before the Inspector reported**, and its closing limit said so.
+It has now returned, so three things were owed and all three are in.
+
+**FIRST, D1 NEVER CARRIED THE STRUCK FIGURE.** [RUN] `grep -n "5.4944e-13" D1.md`
+-> **no hits.** The struck number was in a code comment, `CHECKLIST.md`,
+`LOOP_PROMPT.md` and `DONE.md`, and all four were handled at iteration 21. **D1
+was clean of it by luck rather than by care**, and that is worth saying rather
+than presenting as foresight.
+
+**SECOND, AN `### The audit` SECTION, with all three strikes stated so they
+cannot be softened** - the residual asserted with no producer, the sentence
+claiming a fellow's figures failed to reproduce when both reproduce to four
+decimals, and the self-satisfying provenance bind. **Plus what the audit
+CLEARED** - all six probes re-run independently, every one exit 0 with published
+figures exact - and **the two defects it found that nobody had recorded**: the
+hardening file has **two independent failures, not one**, and the archive count is
+**five occurrences on four lines** where two agents both counted lines.
+
+**THIRD, THE K1 CAVEAT IS NOW IN LIMITS, BESIDE THE DRAW COUNTS.** The slope that
+fired the round's central kill **rests on a journal replay, not a fresh
+derivation** - the driver reported every unit already journalled and recomputed
+none. **The replay matched bitwise, which is real evidence the journal is intact,
+but nobody re-derived that slope from draws this pass.** It sits in Limits where
+the verdict has to read it.
+
+**AND THE CLOSING LIMIT NOW SAYS WHAT IS ACTUALLY TRUE:** the inspection has
+returned, its strikes are applied, and **its own two open gaps are named** - the
+verified-facts pass was outside its mandate and was not re-checked, and one claim
+about failures in a second uncovered file **names a file the log never
+identifies.**
+
+**[RUN] D1's OWN ACCEPTANCE CRITERIA, SELF-CHECKED against the file rather than
+asserted:**
+
+    [OK] 1 kills carry INTERVALS
+    [OK] 2 defects attributed (self-caught vs caught by others)
+    [OK] 3 withdrawn claims have replacements
+    [OK] 4 survivals stated separately
+    [OK] 5 limits collect once, at the end
+    [OK] audit section present
+    criteria met: True
+
+[RUN] `pytest tests/loop/test_no_struck_constant_ships.py` -> **13 passed, exit
+0**, so the new text introduced no struck value.
+
+**THE CHAIN IS COMPLETE AND THE WRITE-UP IS COMPLETE.** fellows -> Wilson ->
+Health Inspector, 37 claims audited, 3 struck, all applied. `D1.md` carries the
+round-5 chapter, the audit, and the limits.
+
+**WHAT REMAINS IS ONE MECHANICAL STEP AND IT IS NOT A JUDGEMENT CALL.** The
+contract puts completion on **line 1 of `DONE.md`**, and the promise is emitted
+only when its statement is completely true. **`TWOSPHERES: KEPT` requires ARM A
+K1-K3 GREEN and ARM B M3 GREEN at n_train=8192** - ARM A did not survive K1 and
+**ARM B was never authorized, so KEPT is false.** `TWOSPHERES: BROKEN` requires
+the write-up with its numbers, which now exists.
+
+CHECKLIST: **`D1.md` AUDIT-CORRECTED** - audit section with all three strikes,
+the two unrecorded findings, and **the K1 journal-replay caveat in Limits**. All
+five acceptance criteria **self-check OK**. Registry **13 passed, exit 0**.
+
 ### ROUND 5, ITERATION 21 - 2026-08-26 - THE HEALTH INSPECTOR REPORTED. 37 CLAIMS AUDITED, 3 STRUCK - AND ONE OF THEM IS A NUMBER OF MINE ASSERTED [RUN] WITH NO PRODUCER.
 
 CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.

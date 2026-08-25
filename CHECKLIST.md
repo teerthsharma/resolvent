@@ -670,3 +670,14 @@ Replayed ARM A's own draw stream (published `D_FR causal` reproduced to 6 dp at 
 | **caveat bearing on K1** | `arm_a_k1.py`/`wilson_probes.py` **replayed cached journals** (*"0 remaining, ran_this_bucket: 0"*). **Replay MATCH is real; a fresh derivation of the slope was not attempted.** |
 
 | my control defect, new shape | The must-fire control fed literal paragraphs to `_measured`, but the evidence filter lived in the **corpus builder**, so **the control could not reach the logic it guarded** and failed. Filter moved into `_measured`. The three earlier gate defects tested the **wrong statistic**; this one **could not reach its subject at all**. |
+
+**D1 AUDIT-CORRECTED [r5 iter 22] - `D1.md`.**
+
+| item | status |
+|---|---|
+| the struck figure in D1 | **NEVER PRESENT.** [RUN] `grep -n "5.4944e-13" D1.md` -> no hits. It was in a code comment, `CHECKLIST.md`, `LOOP_PROMPT.md` and `DONE.md`, all handled at iter 21. **D1 was clean of it by luck, not by care.** |
+| `### The audit` section | **ADDED** - all three strikes stated so they cannot be softened; what the audit **cleared** (six probes re-run, every one exit 0, figures exact); and **its two unrecorded findings** (two independent failures not one; archive count **5 on 4 lines**, both agents counted lines). |
+| **the K1 caveat** | **IN LIMITS.** The slope that fired the central kill rests on a **journal replay, not a fresh derivation** - every unit already journalled, none recomputed. **Replay matched bitwise; nobody re-derived the slope from draws this pass.** |
+| the closing limit | **CORRECTED.** The inspection has returned and its strikes are applied; **its own two open gaps are named** - the verified-facts pass was outside its mandate, and one claim names a file the log never identifies. |
+| acceptance criteria | **5/5 SELF-CHECK OK** against the file, plus the audit section. Registry **13 passed, exit 0**. |
+| **completion status** | **KEPT is FALSE** - ARM A did not survive K1 and ARM B was never authorized. **BROKEN requires the write-up with its numbers, which now exists.** One mechanical step remains: line 1 of `DONE.md`. |

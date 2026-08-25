@@ -5,43 +5,47 @@
 | field | value |
 |---|---|
 | round | **5** - CEQ v7, promise `TWOSPHERES`, **30 iterations** |
-| iteration | **21 complete, 22 next** |
+| iteration | **22 complete, 23 next** |
 | phase | **ARM A under the escalation chain; autonomous to iteration 30** |
 | goal | **match or SUPERSEDE self-attention**; next-equilibrium predictor |
 | calibration | GREEN [RUN] `run_calib.py --self-test` exit 0, 4/4 bit-identical |
 | inspector | tri-state; INDETERMINATE exits nonzero |
 | repo | https://github.com/teerthsharma/resolvent (private) |
 
-## THE ONE NEXT ACTION (round 5, iteration 22)
+## THE ONE NEXT ACTION (round 5, iteration 23)
 
-**All four rungs are done. Apply the strikes to `D1.md`, then write the prognosis
-and emit the promise.**
+**Write line 1 of `DONE.md`, deliver the prognosis, and emit the promise.**
 
-**THE CHAIN IS COMPLETE:** fellows (Foreman, Chase, Cameron) -> Wilson -> Health
-Inspector. **37 claims audited, 3 struck, all applied at iteration 21.**
+**Every precondition is met and none of them is a judgement call any more.**
 
-**`D1.md` HAS NOT BEEN UPDATED FOR THE STRIKES and must not ship until it is.**
-Its closing limit currently says the audit had not returned. It has. Three edits
-are owed:
-  1. **`5.4944e-13` appears in D1's "what survives" section.** It is **STRUCK**.
-     Replace with the reproducible **7.307e-13 to 8.405e-13** at `--tol 1e-15
-     --steps 400`, and add the strike to D1's own defect ledger - **a number of
-     mine asserted `[RUN]` with no producer, thirteen iterations old.**
-  2. **Add the Inspector's two unrecorded findings**: `test_hub_package_hardening`
-     has **two** independent failures, not one; and the archive count for
-     `3,319,296` is **5 on 4 lines**, both agents having counted lines.
-  3. **Add the K1 caveat**: the slope rests on a **journal replay**, not a fresh
-     derivation. That belongs in Limits, beside the draw counts.
+  * **The chain is complete.** fellows (Foreman, Chase, Cameron) -> Wilson ->
+    Health Inspector. **37 claims audited, 3 struck, all applied at iteration 21.**
+  * **The write-up exists and carries the audit.** `D1.md` has the round-5
+    chapter, the strike table, the two unrecorded findings, the K1 journal-replay
+    caveat in Limits, and **5/5 acceptance criteria self-checking OK**.
+  * **`TWOSPHERES: KEPT` is FALSE.** It requires ARM A K1-K3 GREEN **and** ARM B
+    M3 GREEN at n_train=8192. K1's displacement clause resolved at **-0.4137
+    [-0.4579,-0.3704]** and **-0.4654 [-0.5173,-0.4160]**, both entirely below the
+    **-0.30** trigger; ARM A did not survive; **ARM B was never authorized and was
+    never built.**
+  * **`TWOSPHERES: BROKEN` is TRUE**, and the contract's form is
+    `TWOSPHERES: BROKEN - <item> <which kill fired>` **after the write-up with its
+    numbers.** The item is ARM A; the kill is K1's dual slope, displacement
+    clause.
 
-**THEN THE PROGNOSIS AND THE PROMISE.** `TWOSPHERES: BROKEN` is what the evidence
-supports and it is now **audited** evidence: K1's displacement clause resolved at
-**-0.4137 [-0.4579,-0.3704]** and **-0.4654 [-0.5173,-0.4160]**, both entirely
-below **-0.30**, the pre-registered *"no leap"* branch **FIRED**, ARM A did not
-survive, ARM B was never authorized.
+**The contract is explicit that this is not a lesser outcome:** *"An honest BROKEN
+outranks an unfinished KEPT, and D1 ships either way."* And: *"A slope is not a
+capability. KEPT on a statistic is a false promise."*
 
-**Dr House is NOT released, and the reason is now doubly on the record.** Every
-kill fired from a measurement with an interval, and the Inspector cleared the
-probes that produced them. *"Dead is dead, and no leap un-refutes a fact."*
+**THE PROGNOSIS CARRIES EVERY AGENT INCLUDING THE OVERRULED ONES, each with the
+reason** - that is the format's whole point, and three fellows were overruled on
+at least one finding apiece by the verified-facts pass.
+
+**DR HOUSE IS NOT RELEASED, and the record now supports that twice over.** Every
+kill fired from a measurement with an interval, and the audit re-ran the probes
+that produced them. He is for a gap in **INNOVATION**; this round has a gap in
+**RESULTS**, which is not the same thing. *"Wilson refuted it with a verified fact
+- dead is dead, and no leap un-refutes a fact."*
 
 ## Open REDs
 
