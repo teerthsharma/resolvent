@@ -234,26 +234,55 @@ def test_windowed_operators_surrender_reach():
             f"windowed operators do NOT surrender reach: {row}")
 
 
-def test_the_arm_that_reaches_decays_at_the_m2_rate():
-    """`CHECKLIST.md:52` -- the M2 kill: an arm at global reach decays below -0.3.
+@pytest.mark.parametrize("s", [128, 512])
+def test_the_flip_rate_survives_a_third_token_off_the_dilation_lattice(s):
+    """THE FLATNESS IS A `c`-PLACEMENT ARTIFACT. This is the test that says so.
 
-    Applied to whichever arm actually reaches `j` at every `s`. If a bounded
-    -row-width arm reaches, the claim is that it must pay the dense arm's decay;
-    this pins that as a slope against the pre-registered bar.
+    `DONE.md:656` records a prior artifact of exactly this shape -- "multizoom
+    with `c = s//2` in the schedule by hand" -- and `scale/carpet_probe.py:11`
+    predicted the mechanism outright:
 
-    The zeros are dropped from the fit rather than fitted through -- the
-    withdrawn -1.389 was produced by fitting through a floor artifact -- and the
-    number of dropped cells is carried in the failure message.
+        On a hierarchy c reaches i in O(log s) hops, not 2. [...] Fix hops at 2
+        and c is not diluted, it is SEVERED.
+
+    and imposed the discipline this file initially failed to keep:
+
+        c is placed UNIFORMLY AT RANDOM and never inserted into any schedule by
+        hand.
+
+    The ladder in `ladder.py::geometry` puts `c` at `i - s//4`. Every `s` swept
+    is a power of two, so `i - c` is a power of two, and the dilations are
+    powers of two -- `c` sat on the lattice at every point of the sweep. Moving
+    it three positions is enough:
+
+        s=128  c=i-32  flip0=0.121094      s=512  c=i-128  flip0=0.121094
+        s=128  c=i-35  flip0=0.000000      s=512  c=i-131  flip0=0.000000
+        s=128  c=i-25  flip0=0.000000      s=512  c=i-121  flip0=0.000000
+
+    all at `reach = 1.000000`, n=256 -- so `j` is reached in every case and the
+    zero is about `c`, not about reach. The MUST-FIRE half is the aligned cell:
+    the same probe, same `s`, same seed, reading 0.121094, which is what makes
+    the 0.000000 a severing rather than a dead instrument.
+
+    So the -0.115 slope this file's ladder produces is NOT a flatness result. It
+    is one lattice-aligned offset measured five times.
     """
-    got = {s: _cell("dil", s) for s in SIZES}
-    if min(c["reach"] for c in got.values()) < 1.0:
-        pytest.skip("no bounded-row-width arm reaches at every s; nothing to fit")
-    rates = [got[s]["flip0"] for s in SIZES]
-    sl = _slope(SIZES, rates)
-    dropped = sum(1 for r in rates if r == 0.0)
-    row = "  ".join(f"s={s} flip0={got[s]['flip0']:.6f} "
-                    f"flipabs={got[s]['flipabs']:.6f} depth={got[s]['depth']}"
-                    for s in SIZES)
-    assert sl <= M2_BAR, (
-        f"an arm at global reach did NOT decay: slope={sl:.6f} against bar "
-        f"{M2_BAR}, {dropped} zero cells dropped from the fit.  {row}")
+    i, dist = s - 1, s // 2
+    j, sch = i - dist, D.log_schedule(s)
+    kw = dict(n_draws=N, s=s, d=16, i=i, j=j, dilations=sch, window=8, hops=2,
+              seed=0, device=DEV)
+    on = D.composed_draws(c=i - dist // 2, **kw)
+    off = D.composed_draws(c=i - dist // 2 - 3, **kw)
+
+    # MUST-FIRE: the aligned cell has to be seen to produce flips at all.
+    assert bench.flip_rate(on, floor=0.0) > 0.10, (
+        f"CONTROL SILENT: aligned c gives {bench.flip_rate(on, floor=0.0):.6f}")
+    # Reach is about j and must hold in BOTH cells, so the zero below is c.
+    assert D.reach_fraction(on) == 1.0 and D.reach_fraction(off) == 1.0
+
+    assert bench.flip_rate(off, floor=0.0) > 0.0, (
+        f"SEVERED: a third token three positions off the dilation lattice has "
+        f"NO influence on the sign. aligned c=i-{dist // 2} "
+        f"flip0={bench.flip_rate(on, floor=0.0):.6f}, off-lattice "
+        f"c=i-{dist // 2 + 3} flip0={bench.flip_rate(off, floor=0.0):.6f}, "
+        f"reach 1.000000 in both. The ladder's slope is a c-placement artifact.")

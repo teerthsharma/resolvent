@@ -2,6 +2,146 @@
 
 Round 2 archived below its own header; round-1 archive at `DONE_ARCHIVE_ROUND1.md`.
 
+### ROUND 3, ITERATION 10 - 2026-08-25 - SOFTMAX PASSES THE ABSOLUTE BAR. First time in this project. Cameron kills F4.
+
+CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.
+
+ACTION (one): swept the data budget on **softmax alone**, so no signed number
+moved. Iteration 9 showed a 10.8x train/eval gap at n_train=128 - the arms were
+memorising, and an eval number in that regime ranks overfitting, not capability.
+
+**[RUN] s=64 d=24 steps=150 n_eval=512, softmax only:**
+
+    n_train    train      eval      bootstrap CI          verdict
+      128     0.196599   2.116579   [1.791078, 2.411601]  fail
+      512     0.662082   1.316514   [1.134451, 1.540035]  fail
+     2048     0.790853   0.949529   [0.891522, 1.011235]  BELOW 1.0, CI straddles
+     8192     0.820513   0.877168   [0.830455, 0.924226]  **CI ENTIRELY BELOW 1.0**
+
+**SOFTMAX PASSES THE ABSOLUTE BAR AT n_train = 8192.** Chase's C4 - *"no arm has
+ever passed the bar"* - is **FALSE**, and it was a **DATA-BUDGET fact, not an
+operator fact**. The train/eval gap closes monotonically:
+**0.197/2.117 -> 0.662/1.317 -> 0.791/0.950 -> 0.821/0.877**. That is
+memorisation giving way to generalisation.
+
+**EVERY PRIOR M3 READING IN THIS REPOSITORY WAS TAKEN AT A BUDGET WHERE THE
+HARNESS COULD NOT PRODUCE A PASS** (n_train=128). Those readings ranked
+overfitting. **n_train >= 8192 is the setting every arm must be compared at.**
+
+---
+
+**CAMERON REPORTED. 3 failed, 20 passed, every bind and control green - AND HE
+KILLED HIS OWN HEADLINE, which is exactly right.**
+
+**CA1. HALF THE ROUND'S TRADEOFF IS FALSE.** A **dilated** band composed over
+`log2(s)` layers reads the **ENTIRE context**: gradient support exactly
+**32 / 128 / 512 / 2048** with row width exactly **8** at every layer. The
+assertion he wrote encodes `CHECKLIST.md:50` verbatim - *"windowed arms buy
+flatness only by surrendering reach"* - and it FAILS. Contiguous band at
+identical depth and row width: reach **1.000000 -> 0.779297 -> 0.000000 ->
+0.000000 -> 0.000000**. Same operator, same depth, same width; **only the spacing
+differs.**
+
+**Depth confound closed:** dense at matched depth **-0.585** (R2 0.925) vs dense
+depth-1 **-0.972** (R2 0.968), n=1024 to s=512. Depth alone does not rescue the
+dense arm - the reach result is about **row width**, not depth. The depth-1 arm
+is the must-fire control and it fires, reproducing the published M2 kill.
+
+**CA2. AND HE KILLED IT.** At the swept geometry `c = i - s/4` **every s is a
+power of two**, so `c` sat **ON** the power-of-two dilation lattice at all five
+points. Moving `c` three positions off: flip rate **0.121094 -> 0.000000** at
+both s=128 and s=512, reach 1.000000 in both. **The raw gradient pairs
+off-lattice are `lo == hi` BITWISE** - perturbing `c` off the lattice changes the
+gradient **not slightly but not at all. SEVERED, not diluted.**
+
+`scale/carpet_probe.py:11` predicted this exactly - *"Fix hops at 2 and c is not
+diluted, it is SEVERED"* - and `:24` set the discipline that was broken: *"c is
+placed UNIFORMLY AT RANDOM and never inserted into any schedule by hand."*
+
+**CA3. F4's PREMISE WAS ALREADY STRUCK IN-REPO AND NOBODY CARRIED IT.**
+[READ, RESEARCH.md:158] the published windowed flat row was taken at `j=i-4`,
+`c=i-2`, so *"the measured quantity cannot vary with s."* **F4's windowed arm
+never worked - it was FLAT BY CONSTRUCTION.** With Chase's `d(out)/d(x[flipper])
+= 0.0`, **Phase 0's subject is dead twice over, for two independent reasons.**
+
+**CA4. A LIVE INSTRUMENT DEFECT AT DEPTH.** `floor = 1e-6` is fatal once depth is
+composed: the contiguous arm at s=128 reads flip **0.386719** at floor=0 and
+**0.000000** at floor=1e-6 - **the published floor discards 100% of that arm's
+flips**, because depth moves gradient scale ~30 orders of magnitude (median
+|grad| **2.8e-32** at depth 4). **Anyone composing depth must use floor=0 or a
+relative floor.**
+
+**Cameron's declared shortcuts:** s=2048 dilated is 4 seeds x 256 pooled to 1024,
+not one 1024-draw run; s=1024 cells n=512; s=2048 contiguous/dense-at-depth
+n=256; the alignment check is n=256 at 3 fixed offsets x 2 sizes - **not** the
+uniformly-random `c` sweep `carpet_probe.py` demands.
+
+**Cameron could not establish:** the SEVERED FRACTION - he showed *some* `c` are
+severed, not what share. A random-`c` sweep is the missing measurement and it
+decides whether the composition route lives. Also untested: whether severing is
+fixable by overlapping / co-prime / randomised dilations, which is a property of
+the rigid lattice and **not** of bounded row width - the reach result is
+untouched by it. No G1 sweep: dilated/strided attention is heavily occupied
+(LongNet, Sparse Transformer, BigBird) and **no name may be written before it**.
+
+CHECKLIST: M3 bar - softmax PASSES at n_train=8192, CI [0.830455, 0.924226].
+M3w DEAD twice over. Composition route OPEN pending the random-c sweep.
+
+**WILSON REPORTED. All four fellows are in. His facts are the reference the
+other three are checked against, and he settles four disputes and opens one.**
+
+**W1. SHIPPED OPERATORS, definitively.** *"Neither shipped file imports
+`ceq/bench.py`"* - grep exit 1, no output. **The shipped path RE-IMPLEMENTS**,
+and the re-implementations are **bitwise identical** (maxabsdiff 0.0) to
+`bench._causal_signed_operator` and `bench._causal_sgate_operator`.
+**SHIP: `signed`, `sgate`. DO NOT SHIP: softmax-as-a-CEQ-operator, `signmag`,
+`deltanet`, `tgate`, `tgatex`, `paraformer`** - six of eight.
+
+**W2. HE CONFIRMS ITERATION 1 INDEPENDENTLY, by a route I did not use.** Every
+logged `pivot_signed` run has `n_params = base + (s+1)` - **1666, 1730, 1794,
+1858, 4834, ... 5026** - and `s+1` is exactly `tgate`'s `g[s] + tau`. The current
+arm reads **4769**. **No logged `pivot_signed` number was ever measured on the
+shipped operator**, and the parameter count alone proves it.
+
+**W3. `windowed_signed` HAS NEVER BEEN RUN** - zero occurrences in
+`results/m3_capability.txt` across 25 run blocks. And **every `(s,d)` pair ever
+logged has `d >= 21 > 16`**: s=64 d=21/24, s=80 d=27, s=96 d=32, s=112 d=38,
+s=128 d=24/42, s=160 d=54, s=176 d=60, s=192 d=64, s=256 d=85. **The windowed
+arm could not have seen the flipper at ANY setting this project has ever used.**
+Measured `max|d out/d x[39]|` = **0.000000e+00** exactly, against payload
+7.132015e-03 - confirming Chase by a second method.
+
+**W4. THE GELU CLAIM IS MEASURED, NOT ASSERTED - and it has been since round 1.**
+[READ] `tests/cameron/test_negation_is_the_axis.py:84-104` executes it and
+asserts `rate > 0.0`; the value is recorded as **0.0547** at
+`DONE_ARCHIVE_ROUND1.md:882` and `THEORY2.md:81`. Wilson measures **0.0546875**,
+which rounds to it. **Two independent records of the number that scopes F1 have
+existed since round 1**, and neither was carried into the capability framing.
+
+**W5. A PUBLISHED NUMBER DOES NOT REPRODUCE, AND NOBODY HAD CHECKED.**
+`results/iter04_m3_bar_calibration.txt` records `payload_only NRMSE 1.414204`.
+Re-run today: **1.403456**, off by **-0.010748**. predict_the_mean and oracle
+reproduce exactly; the verdict reproduces. **`git log -- scale/negation_scope.py`
+lists exactly ONE commit, dated AFTER the artifact's mtime - there is no record
+of the source state that produced 1.414204.** Not a large drift, and it does not
+move the verdict, but it is a published number that does not reproduce and it is
+now recorded as one.
+
+**W6. STALE DOCSTRING, mine.** `m3_capability.py:8` still says
+*"pivot_signed : A = causal tgate operator"* while line 124 returns
+`_causal_sgate_operator`. My iteration-2 edit changed the code and left the
+docstring. **Fix next iteration** - it is exactly the presence/absence asymmetry
+that has bitten this repo repeatedly.
+
+**W7. MY INSPECTOR HAS A FLAKY CHECK UNDER LOAD.** Run 1 (18:12) reported
+`[FAIL] value binds + resume -- ? passed`, exit 1. Standalone, the same command
+gave **107 passed in 387.03s**, exit 0; run 2 gave exit 0. **The `? passed`
+tells the story: the regex found no count**, so the subprocess was killed or
+timed out under contention from four concurrent agents rather than failing. The
+check reports a FAIL where the honest verdict is INDETERMINATE. Recorded as a
+defect in my own instrument.
+
+
 ### ROUND 3, ITERATION 9 - 2026-08-25 - The M3 gate is repaired and REFUSES Chase's broken task. Softmax measured FIRST.
 
 CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.

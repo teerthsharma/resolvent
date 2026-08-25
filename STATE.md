@@ -5,29 +5,32 @@
 | field | value |
 |---|---|
 | round | **3** - CEQ v5, 30 iterations, promise `SCALEFREE` |
-| iteration | **9 complete, 10 next** |
+| iteration | **10 complete, 11 next** |
 | phase | **Phase 0 - M3 on the windowed arm. Capability before statistics.** |
 | calibration | GREEN [RUN] `run_calib.py --self-test` exit 0, 4/4 bit-identical |
 | inspector | `python inspector.py` - 8 checks, 8 must-fire controls, exits nonzero if any control stays SILENT |
 | repo | https://github.com/teerthsharma/resolvent (private) |
 
-## THE ONE NEXT ACTION (iteration 10)
+## THE ONE NEXT ACTION (iteration 11)
 
-**Find a data budget at which ANY arm can generalise, before comparing arms at
-all.** Softmax reads train **0.196599** against eval **2.116579** at
-n_train=128 with 4769 parameters. That is a 10.8x train/eval gap: the arms are
-memorising, and at that point the eval number ranks overfitting, not capability.
+**Run the M3 table at n_train=8192 - the budget where the harness can produce a
+pass - with softmax already timestamped there and the signed arms measured
+against it.**
 
-Sweep `n_train` upward (512 / 2048 / 8192) on **softmax alone**, and find the
-smallest budget where eval NRMSE goes below 1.0. Two outcomes, both useful:
-  * **a budget exists** -> that is the setting every arm must be compared at,
-    and every prior M3 reading in this repo was taken below it;
-  * **no budget makes softmax generalise** -> the task as constructed is not
-    learnable by this architecture class at this scale, and M3 must be
-    re-specified before any arm is credited or blamed.
+Softmax reads eval **0.877168**, CI **[0.830455, 0.924226]**, entirely below the
+1.0 bar. That is the first pass in this project and it makes an arm comparison
+meaningful for the first time: at n_train=128 every arm was ranking overfitting.
 
-This is cheap, it is softmax-only so it moves no signed number, and it decides
-whether the whole M3 axis is measuring capability or memorisation.
+Arms: `softmax` (done), `pivot_signed`, `pivot_unsigned`. **NOT
+`windowed_signed`** - it is dead twice over (Chase: `d(out)/d(x[flipper]) = 0.0`;
+Cameron: `RESEARCH.md:158` shows F4's flat row was taken where the measured
+quantity *cannot* vary with s). Running it would produce a number that means
+nothing.
+
+The M3 kill applies unchanged: NRMSE > 1.0, or CIs overlap softmax at all
+d >= 256, or the unsigned ablation matches. Note d=24 here is far below M3's
+d in {256,512,1024} - this is the budget-corrected reading at the harness's own
+distance, **not** M3 proper, and must be labelled so.
 
 ## Open REDs
 

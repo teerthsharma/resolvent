@@ -252,6 +252,54 @@ claim is still unestablished.
 
 ---
 
-*Updated through round 3, iteration 9. Four house-mode agents still running;
+## Iteration 10 — softmax passes the bar, and F4 dies twice
+
+**The budget sweep, softmax alone so no signed number moves:**
+
+| n_train | train | eval | bootstrap CI | |
+|---|---|---|---|---|
+| 128 | 0.196599 | 2.116579 | [1.791078, 2.411601] | fail |
+| 512 | 0.662082 | 1.316514 | [1.134451, 1.540035] | fail |
+| 2048 | 0.790853 | 0.949529 | [0.891522, 1.011235] | below 1.0, CI straddles |
+| **8192** | 0.820513 | **0.877168** | **[0.830455, 0.924226]** | **PASSES** |
+
+**Softmax passes the absolute bar for the first time in this project.** Chase's
+*"no arm has ever passed"* was a **data-budget fact, not an operator fact**. The
+train/eval gap closes monotonically — 0.197/2.117 → 0.821/0.877 — memorisation
+giving way to generalisation. Every prior M3 reading in this repository was taken
+at n_train=128, where the harness could not produce a pass at all.
+
+**Cameron refuted half the round's tradeoff, then killed his own result.**
+
+A **dilated** band composed over log₂(s) layers reads the **entire context** —
+gradient support exactly 32/128/512/2048, row width exactly 8. `CHECKLIST.md:50`
+says *"windowed arms buy flatness only by surrendering reach"*; that is false.
+The contiguous band at identical depth and width reaches 1.000 → 0.779 → 0.000 →
+0.000 → 0.000. **Only the spacing differs.** Depth confound closed: dense at
+matched depth −0.585 vs dense depth-1 −0.972, so the result is about row width,
+not depth.
+
+Then the kill, his own: at the swept geometry `c = i − s/4` every `s` is a power
+of two, so `c` sat **on** the dilation lattice at all five points. Three
+positions off, flip rate goes **0.121094 → 0.000000** and the raw gradient pairs
+are **bitwise identical** — `lo == hi`. Off-lattice, perturbing `c` changes the
+gradient *not at all*. **Severed, not diluted.** `scale/carpet_probe.py:11`
+predicted exactly this and `:24` set the discipline that was broken: *"c is
+placed uniformly at random and never inserted into any schedule by hand."*
+
+**And F4's premise was already struck in-repo.** `RESEARCH.md:158` records the
+published windowed flat row taken at `j=i−4, c=i−2`, where *"the measured
+quantity cannot vary with s."* **F4 never worked — it was flat by construction.**
+With Chase's zero gradient at the flipper, Phase 0's subject is dead twice over
+for two independent reasons.
+
+**An instrument defect at depth:** `floor = 1e-6` discards **100%** of the
+contiguous arm's flips at s=128 (0.386719 at floor=0, 0.000000 floored), because
+depth moves gradient scale ~30 orders of magnitude — median |grad| **2.8e-32** at
+depth 4. Anyone composing depth must use `floor=0`.
+
+---
+
+*Updated through round 3, iteration 10. Four house-mode agents still running;
 their findings and the representation-theorem challenge reconcile into a
 prognosis when they land.*
