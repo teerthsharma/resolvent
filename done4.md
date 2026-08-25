@@ -167,9 +167,71 @@ pivots. It is the one positive result in four rounds, and it is unsigned.
 
 ---
 
-*Updated through round 4, iteration 8. Cameron is rebuilding arm A on an additive
-basis; Foreman is root-causing the drift; Wilson and the nurses are on the mask
-cache, the unpinned thread count in the capability harness, and the owed additive-
-basis fetch; Dr House has been released on a five-minute clock, because two of
-this round's four warrants have fallen and that is an innovation gap rather than
-an evidence gap.*
+---
+
+## THE LEAP — Dr House, 85 seconds, and it reframes rather than patches
+
+Released because two of this round's four warrants had been **measured**
+non-operative while eight iterations went to instrument repair — an innovation
+gap, not an evidence gap.
+
+**His verdict: the frame is the mistake, and our own numbers already said so.**
+
+`flip(s)` lives in an **additive** world — consequence as one term outshouting an
+unnormalised sum, an `O(k^{-1/2})` event that four rounds tried to inflate to
+`O(1)`. Attention lives in a **competitive** world: softmax is a normalised
+budget on a simplex, so a third token `c` hurts `j` by **displacing** it, not
+negating it — and displacement is `O(1)` at every `k`, because **the simplex does
+not grow**.
+
+```
+D(s) = E_i[ TV( A_i(· | c present),  A_i(· | c masked) ) ]
+
+l_{i→j} = q_i·k_j + Σ_c A_ic (u_c·k_j)
+```
+
+Consequence measured as **reallocation of i's read**, never as the sign of a
+scalar sum. `pivot_unsigned` stays untouched; `c` enters only the logits. Helps =
+`c` opens `j`'s route. Hurts = `c` hands `j`'s mass to a competitor. **Zero-sum
+on the simplex IS the sign.** And a fixed point of a competition is an
+**equilibrium**, not a token — the "next-equilibrium predictor" bar falls out
+rather than being bolted on.
+
+**Why it is worth binding: it turns four rounds of dead numbers into its own
+evidence.**
+
+| our measured number | its status in the additive frame | its status here |
+|---|---|---|
+| `pivot_unsigned` beats softmax, **zero signed content**, CIs disjoint | an awkward survivor | **the frame itself, already measured** |
+| signed − unsigned CI **[−0.0458, +0.0063]** includes zero | a failure | its **prediction** — if consequence is displacement, ε on values is an empty channel, measured empty |
+| Spencer slack **7.4×**; FKG non-binding (0.9998 → 0.4968) | two dead warrants | irrelevant — `D(s)` never touches ε |
+| `max\|t\|/Σ\|t\| = 0.507` | why cancellation could not work | **why TV displacement is large** — concentration is fuel on a simplex |
+| magnitude routing **−1.298** | routing died | the **magnitude criterion** died; the live arm selects by content |
+
+**His pre-registered kill, falsifiable both ways.** Same harness,
+`k ∈ {8, 32, 128, 512}`, 20000 draws, single-pivot ablation of the top-selected
+`c`, measuring **both** quantities: `flip(s)` log-log slope vs `k` must be
+**≤ −0.4** (a vanishing event must die on schedule) while `D(s)` slope must be
+**≥ −0.1** (scale-free on the simplex). **If `D(s)` slope < −0.3, displacement
+dies with flip, the frame offers nothing at global reach, and the answer was "no
+leap."**
+
+**It is a HYPOTHESIS and it enters no verdict unbound.** Dr House is exempt from
+the RED-test-first rule because five minutes does not fit a test — and that
+exemption is exactly why a fellow must bind it, with a failing test, before any
+of it is credited.
+
+---
+
+## Currently running
+
+| who | on what |
+|---|---|
+| **Cameron** | arm A rebuilt on an **additive basis of order 2** (`D+D ⊇ ℤ_v`), with `j` and `c` drawn uniformly at random and the flip read on X₄ — plus `TRAINING.md`: exact parameter counts, what fits a free T4, and a resume-chunked plan, **free tiers only** |
+| **Foreman** | root cause of the 13/37 drift — what computes `sigma`/`term` versus `rate`, whether 13 vs 24 tracks a parameter, and what a journal certifies when a third of it cannot be replayed and the producing code cannot be diffed |
+| **Wilson + nurses** | the mask cache (the only bitwise-binding optimisation, 1.019×), pinning the thread count in the capability harness — **the one file with published numbers that does not pin** — attacking the 25% operator build, and the owed additive-basis G1 fetch |
+| **Dr House** | reported. Displacement frame, above. Awaiting a fellow to bind it. |
+
+---
+
+*Updated through round 4, iteration 8, plus the leap.*

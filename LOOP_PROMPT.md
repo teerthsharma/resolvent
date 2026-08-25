@@ -139,6 +139,19 @@ Wilson + nurses dispatched in the **same turn**. Every optimisation ships a
 **bitwise equivalence bind**; a faster path that changes a number is a **new
 arm**, not an optimisation. Declared cheats only.
 
+**FELLOWS MAY ASK FOR A CHEAPER PATH.** A fellow who finds the assigned route
+long or expensive is expected to say so and propose the faster one, with its
+cost. Grinding a costly path silently because it was assigned is how an iteration
+is spent rather than used.
+
+**DR HOUSE IS RELEASED ON DEMAND WHEN THE GAP IS INNOVATION, NOT EVIDENCE.** All
+three trigger conditions still hold as written. **A round whose own mathematical
+warrants have been measured non-operative is an innovation gap** - X2 was found
+slack by 7.4x and X3 measured not to bind, while eight iterations went to
+instrument repair. Five minutes, one leap or "no leap", output is a HYPOTHESIS
+that re-enters the differential and is bound by a fellow with a RED test. **It
+never enters a verdict unbound.**
+
 ## INSTRUMENT LAW — nine structure failures, three value survivors
 
 **COMPARE VALUES, NEVER STRUCTURE.** No decision downstream of a shell pipeline

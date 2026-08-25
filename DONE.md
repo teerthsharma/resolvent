@@ -1,3 +1,63 @@
+### ROUND 4, ITERATION 9 - 2026-08-25 - DR HOUSE RELEASED. The leap: the FRAME is the mistake.
+
+CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.
+
+**RELEASED BECAUSE THE GAP WAS INNOVATION, NOT EVIDENCE.** Two of this round's
+four warrants were MEASURED non-operative - Spencer slack by **7.4x** before any
+sign is chosen, FKG not binding (P(+) 0.9998 -> 0.4968 at lam=1.00) - while eight
+iterations went to instrument repair. All three trigger conditions held.
+
+**[85 seconds] THE LEAP: `flip(s)` IS THE WRONG QUANTITY.**
+
+`flip(s)` lives in an **ADDITIVE** world - consequence as one term outshouting an
+unnormalised sum, an `O(k^-1/2)` event four rounds tried to inflate to `O(1)`.
+**Attention lives in a COMPETITIVE world**: softmax is a normalised budget on a
+simplex, so `c` hurts `j` by **DISPLACING** it, not negating it - and
+displacement is `O(1)` at every `k`, **because the simplex does not grow**.
+
+    D(s) = E_i[ TV( A_i(. | c present), A_i(. | c masked) ) ]
+    l_{i->j} = q_i.k_j + sum_c A_ic (u_c.k_j)
+
+`pivot_unsigned` untouched; `c` enters only the LOGITS. Helps = `c` opens `j`'s
+route; hurts = `c` hands `j`'s mass to a competitor. **Zero-sum on the simplex IS
+the sign.** A fixed point of a competition is an **equilibrium**, so the
+"next-equilibrium predictor" bar falls out rather than being bolted on.
+
+**WHY IT IS WORTH BINDING: IT TURNS FOUR ROUNDS OF DEAD NUMBERS INTO EVIDENCE.**
+  * `pivot_unsigned` beating softmax with **zero signed content** is not an
+    awkward survivor - **it is the frame, already measured.**
+  * signed - unsigned CI **[-0.0458, +0.0063]** including zero is the frame's
+    **PREDICTION**: if consequence is displacement, epsilon on values is an empty
+    channel. **Measured empty.**
+  * Spencer vacuous and FKG non-binding killed the epsilon channel; **`D(s)`
+    never touches epsilon.**
+  * `max|t|/sum|t| = 0.507` **INVERTS**: in the additive frame one dominant term
+    was why cancellation failed; on a simplex, **concentration is exactly what
+    makes TV displacement large.** Same number, fuel instead of corpse.
+  * `-1.298` killed the **magnitude criterion**, not routing.
+
+**PRE-REGISTERED KILL, falsifiable both ways.** `k in {8,32,128,512}`, 20000
+draws, single-pivot ablation of the top-selected `c`, **both** quantities
+measured: `flip(s)` slope **<= -0.4** (a vanishing event must die on schedule)
+AND `D(s)` slope **>= -0.1**. **If `D(s)` slope < -0.3, displacement dies with
+flip and the answer was "no leap."**
+
+**IT IS A HYPOTHESIS AND ENTERS NO VERDICT UNBOUND.** Dr House is exempt from
+RED-first because five minutes does not fit a test - and that exemption is
+exactly why a fellow must bind it before any of it is credited.
+
+**POLICY AMENDED, per the user:** fellows may ask for a cheaper or faster path
+rather than grinding an assigned one silently; and **Dr House is released on
+demand when the gap is innovation rather than evidence.**
+
+**RUNNING:** Cameron on arm A as an additive basis of order 2 + `TRAINING.md`
+(exact parameter counts, free tiers only, resume-chunked); Foreman on the 13/37
+drift root cause; Wilson + nurses on the mask cache, the unpinned thread count in
+the capability harness, the 25% operator build, and the owed additive-basis fetch.
+
+CHECKLIST: leap recorded as HYPOTHESIS, unbound. `D(s)` is a candidate
+replacement for M2''''s measured quantity and may not be credited until bound.
+
 ### ROUND 4, ITERATION 8 - 2026-08-25 - CENSUS COMPLETE: 13/37 DRIFT. Replay narrowed to what it can verify.
 
 CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.

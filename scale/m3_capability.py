@@ -51,6 +51,17 @@ from scale.negation_scope import (make_batch, nrmse, bootstrap_ci, calibrate_bar
 from scale.pivot_probe import (select_pivots, pivot_hop2,
                                batched_select_pivots, batched_pivot_hop2)
 
+#: CPU matmul reduction order varies with the thread count, so an unpinned run
+#: is not reproducible. Every published number in results/m3_capability.txt from
+#: 2026-08-25 19:03 onward was taken at 2 threads -- but supplied by the
+#: LAUNCHER's environment, not by this file, which pinned nothing. The same
+#: command run from a shell without OMP_NUM_THREADS set gets this box's default
+#: of 20 (`torch.get_num_threads()` reads 20; `os.cpu_count()` reads 28), which
+#: is what lines 345-741 of that log recorded. Pinning here makes the file, not
+#: the shell, the authority -- the same discipline as `inspector.py:240` and
+#: `tests/chase/test_resume_checkpoint.py:19`.
+torch.set_num_threads(2)
+
 ARMS = ("softmax", "pivot_signed", "pivot_unsigned", "windowed_signed")
 
 #: F4's arm, and Phase 0's whole subject. Windowed signed multi-hop is the ONE

@@ -20,6 +20,7 @@ Nothing here imports a network. Everything runs on CPU in seconds.
 """
 from __future__ import annotations
 
+import functools
 import math
 import statistics
 
@@ -121,15 +122,46 @@ def min_successes_for_separation(n: int, k_baseline: int = 0,
 # word `not` needs, and it is what these probes measure.
 
 
+@functools.lru_cache(maxsize=32)
+def _causal_mask_pair(s: int, window: int, device: str):
+    """`(m, ~m)`, memoised. A pure function of `(s, window, device)`.
+
+    Both the allocation and the complement were being redone on EVERY operator
+    call -- `_causal_sgate_operator` evaluated `~m` four times per call,
+    `_softmax_operator` twice -- and neither depends on `q`, `k` or the batch.
+    Memoising a pure function cannot move a bit, which is the whole reason this
+    is the candidate that binds: `scale/lastrow_bind.py` measured 1.4x and 8.0x
+    from slicing rows earlier and BOTH changed the number (fwd maxdiff 7.45e-09,
+    grad 1.49e-08), because changing a GEMM's `m` dimension changes which BLAS
+    micro-kernel runs and therefore the accumulation order. This changes no
+    tensor shape and no arithmetic op.
+
+    TWO COSTS, DECLARED.
+      1. The cached tensors are SHARED, not copied. Every caller in this repo
+         only reads them (`masked_fill`, `sum`, `torch.equal`), so nothing
+         mutates one today; an in-place write by a future caller would corrupt
+         every later call. Checked by grep over `_causal_mask` at the time of
+         writing: 8 call sites, all read-only.
+      2. The key is `str(device)`, so `cuda` and `cuda:0` are two entries for
+         one device. Harmless (they build identical masks) and irrelevant on
+         this CPU-only path, but it is a key collision by string and not by
+         identity, so it is written down rather than assumed away.
+    """
+    m = torch.ones(s, s, dtype=torch.bool, device=device).tril(-1)
+    m = m if window <= 0 else m.triu(-window)
+    return m, ~m
+
+
 def _causal_mask(s: int, device, window: int = 0) -> torch.Tensor:
     """Strictly-causal boolean mask, optionally banded to a sliding window.
 
     `window = 0` is the unbounded causal row every published number was measured
     on. `window = w` keeps `i - w <= j < i`, the bounded receptive field of
     sliding-window attention.
+
+    Returns the CACHED tensor from `_causal_mask_pair`; do not write to it.
     """
-    m = torch.ones(s, s, dtype=torch.bool, device=device).tril(-1)
-    return m if window <= 0 else m.triu(-window)
+    return _causal_mask_pair(s, window, str(device))[0]
 
 
 def _causal_signed_operator(q: torch.Tensor, k: torch.Tensor,
@@ -139,17 +171,17 @@ def _causal_signed_operator(q: torch.Tensor, k: torch.Tensor,
     Same construction as `ceq.lm.Attention.operator`, restated over plain [S, D]
     tensors so the probe does not drag a whole LM in to ask one question.
     """
-    m = _causal_mask(q.shape[-2], q.device, window)
-    w = ((q @ k.transpose(-2, -1)) / math.sqrt(q.shape[-1])).masked_fill(~m, 0.0)
+    _, nm = _causal_mask_pair(q.shape[-2], window, str(q.device))
+    w = ((q @ k.transpose(-2, -1)) / math.sqrt(q.shape[-1])).masked_fill(nm, 0.0)
     return rho * w / w.abs().sum(-1, keepdim=True).clamp_min(torch.finfo(w.dtype).tiny)
 
 
 def _softmax_operator(q: torch.Tensor, k: torch.Tensor,
                       window: int = 0) -> torch.Tensor:
     """Non-negative control: same causal mask, same scaling, softmax rows."""
-    m = _causal_mask(q.shape[-2], q.device, window)
+    _, nm = _causal_mask_pair(q.shape[-2], window, str(q.device))
     w = (q @ k.transpose(-2, -1)) / math.sqrt(q.shape[-1])
-    return torch.softmax(w.masked_fill(~m, torch.finfo(q.dtype).min), -1).masked_fill(~m, 0.0)
+    return torch.softmax(w.masked_fill(nm, torch.finfo(q.dtype).min), -1).masked_fill(nm, 0.0)
 
 
 def _causal_sgate_operator(q: torch.Tensor, k: torch.Tensor,
@@ -166,11 +198,11 @@ def _causal_sgate_operator(q: torch.Tensor, k: torch.Tensor,
     Whether the SIGN of an entry can be moved by a THIRD token is the open
     question this operator was never measured on, and is why it is added here.
     """
-    m = _causal_mask(q.shape[-2], q.device, window)
+    _, nm = _causal_mask_pair(q.shape[-2], window, str(q.device))
     w = (q @ k.transpose(-2, -1)) / math.sqrt(q.shape[-1])
     neg = torch.finfo(q.dtype).min
-    pp = torch.softmax(w.masked_fill(~m, neg), -1).masked_fill(~m, 0.0)
-    pm = torch.softmax((-w).masked_fill(~m, neg), -1).masked_fill(~m, 0.0)
+    pp = torch.softmax(w.masked_fill(nm, neg), -1).masked_fill(nm, 0.0)
+    pm = torch.softmax((-w).masked_fill(nm, neg), -1).masked_fill(nm, 0.0)
     return rho * (pp - lam * pm) / (1.0 + lam)
 
 
@@ -190,10 +222,10 @@ def _causal_signmag_operator(q: torch.Tensor, k: torch.Tensor,
     which reduces to `sgn(p) * softmax(|p|)`. That work is SINGLE-HOP; the
     multi-hop path sum over this matrix is what is being probed.
     """
-    m = _causal_mask(q.shape[-2], q.device, window)
+    _, nm = _causal_mask_pair(q.shape[-2], window, str(q.device))
     w = (q @ k.transpose(-2, -1)) / math.sqrt(q.shape[-1])
-    mag = torch.softmax(w.abs().masked_fill(~m, torch.finfo(q.dtype).min), -1)
-    return rho * torch.sign(w) * mag.masked_fill(~m, 0.0)
+    mag = torch.softmax(w.abs().masked_fill(nm, torch.finfo(q.dtype).min), -1)
+    return rho * torch.sign(w) * mag.masked_fill(nm, 0.0)
 
 
 def _causal_deltanet_operator(k: torch.Tensor, beta: torch.Tensor,
@@ -213,9 +245,9 @@ def _causal_deltanet_operator(k: torch.Tensor, beta: torch.Tensor,
     I + A. A should be strictly lower triangular") and sglang's
     `chunk_kda_fwd_kernel_inter_solve_fused`.
     """
-    m = _causal_mask(k.shape[-2], k.device, window)
+    _, nm = _causal_mask_pair(k.shape[-2], window, str(k.device))
     kk = torch.nn.functional.normalize(k, dim=-1)
-    return -(beta[:, None] * (kk @ kk.transpose(-2, -1))).masked_fill(~m, 0.0)
+    return -(beta[:, None] * (kk @ kk.transpose(-2, -1))).masked_fill(nm, 0.0)
 
 
 def _causal_tgate_operator(q: torch.Tensor, k: torch.Tensor, g: torch.Tensor,
@@ -266,11 +298,11 @@ def _causal_tgate_operator(q: torch.Tensor, k: torch.Tensor, g: torch.Tensor,
     is measured rather than assumed.
     """
     s = q.shape[-2]
-    m = _causal_mask(s, q.device, window)
+    m, nm = _causal_mask_pair(s, window, str(q.device))
     qh = torch.nn.functional.normalize(q, dim=-1)
     kh = torch.nn.functional.normalize(k, dim=-1)
     w = torch.tanh((qh @ kh.transpose(-2, -1)) / tau)
-    a = (g[:, None] * w).masked_fill(~m, 0.0)
+    a = (g[:, None] * w).masked_fill(nm, 0.0)
     if static_scale:
         vis = m.sum(-1, keepdim=True).clamp_min(1).to(a.dtype)
         a = a / vis.sqrt()
