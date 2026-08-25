@@ -1,3 +1,71 @@
+### ROUND 4, ITERATION 8 - 2026-08-25 - CENSUS COMPLETE: 13/37 DRIFT. Replay narrowed to what it can verify.
+
+CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.
+
+**WILSON'S FULL CENSUS SUPERSEDES MY PARTIAL ONE.** All 37 journalled units
+replayed, ~43 min, journalled append-only to `results/m2_replay_census.txt`:
+
+    dense_signed__at_pivots     4/13 drift
+    pivot_signed__in_P          7/21 drift
+    pivot_signed__not_in_P      2/3  drift
+    TOTAL                      **13/37 (35%)**
+
+**It is not one bad unit and not one bad cell - all three cells are affected.**
+He also corrected his own earlier read: *"my earlier 'drifts on
+dense_signed__at_pivots' read was wrong; two rotations landing on the same cell
+was coincidence."*
+
+**THE DECISIVE COLUMNS.** The differing fields are **ONLY EVER** `sigma` (13/13
+of the drifted units) and `term` (11/13; two drift in `sigma` alone). **`rate`,
+`k` and `n` are BIT-IDENTICAL AT ALL 37.** Drifts are **~1e-9 to 1e-10 relative
+and BIDIRECTIONAL** - `got` above `want` at one index, below at another - which
+is the signature of an **accumulation-order change, not a semantic one**.
+
+**THE PUBLISHED VERDICT IS UNTOUCHED.** Every M2 number is derived from `rate`;
+the kill is `log10(0.02732/0.16511)/log10(4)`. `rate` is bit-identical at all 37.
+
+**AND HE QUANTIFIED WHY THIS HID FOR 45+ ITERATIONS.** `check_replay` reads
+`keys[iteration % len(keys)]` - **ONE unit per run**. At 24/37 clean, any given
+iteration has a **65% chance of passing while a third of the journal is
+drifted**. **The check is a SAMPLING instrument and nothing in the file said so.**
+
+**IT NEVER GAVE A FALSE READING.** It gave a TRUE reading of one unit, and that
+reading was interpreted as a statement about the journal. That is a different
+failure from the nine structure instruments, and it is worth separating: those
+reported something other than what they measured; this reported exactly what it
+measured, and the error was in what the reader took it to cover.
+
+**ACTION (one): NARROWED THE ASSERTION TO WHAT IT CAN VERIFY.**
+
+    REPLAY_ASSERTED = ("rate", "k", "n")     asserted, bitwise
+    REPLAY_ADVISORY = ("sigma", "term")      measured and REPORTED, not asserted
+
+**[RUN] ON A KNOWN-DRIFTED UNIT (`s128`, census index 2):**
+
+    [ PASS] replay of rate/k/n [dense_signed__at_pivots/s128]
+            -- 1 of 37 journalled (SAMPLING: 13/37 are known to drift in
+               sigma/term); advisory drift here in sigma/term
+    [FIRED] must-fire: replay detects a mutated ASSERTED field
+    [FIRED] must-fire: replay IGNORES an advisory-only difference
+
+**The drift is REPORTED IN THE CHECK'S OWN OUTPUT LINE, not hidden**, and the
+line now states it is a sample of 1 of 37. **The second must-fire control is new
+and it is the load-bearing one**: without it the narrowed check would still be
+claiming what it no longer verifies.
+
+**THE DOCSTRING SAYS PLAINLY THAT IT IS WEAKER.** A replay that no longer
+verifies float reproducibility **is not the same instrument**, and pretending
+otherwise is how a check becomes decoration.
+
+**NOT DONE, DELIBERATELY** [Wilson]: the census is NOT wired into `inspector.py`.
+A 43-minute check does not belong in a per-iteration pass, and **pinning all 37
+units before the drift cause is understood would only freeze the wrong numbers.**
+`scale/replay_census.py` exists; run it once the cause is fixed and require 37/37.
+
+CHECKLIST: replay instrument REPAIRED as a narrowed assertion with both controls
+firing. Census 13/37 recorded. `rate` intact at all 37 - published verdict
+untouched.
+
 ### ROUND 4, ITERATION 7 - 2026-08-25 - NO SINGLE THREAD COUNT REPLAYS THE JOURNAL. Bitwise replay is not a single-setting check.
 
 CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.

@@ -5,36 +5,32 @@
 | field | value |
 |---|---|
 | round | **4** - CEQ v6', promise `CHOSENSIGN` |
-| iteration | **7 (round 4) complete, 8 next** |
+| iteration | **8 (round 4) complete, 9 next** |
 | phase | **X4 instrument first - everything downstream reads through it** |
 | goal | **match or SUPERSEDE self-attention**; next-equilibrium predictor, not token predictor |
 | calibration | GREEN [RUN] `run_calib.py --self-test` exit 0, 4/4 bit-identical |
 | inspector | tri-state; INDETERMINATE exits nonzero |
 | repo | https://github.com/teerthsharma/resolvent (private) |
 
-## THE ONE NEXT ACTION (round 4, iteration 8)
+## THE ONE NEXT ACTION (round 4, iteration 9)
 
-**Repair the replay instrument, and the repair is NOT a better constant.**
+**Back to the round's actual subject: arm A, rebuilt as an ADDITIVE BASIS OF
+ORDER 2.** The instrument work is done - the replay asserts what it verifies, the
+census is recorded, and `rate` is intact at all 37, so the published verdict
+stands.
 
-No thread count among 1, 2, 4, 8, 16, 20, 24 replays the whole journal:
-`s1024/b0` needs 1 or 4, `s128` needs none of them. `JOURNAL_THREADS = 2` is
-unfixable by choosing differently.
+Arm A needs `D + D` covering `Z_v`, not `D - D`. In a causal DAG both hops point
+the same way, so only sums compose - measured: `|D-D| = 56/56` while
+`|D+D| = 36/57` for the same Singer set. Two corrections travel with it:
+  * **`j` must stop being fixed at `s//4`.** That pins the offset at `3s/4`,
+    unreachable for any bounded-offset schedule at low hop count, which is what
+    made every schedule read severance 1.0000. The uniform-at-random discipline
+    `carpet_probe.py:24` demands for `c` applies to `j`.
+  * **read on X4**, not the float path.
 
-Two honest forms, and the second is what the evidence supports:
-  * **per-unit thread counts recorded in the journal** - correct, but it
-    re-journals 37 units against code that may itself have moved;
-  * **assert on `rate` alone, report `sigma`/`term` as advisory.** `rate` has
-    matched on every unit at every count tried, it is an integer, and **every
-    published M2 number is built from it**. The float reductions carry no claim.
-
-Take the second, and say plainly in the check's own docstring that it is a
-WEAKER assertion than it was - a replay that no longer verifies float
-reproducibility is not the same instrument, and pretending otherwise is how a
-check becomes decoration.
-
-**Then the must-fire control has to change with it**: mutating `rate` must fail,
-and mutating only `sigma` must NOT - otherwise the new check would still be
-claiming what it no longer verifies.
+Search for a small additive 2-basis mod v directly - for v = 57 a greedy or
+exhaustive search over k = 8..12 offsets is cheap, and the coverage condition is
+a VALUE to assert exactly as `|D-D| = v-1` was.
 
 ## Open REDs
 
