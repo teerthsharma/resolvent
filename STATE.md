@@ -5,54 +5,46 @@
 | field | value |
 |---|---|
 | round | **5** - CEQ v7, promise `TWOSPHERES`, **30 iterations** |
-| iteration | **11 complete, 12 next** |
+| iteration | **12 complete, 13 next** |
 | phase | **ARM A under the escalation chain; autonomous to iteration 30** |
 | goal | **match or SUPERSEDE self-attention**; next-equilibrium predictor |
 | calibration | GREEN [RUN] `run_calib.py --self-test` exit 0, 4/4 bit-identical |
 | inspector | tri-state; INDETERMINATE exits nonzero |
 | repo | https://github.com/teerthsharma/resolvent (private) |
 
-## THE ONE NEXT ACTION (round 5, iteration 12)
+## THE ONE NEXT ACTION (round 5, iteration 13)
 
-**Send the consolidated fellow tier to WILSON. That is the next rung and it may
-not be skipped.**
+**Do NOT wait on Wilson. Build the thing Cameron's F1 makes unavoidable: the
+aggregator arm, with TV given identical treatment.**
 
-All three fellows have reported and **not one of their findings is a verdict.**
-Wilson already holds Foreman's F4/F5. He now needs the rest, because several
-claims are load-bearing and two of them contradict things this project has
-written down:
+Wilson holds both messages and has begun `scale/wilson_probes.py`. **Never block
+on a measurement.**
 
-  1. **Chase F2 - K2's separation may be the selector reading its own score.**
-     `select_pivots` ranks by `key.norm(dim=-1)`. A filler from ranks k+1..2k
-     collapses 9.39 DISJOINT to 1.10 OVERLAP. **If true, ARM B's B1 is not a new
-     criterion**, because `xi` is built from `theta` and `theta` is a monotone
-     read of that same score. Wilson must verify the selector's score function
-     and the two filler populations at his own geometry.
-  2. **Cameron F1 - the aggregator carries ~1.24 of effect while K3 argues over
-     ~0.02.** `theta.max()` reads 2.3275 against `theta.mean()`'s 1.0888 on the
-     **published** draws. Wilson must confirm this is the published draw stream
-     and not a re-sample.
-  3. **`gamma_1` is a TIE in 5 of 6 cells** - which is **G-c's kill condition**,
-     not a soft result. If Wilson confirms it, **X7 dies honestly** and the
-     rank-r shadow goes with it.
-  4. **Chase F3/F4/F5 - the audit surface itself.** A struck constant still
-     pinned by a test the Inspector never runs; every shipped `COSTS` number
-     without a provenance path; **107 of 1278 tests covered.**
+**CAMERON'S F1 IS THE LARGEST UNEXPLOITED NUMBER IN THE ROUND.** `theta.max()`
+reads |d| = **2.3275** against `theta.mean()`'s **1.0888** on the **published**
+draws - delta **+1.2394 [+0.7962,+1.8565]**, winning in **6/6 cells** - while the
+entire K3 quarrel is **+0.0241**. `.mean()` divides by 1024 a signal carried by
+~503 rows, **with the dilution factor random per draw**.
 
-**THEN THE HEALTH INSPECTOR, BEFORE ANY PROGNOSIS.** He re-runs every claimed
-GREEN, checks each finding has a matching RED, and checks nobody contradicts
-Wilson. **Chase's F5 is aimed straight at him** - a clean bill over 8.4% of the
-suite is true and is not a statement about the repository.
+**THE TRAP TO AVOID IS THE ONE SHE ALREADY NAMED:** `tv_max` gains **+1.1702**
+against `th_max`'s **+1.2394**. **The aggregator lifts TV nearly as much**, so
+this is not a result about the sphere and must never be written as one. **Any
+aggregator change is applied to BOTH statistics or the comparison is rigged**, and
+a rigged win is worse than an honest loss.
 
-**WHAT IS ALREADY SETTLED AND NEEDS NO FURTHER ARGUMENT:** K3 as written is not
-evidence for the geometry. theta beats **raw** TV at every k (CI excludes zero)
-and **loses at k=8** to a held-out `TV^p` with no geometry in it. That is my own
-measurement with a fit/score split and both controls fired; it does not need
-Wilson to become true, though he may refute it.
+**WHAT IS NOT YET KNOWN AND SHOULD BE:** she reports `max`'s advantage **shrinking
+with k** (+1.24 -> +0.78 -> +0.73) and **k=512 unmeasured**. And her mechanism
+reading - that the max row sits at or near `i = c+1` - **has no RED test behind
+it and she says so.** Either is a legitimate one-action target.
 
-**Dr House is NOT triggered.** No theory here died of missing innovation - three
-fellows produced results. Release him only if the problem survives all four rungs
-AND the gap is INNOVATION rather than evidence.
+**HOLD THE LINE ON WHAT IS ALREADY SETTLED:** K3 as written is not evidence for
+the geometry (theta loses at k=8 to a held-out `TV^p`, CI excluding zero), and
+**B1 is not a rename** (`rho=-0.0246`, overlap below chance, top-k entirely inside
+nonzero `xi`).
+
+**Dr House stays in the box.** Nothing has died of missing innovation - four
+probes produced results this round. Release him only if the problem survives all
+four rungs AND the gap is INNOVATION rather than evidence.
 
 ## Open REDs
 

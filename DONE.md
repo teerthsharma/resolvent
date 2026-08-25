@@ -1,3 +1,88 @@
+### ROUND 5, ITERATION 12 - 2026-08-25 - Tier sent to Wilson. And B1 is tested BEFORE it is built: it is NOT a rename, so Chase's objection does not land.
+
+CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.
+
+ACTION (one): **the consolidated fellow tier went to WILSON** - the next rung, and
+it may not be skipped. Four priorities, each with what to verify and why it
+matters: Chase's F2 (K2's separation may be the selector reading its own score),
+Cameron's F1 (the aggregator carries ~1.24 while K3 argues over ~0.02), the
+`gamma_1` tie (**G-c's kill condition, not a soft result**), and Chase's F3/F4/F5
+(the audit surface itself). **He was told to lead with anything that refutes a
+fellow OR refutes me**, and my own K3-concavity numbers were handed over with no
+protection.
+
+**BUILT ALONGSIDE, because policy forbids a measurement running with nothing being
+built:** `scale/b1_collapse_test.py`.
+
+**CHASE'S PREMISE IS CORRECT AND I VERIFIED IT MYSELF.** [READ]
+`scale/pivot_probe.py:88`:
+
+    score = key.norm(dim=-1).clone()
+
+with the docstring saying it outright - *"Score is the key-norm, a pure function
+of the token's own representation."* **The incumbent selector ranks by
+magnitude.**
+
+**THE QUESTION HE RAISED ABOUT ARM B, WHICH IS BIGGER THAN K2.** ARM B's **B1**
+proposes *"selection by SHADOW MASS `||xi_p||` instead of salience `|t_p|` (the
+criterion that died at -1.298 was magnitude)"*. But `xi` is built from `theta`,
+and Foreman's identity makes `theta` a monotone function of the masked token's own
+weight. **If the shadow-mass ranking reproduces the key-norm ranking, B1 selects
+the same tokens under a new name and ARM B's first upgrade is void.**
+
+**THIS IS A TEST OF A PROPOSAL, NOT A RESULT, AND THAT IS THE POINT.** Nothing in
+ARM B exists yet. The contract says *"Nothing is built until ARM A survives"* -
+**so the cheapest possible moment to learn that one of the three planned upgrades
+is a rename is now.**
+
+**ALL THREE CONTROLS FIRED, including one aimed at the exact failure mode:** a
+score against itself reads `rho=1.000000`; an independent score reads
+`rho=+0.009650` at chance overlap; and **a monotone transform `a^0.3 * 7 + 2`
+reads `rho=1.000000`** - so the instrument is SHOWN to catch a relabelling rather
+than assumed to.
+
+**[RUN] s=1024, d=16, 80 draws, threads pinned to 2**
+
+    rho(salience, shadow) over all legal candidates = -0.024620 [-0.032497, -0.017230]
+
+      k     top-k overlap                 chance      top-k inside nonzero xi
+      8     0.003125 [0.0000,0.0078]      0.007843    1.000000
+     32     0.015625 [0.0105,0.0211]      0.031373    1.000000
+    128     0.093652 [0.0882,0.0995]      0.125490    1.000000
+
+**B1 IS NOT A RENAME OF THE KEY-NORM.** `rho = -0.0246`, and the top-k overlap is
+**BELOW CHANCE at every k**. **Chase's objection does not land on ARM B.** It is
+**not** a claim that B1 is better - only that it is not the old criterion, and
+whether it helps is an unrun ablation.
+
+**A DEFECT OF MINE, CAUGHT BY THE FIRST RUN'S OWN OUTPUT.** The first table
+printed `rho` as **three identical numbers, -0.024620 at every k**. It is
+identical because **`salience` and `shadow_mass` do not depend on `k` at all** - I
+computed `piv` and never used it. **One measurement printed three times as though
+it varied.** Fixed: `rho` is now stated once and labelled k-independent, and only
+`top-k overlap` is tabulated per k.
+
+**AND A SECOND THING I ALMOST MISREPORTED.** **66.3% of `xi` rows are EXACTLY
+ZERO**, so most of the rank is a rank over **ties** - and near-chance overlap is
+also what ranking **noise** produces. *"Selects different tokens"* and *"selects
+arbitrarily among zeros"* are not the same claim, and the first run could not tell
+them apart. **The added column settles it: `top-k inside nonzero xi = 1.000000` at
+every k** - B1's top-k **never lands on a zero-score token**, so the ties do not
+corrupt the selection. **The verdict survives the objection I raised against my
+own probe**, which is the only reason it is reportable.
+
+This corroborates Cameron's F5 from a different direction: she measured 53-58% of
+**moved** rows reading exactly 0.0 through theta; this reads **66.3% of all legal
+candidates** with zero shadow mass. **Same defect, two instruments.**
+
+**IN FLIGHT:** Wilson has both messages and has begun `scale/wilson_probes.py`.
+**Nothing is claimed for it.**
+
+CHECKLIST: **tier sent to Wilson**, the rung that cannot be skipped. **B1 tested
+BEFORE being built - NOT a rename** (`rho=-0.0246`, overlap below chance, top-k
+entirely inside nonzero `xi`). Two reporting defects of mine caught and fixed
+before the verdict.
+
 ### ROUND 5, ITERATION 11 - 2026-08-25 - K3's MISSING CONTROL BUILT AND RUN: theta LOSES to a plain power of TV. All three fellows in. AND CHASE CORRECTS MY OWN RECORD.
 
 CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.

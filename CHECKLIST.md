@@ -531,3 +531,14 @@ Replayed ARM A's own draw stream (published `D_FR causal` reproduced to 6 dp at 
 | **Cameron F3** | **`\|\|tau\|\|` beats theta at every k, free** (**+0.1932/+0.2018/+0.2026**, CIs exclude zero) - already computed on every draw and never compared. Unlike theta it is **not a function of the per-row TVs**. |
 | **Cameron / G-c** | **`gamma_1` is a TIE** - CI spans zero in **5 of 6 cells**, negative at k=32. **This is the G-c kill condition: `gamma_r` does not separate from draw noise.** |
 | **Cameron F5** | theta's float32 active-row mean is **2.43% wrong** vs float64 against TV's **0.000076%**; 53-58% of moved rows read **exactly 0.0**. **Her own limit: does NOT change the verdict** - float64 moves `d` by <= 0.0005. |
+
+**B1 COLLAPSE TEST [RUN, r5 iter 12] - `scale/b1_collapse_test.py`, exit 0. A PROPOSAL tested before it is built.**
+
+| item | status |
+|---|---|
+| Chase's premise about the selector | **CONFIRMED BY ME [READ] `scale/pivot_probe.py:88`** - `score = key.norm(dim=-1).clone()`, docstring: *"a pure function of the token's own representation"*. The incumbent ranks by **magnitude**. |
+| **ARM B's B1 ("shadow mass instead of salience")** | **NOT A RENAME.** `rho(salience, shadow) = -0.024620 [-0.032497, -0.017230]`, **k-independent**; top-k overlap **0.003125 / 0.015625 / 0.093652** against chance **0.007843 / 0.031373 / 0.125490** - **below chance at every k**. **Chase's objection does not land on ARM B.** Not a claim that B1 is *better* - only that it is not the old criterion. |
+| controls | **3/3 FIRED**, including the one aimed at the failure mode: **a monotone transform `a^0.3*7+2` reads `rho=1.000000`**, so the instrument is *shown* to catch a relabelling. |
+| the tie objection, raised against my own probe | **66.3% of `xi` rows are EXACTLY ZERO**, so near-chance overlap is also what ranking *noise* produces. Settled by the added column: **`top-k inside nonzero xi = 1.000000` at every k** - B1's top-k never selects a zero-score token. |
+| corroboration | Cameron measured **53-58% of moved rows** reading exactly 0.0 through theta; this reads **66.3% of all legal candidates** with zero shadow mass. **Same defect, two instruments.** |
+| my reporting defects, both fixed | (1) `rho` was printed as **three identical numbers** because neither score depends on `k` - `piv` was computed and never used. **One measurement shown three times.** (2) The tie/noise ambiguity was **not distinguishable** in the first run. Both repaired before the verdict was written. |
