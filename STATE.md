@@ -5,30 +5,27 @@
 | field | value |
 |---|---|
 | round | **3** - CEQ v5, 30 iterations, promise `SCALEFREE` |
-| iteration | **3 complete, 4 next** |
+| iteration | **4 complete, 5 next** |
 | phase | **Phase 0 - M3 on the windowed arm. Capability before statistics.** |
 | calibration | GREEN [RUN] `run_calib.py --self-test` exit 0, 4/4 bit-identical |
 | inspector | `python inspector.py` - 8 checks, 8 must-fire controls, exits nonzero if any control stays SILENT |
 | repo | https://github.com/teerthsharma/resolvent (private) |
 
-## THE ONE NEXT ACTION (iteration 4)
+## THE ONE NEXT ACTION (iteration 5)
 
-**Take the first capability reading, and take SOFTMAX first.** The harness is
-now correct: four arms, all on shipped operators, all at n_params=4769, bar
-already calibrated RED-first (`predict_the_mean` 1.000000, `payload_only`
-1.414204 failing, `oracle` 0.000000).
+**Iteration 5 is an Inspector pass (every 5th): `python inspector.py`.** It is
+also the mandatory pre-prognosis audit for the house-mode run, so the two
+coincide - re-run every test the fellows claim green, and check every finding has
+a matching RED before it.
 
-Run at the SMALL setting first (s=64, d=24) to reproduce the harness end to end
-on the shipped operator, with **softmax written to `results/` before any signed
-arm runs** so the timestamps prove the order. That reading is not M3 - M3 needs
-d in {256,512,1024} and 5 seeds - it is the check that the corrected harness
-still runs and that the bar still fires.
+Then reconcile the four reports into ONE prognosis. Contradictions get resolved,
+not averaged: Wilson's verified facts settle any factual dispute, and anything
+genuinely undecided goes to Open rather than into the verdict.
 
-**Pre-register the reading before running it.** Round 2's habit: on the old
-tgate harness every arm sat ABOVE the 1.0 bar (best 1.342215, 34% worse than
-predicting the mean). If the sgate arms also sit above it, that is Outcome B for
-Phase 0 - flatness does not produce capability - and it must be read that way
-rather than as a tuning problem.
+**The first capability reading stays HELD until the audit clears the harness.**
+The specific blocker to clear is Chase's: at s=64, w=8, hop-2 reaches 16
+positions - if the task's flipper-to-payload distance exceeds that, the windowed
+arm cannot see the flipper and its reading is predetermined.
 
 ## Open REDs
 

@@ -2,6 +2,43 @@
 
 Round 2 archived below its own header; round-1 archive at `DONE_ARCHIVE_ROUND1.md`.
 
+### ROUND 3, ITERATION 4 - 2026-08-25 - House mode dispatched on the capability question. Reading HELD pending the audit.
+
+CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.
+
+ACTION (one): dispatched four named agents concurrently, split by STANCE rather
+than by file, with nurses briefed as inference and senior compiler engineers.
+Every fellow is TEST-BOUND: RED first or the claim goes to Open.
+
+  FOREMAN   the contradiction nobody has resolved - F1's theorem puts softmax at
+            exactly 0.000000 on content-conditional sign BY PROOF, while the only
+            matched-parameter capability measurement reads softmax 15/512 against
+            the signed operator's 0/512, p = 2.75e-05, and behind in-distribution
+            (0.7734 vs 0.9258). Both cannot be about the same thing.
+  CHASE     how the REBUILT harness produces a wrong answer in either direction.
+            Includes one that could void Phase 0 outright: at s=64 with w=8,
+            hop-2 reaches 16 positions - if the task's flipper-to-payload
+            distance exceeds that, the windowed arm's result is PREDETERMINED.
+  CAMERON   refuse the reach-vs-flatness tradeoff the round is built on. What was
+            ever MEASURED showing a working local arm cannot be composed into
+            global reach (depth, dilation, hierarchy) versus never tried because
+            the routes table was written first. Plus van der Waerden scores
+            Phi^-1(F_hat), whose growth ~ sqrt(2 log s) is matched to the
+            promotion rate it must cancel.
+  WILSON    ground truth, gate passed on all three counts. Chief among his items:
+            **is "a GELU between two softmax layers restores the sign flip"
+            MEASURED anywhere in this repo, or only asserted?** That sentence is
+            load-bearing in the framing and its evidence has never been located.
+
+**THE FIRST CAPABILITY READING IS HELD.** Iteration 3's next-action was to take
+it, softmax first. Chase is auditing that harness for false-GREEN paths right
+now. Taking a reading from a harness under audit is how this project spent two
+rounds - and the specific hazard Chase was sent after (windowed reach < task
+distance) would make the reading meaningless rather than merely wrong.
+
+CHECKLIST: no status changed. M3w UNTESTED - arm exists and is bound, no reading
+taken.
+
 ### ROUND 3, ITERATION 3 - 2026-08-25 - F4's windowed arm is IN the capability harness, bound by value.
 
 CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.
