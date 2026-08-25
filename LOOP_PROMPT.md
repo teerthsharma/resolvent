@@ -96,8 +96,40 @@ cannot inherit scale. By **Chentsov**, this metric is the unique invariant choic
 
 **THE BRIDGE.** Orthogonal Procrustes: `YᵀX = UΣVᵀ ⇒ R* = UVᵀ` — one SVD.
 
-**SPIN UNLESS EQUILIBRIUM.** `τ = ½(YᵀX − XᵀY)`; equilibrium ⇔ `τ = 0` ⇔ `YᵀX R*`
-symmetric PSD. Global form: the settled reading is the **Karcher/Fréchet mean**
+**SPIN — AND `τ = 0` IS NOT THE EQUILIBRIUM CONDITION. [REPAIRED r5 iter 10,
+BY MEASUREMENT.]** `τ = ½(YᵀX − XᵀY)`, and `τ = 0` ⇔ `YᵀX R*` symmetric PSD.
+**This document previously also called `τ = 0` the equilibrium condition while
+calling the settled reading the Karcher mean. THOSE ARE DIFFERENT POINTS and both
+sentences cannot stand.**
+
+Written out for the Karcher iteration — `X` the k pivot points, `Y` the current
+mean broadcast — `YᵀX = k·m x̄ᵀ`, so **`‖τ‖ = 0` ⇔ `m ∥ x̄`**, the normalised
+**Euclidean** mean. [RUN] `m = x̄/‖x̄‖` reads `‖τ‖ = 2.454507e-16 / 9.675157e-16 /
+5.176001e-15` at k = 8/32/128 — **machine zero in ONE pass, no iteration** —
+against `8.067740e-02 / 2.823547e-01 / 1.054581e+00` at the Karcher mean, which
+is **0.035261 / 0.048773 / 0.054016 rad away**. Control fired: `4.549079e-16` at
+`x̄/‖x̄‖` vs `1.857472` at a pivot.
+
+**THE REPAIR IS FORCED, NOT CHOSEN.** If equilibrium meant `τ = 0`, the settled
+reading would be `x̄/‖x̄‖` — a **one-line closed form** — and **X₆'s own
+pre-registered kill fires**: *"If ONE pass already gives `‖τ‖_F ≈ 0`, the
+equilibrium clause is CUT."* Keeping `τ = 0` as the equilibrium condition
+therefore **deletes the equilibrium clause**. So:
+
+  * **THE EQUILIBRIUM CERTIFICATE IS THE KARCHER RESIDUAL**, `‖mean_p log_m(x_p)‖`.
+    [RUN] it reaches **5.4944e-13** while the glance reads **0.599101 / 0.388587 /
+    0.321843** — the glance is not the fixed point, so the clause SURVIVES.
+  * **`τ` IS A DISPLACEMENT STATISTIC, NOT AN EQUILIBRIUM TEST** — the spin
+    between two configurations, which is how ARM A already used it (`A^c` vs
+    `A^∅`). It keeps that job and loses the other one.
+  * **`τ = 0` MAY NOT BE WRITTEN AS "equilibrium" ANYWHERE**, and any sentence
+    that does is struck on sight.
+
+**THE PRICE, CARRIED WITH THE REPAIR AND NOT BURIED.** The geodesic branch owes
+its own precondition: the Karcher mean is unique only for `θ < π/2`, and [RUN]
+that holds on **0.9333 / 0.8167 / 0.5167** of draws at k = 8/32/128. **At k=128
+the settled reading is not well defined on 48.3% of draws.** ARM B may not be
+built on a Karcher mean until it says what happens there. Global form: the settled reading is the **Karcher/Fréchet mean**
 of its pivot readings, **UNIQUE for θ < π/2** (injectivity radius) — an
 existence-and-uniqueness statement the DEQ era never had. Loop version:
 c-present → c-masked → c-present failing to return the frame is **HOLONOMY**.

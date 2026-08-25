@@ -5,46 +5,48 @@
 | field | value |
 |---|---|
 | round | **5** - CEQ v7, promise `TWOSPHERES`, **30 iterations** |
-| iteration | **9 complete, 10 next** |
+| iteration | **10 complete, 11 next** |
 | phase | **ARM A under the escalation chain; autonomous to iteration 30** |
 | goal | **match or SUPERSEDE self-attention**; next-equilibrium predictor |
 | calibration | GREEN [RUN] `run_calib.py --self-test` exit 0, 4/4 bit-identical |
 | inspector | tri-state; INDETERMINATE exits nonzero |
 | repo | https://github.com/teerthsharma/resolvent (private) |
 
-## THE ONE NEXT ACTION (round 5, iteration 10)
+## THE ONE NEXT ACTION (round 5, iteration 11)
 
-**Collect the fellows if any have landed. Otherwise: DECIDE WHICH EQUILIBRIUM
-THE CONTRACT MEANS, because it currently asserts two and they are not the same
-point.**
+**Collect Chase and Cameron; hold Foreman at the Wilson rung.**
 
-X6 is fully measured now, both halves:
-  * the Karcher **residual** reaches **5.4944e-13** and the glance is NOT the
-    fixed point (residual 0.599101 / 0.388587 / 0.321843) - **the clause
-    SURVIVES**;
-  * the **`||tau||`** trajectory **plateaus NONZERO** (7.255e-02 / 2.962e-01 /
-    1.019e+00) at that same fixed point.
+**FOREMAN'S REPORT IS NOT A VERDICT AND MUST NOT BE TREATED AS ONE.** It is
+RED-bound and it replays ARM A's own draw stream, but the chain is
+**fellows -> Wilson -> Health Inspector -> Dr House**, and it has passed exactly
+one rung. **Wilson has been sent F4/F5** - the dead-row floor and the contaminated
+K1 slope - because his K1 run reads through the same statistic and his facts, not
+Foreman's, settle it.
 
-**Both cannot be the equilibrium condition.** `tau = 0` holds iff the reading is
-parallel to `xbar`, the normalised **Euclidean** mean; the Karcher mean is the
-**geodesic** one, and the two sit **0.031648 rad [0.026318, 0.037550]** apart at
-k=8 with the CI excluding zero at every k. **The contract asserts both, so one of
-its sentences is false of whatever ARM B is built on.** This is a specification
-repair, not a measurement, and it is cheap: pick the geodesic mean (and cut or
-restate the `tau = 0` sentence), or pick `tau = 0` (and stop calling the settled
-reading a Karcher mean). **Do not build ARM B while both stand.**
+**THE FINDING THAT REFRAMES THE ROUND, once it clears Wilson:**
+**`theta_i = arcsin(sqrt(TV_i))` IDENTICALLY** on a one-token mask - one degree of
+freedom, residual **2.980e-07** at the float32 floor. **K3 as written cannot
+distinguish geometry from row-wise concavity**, because theta is a fixed monotone
+function of TV **by construction**. And the sphere's own curvature is measured as
+a **liability**: the chord beats the geodesic by 0.65-1.25%, `sqrt(TV)` by
+2.87-5.70%.
 
-**Carry into that decision, from iteration 8:** the uniqueness precondition holds
-on only **0.9333 / 0.8167 / 0.5167** of draws at k = 8 / 32 / 128. **At k=128 the
-Karcher mean is not unique on 48.3% of draws** - so the geodesic branch of the
-repair has to say what happens there, and "unique for theta < pi/2" is a
-precondition that fails on half the draws at the pivot count ARM B wants.
+**WHAT K3 NEEDS IF IT IS TO MEAN ANYTHING:** a control arm that is a concave
+reparametrisation of TV **with no geometric story** - `TV^p` - and theta must beat
+**that**, not raw TV. **Foreman's `TV^0.2` numbers do NOT support shipping it**:
+he searched 8 exponents on the draws that scored them, with no bootstrap CI and no
+multiplicity correction, and he says so himself. **That arm has to be built
+properly before it can kill or save K3.**
 
-**Tier reading order unchanged:** Wilson's facts settle disputes; a fellow finding
-without its RED test goes to Open; **the Health Inspector runs BEFORE the
-prognosis**; the Chart carries every fellow including overruled ones. **Dr House
-(`model: fable`, 5 min, no nurses) only if the problem survives all four rungs
-AND the gap is INNOVATION, not evidence.**
+**Equilibrium is settled and written into the contract:** the certificate is the
+**Karcher residual**; `tau` is a **displacement statistic**; `tau = 0` may not be
+called equilibrium. **The price rides with it** - the Karcher mean is not unique
+on **48.3% of draws at k=128**, and ARM B may not be built on it until that is
+answered.
+
+**Dr House (`model: fable`, 5 min, no nurses) is NOT triggered yet.** Foreman did
+not die of missing innovation; he produced a result. Release him only if the
+problem survives all four rungs AND the gap is INNOVATION rather than evidence.
 
 ## Open REDs
 

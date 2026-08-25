@@ -1,3 +1,142 @@
+### ROUND 5, ITERATION 10 - 2026-08-25 - INSPECTOR CLEAN. The equilibrium contradiction is REPAIRED BY MEASUREMENT. And FOREMAN LANDS THE BIGGEST FINDING OF THE ROUND.
+
+CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.
+[RUN] `python inspector.py` (iteration 10, the 5th-iteration pass) -> **exit 0,
+CLEAN, 10 checks, 15 controls all fired.** This rotation selected `published: M5
+tail norms` -> `s128h2=0.880500 s512h2=1.292741`, and its must-fire control
+**rejected the struck 1.471448**.
+
+ACTION (one): **resolved the equilibrium contradiction found at iteration 9 - and
+the resolution is FORCED BY A MEASUREMENT, not chosen.**
+
+**[RUN] the test that decides it:**
+
+     k   ||tau|| at xbar/|xbar|   ||tau|| at Karcher   ang(K,E)
+     8             2.454507e-16         8.067740e-02   0.035261
+    32             9.675157e-16         2.823547e-01   0.048773
+   128             5.176001e-15         1.054581e+00   0.054016
+   control [FIRED]: at xbar/|xbar| 4.549079e-16 (~0) | at a pivot 1.857472 (>0)
+
+**`tau = 0` HAS A ONE-LINE CLOSED FORM.** `m = xbar/||xbar||` reads machine zero
+**in one pass, with no iteration at all.** So if equilibrium meant `tau = 0`,
+**X6's own pre-registered kill fires** - *"If ONE pass already gives `||tau||_F ~
+0`, the equilibrium clause is CUT."* **Keeping `tau = 0` as the equilibrium
+condition deletes the equilibrium clause.** The other branch survives. There was
+never a choice here; the measurement made it.
+
+**REPAIR WRITTEN INTO `LOOP_PROMPT.md`:**
+  * the equilibrium **certificate is the Karcher residual** (reaches 5.4944e-13,
+    while the glance reads 0.599101/0.388587/0.321843 - **not the fixed point**);
+  * **`tau` is a DISPLACEMENT statistic**, the spin between two configurations,
+    which is the job ARM A already gave it. It keeps that and loses the other;
+  * **`tau = 0` may not be written as "equilibrium" anywhere**, struck on sight;
+  * **the price travels with the repair:** uniqueness holds on **0.9333/0.8167/
+    0.5167** of draws, so **at k=128 the settled reading is undefined on 48.3%**,
+    and ARM B may not be built on a Karcher mean until it says what happens there.
+
+**NOTE ON THE DIGITS.** These `||tau||` values differ slightly from iteration 9's
+(8.067740e-02 vs 7.255e-02 at k=8) because this run used **40 draws and tol 1e-12**
+against iteration 9's **60 draws and tol 1e-8**. **Same conclusion, different
+draw count - and the difference is stated rather than smoothed.**
+
+---
+
+**FOREMAN REPORTED, AND HE DID NOT FIND A WEAK EFFECT. HE FOUND AN IDENTITY.**
+**HIS FINDINGS ARE NOT VERDICTS YET** - the chain is fellows -> Wilson ->
+Inspector -> Dr House, and they have not passed Wilson. Recorded as REPORTED.
+
+His provenance line reproduces ARM A's published `D_FR causal` to **6 dp at all
+three k** (0.030850 / 0.018089 / 0.013203), so he replayed **ARM A's own draw
+stream**, not a re-sample. `run_calib.py --self-test` exit 0 first.
+
+**F1 - THETA AND TV ARE THE SAME PER-ROW NUMBER. Exact identity, not a tight
+sandwich.** `rows_with_and_without` masks **one** token and renormalises, so with
+`m_i = A^c[i,c]` the row has exactly **one degree of freedom**:
+`A^0[i,j] = A^c[i,j]/(1-m_i)`. Hence `TV_i = m_i` (measured residual **2.980e-07**,
+the float32 floor for a 1024-term sum), `BC_i = sqrt(1-m_i)`, and
+
+    theta_i = arcsin(sqrt(TV_i))     IDENTICALLY
+
+**No draw count separates them.** Draw-level Spearman **0.9930-0.9989**.
+
+**F2 - HIS OWN CENTRAL SUSPICION REFUTED, and he reports the refutation as the
+finding.** He expected the 2% to be float32 noise. **It is not.** Recomputed
+through the exact route in float64: `d_theta(exact) = +1.0890` vs
+`d_theta(arccos) = +1.0888` at k=8. **The 2% is real and stable.** What it is NOT
+is geometry - it is the generic gain of **any** concave transform applied row-wise
+before averaging, and `theta = arcsin(sqrt(TV))` is a **mediocre** member of that
+family: `TV^0.20` beats TV by **15.8%** at k=8 and `TV^0.15` by **32.7%** at
+k=128, i.e. **3.7x to 7.0x theta's own margin**, with no sphere and no Chentsov.
+
+**F3 - THE SPHERE'S CURVATURE IS ITS ONLY CONTRIBUTION OVER THE FLAT SIMPLEX, AND
+THAT CONTRIBUTION IS NEGATIVE AT EVERY k.**
+
+    chord 2sin(theta/2) beats geodesic by +0.86% / +0.65% / +1.25%
+    sin(theta) = sqrt(TV) beats geodesic by +3.97% / +2.87% / +5.70%
+
+**Both tangent-plane readings beat the geodesic on K3's own criterion.** Round
+5's payoff claim - *"scale-free BY RADIUS rather than by tuning"* - describes a
+geometry whose one distinguishing feature is **measured to be a liability**.
+
+**F4 - `theta_rows` CONTRADICTS ITS OWN DOCSTRING and the artifact is most of the
+filler baseline.** Docstring: *"Rows with no mass either side give 0."* Code:
+`arccos(0) = pi/2`. Row 0 has no visible keys under the causal mask, so **every
+draw carries a hard pi/2** - a constant **0.0015340 rad** floor:
+
+    k=8    causal 5.0% of the reading  | filler 46.2%
+    k=32   causal 8.5%                 | filler 50.0%
+    k=128  causal 11.6%                | filler 55.1%
+
+**K2 survives** (the constant sits on both arms) but **its separation was
+understated**: published 9.30/5.90/4.74x becomes **16.44/10.79/9.33x**. K3's
+Cohen's d is **unaffected** - a constant shift cancels in the numerator.
+
+**F5 - K1's SLOPE IS CONTAMINATED, IN THE DIRECTION THAT FLATTERS IT.**
+
+    -0.3061 as ARM A computes it | -0.3323 live rows only | -0.3346 exact route
+
+An additive constant floor **compresses a decaying series in log-log**. K1's
+*"displacement dies with flip -> no leap"* trip wire is **-0.30**. The published
+number sits **2% past it**; corrected it sits **11% past**. **This is live** -
+Wilson's K1 re-measurement is in flight and reads through the same statistic.
+**FORWARDED TO WILSON THIS ITERATION** with instructions to verify or refute at
+his own geometry, report BOTH slopes with a CI on each, and say whether the
+correction moves the verdict or only the digits.
+
+**F6 - 83-88% OF NONZERO ROWS READ ONE OF FIVE VALUES, AND THOSE FIVE ARE THE
+ARCCOS OF SUCCESSIVE float32 ULPs.** `arccos(1-d) ~ sqrt(2d)`, so one ULP in `BC`
+becomes an **absolute** 3.5e-04 error in `theta`. The five most-occupied values
+match `arccos(1 - n*2^-24)`, n=1..5, to **1.12e-07** relative. **80.6-85.5% of
+nonzero rows have theta wrong by more than 100%** against the exact route.
+`p50` of theta over live rows is **exactly 0**, and the **top 1% of rows carry
+52.8 / 80.3 / 90.1%** of the sum. **`D_FR` is a tail statistic.** Cohen's d is
+unmoved, but **any per-row use of theta - including the `gamma_1` and `Xi` shadow
+- is reading the float32 grid.**
+
+**HIS BOTTOM LINE, and it reframes K3 rather than answering it.** Theta DOES beat
+TV on identical draws by 2.1-4.7% and it survives exact recomputation - **but it
+beats TV as a SQUARE ROOT, not as a sphere.** Its own tangent-plane linearisation
+beats it, and a plain `TV^0.2` beats it by up to **7x its margin**. **K3 as
+written cannot distinguish geometry from row-wise concavity**, because on a
+one-token mask theta is a fixed monotone function of TV **by construction**. K3
+needs a control arm that is a concave reparametrisation of TV **with no geometric
+story**, and theta must beat that.
+
+**HIS OPEN LIST, carried unresolved:** `gamma_1` as a reparametrisation (mixed -
+`|<v1,e_c>| > 0.99` on only 1/24, 3/24, 4/24 draws; **not ruled out, not shown**);
+`||tau||` is rank-2 by construction (algebra says `||tau|| = ||w||/sqrt(2)`, his
+numeric rank read 2-22, **instrument too blunt**); whether the best concave
+transform survives its own filler twin (**he searched 8 exponents on the draws
+that scored them, with no CI and no multiplicity correction - "ship TV^0.2" is
+NOT supported**); K1 (another agent's).
+
+CHECKLIST: **Inspector CLEAN exit 0.** Equilibrium contradiction **REPAIRED by
+measurement** - `tau=0` has a one-pass closed form, so it cannot be the
+equilibrium condition without deleting the clause. **Foreman REPORTED, not yet
+verdict**: theta = arcsin(sqrt(TV)) **identically**; curvature is a **liability**;
+`theta_rows` contradicts its docstring; **K1's slope is contaminated and Wilson is
+told.**
+
 ### ROUND 5, ITERATION 9 - 2026-08-25 - The ||tau|| trajectory. THE CONTRACT'S TWO DEFINITIONS OF EQUILIBRIUM ARE DIFFERENT FIXED POINTS, and the gap is measurable.
 
 CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.

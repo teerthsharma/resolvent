@@ -480,3 +480,25 @@ is left, and **a not-found cell is permission to test, not a result.**
 | pattern, not a result | K3 read the geometry's edge over TV at **2.1-4.7%**; this reads the geodesic/flat displacement at **2.75-3.90%**. Recorded as a pattern only. |
 | probe defect | **FAKE CONTROL, mine, DELETED.** "C3 instrument SEES a Karcher/Euclid gap" passed `True` **unconditionally** and chose orthonormal axes whose two means coincide **by symmetry** - zero either way. Third instrument-#15 in this project and the first in my own file. C1/C2 are real and fired (`0.000e+00`/`0.000e+00`; `2.089918`/`0.635487`). |
 | scaling caveat | `tau` carries a factor of `k`, so settled `\|\|tau\|\|` is **NOT comparable across k**. The **drop ratio** is. |
+
+**EQUILIBRIUM REPAIR + INSPECTOR [RUN, r5 iter 10].**
+
+| item | status |
+|---|---|
+| `inspector.py`, 5th-iteration pass | **CLEAN, exit 0**, 10 checks / 15 controls. Rotation selected `M5 tail norms` -> `s128h2=0.880500 s512h2=1.292741`; its control **rejected the struck 1.471448**. |
+| the two-equilibria contradiction | **REPAIRED BY MEASUREMENT.** `\|\|tau\|\|=0` has a **one-pass closed form**: `m = xbar/\|\|xbar\|\|` reads **2.454507e-16 / 9.675157e-16 / 5.176001e-15** vs **8.067740e-02 / 2.823547e-01 / 1.054581e+00** at the Karcher mean. **X6's own kill therefore fires on the `tau=0` branch** - one pass already gives it, so that branch DELETES the clause. **Forced, not chosen.** |
+| what the contract now says | Equilibrium certificate = **the Karcher residual**. `tau` = **a displacement statistic**, the job ARM A already gave it. **`tau = 0` may not be written as "equilibrium" anywhere.** |
+| the price, carried not buried | Uniqueness holds on **0.9333 / 0.8167 / 0.5167** of draws. **ARM B may not be built on a Karcher mean until it says what happens on the 48.3% at k=128 where the mean is not unique.** |
+
+**FOREMAN [REPORTED, r5 iter 10 - NOT YET A VERDICT; awaiting Wilson, then Inspector].**
+Replayed ARM A's own draw stream (published `D_FR causal` reproduced to 6 dp at all three k).
+
+| finding | status |
+|---|---|
+| **F1 theta IS TV** | **RED-bound.** One-token masking leaves one degree of freedom, so `TV_i = m_i` (residual **2.980e-07**, the float32 floor) and **`theta_i = arcsin(sqrt(TV_i))` IDENTICALLY**. Not a tight sandwich - a construction. Spearman **0.9930-0.9989**. **No draw count separates them.** |
+| **F2 the 2% is real, and it is not geometry** | **RED-bound.** Exact float64 route gives `d_theta = +1.0890` vs `+1.0888` - stable. But it is the generic gain of **any** row-wise concave transform, and theta is a **mediocre** one: `TV^0.20` beats TV by **15.8%**, `TV^0.15` by **32.7%** - **3.7x-7.0x theta's margin**. |
+| **F3 curvature is a LIABILITY** | **RED-bound.** chord beats geodesic by **+0.86/+0.65/+1.25%**; `sqrt(TV)` by **+3.97/+2.87/+5.70%**. The sphere's only distinguishing feature **costs** standardized effect. |
+| **F4 `theta_rows` vs its docstring** | **RED-bound.** Docstring says dead rows give 0; code gives **pi/2**. Constant **0.0015340 rad** floor = **46.2/50.0/55.1% of the FILLER baseline**. K2 survives but is **understated**: 9.30/5.90/4.74x -> **16.44/10.79/9.33x**. K3's d unaffected. |
+| **F5 K1's slope is contaminated** | **RED-bound, and LIVE.** **-0.3061** as computed / **-0.3323** live-only / **-0.3346** exact. Trip wire **-0.30**: 2% past becomes **11% past**. **FORWARDED TO WILSON** to verify at his geometry with CIs on both slopes. |
+| **F6 theta reads the float32 grid** | **RED-bound.** 83-88% of nonzero rows sit on **five values = `arccos(1-n*2^-24)`** to 1.12e-07. **80.6-85.5% of rows wrong by >100%** vs exact. `p50 = 0`; **top 1% carry 52.8/80.3/90.1%**. Cohen's d unmoved; **every per-row use of theta, including `gamma_1` and `Xi`, is affected.** |
+| his OPEN | `gamma_1` as reparametrisation (**not ruled out, not shown**); `\|\|tau\|\|` rank-2 (**instrument too blunt**); **"ship `TV^0.2`" is NOT supported** - 8 exponents searched on the draws that scored them, no CI, no multiplicity correction. |
