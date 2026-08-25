@@ -5,40 +5,46 @@
 | field | value |
 |---|---|
 | round | **4** - CEQ v6', promise `CHOSENSIGN` |
-| iteration | **3 (round 4) complete, 4 next** |
+| iteration | **4 (round 4) complete, 5 next** |
 | phase | **X4 instrument first - everything downstream reads through it** |
 | goal | **match or SUPERSEDE self-attention**; next-equilibrium predictor, not token predictor |
 | calibration | GREEN [RUN] `run_calib.py --self-test` exit 0, 4/4 bit-identical |
 | inspector | tri-state; INDETERMINATE exits nonzero |
 | repo | https://github.com/teerthsharma/resolvent (private) |
 
-## THE ONE NEXT ACTION (round 4, iteration 4)
+## THE ONE NEXT ACTION (round 4, iteration 5)
 
-**Build arm A as the DIFFERENCE-SET COVERAGE construction - and describe it that
-way, never as "co-prime spacing", which G1 has taken.**
+**Iteration 5 is an Inspector pass (every 5th) - and it is not routine this
+time.** Wilson found a journalled unit that **does not replay bitwise**:
+`dense_signed__at_pivots/s1024/b0`, `sigma` 2.9093518977946347 against
+2.9093518966758096, self-reproducible in-process so it is **drift against the
+journal, not nondeterminism**. The journal predates the code by **3h44m**.
 
-The birth gates are already specified and one is already GREEN:
-  * `|D-D| = v-1` as a VALUE - **GREEN**, exact at v = 7, 13, 21, 31, 57;
-  * **flipper placed UNIFORMLY AT RANDOM, never on the schedule** - the
-    discipline `carpet_probe.py:24` demanded and round 3 broke, which is how a
-    lattice-aligned `c` produced a flat reading that was an artifact;
-  * **off-schedule flip rate within CI of on-schedule** - the exact test that
-    killed the dilation, promoted to a birth gate.
+**That is a G2-class question and it outranks the arm work.** Either the code
+changed under a journal that was never re-generated - in which case every
+journalled number is a reading of an older object - or the journal is fine and
+the replay is not. The 37-unit census Wilson started decides which.
 
-Kill: any bitwise-identical gradient pair (severing), OR `|slope| >= 0.01` over
-s=512->2048 **on the X4 instrument**, OR M3 fail at n=8192.
-
-**Read it on X4, not on the float path.** The float statistic misses flips whose
-product underflows, and at depth median |grad| is 2.8e-32.
+Then: **arm A's redirect.** The object is an **additive basis of order 2**
+(`D + D ⊇ Z_v`), not a difference set - in a causal DAG both hops point the same
+way, so only sums compose. And `j = s//4` must stop being fixed: the same
+uniform-at-random discipline `carpet_probe.py:24` demands for `c` applies to `j`,
+and not applying it is what made every schedule read 1.0000.
 
 ## Open REDs
 
+**JOURNAL DRIFT [Wilson, r4 iter 4].** `dense_signed__at_pivots/s1024/b0` and
+`/s128` do not replay bitwise. Journal mtime 12:38:59, code mtime 16:22:33.
+G2-class. Census running.
+
 **F16** - the signed arm was not signed at harness scale; round 4's entry point.
 
-**SPENCER IS SLACK BY 7.4x** at this geometry, so arm B's stated theoretical
-warrant does not bind. Not a kill - a correction to the reason. The background is
-dominated (**max term 50.7% of total mass**), which is extreme-order-statistic
-selection doing what round 2 already identified.
+**X3 DOES NOT BIND AS STATED.** At lam=1.00 the selected set reads P(+) 0.4968,
+pairwise correlation **-0.039893**. The alignment measured at iteration 6 was
+**lambda, not FKG**.
+
+**ARM A REDIRECTED.** Difference sets describe differences; causal composition
+uses sums. Target is an additive basis of order 2.
 
 ## Carried, and load-bearing
 

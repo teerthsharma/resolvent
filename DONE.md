@@ -1,3 +1,139 @@
+### ROUND 4, ITERATION 4 - 2026-08-25 - ARM A's THEOREM DESCRIBES THE WRONG OBJECT. My error, caught by my own probe.
+
+CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.
+
+ACTION (one): built arm A and its birth gates. **The probe read severance
+1.0000 for EVERY schedule including contiguous, and flip rate 0.000000
+everywhere.** That is not a result, it is a broken probe, and the break is mine.
+
+**THE ERROR, EXACTLY.** The coverage theorem is about DIFFERENCES: a cyclic
+Singer (v,k,1)-difference set has every nonzero residue occurring once as
+`d_a - d_b`. **But a CAUSAL two-hop path composes SUMS:**
+
+    (i - p) + (p - j) = i - j        both hops point the same way
+
+**In a causal DAG every hop goes the same direction, so differences NEVER
+arise.** I asserted a birth gate about `D-D` and built a mask whose 2-hop reach
+is `D+D`.
+
+**[RUN] MEASURED:**
+
+    |D-D| = 56  of v-1 = 56     the theorem holds, exactly
+    |D+D| = 36  of v   = 57     the SUMS DO NOT COVER
+    probe offset i-j = 42:  in D? False.  in raw D+D? False.  -> UNREACHABLE
+
+**The pair (i=56, j=14) was simply unreachable for every schedule** - contiguous
+1..8 reaches at most 16 in two hops, and 42 > 16 - which is why all three rows
+read 1.0000 identically. **The uniformity across schedules is what exposed it:**
+a real severance difference could not possibly be identical for a difference set,
+a power-of-two lattice, and a contiguous band.
+
+**EIGHTH APPEARANCE OF ONE SHAPE - a correct statement about an object other
+than the one built - AND I COMMITTED IT ONE ITERATION AFTER RECORDING THE
+SEVENTH.** The seventh was F16: the signed arm was not signed at the scale it was
+scored. Recording a class does not prevent it; only a test does, and this test
+caught it within one iteration, which is the system working.
+
+**THE CONSTRUCTIVE CONSEQUENCE, and it redirects arm A rather than killing it.**
+The object needed is an **ADDITIVE BASIS OF ORDER 2** - a set `D` with
+`D + D ⊇ Z_v` - not a difference set. **Sidon sets are exactly the WRONG
+object**: they minimise sum collisions, and coverage needs them maximised. The
+Lean target changes with it: **an additive-basis coverage lemma, not a
+difference-set one.** Still finite and decidable.
+
+**AND THE `i, j` GEOMETRY WAS ITSELF UNSOUND.** `j = s//4` fixes the offset at
+`3s/4`, which for any bounded-offset schedule is unreachable at small hop counts.
+Round 3 already recorded that `carpet_probe.py:24` requires `c` uniformly at
+random; the same discipline applies to `j`, and it was not applied here.
+
+---
+
+**WILSON REPORTED. FOUR JOBS, and two findings outrank my arm.**
+
+**W-J1. THE TRI-STATE INSPECTOR IS APPLIED AND VERIFIED END TO END** - three real
+runs, exit code read from python's own status, never through a pipeline: clean
+run **exit 0, 9 checks, 13 controls all fired**; `lake` removed from PATH ->
+**1 FAIL + 1 INDET, exit 1**, with `[INDET] lake build CEQ -- lake not runnable`
+printed as a distinct state.
+
+**Verifying it found TWO defects, both real:**
+  * **`STATE.md`'s regex broke SILENTLY at commit 99a4110** - my round-4 rewrite
+    changed the line to `| iteration | **0 (round 4) complete, 1 next** |`, the
+    old pattern stopped matching, and `... if m else 0` **defaulted to iteration
+    0**. A legal number, so **the journal-replay and published-number rotations
+    silently selected ground nobody chose.** A default that is indistinguishable
+    from a measurement is the instrument-#15 shape in a new costume.
+  * **A JOURNALLED UNIT DOES NOT REPLAY BITWISE.**
+    `dense_signed__at_pivots/s1024/b0`: `rate` matches exactly, but
+    `sigma` reads **2.9093518977946347** against journalled
+    **2.9093518966758096**, and `term` **0.0070104254339412855** against
+    **0.007010425434393368**. Self-reproducible within one process, so it is
+    **drift against the journal, not nondeterminism**. Lead, not diagnosis:
+    `results/m2.jsonl` mtime **12:38:59**, `scale/m2_units.py` mtime **16:22:33**
+    - **the journal predates the code by 3h44m.** A 37-unit census is running.
+
+**W-J2. MY "~2.1 s AT BOTH n=2048 AND n=8192" WAS WRONG.** Measured properly -
+warmup discarded, median of 5, staged forward bound `torch.equal` to the shipped
+one at maxdiff **0.000000e+00** before any timing was credited:
+
+    n=2048  FULL STEP 0.3943 s     n=8192  FULL STEP 1.9946 s
+    backward 56.1%                 backward 57.4%
+    operator build 23.1%           operator build 25.4%
+
+**4x the data costs 5.06x the time - superlinear, not equal.** My reading took
+the first step, where allocation dominates. Component shares are within 2 points
+across sizes, which is what O(n) work looks like; the optimiser - the only
+size-independent step - is **0.1-0.2%**. RSS at n=8192 is **1111 MB** with the
+batched path, so **memory is no longer the blocker** and 150 steps is **~299 s
+per arm**.
+
+**W-J2b. THE ONLY BITWISE-SAFE OPTIMISATION IS 1.019x.** The last-row path is
+**8.54x** and **changes bits** (fwd maxdiff 1.49e-08, grad 7.45e-08), so by the
+standing policy **it is a NEW ARM, not an optimisation**. Isolated cause,
+measured: on this BLAS **changing a matmul's `m` changes the accumulation
+order**, which rules out the whole slice-earlier family. The mask cache
+(`lru_cache` on `_causal_mask`) is **bitwise at n in {1,8,64,512,2048,8192},
+forward and gradient**, and buys 1.019x. **That is the honest ceiling: the step
+is dominated by arithmetic the arms require.**
+
+**W-J2c. `scale/m3_capability.py` NEVER PINS THREAD COUNT** - it prints
+`torch.get_num_threads()` and never sets it (default 20 here). `inspector.py`
+pins `JOURNAL_THREADS = 2`; `test_resume_checkpoint.py:19` pins 1 with the
+comment *"CPU matmul reduction order must not vary run to run"*. **The one file
+with published capability numbers is the one that does not pin.**
+
+**W-J3. lam=1.00 COMPLETELY REPAIRS THE SELECTED SET.** Identical draws, bound
+`torch.equal(q,q') = True` and `torch.equal(k,k') = True` in-process, operators
+differing:
+
+    lam    s     E|sum eps|   vs A_8    P(+)      mean pair corr
+    0.10   512     7.997000   3.6558x   0.9998        0.999250
+    1.00   512     1.829000   0.8361x   0.4968       -0.039893
+    1.00   128     1.532000   0.7003x   0.5039       -0.065321
+    1.00    16     1.164000   0.5321x   0.5002       -0.090071
+
+**P(+) goes 0.9998 -> 0.4968 and correlation 0.9993 -> -0.0399.** The alignment
+I measured at iteration 6 and attributed to FKG **was lambda, not FKG** - at
+lam=1.00 the selected signs are balanced and very slightly ANTI-correlated.
+**X3's "selection-coupled signs MUST align" does not bind here**, and the
+round-4 contract's reading of my own iteration-6 number needs that correction.
+
+**W-J4. G1, and the co-prime origin is older than the attention paper.**
+[CITED] Wang et al., **arXiv 1702.08502** (HDC, semantic segmentation), verbatim:
+*"the dilation rate within a group should not have a common factor relationship
+(like 2,4,8, etc.), otherwise the gridding problem will still hold for the top
+layer."* **The anti-gridding coprimality condition originates in dilated CNNs**,
+and 2606.28560 says so itself: *"This ports the anti-gridding idea from dilated
+convolutions ... to per-layer attention spacing."* Verified independently: that
+paper's HTML has **22 hits for "coprime"**, submitted **2026-06-26**. LongNet
+confirmed **geometric and explicit** - *"we set w and r to geometric sequences
+for an exponential attentive field"* - with **0 hits** for coprime/gcd; Sparse
+Transformer and BigBird carry **no per-layer dilation schedule at all**.
+
+CHECKLIST: **ARM A REDIRECTED** - difference set is the wrong object for causal
+composition; the target is an **additive basis of order 2**. **X3 CORRECTED by
+measurement** - the alignment was lambda, not FKG. **JOURNAL DRIFT OPEN.**
+
 ### ROUND 4, ITERATION 3 - 2026-08-25 - G1 FIRES ON CO-PRIME. Round 3's schedule finding is PUBLISHED.
 
 CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.
