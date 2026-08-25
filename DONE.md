@@ -2,6 +2,70 @@
 
 Round 2 archived below its own header; round-1 archive at `DONE_ARCHIVE_ROUND1.md`.
 
+### ROUND 3, ITERATION 1 - 2026-08-25 - INSTRUMENT #17 IS IN THE CAPABILITY HARNESS. Bind written, RED.
+
+CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.
+
+ACTION (one): wrote `tests/loop/test_m3_harness_operator_is_shipped.py`. RED.
+
+**PHASE 0 SAID "RUN M3 ON THE WINDOWED ARM". READING THE HARNESS FIRST FOUND
+SOMETHING THAT OUTRANKS IT.**
+
+[READ, scale/m3_capability.py:93] the CAPABILITY harness resolves its only
+signed arm to
+
+    bench._causal_tgate_operator(q, k, self.g, self.tau)      # pivot_signed
+
+**`tgate` ships nowhere.** Round 2 caught exactly this and bound it -
+`tests/loop/test_measured_operator_is_shipped.py` - but that bind resolves arms
+from `scale/pivot_probe.py::build_arm`. **[RUN] `'m3_capability' in bind_source`
+-> False.** The bind was pointed at the other file.
+
+**SO ROUND 2's M3 NUMBERS ARE INSTRUMENT-#17 NUMBERS TOO:** softmax 1.855584,
+pivot_signed **1.342215**, pivot_unsigned 1.956147. The signed arm measured an
+operator the module does not ship. Nobody caught it because #17 was found in the
+M2/S2 path and the fix was written there.
+
+**THE LESSON IS NOT "WE MISSED ONE."** A bind covers the call site it names and
+nothing else. This one was written against a MODULE; it needed to be written
+against the QUESTION - *does any harness measure a non-shipped operator?* The new
+test is parametrized over `M3.ARMS` so a new arm cannot be added without being
+covered.
+
+**VALUE-BOUND, per the round-2 instrument law.** It does not grep for the string
+`tgate`. It builds each arm's operator TENSOR and compares it **bitwise** against
+the tensors the shipped operators produce on identical inputs. A rename, an
+alias, or a refactor cannot fool it.
+
+**[RUN] 1 failed, 4 passed** - and the shape of the pass matters:
+  * `pivot_signed` **FAILS** - not bitwise equal to softmax or sgate
+  * `softmax`, `pivot_unsigned` **PASS** - both genuinely resolve to `_softmax_operator`
+  * **must-fire control FIRES** - `tgate` built explicitly is REJECTED by the
+    comparator, so a green cannot mean the comparison is blind
+  * windowed-arm-absent test **PASSES** - confirming F4 is still not in `ARMS`
+
+**F4's PROVENANCE, settled before it gets built [READ, DONE_ARCHIVE_ROUND1:1272]:**
+*"Flat across a 64x growth in context -- every windowed **sgate** interval
+overlaps every other."* **F4 was measured on the SHIPPED operator.** So the
+Phase-0 windowed arm must be built on `sgate` with `window=8`, NOT on the tgate
+its sibling arm uses. Recorded now so the arm cannot be built on the wrong
+operator by copying the file's existing pattern.
+
+**ALSO CONFIRMED, and it is good news for Chase's demand:** the M3 bar was
+already calibrated RED-first [READ, results/iter04_m3_bar_calibration.txt] -
+`predict_the_mean` **1.000000** exactly, `payload_only` **1.414204** FAILING,
+`oracle` **0.000000** passing. *"BAR CALIBRATED"*. Chase asked for the criterion
+to be seen firing on a deliberately broken arm; it was, at s=512 d=256.
+
+**AND THE EXISTING M3 EVIDENCE IS WORSE THAN ANY DOCUMENT SAYS.** At s=64 d=24,
+**every arm is ABOVE the absolute bar**: softmax 1.855584, pivot_signed 1.342215,
+pivot_unsigned 1.956147, against predict-the-mean at 1.0. **The best arm is 34%
+worse than predicting the mean.** An ordering below a failed bar is not a result,
+and the ordering is on a non-shipped operator besides.
+
+CHECKLIST: M3w annotated - harness operator-unbound, bind written and RED.
+Status unchanged: UNTESTED.
+
 ### ROUND 3, ITERATION 0 - 2026-08-25 - the contract went to the room BEFORE the loop.
 
 `/differential-planning` on CEQ v4. Three fellows, questions only, no fixes.
