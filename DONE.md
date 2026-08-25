@@ -1,3 +1,19 @@
+HOLDFAST: BROKEN - M2 - clause 1 fired: sign-flip slope -1.298 against the pre-registered bar of -0.3, on the operator the module ships.
+
+Written 2026-08-25. Calibration ran bit-identical the same date (run_calib.py
+--self-test, exit 0, 4/4). The negative-result write-up is complete: DONE.md
+carries the kill with exact numbers and commands, PROGNOSIS.md states it as the
+verdict, README.md and MODEL_CARD.md lead with it, and workdone2.md summarises
+iterations 34-46. Measured, PROTOCOL: SCALING, c drawn from the pivot set:
+0.16511 / 0.02732 / 0.00000 / 0.00000 at s = 8/32/128/512. Routing is worse
+than dense (-1.088). The kill survives removal of the magnitude gate
+(floor = 0 -> -1.1150, R2 0.9350), so it is not a floor artifact, and the same
+probe reads -0.034 for tgate, so it is not a constant. KEPT is illegal: no
+route went GREEN, no capability table exists with softmax timestamped first,
+and no trained checkpoint exists.
+
+---
+
 # DONE — Round 2, under CONTRACT.md and LOOP_PROMPT.md
 
 Started 2026-08-25. Round 1's 5,922 lines are preserved verbatim in
