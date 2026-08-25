@@ -2,6 +2,108 @@
 
 Round 2 archived below its own header; round-1 archive at `DONE_ARCHIVE_ROUND1.md`.
 
+### ROUND 3, ITERATION 7 - 2026-08-25 - Frustration audit: hypothesis REFUTED, replacement is sharper. CHASE REPORTS.
+
+CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.
+Probe: `scale/frustration_audit.py`, 20000 triangles per cell.
+
+ACTION (one): ran the Zaslavsky frustration audit - in the arsenal since round 1
+(*"frustration ~0 = signed-in-name-only; this item is itself a kill"*) and
+**never run**.
+
+**GAUGE INVARIANCE IS THE POINT.** Switching by `D = diag(+-1)` sends
+`sign(A_ij) -> d_i d_j sign(A_ij)`: it changes the COUNT of negatives while
+changing nothing structural. Counting negatives is not a measurement. The
+TRIANGLE SIGN PRODUCT is invariant - each `d` appears twice and cancels.
+
+**[RUN] CALIBRATED BOTH ENDS:** balanced (planted `d_i d_j`) **0.000000**;
+random_signed (iid) **0.508600**.
+
+**[RUN] ARMS:**
+
+    arm            s=16      s=128     s=512    neg-entry fraction
+    softmax      0.000000  0.000000  0.000000        0.000
+    sgate        0.248800  0.262100  0.277850        0.121
+    sgate_lam1   0.505616  0.502201  0.498300        0.501
+    tgate        0.557750  0.495750  0.496550        0.502
+
+**MY HYPOTHESIS WAS WRONG. sgate is NOT signed-in-name-only.** Frustration
+0.25-0.28 is real structure no switching can remove. **The kill does NOT fire.**
+
+**THE REPLACEMENT, and it exists only because iterations 6 and 7 sit together:**
+
+    bulk sign structure (all triangles)   frustration 0.2779 at s=512
+    selected set (top-k by magnitude)     99.98% POSITIVE at s=512
+
+**sgate carries real sign structure in its BULK and essentially none in its
+LARGE entries. The signs live in the SMALL entries; selection by magnitude
+discards exactly the part that carries them.** And the two move in OPPOSITE
+directions with context - bulk frustration 0.2488 -> 0.2779 RISES while selected
+P(+) 0.9817 -> 0.9998 also rises. **The operator becomes more signed as context
+grows; the tokens routing picks become less signed.**
+
+That is a mechanism for pivot routing's -1.298 that is neither the term-count
+story (dead) nor the scale story: **top-k salience selection is a SIGN-DESTROYING
+operation on this operator.** `lam` is the dial - at `lam=1.00` frustration is
+**0.4983**, full structure, against shipped `lam=0.10`'s 0.2779.
+
+---
+
+**CHASE REPORTED (house mode). 5 RED, 9 passed, every must-fire control among the
+passes. `tests/chase/test_m3_capability_harness.py`. THE HOLD WAS CORRECT AND THE
+REASON IS WORSE THAN THE ONE I HELD FOR.**
+
+**C1. `windowed_signed` CANNOT SEE THE FLIPPER at the harness's own defaults.**
+Autograd, not inference: `d(out)/d(x[flipper])` is **exactly 0.0**, not small.
+
+    softmax          grad_at_flipper=0.0313   nonzero positions 0..63  count=64
+    pivot_signed     grad_at_flipper=0.0408   nonzero positions 0..63  count=64
+    pivot_unsigned   grad_at_flipper=0.0329   nonzero positions 0..63  count=64
+    windowed_signed  grad_at_flipper=0.0      nonzero positions 47..63 count=17
+
+Reach is `2w = 16`; the harness default is `d=24` and the recorded sweep runs
+`d=24..54`. **Its NRMSE is fixed before training starts at every distance in the
+sweep.**
+
+**C2. AND IT WOULD HAVE READ AS A CAPABILITY RESULT.** `windowed_signed`'s
+support is `[47,63]` - it contains the payload at 62 and excludes the flipper at
+39. **That is precisely the `payload_only` reference predictor the bar
+calibrates as a FAILURE at 1.361782.** The harness would have printed
+`windowed_signed` at about that number with `RED 0-step [OK]`, `n_params=4769`,
+and the reading would have been indistinguishable from *"F4's windowed arm has
+no capability"* when it is **geometric impossibility**.
+
+**C3. TWO OF THE BAR'S THREE CHECKS ARE ALGEBRAIC IDENTITIES.**
+`predict_the_mean = nrmse(y.mean(), y)` is identically 1.0, and
+`oracle = nrmse(oracle(x,f,p), y)` where **y was produced by that same call**, so
+it is `nrmse(t,t)` identically 0.0. Only `payload_only` reads the task. Chase
+replaced the oracle with a purely local label - the entire M3 premise removed -
+and the harness printed **BAR CALIBRATED**. This is the repo's *"zero BY
+CONSTRUCTION mapped to GREEN"* defect **inside the gate that guards the round**.
+
+**C4. NO ARM HAS EVER PASSED THE BAR.** softmax 0.581/1.477, pivot_signed
+0.127/1.389, pivot_unsigned 0.584/1.501 - train far below 1.0, eval above it.
+There is **no model-level positive control**: the oracle is an identity, not a
+trained model. So *"arm X failed"* and *"the harness cannot produce a pass"* are
+**the same printout**.
+
+**C5. M3's DISTANCES ARE UNREACHABLE AT THESE SETTINGS.** Default `d=24` at
+`s=64`; M3 requires `d in {256,512,1024}` and `make_batch` caps `d < s-1 = 62`.
+
+**C6.** The PARAM MATCH block iterates a hardcoded
+`("pivot_signed","pivot_unsigned")`, so `windowed_signed` is never checked, and
+the whole block silently skips when `softmax` is absent from `--arms`.
+
+**OPEN from Chase, no RED written:** batched-vs-single operator equality is NOT
+bitwise (max abs diff 1.49e-07 softmax, 2.09e-07 sgate w0, 1.19e-07 sgate w8) -
+fp32 reduction order, but the module docstring's *"no change to their math"* is
+stronger than what holds. Also: LR fairness unswept; whether the 0-step RED gate
+can fire on a cheating arm, untested.
+
+CHECKLIST: frustration GREEN for sgate. **M3w BLOCKED** - the harness cannot
+produce a valid windowed reading at any distance in its sweep, and its bar
+cannot detect a task with no long-range dependence.
+
 ### ROUND 3, ITERATION 6 - 2026-08-25 - A_8 = 2.187500 IS STRUCK. sgate's selected signs do not cancel.
 
 CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.

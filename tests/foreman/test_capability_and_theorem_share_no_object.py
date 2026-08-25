@@ -179,6 +179,43 @@ def test_the_benchmarked_operator_carries_the_positive_row_mass_the_published_on
         f"as-run row-1 L1 mass = {row1_mass!r}")
 
 
+def test_the_hops_the_campaign_is_about_carry_signal_in_the_benchmarked_arm():
+    """RED, and the quantitative mechanism behind the other two.
+
+    The whole construction is `out = v + Av + A^2 v + ...`; the theorem is a
+    statement about `I + A + A^2`. This measures what each of those terms is
+    worth, as a fraction of `||v||`, in the arm that was actually trained on
+    COGS -- block 0, real COGS token ids, `lm.TinyLM` at seed 0, nothing
+    rebound. The parity operator on the SAME q, k, v is the comparison, so the
+    only difference between the two columns is `(rho, lam)`.
+    """
+    attn, q, k = _q_k_as_capability_builds_them()
+    vocab = harness.build_vocab("cogs")
+    pairs = harness.load_pairs("cogs", "train")
+    model = lm.TinyLM("sgate", seq=harness.COGS_SEQ, vocab=len(vocab), seed=SEED)
+    x, _ = harness._batch(pairs, vocab, list(range(4)), torch.device("cpu"),
+                          harness.COGS_SEQ)
+    with torch.no_grad():
+        h = model.tok(x) + model.pos(torch.arange(x.shape[1]))[None]
+        _q, _k, v = model.blocks[0].attn.qkv_heads(model.blocks[0].n1(h))
+        nv = float(v.norm())
+
+        def hop_mass(a):
+            t, out = v, []
+            for _ in range(3):
+                t = a @ t
+                out.append(float(t.norm()) / nv)
+            return out
+
+        run = hop_mass(attn.operator(q, k))
+        parity = hop_mass(bench._causal_sgate_operator(q, k, rho=PARITY_RHO,
+                                                       lam=PARITY_LAM))
+    assert run == parity, (
+        f"hop mass ||A^n v||/||v|| for n = 1,2,3 -- as-run {run!r} vs "
+        f"parity {parity!r}; hop-2 ratio parity/as-run = "
+        f"{parity[1] / run[1]!r}")
+
+
 def test_the_theorem_zero_survives_the_mlp_the_benchmarked_model_has():
     """RED. The exclusivity claim, measured on the architecture that was
     benchmarked instead of on the probe's MLP-free stack.

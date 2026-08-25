@@ -146,6 +146,25 @@ def test_the_geometry_is_s_sensitive():
     assert hi["reach"] == 0.0, f"CONTROL SILENT: contig s=512 reach {hi['reach']}"
 
 
+def test_the_instrument_still_reads_the_m2_decay():
+    """MUST-FIRE CONTROL: the arm M2 killed must still be seen to die here.
+
+    The whole verdict below is "an arm did not decay". That is worth nothing
+    unless this instrument, at THIS geometry, still reads the decay it was built
+    to read. So the shipped `sgate` at `window = 0`, `depth = 1` -- the arm
+    `PROGNOSIS.md:40` records at slope -1.298 -- is run through the same
+    `_cell`/`_slope` path and must come in under the same -0.3 bar.
+
+    If this goes silent, `test_the_arm_that_reaches_decays_at_the_m2_rate` is
+    measuring an instrument that cannot return a decay and its RED means nothing.
+    """
+    got = {s: _cell("glob_1", s) for s in SIZES}
+    rates = [got[s]["flip0"] for s in SIZES]
+    sl = _slope(SIZES, rates)
+    row = "  ".join(f"s={s} flip0={got[s]['flip0']:.6f}" for s in SIZES)
+    assert sl <= M2_BAR, f"CONTROL SILENT: glob_1 slope={sl:.6f}  {row}"
+
+
 # ---------------------------------------------------------------------------
 # THE VERDICT TESTS. These assert the repository's stated position.
 # ---------------------------------------------------------------------------

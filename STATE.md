@@ -5,34 +5,45 @@
 | field | value |
 |---|---|
 | round | **3** - CEQ v5, 30 iterations, promise `SCALEFREE` |
-| iteration | **6 complete, 7 next** |
+| iteration | **7 complete, 8 next** |
 | phase | **Phase 0 - M3 on the windowed arm. Capability before statistics.** |
 | calibration | GREEN [RUN] `run_calib.py --self-test` exit 0, 4/4 bit-identical |
 | inspector | `python inspector.py` - 8 checks, 8 must-fire controls, exits nonzero if any control stays SILENT |
 | repo | https://github.com/teerthsharma/resolvent (private) |
 
-## THE ONE NEXT ACTION (iteration 7)
+## THE ONE NEXT ACTION (iteration 8)
 
-**Run the frustration / switching-class integrity audit on every signed arm.**
-Iteration 6 found sgate is **signed in name only** at the entries that matter:
-99.98% of its top-k-by-magnitude entries are positive, pairwise correlation
-0.9993. The arsenal has carried this exact check since round 1 - *"frustration ~0
-= signed-in-name-only; this item is itself a kill"* - and it has never been run.
+**Repair the M3 bar, because it is the gate that guards the round and two of its
+three checks are algebraic identities.**
 
-If sgate's frustration index is ~0, then every signed-vs-unsigned comparison in
-three rounds compared an unsigned arm against an **effectively unsigned** arm,
-and the whole signedness axis was never actually exercised. That would explain
-Cameron's open contradiction - softmax 15/512 against the signed operator's
-0/512 - without any appeal to trainability.
+Chase [RED, 5 failed / 9 passed]: `predict_the_mean = nrmse(y.mean(), y)` is
+identically 1.0 and `oracle = nrmse(oracle(x,f,p), y)` is `nrmse(t,t)`,
+identically 0.0 - **y was produced by that same call**. Only `payload_only`
+reads the task, and the bar printed **BAR CALIBRATED** on a label with zero
+flipper dependence. That is *"zero BY CONSTRUCTION mapped to GREEN"* inside the
+gate that decides Phase 0.
 
-Cheap: it is a property of the operator at init, no training, CPU minutes.
-RED-first: a deliberately balanced signed matrix must read HIGH frustration, and
-an all-positive one must read ~0.
+The repair needs a **model-level positive control**: something TRAINED that must
+pass, so that "arm failed" and "harness cannot produce a pass" stop being the
+same printout. Today no arm has ever passed - softmax 0.581/1.477, pivot_signed
+0.127/1.389, pivot_unsigned 0.584/1.501 - and the oracle is an identity, not a
+model.
+
+**The windowed arm's geometry is NOT a bug to fix by widening w.** Reach `2w=16`
+against `d=24..54` is a fact about F4's construction. Either the task distance
+comes down inside `2w`, or the arm gets depth (L layers reach `L*w`) - and that
+second option is Cameron's composition question, still running.
 
 ## Open REDs
 
-**None.** The M3 harness bind went GREEN this iteration (5 passed, must-fire
-control firing). R5 and R8 remain STRUCK before build (0/20000 event change).
+**M3 bar - RED [Chase, r3 iter 7].** Two of three checks are identities; the bar
+calibrates on a task with no long-range dependence. No model-level positive
+control exists.
+
+**M3w BLOCKED.** `windowed_signed` cannot see the flipper at any distance in the
+recorded sweep - `d(out)/d(x[flipper]) = 0.0` exactly.
+
+R5 and R8 remain STRUCK before build (0/20000 event change).
 
 ## Carried, and load-bearing
 
