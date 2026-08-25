@@ -5,46 +5,45 @@
 | field | value |
 |---|---|
 | round | **5** - CEQ v7, promise `TWOSPHERES`, **30 iterations** |
-| iteration | **13 complete, 14 next** |
+| iteration | **14 complete, 15 next** |
 | phase | **ARM A under the escalation chain; autonomous to iteration 30** |
 | goal | **match or SUPERSEDE self-attention**; next-equilibrium predictor |
 | calibration | GREEN [RUN] `run_calib.py --self-test` exit 0, 4/4 bit-identical |
 | inspector | tri-state; INDETERMINATE exits nonzero |
 | repo | https://github.com/teerthsharma/resolvent (private) |
 
-## THE ONE NEXT ACTION (round 5, iteration 14)
+## THE ONE NEXT ACTION (round 5, iteration 15)
 
-**Bind the draw stream, or every aggregator number stays unquotable.**
+**Iteration 15 is an Inspector pass (every 5th) - and Chase aimed a finding
+straight at it that must be acted on, not just recorded.**
 
-**A CONTRADICTION IS OPEN AND IT IS THE BLOCKER.** At identical s, draw count and
-seeds, `d(th_max)` reads **2.0133** here against Cameron's **2.3275** at k=8, and
-**2.0078** against her **1.4806** at k=128 - **opposite trends in k**. The
-`mean_all` vs active-row-mean difference cannot account for it. The active-row
-means nearly agree (1.5630 vs 1.5304), so the draw streams are close but **not the
-same**.
+**CHASE F5: the Inspector's clean bill covers 107 of 1278 tests - 8.4%.** He
+probed two files inside the blind spot and found **8 live failures**, including
+**a struck constant (`-1.389`, `0.9938`) still PINNED by
+`tests/chase/test_hub_package_hardening.py:496-499`** while the struck-registry
+test asserts the opposite. *"INSPECTOR PASS - exit 0, CLEAN"* is true **and is not
+a statement about the repository**, and this project has written that sentence
+into `DONE.md` five times.
 
-**THE LIKELY CAUSE IS MINE.** Her probe demonstrably reproduces the published ARM
-A journal bit-identically; `scale/max_row_mechanism.py` writes a **fresh draw
-loop** and claims no such bind. **A probe that does not replay the published
-generator is measuring a different population**, and this project has a standing
-rule that the measured object must be the shipped object.
+So iteration 15 runs `python inspector.py` **and** decides what to do about its
+coverage. Options, in order of cost: widen `check_suites` beyond
+`tests/loop tests/w11 tests/chase/test_resume_checkpoint.py`; or make the
+Inspector **report its own coverage fraction in its output**, so a clean bill can
+never again be read as a statement about the suite. **The second is cheap and
+removes the misreading permanently.**
 
-**So the next action is to give `max_row_mechanism.py` the bind Cameron's probe
-has:** consume the generator exactly as `arm_a_run.one` does - including the flip
-half's two `randn(d)` draws, which advance the stream - and assert against the
-published journal fields before reporting anything. If the numbers move to hers,
-mine were wrong and the record says so. If they do not, the disagreement is real
-and Wilson decides.
+**Also owed and now cheap:** Chase's F3 says two shipped tests make **logically
+opposite demands on the same dict**. That is not a coverage problem, it is a
+**live contradiction in the test suite**, and the registry test passing while the
+other fails is exactly how a struck constant survives.
 
-**Wilson holds both messages** and has `scale/wilson_probes.py` in progress,
-including a request to confirm whether Cameron's probe reads the published stream.
-**Never block on him** - the bind above is buildable now.
+**WHAT IS SETTLED AND NEEDS NO MORE WORK:** the `max_row_mechanism` bind passes on
+all six published fields; **the contradiction I reported was mine and is
+withdrawn**; Cameron's mechanism is **refuted on the correct population**; the
+aggregator win is **real, large, unexplained, and shared with TV**.
 
-**WHAT SURVIVES REGARDLESS, because both measurements agree:** `max` beats `mean`
-by a large margin at every k; that margin dwarfs the whole K3 quarrel (+0.0241);
-**TV gains almost identically**, so the aggregator is not a sphere result; and
-**Cameron's mechanism is refuted** - argmax at `c+1` on 0.00% of draws at k=8,
-median offset 103, and row `c+1` alone scores 0.1864 against the max's 2.0133.
+**Wilson holds three messages** and has `scale/wilson_probes.py` in progress.
+**Never block on him.**
 
 **Dr House stays in the box.** Nothing has died of missing innovation.
 

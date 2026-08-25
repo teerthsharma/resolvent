@@ -62,8 +62,23 @@ JOURNAL = pathlib.Path(__file__).resolve().parents[1] / "results" / "max_row.jso
 
 
 def one(s: int, k: int, d: int, g: torch.Generator, *, filler: bool):
+    """ONE DRAW, CONSUMING THE GENERATOR EXACTLY AS `arm_a_run.one` DOES.
+
+    THE FIRST VERSION OF THIS FUNCTION DID NOT, AND THAT IS WHY ITS NUMBERS
+    DISAGREED WITH THE AGGREGATOR PROBE'S. `arm_a_run.one` draws THREE d x d
+    matrices (wq, wk, wo) and a v0 of shape (s, d) before touching j, and after
+    choosing c it draws TWO MORE randn(d) inside its flip half. The old loop drew
+    two d x d matrices, no v0, and nothing after c -- so every draw past the
+    first was reading a DIFFERENT POSITION IN THE STREAM.
+
+    `wo` and `v0` are never used here. They are drawn anyway, because the point
+    is not what they contain, it is where they leave the generator. A probe that
+    does not replay the published stream is measuring a different population, and
+    this project's standing rule is that the measured object is the shipped one.
+    """
     x0 = torch.randn(s, d, generator=g)
-    wq, wk = torch.randn(d, d, generator=g), torch.randn(d, d, generator=g)
+    wq, wk, wo = (torch.randn(d, d, generator=g) for _ in range(3))   # wo unused
+    v0 = torch.randn(s, d, generator=g)                              # unused
     q, kk = x0 @ wq, x0 @ wk
     i = s - 1
     j = int(torch.randint(1, i, (1,), generator=g))
@@ -87,7 +102,10 @@ def one(s: int, k: int, d: int, g: torch.Generator, *, filler: bool):
     am_th = int(idx[int(th_a.argmax())])
     am_tv = int(idx[int(tv_a.argmax())])
     nxt = c + 1
+    # The flip half's two draws. Not used; consumed so the NEXT draw lines up.
+    _ = (torch.randn(d, generator=g), torch.randn(d, generator=g))
     return dict(c=c, n_active=int(act.sum()),
+                th_all=float(th.mean()), tv_all=float(tv.mean()),
                 off_th=am_th - c, off_tv=am_tv - c, same_argmax=am_th == am_tv,
                 th_max=float(th_a.max()), tv_max=float(tv_a.max()),
                 th_mean=float(th_a.mean()), tv_mean=float(tv_a.mean()),
@@ -143,6 +161,37 @@ def main() -> int:
     ap.add_argument("--ks", type=int, nargs="+", default=[8, 32, 128])
     ap.add_argument("--seed", type=int, default=0)
     a = ap.parse_args()
+
+    # THE BIND. `arm_a_run` published these; if the stream is replayed correctly
+    # this probe must reproduce them to the printed precision. G-clause: the
+    # measured object must be the shipped object, and a bind covers the QUESTION,
+    # not the call site -- so it is asserted on the STATISTIC ARM A published
+    # (mean over ALL rows), not on anything this file prefers.
+    PUBLISHED = {8: (0.030850, 0.003317), 32: (0.018089, 0.003068),
+                 128: (0.013203, 0.002784)}
+    print("=== BIND: does this probe replay ARM A's published draw stream? ===")
+    bind_ok = True
+    for k in a.ks:
+        if k not in PUBLISHED:
+            print(f"  k={k:<5} no published value -- NOT BOUND")
+            continue
+        cs = cell(a.s, k, a.d, a.draws, a.seed, False)
+        fs = cell(a.s, k, a.d, a.draws, a.seed + 999, True)
+        gc = sum(r["th_all"] for r in cs) / len(cs)
+        gf = sum(r["th_all"] for r in fs) / len(fs)
+        pc, pf = PUBLISHED[k]
+        okc, okf = abs(gc - pc) < 5e-6, abs(gf - pf) < 5e-6
+        bind_ok &= okc and okf
+        print(f"  k={k:<5} causal {gc:.6f} vs published {pc:.6f} "
+              f"[{'OK' if okc else 'MISMATCH'}]   "
+              f"filler {gf:.6f} vs published {pf:.6f} [{'OK' if okf else 'MISMATCH'}]")
+    if not bind_ok:
+        print()
+        print("  THE STREAM IS NOT THE PUBLISHED ONE. Every number below would")
+        print("  describe a different population. Stopping rather than reporting.")
+        return 1
+    print("  -> bound. The draws below ARE the published draws.")
+    print()
 
     print("=== MUST-FIRE CONTROLS (read before any number below) ===")
     ok = True

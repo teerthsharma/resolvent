@@ -1,3 +1,87 @@
+### ROUND 5, ITERATION 14 - 2026-08-26 - The contradiction was MINE. Bound to the published stream, my numbers become Cameron's exactly. The mechanism stays refuted.
+
+CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.
+
+ACTION (one): gave `scale/max_row_mechanism.py` the bind it never had, and the
+disagreement I reported last iteration **evaporated.**
+
+**THE CAUSE, AND IT WAS ENTIRELY MINE.** `arm_a_run.one` draws **THREE** `d x d`
+matrices (`wq, wk, wo`) and a `v0` of shape `(s, d)` **before** it touches `j`,
+and after choosing `c` it draws **TWO MORE** `randn(d)` inside its flip half. My
+loop drew **two** `d x d` matrices, **no** `v0`, and **nothing after `c`**. So
+every draw past the first sat at **a different position in the generator.**
+
+`wo` and `v0` are still never used in this probe. **They are drawn anyway,
+because the point is not what they contain, it is where they leave the
+generator.**
+
+**[RUN] THE BIND, asserted before anything else runs:**
+
+    k=8    causal 0.030850 vs published 0.030850 [OK]  filler 0.003317 vs 0.003317 [OK]
+    k=32   causal 0.018089 vs published 0.018089 [OK]  filler 0.003068 vs 0.003068 [OK]
+    k=128  causal 0.013203 vs published 0.013203 [OK]  filler 0.002784 vs 0.002784 [OK]
+
+**AND THE NUMBERS BECOME HERS, TO EVERY PRINTED DIGIT:**
+
+                        mine (bound)   Cameron   mine (unbound, WRONG)
+    d(th_max)  k=8          2.3275      2.3275          2.0133
+    d(th_max)  k=32         1.8900      1.8900          2.0555
+    d(th_max)  k=128        1.4806      1.4806          2.0078
+    d(th_mean) k=8          1.5304      1.5304          1.5630
+    d(tv_max)  k=8          2.2586      2.2586          1.9850
+
+**CAMERON WAS RIGHT AND I WAS WRONG.** I reported a contradiction and an opposite
+k-trend; **both were artifacts of an unbound draw loop.** On the bound stream the
+`max` advantage reads **+0.7971 / +0.5003 / +0.5088** - **shrinking then flat,
+which is her direction**, not the opposite one I claimed. **Withdrawn to Wilson
+this iteration** so he does not spend effort adjudicating a dispute that does not
+exist.
+
+**THIS IS THE PROJECT'S OWN RULE FIRING ON ME.** *"Measured object = shipped
+object"*, and *"a probe that does not replay the published stream is measuring a
+different population."* I wrote a fresh draw loop, reported its numbers against
+someone else's bound ones, and called the difference a contradiction. **The
+correct response to a disagreement with a bound probe is to check your own bind
+first**, and I did not.
+
+**THE MECHANISM IS STILL REFUTED - now on the CORRECT population, which is the
+first time it has been tested on it at all.**
+
+      k    off==1    off<=2   off<=10   median   chance off==1  theta/TV agree
+      8    0.0250    0.0333    0.0583      137        0.008959          0.8083
+     32    0.0167    0.0250    0.0583      117        0.007750          0.9083
+    128    0.0083    0.0083    0.0417      130        0.004493          0.9250
+
+      k    th_max   th_next   th_mean |    tv_max   tv_next   tv_mean
+      8    2.3275    0.2923    1.5304 |    2.2586    0.2858    1.4751
+     32    1.8900    0.0583    1.3897 |    1.8530    0.0772    1.3285
+    128    1.4806    0.1977    0.9717 |    1.4341    0.1781    0.9132
+
+The argmax sits at `c+1` on **2.50% / 1.67% / 0.83%** of draws against chance
+**0.90% / 0.78% / 0.45%** - **2.8x, 2.2x and 1.9x chance**, but still **under
+3% of draws**, with a **median offset of 137 / 117 / 130.** And reading row `c+1`
+alone scores **0.2923 / 0.0583 / 0.1977** against the max's **2.3275 / 1.8900 /
+1.4806**. **There is no O(1) shortcut and no mechanism. Cameron was right to
+disclaim her reading, and it stays disclaimed.**
+
+**THE AGGREGATOR WIN IS REAL, LARGE, AND UNEXPLAINED** - `max` beats the
+active-row mean by **+0.7971 / +0.5003 / +0.5088**, against a K3 quarrel of
+**+0.0241**.
+
+**AND IT IS NOT A SPHERE RESULT.** `tv_max` reads **2.2586 / 1.8530 / 1.4341**
+against theta's **2.3275 / 1.8900 / 1.4806** - **the aggregator lifts both**,
+exactly as Cameron warned when she first reported it.
+
+**A PROCESS DEFECT WORTH NAMING: I broke the same heredoc three times.** Writing
+`\\n` inside a `<<'PYEOF'` Python string produces a real newline in the emitted
+file and an unterminated literal. It cost three runs across iterations 12 and 14.
+**Stop putting escaped newlines in heredoc-embedded source.**
+
+CHECKLIST: **`max_row_mechanism.py` BOUND** - reproduces all six published ARM A
+fields at `abs=5e-6`. **The contradiction I reported was mine and is WITHDRAWN.**
+**Cameron's mechanism REFUTED on the correct population.** Aggregator win real
+(+0.7971/+0.5003/+0.5088), unexplained, **and shared with TV**.
+
 ### ROUND 5, ITERATION 13 - 2026-08-25 - Cameron's mechanism claim is REFUTED. And my own max numbers CONTRADICT hers, which I cannot settle.
 
 CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.

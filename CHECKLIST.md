@@ -553,3 +553,14 @@ Replayed ARM A's own draw stream (published `D_FR causal` reproduced to 6 dp at 
 | is it a sphere result? | **NO.** `tv_max` reads **1.9850 / 1.9804 / 1.9730** against theta's **2.0133 / 2.0555 / 2.0078**. **The aggregator lifts both statistics.** |
 | controls | **3/3 FIRED** - planted max at row 377 found at 377; planted max at row 42 with c=100 **correctly excluded** (returns 483); `arcsin(sqrt(.))` strictly increasing forces a shared argmax, asserted not assumed. |
 | **CONTRADICTION WITH CAMERON - OPEN** | Same s, draws and seeds: `d(th_max)` reads **2.0133** here vs her **2.3275** at k=8, and **2.0078** vs her **1.4806** at k=128 - **an opposite trend in k**. The `mean_all` vs active-row-mean difference cannot explain it, because `d(th_max)` depends on neither. Active-row means nearly agree (**1.5630** vs **1.5304**). **Her probe replays the published generator; mine writes a fresh draw loop and claims no such bind - the likely source. SENT TO WILSON. Neither `th_max` figure may be quoted as the value until he settles it.** |
+
+**DRAW-STREAM BIND [RUN, r5 iter 14] - `scale/max_row_mechanism.py`, exit 0.**
+
+| item | status |
+|---|---|
+| the bind | **PASSES at `abs=5e-6` on all six published ARM A fields** - causal 0.030850 / 0.018089 / 0.013203 and filler 0.003317 / 0.003068 / 0.002784. Asserted **before** any other output; the probe returns 1 rather than reporting on an unbound stream. |
+| **the contradiction I reported at iter 13** | **WITHDRAWN. It was mine.** `arm_a_run.one` draws **three** `d x d` matrices and a `v0` before `j`, and **two more `randn(d)`** after `c`; my loop drew two, none, and none. Every draw past the first sat at a different generator position. |
+| the corrected numbers | `d(th_max)` = **2.3275 / 1.8900 / 1.4806**, `d(th_mean)` = **1.5304**, `d(tv_max)` = **2.2586 / 1.8530 / 1.4341** - **Cameron's values to every printed digit.** My unbound figures (2.0133 / 2.0555 / 2.0078) were wrong. |
+| the "opposite k-trend" I claimed | **ALSO AN ARTIFACT.** Bound, the `max` advantage reads **+0.7971 / +0.5003 / +0.5088** - shrinking then flat, **her direction**. |
+| Cameron's mechanism, retested on the correct population | **STILL REFUTED.** argmax at `c+1` on **0.0250 / 0.0167 / 0.0083** vs chance **0.008959 / 0.007750 / 0.004493** (2.8x / 2.2x / 1.9x chance but **under 3% of draws**), **median offset 137 / 117 / 130**. Row `c+1` alone scores **0.2923 / 0.0583 / 0.1977** against the max's **2.3275 / 1.8900 / 1.4806**. **No O(1) shortcut.** |
+| the aggregator win | **REAL, LARGE, UNEXPLAINED** (+0.7971 / +0.5003 / +0.5088 vs a K3 quarrel of +0.0241) - **and shared with TV**, so not a sphere result. |
