@@ -200,6 +200,47 @@ object. **G6** no comparative sentence without a bootstrap CI excluding zero.
 sign/flip decision** — the `lo*hi` underflow class, mechanised as a lint over
 probe code with a must-fire example.
 
+## THE ESCALATION CHAIN — binding, stated by the user at round 5 iteration 7
+
+**Every problem goes down this chain in order and does not skip a rung:**
+
+    fellows (Chase, Cameron, Foreman)  ->  Wilson  ->  Health Inspector  ->  DR HOUSE
+
+1. **FELLOWS — Chase, Cameron, Foreman.** Dispatched **in ONE message so they run
+   in parallel**, all three on the **SAME question from different stances**, never
+   split by file or directory. Each is **TEST-BOUND**: a finding is admissible
+   only with a RED test shown against the code as it stands. No RED, no finding —
+   it goes to **Open**, however convincing it reads.
+2. **WILSON.** Verified facts only, each with file/line/command output, and
+   "unverified" wherever he cannot verify. No stance, no recommendations. **His
+   facts settle every factual dispute between fellows.**
+3. **HEALTH INSPECTOR.** Audits the log, not the science: re-runs every claimed
+   GREEN, checks every finding has a matching RED before it, checks no fellow
+   contradicts Wilson. **A struck claim is struck** — it leaves the verdict, goes
+   to Open, and is not re-argued or re-tested until it passes. He produces no
+   findings and never joins the differential.
+4. **DR HOUSE — and "House" in this chain means DR HOUSE, not house-mode.**
+   Released **only when the problem still is not solved AND the missing thing is
+   INNOVATION rather than evidence.** One agent, never a panel.
+   **`model: fable`. Exactly 5 minutes wall clock, hard stop. NO nurses.**
+   Input: the dead theory, its cause of death, and Wilson's facts.
+   Output: **one leap, or the words "no leap".**
+   **He produces a HYPOTHESIS, never a finding** — exempt from RED-first because
+   five minutes does not fit a test, and that exemption is exactly why his output
+   **cannot enter a verdict directly.** It re-enters the differential and a fellow
+   binds it with a RED test on a later round. **An unbound leap stays in Open
+   forever.** The Inspector does not audit him; there is nothing to audit.
+
+**NOT a trigger for Dr House:** Wilson refuted it with a verified fact (dead is
+dead, and no leap un-refutes a fact); Chase found it dangerous (a risk decision);
+Cameron found a cheaper path (it did not die, it lost); nobody wants the thing.
+
+**AUTONOMY.** The user meets this loop at **iteration 30**. Until then every
+problem is resolved through this chain **without checking in** — no blocking
+questions, no waiting on a human answer, no iteration held open. Where a decision
+would normally warrant a question, run the chain and **record the decision and its
+reasoning in `DONE.md`** so iteration 30 has a readable trail.
+
 ## STANDING POLICY
 
 **Never block on a measurement** — if one is running, something is being BUILT

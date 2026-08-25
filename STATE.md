@@ -5,46 +5,44 @@
 | field | value |
 |---|---|
 | round | **5** - CEQ v7, promise `TWOSPHERES`, **30 iterations** |
-| iteration | **6 complete, 7 next** |
-| phase | **G1 fetches, then ARM A (the torque probe)** |
+| iteration | **7 complete, 8 next** |
+| phase | **ARM A under the escalation chain; autonomous to iteration 30** |
 | goal | **match or SUPERSEDE self-attention**; next-equilibrium predictor |
 | calibration | GREEN [RUN] `run_calib.py --self-test` exit 0, 4/4 bit-identical |
 | inspector | tri-state; INDETERMINATE exits nonzero |
 | repo | https://github.com/teerthsharma/resolvent (private) |
 
-## THE ONE NEXT ACTION (round 5, iteration 7)
+## THE ONE NEXT ACTION (round 5, iteration 8)
 
-**Read Wilson's TASK 2/3 K1 numbers when the buckets land, and read the D_FR
-slope's CI before its point estimate.**
+**Collect the fellow tier. Do not write a prognosis before the Inspector runs.**
 
-TASK 1 and TASK 4 are in and both changed the ground:
-  * **the flip instrument is calibrated** - planted sign change fires, softmax
-    reads zero, and the `1e-200` case shows the float path missing a flip the
-    valuation catches;
-  * **F16 does not generalise.** `_causal_sgate_operator` is signed at **every**
-    lam including 0.10 at ARM A's geometry - 30/30 readings, `min A =
-    -1.363636e-01` - because the mean causal `|w|` here is **1.171e+01** against
-    the harness's **2.682399e-03**. **`lam` is a threshold at 1.0 only when the
-    logits are near zero.** K1's flip half is therefore a measurement now.
+The chain is now binding and written into `LOOP_PROMPT.md`:
 
-**The reading order is fixed:** whether the `D_FR` slope's bootstrap CI
-**excludes**, **includes** or **straddles** the pre-registered **-0.3** line
-comes before the point estimate. Iteration 4 read **-0.3061** with no error bar
-and that is the entire reason K1 was voided. **Do not round toward a verdict in
-either direction** - an unfavourable reading pulled out of noise is worth exactly
-what a favourable one is.
+    fellows (Chase, Cameron, Foreman) -> Wilson -> Health Inspector -> DR HOUSE
 
-**Gate 3 is closed and it is a FAIL, not a void.** The audit's repaired control
-fires at 0/48 with separation exactly zero, so the 109/384 live off-schedule
-draws are the arm, not the probe. **The additive-basis arm's flip behaviour
-tracks lattice placement rather than content.** That does not touch the basis's
-COVERAGE result - k=12 proven for `[1,56]`, k=18 for `[1,127]`, unreachable
-fraction driven to exactly 0.0000 - which is a separate object and survives.
+**In flight:** Foreman (is theta a reparametrisation of TV in the linearised
+regime), Chase (is D1 complete, has any published number moved, blast radius),
+Cameron (is the MEAN the weak part rather than the sphere; are `||tau||` and
+`gamma_1` free separators nobody tested). Wilson's K1 buckets at **26/48**.
 
-**A defect to repair when the instrument is next opened:** `scale/valuation.py`'s
-docstring argues the underflow with float32's `1.18e-38` while the function takes
-a Python float64. The instrument is GREEN; **its stated reason does not reproduce
-at the magnitude it names.**
+**Reading order is fixed and it is not the order the reports arrive in:**
+  1. **Wilson's facts settle every factual dispute.** A fellow's claim that
+     contradicts a verified Wilson fact is dead - not averaged, not softened.
+  2. **Every fellow finding needs its RED test shown.** Unbound claims go to
+     **Open**, however convincing they read.
+  3. **The Health Inspector runs BEFORE the prognosis, always** - re-runs every
+     claimed GREEN, checks each finding has a matching RED, checks nobody
+     contradicts Wilson. **A struck claim is struck** and is not re-argued.
+  4. **Then, and only then, the Prognosis and the Chart** - and the Chart carries
+     **every** fellow including the overruled ones, each with the reason.
+
+**Dr House is released only if the problem survives all four rungs AND the gap is
+INNOVATION rather than evidence.** He is NOT triggered by Wilson refuting
+something (dead is dead), by Chase finding a risk (that is a decision), or by
+Cameron finding a cheaper path (that theory lost, it did not die).
+
+**Nothing is claimed for any in-flight agent.** Never block on a measurement -
+if the tier is still out, build alongside it.
 
 ## Open REDs
 

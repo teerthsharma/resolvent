@@ -445,3 +445,14 @@ is left, and **a not-found cell is permission to test, not a result.**
 | `scale/valuation.py` docstring | **DEFECT.** Its worked example argues the underflow with float32's `1.18e-38`, but the function takes a **Python float64**, where `1e-30 * -1e-30` is represented fine. **The instrument is right; its stated reason does not reproduce at the stated magnitude.** |
 | **F16 (`lam` is a threshold at 1.0)** | **DOES NOT GENERALISE.** At ARM A's geometry `_causal_sgate_operator` is signed at **every** lam including 0.10 - **30/30** readings, `min A = -1.363636e-01`, negative fraction 0.2322-0.2495, `I+A+pivot_hop2` negative in 5/5 seeds at every `(s, lam)`. Cause is **logit scale**: mean causal \|w\| **1.171e+01** / **1.320e+01** vs the harness's **2.682399e-03**. F16 was true of one geometry and I generalised it - **ninth appearance of correct statement, wrong object.** |
 | K1's flip half | **NOW EVALUABLE** - the signed arm's Jacobian is genuinely negative here, so `flip` is a measurement rather than a theorem. TASK 2/3 numbers **not in**; nothing claimed. |
+
+**PROCESS DEFECT AND REPAIR [r5 iter 7] - raised by the user, third occurrence.**
+
+| item | status |
+|---|---|
+| house mode, iterations 1-6 | **NOT RUN.** Agents were dispatched **serially, one at a time**, and each report written up on its own. That is sequential delegation. **No parallel fellow tier, no reconciliation, no Prognosis, no Chart.** |
+| `inspector.py` vs the Health Inspector | **CONFLATED.** The former is a command; the latter is a named agent who re-runs claimed GREENs and strikes unbound claims. Running one is not running the other. |
+| Dr House | **NEVER RELEASED this round**, despite standing instruction to release him when the fellows have gone without a mathematical leap. |
+| repair | **3 fellows dispatched in ONE message on the SAME question**, each test-bound with nurse rules. Foreman: is theta a reparametrisation of TV in the linearised regime. Chase: is D1 complete, has any published number moved, what is the blast radius. Cameron: is the MEAN the weak part rather than the sphere, and are `\|\|tau\|\|`/`gamma_1` free separators nobody tested. |
+| **escalation chain** | **WRITTEN INTO `LOOP_PROMPT.md` AS BINDING** - fellows -> Wilson -> Health Inspector -> **DR HOUSE (`model: fable`, 5 min hard stop, no nurses, one leap or "no leap", HYPOTHESIS not finding, must be bound by a fellow's RED test or it stays in Open)**. |
+| autonomy | **Loop runs to iteration 30 without check-in.** Decisions go through the chain and are recorded with their reasoning in `DONE.md`. |
