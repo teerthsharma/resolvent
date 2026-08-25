@@ -128,6 +128,15 @@ def report():
             print("  entrywise, so it CANNOT flip a sign at all. This says nothing")
             print("  about whether routing or signedness carries the flatness.")
             print("  S2 needs an unsigned arm that CAN flip before it can decide.")
+        elif sl != sl:
+            # NaN falls through `sl > -0.3` (always False) into the
+            # `else`, which prints the strongest sentence in this
+            # project for an UNDEFINED slope. Confirmed by execution.
+            print("\n  *** SLOPE UNDEFINED -- NO VERDICT. ***")
+            print("  The rate hit exactly 0 at every size, or fewer")
+            print("  than two nonzero points remain, so no log-log")
+            print("  slope exists. Neither a pass nor a fail: an")
+            print("  unevaluable clause, reported as one.")
         elif sl > -0.3:
             print("\n  *** G4 FIRES: unsigned routing is ALSO flat. ***")
             print("  The contribution is ROUTING, which is Star-Transformer's")

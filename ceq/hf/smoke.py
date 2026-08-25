@@ -289,8 +289,10 @@ def main() -> int:
           "params, {seeds} seeds, seq {seq}".format(**COSTS["parity"]))
     d = COSTS["content_conditional_sign_decay"]
     print("  the distinguishing property DECAYS with context: {:.5f} at s=8 -> "
-          "{:.5f} at s=128, slope {} (softmax is {:.4f} at every s)"
-          .format(d[8], d[128], d["slope"], d["softmax_at_every_s"]))
+          "{:.5f} at s=128 (softmax is {:.4f} at every s)"
+          .format(d[8], d[128], d["softmax_at_every_s"]))
+    #: `slope` is None on purpose -- print the withdrawal, never a number.
+    print("  exponent:                          {}".format(d["exponent_status"]))
     print("  trust_remote_code:                 {}".format(COSTS["trust_remote_code"]))
     c = COSTS["capability"]
     print("  CAPABILITY -- A LOSS, not a tie:   {} exact match, softmax {:.4f} vs "

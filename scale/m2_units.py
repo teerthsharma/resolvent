@@ -310,16 +310,21 @@ def report():
         print(f"{label:>24} " + "".join(f"{c:>21}" for c in cells)
               + f"{sl:>+9.3f}{note}")
 
-    a = out["pivot_signed__in_P"][1]
-    b = out["pivot_signed__not_in_P"][1]
-    k1 = (a < -0.3) if a == a else True
-    k2 = (b > -0.3) if b == b else False
-    print("\n=== VERDICT against the frozen kill ===")
-    print(f"  slope(c in P)     = {a:+.3f} -> {'KILL' if k1 else 'survives'}")
-    print(f"  slope(c NOT in P) = {b:+.3f} -> "
-          + ("KILL: control also flat, mechanism story FALSE" if k2
-             else "control decays as the mechanism requires"))
-    print(f"\n  M2 = {'RED' if (k1 or k2) else 'GREEN'}")
+    # THE DUPLICATE VERDICT IS DELETED. `_verdict()` above was repaired to
+    # refuse an unevaluable clause; `report()` kept a private copy of the
+    # ORIGINAL logic, including
+    #     k2 = (b > -0.3) if b == b else False
+    # which maps a NaN control slope to False -> "control decays as the
+    # mechanism requires" -> **M2 = GREEN**. Confirmed by execution:
+    # a = -0.050 with b = NaN printed GREEN.
+    #
+    # The fix is not new logic. It is having ONE verdict path. Two copies of
+    # a rule means the tested copy can be correct while the copy that runs
+    # is not -- and that is what happened: the test imports `_verdict`, and
+    # nothing imported `report`.
+    _verdict(out["pivot_signed__in_P"][1],
+             out["pivot_signed__not_in_P"][1],
+             out.get("dense_signed__at_pivots", (None, float("nan")))[1])
 
 
 if __name__ == "__main__":

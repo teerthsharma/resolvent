@@ -14,7 +14,8 @@ control.
 
 WHAT THAT NUMBER IS NOT. Parity at 3.3M and seq 128. It is not a scaling claim,
 it is not measured past 600 steps on this operator, and the property that
-distinguishes the operator from softmax decays as `s^-1.389` in context length --
+distinguishes the operator from softmax DECAYS with context length (exponent
+WITHDRAWN as a `floor = 1e-6` artifact; no replacement exponent is published because -0.958 (R^2 0.9990) and -1.221 (R^2 0.9662) disagree) --
 see `COSTS` in `modeling_ceq.py`, which ships in the same repository.
 
 `operator`, `rho`, `lam` and `hops` all default to `None` rather than to a value,

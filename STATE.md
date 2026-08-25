@@ -14,58 +14,75 @@ Governing documents, in precedence order:
 
 | field | value |
 |---|---|
-| iteration | **15 complete, 16 next** — max **80** |
-| phase | **Phase 0** (iterations 1–3: instruments before numbers) |
-| item in flight | **M2'** — appended verbatim, UNTESTED |
+| iteration | **43 complete, 44 next** — max **80** |
+| phase | **WORK-STOPPING — M2 RED; repair / prior-art / write-up only** |
+| item in flight | **M2 RED, measured on shipped operator (-1.298, 0 flips at s>=128)** |
 | LOCK lines | `LOCK M2 efadc390c93f` — re-verified iteration 1 against the archived copy: **byte-identical** |
 | calibration | **GREEN** [RUN] `run_calib.py --self-test` exit 0, 4/4 bit-identical |
 | promise | `HOLDFAST` — retires SEPARATRIX |
 
 ## Open REDs
 
-None. **M2 is SUPERSEDED, not RED** — clause 1 did not fire (+0.0270 against a
-−0.3 bar), clause 3 did not fire, and clause 2 is unevaluable by construction.
-A claim whose safeguard cannot be evaluated has not survived it, so M2 leaves
-the live set with its defect report rather than passing. The work-stopping
-clause does not fire.
+**M2 - RED, work-stopping IN FORCE.** On the SHIPPED operator (`sgate`) the
+pivot arm reads slope **-1.298** against clause 1's **-0.3** bar. The
+iteration-1 SUPERSEDED ruling was made on `tgate` numbers and is corrected.
+(**-1.826 stood here until iteration 35 struck it** - Cameron's number, which my
+own measurement contradicted at iteration 20. The document the loop reads first
+disagreed with CHECKLIST.md for fifteen iterations.)
 
-## THE ONE NEXT ACTION (iteration 16)
+**M5 - RED.** `||A^hops|| = 0.880500` at s=128, hops=2 - nonzero and O(1), so
+the exactness hypothesis is unmet. **The 1.471448 printed here since iteration
+33 was FABRICATED and is struck** (iteration 35; not reproducible at any of
+1,800 settings). Value now pinned by `EXPECTED_TAIL`.
 
-**Sweep softmax's budget on M3 and find out whether the 1.0 bar is reachable at
-all.** Vary steps and n-train; the question is binary and decides whether four
-more arms are worth running:
+**M2' - RED.** All four routes sign-blind by the twin test.
 
-- **eval NRMSE crosses 1.0** -> the bar is real, softmax's 1.725 was a budget
-  artifact, and the comparison becomes meaningful at that budget;
-- **never crosses** -> **M3 is a termination clause wearing a gate's clothes**,
-  it fails every arm identically regardless of operator, and it must be recorded
-  as such rather than run four times to produce four identical failures.
+## THE ONE NEXT ACTION (iteration 44)
 
-### Iteration 15 - Health Inspector: 4/4 CLEAN, 0 struck
+**The write-up is complete and internally consistent. The remaining work is not
+scientific, it is delivery** - and the decision belongs to the user.
 
-| check | result |
-|---|---|
-| calibration `--self-test` | exit 0, wrong target rejected first, 4/4 bit-identical |
-| LOCK vs **archived copy** | `efadc390c93f`, `archived==live: True` |
-| replay, bitwise, **third journal** | `r2` -> `tgate/s8` **BITWISE MATCH** |
-| audit | **0 struck** |
+State of the record: M2 RED and **instrument-cleared, permanently**; M2' RED on
+all four routes with **G1 firing for R3** (Tropical Attention, arXiv:2505.17190,
+is R3 and published); M5 RED with its hypothesis pinned by test; nine documents
+agreeing; **five value binds green**; Lean **27 theorems, exit 0, zero sorry**;
+resume **bitwise-verified**. **No live theory, no instrument under suspicion.**
 
-The LOCK check matters more this pass than last: **two items have been appended
-since iteration 1** (M2' and M2''), which is precisely the situation that made
-the naive slice-boundary check cry wolf. The archived-copy method held.
+Iteration 44 should prepare the push and stop short of making it: verify the
+tree is clean, confirm no Claude attribution anywhere in the commit messages
+(the `github-master` rule, which **overrides** the global CLAUDE.md trailer),
+and put the one-line summary in front of the user. **Name: `resolvent`.
+Private.** The push itself is the user's call and has been since iteration 34.
 
-The replay deliberately used **`r2`, a journal never replayed before** -
-re-running `m2` a fourth time exercises one code path and audits nothing new.
-**Three independent journals (`m2`, `s2`, `r2`) have now each reproduced bitwise
-from a fresh process.**
+### Iteration 43 - PROGNOSIS.md now carries iterations 35-42
 
-**One thing the pass surfaced, recorded not acted on:** `r2`'s `coh_dense` and
-`coh_pivot` are **identical to 16 digits at s=8** (0.7044318334094577 both),
-then diverge (s=128: 0.2675 vs 0.7556). That identity is *expected* - at s=8
-nearly every token is a pivot, so routed and dense hop-2 are the same
-computation. It is the same boundary condition under which the M2 claim arm and
-its dense control both read **0.024658**. Two unrelated instruments agreeing
-there is a cross-check neither was built to provide.
+**277 -> 383 lines**, bind still green. Added: M2's permanence with the paired
+floor table (**kill fires at `floor = 0`, -1.1150**; removing the gate makes it
+**steeper**); the floor discarding **6.8% -> 52.6% -> 100%** of sign changes, so
+`0.00000` at s=128 overstates; the two-solid-point derivation (**-1.2977** vs
+**-1.2980**, zeros worth 0.0003); the fabricated `1.471448` and the `> 1e-3`
+**inequality** that let it ride through fourteen passing tests.
+
+**And a new section that is the most transferable finding here:** sorted by what
+they compared, **7 instruments compared STRUCTURE and all 7 failed; 2 compared
+VALUES and neither ever has.** A structure check tests a proxy, and proxies drift
+when the surrounding text is reformatted, refactored or piped.
+
+### Correction to my own iteration-39 entry
+
+I recorded, in a RUN voice, that the random-init scope fact was *"not recorded
+anywhere"*, citing **0 hits in PROGNOSIS.md**. **False.** `PROGNOSIS.md:277`
+already said *"Everything is measured on random projections, not trained
+checkpoints."* My grep tried three phrasings; the document used a fourth.
+
+The gap was real and testing it was right — **what was wrong was the claim of
+novelty.** DONE.md is append-only, so iteration 39's entry stands and the
+correction is appended beside it.
+
+**Eighth structure-level defect, and the mirror of iteration 34's.** That one
+searched for what should be there and declared consistency. This one searched for
+what should be there and declared a recorded fact missing. **Same defect: a
+string search tests a proxy for a fact.**
 
 ## Board in flight
 

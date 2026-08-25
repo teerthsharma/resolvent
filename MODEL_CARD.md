@@ -15,6 +15,40 @@ tags:
 
 # ceq — a signed causal path-sum correction for attention
 
+> ## The operator does not work. This is the negative result and the harness that produced it.
+>
+> **The pre-registered kill fires on the operator the module ships.** Measured,
+> `PROTOCOL: SCALING`, `c` drawn from the pivot set: sign-flip rate
+> **0.16511 / 0.02732 / 0.00000 / 0.00000** at s = 8/32/128/512, slope
+> **−1.298** against a bar of **−0.3**. **Zero flips at s ≥ 128.** Pivot routing
+> makes it *worse* than dense, not better (dense reads −1.088).
+>
+> **The measurement that once said otherwise was measuring a different
+> operator.** `_causal_tgate_operator` carried every headline — a flat
+> **+0.0270** slope across a 256× context growth, a **61×** separation at
+> s=1024 — and appears **nowhere in the shipped path**, which uses
+> `ceq_operator` and `sgate_operator`. The arm names hid it:
+> `scale/pivot_probe.py::ARMS` never contains the string `"tgate"`, because the
+> arms are called `pivot_signed` and `dense_signed` and `build_arm` maps **both**
+> to it. *The name describes a property, not an implementation.*
+>
+> **The Lean core is sound; it does not certify what ships.** 27 theorems,
+> `lake build` exit 0, zero `sorry`, no `sorryAx`. `pow_card_eq_zero` is
+> **confirmed against the shipped tensor** — `A^n = 0` at exactly
+> `0.000000e+00` for s = 16/64/128/512. But `occupancy_is_exact_inverse` is
+> stated at **N = n**, and the module truncates at **hops = 2..4** where
+> `‖A^hops‖` is **0.880500** at s=128 (hops=2; **0.882030** at hops=4).
+> **The 1.471448 previously printed here was struck by the iteration-35 audit —
+> not reproducible at any of 1,800 settings.** **The theorems certify a computation the
+> module does not perform**, and `truncation_bound` refuses at the shipped
+> `rho = 1.5`, so no bound stands in either.
+>
+> **What is worth reading this repository for:** the negative result, the Lean
+> core as mathematics, and a falsification harness that caught **seventeen** of
+> its own broken instruments — including the one that invalidated its own
+> headline. Full verdict in [`PROGNOSIS.md`](PROGNOSIS.md).
+
+
 ## Model Details
 
 - **Type:** a `transformers`-registerable attention function plus a small causal-LM
@@ -211,7 +245,8 @@ part does not transfer to an A100.
 A Turing-style evaluation has **never been attempted — no file for one exists**. Nothing has
 run above **3.65M parameters**. `python -m pytest tests/ -q` has never completed (~9% in 15
 minutes on CPU, estimated >3 h), so **no total pass/fail count exists — do not quote one**;
-what is verified is that **809 tests collect** in 19.9 s and every test name cited in the
+what is verified is that **955 tests collect** in 9.6 s (measured 2026-08-25; this count
+GROWS as tests are added, so re-measure rather than trusting it) and every test name cited in the
 README resolves against that collection, enforced by `tests/w11/test_w11_claims_resolve.py`.
 
 **This package requires `trust_remote_code=True`.** Loading it executes Python from this
@@ -383,7 +418,7 @@ CPU works. `α = 0` is free and bitwise; raise `α` only with the cost curve abo
 ## Reproduce
 
 ```bash
-python -m pytest --collect-only -q tests/     # 809 tests collect, 19.9 s
+python -m pytest --collect-only -q tests/     # 955 collect, 9.6 s (2026-08-25)
 python -m pytest tests/ -q                    # every falsifier -- >3 h, has NEVER completed
 python -m ceq.diagnose                        # the CPU sign-flip diagnostic
 python -m ceq.capability                      # COGS + SCAN, both arms, published refs

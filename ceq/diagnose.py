@@ -11,7 +11,7 @@ a signed operator from softmax at block level rather than at matrix level.
 WHY THE DECAY CURVE IS PRINTED WITH THE RATE, ALWAYS. This project measured
 0.1641 at the probe's default context of s = 8, called it the module's
 distinguishing property, and spent three rounds optimising a val-loss ratio
-around it. Swept over context, the rate decays as `s^-1.389` (R^2 0.9938), from
+around it. Swept over context, the rate DECAYS, from
 0.17480 at s = 8 to 0.00391 at s = 128 -- because a third token is 1 of ~s
 intermediates in the `k >= 2` term of `J = sum_k A^k` that carries the property
 at all. The property and the dilution are the same fact. A single rate at a
@@ -59,8 +59,11 @@ TABLE_HOPS, DECAY_HOPS = 3, 2
 # the default run reproduces them exactly rather than approximately.
 FULL_DRAWS, FAST_DRAWS = 128, 64
 # 1024 is the published draw count and reproduces the curve entry for entry.
-# 512 is the smallest count whose fitted slope still lands within 0.35 of the
-# published -1.389 (measured: 128 -> -1.295, 256 -> -1.551, 512 -> -1.402).
+# The exponent this comment used to justify itself against is WITHDRAWN, and
+# the spread that justification quoted is the reason: 128 -> -1.295,
+# 256 -> -1.551, 512 -> -1.402 across draw counts alone. A quantity that
+# moves 0.26 with the DRAW COUNT is not a published constant. 1024 is kept
+# as the count the rate table was measured at; 512 as the fast path.
 FULL_DECAY_DRAWS, FAST_DECAY_DRAWS = 1024, 512
 
 
@@ -88,7 +91,7 @@ def decay_curve(n_draws: int, device, kind: str = "sgate") -> dict:
     slope, r2 = _loglog_fit(fit)
     return dict(rate={str(s): r for s, r in rate.items()}, slope=slope, r2=r2,
                 n_fitted=len(fit), n_draws=n_draws,
-                published_slope=-1.389, published_r2=0.9938,
+                published_slope=None, published_r2=None,
                 extrapolated_at_2048=(10 ** (_intercept(fit, slope)
                                              + slope * math.log10(2048))
                                       if len(fit) >= 2 else None))
@@ -161,8 +164,11 @@ def render(r: dict) -> str:
     out.append("  " + "".join(f"{r['decay']['rate'][s]:>10.5f}" for s in
                               sorted(r["decay"]["rate"], key=int)))
     d = r["decay"]
+    #: There is no published exponent to compare against -- it was withdrawn,
+    #: and printing "None / None" would read as a missing value rather than a
+    #: deliberate one. Say which.
     out += [f"  log-log slope {d['slope']:.3f}  R2 {d['r2']:.4f}   "
-            f"(published: {d['published_slope']} / {d['published_r2']}, "
+            f"(no published exponent: WITHDRAWN as a floor=1e-6 artifact; "
             f"{FULL_DECAY_DRAWS} draws)",
             f"  extrapolated to s=2048: {d['extrapolated_at_2048']:.2e}"
             if d["extrapolated_at_2048"] else "",

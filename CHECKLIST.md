@@ -24,12 +24,12 @@ nothing (arXiv:2605.20798). Statistics are not capabilities.
 | id | item | status |
 |---|---|---|
 | M1 | Negative influence on the value path | UNTESTED |
-| M2 | Context-stable signed influence at global reach | **SUPERSEDED** (defective kill) |
-| M2' | Signed influence that context cannot dilute (4 routes) | **RED** — all four routes SIGN-BLIND (twin test F(A) vs F(\|A\|)) |
+| M2 | Context-stable signed influence at global reach | **RED** — MEASURED on the shipped operator: sgate-pivot slope **-1.298** vs bar **-0.3**, and **0 flips at s>=128**. The +0.0270 / 61x numbers were `tgate`, which ships nowhere (instrument #17). **SCOPE [RUN, iter 39]: measured at RANDOM INITIALIZATION** — `pivot_probe.py:145` draws q, k and the gate from `torch.randn`; no trained weights are loaded anywhere in `scale/`. **INSTRUMENT-CLEARED [RUN, iter 42] and the RED is now PERMANENT**: at `floor = 0` the slope is **−1.115** (R² 0.9350) — the kill still fires with the magnitude gate removed, and the same instrument reads −0.034 for `tgate` vs −1.298 for `sgate`, so it is not reading a constant. Per `M2_TRAINED_PREREGISTERED_READING.md`, written before the test, **no trained number can overturn this**. |
+| M2' | Signed influence that context cannot dilute (4 routes) | **RED** — all four routes SIGN-BLIND (twin test F(A) vs F(\|A\|)); **G1 FIRES for R3** — Tropical Attention arXiv:2505.17190 is R3, published |
 | M2'' | Sign-blind twin differential — F(A), F(\|A\|), F(softmax) in one table | UNTESTED — **instrument CALIBRATED 2/2 ends** (theorem anchors gap 0.000e+00; must-fire gap 4.777e-01); no readout judged yet |
-| M3 | Long-range sign capability, absolute bar | UNTESTED — **softmax baseline recorded FIRST: eval NRMSE 1.725106 [1.374, 2.104], FAILS the 1.0 bar**; bar reachability unknown |
-| M4 | Exact eviction | UNTESTED |
-| M5 | Certified finite computation | UNTESTED |
+| M3 | Long-range sign capability, absolute bar | UNTESTED — softmax first: **1.725106** (n=512) -> **1.304590** (n=2048); **bar REACHABLE** (learnability control 0.0071, routing free) |
+| M4 | Exact eviction | UNTESTED — **kill now EVALUABLE**: must-fire arm added (kept-token perturbation moves 8/8); crushed-token 0.0 re-labelled **structural**; gating moves 8/8 under BOTH placements |
+| M5 | Certified finite computation | **RED** — `occupancy_is_exact_inverse` is stated at **N=n**; the module truncates at **hops=2..4**, where **||A^hops||=0.880500 at s=128**, not 0 (value now PINNED by test; the 1.47 first printed here was struck by the iteration-35 audit). `A^n=0` IS confirmed. The theorems are sound; they certify a computation the module does not perform; violation now **pinned by test** (`test_theorem_hypotheses_hold_at_shipped_settings.py`, 14 passed). **SCOPE [RUN, iter 39]: measured at RANDOM INITIALIZATION**, same as M2. |
 | M6 | Denominator-free magnitude certificate | UNTESTED |
 
 **M1. NEGATIVE INFLUENCE ON THE VALUE PATH**

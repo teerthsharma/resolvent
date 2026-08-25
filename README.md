@@ -1,5 +1,39 @@
 # ceq — consequence-equilibrium attention
 
+> ## The operator does not work. This is the negative result and the harness that produced it.
+>
+> **The pre-registered kill fires on the operator the module ships.** Measured,
+> `PROTOCOL: SCALING`, `c` drawn from the pivot set: sign-flip rate
+> **0.16511 / 0.02732 / 0.00000 / 0.00000** at s = 8/32/128/512, slope
+> **−1.298** against a bar of **−0.3**. **Zero flips at s ≥ 128.** Pivot routing
+> makes it *worse* than dense, not better (dense reads −1.088).
+>
+> **The measurement that once said otherwise was measuring a different
+> operator.** `_causal_tgate_operator` carried every headline — a flat
+> **+0.0270** slope across a 256× context growth, a **61×** separation at
+> s=1024 — and appears **nowhere in the shipped path**, which uses
+> `ceq_operator` and `sgate_operator`. The arm names hid it:
+> `scale/pivot_probe.py::ARMS` never contains the string `"tgate"`, because the
+> arms are called `pivot_signed` and `dense_signed` and `build_arm` maps **both**
+> to it. *The name describes a property, not an implementation.*
+>
+> **The Lean core is sound; it does not certify what ships.** 27 theorems,
+> `lake build` exit 0, zero `sorry`, no `sorryAx`. `pow_card_eq_zero` is
+> **confirmed against the shipped tensor** — `A^n = 0` at exactly
+> `0.000000e+00` for s = 16/64/128/512. But `occupancy_is_exact_inverse` is
+> stated at **N = n**, and the module truncates at **hops = 2..4** where
+> `‖A^hops‖` is **0.880500** at s=128 (hops=2; **0.882030** at hops=4).
+> **The 1.471448 previously printed here was struck by the iteration-35 audit —
+> not reproducible at any of 1,800 settings.** **The theorems certify a computation the
+> module does not perform**, and `truncation_bound` refuses at the shipped
+> `rho = 1.5`, so no bound stands in either.
+>
+> **What is worth reading this repository for:** the negative result, the Lean
+> core as mathematics, and a falsification harness that caught **seventeen** of
+> its own broken instruments — including the one that invalidated its own
+> headline. Full verdict in [`PROGNOSIS.md`](PROGNOSIS.md).
+
+
 An attention operator whose output is a **signed, strictly causal path sum** rather than a
 one-hop similarity lookup:
 

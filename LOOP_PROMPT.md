@@ -14,9 +14,14 @@ The concrete bridge already exists and is unclaimed: **the notebook's own
 default shape is 25,707,520 parameters, 7.0x above the 3.65M ceiling this
 project has ever trained, and it FITS a free T4 (2.45 GiB against 14.5) in one
 12-hour session.** As shipped the notebook runs 1.6% of a Chinchilla budget.
-The blocker is **~15 lines of missing checkpoint/resume** in
-`ceq/hf/train.py::train()` — no optimizer state, no step counter, no load path
-— not money and not hardware.
+
+**THE BLOCKER THIS FILE USED TO NAME HERE IS GONE, [RUN, iteration 39]** —
+`train()` takes `resume_from`, and `trainer_state.pt` carries the optimizer
+moments, the step counter, the data generator's state and the torch RNG state.
+Resume is now verified **bitwise**: a stitched N+N run reproduces an
+uninterrupted 2N run's weights exactly, with a must-fire control proving the
+comparison is not blind (`tests/chase/test_resume_checkpoint.py`, 3 passed).
+**Not money, not hardware, and no longer missing code.**
 
 **The design under test — pivot routing:**
 
@@ -26,15 +31,30 @@ Base matrix is `tgate` in `ceq/bench.py`:
 `A_ij = g_i * tanh((qhat_i . khat_j)/tau)`, `j < i`, unnormalized, signed,
 query-dependent.
 
-**THE CLAIM, REFRAMED — do not use the old framing.** At s=8 the UNSIGNED pivot
-arm flips signs at 0.1025 against signed's 0.0264 — four times MORE. Then it
-dies: 0.0000 at s=512 (0/4096, CP upper 0.000731) while signed holds at 0.0313.
-"Softmax cannot do this" is FALSE and measured false. The defensible claim is
-**PERSISTENCE IN CONTEXT** — signed influence that context cannot dilute — plus
-depth/parameter efficiency. Every sentence you write claims persistence, never
-short-range capability. (Also standing: one GELU between two softmax layers
-restores the sign flip — the semiring theorem covers non-negative operators
-with LINEAR value paths, not real transformers. Never overclaim past that.)
+**THE CLAIM IS DEAD ON THE SHIPPED OPERATOR. There is no reframing left.**
+
+The persistence framing below stood on `tgate`. **`tgate` ships nowhere** —
+`ARMS` never contains the string, and the module's operator is `sgate`
+(instrument #17). Measured on the operator that actually ships:
+
+    operator   hop2         8        32       128       512    slope
+    sgate     pivot   0.16511   0.02732   0.00000   0.00000  **-1.298**
+      k/n             124/751    15/549     0/213      0/60
+    sgate     dense   0.16511   0.03655   0.00000   0.00000    -1.088
+
+**M2's bar is -0.3. The shipped operator reads -1.298** — four times past the
+kill, **zero flips at every s >= 128**, and **routing is WORSE than dense**
+(-1.298 against -1.088), which is the opposite of the entire thesis. Persistence
+in context is not a claim this operator supports; it is the claim it refutes.
+
+**Do NOT write a persistence sentence.** Do not write a
+depth/parameter-efficiency sentence either — nothing has trained above 3.65M
+against a 300M gate. The only sentences this project can currently support are
+the negative result and the harness that produced it.
+
+(Still standing, and unaffected: one GELU between two softmax layers restores
+the sign flip — the semiring theorem covers non-negative operators with LINEAR
+value paths, not real transformers. Never overclaim past that.)
 
 **Your memory is the repo, not your head.** Read, in this order, every
 iteration, before acting:
@@ -73,7 +93,7 @@ to build; it does not override `CHECKLIST.md`.
   honest cost. Deleting without replacing is how a project runs out of theories
   at iteration 60.
 
-## M2 IS A REPORTED DEFECT, NOT A PASS — and its numbers SURVIVE
+## M2 IS RED ON THE SHIPPED OPERATOR — and its old numbers are RE-SCOPED, not law
 
 M2's original kill clause 2 (`c-not-in-P is ALSO flat`) is **UNEVALUABLE BY
 CONSTRUCTION**: `hop2[i,j] = sum_{p in P} A[i,p] A[p,j]` has no term with index
@@ -82,20 +102,33 @@ its NaN slope to "control decays as required" — a FALSE GREEN, broken
 instrument #15. The item text is frozen under `LOCK M2 efadc390c93f` — do NOT
 edit it, do NOT silently fix it. M2 stays RED with this defect report attached.
 
-**These measurements are journalled, replay-verified 11x, and must NEVER be
-re-derived** (all PROTOCOL: SCALING, CP intervals, calibration bit-identical):
+**THESE NUMBERS ARE TRUE ABOUT `tgate` AND SAY NOTHING ABOUT THE MODULE.**
+They are journalled, replay-verified 11x, and they REPRODUCE — iteration 18
+re-measured the flatness at -0.034 against the journalled +0.0270, both flat.
+**The measurement was never wrong. It was measuring the wrong object.** So they
+are not withdrawn and not re-derived; they are RE-SCOPED, and may never appear
+in a sentence about what the module does (instrument #17).
 
-- M2 claim arm `pivot_signed`, wrt=v, 16384 draws at tail:
-  s=8 0.024658 | 32 0.028564 | 128 0.031006 | 512 0.028809 | 1024 0.029663
-  (486/16384) | 2048 0.029907 (490/16384). Slope **+0.0270**, R2 0.5222, 256x growth.
-- Control `dense_signed__at_pivots` (same c, same operator, A@A hop-2):
-  s=8 0.024658 | 512 0.003174 | 1024 0.000488 (2/4096) | 2048 0/2048 so far.
-  Slope **-0.746**. Separation 1.0x -> 61x -> >=20.5x.
-- S2 ablation, wrt="x" (the ONLY channel where the comparison is non-vacuous;
-  on wrt=v softmax is pinned at exactly 0 by theorem, I+A+A^2 non-negative):
-  `pivot_unsigned__x` s=8 **0.102539** -> s=512 **0.000000**, slope -1.598, R2 0.9962.
-  `pivot_signed__x` s=8 0.026367 -> s=512 0.031250, slope -0.021.
-  Separation at s=512 >= **42.7x**.
+    tgate     pivot   0.02865   0.02734   0.03125   0.02344    -0.034
+    tgate     dense   0.02865   0.02474   0.00911   0.00391    -0.503
+
+Archived readings, `tgate` only (all PROTOCOL: SCALING, CP intervals,
+calibration bit-identical):
+
+- `pivot_signed`, wrt=v, 16384 draws at tail: s=8 0.024658 | 32 0.028564 |
+  128 0.031006 | 512 0.028809 | 1024 0.029663 | 2048 0.029907. Slope +0.0270.
+- `dense_signed__at_pivots`: s=8 0.024658 | 512 0.003174 | 1024 0.000488 |
+  2048 0/2048. Slope -0.746 — **corrected to -1.009** once s=8 was found
+  degenerate (|P| = 6, not 8; both s=8 cells read k=101, n=4096, one arm
+  reported twice under two names). The 61x separation figure is `tgate`-only.
+- S2, wrt="x": `pivot_unsigned__x` s=8 0.102539 -> s=512 0.000000, slope -1.598.
+  `pivot_signed__x` s=8 0.026367 -> s=512 0.031250, slope -0.021. **The signed
+  arm here is `tgate`; the unsigned arm is SOFTMAX.** The 42.7x is a comparison
+  between two operators neither of which is the module's, and is dead as a
+  claim.
+
+**THE NUMBERS THAT BIND — shipped operator, `sgate`, the table in "THE CLAIM IS
+DEAD" above. -1.298 against a -0.3 bar. Quote those.**
 
 ## THE OPEN CONTRADICTION — resolve this before trusting M2' framing
 
@@ -283,8 +316,8 @@ running.
   pivot+unsigned, then pivot+signed. The claim sentence is persistence.
 - **Phase 3 — THE SHIP PATH:** M4; M5 (`lake build CEQ`, zero sorry,
   `.tril(-1)` grep-bind); M6 (numerical-radius guard, then re-run the surviving
-  M2' route with the guard on); **then the ~15 lines of checkpoint/resume in
-  `ceq/hf/train.py` and the free 25.7M T4 Colab run**; then the HF package with
+  M2' route with the guard on); **then the free 25.7M T4 Colab run**
+  (checkpoint/resume already exists and is bitwise-verified); then the HF package with
   the capability table in its card, limits first. S1/S3 last.
 
 **One iteration equals exactly ONE of:** write a RED test / turn one RED test

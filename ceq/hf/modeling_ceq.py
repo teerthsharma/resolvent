@@ -22,7 +22,8 @@ FIRST. Val-loss parity is the favourable number. On COGS generalization at
 0.0293**, one-sided Fisher exact **p = 2.8e-05**, with the deficit already
 present in-distribution (0.7734 against 0.9258). Training peak memory is up to
 8.06x SDPA, wall clock 1.32x, there is no KV cache, and the property that
-distinguishes this operator from softmax decays as `s^-1.389` in context length.
+distinguishes this operator from softmax DECAYS with context length, from
+0.17480 at s=8 to 0.00391 at s=128. The exponent is WITHDRAWN as a `floor = 1e-6` artifact; no replacement exponent is published because -0.958 (R^2 0.9990) and -1.221 (R^2 0.9662) disagree.
 
 WHY THIS FILE DUPLICATES `ceq/attention.py` INSTEAD OF IMPORTING IT
 
@@ -130,7 +131,19 @@ COSTS = {
     #: endpoints, so it did not catch them. It checks every entry now.
     "content_conditional_sign_decay": {8: 0.17480, 16: 0.08887, 32: 0.02637,
                                        64: 0.01172, 128: 0.00391,
-                                       "slope": -1.389, "r2": 0.9938,
+                                       #: The exponent is WITHDRAWN, and the
+                                       #: repair is DELETION rather than a
+                                       #: substitution: the two candidate
+                                       #: fits disagree, so any number put
+                                       #: here would be indefensible. The
+                                       #: RATES above are measured and stand.
+                                       "slope": None, "r2": None,
+                                       "exponent_status": (
+                                           "WITHDRAWN -- the -1.389 / R^2 0.9938 pair was a "
+                                           "floor=1e-6 artifact. No replacement is published: "
+                                           "-0.958 (R^2 0.9990) on floor=0 rates and -1.221 "
+                                           "(R^2 0.9662) from the audit disagree. The decay "
+                                           "itself is real -- 0.17480 -> 0.00391 over s=8..128."),
                                        "softmax_at_every_s": 0.0},
     #: What "parity" means here, exactly and with its limits.
     "parity": {"ratio": 1.0334, "params": 3319296, "seeds": 5,

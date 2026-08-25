@@ -1,260 +1,383 @@
-# Prognosis — consequence-equilibrium attention
+# Prognosis
 
-Room: Wilson (facts), Foreman (root cause), Chase (failure modes), Cameron (better path),
-Dr House (fable leap), Health Inspector (log audit). 83 claims audited, 29 audit events.
-All 9 green claims re-ran green; zero strikes under the re-run check.
+Written 2026-08-25, loop iteration 21, immediately after a Health Inspector pass
+(3/3 mechanical checks clean, 3 claims struck on provenance).
 
----
-
-## Prognosis
-
-**All four named decisions are dead as formulated, and the core concept is not.** The
-equilibrium was never the problem — every named *implementation* of it was. `sigmoid`'s
-`(I − A)z = b` is a direct linear solve with no iteration, so decision 1 never existed
-as a DEQ; a real DEQ silently loses its fixed point at step 47 while the loss keeps
-falling. Decision 2's row-stochastic constraint confines the output to a scaled convex
-hull of `b` (NRMSE 0.590 against an unconstrained fit, 8 of 32 target coordinates
-unreachable at any `(P, γ)`). Decision 3's hierarchical schedule loses 0/15 to a
-one-line sliding-window+sinks mask, costs 53× the attention it schedules, and receives
-no gradient at all. Decision 4's harmonic space is `d mod 2` on any graph with a cycle —
-exactly zero at every even stalk width tested.
-
-**What survives is a single untested path**, and it is the one Dr House named: the
-equilibrium taken in the **(max, +) semiring** rather than `(+, ×)`. The reduction that
-killed the linear version is precisely what makes this non-trivial — APPNP *is* the
-Kleene star in `(+, ×)`, which is why `torch.linalg.solve` eats the DEQ and why the whole
-stage reproduces Gasteiger et al. 2019 to 2.22e-16. In `(max, +)` the Kleene star is
-Bellman optimality, which has no linear closed form, so the solver does real work and the
-fixed point is *literally* a value function rather than SR-flavoured. It is a hypothesis
-with no RED test behind it and it stays in Open until a fellow binds it.
-
-**The deliverable order inverts.** The interventional domain is executed code, not
-physics — physics pretraining measured identical to a sham prior with its action column
-permuted (0.3667 vs 0.3654, against 0.3654 for matched-λ scratch). The corpus of
-`(program, mutation, executed-output-before, executed-output-after)` does not exist
-publicly, needs no GPU, no Triton, and no `trust_remote_code`. Ship that first.
+Every number below carries its evidence class — **RUN** (executed here, output
+in `results/`), **READ** (file:line), **CITED** (external, resolved), **DERIVED**
+(from RUN/READ by stated steps) — and, per the standing rule added in iteration
+20, **every agent-produced figure names its source inline every time it appears,
+not only at first mention.**
 
 ---
 
-## Chart
+## The verdict
 
-**Wilson** — 8 claims verified, 0 fabrications, 2 content failures.
-- Ramsauer: "softmax = one Hopfield update" is exact; "one iteration reaches the fixed
-  point" is a stronger paraphrase — error is exponentially small in pattern separation
-  `Δᵢ`, not zero. **Kept, and it argues *for* the design**: small `Δᵢ` is caustic's orbit
-  collapse, so the equilibrium buys most exactly where errors live.
-- Dayan 1993 prints `(I − Q)⁻¹` with **no γ**, `Q` sub-stochastic from a finite absorbing
-  chain. **Kept** — THEORY.md attributed later notation to the primary source.
-- The ~30-architecture inversion claim: **no such study exists.** Nearest is Tay et al.
-  (arXiv:2207.10551) — ten architectures, 2.9B dense, no intercept-vs-slope
-  decomposition. **Kept.** It cannot appear on a model card.
-- `ker Δ_F` trivialization requires **at least one cycle** (Hansen). **Kept**, and it is
-  the qualifier that makes Foreman's parity law actionable.
+**The attention operator this project set out to build does not work, and the
+measurement that said otherwise was measuring something the module does not
+ship.** On the shipped operator the pre-registered kill fires by a factor of
+four, and the property the whole design rests on is *absent* above context 32.
 
-**Foreman** — 15 RED / 26 GREEN. Root cause: the two constraints of §1 pin `P`'s top
-eigenvector to `1`, and every downstream consequence is that one fact booked four times.
-- `σ_max(γP)` reaches 1.9863; row-stochasticity bounds the ∞-norm, not the 2-norm
-  `sigmoid` reports. **Kept** — independently reproduced by the orchestrator (√2 witness)
-  and now machine-checked in Lean.
-- The resolvent of a stochastic kernel cannot amplify any mode above the mean: best ratio
-  1.000000 over 1,920 kernels. Horizon and contrast are reciprocals. **Kept.**
-- Decision 1 vs decision 2 is a dichotomy, not a risk: affine → DEQ residual 1.05e-15
-  (outer solver computes nothing); nonlinear → 57.4% from `(I−γP)⁻¹b` (SR reading void).
-  **Kept, and it is the finding Dr House's leap answers.**
-- §6's resolvent stage is APPNP bit-for-bit, 2.22e-16. **Kept.**
-- "Topology is decorative — the barcode is never an input to the resolvent."
-  **OVERRULED twice.** First by the Inspector: UNBOUND, its only evidence is a *green*
-  test and a passing test is not a falsification. Second, and more decisively, on
-  aim — see *The barcode charge is misdirected* below. It is a true statement about
-  `THEORY.md` §6 and a false one about the code that already exists.
-- "sigmoid's README contains no `rho_max`, no NRMSE, no `(I−A)z=b`."
-  **STRUCK.** All four strings are live at byte offsets 17865 / 18243 / 18448 / 18564 /
-  18747. The nurse's fetch failed and its silence was logged as a finding; it also
-  contradicted Foreman's own correct `σ_max` finding.
+**What survives is not the operator. It is the Lean core as MATHEMATICS, and the
+falsification harness** — 27 machine-checked theorems with no `sorry` and no
+`sorryAx`, and an instrument discipline that caught seventeen of its own broken
+instruments, including the one that invalidated the headline.
 
-**Chase** — 32 RED / 10 GREEN, on real hardware (RTX 4060, torch 2.5.1+cu121).
-- **`BlockMask.from_kv_blocks` computes fully dense attention while `to_dense()` reports
-  the sparse pattern.** Output is `0.000e+00` from unmasked dense — bitwise identical —
-  and causality is dropped too. `create_block_mask(mask_mod=...)` is exact. **Kept, and
-  it is the highest-blast-radius finding in the room:** any sparsity or speedup number
-  taken through that path is dense attention wearing a sparse label.
-- Corrupt CSR: out-of-range offsets → CUDA illegal memory access that poisons the process
-  context (contaminated 13 subsequent tests); negative indices → no exception, finite
-  output, wrong by 3.27 absolute. The empty-row guard lives only inside
-  `build_topology_block_schedule`, so **any new builder does not inherit it**. **Kept.**
-  Rollback: four lines of validation in `scheduled_attention()`.
-- DEQ loses its fixed point at step 47, trains 922 more steps, ρ(J_f) 0.4942 → 1.0086,
-  residual degrading 45,230×, loss falling monotonically throughout. **Kept, verified to
-  the digit by the Inspector.** No rollback from a loss-only monitor. No DEQ at ~1B scale
-  exists in the literature, successful or failed.
-- **Theorem 1 as a training objective is blind to correctness.** `floor(20 correct) = 0`
-  equals `floor(20 wrong) = 0`; `select_by_floor` prefers pure noise (floor 0) to a
-  100%-correct candidate carrying 2 observable collisions (floor 2). Descending a
-  differentiable relaxation improved the surrogate 18.7× while the certified floor never
-  moved and accuracy never moved. And `verify_injective` takes `gold: dict[str, str]` —
-  **the guard needs the answer key the objective claims to avoid.** **Kept.** No rollback
-  once trained on it: the weights are the artifact.
-- Schedule rebuild costs 53× the dense attention it replaces (42.12 ms vs 0.792 ms at
-  seq 8192). **Kept** — and it explains Cameron's 0/15 mechanically.
-- The one genuinely new component receives no gradient: `d(loss)/d(salience)` is `None`,
-  top-k is an argsort. Rebuilt between forward and backward: 9.4% mask difference,
-  gradient relative error 0.433, nothing raises. **Kept.** §3 is a hyperparameter to
-  select, not a component to train.
-- Row-stochastic: `(I−γP)⁻¹b` is confined to `[min(b), max(b)]/(1−γ)` in 600/600 draws;
-  simplex projection destroys 82.1% of gradient norm in one step; dense solve is 5.9× the
-  attention beside it (8.09 ms vs 1.37 ms at d=2048, 129 ms per forward over 16 layers).
-  **Kept.** Rollback: truncated Neumann, K matvecs, 68× cheaper at K=20.
-- HF shipping: `trust_remote_code=False` refuses; CPU has no fallback path; **Triton
-  ships Linux-only wheels and needs compute capability 8.0+, so a free-Colab T4 (sm_75)
-  cannot run it at all**; Serverless Inference has no `trust_remote_code`, so the model
-  page gets no working widget; `AttentionInterface.register` does not register into
-  `AttentionMaskInterface`. **Kept.** All four have rollbacks.
+**Not the certification.** [RUN, iteration 28] `occupancy_is_exact_inverse` is
+stated at `N = n`, and the module truncates at `hops = 2..4` where `‖A^hops‖` is
+**0.880500 at s=128** — not zero. **The theorems certify a computation the module
+does not perform**, so M5 is RED and the phrase *"machine-checked finite
+resolvent"* is overstated wherever it appears. The resolvent is exact at
+**hops ≥ n**; the module runs **hops = 2**.
 
-**Cameron** — 9 RED / 21 GREEN / 1 xfail.
-- **Physics→language transfer is zero.** Physics prior 0.3667, sham prior with permuted
-  action column 0.3654, matched-λ scratch 0.3654. The apparent gain was regularization
-  strength; her own first single-seed run passed, and the null control caught it.
-  **Kept — this is the finding that redirects the whole programme.**
-- Hierarchical schedule 0.39 vs window+sinks 0.975, beats window+sinks 0/15, below the
-  random null in exactly 2 cells. Beats the 0D-salience control 6/15. **Kept**, verified
-  by the Inspector on real SmolLM2-135M attention across 15 cells.
-- An H-matrix far-field is **low-rank, not sparse**; CSR can only keep or drop. **Kept.**
-  This is the structural reason §3 could not have worked as specified.
-- Row-stochastic cannot represent negative literal→outcome coupling: fits +0.0003 where
-  ≤ −0.05 is needed, because a convex combination has no negative entry. **Kept.**
-- "flex backward matches dense to atol 1e-9", "executed Python is a working interventional
-  domain", "Lean 4.33.1 + `repl` is a `do()` with a kernel oracle", "the constraint costs
-  only 1.04×" — **all UNBOUND.** Supporting tests pass but were never logged, and the Lean
-  clause has **no test anywhere in `tests/`**.
-- Log integrity: 6 of 7 finding lines are truncated JSON and do not parse; zero green
-  events logged against 21 passing tests. **STRUCK.**
-
-**Dr House** (fable, 5 min) — returned **(a) THE LEAP**, not "no leap".
-- Replace `(I − γP)⁻¹` with the **max-plus Kleene star**: `z* = maxₐ(rₐ(x) + γAₐz*)`,
-  Bellman optimality. Escapes the APPNP reduction because APPNP *is* the Kleene star in
-  `(+, ×)`; in `(max, +)` there is no linear closed form. Contraction via the Perron
-  certificate rather than row-stochasticity, so the eigenvector is not pinned. `do()`
-  becomes row surgery on `Aₐ` that propagates because the output is re-solved.
-- **HYPOTHESIS, UNBOUND.** Exempt from the RED-first rule by construction, therefore
-  barred from the verdict. It re-enters the differential as a candidate and stays in Open
-  until a fellow binds it with a failing test.
-- His own caution, kept: one-step tropical attention exists (2025). The ownable claim is
-  the **star** — equilibrium plus certificate — not the semiring swap.
-
-**Inspector** — 83 claims audited, 4 struck, 5 unbound, 3 contradictions resolved.
-- Struck: Foreman's sigmoid-README claim; Cameron's `test_domain.py` red-label; Cameron's
-  6 truncated log lines; Cameron's zero-green-coverage.
-- Resolved: the two NRMSE figures are **not** in conflict — Foreman measured in-sample
-  one-step on lifted Lorenz with the *whole* operator constrained against a 7.08e-12
-  baseline; Cameron measured held-out OOD on executed code with only the state→state
-  block constrained against an already-28%-wrong baseline. Different system, scope,
-  sample, and swept axis.
-- Scope limit: events appended after the Inspector's `done` line are unaudited.
+That is a real artifact and it is worth shipping. It is not the artifact the
+project set out to make.
 
 ---
 
-## What replaces what
+## What died, and by which number
 
-| dead | replacement | status |
+**M2 — context-stable signed influence at global reach. RED.**
+[RUN] On the shipped operator (`sgate`), with `c` drawn from the pivot set to
+match the journalled protocol: rates **0.16511 / 0.02732 / 0.00000 / 0.00000**
+at s = 8/32/128/512, slope **−1.298** against a pre-registered bar of **−0.3**.
+**Zero flips at s ≥ 128**, on 213 and 60 usable draws. Pivot routing makes it
+*worse*, not better: dense reads −1.088.
+
+**THE RED IS NOW PERMANENT, AND IT WAS EARNED THE HARD WAY [RUN, iteration 42].**
+The statistic is `lo*hi < 0 AND min(|lo|,|hi|) > floor`. Condition 1 is a sign
+change; **condition 2 is a MAGNITUDE GATE at `floor = 1e-6`** — the same floor
+this project already convicted once, when the published exponent −1.389 was
+withdrawn as a floor artifact. If gradients shrink with `s`, the rate decays even
+when the sign structure is untouched.
+
+Tested paired, both floors on identical draws in one pass so the difference is
+exact rather than two noisy runs compared:
+
+| | floor = 1e-6 | floor = 0 |
 |---|---|---|
-| DEQ fixed-point iteration | direct solve, or max-plus value iteration where no closed form exists | max-plus unbound |
-| row-stochastic `P` + `γ` | **Perron certificate**: `A ≥ 0`, `∃ w > 0` with `Aw ≤ ρw` ⇒ `ρ`-contraction in `‖·‖_w` | **proved in Lean**, runtime guard required |
-| dense resolvent solve | truncated Neumann `∑_{k<K} γᵏPᵏb`, K matvecs, error `γᴷ/(1−γ)` | **proved in Lean** (`occupancy_telescope`) |
-| hierarchical H-matrix CSR schedule | sliding-window + attention sinks as a `mask_mod` predicate | measured 0.975 vs 0.39 |
-| raw-CSR `BlockMask.from_kv_blocks` | `create_block_mask(mask_mod=…)` | exact, `0.000e+00` |
-| MuJoCo / physics interventions | executed code; Lean REPL as a kernel-oracle `do()` | code measured, Lean **unbound** |
-| Theorem 1 as a training objective | Theorem 1 as a **discrete selector** over enumerated candidates, `verify_injective` against a held-out labelled set | Chase's constraint |
-| sheaf harmonic gate | buried | `d mod 2`, exactly 0 at even `d` |
+| slope | −1.0938 | **−1.1150** (R² 0.9350) |
 
-Two Lean theorems now do engineering work rather than decoration:
-`occupancy_telescope` **is** the truncation-error certificate for Chase's 68×-cheaper
-Neumann rollback, and `weighted_contraction` is what licenses dropping row-stochasticity
-without losing Banach.
+**The kill fires with the gate removed** — still nearly four times past the
+−0.3 bar — and removing it makes the slope **steeper**, not flatter. That is the
+opposite of what a rescue needs.
+
+**But the floor does real work, and its effect grows with context:** it discards
+**6.8% → 52.6% → 100%** of genuine sign changes at s = 8 / 32 / 128. **At s=128
+the published `0.00000` does not mean "no sign changes" — there were two, and the
+floor discarded both.** The verdict is unchanged; the way the number reads
+overstates it, and that is a defect in the reporting, not in the finding.
+
+**And the exponent is better supported than it looks.** The tail zeros rest on
+213 and **60** draws — at s=512 the CP upper bound is **0.05963**, so the true
+rate could exceed the well-measured s=32 rate. Yet the slope through the two
+*solid* points alone is `log10(0.02732/0.16511) / log10(4)` = **−1.2977** against
+the published **−1.2980**. **The weak zeros move it by 0.0003.** A tail
+re-measurement cannot rescue M2 and is not worth buying.
+
+**Correction to the dense control, [RUN] and it makes the separation
+stronger.** `s=8` was **degenerate**: `select_pivots` excludes `i` and `j`,
+leaving six indices, so |P| = **6, not 8**. Routing restricted nothing there —
+`A[:,P]A[P,:]` equals `A@A` to **1.86e-09**, under the probe's own floor, and
+**both s=8 cells read k=101, n=4096**: one arm reported twice under two names.
+It was the **leftmost point of both fits**. Dropping it moves the dense slope
+from −0.746 to **−1.009**. Replacement is s=16, the smallest size where |P| = 8
+is a proper subset; routing bites when **s > 13.3** at k=8.
+
+This costs the claim nothing and costs the wrong number everything — **and it
+does not rescue M2.** A stronger separation between two arms of an operator that
+ships nowhere is still a fact about an operator that ships nowhere.
+
+**M2′ — the four-route replacement. RED.**
+[CITED — Foreman] The twin test runs each route's own criterion on `A` and on
+`|A|` (magnitudes bit-identical, signs stripped): determined fraction
+**0.8555 → 1.0000**; balanced ambiguity **0.0410 → 0.0000**; off-support
+influence **0.000e+00 → 0.000e+00**; slope(term/σ) **−0.04/−0.92 →
+−0.046/−0.930**. **Every criterion is met at least as well by an operator with
+no signs at all.** All four routes measure a sign-blind scalar.
+
+**The sign branch is closed by argument, not by a failed test.**
+[CITED — Chase] The readout is `A[i,j] + Σ_{p∈P} A[i,p]A[p,j]`, and `c` enters
+**exactly one term**. So "does `c` flip the sign" is exactly "can `|t_c|` beat
+`|`the rest`|`" — a magnitude comparison. **Sign structure can forbid the flip;
+it can never protect it.** That retires R2 and arsenal item C1 as a branch.
+
+**Path coherence — the named replacement. RED, and backwards.**
+[CITED — Chase] Dense tgate at s=2048 sits **7.8×** above its null, deltanet
+**13.4×**, but the **pivot bundle excess is only 1.14×**. Routing does not
+*create* coherence; it cuts N and *reduces* it.
 
 ---
 
-## The barcode charge is misdirected
+## Instrument #17 — the one that matters
 
-Foreman's most damaging unbound claim was that topology is decorative because the barcode
-never reaches the operator. That is true of the pipeline in `THEORY.md` §6, which routed
-the barcode into a *schedule* that then fed a graph resolvent — the barcode genuinely
-never arrives there. It is false of `sigmoid`, which already solved this.
+**Every M2 and S2 headline was measured on `tgate`, which the module does not
+ship.**
 
-`sigmoid` §3.3, the **Hilbert-series embedding**:
+[RUN] `_causal_tgate_operator` lives in `ceq/bench.py`, five `scale/` probes and
+three test files. The shipped module uses `ceq_operator`
+(`ceq/attention.py:151,249`) and `sgate_operator` (`modeling_ceq.py:297,404`).
 
-> "A barcode has no fixed length, so no linear operator can act on it. The numerator of
-> its Hilbert series supplies one — births contribute positively, deaths negatively.
-> **This step is what makes a *linear* operator on topology possible at all.**"
+[RUN] And the arm names hid it. `scale/pivot_probe.py::ARMS` **never contains
+the string "tgate"** — the arms are `pivot_signed` and `dense_signed`, and
+`build_arm` maps **both** to `_causal_tgate_operator`:
 
-```
-N(s) = Σᵢ s^{bᵢ} − Σᵢ s^{dᵢ}      c_k = #{births in bin k} − #{deaths in bin k}
-```
+    deltanet        -> _causal_deltanet_operator
+    dense_signed    -> _causal_tgate_operator     <- ships NOWHERE
+    dense_unsigned  -> _softmax_operator
+    pivot_signed    -> _causal_tgate_operator     <- ships NOWHERE
+    pivot_unsigned  -> _softmax_operator
+    sgate           -> _causal_sgate_operator     <- SHIPS
 
-And §3.4 makes those coefficients half the state: `z = [ψ ; u]`, `ψ` = Hilbert
-coefficients plus Betti curves, `u` = whitened PCA of the standardized activation. The
-operator acts on `z`. **The barcode is inside the operator, not beside it.**
+**The name describes a property — "signed" — not an implementation.** Nothing in
+any arm list, any table, or any of this project's own records ever said the
+numbers came from an operator that ships nowhere.
 
-Foreman's own green test cuts the other way once aimed correctly. Showing that
-`d → d^1.5` moves the barcode while leaving the kNN graph bit-identical proves the
-barcode carries information the graph *cannot* express. That is an argument for wiring it
-in, not for calling it decoration.
+**This is a different species from the other sixteen.** Those were broken
+measurements, catchable by calibration. **This was a correct measurement of the
+wrong object**, and no calibration could have caught it — the instrument worked
+perfectly throughout. What was missing was a bind between *measured* and
+*shipped*, and the repo already had that pattern for Lean (`.tril(-1)`
+grep-binding a theorem hypothesis to the shipped tensor) without ever applying it
+to the operator. It now exists:
+`tests/loop/test_measured_operator_is_shipped.py`, 14 passed, calibrated at both
+ends.
 
-**Three specification traps carried forward from `sigmoid` §3.1 and §3.5**, each already
-measured, each capable of silently reducing the topology channel to noise:
+---
 
-1. **Standardize by median and 1.4826·MAD, not mean and σ.** Measured on distilgpt2, the
-   largest per-dimension standard deviation was **22.1** against a median of **0.308** — a
-   **72× ratio concentrated in about five channels**. Without robust standardization the
-   barcode is a function of those five outliers and the "topological" feature measures
-   activation magnitude and nothing else.
-2. **Which cloud — temporal or spatial — decides the result before any model is fitted.**
-   On an entity corpus whose ground truth is H₀ of the entity cloud, the temporal encoder
-   scored **0.386 against a 0.487 majority baseline**: actively worse than guessing.
-3. **Which scale.** Dividing filtration values by cloud diameter buys scale invariance and
-   discards scale. When the quantity of interest lives at a fixed physical distance — a
-   contact threshold, a constraint radius — normalizing destroys exactly the signal.
+## The instrument taxonomy — the most transferable thing here
 
-Reusable API already shipped in `topological-ml-toolkit`, sklearn-shaped:
-`PHFeaturizer`, `BettiCurve`, `PersistenceImage`, `point_cloud_signature`,
-`activation_signature`, `persistence_similarity_trajectory`. `activation_signature` is the
-direct entry point for a residual stream.
+Eighteen instruments in this project were internally consistent and externally
+wrong. Sorted by what they compared, they fall into two groups with **completely
+different failure rates**, and the split is the finding:
 
-And H₀ needs no simplicial complex: for a Vietoris–Rips filtration the H₀ death times
-**are** the MST edge weights, exact at `O(W²D)`. That identity is what makes the merged
-`kernels#22` schedule run 13× faster than its reference.
+| | instruments | times they gave a false reading |
+|---|---|---|
+| compared **structure** (regex, slices, substrings, exit codes) | 7 | **7** |
+| compared **values** (numbers against numbers) | 2 | **0** |
+
+The seven structure failures: the LOCK slice boundary; the LOCK-line scraper
+matching prose; the provenance audit missing a line break; the ARMS-DISTINCT
+dispatch slice broken by a refactor; a line-scoped strike-marker check whose
+markers sat one line away; a substring search for the count `809` that matched
+`0.038097`; and `lake build | tail; echo $?`, which reports **tail's** exit
+status, not the build's.
+
+The two value instruments — the calibration gate and `scale/bucket.py`'s bitwise
+replay — have never once been wrong.
+
+**The lesson is not "write better regexes."** It is that a check comparing
+*structure* is checking a proxy, and proxies drift when the thing around them is
+reformatted, refactored, or piped. A check comparing *values* has nothing to
+drift. Every bind added late in this project was built value-first for that
+reason, and none has failed.
+
+**Two corollaries, both learned by being wrong:**
+
+- **A presence check cannot prove absence.** Iteration 34 declared the documents
+  consistent on the strength of a script confirming each one *contained* the
+  verdict string. Two documents were carrying **struck** numbers the script had
+  no way to see. Absence is now mechanised as a value walk over the shipped
+  objects, plus a paragraph-scoped text layer that is explicitly labelled weaker.
+- **A presence check also fails when you guess the wording.** Iteration 39
+  searched for "random init / untrained / random-init", found nothing, and
+  concluded the repository had never recorded that its measurements use untrained
+  weights. **It had** — the last line of the Open list below, in the words
+  "random projections". The claim of novelty was wrong; the gap was real.
+
+## The fabricated number, and why fourteen passing tests did not catch it
+
+`‖A^hops‖ = 1.471448` was published in this document, in `README.md`, in
+`MODEL_CARD.md` and in a test docstring. **It is not reproducible.** A sweep of
+1,800 settings — dimension, seed, generator layout, `rho`, `lam`, `hops` —
+produced it exactly **zero** times. The measured value is **0.880500**.
+
+It survived because the test beside it asserted `got > 1e-3` — **an
+inequality**. Both the true and the fabricated value satisfy that, so fourteen
+tests passed around a false docstring. It also sat near a real reading
+(`(64, 2) = 1.476635`), so it never looked wrong.
+
+**A test that pins an inequality cannot protect an exact number quoted from it.**
+The repair was not the correction but the pin: every measured `(s, hops)` value
+is now asserted at `abs=5e-7`, and substituting the fabricated value back fails
+exactly one test.
+
+---
+
+## What survives audit
+
+**The Lean core, as mathematics.** [RUN] 27 theorems, `lake build CEQ` exit 0,
+zero `sorry`, no theorem depending on `sorryAx`. It is indifferent to which
+operator is instantiated, so instrument #17 does not touch it.
+
+**M5 IS RED, AND IT LIMITS WHAT THIS SECTION MAY CLAIM.** [RUN, iteration 28]
+`A^n = 0` is confirmed empirically — exactly `0.000000e+00` at s = 16/64/128/512,
+matching `pow_card_eq_zero` to the bit. But the shipped truncation leaves
+`‖A^2‖ = 0.880500` at s=128 and `1.292741` at s=512, so
+`occupancy_is_exact_inverse`'s `N = n` hypothesis **is violated by the tensor
+that ships**. And no bound replaces it: `truncation_bound` refuses at the
+shipped `rho = 1.5`, where the geometric expression is **−6.75**, a negative
+bound. **At shipping settings the truncation is unbounded.**
+
+**This is the fourth appearance of one shape** — a correct statement about an
+object other than the one that ships, after instrument #17 (`tgate`), M4's kill
+(deleted content), and M2's clause 2 (structural zero). Iteration 18's bind
+covers **operators**; **nothing yet binds theorem hypotheses to shipped
+settings.**
+
+The theorems themselves, unaffected:
+
+- `Nilpotent.pow_card_eq_zero` — strictly-lower-triangular `A` over any
+  `CommRing` has `A^n = 0`, with **no sign hypothesis and no magnitude
+  hypothesis**.
+- `Occupancy.occupancy_eq_inverse_of_nilpotent` — the truncated sum **is** the
+  two-sided inverse of `(I − A)`.
+- `Refcount.floor_add_orbits` — caustic Theorem 1's indistinguishability floor
+  equals foliation's refcount, `n − m = Σ_plaques (refcount − 1)`. Both halves
+  are the author's own prior work; this is the sentence that identifies them.
+
+**The harness.** Append-only journals; PID locks; **bitwise replay as a
+determinism audit** (three independent journals — `m2`, `s2`, `r2` — each
+reproduce from a fresh process); pre-registered kills; theorem-backed
+calibration anchors that return *exactly* zero; and the rule that **a kill which
+cannot fire is a defect**.
+
+That last rule earned itself repeatedly. [RUN] R2's kill was unreachable — the
+determined fraction has a structural floor of **2/k = 0.25** and the kill said
+"≈ 0". [RUN] R4's `θ*` is a **half-line, not a point** — slope is identically
+zero for every θ ≥ 0.5 out to 1.5, max |slope| **0.055**. [RUN] M2's own clause
+2 was zero by construction, and the verdict code mapped its NaN to GREEN.
+
+**The M3 bar is reachable.** [RUN] softmax **1.725106 → 1.304590** for 4× the
+data, train/eval gap closing 0.532 → 0.733 exactly as an overfitting diagnosis
+predicts. [CITED — Cameron] a learnability control with routing free reaches
+held-out **0.0071**. So M3 is not a termination clause; **any arm failure is
+routing, not budget.**
+
+---
+
+## What was never done
+
+- **ARC-AGI has never been scored. No Turing-style evaluation file exists.**
+- **Nothing has trained above 3.65M parameters** against a 300M gate.
+- **The whole test suite has never completed a run** — nine attempts, three
+  agents, one 1-hour monitor. 829 tests collect. **No total pass/fail count
+  exists for this repository, and none should be quoted.**
+- The one capability comparison ever run at matched parameters went **against**
+  the operator: COGS-gen softmax **0.0293** (15/512) against **0.0000** (0/512)
+  at 3,652,096 parameters in both arms, one-sided Fisher **p = 2.7502788939e-05**,
+  and behind **in-distribution** too (0.9258 against 0.7734).
+
+---
+
+## Novelty
+
+**None claimed.** Every novelty claim was withdrawn against prior art this
+project found itself: SimA (2206.08898), **Signed Dual Attention (2606.04833),
+which is this module's own `sgate` matrix**, DeltaNet (2406.06484), ParaFormer
+(2512.14619), SignGT (2310.11025), Cog Attention (2411.07176), RetNet
+(2307.08621), Star-Transformer (1902.09113, which owns pivot/relay routing from
+2019).
+
+**The per-route sweep fires too, and it was run 26 iterations late.**
+`CONTRACT.md` requires G1 as *step 0*; the per-route half ran at iteration 26.
+
+| route | verdict |
+|---|---|
+| **R3** non-Archimedean / max-plus | **OCCUPIED.** [CITED] *Tropical Attention*, arXiv:2505.17190 (22 May 2025) — *"operates natively in the max-plus semiring of tropical geometry"*, maps Euclidean → tropical → back, leaving subsequent blocks unchanged. **That is R3.** |
+| R1 group testing / d-disjunct | **not found** — the surrounding space is crowded (NSA 2502.11089, MoBA, TidalDecode 2410.05076) |
+| R4 Dyson hierarchical / RG | **not found in ML** — long-established in statistical physics, no transformer intersection surfaced |
+| R2 sign-solvability | swept Round 1 — Brualdi–Shader, CUP 1995, no ML application found |
+
+**And it undermines R3's premise, not merely its novelty.** [CITED] the same
+literature records that *in the β→∞ regime, self-attention operates in the
+tropical semiring, and the tropical limit of softmax attention is a tropical
+matrix product.* R3 existed to break the **Archimedean sum** hypothesis — but if
+tropical attention is softmax's own limiting regime, **it is not an escape from
+softmax at all.**
+
+R1 and R4 are recorded as **not found**, not as *unoccupied*: absence in one
+sweep is weaker evidence than presence, and six novelty claims here have already
+died on prior art an earlier sweep missed.
+
+**No work was wasted — because the cost order put R3 last and all four routes
+died before reaching it. That is luck, not process.** Under order 3 → 1 → 4 → 2
+this project would have built a published architecture and found out afterwards.
+
+And the strongest framing is measured false. [RUN] At s=8 the **unsigned** arm
+flips signs at **0.1025** against the signed arm's **0.0264** — softmax flips
+**four times more often** at short range before dying. "Softmax cannot do this"
+is false, and [READ] one GELU between two softmax layers restores the property
+outright (`test_a_nonlinearity_between_softmax_layers_gives_the_sign_flip_back`).
+
+---
+
+## Recommendation
+
+**Ship the negative result, the Lean core and the harness. Do not ship an
+attention claim.**
+
+A negative result with a reproducing instrument and a machine-checked core is
+publishable and useful, and almost nobody ships one. The three things this
+repository can defend are: a formal core that does not depend on the operator; a
+falsification harness that caught seventeen of its own instruments including the
+one that invalidated its headline; and a clean, documented account of why a
+plausible design does not work.
+
+**Both blockers this document originally named are now closed.**
+
+[RUN, iteration 22] **M4's kill is calibrated at both ends.** The defect was
+real — `settle_evicted` reads `x[keep]` and nothing else, while the perturbed
+token came from `lowest_salience_token(..., exclude=keep)`, so `y[keep] ==
+x[keep]` bitwise and the headline `0.000000e+00` was zero *by arithmetic*. A
+must-fire arm now perturbs a token **inside** `keep` and requires movement:
+**8/8 draws**. The crushed-token zero is re-labelled **structural**, and gating
+is shown to move in **8/8 draws under both placements**, which is a fact about
+the denominator rather than evidence eviction is exact. M4's claim survives; the
+like-for-like framing of `0.000000e+00` against `2.154868e-05` does not.
+
+[RUN, iteration 23] **Both NaN→GREEN paths are deleted.** Proved by execution
+first: `a = −0.050, b = NaN` printed **`M2 = GREEN`**, and a NaN slope printed
+*"signedness is load-bearing… the unoccupied cell"* — this project's strongest
+sentence — for an undefined slope. The root cause was **two copies of one rule**:
+`_verdict()` had already been repaired, `report()` kept a private copy of the
+original, and the tested copy was correct while the copy that ran was not. The
+fix is deletion — one verdict path — and it now prints `M2 = VOID — a mandatory
+clause is UNEVALUABLE` and refuses.
+
+**The rule both repairs share, and it generalises past them:** *0.0 from an
+instrument that CAN move is a result; 0.0 from an instrument that CANNOT is a
+tautology.* That one sentence covers M2's clause 2, R2's unreachable 2/k floor,
+R4's half-line θ\*, and M4 — four defects across four routes, one shape.
 
 ---
 
 ## Open
 
-- **The max-plus star.** Dr House's leap, unbound. Falsifier he specified: synthetic
-  token-MDPs, train on dynamics A, edge-deletion interventions at test, evaluate return
-  prediction on B; three arms (standard attention / APPNP / max-plus star) at matched
-  parameters. **Dead if arm 3 matches arm 2 post-intervention.** Plus a collapse probe:
-  residual of the best affine fit to the learned `f` at `z*` — if the maxes anneal
-  inactive it quietly became APPNP.
-- **The Perron certificate's runtime hypothesis.** Chase found the failure the proof does
-  not cover: on a **reducible** non-negative `A`, power iteration returns `w` with exact
-  zero entries (`w = [0.768, 0.640, 0.0, 0.0]`, min 6.6e-14), so `‖v‖_w` divides by zero
-  and the norm is undefined — and a learned `A` becomes reducible the moment a block is
-  driven to zero. On an **imprimitive** `A` there is no dominant eigenvalue at all. The
-  Lean proof is not the exposure; it is machine-checked and holds under `w_pos`. The
-  exposure is the runtime check, and it must **fail closed**: refuse the step, keep the
-  last certified `w`, alarm. Requires an irreducibility precondition and `min(w)` logged
-  every step.
-- **Physics→language at scale.** Cameron's null shows the *mechanism* of failure at
-  6-dim / 135M / 1024 tokens. It does not establish failure at 1B.
-- **Attention-mass recall is a proxy.** 97.5% of oracle mass is not end-task accuracy.
-  The schedule ablation should be re-run against downstream accuracy before §3 is
-  formally cancelled.
-- **Lean REPL throughput.** No source gives tactics/sec. Snapshotting work
-  (arXiv:2605.25556) reports a few ms to 500 ms per branch, 95th percentile 289 ms —
-  enough to suggest a corpus is buildable, not enough to size it.
-- **Weighted-norm transient growth.** Chase measured `κ = max(w)/min(w)` up to 2904.7 and
-  the inequality permits κ-fold L2 transient under a valid `ρ = 0.9` certificate, but did
-  not construct an adversarial `A` that exhibits it. Statement stands, demonstration does
-  not.
-- **`ker Δ_F`** itself remains untested directly; the trivial-fixed-point collapse
-  (`‖z*‖ = 5.8e-12`) was the outer DEQ, not the sheaf Laplacian.
-- **PR #22 test-count discrepancy**: the body reports "17 passed" for a file containing 18
-  test functions. Unreconciled.
+- The **−1.298** slope is fitted on **two nonzero points** (sgate reads exactly
+  0.00000 at s=128 and s=512). The **verdict** is robust — 0.16511 → 0.00000
+  over a 16× growth, against a bar of "< −0.3" — but **the exponent is not a
+  measurement.** [RUN, iteration 42] **This is now quantified rather than
+  hedged:** the two solid points alone give **−1.2977** against the published
+  **−1.2980**, so the zeros contribute 0.0003 — and the kill survives at
+  `floor = 0` (**−1.1150**), which is the mechanism that would have explained it
+  away.
+- Whether the M3 ordering survives at adequate budget is unknown. [CITED —
+  Cameron] at s=128, d=42: softmax **1.7238** [1.5078, 1.9957], pivot_signed
+  **1.1846** [1.0921, 1.2930], pivot_unsigned **1.6634** [1.4858, 1.8870] —
+  pivot_signed beats softmax with non-overlapping CIs and pivot_unsigned tracks
+  softmax, **but every arm is above the 1.0 bar.** An ordering below a failed bar
+  is not a result.
+- Everything is measured on **random projections**, not trained checkpoints.
+  **RESOLVED as far as it can be without spending a run [RUN, iteration 42].**
+  The worry is that the operator's dilution is an artifact of initialization. It
+  is not testable directly without training, but the *instrument* was tested
+  instead, and it survived both suspicions: the kill fires at `floor = 0`, and
+  the same instrument reads **−0.034 for `tgate`** against **−1.298 for
+  `sgate`**, so it is not returning a constant regardless of input.
+  `M2_TRAINED_PREREGISTERED_READING.md`, written **before** that test, fixed the
+  consequence in advance — *"if the instrument survives, a trained run cannot
+  overturn M2 no matter what it reads."* It survived.
+  **And the bar makes the point moot anyway:** the free-T4 shape is 25.7M
+  parameters, **8.6% of the 300M gate** this project is held to. A trained
+  reading there could not settle the question even if it were run.

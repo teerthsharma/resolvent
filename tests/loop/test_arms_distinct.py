@@ -185,85 +185,71 @@ def test_excusing_the_default_does_not_excuse_a_missing_arm():
 
 
 def test_a_newly_added_arm_cannot_inherit_the_default_silently():
-    """The forward-looking half of the same guarantee.
+    """G3, bound on BEHAVIOUR rather than on source text.
 
-    An arm added to the accept-list and forgotten in the dispatch executes the
-    `else` branch and publishes softmax's number under its own name. Excusing
-    `softmax` must never extend to it.
+    WHY THIS WAS REWRITTEN. The previous version sliced `sign_flip_rate`'s body
+    between the literals `"if op_kind =="` and `"if not h.requires_grad"`.
+    FOREMAN's discard-floor refactor split that function into
+    `sign_flip_draws` + `flip_rate`, both anchors vanished, and the bind died
+    with `ValueError: substring not found` -- leaving **G3 unguarded** while the
+    repository looked green.
+
+    That was the FOURTH structure-by-regex instrument here to break, after the
+    LOCK slice boundary, the LOCK-line scraper matching prose, and the
+    provenance audit missing a line break. The two instruments that have never
+    broken -- the calibration gate and the bitwise journal replay -- both
+    compare VALUES. So this one now compares values too: re-anchoring on new
+    strings would have been the fifth instance of the same mistake.
+
+    An unknown arm must RAISE, not fall through to whichever branch is last.
+    That is exactly how `paraformer` ran softmax under its own name.
     """
-    got = missing_from_dispatch(_real_dispatch(),
-                                ARMS + ["a_new_arm_nobody_wired_up"],
-                                DEFAULT_ARM)
-    assert got == ["a_new_arm_nobody_wired_up"], (
-        f"a hypothetical unwired arm was not flagged; got {got!r}"
+    with pytest.raises(ValueError):
+        bench.sign_flip_rate("an_arm_that_was_never_implemented", n_draws=4, s=8)
+
+
+@pytest.mark.parametrize("a,b", [(x, y) for i, x in enumerate(ARMS)
+                                 for y in ARMS[i + 1:]])
+def test_no_two_arms_execute_the_same_code_path(a, b):
+    """The G3 guarantee itself, checked by EXECUTION at a fixed seed.
+
+    If two arms share a dispatch branch their draws are bit-identical. This
+    detects that directly, without knowing anything about how the dispatch is
+    written -- so it survives any refactor that preserves behaviour, which is
+    the property the regex version lacked.
+    """
+    da = bench.sign_flip_draws(a, n_draws=24, s=16, seed=0)
+    db = bench.sign_flip_draws(b, n_draws=24, s=16, seed=0)
+    assert da != db, (
+        f"arms {a!r} and {b!r} produced BIT-IDENTICAL draws at seed 0. Either "
+        f"one is executing the other's branch (the ParaFormer defect, G3), or "
+        f"they are the same operator under two names."
     )
 
 
-# --- the bind itself --------------------------------------------------------
+def test_the_declared_default_really_is_the_default():
+    """`softmax` is the documented fallthrough. Verified by BEHAVIOUR.
 
-def default_is_the_else_branch(dispatch: str, default_call: str) -> bool:
-    """True if the FIRST statement of some `else:` block calls `default_call`.
-
-    Reads the first non-blank, non-comment line of each `else:` block rather
-    than a fixed line offset. The offset version discriminated correctly on
-    today's formatting and would have read the wrong line after any reflow --
-    a check that depends on whitespace is a check that fails silently later.
+    The old version asserted this by locating an `else:` in the source. The
+    honest check is that softmax reads its known structural value -- exactly
+    0.0 on the value path, because `I + A + A^2` is non-negative entrywise for
+    a non-negative operator, so no sign flip is reachable.
     """
-    for seg in dispatch.split("else:")[1:]:
-        for line in seg.splitlines():
-            if not line.strip() or line.strip().startswith("#"):
-                continue
-            if default_call in line:
-                return True
-            break                      # only the block's first statement counts
-    return False
-
-
-def test_the_default_is_else_check_can_fail():
-    """RED-first for the excusal guard, kept in the file, not in a shell.
-
-    BAD case: `_softmax_operator` appears in the dispatch but NOT as the `else`
-    fallthrough -- precisely the hole that excusing `softmax` would open.
-    """
-    good = ('\n                if op_kind == "deltanet":\n'
-            '                    a = _causal_deltanet_operator(kk, bet)\n'
-            '                else:\n'
-            '                    a = _softmax_operator(qq, kk)\n')
-    bad = ('\n                if op_kind == "deltanet":\n'
-           '                    a = _softmax_operator(qq, kk)\n'
-           '                else:\n'
-           '                    a = _causal_signed_operator(qq, kk)\n')
-    assert default_is_the_else_branch(good, "_softmax_operator") is True
-    assert default_is_the_else_branch(bad, "_softmax_operator") is False, (
-        "the guard passes a dispatch whose `else` does not default to softmax; "
-        "excusing the default is then unsafe"
+    r = bench.sign_flip_rate("softmax", n_draws=128, s=8, hops=3)
+    assert r == 0.0, (
+        f"softmax read {r!r} on the value path; it is pinned at exactly 0 by "
+        f"theorem, so a nonzero reading means the arm is not running softmax"
     )
 
 
-def test_the_declared_default_really_is_the_else_branch():
-    """`softmax` is excused only because it IS the documented fallthrough.
+def test_the_behavioural_bind_is_calibrated_and_fires():
+    """RED-first: the same arm under two names MUST be caught.
 
-    Verified, not assumed: if the `else` ever stops calling `_softmax_operator`,
-    the excusal in `missing_from_dispatch` becomes a hole, and this closes it.
+    Without this, a bind that passed everything would look identical to a bind
+    that works -- which is how sixteen instruments here got believed.
     """
-    assert default_is_the_else_branch(_real_dispatch(), "_softmax_operator"), (
-        f"the declared default {DEFAULT_ARM!r} is excused from the literal "
-        f"check because it is supposed to be the `else` fallthrough, but no "
-        f"`else` block calls `_softmax_operator`. The excusal is now a hole."
-    )
-
-
-def test_every_arm_literal_occurs_in_the_dispatch_that_computes_it():
-    """STRUCTURAL half. The bug was always visible here.
-
-    `paraformer` was accepted by the guard clause -- so it did not raise
-    ValueError -- while never appearing in the path-sum dispatch, so it silently
-    fell through to the softmax branch. Accepting a name is not implementing it.
-    """
-    missing = missing_from_dispatch(_real_dispatch(), ARMS, DEFAULT_ARM)
-    assert not missing, (
-        f"arms accepted by sign_flip_rate but absent from the branch that "
-        f"computes their number: {missing}. This is the ParaFormer bug class "
-        f"(G3) -- the arm will silently execute whichever branch it falls "
-        f"through to, and report that operator's number under its own name."
-    )
+    d1 = bench.sign_flip_draws("sgate", n_draws=24, s=16, seed=0)
+    d2 = bench.sign_flip_draws("sgate", n_draws=24, s=16, seed=0)
+    assert d1 == d2, "same arm, same seed, must be reproducible"
+    d3 = bench.sign_flip_draws("softmax", n_draws=24, s=16, seed=0)
+    assert d1 != d3, "two genuinely different arms must not be bit-identical"
