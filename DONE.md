@@ -2,6 +2,59 @@
 
 Round 2 archived below its own header; round-1 archive at `DONE_ARCHIVE_ROUND1.md`.
 
+### ROUND 3, ITERATION 12 - 2026-08-25 - THE SEVERED FRACTION: 41% -> 57%, growing with s. Support is not influence.
+
+CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.
+Probe: `tests/cameron/severed_fraction.py`.
+
+ACTION (one): ran the measurement Cameron named and could not run - *"I showed
+SOME c positions are severed, not what share. A random-c sweep is the missing
+measurement and it decides whether this route lives."*
+
+**DONE EXHAUSTIVELY, NOT BY SAMPLING.** Severance is a property of `c`'s POSITION
+against the dilation lattice, not a random event, so every legal `c` in `(j, i)`
+is swept and the fraction is EXACT for that geometry - there is no sampling error
+to report.
+
+**[RUN] severed := perturbing `x[c]` leaves EVERY gradient pair BITWISE equal:**
+
+    s     depth  positions  severed  fraction   dilations
+    64      3        46        19     0.4130    [1, 2, 4]
+    128     4        94        54     0.5745    [1, 2, 4, 8]
+
+**41% -> 57% OF THE CONTEXT CANNOT MOVE THE SIGN, AND THE FRACTION GROWS WITH
+s.**
+
+**THE READING WAS FIXED BEFORE THE RUN** and it is the unfavourable one:
+*"severed fraction large -> the ladder reads the whole context only for the
+positions it happens to land on. 'Reach' would then be a statement about the
+SUPPORT of the gradient and not about which tokens can actually MOVE it, and the
+composition route dies on the same blade that killed pivot routing: a selection
+rule that discards the thing being measured."*
+
+**AND THE PATTERN IS WORSE THAN THE NUMBER.** The LIVE positions are the ones
+FARTHEST from the query - offsets `i-c` = **94, 93, 92, ...** at s=128, sitting
+immediately next to the target `j`. **The positions NEAR THE QUERY are the
+severed ones.** A ladder influenced by distant tokens but not by nearby ones is
+not the reach property anyone wanted, and nothing in the composition story
+predicted it.
+
+**THIS DOES NOT CONTRADICT CAMERON.** His gradient-support result stands exactly
+as measured: support is exactly `s` at every size, row width exactly 8. **It
+SCOPES it. Support is not influence**, and only the second one is a capability.
+
+**A DECLARED ASYMMETRY IN MY OWN PROBE, stated because it biases the answer.**
+`n_draws` per `c` is small (4). Severance is detected as `lo == hi` bitwise
+across every draw, so **one non-identical pair is enough to call a position
+LIVE**. A small draw count therefore cannot manufacture severance - it can only
+miss liveness. **The bias runs toward MORE severance**, i.e. against the route,
+which is the direction that makes the finding harder to dismiss rather than
+easier.
+
+CHECKLIST: composition route - reach CONFIRMED (Cameron), influence SEVERED for
+41-57% of positions and rising. Not dead, but the reach claim may not be quoted
+without this number beside it.
+
 ### ROUND 3, ITERATION 11 - 2026-08-25 - STANDING POLICY: never block on a measurement. Wilson manages the nurses.
 
 CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.

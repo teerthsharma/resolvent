@@ -5,27 +5,29 @@
 | field | value |
 |---|---|
 | round | **3** - CEQ v5, 30 iterations, promise `SCALEFREE` |
-| iteration | **11 complete, 12 next** |
+| iteration | **12 complete, 13 next** |
 | phase | **Phase 0 - M3 on the windowed arm. Capability before statistics.** |
 | calibration | GREEN [RUN] `run_calib.py --self-test` exit 0, 4/4 bit-identical |
 | inspector | `python inspector.py` - 8 checks, 8 must-fire controls, exits nonzero if any control stays SILENT |
 | repo | https://github.com/teerthsharma/resolvent (private) |
 
-## THE ONE NEXT ACTION (iteration 12)
+## THE ONE NEXT ACTION (iteration 13)
 
-**Reconcile both in-flight streams and record both** - the policy requires it:
-*"measurement lands -> reconcile both, record both."*
+**Reconcile the two in-flight streams, which the policy requires and iteration 12
+did not reach:** `results/r3_it11_pivot_8192.log` (signed + unsigned arms at the
+budget where softmax reads eval 0.877168) and Wilson's three engineering diffs.
 
-  * `results/r3_it11_pivot_8192.log` - the signed and unsigned arms at the budget
-    where softmax reads eval **0.877168**, CI **[0.830455, 0.924226]**. The M3
-    kill applies: NRMSE > 1.0, or CIs overlap softmax, or the unsigned ablation
-    matches. **Label it clearly as d=24, NOT M3 proper** - M3 wants
-    d in {256,512,1024} and s=64 cannot host them.
-  * Wilson's three diffs, each with its bitwise bind.
+**If the severed fraction has an obvious repair, it is the next build after
+that.** Cameron named the candidate and did not test it: severance is a property
+of the RIGID per-layer power-of-two lattice, not of bounded row width - so
+**overlapping, co-prime, or randomised dilations** may keep the reach result
+(support exactly s, row width 8) while killing the severance. That is a cheap
+one-line change to `log_schedule` and it is testable with the probe that already
+exists.
 
-**If the pivot run died again**, that is Job 1's answer arriving by failure
-rather than by measurement, and the vectorised path becomes the prerequisite
-rather than an optimisation.
+Pre-register before running it: **co-prime dilations must lower the severed
+fraction WITHOUT lowering gradient support**, or the trade is not a repair, it is
+a different arm.
 
 ## Open REDs
 
