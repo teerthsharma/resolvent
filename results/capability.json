@@ -1,0 +1,143 @@
+{
+ "addprim_jump": {
+  "split": "addprim_jump",
+  "steps": 4000,
+  "seed": [
+   0,
+   1,
+   2
+  ],
+  "bs": 32,
+  "lr": 0.0003,
+  "device": "cuda",
+  "max_new": 64,
+  "max_eval": 512,
+  "eval_split": "test",
+  "arms": {
+   "softmax": {
+    "kind": "softmax",
+    "exact_match": 0.0,
+    "n_solved": null,
+    "n_eval": 512,
+    "eval_split": "test",
+    "n_params": 3183104,
+    "vocab": 22,
+    "seq": 64,
+    "train_loss": 0.381119966506958,
+    "per_seed": [
+     0.0,
+     0.0,
+     0.005859375
+    ]
+   },
+   "sgate": {
+    "kind": "sgate",
+    "exact_match": 0.0,
+    "n_solved": null,
+    "n_eval": 512,
+    "eval_split": "test",
+    "n_params": 3183104,
+    "vocab": 22,
+    "seq": 64,
+    "train_loss": 0.37619128823280334,
+    "per_seed": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   }
+  },
+  "in_distribution": null,
+  "score_ceiling": 1.0,
+  "reference": {
+   "score": 0.034,
+   "sem": 0.02,
+   "sd": null,
+   "model": "unmodified Transformer",
+   "source": "arXiv:2107.01366",
+   "note": "Chaabouni, Dessi & Kharitonov, Table 3, jump column: 3.4 +/- 2.0, and the +/- is 1 SEM, NOT a standard deviation -- this file said sd for a round. Best hyperparameter configuration per architecture. NONZERO, unlike the length split, so there is a baseline to beat rather than a floor to share. Lake & Baroni's original LSTM+attention best was 0.012 (arXiv:1711.00350, prose, not a table)."
+  },
+  "altered_attention": {
+   "score": 0.43,
+   "sem": 0.095,
+   "sd": null,
+   "model": "Transformer + T5-style relative-position attention bias",
+   "source": "arXiv:2107.01366",
+   "note": "Same Table 3, `+T5` row, jump column: 43.0 +/- 9.5 SEM from 3.4. THE STRONGER PRECEDENT. Changing the attention moves SCAN addprim_jump by ~40 points, against ~4 points on COGS sequence-generation (arXiv:2108.12284 Table 3). If the question is which benchmark responds most to an attention change, the answer measured here is this split, not COGS."
+  },
+  "verdict": "no_win",
+  "comparison": "parameter-matched from-scratch, NOT frontier-model",
+  "wall_clock_s": 2149.1
+ },
+ "cogs": {
+  "split": "cogs",
+  "steps": 3000,
+  "seed": [
+   0
+  ],
+  "bs": 32,
+  "lr": 0.0003,
+  "device": "cuda",
+  "max_new": 192,
+  "max_eval": 512,
+  "eval_split": "gen",
+  "arms": {
+   "softmax": {
+    "kind": "softmax",
+    "exact_match": 0.029296875,
+    "n_solved": null,
+    "n_eval": 512,
+    "eval_split": "gen",
+    "n_params": 3652096,
+    "vocab": 874,
+    "seq": 192,
+    "train_loss": 0.2725582718849182,
+    "per_seed": [
+     0.029296875
+    ]
+   },
+   "sgate": {
+    "kind": "sgate",
+    "exact_match": 0.0,
+    "n_solved": null,
+    "n_eval": 512,
+    "eval_split": "gen",
+    "n_params": 3652096,
+    "vocab": 874,
+    "seq": 192,
+    "train_loss": 0.2850164771080017,
+    "per_seed": [
+     0.0
+    ]
+   }
+  },
+  "in_distribution": {
+   "softmax": 0.92578125,
+   "sgate": 0.7734375,
+   "seed": [
+    0
+   ],
+   "steps": 3000,
+   "n_eval": 256,
+   "split": "test"
+  },
+  "score_ceiling": 0.951171875,
+  "reference": {
+   "score": 0.35,
+   "sd": 0.06,
+   "model": "2-layer encoder-decoder Transformer, 9.5M params",
+   "source": "arXiv:2010.05465",
+   "note": "Kim & Linzen 2020, Table 2, generalization set, 21,000 items, 5 seeds. The SAME row reads Dev 0.96 / Test 0.96, so 0.35 is a generalization gap and not an unlearnable task. ENCODER-DECODER: 2 encoder + 2 decoder layers, 4 heads, ff 512. Scoring is exact match on the whole logical form."
+  },
+  "altered_attention": {
+   "score": 0.81,
+   "sd": 0.01,
+   "model": "relative-positional Transformer",
+   "source": "arXiv:2108.12284",
+   "note": "Csordas, Irie & Schmidhuber 2021, Table 3. THE PRECEDENT, and it is a modest one stated honestly: within their own tuned setup the attention variants span Trafo 0.80 +/- 0.00, Rel. Trafo 0.81 +/- 0.01, Uni. Trafo 0.78 +/- 0.03, Rel. Uni. Trafo 0.77 +/- 0.01. So changing the attention moves this benchmark by about 4 points at a fixed training recipe -- not the 52 points a previous draft of this file claimed."
+  },
+  "verdict": "no_win",
+  "comparison": "parameter-matched from-scratch, NOT frontier-model",
+  "wall_clock_s": 1737.9
+ }
+}

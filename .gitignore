@@ -1,0 +1,30 @@
+# Lean build artefacts — mathlib toolchain, hundreds of MB, fully reproducible
+lean/.lake/
+lean/build/
+*.olean
+*.ilean
+*.trace
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+
+# Measurement locks are process state, not evidence.
+# The JOURNALS (results/*.jsonl) ARE evidence and ARE committed.
+results/*.lock
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Third-party benchmark corpora — NOT redistributed here.
+# COGS (Kim & Linzen 2020), SCAN (Lake & Baroni 2018) and TinyStories
+# (Eldan & Li 2023) carry their own licences and are fetchable upstream.
+# See data/README.md for provenance and exact fetch commands.
+data/*.tsv
+data/*.txt

@@ -1,0 +1,208 @@
+....FFFF..FF...........                                                  [100%]
+================================== FAILURES ===================================
+_ test_claim_the_signed_content_dependent_path_sum_is_not_already_deltanet[cpu] _
+
+device = 'cpu'
+
+    @pytest.mark.parametrize("device", DEVICES)
+    def test_claim_the_signed_content_dependent_path_sum_is_not_already_deltanet(device):
+        """RED first. The residual claim against the construction that ships.
+    
+        DeltaNet's chunkwise form (arXiv:2406.06484, eq:inverse) is
+    
+            T = (I + tril(diag(beta) K K^T, -1))^-1 diag(beta)
+    
+        -- a strictly-lower-triangular matrix built from K and beta, whose entries
+        `-beta_i (k_i . k_j)` carry a sign per entry with no non-negativity anywhere,
+        inverted exactly. Because it is strictly triangular it is nilpotent, so that
+        inverse IS a finite path sum `sum_k (-M)^k`. Content-dependent, signed,
+        multi-hop, and shipping in `fla/ops/utils/solve_tril.py` and sglang's
+        `chunk_kda_fwd_kernel_inter_solve_fused`.
+    
+        If it reads the same content-conditional sign rate as `sgate` on this probe,
+        the residual claim has no cell left to occupy.
+    
+        The `deltanet` arm draws its own `beta` before `x0`/`v0`, exactly as the
+        `paraformer` arm draws its gammas, so that no other arm's random stream --
+        and no previously published number -- moves. The consequence is that this is
+        an UNPAIRED comparison: both arms see 2048 iid draws from the same
+        distribution, not the same 2048 draws.
+>       """
+E       AssertionError: DeltaNet's signed content-dependent triangular path sum reads 0.076171875 against sgate's 0.14501953125 on the same draws. Signed + content-dependent + multi-hop is occupied by a shipping kernel.
+E       assert 0.076171875 < (0.14501953125 / 10.0)
+
+tests\foreman\test_paraformer_ratio_across_context.py:105: AssertionError
+_ test_claim_the_signed_content_dependent_path_sum_is_not_already_deltanet[cuda] _
+
+device = 'cuda'
+
+    @pytest.mark.parametrize("device", DEVICES)
+    def test_claim_the_signed_content_dependent_path_sum_is_not_already_deltanet(device):
+        """RED first. The residual claim against the construction that ships.
+    
+        DeltaNet's chunkwise form (arXiv:2406.06484, eq:inverse) is
+    
+            T = (I + tril(diag(beta) K K^T, -1))^-1 diag(beta)
+    
+        -- a strictly-lower-triangular matrix built from K and beta, whose entries
+        `-beta_i (k_i . k_j)` carry a sign per entry with no non-negativity anywhere,
+        inverted exactly. Because it is strictly triangular it is nilpotent, so that
+        inverse IS a finite path sum `sum_k (-M)^k`. Content-dependent, signed,
+        multi-hop, and shipping in `fla/ops/utils/solve_tril.py` and sglang's
+        `chunk_kda_fwd_kernel_inter_solve_fused`.
+    
+        If it reads the same content-conditional sign rate as `sgate` on this probe,
+        the residual claim has no cell left to occupy.
+    
+        The `deltanet` arm draws its own `beta` before `x0`/`v0`, exactly as the
+        `paraformer` arm draws its gammas, so that no other arm's random stream --
+        and no previously published number -- moves. The consequence is that this is
+        an UNPAIRED comparison: both arms see 2048 iid draws from the same
+        distribution, not the same 2048 draws.
+>       """
+E       AssertionError: DeltaNet's signed content-dependent triangular path sum reads 0.076171875 against sgate's 0.14501953125 on the same draws. Signed + content-dependent + multi-hop is occupied by a shipping kernel.
+E       assert 0.076171875 < (0.14501953125 / 10.0)
+
+tests\foreman\test_paraformer_ratio_across_context.py:105: AssertionError
+_ test_claim_the_separation_from_signed_hop_coefficients_survives_context[cpu] _
+
+device = 'cpu'
+
+        a = (1.0 - conf) / 2.0
+        lo = 0.0 if k == 0 else float(beta.ppf(a, k, n - k + 1))
+        hi = 1.0 if k == n else float(beta.ppf(1 - a, k + 1, n - k))
+        return lo, hi
+    
+    
+    @pytest.mark.parametrize("device", DEVICES)
+    def test_claim_the_separation_from_signed_hop_coefficients_survives_context(device):
+        """RED first. The 84x, restated as something a reviewer can check.
+    
+        Round 3 published "at least 84x" from a single context length and no
+        interval on either side. Both rates are binomial, so the honest statement of
+        a separation is: the exact Clopper-Pearson 95% LOWER bound on the signed
+        matrix clears the exact 95% UPPER bound on the signed coefficients. At s = 8
+        it does. This asserts it still does at s = 128 -- a context length below
+        anything a language model runs at.
+    
+        KILL CONDITION: if the two intervals overlap at s = 128, then 2048 draws
+        cannot tell a signed base matrix from signed hop coefficients at any context
+        a 300M model uses, and the residual novelty claim has no measurement behind
+        it at the only scale that matters.
+        """
+        dev = torch.device(device)
+        n = 2048
+        def band(kind, s):
+            r = bench.sign_flip_rate(kind, hops=2, n_draws=n, s=s, i=s - 1,
+>                                    j=s // 4, c=s // 2, seed=0, device=dev)
+E                                    AssertionError: at s=128 sgate CP95=(0.001375270987717034, 0.007029565507119427) and paraformer CP95=(0.0, 0.0017995894645376769) overlap; 2048 draws cannot separate a signed base matrix from signed hop coefficients at that context, and 128 is short.
+E                                    assert 0.001375270987717034 > 0.0017995894645376769
+
+tests\foreman\test_paraformer_ratio_across_context.py:147: AssertionError
+_ test_claim_the_separation_from_signed_hop_coefficients_survives_context[cuda] _
+
+device = 'cuda'
+
+        a = (1.0 - conf) / 2.0
+        lo = 0.0 if k == 0 else float(beta.ppf(a, k, n - k + 1))
+        hi = 1.0 if k == n else float(beta.ppf(1 - a, k + 1, n - k))
+        return lo, hi
+    
+    
+    @pytest.mark.parametrize("device", DEVICES)
+    def test_claim_the_separation_from_signed_hop_coefficients_survives_context(device):
+        """RED first. The 84x, restated as something a reviewer can check.
+    
+        Round 3 published "at least 84x" from a single context length and no
+        interval on either side. Both rates are binomial, so the honest statement of
+        a separation is: the exact Clopper-Pearson 95% LOWER bound on the signed
+        matrix clears the exact 95% UPPER bound on the signed coefficients. At s = 8
+        it does. This asserts it still does at s = 128 -- a context length below
+        anything a language model runs at.
+    
+        KILL CONDITION: if the two intervals overlap at s = 128, then 2048 draws
+        cannot tell a signed base matrix from signed hop coefficients at any context
+        a 300M model uses, and the residual novelty claim has no measurement behind
+        it at the only scale that matters.
+        """
+        dev = torch.device(device)
+        n = 2048
+        def band(kind, s):
+            r = bench.sign_flip_rate(kind, hops=2, n_draws=n, s=s, i=s - 1,
+>                                    j=s // 4, c=s // 2, seed=0, device=dev)
+E                                    AssertionError: at s=128 sgate CP95=(0.001375270987717034, 0.007029565507119427) and paraformer CP95=(0.0, 0.0017995894645376769) overlap; 2048 draws cannot separate a signed base matrix from signed hop coefficients at that context, and 128 is short.
+E                                    assert 0.001375270987717034 > 0.0017995894645376769
+
+tests\foreman\test_paraformer_ratio_across_context.py:147: AssertionError
+_ test_claim_the_context_decay_is_the_path_count_and_not_the_row_normalizer[cpu] _
+
+device = 'cpu'
+
+            assert got[k] * n == pytest.approx(want, rel=0.15), (
+                f"{k} reads {got[k] * n:.0f}/{n}, published {want}/{n}: {got}")
+        assert got["deltanet"] > got["paraformer"], (
+            f"the ordering that kills the claim is gone: {got}")
+    
+    
+    @pytest.mark.parametrize("device", DEVICES)
+    def test_claim_the_context_decay_is_the_path_count_and_not_the_row_normalizer(device):
+        """RED first. Round 3's mechanism sentence, isolated.
+    
+        Round 3: "the two-hop term sums over ~s intermediates of which c is one, so
+        its share is 1/s BY CONSTRUCTION". That sweep moved `j = s/4` and `c = s/2`,
+        so the number of intermediates between `j` and `i` grew with `s` at the same
+        time as every row normalizer did. Two channels, one measurement.
+    
+        Pin the offsets instead -- `j = i-4`, `c = i-2` -- so the path count between
+        `j` and `i` is a constant 3 at every context length. If the 1/s share is the
+        cause, every arm must now be FLAT in `s`. DeltaNet, whose entries
+        `-beta_i (k_i . k_j)` carry no row normalizer at all, is the control.
+        """
+        dev = torch.device(device)
+        def at(kind, s):
+            return bench.sign_flip_rate(kind, hops=2, n_draws=1024, s=s, i=s - 1,
+>                                       j=s - 5, c=s - 3, seed=0, device=dev)
+E                                       AssertionError: at a FIXED path count the row-normalized arm still fell 0.0185546875 -> 0.0 while the normalizer-free arm held 0.07421875 -> 0.0654296875. The decay is the softmax row normalizer summing over s tokens, not the two-hop share being 1/s.
+E                                       assert 0.0 > (0.5 * 0.0185546875)
+
+tests\foreman\test_paraformer_ratio_across_context.py:203: AssertionError
+_ test_claim_the_context_decay_is_the_path_count_and_not_the_row_normalizer[cuda] _
+
+device = 'cuda'
+
+            assert got[k] * n == pytest.approx(want, rel=0.15), (
+                f"{k} reads {got[k] * n:.0f}/{n}, published {want}/{n}: {got}")
+        assert got["deltanet"] > got["paraformer"], (
+            f"the ordering that kills the claim is gone: {got}")
+    
+    
+    @pytest.mark.parametrize("device", DEVICES)
+    def test_claim_the_context_decay_is_the_path_count_and_not_the_row_normalizer(device):
+        """RED first. Round 3's mechanism sentence, isolated.
+    
+        Round 3: "the two-hop term sums over ~s intermediates of which c is one, so
+        its share is 1/s BY CONSTRUCTION". That sweep moved `j = s/4` and `c = s/2`,
+        so the number of intermediates between `j` and `i` grew with `s` at the same
+        time as every row normalizer did. Two channels, one measurement.
+    
+        Pin the offsets instead -- `j = i-4`, `c = i-2` -- so the path count between
+        `j` and `i` is a constant 3 at every context length. If the 1/s share is the
+        cause, every arm must now be FLAT in `s`. DeltaNet, whose entries
+        `-beta_i (k_i . k_j)` carry no row normalizer at all, is the control.
+        """
+        dev = torch.device(device)
+        def at(kind, s):
+            return bench.sign_flip_rate(kind, hops=2, n_draws=1024, s=s, i=s - 1,
+>                                       j=s - 5, c=s - 3, seed=0, device=dev)
+E                                       AssertionError: at a FIXED path count the row-normalized arm still fell 0.0185546875 -> 0.0 while the normalizer-free arm held 0.07421875 -> 0.0654296875. The decay is the softmax row normalizer summing over s tokens, not the two-hop share being 1/s.
+E                                       assert 0.0 > (0.5 * 0.0185546875)
+
+tests\foreman\test_paraformer_ratio_across_context.py:203: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/foreman/test_paraformer_ratio_across_context.py::test_claim_the_signed_content_dependent_path_sum_is_not_already_deltanet[cpu]
+FAILED tests/foreman/test_paraformer_ratio_across_context.py::test_claim_the_signed_content_dependent_path_sum_is_not_already_deltanet[cuda]
+FAILED tests/foreman/test_paraformer_ratio_across_context.py::test_claim_the_separation_from_signed_hop_coefficients_survives_context[cpu]
+FAILED tests/foreman/test_paraformer_ratio_across_context.py::test_claim_the_separation_from_signed_hop_coefficients_survives_context[cuda]
+FAILED tests/foreman/test_paraformer_ratio_across_context.py::test_claim_the_context_decay_is_the_path_count_and_not_the_row_normalizer[cpu]
+FAILED tests/foreman/test_paraformer_ratio_across_context.py::test_claim_the_context_decay_is_the_path_count_and_not_the_row_normalizer[cuda]
+6 failed, 17 passed in 967.66s (0:16:07)

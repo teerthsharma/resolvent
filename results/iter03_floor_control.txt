@@ -1,0 +1,9 @@
+PROTOCOL: SCALING  (i=s-1, j=s/4, c drawn from the placement pool)
+M2 pivot probe. k=8 pivots, content-selected by key-norm, never using c. n=128 draws.
+KILL (CHECKLIST M2, pre-registered): slope(c in P) < -0.3, OR c-not-in-P also flat, OR any published bench number moves.
+
+ dense_unsigned    0.0000[0.000,0.028]   0.0000[0.000,0.028]  slope +nan (0/2 nonzero)
+ pivot_unsigned    0.0000[0.000,0.028]   0.0000[0.000,0.028]  slope +nan (0/2 nonzero)
+
+CONTROLS (the run is void if these misread):
+  an exact 0.0000 or 1.0000 anywhere means broken until a known-truth synthetic passes

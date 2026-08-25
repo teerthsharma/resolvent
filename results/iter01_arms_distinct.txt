@@ -1,0 +1,29 @@
+....F.                                                                   [100%]
+================================== FAILURES ===================================
+_______ test_every_arm_literal_occurs_in_the_dispatch_that_computes_it ________
+
+    def test_every_arm_literal_occurs_in_the_dispatch_that_computes_it():
+        """STRUCTURAL half. The bug was always visible here.
+    
+        `paraformer` was accepted by the guard clause -- so it did not raise
+        ValueError -- while never appearing in the path-sum dispatch, so it silently
+        fell through to the softmax branch. Accepting a name is not implementing it.
+        """
+        src = (ROOT / "ceq" / "bench.py").read_text(encoding="utf-8")
+        body = src[src.index("def sign_flip_rate"):]
+        # the dispatch chain runs from the first operator selection to the return
+        dispatch = body[body.index("if op_kind =="):body.index("if not h.requires_grad")]
+        missing = [a for a in ARMS if f'"{a}"' not in dispatch]
+>       assert not missing, (
+            f"arms accepted by sign_flip_rate but absent from the branch that "
+            f"computes their number: {missing}. This is the ParaFormer bug class "
+            f"(G3) -- the arm will silently execute whichever branch it falls "
+            f"through to, and report that operator's number under its own name."
+        )
+E       AssertionError: arms accepted by sign_flip_rate but absent from the branch that computes their number: ['softmax']. This is the ParaFormer bug class (G3) -- the arm will silently execute whichever branch it falls through to, and report that operator's number under its own name.
+E       assert not ['softmax']
+
+tests\loop\test_arms_distinct.py:149: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/loop/test_arms_distinct.py::test_every_arm_literal_occurs_in_the_dispatch_that_computes_it
+1 failed, 5 passed in 83.39s (0:01:23)

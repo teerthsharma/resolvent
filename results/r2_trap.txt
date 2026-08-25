@@ -1,0 +1,12 @@
+PROTOCOL: SCALING (i=s-1, j=s/4, c drawn from P)  arm=pivot_signed
+BIND: k must match journalled M2 (117/127/118 at s=32/128/512, seed 0, 4096 draws) or this table is void.
+
+     s      n     k      rate  t_c sign moved  flip&t moved  flip&t FIXED  share fixed
+    32   4096   117   0.02856          0.3540            75            42       0.3590
+   128   4096   127   0.03101          0.3635            82            45       0.3543
+   512   4096   118   0.02881          0.3706            77            41       0.3475
+
+`flip & t FIXED` is the count sign-determinacy would remove: a
+flip driven by MAGNITUDE alone, at an unchanged sign for the only
+term c enters. The rest need the sign of t_c to move, which no
+determinacy condition on a fixed pattern forbids.

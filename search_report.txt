@@ -1,0 +1,44 @@
+=== TASK 1: eps/EPS/clamp_min/1e-3 near rollback/Jacobian/l1 ===
+
+GREP RESULTS (sorted by file):
+
+File: C:\Users\seal\Desktop\New folder (32)\ceq\attention.py
+Line 79: def ceq_operator(query: torch.Tensor, key: torch.Tensor,
+Line 80:                  attention_mask: torch.Tensor | None = None,
+Line 81:                  *, rho: float = DEFAULT_RHO,
+Line 82:                  scaling: float | None = None,
+Line 83:                  eps: float = 0.0) -> torch.Tensor:
+Line 90:     THE CONDITIONING ROLLBACK, OFF BY DEFAULT. `eps` adds a floor to the
+Line 91:     denominator: `rho * w / (l1 + eps)`. The forward of this operator is exactly
+Line 97:     bounds the Jacobian by rho/eps and leaves the sign and the strict causality
+Line 98:     untouched; at eps=1e-3 it moves the operator by under 1e-2 relative on rows
+Line 115:     l1 = w.abs().sum(-1, keepdim=True) + eps
+Line 116:     return rho * w / l1.clamp_min(torch.finfo(w.dtype).tiny)
+
+File: C:\Users\seal\Desktop\New folder (32)\ceq\hf\modeling_ceq.py
+Line 67:     *, rho: float = 0.9,
+Line 68:         scaling: float | None = None,
+Line 69:         eps: float = 0.0) -> torch.Tensor:
+Line 87:     not an immediate blow-up. The rollback is `rho * w / (l1 + eps)`, which
+Line 88:     bounds the Jacobian by rho/eps and leaves the sign untouched.
+Line 89:     `eps = 0.0` is BITWISE the operator that shipped, so turning the rollback
+Line 104:     l1 = w.abs().sum(-1, keepdim=True) + eps
+Line 105:     return rho * w / l1.clamp_min(torch.finfo(w.dtype).tiny)
+
+File: C:\Users\seal\Desktop\New folder (32)\ceq\lm.py
+Line 136:         return RHO * w / l1.clamp_min(torch.finfo(w.dtype).tiny)
+
+File: C:\Users\seal\Desktop\New folder (32)\ceq\hopcache.py
+Line 72:     return alpha * rho * w / l1.clamp_min(torch.finfo(w.dtype).tiny)
+
+File: C:\Users\seal\Desktop\New folder (32)\tests\chase\test_signed_operator_trainability.py
+Line 52:     return rho * w / l1.clamp_min(torch.finfo(w.dtype).tiny)
+Line 137:         a = lm.RHO * w / l1.clamp_min(torch.finfo(w.dtype).tiny)
+Line 148: def test_the_eps_rollback_bounds_the_jacobian_it_is_supposed_to_bound(device):
+Line 169: def test_the_eps_rollback_keeps_the_operator_signed_and_strictly_causal(device):
+Line 196:     eps shrinks a row's L1 from rho to rho*l1/(l1+eps), so the cost is largest
+
+File: C:\Users\seal\Desktop\New folder (32)\tests\foreman\test_l1_normalizer_obstruction.py
+Line 178:     for eps in (1e-6, 1e-10, 1e-14):
+Line 187:     print("\n  A[1,0] jump across w = 0 at eps = 1e-6, 1e-10, 1e-14 : %s"
+
