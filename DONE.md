@@ -1,3 +1,104 @@
+### ROUND 5, ITERATION 17 - 2026-08-26 - THE AGGREGATOR WIN IS NO LONGER UNEXPLAINED. It is peak attention concentration, and the sphere contributes nothing to it.
+
+CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.
+
+ACTION (one): built and ran `scale/aggregator_mechanism.py`. **The Health
+Inspector is running tests in this tree, so the provenance repair he is auditing
+was deliberately NOT touched this iteration** - racing an auditor on the file he
+is auditing makes his verdict unreadable.
+
+**THE STANDING PUZZLE.** `theta.max()` beats `theta.mean()` by **+1.1347
+[+0.7833,+1.5877] / +0.9355 / +0.4959**, Wilson confirming Cameron. The record has
+called it **REAL, LARGE and UNEXPLAINED** for four iterations, and Cameron's
+proposed mechanism was refuted at iteration 14.
+
+**THE IDENTITY HANDS OVER THE MECHANISM AND NOBODY HAD USED IT.** Since
+`TV_i = A^c[i,c]` and `theta_i = arcsin(sqrt(TV_i))` with `arcsin(sqrt(.))`
+strictly increasing,
+
+    max_i theta_i = arcsin(sqrt( max_i A^c[i,c] ))
+
+**`theta.max()` is a strictly-increasing function of THE LARGEST ATTENTION WEIGHT
+ANY ROW PLACES ON c.** Not a geometric statistic at all.
+
+**[RUN] s=1024, d=16, 120 draws/cell, bound to ARM A's published stream (all six
+fields OK at abs=5e-6), threads pinned to 2.**
+
+**M1 - the identity on VALUES, which is what it claims:**
+
+      k   max|max th - arcsin(sqrt(max A))|   argmax agree   rows tied at max
+      8                        6.697e-04          0.841667             1.1292
+     32                        6.074e-04          0.941667             1.0458
+    128                        6.471e-04          0.929167             1.0708
+
+**Residual at the float32 floor** - the same order as Foreman's 8.457e-04. **The
+identity holds.**
+
+**A TEST OF MINE THAT WAS WRONG, AND THE PROBE'S OWN OUTPUT CAUGHT IT.** The first
+version checked **argmax** and read 0.84-0.94, and printed *"BROKEN -- the
+identity does not hold here."* **That was my error, not the identity's.** argmax
+is preserved only when there are **no ties**, and Foreman's F6 already measured
+theta as quantised onto **five float32 levels carrying 83-88% of nonzero rows**.
+The value test is the one the identity makes; **the argmax disagreement is a
+tie-break artifact and is now reported as one.**
+
+**M2 - DOES RAW PEAK ATTENTION SEPARATE AS WELL AS max theta?**
+
+      k   |d| max theta   |d| max A[:,c]   AUC theta      AUC A    AUC delta
+      8          2.3275           2.2586    0.913229   0.914514   -1.285e-03
+     32          1.8900           1.8530    0.891354   0.890556   +7.986e-04
+    128          1.4806           1.4341    0.838229   0.837986   +2.431e-04
+
+**AUC gap ~1e-03.** **THE SPHERE CONTRIBUTES NOTHING TO THE AGGREGATOR WIN.** It
+is a fact about **attention concentration**, and it would have been visible with
+no Fisher-Rao, no Chentsov and no arccos anywhere in the round.
+
+**M4 - AND THE CONCENTRATION IS DRAMATIC:**
+
+      k   median offset   max A causal   max A filler   ratio
+      8             137       0.881909       0.161140   5.473
+     32             117       0.843779       0.207901   4.059
+    128             130       0.714204       0.173796   4.109
+
+**A pivot receives 88% of some row's entire attention. A filler receives 16%.**
+That is the whole mechanism: **a pivot captures near-total attention from at
+least one row; a filler is attended diffusely by many.** A MAX sees the first; a
+MEAN averages it away. **Cameron's arithmetic about dilution was right; her
+guess about WHICH row was wrong; and the real answer is not about position at
+all - it is about concentration.**
+
+**M3 - THE TEST THAT COULD HAVE KILLED IT, RUN RATHER THAN AVOIDED, AND ITS
+CONFOUND STATED FIRST.**
+
+    k=8    rho(||k_c||, max A)  pooled +0.760992   causal +0.253330   filler +0.553427
+    k=32                        pooled +0.755083   causal +0.333398   filler +0.591110
+    k=128                       pooled +0.681944   causal +0.448121   filler +0.498430
+
+**THE POOLED +0.76 IS NOT EVIDENCE - IT IS THE SEPARATION UNDER TEST.** Pooling
+mixes high-key-norm pivots with the low-key-norm tail, so that correlation is
+the thing being measured, not an independent check on it. **Only the within-arm
+numbers inform**, and they run **+0.25 to +0.45** - moderate. So the win is **not
+simply the selector's own score returning.**
+
+**THAT IS A SURVIVAL, NOT A POSITIVE RESULT, AND THE MISSING CONTROL IS NAMED
+RATHER THAN LEFT IMPLICIT.** Wilson showed that matching key-norm - his
+band-filler at ranks k+1..2k - **removes ~65% of the mean-based K2 effect**
+(1.2267 -> 0.4301). **Nobody has run a key-norm-matched filler against the
+AGGREGATOR.** Until that is done, *"the aggregator win is not the selector"* rests
+on a within-arm correlation of 0.45, not on a matched control. **What peak
+attention DOES track remains unmeasured.**
+
+**NONE OF THIS RESCUES THE ROUND.** K1's `D_FR` clause is resolved against an
+interval and the *"no leap"* branch has fired; ARM A has not survived; ARM B is
+not authorized. **The aggregator finding is a fact about softmax attention, not
+about the two-spheres frame** - and by M2 it is visible without the frame at all.
+
+CHECKLIST: **the aggregator win is EXPLAINED** - `theta.max()` is a monotone read
+of `max_i A[i,c]`, AUC gap **~1e-03**, so **the sphere contributes nothing to it**.
+Peak attention **0.881909 causal vs 0.161140 filler, ratio 5.473**. Identity
+confirmed on VALUES at the float32 floor; **my argmax test was the wrong test**.
+**Key-norm-matched filler against the aggregator: NOT YET RUN.**
+
 ### ROUND 5, ITERATION 16 - 2026-08-26 - Health Inspector dispatched. B1 decomposed: Wilson and I were BOTH right, my hypothesis is REFUTED, and B1 turns out ILL-POSED for a reason neither of us raised.
 
 CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.

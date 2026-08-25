@@ -5,50 +5,49 @@
 | field | value |
 |---|---|
 | round | **5** - CEQ v7, promise `TWOSPHERES`, **30 iterations** |
-| iteration | **16 complete, 17 next** |
+| iteration | **17 complete, 18 next** |
 | phase | **ARM A under the escalation chain; autonomous to iteration 30** |
 | goal | **match or SUPERSEDE self-attention**; next-equilibrium predictor |
 | calibration | GREEN [RUN] `run_calib.py --self-test` exit 0, 4/4 bit-identical |
 | inspector | tri-state; INDETERMINATE exits nonzero |
 | repo | https://github.com/teerthsharma/resolvent (private) |
 
-## THE ONE NEXT ACTION (round 5, iteration 17)
+## THE ONE NEXT ACTION (round 5, iteration 18)
 
-**Wait for the Health Inspector's verdicts, and while he runs, close the
-self-satisfying provenance bind - it is the last live hazard in the tree.**
+**Run the key-norm-matched filler against the AGGREGATOR. It is the one control
+that decides whether iteration 17's finding is a result or an artifact.**
 
-**THE HAZARD, from Wilson:** `1.44x`, `1.0334`, `0.379x` and `3,319,296` now
-appear in `DONE.md` exactly once each - **inside the text of the finding that
-reported their absence.** `tests/chase/test_hub_package_hardening.py` asserts
-`"3,319,296" in done`. **That assertion can now be satisfied by the report of the
-absence itself.** It is the same class as the fabricated number: a bind that
-passes for the wrong reason. **A provenance test must match a MEASUREMENT, not a
-mention** - the fix is to require the number to appear in a context that carries
-its own run evidence, or to point the bind at the archive where the measurement
-actually lives.
+The aggregator win is now explained: `theta.max()` is a monotone read of
+`max_i A[i,c]`, the largest attention weight any row places on `c`, with an AUC
+gap of **~1e-03** against the raw attention statistic - **the sphere contributes
+nothing to it.** The mechanism is concentration: **0.881909 causal vs 0.161140
+filler**, a ratio of **5.473**.
 
-**THE ROUND'S SHAPE IS DECIDED AND SHOULD NOT BE RE-ARGUED.** K1's `D_FR` clause
-is resolved against an interval - **-0.4137 [-0.4579,-0.3704]** and **-0.4654
-[-0.5173,-0.4160]**, both entirely below **-0.30** - so the pre-registered *"no
-leap"* branch has **FIRED**, **ARM A has not survived K1**, and **ARM B is not
-authorized**. `TWOSPHERES: KEPT` is **not available**.
+**BUT THE DECISIVE CONTROL IS MISSING AND IT IS NAMED IN THE RECORD RATHER THAN
+GLOSSED.** Wilson measured that a **key-norm-matched filler** (ranks k+1..2k)
+removes **~65%** of the mean-based K2 effect - 1.2267 collapses to 0.4301, though
+it survives with a CI excluding zero. **Nobody has run that filler against
+`max_i A[i,c]`.** If the aggregator's 5.473 ratio collapses the same way, then
+peak attention is largely the key-norm returning and **the finding is Chase's F2
+firing a third time**. If it survives, peak attention tracks something the
+selector's score does not, and **that is worth carrying past this round.**
 
-**B1 is doubly settled and neither settlement helps ARM B:** it is **not** a
-rename of the key-norm (R1 = -0.025318, reproduced twice), **and** it is
-**ill-posed as written** - the top-k it selects retains **5.4%** at k=8 under a
-change of the very token the selector is forbidden to see.
+Within-arm `rho(||k_c||, max A)` reads **+0.25 to +0.45**, which is why the
+question is open rather than settled. **The pooled +0.76 must not be quoted as
+evidence** - it mixes the two arms and therefore IS the separation under test.
 
-**DR HOUSE REMAINS IN THE BOX, and the reason must be stated rather than
-assumed.** K1 died of **EVIDENCE** - a measured slope with an interval. The skill
-is explicit: *"Wilson refuted it with a verified fact - dead is dead, and no leap
-un-refutes a fact."* Releasing him here would be using a leap to argue with a
-measurement.
+**HOLD EVERYTHING ELSE.** K1's `D_FR` clause is resolved against an interval,
+the *"no leap"* branch has **FIRED**, **ARM A has not survived**, **ARM B is not
+authorized**, and `TWOSPHERES: KEPT` is **not available**. The aggregator finding
+is a fact about softmax attention, **not** about the two-spheres frame.
 
-**WHAT STILL WANTS AN ANSWER AND IS NOT BLOCKED:** the aggregator win is **real,
-large and unexplained** (+1.1347 / +0.9355 / +0.4959, CIs excluding zero, Wilson
-confirming Cameron) - and **it is not a sphere result**, since the sphere-vs-TV
-term at the same aggregator is only **~5%** of it. **That is the live thread, and
-it belongs to whatever comes after this round.**
+**The Health Inspector is still out.** He audits the log, and he was pointed
+hardest at my own six probes and at the self-satisfying provenance bind. **The
+prognosis is not written until he reports**, and **his strikes are strikes** - no
+appeal, straight to Open.
+
+**Dr House stays in the box.** K1 died of EVIDENCE. *"Dead is dead, and no leap
+un-refutes a fact."*
 
 ## Open REDs
 

@@ -600,3 +600,15 @@ Replayed ARM A's own draw stream (published `D_FR causal` reproduced to 6 dp at 
 | **B1 IS ILL-POSED AS WRITTEN** | **NEW, and neither Wilson nor Chase raised it.** `xi` is defined **relative to a chosen `c`**, but `select_pivots` is documented *"USES ONLY CONTENT -- never `c`, never `i`, `j`"*. Top-k overlap across a change of `c` on the SAME draw: **0.054167 / 0.196094 / 0.631510** (chance 0.007835 / 0.031342 / 0.125367). **At k=8 the selection retains 5.4% of its picks.** A defect in the **contract sentence**, found before ARM B exists. |
 | my verdict-rule defect | **CAUGHT BY THE PROBE'S OWN OUTPUT.** The first gate used **bulk rank stability (+0.891716)** and printed *"well-posedness survives"*. The bulk Spearman is high **because ~68% of the vector is exact zeros tying with zeros regardless of `c`**. `select_pivots` takes a **top-k**, not a bulk ranking. Gate moved; **verdict reverses**. |
 | k-independence, noted not hidden | R1, R3 and bulk R4 **do not depend on k**, so three identical rows print for them. **Only the top-k overlap is k-dependent, and it is the deciding one.** |
+
+**AGGREGATOR MECHANISM [RUN, r5 iter 17] - `scale/aggregator_mechanism.py`, exit 0, bound to the published stream.**
+
+| item | status |
+|---|---|
+| **the aggregator win, four iterations "UNEXPLAINED"** | **EXPLAINED.** `max_i theta_i = arcsin(sqrt(max_i A^c[i,c]))` -- **`theta.max()` is a strictly-increasing function of the largest attention weight any row places on `c`.** Not a geometric statistic. |
+| M1 identity on VALUES | **HOLDS.** `max\|max th - arcsin(sqrt(max A))\|` = **6.697e-04 / 6.074e-04 / 6.471e-04**, the float32 floor, same order as Foreman's 8.457e-04. |
+| my M1 test, first version | **WRONG TEST, mine.** It checked **argmax**, read 0.84-0.94, and printed *"BROKEN"*. argmax is preserved only without **ties**, and F6 measured theta quantised onto **five float32 levels holding 83-88% of nonzero rows**. Reported as a tie-break artifact now. |
+| M2 does the sphere contribute? | **NO.** \|d\| max theta **2.3275 / 1.8900 / 1.4806** vs \|d\| max A **2.2586 / 1.8530 / 1.4341**; **AUC gap ~1e-03**. The win is visible with **no Fisher-Rao, no Chentsov, no arccos**. |
+| M4 the mechanism | **ATTENTION CONCENTRATION.** max A causal **0.881909 / 0.843779 / 0.714204** vs filler **0.161140 / 0.207901 / 0.173796**, **ratio 5.473 / 4.059 / 4.109**. A pivot captures ~88% of some row's whole attention; a filler 16%. |
+| M3 is it the selector's score returning? | **NOT SIMPLY** - within-arm `rho(\|\|k_c\|\|, max A)` = **+0.25 to +0.45**. **The POOLED +0.76 is NOT evidence** - pooling mixes high-key-norm pivots with the low-key-norm tail, so it **is the separation under test**. |
+| **the control nobody has run** | **KEY-NORM-MATCHED FILLER vs THE AGGREGATOR: NOT YET RUN.** Wilson showed matching key-norm removes **~65%** of the mean-based K2 effect (1.2267 -> 0.4301). Until that control is applied to the aggregator, *"the win is not the selector"* rests on a within-arm rho of 0.45, **not on a matched control**. |
