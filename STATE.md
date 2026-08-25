@@ -5,44 +5,36 @@
 | field | value |
 |---|---|
 | round | **5** - CEQ v7, promise `TWOSPHERES`, **30 iterations** |
-| iteration | **7 complete, 8 next** |
+| iteration | **8 complete, 9 next** |
 | phase | **ARM A under the escalation chain; autonomous to iteration 30** |
 | goal | **match or SUPERSEDE self-attention**; next-equilibrium predictor |
 | calibration | GREEN [RUN] `run_calib.py --self-test` exit 0, 4/4 bit-identical |
 | inspector | tri-state; INDETERMINATE exits nonzero |
 | repo | https://github.com/teerthsharma/resolvent (private) |
 
-## THE ONE NEXT ACTION (round 5, iteration 8)
+## THE ONE NEXT ACTION (round 5, iteration 9)
 
-**Collect the fellow tier. Do not write a prognosis before the Inspector runs.**
+**Collect whichever fellows have landed; if none has, measure the `||tau||`
+trajectory that X6 actually names.**
 
-The chain is now binding and written into `LOOP_PROMPT.md`:
+**X6 is GREEN and the equilibrium clause SURVIVES** - residual at the glance
+0.599101 / 0.388587 / 0.321843, 100% converged in 28-53 steps. But the probe
+measured the **Karcher residual** trajectory, not the **`||tau||_F`** trajectory
+the clause names. `||tau||` was taken **at the glance only**. That gap is stated
+in `CHECKLIST.md` and is the cheapest remaining thing to close.
 
-    fellows (Chase, Cameron, Foreman) -> Wilson -> Health Inspector -> DR HOUSE
+**THE FINDING THAT MATTERS MORE IS THE ONE X6 DRAGGED IN.** Uniqueness holds on
+**0.9333 / 0.8167 / 0.5167** of draws at k = 8 / 32 / 128 - **at k=128 the
+Karcher mean is not unique on 48.3% of draws**, and settling also slows (28.43 ->
+52.55 steps). **Both trends run against ARM B, which wants k pivots.** Before ARM
+B is built on a Karcher mean, decide what happens on the draws where that mean
+does not exist uniquely - it is a precondition, not a caveat.
 
-**In flight:** Foreman (is theta a reparametrisation of TV in the linearised
-regime), Chase (is D1 complete, has any published number moved, blast radius),
-Cameron (is the MEAN the weak part rather than the sphere; are `||tau||` and
-`gamma_1` free separators nobody tested). Wilson's K1 buckets at **26/48**.
-
-**Reading order is fixed and it is not the order the reports arrive in:**
-  1. **Wilson's facts settle every factual dispute.** A fellow's claim that
-     contradicts a verified Wilson fact is dead - not averaged, not softened.
-  2. **Every fellow finding needs its RED test shown.** Unbound claims go to
-     **Open**, however convincing they read.
-  3. **The Health Inspector runs BEFORE the prognosis, always** - re-runs every
-     claimed GREEN, checks each finding has a matching RED, checks nobody
-     contradicts Wilson. **A struck claim is struck** and is not re-argued.
-  4. **Then, and only then, the Prognosis and the Chart** - and the Chart carries
-     **every** fellow including the overruled ones, each with the reason.
-
-**Dr House is released only if the problem survives all four rungs AND the gap is
-INNOVATION rather than evidence.** He is NOT triggered by Wilson refuting
-something (dead is dead), by Chase finding a risk (that is a decision), or by
-Cameron finding a cheaper path (that theory lost, it did not die).
-
-**Nothing is claimed for any in-flight agent.** Never block on a measurement -
-if the tier is still out, build alongside it.
+**Reading order for the tier, fixed:** Wilson's facts settle factual disputes; a
+fellow finding without its RED test goes to **Open**; the **Health Inspector runs
+BEFORE the prognosis**; the Chart carries **every** fellow including overruled
+ones, with the reason. **Dr House (`model: fable`, 5 min, no nurses) only if the
+problem survives all four rungs AND the gap is INNOVATION, not evidence.**
 
 ## Open REDs
 

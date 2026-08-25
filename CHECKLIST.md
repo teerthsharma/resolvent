@@ -456,3 +456,15 @@ is left, and **a not-found cell is permission to test, not a result.**
 | repair | **3 fellows dispatched in ONE message on the SAME question**, each test-bound with nurse rules. Foreman: is theta a reparametrisation of TV in the linearised regime. Chase: is D1 complete, has any published number moved, what is the blast radius. Cameron: is the MEAN the weak part rather than the sphere, and are `\|\|tau\|\|`/`gamma_1` free separators nobody tested. |
 | **escalation chain** | **WRITTEN INTO `LOOP_PROMPT.md` AS BINDING** - fellows -> Wilson -> Health Inspector -> **DR HOUSE (`model: fable`, 5 min hard stop, no nurses, one leap or "no leap", HYPOTHESIS not finding, must be bound by a fellow's RED test or it stays in Open)**. |
 | autonomy | **Loop runs to iteration 30 without check-in.** Decisions go through the chain and are recorded with their reasoning in `DONE.md`. |
+
+**X6 EQUILIBRIUM CLAUSE [RUN, r5 iter 8] - `scale/equilibrium_probe.py`, exit 0, first run in five rounds.**
+
+| item | status |
+|---|---|
+| X6 pre-registered kill | **SURVIVES - the clause is NOT cut.** Residual at the glance **0.599101** [0.58661, 0.61330] / **0.388587** / **0.321843**, CIs nowhere near zero; **100% converged** in **28.43 / 44.02 / 52.55** steps to `1e-8`. The glance is not the fixed point, so "equilibrium" is doing work. |
+| must-fire controls | **4/4 FIRED** - identical readings give residual `0.000e+00`; spread readings give `0.603907` and the iterate moves `0.673630`; uniqueness guard fires at `theta_max=3.141593`; `\|\|tau\|\|` is `0.000e+00` when `Y==X` and `5.635273` otherwise. |
+| **uniqueness precondition** | **NEW HARD LIMIT.** `theta_max < pi/2` holds on **0.9333 / 0.8167 / 0.5167** of draws at k = 8 / 32 / 128. **At k=128 the Karcher mean is not unique on 48.3% of draws**, so "the settled reading" is not well defined there. The contract sells uniqueness as *"an existence-and-uniqueness statement the DEQ era never had"*. |
+| direction of travel | **BOTH TRENDS WRONG FOR ARM B.** More pivots = **slower settling** (28.43 -> 52.55) **and weaker uniqueness** (0.9333 -> 0.5167). ARM B wants k pivots. |
+| probe defect 1 | **UNREACHABLE TOLERANCE, mine.** `tol=1e-8` sits below float32's floor - `float32 eps = 1.1920928955078125e-07`, iteration floors at **1.8546e-08**, float64 reaches **5.4944e-13**. `converged` could never be true. Fixed: iteration runs float64 as a **declared analysis choice**. |
+| probe defect 2 | **CENSORED STEPS REPORTED AS A TIME, mine.** First table printed `steps 64.00`, which was the cap. Now averaged over **converged draws only**, with the converged fraction printed beside it. |
+| scope | X6 names the **`\|\|tau\|\|_F` trajectory**; what is measured is the **Karcher residual** trajectory, with `\|\|tau\|\|` at the glance only (0.270901 / 0.175964 / 0.145850). **The `\|\|tau\|\|` trajectory under iteration is NOT MEASURED.** |

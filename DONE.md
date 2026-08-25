@@ -1,3 +1,97 @@
+### ROUND 5, ITERATION 8 - 2026-08-25 - X6 RUN FOR THE FIRST TIME. The equilibrium clause SURVIVES, and it drags a hard limit in behind it.
+
+CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.
+
+ACTION (one): built and ran `scale/equilibrium_probe.py` - **X6, a pre-registered
+kill that has never been run in five rounds**, on a word that is in the module's
+own name. Constitution ideal 2: *"Equilibrium over glance - the reading is a fixed
+point with a certificate, OR THE WORD 'equilibrium' IS CUT."* X6: *"||tau||_F
+trajectory under iteration. IF ONE PASS ALREADY GIVES ||tau||_F ~ 0, THE
+EQUILIBRIUM CLAUSE IS CUT."*
+
+**ARM A printed ||tau|| at a SINGLE pass and never iterated.** A single-pass
+number is not a trajectory, and the kill is about the trajectory.
+
+**THE INITIALISATION IS THE WHOLE TEST AND IT IS NOT A FREE CHOICE.** The Karcher
+iteration starts at **the softmax reading itself - the glance**. So the residual
+at step 0 answers exactly what X6 asks: **is the glance already the equilibrium?**
+If it is, iterating buys nothing and the word goes.
+
+**ALL FOUR MUST-FIRE CONTROLS FIRED** before any number was read: identical pivot
+readings give residual exactly `0.000e+00`; spread readings give `0.603907` and
+the iterate moves `0.673630`; the uniqueness guard fires at `theta_max=3.141593`
+past `pi/2`; `||tau||` reads `0.000e+00` when `Y == X` and `5.635273` otherwise.
+
+**[RUN] s=256, d=16, 60 draws/cell, steps<=512, tol=1e-8, threads pinned to 2**
+
+       k   residual @ GLANCE            res final  steps  conv  unique  ||tau||_0
+       8   0.599101 [0.58661,0.61330]   7.481e-09  28.43  1.000  0.9333  0.270901
+      32   0.388587 [0.37962,0.39790]   8.155e-09  44.02  1.000  0.8167  0.175964
+     128   0.321843 [0.31568,0.32828]   8.405e-09  52.55  1.000  0.5167  0.145850
+
+**X6 SURVIVES. THE CLAUSE IS NOT CUT.** The residual at the glance is
+**0.599101 / 0.388587 / 0.321843** with CIs nowhere near zero, and the iteration
+takes **28 to 53 steps** to reach `1e-8`. **The glance is not the fixed point,
+so "equilibrium" is doing work rather than relabelling one pass.** This is the
+first pre-registered kill this round that a clause has passed on its own terms.
+
+**AND HERE IS WHAT IT DRAGGED IN. THE UNIQUENESS PRECONDITION COLLAPSES AS k
+GROWS.**
+
+    unique (theta_max < pi/2)   k=8   0.9333
+                                k=32  0.8167
+                                k=128 0.5167
+
+The contract sells uniqueness as the prize: the Karcher mean is *"UNIQUE for
+theta < pi/2 (injectivity radius) - an existence-and-uniqueness statement the DEQ
+era never had."* **At k=128, 48.3% of draws sit OUTSIDE that radius**, where the
+Karcher mean is **not unique** and "the settled reading" is **not well defined**.
+
+**BOTH TRENDS POINT THE WRONG WAY FOR ARM B.** More pivots means **slower
+settling** (28.43 -> 44.02 -> 52.55 steps) **and weaker uniqueness** (0.9333 ->
+0.5167). ARM B wants k pivots. **The guarantee that makes the equilibrium clause
+worth having is the one that degrades fastest in the direction the build wants to
+go**, and nothing in five rounds had measured it.
+
+---
+
+**TWO DEFECTS OF MINE IN THIS PROBE, BOTH CAUGHT BY THE PROBE'S OWN OUTPUT AND
+BOTH FIXED BEFORE THE NUMBERS ABOVE WERE TAKEN.**
+
+**1. I SET A TOLERANCE THE ARITHMETIC CANNOT REACH.** The first run reported
+`conv = 0.0000` at every k, and `res_final` was **identical at steps=64 and
+steps=512** (`4.261e-08` both) - not censoring, a **floor**. [RUN]
+`float32 eps = 1.1920928955078125e-07`, and the float32 iteration floors at
+**1.8546e-08** while float64 reaches **5.4944e-13**. **My tol of 1e-8 sat below
+what float32 can resolve, so `converged` could never be true.** That is the
+same defect class as the fabricated-number round: **a threshold that cannot be
+met is not a threshold.** The iteration now runs in float64 as a **declared
+analysis choice** - the shipped operator is float32, but the Karcher iteration is
+the *measurement* of the shipped object, not the shipped object.
+
+**2. I AVERAGED THE STEP CAP INTO A CONVERGENCE TIME.** The first table printed
+`steps 64.00`, which was the cap, reported as though it were a measurement. Now
+`steps*` averages **converged draws only** and prints the converged fraction
+beside it, so a censored run reads as censored.
+
+**WHAT THIS PROBE DID NOT MEASURE, stated rather than implied.** X6 names the
+**`||tau||_F` trajectory**; what is measured here is the **Karcher residual
+trajectory** - the fixed-point certificate - with `||tau||` taken **at the glance
+only** (`0.270901 / 0.175964 / 0.145850`). The residual is the right certificate
+for *"is this a fixed point"*; `||tau||` is the *symmetry* condition and its
+trajectory under iteration is **NOT MEASURED**. The clause survives on the
+residual, and that is the scope of the claim.
+
+**IN FLIGHT, NOTHING CLAIMED:** Foreman (`scale/foreman_theta_tv.py`), Chase
+(`scale/chase_k3_ci.py`, `scale/chase_k2_salience.py`), Cameron
+(`scale/cameron_aggregator_probe.py`) all writing. Wilson's K1 buckets past 26/48.
+
+CHECKLIST: **X6 GREEN - the equilibrium clause SURVIVES its own kill**, residual
+at the glance 0.599101/0.388587/0.321843, converged 100% in 28-53 steps.
+**NEW HARD LIMIT: uniqueness holds on only 51.67% of draws at k=128**, degrading
+monotonically in k. Probe defects (unreachable tol, censored steps) found and
+fixed before the reading.
+
 ### ROUND 5, ITERATION 7 - 2026-08-25 - THE ROOM, FOR THE FIRST TIME. And the user names the defect before I finish naming it.
 
 CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.
