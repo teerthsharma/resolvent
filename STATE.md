@@ -5,29 +5,33 @@
 | field | value |
 |---|---|
 | round | **3** - CEQ v5, 30 iterations, promise `SCALEFREE` |
-| iteration | **12 complete, 13 next** |
+| iteration | **13 complete, 14 next** |
 | phase | **Phase 0 - M3 on the windowed arm. Capability before statistics.** |
 | calibration | GREEN [RUN] `run_calib.py --self-test` exit 0, 4/4 bit-identical |
 | inspector | `python inspector.py` - 8 checks, 8 must-fire controls, exits nonzero if any control stays SILENT |
 | repo | https://github.com/teerthsharma/resolvent (private) |
 
-## THE ONE NEXT ACTION (iteration 13)
+## THE ONE NEXT ACTION (iteration 14)
 
-**Reconcile the two in-flight streams, which the policy requires and iteration 12
-did not reach:** `results/r3_it11_pivot_8192.log` (signed + unsigned arms at the
-budget where softmax reads eval 0.877168) and Wilson's three engineering diffs.
+**Test the repair Cameron named and never tried: co-prime / randomised dilations
+against the severed fraction.**
 
-**If the severed fraction has an obvious repair, it is the next build after
-that.** Cameron named the candidate and did not test it: severance is a property
-of the RIGID per-layer power-of-two lattice, not of bounded row width - so
-**overlapping, co-prime, or randomised dilations** may keep the reach result
-(support exactly s, row width 8) while killing the severance. That is a cheap
-one-line change to `log_schedule` and it is testable with the probe that already
-exists.
+Severance is a property of the **rigid power-of-two lattice**, not of bounded row
+width - so the reach result (support exactly `s`, row width exactly 8) may
+survive a schedule that is not a geometric series. The probe already exists
+(`tests/cameron/severed_fraction.py`, exhaustive over every legal `c`), and
+`log_schedule` is the one function to change.
 
-Pre-register before running it: **co-prime dilations must lower the severed
-fraction WITHOUT lowering gradient support**, or the trade is not a repair, it is
-a different arm.
+**PRE-REGISTERED, fixed before running:**
+  * co-prime dilations **lower the severed fraction WITHOUT lowering gradient
+    support** -> the repair is real, and the composition route is alive again;
+  * they lower severance **and** support -> **not a repair, a different arm** -
+    reach was traded away, which is the tradeoff the round already refused;
+  * severance is unchanged -> it is not the lattice, it is bounded row width
+    itself, and the whole composition family closes.
+
+Baselines in the same table: `[1,2,4,8]` (measured: 0.4130 at s=64, 0.5745 at
+s=128) and a contiguous `[1,1,1,1]` control.
 
 ## Open REDs
 

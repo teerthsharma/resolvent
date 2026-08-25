@@ -2,6 +2,54 @@
 
 Round 2 archived below its own header; round-1 archive at `DONE_ARCHIVE_ROUND1.md`.
 
+### ROUND 3, ITERATION 13 - 2026-08-25 - Wilson's Job 1 VERIFIED BY ME: bitwise identical, 4-9x faster.
+
+CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.
+
+ACTION (one): verified the vectorised hop-2 path Wilson's engineers built. **The
+policy says every optimisation ships a bitwise equivalence bind - and a bind
+reported by an agent is not a bind until I run it.**
+
+**[RUN] MY OWN MEASUREMENT, not the agent's report:**
+
+    n      bitwise  loop(ms)  vec(ms)  speedup   maxdiff
+    128     True       5.88     0.68     8.6x    0.000e+00
+    512     True      27.71     3.04     9.1x    0.000e+00
+    2048    True     113.56    27.92     4.1x    0.000e+00
+
+**`torch.equal` TRUE at every size, max difference EXACTLY 0.000e+00.** The loop
+becomes two `torch.gather` calls and one `bmm`. Full file: **68 passed**,
+including a must-fire control whose two clauses I isolated and confirmed both
+fire (perturbing `a` at a routed entry; scaling a key row to reorder the pivots).
+
+**THE SPEEDUP DECAYS WITH n - 8.6x -> 9.1x -> 4.1x - AND THAT IS THE HONEST
+HEADLINE.** The gather materialises `[n,s,k]` and `[n,k,s]` before the `bmm`, so
+memory bandwidth takes over from Python-loop overhead. **It is a constant-factor
+win that shrinks exactly where it was most needed**, and it will not by itself
+make an 8192-example training run cheap.
+
+**AN ERROR OF MINE, CORRECTED IN THE SAME ITERATION.** My first run of that file
+read **66 passed, 1 failed** on `test_control_bind_can_fail`, and I hypothesised
+a **test-isolation defect** - a control depending on global RNG state. **Wrong on
+both counts.** Running the two clauses standalone showed both firing; re-running
+the file showed **68 passed**. The file went from 67 tests to 68 between my two
+reads: **Wilson's agent was still writing it, and I read a mid-write snapshot.**
+`make_ak` uses a local `torch.Generator`, so there was never a global-RNG
+dependence to find.
+
+**The lesson is procedural and it is new here:** a background agent's output
+directory is not a stable object. Reading it mid-write produces a defect report
+about a file that does not exist any more. **Wait for the completion
+notification, or re-read before diagnosing.**
+
+**STILL IN FLIGHT:** `results/r3_it11_pivot_8192.log` remains **0 bytes** with the
+process alive and accumulating CPU - buffered, not dead. Wilson's Jobs 2 and 3
+(the inspector's FAIL-vs-INDETERMINATE defect, the stale docstring) have not
+landed.
+
+CHECKLIST: no status changed. Vectorised hop-2 available and bitwise-bound; not
+yet wired into `m3_capability.py`, which the running measurement is reading.
+
 ### ROUND 3, ITERATION 12 - 2026-08-25 - THE SEVERED FRACTION: 41% -> 57%, growing with s. Support is not influence.
 
 CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.

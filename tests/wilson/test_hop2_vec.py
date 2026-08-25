@@ -120,20 +120,42 @@ def test_grad_bitwise(kind):
 
 
 def test_control_bind_can_fail():
-    """MUST-FIRE CONTROL. `torch.equal` between these two tensors must return
-    False for a single perturbed entry -- a bind that cannot fail is not a bind
-    (instrument #15). Without this, all of the above pass on a broken assert."""
+    """MUST-FIRE CONTROL. `torch.equal` must return False for a single perturbed
+    entry -- a bind that cannot fail is not a bind (instrument #15).
+
+    The perturbed entry has to be one hop-2 actually READS. The first draft of
+    this control moved `a[0, s-1, 0]` and the control did NOT fire: column 0 is
+    not a pivot and row s-1 is not a pivot, so that entry is outside
+    `a[:, P] @ a[P, :]` entirely and BOTH paths ignore it. That is the rank-|P|
+    mechanism working, not the bind failing -- but a control aimed at a
+    structural zero proves nothing, so it is aimed at a routed entry instead."""
     a, k = make_ak(4, 0, "pivot_signed")
+    piv = batched_select_pivots(k, K_PIVOTS)
     want = loop_hop2(a, k)
     bad = a.clone()
-    bad[0, S - 1, 0] += 1e-6
-    got = batched_pivot_hop2(bad, batched_select_pivots(k, K_PIVOTS))
+    bad[0, S - 1, piv[0, 0]] += 1e-6          # row s-1, column = a real pivot
+    got = batched_pivot_hop2(bad, piv)
     assert not torch.equal(got, want), "the bind cannot distinguish a perturbed a"
     # and the pivot bind must also be able to fail
     kbad = k.clone()
     kbad[0, 0, :] *= 1e3
-    assert not torch.equal(batched_select_pivots(kbad, K_PIVOTS),
-                           batched_select_pivots(k, K_PIVOTS))
+    assert not torch.equal(batched_select_pivots(kbad, K_PIVOTS), piv)
+
+
+def test_entries_outside_the_pivot_routes_are_ignored_by_both_paths():
+    """The other half of the control above, pinned as a claim: an entry that is
+    in no pivot row and no pivot column changes NEITHER path. Both must ignore
+    it identically -- if the vectorised gather picked up a wider slice of `a`
+    than the loop's indexing does, this is where it would show."""
+    a, k = make_ak(4, 0, "pivot_signed")
+    piv = batched_select_pivots(k, K_PIVOTS)
+    pset = set(piv[0].tolist())
+    j = next(c for c in range(S) if c not in pset)      # column no pivot uses
+    i = next(r for r in range(S - 1, -1, -1) if r not in pset)
+    bad = a.clone()
+    bad[0, i, j] += 1.0
+    assert torch.equal(loop_hop2(bad, k), loop_hop2(a, k))
+    assert torch.equal(batched_pivot_hop2(bad, piv), batched_pivot_hop2(a, piv))
 
 
 def _bench(n, kind, reps=3):
