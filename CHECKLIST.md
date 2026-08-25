@@ -612,3 +612,16 @@ Replayed ARM A's own draw stream (published `D_FR causal` reproduced to 6 dp at 
 | M4 the mechanism | **ATTENTION CONCENTRATION.** max A causal **0.881909 / 0.843779 / 0.714204** vs filler **0.161140 / 0.207901 / 0.173796**, **ratio 5.473 / 4.059 / 4.109**. A pivot captures ~88% of some row's whole attention; a filler 16%. |
 | M3 is it the selector's score returning? | **NOT SIMPLY** - within-arm `rho(\|\|k_c\|\|, max A)` = **+0.25 to +0.45**. **The POOLED +0.76 is NOT evidence** - pooling mixes high-key-norm pivots with the low-key-norm tail, so it **is the separation under test**. |
 | **the control nobody has run** | **KEY-NORM-MATCHED FILLER vs THE AGGREGATOR: NOT YET RUN.** Wilson showed matching key-norm removes **~65%** of the mean-based K2 effect (1.2267 -> 0.4301). Until that control is applied to the aggregator, *"the win is not the selector"* rests on a within-arm rho of 0.45, **not on a matched control**. |
+
+**AGGREGATOR vs KEY-NORM-MATCHED FILLER [RUN, r5 iter 18] - `scale/aggregator_matched_filler.py`, exit 0, bound on the first 120 draws.**
+
+| item | status |
+|---|---|
+| **the aggregator finding** | **SEVERELY DEGRADED AT EVERY k.** causal-vs-band \|d\| on `max A` = **0.0677 [0.0040,0.2978] / 0.2241 [0.0274,0.4494] / 0.8366 [0.6020,1.1082]**, keeping **2.9% / 13.3% / 58.9%** of the unmatched-tail effect. |
+| the concentration ratio | **1.023 / 1.116 / 1.997** against a matched band. The **5.473** reported at iter 17 was against an **unmatched tail**; a key-norm-matched filler reaches **0.864755** peak attention against causal's **0.884602**. |
+| **the comparison that matters** | Wilson's **MEAN**-based K2 kept **35%** under this same control. The **aggregator keeps 2.9%**. **The aggregator is MORE confounded by the selector than the mean it replaced, not less.** |
+| what still stands | Cameron's F1 - `theta.max()` beats `theta.mean()` by +1.13 with CIs excluding zero - **is real and unaffected**. What dissolves is the **interpretation**: the contrast it amplifies is largely the selector's own score at small k. **A bigger effect on a confounded contrast is a bigger confounded effect.** |
+| my verdict gate | **TESTED HALF ITS OWN PRE-REGISTRATION.** It checked only "CI excludes zero" and printed **SURVIVES**; the pre-registration reads *"CI excludes zero **and the band ratio stays above ~2x**"*, and the ratio is **1.023**. Fixed; verdict reverses to SEVERELY DEGRADED. |
+| **the pattern, now three** | iter 16 gated on **bulk rank** when selection takes a **top-k**; iter 17 tested the identity on **argmax** when it claims **values**; iter 18 tested **half** a two-part gate. **Each measured something ADJACENT to what was pre-registered, and each erred in the flattering direction.** All three self-caught by the probe's own output. |
+| bind defect, also self-caught | First read MISMATCH at all three k - comparing a **160-draw** mean to a **120-draw** published one. A statement about denominators, not the stream. Now asserts on the **first 120**. |
+| limit travelling with the result | The match is by **RANK, not value**: band/causal key-norm **0.9120 / 0.8900 / 0.8347**. The residual gap is **uncontrolled**, so **2.9% is an UPPER bound** on what survives. |

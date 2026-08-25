@@ -1,3 +1,100 @@
+### ROUND 5, ITERATION 18 - 2026-08-26 - THE AGGREGATOR FINDING LARGELY DISSOLVES. Key-norm matching leaves 2.9% of it at k=8 - the aggregator is MORE confounded by the selector than the mean it replaced.
+
+CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.
+
+ACTION (one): built and ran `scale/aggregator_matched_filler.py` - **the control
+the record named as missing at iteration 17, run rather than left named.**
+
+**WHY IT HAD TO BE RUN.** `select_pivots` ranks by `key.norm(dim=-1)` and the
+"causal" arm is exactly its top-k, so high peak attention and high key-norm are
+**confounded by construction**. Wilson measured that a **key-norm-matched filler**
+(ranks k+1..2k, still outside P) removes **~65%** of the MEAN-based K2 effect.
+**Nobody had run it against the aggregator.**
+
+**[RUN] s=1024, d=16, 160 draws/cell, three arms, bound to the published stream
+on its first 120 draws (all three k OK at abs=5e-6), threads pinned to 2.**
+
+**THE KEY-NORM MATCH, with its residual gap printed rather than assumed away:**
+
+      k   ||k_c|| causal   ||k_c|| band   ||k_c|| tail   band/causal
+      8          28.0809        25.6085        15.5185        0.9120
+     32          25.3201        22.5353        15.4897        0.8900
+    128          22.6392        18.8971        14.4029        0.8347
+
+**PEAK ATTENTION, THE STATISTIC UNDER TEST:**
+
+      k   max A causal   max A band   max A tail   c/band   c/tail
+      8       0.884602     0.864755     0.160338    1.023    5.517
+     32       0.805002     0.721258     0.202117    1.116    3.983
+    128       0.698484     0.349717     0.163954    1.997    4.260
+
+**A KEY-NORM-MATCHED FILLER REACHES 0.864755 PEAK ATTENTION AGAINST THE CAUSAL
+ARM'S 0.884602. A RATIO OF 1.023.** The 5.473 ratio reported at iteration 17 was
+**against an unmatched tail**, and against a matched band it is **essentially
+one.**
+
+**SEPARATION, |d| WITH A BOOTSTRAP CI:**
+
+      k      stat        causal vs TAIL             causal vs BAND         kept
+      8     max A   2.2994 [1.8663,2.8623]   0.0677 [0.0040,0.2978]        2.9%
+      8    max th   2.3580 [1.9243,2.9432]   0.1058 [0.0065,0.3380]        4.5%
+     32     max A   1.6804 [1.3574,2.0972]   0.2241 [0.0274,0.4494]       13.3%
+     32    max th   1.7305 [1.4047,2.1451]   0.2559 [0.0442,0.4810]       14.8%
+    128     max A   1.4204 [1.1252,1.7744]   0.8366 [0.6020,1.1082]       58.9%
+    128    max th   1.4598 [1.1598,1.8096]   0.8503 [0.6182,1.1190]       58.2%
+
+**VERDICT: SEVERELY DEGRADED AT EVERY k, AND THE SMALL-k END IS WHERE IT
+COLLAPSES.** The intervals exclude zero, so peak attention is **not identical** to
+the key-norm - but at k=8 it retains **2.9%** of what the unmatched tail gave.
+
+**AND HERE IS THE SENTENCE THAT MATTERS: WILSON'S MEAN-BASED COMPARISON RETAINED
+35% UNDER THE SAME CONTROL. THE AGGREGATOR RETAINS 2.9%.** **The aggregator is
+MORE confounded by the selector than the mean it was supposed to improve on, not
+less.** It holds up only at **k=128**, where it keeps 58.9%.
+
+**WHAT THIS DOES TO THE ROUND'S ONE LIVE THREAD.** Cameron's F1 was recorded as
+*"the largest unexploited number in the round"* - `theta.max()` beating
+`theta.mean()` by +1.13, confirmed by Wilson with CIs excluding zero. **That
+comparison is real and it still stands.** What dissolves is the interpretation:
+the causal-vs-filler separation the aggregator was amplifying is **largely the
+selector's own score at small k**. **A bigger effect on a confounded contrast is a
+bigger confounded effect.**
+
+**A DEFECT OF MINE, AND IT IS THE THIRD OF THE SAME SHAPE.** My verdict gate
+tested **only whether the CI straddles zero** and printed **"PEAK ATTENTION
+SURVIVES"**. My own pre-registration, written in the same file before any number,
+reads *"CI EXCLUDES ZERO **and the band ratio stays above ~2x**"*. **At k=8 the
+ratio is 1.023.** I gated on half of my own pre-registration and it turned a
+collapse into a survival.
+
+**THE PATTERN, NAMED BECAUSE IT IS NOW THREE:**
+  * iteration 16 - gated well-posedness on **bulk rank** when selection uses a
+    **top-k**;
+  * iteration 17 - tested the identity on **argmax** when it is a claim about
+    **values**;
+  * iteration 18 - tested **half** a two-part pre-registration.
+**Each time the gate measured something ADJACENT to what was pre-registered, and
+each time the error ran in the flattering direction.** All three were caught by
+the probe's own output, which is the only reason they are reportable rather than
+shipped.
+
+**A SECOND DEFECT, caught the same way.** The bind first read MISMATCH at all
+three k - because it compared a **160-draw** mean against a **120-draw** published
+mean. **A true statement about two denominators, not about the stream.** The probe
+correctly refused to report; the bind now asserts on the **first 120 draws**,
+which are the published 120 since draws are sequential from one generator.
+
+**LIMIT THAT TRAVELS WITH EVERY NUMBER ABOVE:** the match is by **RANK, not by
+value**. Band/causal key-norm is **0.9120 / 0.8900 / 0.8347**, so a residual
+key-norm gap remains **uncontrolled** - which means the retained 2.9% is an
+**upper** bound on what survives the confound, not a lower one.
+
+CHECKLIST: **the aggregator finding is SEVERELY DEGRADED** - keeps **2.9% / 13.3%
+/ 58.9%** against a key-norm-matched filler, with peak-attention ratio **1.023** at
+k=8. **Wilson's mean kept 35%; the aggregator keeps 2.9%.** Verdict gate tested
+half its own pre-registration - **third gate defect of the same shape**, all three
+self-caught.
+
 ### ROUND 5, ITERATION 17 - 2026-08-26 - THE AGGREGATOR WIN IS NO LONGER UNEXPLAINED. It is peak attention concentration, and the sphere contributes nothing to it.
 
 CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.

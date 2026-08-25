@@ -5,49 +5,51 @@
 | field | value |
 |---|---|
 | round | **5** - CEQ v7, promise `TWOSPHERES`, **30 iterations** |
-| iteration | **17 complete, 18 next** |
+| iteration | **18 complete, 19 next** |
 | phase | **ARM A under the escalation chain; autonomous to iteration 30** |
 | goal | **match or SUPERSEDE self-attention**; next-equilibrium predictor |
 | calibration | GREEN [RUN] `run_calib.py --self-test` exit 0, 4/4 bit-identical |
 | inspector | tri-state; INDETERMINATE exits nonzero |
 | repo | https://github.com/teerthsharma/resolvent (private) |
 
-## THE ONE NEXT ACTION (round 5, iteration 18)
+## THE ONE NEXT ACTION (round 5, iteration 19)
 
-**Run the key-norm-matched filler against the AGGREGATOR. It is the one control
-that decides whether iteration 17's finding is a result or an artifact.**
+**The round has no surviving positive claim. Begin D1 - the negative result -
+which the contract makes a DELIVERABLE regardless of outcome.**
 
-The aggregator win is now explained: `theta.max()` is a monotone read of
-`max_i A[i,c]`, the largest attention weight any row places on `c`, with an AUC
-gap of **~1e-03** against the raw attention statistic - **the sphere contributes
-nothing to it.** The mechanism is concentration: **0.881909 causal vs 0.161140
-filler**, a ratio of **5.473**.
+**EVERYTHING IS NOW RESOLVED EXCEPT THE INSPECTOR'S AUDIT:**
+  * **K1** - `D_FR` slope **-0.4137 [-0.4579,-0.3704]** and **-0.4654
+    [-0.5173,-0.4160]**, both entirely below **-0.30**: the pre-registered *"no
+    leap"* branch **FIRED**. The flip half is alive but unresolved at 8/2400.
+  * **K3** - theta beats **raw** TV but **loses at k=8 to a held-out `TV^p`**;
+    the identity `theta = arcsin(sqrt(TV))` makes K3 unable to distinguish
+    geometry from row-wise concavity **by construction**.
+  * **the aggregator** - real as a comparison, but **keeps 2.9% against a
+    key-norm-matched filler at k=8**, worse than the **35%** the mean retained.
+  * **B1** - not a rename (rho = -0.0253, reproduced twice), **and ill-posed as
+    written**: its top-k retains **5.4%** under a change of the token the
+    selector may not see.
+  * **X6** - the equilibrium clause **survives** on the Karcher residual, and the
+    contract's `tau = 0` sentence was **repaired by measurement** because it has
+    a one-pass closed form.
 
-**BUT THE DECISIVE CONTROL IS MISSING AND IT IS NAMED IN THE RECORD RATHER THAN
-GLOSSED.** Wilson measured that a **key-norm-matched filler** (ranks k+1..2k)
-removes **~65%** of the mean-based K2 effect - 1.2267 collapses to 0.4301, though
-it survives with a CI excluding zero. **Nobody has run that filler against
-`max_i A[i,c]`.** If the aggregator's 5.473 ratio collapses the same way, then
-peak attention is largely the key-norm returning and **the finding is Chase's F2
-firing a third time**. If it survives, peak attention tracks something the
-selector's score does not, and **that is worth carrying past this round.**
+**So `TWOSPHERES: KEPT` is not available and `TWOSPHERES: BROKEN` is what the
+evidence supports.** The contract: *"An honest BROKEN outranks an unfinished
+KEPT, and D1 ships either way."*
 
-Within-arm `rho(||k_c||, max A)` reads **+0.25 to +0.45**, which is why the
-question is open rather than settled. **The pooled +0.76 must not be quoted as
-evidence** - it mixes the two arms and therefore IS the separation under test.
+**D1 DOES NOT EXIST AS A DOCUMENT.** Chase established this: `LOOP_PROMPT.md:30`
+and `:262` name it, the only definition is in the round-4 archive, and
+`PROGNOSIS.md` is D1 in substance under another name with **no acceptance
+criteria and no round-5 chapter**. **Write the round-5 chapter**: what died, by
+which number, with its interval; the instrument defects and which of them were
+self-caught; and what survives audit.
 
-**HOLD EVERYTHING ELSE.** K1's `D_FR` clause is resolved against an interval,
-the *"no leap"* branch has **FIRED**, **ARM A has not survived**, **ARM B is not
-authorized**, and `TWOSPHERES: KEPT` is **not available**. The aggregator finding
-is a fact about softmax attention, **not** about the two-spheres frame.
+**DO NOT EMIT THE PROMISE YET.** The Health Inspector has not reported. **His
+strikes are strikes** - no appeal, straight to Open - and a claim he strikes must
+not appear in D1 as though it stood. **Write the chapter; hold the promise.**
 
-**The Health Inspector is still out.** He audits the log, and he was pointed
-hardest at my own six probes and at the self-satisfying provenance bind. **The
-prognosis is not written until he reports**, and **his strikes are strikes** - no
-appeal, straight to Open.
-
-**Dr House stays in the box.** K1 died of EVIDENCE. *"Dead is dead, and no leap
-un-refutes a fact."*
+**Dr House stays in the box.** Nothing died of missing innovation. Every kill this
+round was fired by a measurement with an interval.
 
 ## Open REDs
 
