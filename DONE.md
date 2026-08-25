@@ -2,6 +2,63 @@
 
 Round 2 archived below its own header; round-1 archive at `DONE_ARCHIVE_ROUND1.md`.
 
+### ROUND 3, ITERATION 15 - 2026-08-25 - INSPECTOR CLEAN. And the 8192 measurement DIED SILENTLY - I broke my own ADR.
+
+**[RUN] `python inspector.py 15` -> exit 0. CLEAN: 8 checks, 8 controls all fired.**
+
+    calibration (bench invoked directly)         4 values bit-identical
+    LOCK M2 efadc390c93f                         hash matches
+    bitwise replay pivot_signed__in_P/s16        37 journalled, match
+    published: pow_card_eq_zero (A^n = 0)        {16:0.0, 64:0.0, 128:0.0, 512:0.0}
+    value binds + resume                         107 passed
+    lake build CEQ (unmasked exit) + zero sorry  exit=0 sorry=0
+    struck-constant absence (9 docs + code)      12 passed
+    no Claude attribution in any commit          21 commits, 0 hits
+
+---
+
+**THE MEASUREMENT DIED SILENTLY AND I CAUSED IT.**
+
+`results/r3_it11_pivot_8192.log`: **0 bytes**. The background task output file:
+**0 bytes**. The process (started 19:02:12, 946 s CPU when last seen) is **gone
+from the process table**. Nothing was recorded - not a traceback, not a partial
+table, not an exit code.
+
+**Python buffers stdout when it is redirected**, so a killed process loses the
+whole buffer. **A 0-byte log from a dead process is indistinguishable from a
+0-byte log from a live one**, which is why four consecutive iterations reported
+it as "still buffering". It was not.
+
+**THIS IS MY OWN RULE, BROKEN.** `LOOP_PROMPT.md` carries ADR-001 verbatim:
+*"No Bash call over 10 minutes can complete on this platform. All long
+measurement goes through `scale/bucket.py` - append-only journal, PID lock,
+wall-clock buckets, and a replay assertion... Never `| tee` a long run: tee's
+exit code masked M2's silent death at 588 s (instrument #13)."*
+
+I launched an **unbucketed, full-batch, 8192-example** run with `nohup` and a
+redirect. **The journal exists precisely so that a death leaves evidence**, and I
+bypassed it and got the exact failure it was written to prevent.
+
+**THE LIKELY CAUSE, and the vectorised path does not fix it.** `run_arm`
+full-batches: at n_train=8192 the operator `a` is `[8192,64,64]` float32 = 134 MB,
+the hop-2 term another 134 MB, autograd saves both, and the pivot arms stack 8192
+separate `[64,64]` tensors - several GB per step, against another 1.3 GB process
+already resident. **Wilson's vectorised hop-2 makes memory WORSE, not better**:
+it materialises `[n,s,k]` and `[n,k,s]` gathers before the `bmm`. An 8.6x speedup
+does not help a run that is being killed for memory.
+
+**THE FIX IS GRADIENT ACCUMULATION, NOT MINIBATCHING.** Minibatch SGD is a
+DIFFERENT OPTIMISER and would change the numbers - by the standing policy that
+makes it **a new arm, not an optimisation**. Gradient accumulation preserves
+full-batch semantics exactly, up to float associativity, while bounding memory.
+**It will NOT be bitwise** - summing 8 partial gradients differs from summing
+8192 terms in one reduction - and that must be declared and measured rather than
+asserted.
+
+CHECKLIST: no status changed. The signed/unsigned arms at n_train=8192 remain
+**UNMEASURED**; the previous claim that they were "in flight" was wrong for at
+least four iterations.
+
 ### ROUND 3, ITERATION 14 - 2026-08-25 - CO-PRIME DILATIONS REPAIR THE SEVERANCE. 0.5745 -> 0.1277 at unchanged support.
 
 CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.

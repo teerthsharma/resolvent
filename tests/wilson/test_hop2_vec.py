@@ -158,6 +158,22 @@ def test_entries_outside_the_pivot_routes_are_ignored_by_both_paths():
     assert torch.equal(batched_pivot_hop2(bad, piv), batched_pivot_hop2(a, piv))
 
 
+@pytest.mark.slow
+@pytest.mark.parametrize("n", [2048, 8192])
+def test_hop2_bitwise_at_the_measured_budget(n):
+    """The cases above stop at n=64 to stay cheap. n_train=8192 is the budget
+    the campaign actually runs at, and a bitwise claim that stops two orders of
+    magnitude short of the shipped setting is a claim about a different tensor.
+    Forward only: the loop's BACKWARD at n=2048 takes ~25 s of one core, and
+    this has to share a machine with the running measurement."""
+    a, k = make_ak(n, 0, "pivot_signed")
+    want = loop_hop2(a, k)
+    got = batched_pivot_hop2(a, batched_select_pivots(k, K_PIVOTS))
+    assert torch.equal(got, want), (
+        f"NOT BITWISE n={n}: max abs diff = {float((got - want).abs().max()):.6e}"
+    )
+
+
 def _bench(n, kind, reps=3):
     a, k = make_ak(n, 0, kind)
     out = {}

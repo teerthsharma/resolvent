@@ -5,29 +5,34 @@
 | field | value |
 |---|---|
 | round | **3** - CEQ v5, 30 iterations, promise `SCALEFREE` |
-| iteration | **14 complete, 15 next** |
+| iteration | **15 complete, 16 next** |
 | phase | **Phase 0 - M3 on the windowed arm. Capability before statistics.** |
 | calibration | GREEN [RUN] `run_calib.py --self-test` exit 0, 4/4 bit-identical |
 | inspector | `python inspector.py` - 8 checks, 8 must-fire controls, exits nonzero if any control stays SILENT |
 | repo | https://github.com/teerthsharma/resolvent (private) |
 
-## THE ONE NEXT ACTION (iteration 15)
+## THE ONE NEXT ACTION (iteration 16)
 
-**Iteration 15 is an Inspector pass (every 5th) - `python inspector.py`.**
+**Make the 8192 reading survivable, through `scale/bucket.py` as ADR-001
+requires, with gradient accumulation for memory.**
 
-Then, immediately after: **the flip rate under the co-prime schedule.** Severance
-falling from 0.5745 to 0.1277 at unchanged support is NECESSARY for the route,
-not SUFFICIENT. What decides it is whether the sign-flip rate stays flat in `s`
-when the positions can actually move it.
+Two separate defects caused the silent death and both need fixing:
+  * **no journal** - the run left zero evidence because it was not bucketed.
+    ADR-001 exists for exactly this and was bypassed.
+  * **full-batch memory** - `[8192,64,64]` operator plus hop-2 plus autograd
+    saves, several GB per step. Wilson's vectorised path makes this WORSE, since
+    it materialises the gathers.
 
-Pre-register before running, and note the floor: **Cameron measured that at depth
-the `1e-6` floor discards 100% of a composed arm's flips** (0.386719 at floor=0
-against 0.000000 floored, median |grad| 2.8e-32 at depth 4). **The co-prime flip
-rate must be read at `floor=0`**, with the floored number reported beside it as
-the artifact it is.
+**Gradient accumulation, NOT minibatching.** Minibatch SGD is a different
+optimiser and would change the numbers, which by the standing policy makes it a
+new arm rather than an optimisation. Accumulation preserves full-batch semantics.
 
-Baselines in the same table, same draws: pow2, contiguous, and dense depth-1
-(which reproduces the published M2 kill and is the must-fire control).
+**DECLARE AND MEASURE THE NON-BITWISENESS.** Summing 8 partial gradients is not
+the same reduction order as summing 8192 terms at once, so it will NOT be
+bitwise. Measure the max relative difference against a full-batch run at a size
+that still fits (n=2048), report it, and only then use accumulation at 8192.
+Asserting "mathematically equivalent" without that number is the exact move this
+project has been burned by.
 
 ## Open REDs
 
