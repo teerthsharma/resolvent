@@ -5,36 +5,46 @@
 | field | value |
 |---|---|
 | round | **5** - CEQ v7, promise `TWOSPHERES`, **30 iterations** |
-| iteration | **8 complete, 9 next** |
+| iteration | **9 complete, 10 next** |
 | phase | **ARM A under the escalation chain; autonomous to iteration 30** |
 | goal | **match or SUPERSEDE self-attention**; next-equilibrium predictor |
 | calibration | GREEN [RUN] `run_calib.py --self-test` exit 0, 4/4 bit-identical |
 | inspector | tri-state; INDETERMINATE exits nonzero |
 | repo | https://github.com/teerthsharma/resolvent (private) |
 
-## THE ONE NEXT ACTION (round 5, iteration 9)
+## THE ONE NEXT ACTION (round 5, iteration 10)
 
-**Collect whichever fellows have landed; if none has, measure the `||tau||`
-trajectory that X6 actually names.**
+**Collect the fellows if any have landed. Otherwise: DECIDE WHICH EQUILIBRIUM
+THE CONTRACT MEANS, because it currently asserts two and they are not the same
+point.**
 
-**X6 is GREEN and the equilibrium clause SURVIVES** - residual at the glance
-0.599101 / 0.388587 / 0.321843, 100% converged in 28-53 steps. But the probe
-measured the **Karcher residual** trajectory, not the **`||tau||_F`** trajectory
-the clause names. `||tau||` was taken **at the glance only**. That gap is stated
-in `CHECKLIST.md` and is the cheapest remaining thing to close.
+X6 is fully measured now, both halves:
+  * the Karcher **residual** reaches **5.4944e-13** and the glance is NOT the
+    fixed point (residual 0.599101 / 0.388587 / 0.321843) - **the clause
+    SURVIVES**;
+  * the **`||tau||`** trajectory **plateaus NONZERO** (7.255e-02 / 2.962e-01 /
+    1.019e+00) at that same fixed point.
 
-**THE FINDING THAT MATTERS MORE IS THE ONE X6 DRAGGED IN.** Uniqueness holds on
-**0.9333 / 0.8167 / 0.5167** of draws at k = 8 / 32 / 128 - **at k=128 the
-Karcher mean is not unique on 48.3% of draws**, and settling also slows (28.43 ->
-52.55 steps). **Both trends run against ARM B, which wants k pivots.** Before ARM
-B is built on a Karcher mean, decide what happens on the draws where that mean
-does not exist uniquely - it is a precondition, not a caveat.
+**Both cannot be the equilibrium condition.** `tau = 0` holds iff the reading is
+parallel to `xbar`, the normalised **Euclidean** mean; the Karcher mean is the
+**geodesic** one, and the two sit **0.031648 rad [0.026318, 0.037550]** apart at
+k=8 with the CI excluding zero at every k. **The contract asserts both, so one of
+its sentences is false of whatever ARM B is built on.** This is a specification
+repair, not a measurement, and it is cheap: pick the geodesic mean (and cut or
+restate the `tau = 0` sentence), or pick `tau = 0` (and stop calling the settled
+reading a Karcher mean). **Do not build ARM B while both stand.**
 
-**Reading order for the tier, fixed:** Wilson's facts settle factual disputes; a
-fellow finding without its RED test goes to **Open**; the **Health Inspector runs
-BEFORE the prognosis**; the Chart carries **every** fellow including overruled
-ones, with the reason. **Dr House (`model: fable`, 5 min, no nurses) only if the
-problem survives all four rungs AND the gap is INNOVATION, not evidence.**
+**Carry into that decision, from iteration 8:** the uniqueness precondition holds
+on only **0.9333 / 0.8167 / 0.5167** of draws at k = 8 / 32 / 128. **At k=128 the
+Karcher mean is not unique on 48.3% of draws** - so the geodesic branch of the
+repair has to say what happens there, and "unique for theta < pi/2" is a
+precondition that fails on half the draws at the pivot count ARM B wants.
+
+**Tier reading order unchanged:** Wilson's facts settle disputes; a fellow finding
+without its RED test goes to Open; **the Health Inspector runs BEFORE the
+prognosis**; the Chart carries every fellow including overruled ones. **Dr House
+(`model: fable`, 5 min, no nurses) only if the problem survives all four rungs
+AND the gap is INNOVATION, not evidence.**
 
 ## Open REDs
 

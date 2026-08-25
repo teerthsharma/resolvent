@@ -1,3 +1,90 @@
+### ROUND 5, ITERATION 9 - 2026-08-25 - The ||tau|| trajectory. THE CONTRACT'S TWO DEFINITIONS OF EQUILIBRIUM ARE DIFFERENT FIXED POINTS, and the gap is measurable.
+
+CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.
+
+ACTION (one): built and ran `scale/tau_trajectory.py`, closing the gap I recorded
+against myself last iteration - X6 names the **`||tau||_F` trajectory** and
+`equilibrium_probe.py` measured the Karcher **residual** trajectory, taking
+`||tau||` at the glance only.
+
+**WRITING OUT WHAT tau IS IN THIS ITERATION TURNED THE TEST SHARPER THAN THE
+CLAUSE ASKS FOR.** With `X` the k pivot points and `Y` the current mean broadcast
+to k rows,
+
+    Y^T X = sum_p m (x_p)^T = k * m (xbar)^T          xbar = mean_p x_p
+    tau   = (k/2) ( m xbar^T - xbar m^T )
+    ||tau||_F = 0   <=>   m is PARALLEL TO xbar
+
+**So the contract's own equilibrium condition, written out, says the settled
+reading is at equilibrium exactly when it is parallel to the PLAIN EUCLIDEAN
+AVERAGE of the pivot readings.** That makes X6's second half a harder K3: does
+the whole Riemannian apparatus - log map, exp map, Karcher iteration,
+injectivity radius - **land anywhere the one-line normalised Euclidean mean did
+not already reach?**
+
+**[RUN] s=256, d=16, 60 draws/cell, float64, threads pinned to 2**
+
+     k  ||tau|| glance  ||tau|| settled   ang(Karcher,Euclid)     spread  ang/spread
+     8        2.167207        7.255e-02  0.031648 [0.02632,0.03755]  1.170608   2.7536%
+    32        5.630836        2.962e-01  0.050990 [0.04791,0.05433]  1.313333   3.8968%
+   128       18.668843        1.019e+00  0.052714 [0.04909,0.05638]  1.356641   3.8954%
+
+**THE HEADLINE IS NOT THE ANGLE. IT IS THAT `||tau||` NEVER REACHES ZERO.**
+
+`||tau||` falls by **29.9x / 19.0x / 18.3x** and then **plateaus at 7.255e-02 /
+2.962e-01 / 1.019e+00** - while the Karcher residual at the same fixed point
+reaches **5.4944e-13** [RUN, iter 8]. **The iteration converges hard, and it
+converges to a point where `tau != 0`.**
+
+**THE CONTRACT DEFINES EQUILIBRIUM TWICE AND THE TWO DEFINITIONS DISAGREE:**
+
+    "SPIN UNLESS EQUILIBRIUM. tau = 1/2 (Y^T X - X^T Y); equilibrium <=> tau = 0"
+    "the settled reading is the Karcher/Frechet mean of its pivot readings"
+
+**These are DIFFERENT POINTS.** `tau = 0` requires `m` parallel to `xbar` - the
+normalised Euclidean mean. The Karcher mean is the **geodesic** mean and is not
+that point. Measured separation **0.031648 rad** at k=8, CI **[0.026318,
+0.037550]**, **excluding zero**, and it holds at every k.
+
+**This is not a failure of either object; it is an inconsistency in the
+specification, found by writing out what its own symbol means.** Whichever one
+ARM B is built on, the other clause is false of it, and the document currently
+asserts both.
+
+**AND THE ANGLE ITSELF, reported without my thumb on it.** The gap is **2.75% /
+3.90% / 3.90%** of the pivot spread. **My verdict code called under 1% "practically
+the flat one" and above it "machinery EARNS". THAT 1% WAS MINE, ARBITRARY, AND
+UNJUSTIFIED**, so the verdict line it prints is worth less than the raw numbers
+beside it. What is defensible: the two means are **distinguishable**, CIs exclude
+zero at every k, and the separation is **a few percent of the spread**.
+
+**WORTH NOTING WITHOUT CLAIMING:** K3 read the geometry's edge over TV at
+**2.1-4.7%**; this reads the geodesic mean's displacement from the flat mean at
+**2.75-3.90%**. **The sphere keeps earning single-digit percentages.** Two
+measurements of different things landing in the same band is a pattern, not a
+result, and it is recorded as the former.
+
+**A DEFECT OF MINE IN THIS PROBE, DELETED RATHER THAN SOFTENED.** I wrote a third
+control, "C3 instrument SEES a Karcher/Euclid gap on spread points", **and passed
+it `True` unconditionally.** It printed an angle and could not fail. It also chose
+three orthonormal axes, whose geodesic and chordal means are **both the symmetric
+point**, so its "gap" was **zero by symmetry** and it would have read like a clean
+pass either way. **A check that cannot fail is the instrument-#15 shape this
+project has struck twice, and I put a third one in my own file.** Removed. C1 and
+C2 are real and both FIRED - `tau=0.000e+00 ang=0.000e+00` on identical pivots,
+`tau=2.089918 ang=0.635487` on non-parallel ones.
+
+**SCALING CAVEAT, stated because the table invites the wrong read.** `tau` carries
+a factor of `k`, so **the settled `||tau||` values are NOT comparable across k**
+in absolute terms - the glance values grow the same way (2.17 -> 5.63 -> 18.67).
+**The drop RATIO is the comparable quantity: 29.9x / 19.0x / 18.3x.**
+
+CHECKLIST: **X6's `||tau||` trajectory MEASURED.** `||tau||` converges to
+**nonzero** at the Karcher fixed point, so **the contract's `tau = 0` equilibrium
+and its Karcher-mean equilibrium are DIFFERENT POINTS**, separated by
+**0.031648 rad [0.026318, 0.037550]** at k=8. Geodesic-vs-flat gap **2.75-3.90%**
+of spread. Fake control removed from my own file.
+
 ### ROUND 5, ITERATION 8 - 2026-08-25 - X6 RUN FOR THE FIRST TIME. The equilibrium clause SURVIVES, and it drags a hard limit in behind it.
 
 CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.

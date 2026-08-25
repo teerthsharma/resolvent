@@ -468,3 +468,15 @@ is left, and **a not-found cell is permission to test, not a result.**
 | probe defect 1 | **UNREACHABLE TOLERANCE, mine.** `tol=1e-8` sits below float32's floor - `float32 eps = 1.1920928955078125e-07`, iteration floors at **1.8546e-08**, float64 reaches **5.4944e-13**. `converged` could never be true. Fixed: iteration runs float64 as a **declared analysis choice**. |
 | probe defect 2 | **CENSORED STEPS REPORTED AS A TIME, mine.** First table printed `steps 64.00`, which was the cap. Now averaged over **converged draws only**, with the converged fraction printed beside it. |
 | scope | X6 names the **`\|\|tau\|\|_F` trajectory**; what is measured is the **Karcher residual** trajectory, with `\|\|tau\|\|` at the glance only (0.270901 / 0.175964 / 0.145850). **The `\|\|tau\|\|` trajectory under iteration is NOT MEASURED.** |
+
+**X6 `||tau||` TRAJECTORY [RUN, r5 iter 9] - `scale/tau_trajectory.py`, exit 0 unpiped.**
+
+| item | status |
+|---|---|
+| the trajectory X6 names | **MEASURED.** `\|\|tau\|\|` falls **29.9x / 19.0x / 18.3x** and **plateaus NONZERO** at **7.255e-02 / 2.962e-01 / 1.019e+00**, while the Karcher residual at the same fixed point reaches **5.4944e-13**. |
+| **contract inconsistency** | **FOUND, and it is structural.** `\|\|tau\|\|=0` requires `m` parallel to `xbar`, the normalised **Euclidean** mean; the settled reading is the **geodesic** mean. **"equilibrium <=> tau = 0" and "the settled reading is the Karcher mean" are DIFFERENT FIXED POINTS**, separated by **0.031648 rad [0.026318, 0.037550]** at k=8, CI excluding zero, at every k. **Whichever ARM B is built on, the other clause is false of it, and the document asserts both.** |
+| geodesic vs flat mean | Gap is **2.75% / 3.90% / 3.90%** of the pivot spread; CIs exclude zero at every k, so the two means are **distinguishable**. |
+| my 1% threshold | **ARBITRARY AND UNJUSTIFIED, mine.** The printed verdict line ("machinery EARNS") rests on a cutoff nothing supports. **The raw numbers are the finding; the verdict line is not.** |
+| pattern, not a result | K3 read the geometry's edge over TV at **2.1-4.7%**; this reads the geodesic/flat displacement at **2.75-3.90%**. Recorded as a pattern only. |
+| probe defect | **FAKE CONTROL, mine, DELETED.** "C3 instrument SEES a Karcher/Euclid gap" passed `True` **unconditionally** and chose orthonormal axes whose two means coincide **by symmetry** - zero either way. Third instrument-#15 in this project and the first in my own file. C1/C2 are real and fired (`0.000e+00`/`0.000e+00`; `2.089918`/`0.635487`). |
+| scaling caveat | `tau` carries a factor of `k`, so settled `\|\|tau\|\|` is **NOT comparable across k**. The **drop ratio** is. |
