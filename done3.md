@@ -1,20 +1,82 @@
-# Work done — round 3 (CEQ v5), live
+# Work done — round 3 (CEQ v5)
 
-Round 1 archived in `DONE_ARCHIVE_ROUND1.md`. Round 2 summarised in
-`workdone2.md`. This file tracks round 3 and is updated every iteration until
-the loop stops.
+Round 1 archived in `DONE_ARCHIVE_ROUND1.md`. Round 2 in `workdone2.md`. This
+covers round 3 and is updated every iteration until the loop stops.
 
 **Goal, as restated:** not the best token predictor — the **next-equilibrium
-predictor**. An attention module that understands causality and consequences on
+predictor**. Attention that understands causality and consequences on
 Turing-grade problems at the smallest scale.
 
 ---
 
-## The round in one line, so far
+## THE HEADLINE
 
-The contract went to the room before a line was built, which **struck two of four
-routes before they cost anything** — and then the first substantive measurement
-**struck a constant I had pinned myself**.
+**Three arms cleared the absolute capability bar for the first time in this
+project's history — and the win belongs to ROUTING, not to SIGN.**
+
+    arm              train      eval       bootstrap CI            n_params
+    softmax         0.820513   0.877168   [0.830455, 0.924226]     4769
+    pivot_unsigned  0.732424   0.747528   [0.696849, 0.797716]     4769
+    pivot_signed    0.664873   0.673762   [0.632559, 0.715564]     4769
+
+`pivot_unsigned` carries **no signed content whatsoever** — it is
+`_softmax_operator`, differing from the baseline *only* by routing hop-2 through
+k=8 content-selected pivots. Its interval is **disjoint from softmax's**, at
+identical parameter count, identical data, identical steps and lr, with softmax
+timestamped first.
+
+**Routing beats softmax. Sign does not measurably beat routing.** Three rounds of
+this project have been about signedness.
+
+## THE TEST THAT DECIDED IT
+
+Iteration 17 used per-arm bootstrap intervals; they overlapped by 0.0188 and G4
+fired. But that is the *conservative* test — both arms see the identical eval
+batch, so shared variance inflates both intervals. The correct instrument is a
+**paired** bootstrap on the per-example difference, and it is the one that makes
+the signed claim **easier**:
+
+    mean |err| signed    = 0.533127
+    mean |err| unsigned  = 0.553028
+    paired mean difference (signed - unsigned) = -0.019901
+    paired bootstrap 95% CI = [-0.045847, +0.006275]   B = 20000
+    signed wins on 55.3% of examples
+
+**The CI includes zero on the favourable test.** 55.3% is barely a coin flip. The
+reading was pre-registered: *"paired CI includes 0 → G4 stands, the capability is
+routing, and the claim is rewritten as a routing result — a finding against three
+rounds of this project's own thesis, and it must be reported as one."*
+
+The unpaired test was reported first **on purpose**. A project carrying six
+withdrawn novelty claims does not get to run the flattering test first.
+
+## WHAT MADE ANY OF IT MEASURABLE
+
+**No arm had ever passed the bar — a data-budget fact, not an operator fact.**
+Every prior reading in this repository was taken at `n_train = 128`, where 4769
+parameters memorise 128 examples:
+
+    n_train     train      eval       CI
+        128    0.196599   2.116579   [1.791078, 2.411601]   fail
+        512    0.662082   1.316514   [1.134451, 1.540035]   fail
+       2048    0.790853   0.949529   [0.891522, 1.011235]   straddles
+       8192    0.820513   0.877168   [0.830455, 0.924226]   PASSES
+
+A 10.8x train/eval gap at 128, closing to 1.07x at 8192. Every earlier reading
+ranked overfitting.
+
+## THE SYNTHESIS NOW BEING BUILT
+
+Three measured results point at one mechanism that has never been assembled:
+routing is what works (above); **top-k-by-magnitude selection is
+sign-destroying** (frustration 0.2779 in bulk against a selected set 99.98%
+positive, pairwise correlation 0.9993); and **co-prime dilated composition**
+gives whole-context gradient support at row width 8 with severance cut 0.5745 ->
+0.1277 at unchanged support. The candidate is routing with a selection rule that
+is **not magnitude**, over a co-prime dilated composition, made affordable by a
+batched hop-2 path that is bitwise-equal to the loop and 374x faster on
+forward+backward. Cameron is specifying it; Wilson and the nurses are on the
+engineering.
 
 ---
 
@@ -300,6 +362,4 @@ depth 4. Anyone composing depth must use `floor=0`.
 
 ---
 
-*Updated through round 3, iteration 10. Four house-mode agents still running;
-their findings and the representation-theorem challenge reconcile into a
-prognosis when they land.*
+*Updated through round 3, iteration 18.*
