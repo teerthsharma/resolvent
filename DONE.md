@@ -1,3 +1,77 @@
+# DONE - Round 3, under CEQ v5
+
+Round 2 archived below its own header; round-1 archive at `DONE_ARCHIVE_ROUND1.md`.
+
+### ROUND 3, ITERATION 0 - 2026-08-25 - the contract went to the room BEFORE the loop.
+
+`/differential-planning` on CEQ v4. Three fellows, questions only, no fixes.
+Every claim below is [RUN] this session.
+
+**FOREMAN and CHASE CONVERGED INDEPENDENTLY** on the question that decided
+the round: which route changes the **EVENT** rather than the **STATISTIC**?
+
+    common positive rescale (R5, R8)   event changed in      0 / 20000
+    ECDF rank transform      (R7)      event changed in    723 / 20000  (3.6%)
+
+**R5 and R8 STRUCK BEFORE BUILD.** R8 was scheduled FIRST as the cheapest
+one-line change. It is a provable no-op, and this repository already proved
+it once as instrument #16 - *a positive elementwise rescale cannot change a
+sign* - which is part of why R4 died. Building it would have burned iterations
+producing a guaranteed null that would have read as evidence.
+
+**A PUBLISHED CLAIM IS WITHDRAWN.** Foreman demanded the interval on the
+comparison that declared pivot routing dead. Bootstrap B=20000:
+**pivot - dense = -0.2099, 95% CI [-0.7497, +0.2651]** - does not exclude zero.
+*"Routing makes it worse than dense"* is unsupported. Pivot routing stays dead;
+that sentence does not.
+
+**FOREMAN KILLED THE TWIN TEST.** In `a = sign(t)*F(|t|)^gamma` the sign is a
+multiplicative prefactor, so sign-sensitivity is a property of the ALGEBRA, not
+the aggregation. **`sign(t)*1` - pure sign, all magnitude destroyed, plainly
+useless - passes v4's twin test identically.** Rebuilt with a third NOT-VACUOUS
+arm in which that control must be SEEN losing.
+
+**ALL THREE DEMANDED THE SAME REORDERING, AND IT IS CONCEDED.** F4's windowed
+w=8 arm is already flat to s=2048 - the exact property four routes chase - and
+has never been capability-tested. It is a live counterexample to the sufficiency
+of the M2'' gate sitting inside the contract's own facts table. **M3 on the
+windowed arm is now Phase 0.** If it goes RED, flatness does not produce
+capability and the gate is void as a proxy - the cheapest possible test of the
+round's own premise.
+
+**THE FABLE RUN'S KILL WAS REPLACED, NOT ACCEPTED.** Dr House's ratio test used
+s=8 as its baseline - a documented degenerate point (|P| = 6, not 8; round 2
+iteration 23). From s=8 his own kill FIRES at 1.996 >= 1.9; from s=16 it passes
+at 1.357. The user's derivation showed all his numbers are one formula at
+different boundaries: `(1 - gamma(k+1)/(2(s0+1)))^-1` gives 2.000 / 1.636 /
+1.360 against measured 1.996 / 1.633 / 1.357.
+
+**[RUN] THE CORRECTED PRE-REGISTRATION, VERIFIED:**
+  * `A_8 = 2.187500` exactly, 256-term sign enumeration, no Khintchine slack.
+  * `E|B_k(s)| -> A_k` monotonically: **0.7476 / 0.9653 / 0.9912 / 0.9978 /
+    1.00000** at s = 16/128/512/2048/2^20. A ceiling, not a trend.
+  * **KILL 2 is the discriminating one**: local slope on s=512->2048 ALONE,
+    predicted **-0.00476**, bar |slope| < 0.01. The -0.1246 slope over 8->2048
+    is a **transient**, and a bar fitted across it would pass arms that should
+    fail. The dense arm reads -1.088 there and cannot pass.
+  * gamma admissible range is a formula: sup-ratio crosses 1.9 at **1.789**.
+
+**OPEN, and it is the deepest thing in the round (Cameron).** F1 says softmax
+sits at exactly 0.000000 on negation BY THEOREM. The only matched-parameter
+capability measurement says softmax **15/512** on COGS against this operator's
+**0/512**, p = 2.75e-05. **Both numbers cannot be about the same thing**, and
+nothing in two rounds resolves it.
+
+**Also open, and unanswerable today:** no result in either round shows a change
+in flip-rate moving any capability number in either direction. F7 concedes
+val-loss under 3% does not predict capability; the same standard has never been
+turned on flip-slope. Phase 0 is the first honest test of it.
+
+CHECKLIST: round-3 block appended. R5 and R8 STRUCK. M3w, M2n, TWIN, M6, M7
+UNTESTED. R6 held behind R7, pending its own event test.
+
+---
+
 HOLDFAST: BROKEN - M2 - clause 1 fired: sign-flip slope -1.298 against the pre-registered bar of -0.3, on the operator the module ships.
 
 Written 2026-08-25. Calibration ran bit-identical the same date (run_calib.py

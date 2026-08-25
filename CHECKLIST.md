@@ -315,3 +315,23 @@ art that steals the claim, it is independent published evidence that the
 mechanism WORKS. The 1/k-vs-1/s derivation and the inverse-Littlewood-Offord
 k^-1/2 reading both predict what a 2019 architecture already demonstrates. That
 is the first external corroboration this mechanism story has ever had.
+
+## ROUND 3 — CEQ v5. Items freeze on first test. Status column only.
+
+| id | item | status |
+|---|---|---|
+| M3w | **CAPABILITY ON THE WINDOWED ARM (Phase 0, FIRST).** Negation-scope flip at d in {256,512,1024}, executable oracle, 5 seeds, matched params + lr sweep, softmax timestamped FIRST. Kill: NRMSE > 1.0; or CIs overlap softmax at all d >= 256; or the unsigned ablation matches. **The kill must be SEEN firing on a deliberately broken arm before the first reading.** | UNTESTED |
+| M2n | **SCALE-FREE SIGNED INFLUENCE (R7).** KILL 1: measured E\|B_k(s)\| exceeds A_k(1+eps_Jensen) at any s, A_8 = 2.187500 exact by 256-term enumeration. KILL 2: local log-log slope on **s=512->2048 alone** with \|slope\| >= 0.01 (predicted -0.00476; dense reads -1.088 and cannot pass). Baseline s=16, never s=8. Requires identical-draws pairing, floor=0 companion arm, CP intervals + discard counts on every zero, rebuilt twin test passed, no published number moved. | UNTESTED |
+| TWIN | **REBUILT TWIN TEST — three arms.** scale-insensitive (monotone magnitude randomization must NOT change the decision); sign-sensitive (sign randomization MUST change it); **NOT-VACUOUS** (`sign(t)*1` must score STRICTLY WORSE than `sign(t)*F^gamma` on the same draws). v4's two-arm version was vacuous: sign is a multiplicative prefactor, so `sign(t)*1` passed it identically. | UNTESTED |
+| M6 | Numerical-radius guard compatible with the surviving route. Kill: guard reintroduces decay, or training diverges at every lr. | UNTESTED |
+| M7 | Trained reading at >= 25.7M under a pre-registered reading doc. 300M remains the gate and its absence is stated in every document. | UNTESTED |
+| R5 | Self-normalized / studentized sign statistic | **STRUCK BEFORE BUILD** — a common positive rescale changed the event in **0/20000** draws. Divides both sides by the same scalar; the event set is invariant. Already proved once here as instrument #16. |
+| R8 | Extreme-value-calibrated threshold | **STRUCK BEFORE BUILD** — same 0/20000. Was scheduled FIRST as "cheapest"; would have produced a guaranteed null and read as evidence. |
+| R6 | Inverse-propensity (Horvitz-Thompson) | UNTESTED — per-token 1/pi_i is NOT a common rescale, so it may change the event, but this is **unmeasured**. Run the 20000-draw event test before building. Held behind R7. |
+
+**WITHDRAWN CLAIM.** *"Pivot routing makes it worse than dense"* (-1.298 vs
+-1.088) is **not statistically supported**: bootstrap B=20000 gives
+pivot - dense = -0.2099, 95% CI **[-0.7497, +0.2651]**, which does not exclude
+zero. Pivot routing stays dead (both arms far past the -0.3 bar); that sentence
+does not, and it appears in every document written since round 2.
+
