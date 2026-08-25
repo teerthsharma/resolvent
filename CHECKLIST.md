@@ -409,3 +409,11 @@ additive-basis COVERAGE THEOREM. Both still owe their kills.
 **FIVE of seven cells occupied before a line was built.** The two not found -
 additive-basis schedule, and Procrustes torque as a ROUTING OBJECTIVE - are what
 is left, and **a not-found cell is permission to test, not a result.**
+
+**ARM A FIRST READING [RUN, r5 iter 4]** - 120 draws/cell declared, k in {8,32,128}.
+
+| kill | verdict |
+|---|---|
+| K1 dual slope | **NOT EVALUABLE.** `flip` = 0.00000 at every k **by F1** - `pivot_unsigned`'s Jacobian `I+A+hop2` has **no negative entry, min exactly 0.000000e+00** - so the flip half was never alive on an unsigned arm. `D_FR` slope **-0.3061** misses the -0.3 line by **0.006** on a 3-point fit. **Untested, not failed.** |
+| K2 filler twin | **GREEN** - causal vs filler CIs **DISJOINT at every k**, ~**10x** separation (0.030850 vs 0.003317 at k=8). The statistic can lose to a filler. |
+| K3 geometry earns itself | **GREEN, THIN** - theta beats TV at every k but by **2.3% / 2.1% / 4.7%**. Passes the stated criterion; a 2% edge is not "clearly", and the contract's point was that TV ships otherwise. |

@@ -1,3 +1,70 @@
+### ROUND 5, ITERATION 4 - 2026-08-25 - ARM A RAN. K2 PASSES. K3 passes THIN. K1 IS NOT EVALUABLE, and that is my probe's fault.
+
+CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.
+Threads PINNED IN THE FILE (2), not left to the launcher - Wilson's finding.
+Journal: `results/arm_a.jsonl`.
+
+**[RUN] DECLARED: 120 draws per cell, not the contract's 20000, and 3 of 4 k
+values. Every CI is printed and they are correspondingly wide.**
+
+    k      D_FR causal              D_FR filler             flip     ||tau||   gamma_1
+    8    0.030850 [0.0252,0.0375]  0.003317 [0.0024,0.0044]  0.00000  5.4280   0.6048
+    32   0.018089 [0.0148,0.0215]  0.003068 [0.0025,0.0037]  0.00000  3.3409   0.5073
+    128  0.013203 [0.0101,0.0170]  0.002784 [0.0023,0.0034]  0.00000  2.3831   0.4280
+
+**K2 FILLER TWIN: PASSES, CLEANLY.** Causal and filler CIs are **DISJOINT at
+every k**, with roughly a **10x** separation (0.0309 vs 0.0033 at k=8). The
+displacement statistic **can** lose to a filler, so it is not M2-clause-2 again.
+**This is the one clean result of the run.**
+
+**K3 GEOMETRY EARNS ITSELF: PASSES, BUT THIN.**
+
+    k=8    d_theta=+1.0888  d_TV=+1.0645     theta wins by 2.3%
+    k=32   d_theta=+1.1146  d_TV=+1.0920     theta wins by 2.1%
+    k=128  d_theta=+0.7410  d_TV=+0.7077     theta wins by 4.7%
+
+theta beats raw TV at every k, **but by 2-5%, not by a margin that would survive
+a different draw count.** Recorded as a PASS on the stated criterion and as
+**thin**, because the criterion was "larger standardized effect" and it is larger
+- and because the contract's own point was that if theta does not clearly beat
+TV, **TV ships**. A 2% edge is not "clearly".
+
+**K1 DUAL SLOPE: NOT EVALUABLE, AND THE FAULT IS IN MY PROBE.**
+
+`flip` reads **exactly 0.00000 at every k**. That is not a statistic decaying on
+schedule - **it is F1, the theorem.** [RUN] the influence Jacobian of the arm I
+measured:
+
+    pivot_unsigned  J = I + A + hop2
+    any negative entry?  False        min entry  0.000000e+00
+
+**`pivot_unsigned` uses `_softmax_operator`, which is NON-NEGATIVE, so
+`I + A + A^2` is non-negative entrywise and the gradient CANNOT change sign.**
+flip(k) = 0 is guaranteed before any draw is taken.
+
+**K1 asks flip(s) to die on schedule. On an unsigned arm it was never alive.**
+The contract said to run ARM A on *"the LIVE `pivot_unsigned` arm"* and I did -
+but **K1's flip half requires a SIGNED arm to be evaluable at all**, and I did not
+notice the contradiction until the probe printed a column of exact zeros.
+
+**THIS IS THE INSTRUMENT-#15 CLASS AND I WROTE THAT RULE:** *"a control that
+cannot be nonzero is not a control."* The tell was the same one that caught the
+difference-set error two rounds ago - **a column identical across every cell.**
+
+**AND THE SECOND CLAUSE IS TOO CLOSE TO CALL.** `D_FR` slope in k reads
+**-0.3061** against the *"no leap"* line at **-0.3**. It misses by **0.006**, on
+**120 draws** at **3 points**. **I am not declaring "no leap" on a 0.006 margin
+from a 3-point fit whose companion clause is vacuous.** That would be reading a
+verdict out of noise, in the unfavourable direction, which is no better than
+reading one out of noise in the favourable direction.
+
+**WHAT IS ACTUALLY ESTABLISHED:** displacement separates causal from filler with
+disjoint CIs and about 10x margin (K2), and theta edges TV by 2-5% (K3). **K1 is
+untested**, not failed.
+
+CHECKLIST: K2 GREEN. K3 GREEN-thin. **K1 NOT EVALUABLE** - flip half vacuous by
+theorem on an unsigned arm; D_FR slope within noise of its line.
+
 ### ROUND 5, ITERATION 3 - 2026-08-25 - Torque probe built. And Wilson corrects my premise about the thread pin.
 
 CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.

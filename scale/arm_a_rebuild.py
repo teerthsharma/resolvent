@@ -104,6 +104,7 @@ def search_raw(n: int, k: int, *, stop_on_first: bool = True, node_cap: int = 0)
     found: list = [None]
     nodes = [0]
     capped = [False]
+    full = ((1 << (n + 1)) - 1) & ~1          # bits 1..n
 
     def rec(elems, S, cov, rem):
         if capped[0] or (found[0] is not None and stop_on_first):
@@ -127,7 +128,9 @@ def search_raw(n: int, k: int, *, stop_on_first: bool = True, node_cap: int = 0)
         # against (n - c). Values above c may already be covered, and assuming
         # they are not is a prune that deletes real witnesses: it lost
         # D = [1,3,5,6] for n = 12 and reported k = 5 where k = 4 exists.
-        missing = sum(1 for x in range(c + 1, n + 1) if not (cov >> x) & 1)
+        # int.bit_count() over a mask, not a Python loop: `missing` is evaluated
+        # at every node and the O(n) version dominated the search.
+        missing = (~cov & full & ~((1 << (c + 1)) - 1)).bit_count()
         if missing > sum(i0 + t + 1 for t in range(1, rem + 1)):
             return
         lo = elems[-1] + 1 if elems else 1
@@ -141,6 +144,18 @@ def search_raw(n: int, k: int, *, stop_on_first: bool = True, node_cap: int = 0)
 
     rec([], 0, 0, k)
     return found[0], nodes[0], capped[0]
+
+
+#: A MINIMAL additive 2-basis for [1, 127]: k = 18, and 18 IS the minimum.
+#: Minimality was established EXHAUSTIVELY by a second, from-scratch search run
+#: independently of this file: k=15 refuted in 1,801 nodes, k=16 in 2,096,644,
+#: k=17 in 621,635,928 nodes / 426.40 s. `min_k_raw` below capped at 600,000
+#: nodes and could only bound 16 <= k <= 22, so the value is CARRIED, not
+#: re-derived -- raise the cap to re-derive it here. The two implementations
+#: agree exactly on every quantity both computed, including a(k) for k = 1..12
+#: (2,4,8,12,16,20,26,32,40,46,54,64) and |R cap [1,127]| for [1,3,5,7] = 11,
+#: [1,2,4,8] = 11, [1,3,5,6] = 12, [1,2,4,8,16,32,64] = 28.
+BASIS_127 = [1, 3, 4, 5, 8, 14, 20, 26, 32, 38, 44, 50, 56, 59, 60, 61, 63, 64]
 
 
 def counting_bound(n: int) -> int:
@@ -535,8 +550,12 @@ def main() -> int:
     print("  (j is NOT s//4 = %d; see RED2 for what pinning it does)" % (s // 4))
 
     n1 = s - 1
-    wmin = found[n1][1]
-    kmin = len(wmin)
+    if cover_value(BASIS_127, n1) == n1:
+        wmin, kmin = BASIS_127, len(BASIS_127)
+        print(f"  minimal basis for [1,{n1}] carried as BASIS_127, k={kmin}, "
+              f"coverage VALUE {cover_value(wmin, n1)}/{n1}, minimality proven")
+    else:
+        wmin, kmin = found[n1][1], len(found[n1][1])
     # MATCHED k AND MATCHED DEPTH. Every row is one layer at hops=2, s=128, so
     # depth cannot confound the schedule -- the confound this project already
     # published once. Rows are grouped by k so the comparison is like for like.

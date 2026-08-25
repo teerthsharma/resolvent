@@ -5,31 +5,32 @@
 | field | value |
 |---|---|
 | round | **5** - CEQ v7, promise `TWOSPHERES`, **30 iterations** |
-| iteration | **3 complete, 4 next** |
+| iteration | **4 complete, 5 next** |
 | phase | **G1 fetches, then ARM A (the torque probe)** |
 | goal | **match or SUPERSEDE self-attention**; next-equilibrium predictor |
 | calibration | GREEN [RUN] `run_calib.py --self-test` exit 0, 4/4 bit-identical |
 | inspector | tri-state; INDETERMINATE exits nonzero |
 | repo | https://github.com/teerthsharma/resolvent (private) |
 
-## THE ONE NEXT ACTION (round 5, iteration 4)
+## THE ONE NEXT ACTION (round 5, iteration 5)
 
-**RUN ARM A.** The module exists (`scale/torque_probe.py`); nothing has been
-measured yet.
+**Iteration 5 is an Inspector pass (every 5th) - and it has a repair to make
+that Foreman found.**
 
-Bucketed - 20000 draws at four sizes will not fit one call, and two unbucketed
-runs have already died here. Start at `k in {8, 32}` with a declared draw count,
-journal it, then extend.
+`inspector.py:299`'s *"published: M2 two-point slope"* check computes
+`log10(0.02732/0.16511)/log10(4)` **from two constants it holds itself** and
+compares to a third constant. **It re-verifies `math.log10`. It has never checked
+a measurement**, and it has passed at every pass this round. Those two numbers
+are **sgate** values that appear in **no journalled unit** - grep returns zero
+hits, and no unit carries n=751 or n=549.
 
-Three kills, and after the G1 round **K3 decides whether the round has
-anything**: the sphere map is textbook and the TV ablation probe is occupied, so
-theta must beat raw TV by standardized effect on identical draws or **TV ships**.
+**Then re-run K1 on a SIGNED arm.** The flip half is vacuous on `pivot_unsigned`
+by F1 - Jacobian min entry exactly 0.000000e+00 - so K1 needs `pivot_signed` at
+`lam=1.00`, the regime where the operator is genuinely signed (bulk negative
+fraction 0.500564). And more draws and more k points: **-0.3061 against a -0.3
+line on a 3-point fit is noise, in either direction.**
 
-**Pin the thread count in the probe itself.** Wilson's finding is that
-`m3_capability.py`'s published numbers were reproducible only because the shell
-happened to be set to 2 - the file said nothing, and the same log carries the
-same command at 20 threads (14 runs) and 3 threads (2 runs). **A probe that does
-not pin is a probe whose number is a function of its launcher.**
+**Do not read a verdict out of that margin while it stands.** K1 is UNTESTED.
 
 ## Open REDs
 
