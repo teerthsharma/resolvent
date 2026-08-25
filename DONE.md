@@ -1,3 +1,93 @@
+### ROUND 5, ITERATION 13 - 2026-08-25 - Cameron's mechanism claim is REFUTED. And my own max numbers CONTRADICT hers, which I cannot settle.
+
+CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.
+
+ACTION (one): built and ran `scale/max_row_mechanism.py` - **the RED test Cameron
+asked for and disclaimed.** Her words: *"my reading is that the max row is at or
+near `i = c+1` ... a mechanism claim with no RED test behind it. Do not ship it
+as one."*
+
+**ALL THREE CONTROLS FIRED**, including one that had to prove the mask actually
+masks: a maximum planted at row 377 is found at 377; a maximum planted at row 42
+with `c=100` is **correctly NOT found** (locator returns 483); and
+`arcsin(sqrt(.))` being strictly increasing forces theta and TV to share an argmax
+(both 32), which is asserted rather than assumed.
+
+**[RUN] s=1024, d=16, 120 draws/cell, threads pinned to 2**
+
+=== Q1 WHERE IS THE ARGMAX? (offset = argmax - c) ===
+
+      k    off==1    off<=2   off<=10   median   chance off==1  theta/TV agree
+      8    0.0000    0.0083    0.0750      103        0.005728          0.8583
+     32    0.0167    0.0250    0.0667      115        0.012310          0.9417
+    128    0.0250    0.0333    0.0500      156        0.004483          0.9500
+
+**THE MECHANISM IS REFUTED.** The argmax sits at `c+1` on **0.00% of draws at
+k=8** against a chance baseline of **0.5728%**, and the **median offset is 103,
+115 and 156** - nowhere near 1. At k=128 the `off==1` rate is 2.50% against
+0.4483% chance, which is 5.6x chance but is still **2.5% of draws**, and the
+median offset of 156 kills it regardless. **There is no consistent lift.**
+
+=== Q2 DOES A FIXED RULE MATCH THE MAX? ===
+
+      k    th_max   th_next   th_mean |    tv_max   tv_next   tv_mean
+      8    2.0133    0.1864    1.5630 |    1.9850    0.1781    1.5124
+     32    2.0555    0.2421    1.1907 |    1.9804    0.2080    1.1275
+    128    2.0078    0.3489    0.9531 |    1.9730    0.3330    0.8889
+
+**Reading row `c+1` alone gives |d| = 0.1864 / 0.2421 / 0.3489** against the max's
+**2.0133 / 2.0555 / 2.0078** - a gap of **+1.83 / +1.81 / +1.66**. The fixed rule
+is not merely worse than the max, **it is far worse than the MEAN.** There is no
+O(1) shortcut here.
+
+**SO THE AGGREGATOR WIN IS REAL AND IT IS UNEXPLAINED.** `max` beats `mean` by
+**+0.4503 / +0.8648 / +1.0547**. Cameron was right to disclaim her reading, and
+**it stays disclaimed.**
+
+**AND EVERY THETA COLUMN HAS A TV TWIN WITHIN A FEW PERCENT** - `tv_max` reads
+1.9850 / 1.9804 / 1.9730 against theta's 2.0133 / 2.0555 / 2.0078. **Whatever the
+aggregator buys, it buys for BOTH statistics. None of this is evidence for the
+sphere**, exactly as she warned.
+
+---
+
+**A CONTRADICTION WITH CAMERON THAT I CANNOT SETTLE AND WILL NOT PAPER OVER.**
+
+Same s=1024, same 120 draws, same seeds 0/999:
+
+                        mine        hers
+    d(th_max)  k=8      2.0133      2.3275
+    d(th_max)  k=128    2.0078      1.4806
+    d(th_mean, active)  1.5630      1.5304   (k=8; close, not identical)
+
+**THE TREND IS OPPOSITE.** Her `max` advantage **shrinks** with k
+(+1.2394 -> +0.7798 -> +0.7322, against `mean_all`); **mine grows**
+(+0.4503 -> +0.8648 -> +1.0547, against the active-row mean). Part of that is a
+definitional difference we both stated - she compares against `mean_all` over all
+s rows, I compare against the mean over **active** rows - **but that cannot
+explain `d(th_max)` itself differing by 0.31 at k=8 and 0.53 at k=128**, since
+that column depends on neither choice.
+
+**Her active-row mean (1.5304) and mine (1.5630) nearly agree, so the draw
+streams are close. `th_max` is where we diverge, and I do not know why.** She
+demonstrated her probe reproduces the published journal bit-identically; **mine
+makes no such claim** - I wrote a fresh draw loop rather than replaying ARM A's
+generator, and that is the most likely source. **Flagged for Wilson**, who is
+already holding a request to confirm whether her probe reads the published draw
+stream. **Until he settles it, neither set of `th_max` numbers should be quoted
+as the value.**
+
+**WHAT IS SAFE TO SAY REGARDLESS, because both measurements agree on it:**
+`max` beats `mean` by a large margin at every k; the margin dwarfs the entire K3
+quarrel (+0.0241); and **TV gains almost identically**, so the aggregator is not a
+sphere result.
+
+CHECKLIST: **Cameron's mechanism REFUTED** - argmax at `c+1` on 0.00% of draws at
+k=8, median offset 103/115/156, and reading row `c+1` alone scores 0.1864 against
+the max's 2.0133. **The aggregator win reproduces and is UNEXPLAINED.**
+**`d(th_max)` CONTRADICTS Cameron's by 0.31-0.53 with an opposite k-trend - open,
+sent to Wilson.**
+
 ### ROUND 5, ITERATION 12 - 2026-08-25 - Tier sent to Wilson. And B1 is tested BEFORE it is built: it is NOT a rename, so Chase's objection does not land.
 
 CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.

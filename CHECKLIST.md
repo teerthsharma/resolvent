@@ -542,3 +542,14 @@ Replayed ARM A's own draw stream (published `D_FR causal` reproduced to 6 dp at 
 | the tie objection, raised against my own probe | **66.3% of `xi` rows are EXACTLY ZERO**, so near-chance overlap is also what ranking *noise* produces. Settled by the added column: **`top-k inside nonzero xi = 1.000000` at every k** - B1's top-k never selects a zero-score token. |
 | corroboration | Cameron measured **53-58% of moved rows** reading exactly 0.0 through theta; this reads **66.3% of all legal candidates** with zero shadow mass. **Same defect, two instruments.** |
 | my reporting defects, both fixed | (1) `rho` was printed as **three identical numbers** because neither score depends on `k` - `piv` was computed and never used. **One measurement shown three times.** (2) The tie/noise ambiguity was **not distinguishable** in the first run. Both repaired before the verdict was written. |
+
+**MAX-ROW MECHANISM [RUN, r5 iter 13] - `scale/max_row_mechanism.py`, exit 0.**
+
+| item | status |
+|---|---|
+| Cameron's mechanism claim (*"the max row is at or near i = c+1"*) | **REFUTED.** argmax at `c+1` on **0.0000 / 0.0167 / 0.0250** of draws against chance **0.005728 / 0.012310 / 0.004483**; **median offset 103 / 115 / 156**. No consistent lift. **She disclaimed it and it stays disclaimed.** |
+| the O(1) shortcut it implied | **DOES NOT EXIST.** Reading row `c+1` alone gives \|d\| = **0.1864 / 0.2421 / 0.3489** against the max's **2.0133 / 2.0555 / 2.0078** - gap **+1.83 / +1.81 / +1.66**, and **far worse than the mean** too. |
+| the aggregator win itself | **REPRODUCES, and is UNEXPLAINED.** `max` beats the active-row mean by **+0.4503 / +0.8648 / +1.0547**. |
+| is it a sphere result? | **NO.** `tv_max` reads **1.9850 / 1.9804 / 1.9730** against theta's **2.0133 / 2.0555 / 2.0078**. **The aggregator lifts both statistics.** |
+| controls | **3/3 FIRED** - planted max at row 377 found at 377; planted max at row 42 with c=100 **correctly excluded** (returns 483); `arcsin(sqrt(.))` strictly increasing forces a shared argmax, asserted not assumed. |
+| **CONTRADICTION WITH CAMERON - OPEN** | Same s, draws and seeds: `d(th_max)` reads **2.0133** here vs her **2.3275** at k=8, and **2.0078** vs her **1.4806** at k=128 - **an opposite trend in k**. The `mean_all` vs active-row-mean difference cannot explain it, because `d(th_max)` depends on neither. Active-row means nearly agree (**1.5630** vs **1.5304**). **Her probe replays the published generator; mine writes a fresh draw loop and claims no such bind - the likely source. SENT TO WILSON. Neither `th_max` figure may be quoted as the value until he settles it.** |

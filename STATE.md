@@ -5,46 +5,48 @@
 | field | value |
 |---|---|
 | round | **5** - CEQ v7, promise `TWOSPHERES`, **30 iterations** |
-| iteration | **12 complete, 13 next** |
+| iteration | **13 complete, 14 next** |
 | phase | **ARM A under the escalation chain; autonomous to iteration 30** |
 | goal | **match or SUPERSEDE self-attention**; next-equilibrium predictor |
 | calibration | GREEN [RUN] `run_calib.py --self-test` exit 0, 4/4 bit-identical |
 | inspector | tri-state; INDETERMINATE exits nonzero |
 | repo | https://github.com/teerthsharma/resolvent (private) |
 
-## THE ONE NEXT ACTION (round 5, iteration 13)
+## THE ONE NEXT ACTION (round 5, iteration 14)
 
-**Do NOT wait on Wilson. Build the thing Cameron's F1 makes unavoidable: the
-aggregator arm, with TV given identical treatment.**
+**Bind the draw stream, or every aggregator number stays unquotable.**
 
-Wilson holds both messages and has begun `scale/wilson_probes.py`. **Never block
-on a measurement.**
+**A CONTRADICTION IS OPEN AND IT IS THE BLOCKER.** At identical s, draw count and
+seeds, `d(th_max)` reads **2.0133** here against Cameron's **2.3275** at k=8, and
+**2.0078** against her **1.4806** at k=128 - **opposite trends in k**. The
+`mean_all` vs active-row-mean difference cannot account for it. The active-row
+means nearly agree (1.5630 vs 1.5304), so the draw streams are close but **not the
+same**.
 
-**CAMERON'S F1 IS THE LARGEST UNEXPLOITED NUMBER IN THE ROUND.** `theta.max()`
-reads |d| = **2.3275** against `theta.mean()`'s **1.0888** on the **published**
-draws - delta **+1.2394 [+0.7962,+1.8565]**, winning in **6/6 cells** - while the
-entire K3 quarrel is **+0.0241**. `.mean()` divides by 1024 a signal carried by
-~503 rows, **with the dilution factor random per draw**.
+**THE LIKELY CAUSE IS MINE.** Her probe demonstrably reproduces the published ARM
+A journal bit-identically; `scale/max_row_mechanism.py` writes a **fresh draw
+loop** and claims no such bind. **A probe that does not replay the published
+generator is measuring a different population**, and this project has a standing
+rule that the measured object must be the shipped object.
 
-**THE TRAP TO AVOID IS THE ONE SHE ALREADY NAMED:** `tv_max` gains **+1.1702**
-against `th_max`'s **+1.2394**. **The aggregator lifts TV nearly as much**, so
-this is not a result about the sphere and must never be written as one. **Any
-aggregator change is applied to BOTH statistics or the comparison is rigged**, and
-a rigged win is worse than an honest loss.
+**So the next action is to give `max_row_mechanism.py` the bind Cameron's probe
+has:** consume the generator exactly as `arm_a_run.one` does - including the flip
+half's two `randn(d)` draws, which advance the stream - and assert against the
+published journal fields before reporting anything. If the numbers move to hers,
+mine were wrong and the record says so. If they do not, the disagreement is real
+and Wilson decides.
 
-**WHAT IS NOT YET KNOWN AND SHOULD BE:** she reports `max`'s advantage **shrinking
-with k** (+1.24 -> +0.78 -> +0.73) and **k=512 unmeasured**. And her mechanism
-reading - that the max row sits at or near `i = c+1` - **has no RED test behind
-it and she says so.** Either is a legitimate one-action target.
+**Wilson holds both messages** and has `scale/wilson_probes.py` in progress,
+including a request to confirm whether Cameron's probe reads the published stream.
+**Never block on him** - the bind above is buildable now.
 
-**HOLD THE LINE ON WHAT IS ALREADY SETTLED:** K3 as written is not evidence for
-the geometry (theta loses at k=8 to a held-out `TV^p`, CI excluding zero), and
-**B1 is not a rename** (`rho=-0.0246`, overlap below chance, top-k entirely inside
-nonzero `xi`).
+**WHAT SURVIVES REGARDLESS, because both measurements agree:** `max` beats `mean`
+by a large margin at every k; that margin dwarfs the whole K3 quarrel (+0.0241);
+**TV gains almost identically**, so the aggregator is not a sphere result; and
+**Cameron's mechanism is refuted** - argmax at `c+1` on 0.00% of draws at k=8,
+median offset 103, and row `c+1` alone scores 0.1864 against the max's 2.0133.
 
-**Dr House stays in the box.** Nothing has died of missing innovation - four
-probes produced results this round. Release him only if the problem survives all
-four rungs AND the gap is INNOVATION rather than evidence.
+**Dr House stays in the box.** Nothing has died of missing innovation.
 
 ## Open REDs
 
