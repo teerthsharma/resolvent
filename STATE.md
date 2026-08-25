@@ -5,45 +5,45 @@
 | field | value |
 |---|---|
 | round | **3** - CEQ v5, 30 iterations, promise `SCALEFREE` |
-| iteration | **7 complete, 8 next** |
+| iteration | **8 complete, 9 next** |
 | phase | **Phase 0 - M3 on the windowed arm. Capability before statistics.** |
 | calibration | GREEN [RUN] `run_calib.py --self-test` exit 0, 4/4 bit-identical |
 | inspector | `python inspector.py` - 8 checks, 8 must-fire controls, exits nonzero if any control stays SILENT |
 | repo | https://github.com/teerthsharma/resolvent (private) |
 
-## THE ONE NEXT ACTION (iteration 8)
+## THE ONE NEXT ACTION (iteration 9)
 
-**Repair the M3 bar, because it is the gate that guards the round and two of its
-three checks are algebraic identities.**
+**Repair the M3 bar - it is still the gate that guards the round, and Chase
+showed two of its three checks are algebraic identities.**
 
-Chase [RED, 5 failed / 9 passed]: `predict_the_mean = nrmse(y.mean(), y)` is
-identically 1.0 and `oracle = nrmse(oracle(x,f,p), y)` is `nrmse(t,t)`,
-identically 0.0 - **y was produced by that same call**. Only `payload_only`
-reads the task, and the bar printed **BAR CALIBRATED** on a label with zero
-flipper dependence. That is *"zero BY CONSTRUCTION mapped to GREEN"* inside the
-gate that decides Phase 0.
+`predict_the_mean = nrmse(y.mean(), y)` is identically 1.0. `oracle =
+nrmse(oracle(x,f,p), y)` is `nrmse(t,t)`, identically 0.0, because **y was
+produced by that same call** (`negation_scope.py:92`: `return x, oracle(x,f,p),
+f, p`). Only `payload_only` reads the task, and the bar printed **BAR
+CALIBRATED** on a label with zero flipper dependence.
 
-The repair needs a **model-level positive control**: something TRAINED that must
-pass, so that "arm failed" and "harness cannot produce a pass" stop being the
-same printout. Today no arm has ever passed - softmax 0.581/1.477, pivot_signed
-0.127/1.389, pivot_unsigned 0.584/1.501 - and the oracle is an identity, not a
-model.
-
-**The windowed arm's geometry is NOT a bug to fix by widening w.** Reach `2w=16`
-against `d=24..54` is a fact about F4's construction. Either the task distance
-comes down inside `2w`, or the arm gets depth (L layers reach `L*w`) - and that
-second option is Cameron's composition question, still running.
+Two additions, both RED-first against Chase's own broken-task case:
+  * **TASK-DEPENDENCE CHECK** - perturb `x[:, f, :]` and require `y` to move.
+    A label that does not respond to the flipper is not this task.
+  * **MODEL-LEVEL POSITIVE CONTROL** - something TRAINED that must pass, so
+    *"arm failed"* and *"harness cannot produce a pass"* stop being the same
+    printout. Today no arm has ever passed and the oracle is an identity, not a
+    model.
 
 ## Open REDs
 
-**M3 bar - RED [Chase, r3 iter 7].** Two of three checks are identities; the bar
-calibrates on a task with no long-range dependence. No model-level positive
-control exists.
+**M3 bar - RED [Chase].** Two of three checks are identities; calibrates on a
+task with no long-range dependence; no model-level positive control.
 
-**M3w BLOCKED.** `windowed_signed` cannot see the flipper at any distance in the
-recorded sweep - `d(out)/d(x[flipper]) = 0.0` exactly.
+**M3w BLOCKED [Chase].** `d(out)/d(x[flipper]) = 0.0` exactly - reach `2w=16`
+against a sweep of `d=24..54`.
 
-R5 and R8 remain STRUCK before build (0/20000 event change).
+**COGS capability number - SCOPE BROKEN [Foreman].** The run trained
+`(0.9, 1.0, 3)`, not the parity point: row sums exactly 0, mixing 9.9x below the
+softmax arm, hop-2 mass 4.04e-03. **The headline 0/512 vs 15/512 is not a
+measurement of the parity operator.**
+
+R5 and R8 remain STRUCK before build (0/20000).
 
 ## Carried, and load-bearing
 

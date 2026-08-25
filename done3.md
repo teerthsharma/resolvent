@@ -162,6 +162,57 @@ actually measures — is better. Neither half may be quoted without the other.
 
 ---
 
-*Updated through round 3, iteration 6. Four house-mode agents still running;
+## Iteration 8 — F1 is scoped to a stack nobody ships
+
+Foreman resolved the contradiction iteration 0 left in Open. It was never one
+contradiction — **both sides were measuring objects that do not correspond.**
+
+**The benchmark ran a different operator.** `ceq/capability.py` never sets
+`lm.RHO / SGATE_LAM / HOPS`, so COGS trained the pre-campaign globals
+`(0.9, 1.0, 3)` rather than the parity point `(1.5, 0.10, 2)`;
+`max|A_run − A_parity| = 1.2273`. At `λ = 1` both softmax halves sum to 1, so
+`A = ρ(p⁺ − p⁻)/2` has **row sum exactly 0**, and row 1 is identically zero.
+
+| | mean row-L1 | ‖Av‖/‖v‖ |
+|---|---|---|
+| as-run `sgate(0.9, 1.0)` | 0.210988 | **0.054957** |
+| parity `sgate(1.5, 0.10)` | 1.220934 | 0.517922 |
+| softmax | 1.000000 | 0.545308 |
+
+The benchmarked signed arm **mixed 9.9× less** than the softmax arm it was
+parameter-matched against, and its hop-2/hop-3 masses were `4.04e-03` and
+`3.22e-04` — the multi-hop path sum this campaign exists to test contributed
+**0.4% and 0.03%** of the signal in the arm that was benchmarked.
+
+**The theorem's zero is measured with the MLP deleted.** Verified directly:
+
+```
+softmax       depth=1  0.0          softmax_gelu  depth=1  0.0
+softmax       depth=2  0.0          softmax_gelu  depth=2  0.0546875
+sgate         depth=1  0.1484375    sgate         depth=2  0.09375
+```
+
+Plain softmax reads 0.0 at **both** depths, so the theorem is about the operator
+rather than shallowness — that part of F1 is sound. But `ceq/lm.py:214` puts
+`nn.Linear → nn.GELU → nn.Linear` in every block and trains four of them, and
+with that nonlinearity softmax reads **0.0546875**.
+
+**Like-for-like at depth 2 the ratio is 1.71×, not exclusivity** — and `sgate`
+gets *worse* with depth while `softmax_gelu` gets better, so the gap closes from
+both sides. The `0.0546875` has been asserted in this repository since round 1
+at `tests/cameron/test_parity_is_the_wrong_target.py:61` and was never carried
+into the capability framing.
+
+**Sixth appearance of one shape** — a correct statement about an object other
+than the one that ships: instrument #17, M4's kill, M2's vacuous clause, M5's
+hypothesis, the random-init scope, and now F1.
+
+What survives: the theorem is true and M1 stays GREEN as a precondition. What
+does not survive is *"softmax cannot do this at all."* The honest number is
+**1.71× at matched depth**, and it travels with the claim from here on.
+
+---
+
+*Updated through round 3, iteration 8. Four house-mode agents still running;
 their findings and the representation-theorem challenge reconcile into a
 prognosis when they land.*

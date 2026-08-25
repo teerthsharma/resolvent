@@ -2,6 +2,86 @@
 
 Round 2 archived below its own header; round-1 archive at `DONE_ARCHIVE_ROUND1.md`.
 
+### ROUND 3, ITERATION 8 - 2026-08-25 - F1 IS SCOPED TO A STACK NOBODY SHIPS. Foreman resolves the open contradiction.
+
+CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.
+
+ACTION (one): corrected **F1** - the foundational claim of this entire project -
+in the governing documents, after verifying the overturning number myself.
+
+**FOREMAN REPORTED [4 failed, 3 passed, all three controls among the passes],
+and he RESOLVED the contradiction that iteration 0 put in Open.**
+
+Cameron's contradiction was: F1's theorem puts softmax at exactly 0.000000 on
+content-conditional sign BY PROOF, while COGS reads softmax 15/512 against the
+signed operator's 0/512. **Both cannot be about the same thing.** Foreman's
+answer: **they never were about the same thing, at BOTH ends.**
+
+**END 1 - THE BENCHMARK RAN A DIFFERENT OPERATOR.** `ceq/capability.py` never
+assigns `lm.RHO / SGATE_LAM / HOPS`, so the COGS run trained the pre-campaign
+globals **(0.9, 1.0, 3)** instead of the parity point **(1.5, 0.10, 2)**.
+[RUN] `max|A_run - A_parity| = 1.227272629737854`.
+
+At `lam = 1` both softmax halves sum to 1, so `A = rho(p+ - p-)/2` has **row sum
+exactly 0**; on row 1, where one key is visible, both halves put mass 1 on it and
+the row is **identically zero** - measured row-1 L1 mass **0.0**.
+
+    as-run sgate(0.9, 1.0)     mean row-L1 0.210988   ||Av||/||v|| 0.054957
+    parity sgate(1.5, 0.10)    mean row-L1 1.220934   ||Av||/||v|| 0.517922
+    softmax P                  mean row-L1 1.000000   ||Av||/||v|| 0.545308
+
+**The benchmarked signed arm mixed 9.9x less than the softmax arm it was
+"parameter-matched" against**, and its hop-2 / hop-3 masses were **4.04e-03 and
+3.22e-04** of ||v|| - **the multi-hop path sum this whole campaign is about
+contributed 0.4% and 0.03% of the signal in the arm that was benchmarked.**
+
+**END 2 - THE THEOREM'S ZERO IS MEASURED WITH THE MLP DELETED.**
+**[RUN] VERIFIED MYSELF, n_draws=128, s=8, hops=3, seed 0, CPU:**
+
+    softmax       depth=1  0.0            softmax_gelu  depth=1  0.0
+    softmax       depth=2  0.0            softmax_gelu  depth=2  **0.0546875**
+    sgate         depth=1  0.1484375      sgate         depth=2  **0.09375**
+
+Plain softmax reads **0.0 at BOTH depths**, so the theorem is about the OPERATOR
+and not about shallowness - that part of F1 is sound. **But `ceq/lm.py:214` puts
+`nn.Linear -> nn.GELU -> nn.Linear` in every block and `ceq/lm.py:28` trains
+four of them.** With that nonlinearity present, softmax reads **0.0546875**, not
+zero.
+
+**A CORRECTION TO FOREMAN'S OWN FRAMING, AND IT CUTS AGAINST THE OPERATOR
+HARDER.** He quoted *"0.148 against 0.055, a 2.7x ratio"* - but that compares
+sgate at **depth 1** against softmax_gelu at **depth 2**. **Like-for-like at
+depth 2 with the nonlinearity every shipped block has: 0.09375 vs 0.0546875 =
+1.71x.** And **sgate gets WORSE with depth** (0.1484375 -> 0.09375) while
+softmax_gelu gets better (0.0 -> 0.0546875). The gap closes from both sides.
+
+**THE NUMBER HAS BEEN IN THIS REPO SINCE ROUND 1.**
+[READ] `tests/cameron/test_parity_is_the_wrong_target.py:61` asserts
+`softmax_gelu depth=2 == 0.0546875` to 1e-12. **It was never carried into the
+capability framing**, and every document since has said "exactly 0.000000, by
+theorem" without the scope.
+
+**THIS IS THE SIXTH APPEARANCE OF ONE SHAPE** - a correct statement about an
+object other than the one that ships:
+
+    instrument #17   tgate measured, sgate ships
+    M4               kill written about kept content, measured on deleted
+    M2 clause 2      a control that is zero by construction
+    M5               theorem stated at N=n, module truncates at hops=2
+    M2/M5 scope      measured at random init, claimed for a trained module
+    F1 (here)        theorem true on a LINEAR value path, quoted for a stack
+                     with a GELU in every block
+
+**WHAT SURVIVES.** The theorem is TRUE and M1 stays GREEN: a non-negative
+operator on a linear value path has a non-negative influence Jacobian, and
+softmax reads exactly 0.0 at both depths without the MLP. **What does not
+survive is the exclusivity framing.** "Softmax cannot do this at all" is false
+for the architecture that ships; the honest statement is **1.71x at matched
+depth**, and it must appear with that number attached wherever the claim appears.
+
+CHECKLIST: F1 CORRECTED - scoped to a linear value path, with the shipped-stack
+numbers attached. M1 remains GREEN as a precondition.
+
 ### ROUND 3, ITERATION 7 - 2026-08-25 - Frustration audit: hypothesis REFUTED, replacement is sharper. CHASE REPORTS.
 
 CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.
