@@ -1,3 +1,93 @@
+# TWOSPHERES: BROKEN - ARM A, K1's dual slope, displacement clause
+
+The round's central kill fired. `D_FR` slope in k reads **-0.4137
+[-0.4579, -0.3704]** as computed and **-0.4654 [-0.5173, -0.4160]** with the
+dead-row floor removed - **both intervals entirely below the pre-registered
+-0.30 trigger**, and both failing K1's own bar of `>= -0.10`. 400 draws per cell,
+six pivot counts, bucketed, determinism replay matching each bucket.
+
+**ARM A did not survive K1, so ARM B was never authorized and was never built.**
+`TWOSPHERES: KEPT` is false on two independent grounds.
+
+The write-up with its numbers is **`D1.md`** - round-5 chapter, audit section,
+defect ledger, withdrawn-claims table, and limits. The log audit ran to
+completion: **37 claims checked, 3 struck, all applied.**
+
+*An honest BROKEN outranks an unfinished KEPT. A slope is not a capability.*
+
+---
+
+### ROUND 5, ITERATION 23 - 2026-08-26 - THE ROUND CLOSES. BROKEN, on an audited measurement with an interval.
+
+CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.
+
+ACTION (one): **wrote line 1 of `DONE.md` and closed the round.**
+
+**THE COMPLETION CONDITION, CHECKED RATHER THAN ASSUMED.** [RUN] against the
+contract's own clause at `LOOP_PROMPT.md:289-296`:
+
+    ARM A K1 GREEN?   NO  - dual slope FIRED, both intervals below -0.30
+    ARM A K2 GREEN?   passes, but DEGRADED under a key-norm-matched filler
+    ARM A K3 GREEN?   passes as written; LOSES at k=8 to a held-out TV^p
+    ARM B M3 GREEN?   NO  - never authorized, never built
+    -> KEPT is FALSE
+    write-up exists?  YES - D1.md, 273 lines, audit section present
+    -> BROKEN is TRUE and its write-up carries its numbers
+
+**KEPT fails twice over**, which matters: it is not that ARM B underperformed, it
+is that **the contract forbade building it** once ARM A missed K1, and that clause
+was honoured rather than quietly relaxed.
+
+**WHAT THE ROUND SET OUT TO DO.** Measure a token's consequence as an **angle**
+on the unit sphere - `phi(p) = sqrt(p)` carrying the simplex isometrically onto
+the positive orthant, Fisher-Rao picked out uniquely by Chentsov - so that
+displacement would be **scale-free by radius rather than by tuning**.
+
+**WHY IT DID NOT WORK, IN ONE SENTENCE.** On a one-token mask the row has a single
+degree of freedom, so `theta_i = arcsin(sqrt(TV_i))` **exactly** - the angle is a
+fixed strictly-increasing function of total variation, the geometry adds no
+information, and the sphere's one distinguishing feature, its curvature, is
+measured as a **liability** at every pivot count.
+
+**THE FIVE THINGS THIS ROUND ACTUALLY ESTABLISHED**, none of which is the thing it
+set out to establish:
+
+  1. **The identity.** `theta = arcsin(sqrt(TV))`, measured three ways at three
+     precisions - float32 **8.457280e-04**, float64 **6.828570e-08**, TV residual
+     **2.980e-07**. **K3 as written cannot distinguish geometry from row-wise
+     concavity**, because it compares two aggregations of one number.
+  2. **The equilibrium clause survives its own kill** - the glance is not the
+     fixed point (residual **0.599101 / 0.388587 / 0.321843**, 100% converged in
+     28-53 steps) - **and a contradiction inside the contract was repaired by
+     measurement**, since `tau = 0` has a one-pass closed form and therefore
+     triggers the very kill it was meant to certify.
+  3. **The aggregator win is attention concentration, not geometry** - and it
+     **retains 2.9%** against a key-norm-matched filler at k=8, worse than the
+     **35%** the mean it replaced retained.
+  4. **B1 is not a rename - and is ill-posed as written**, since its top-k
+     retains **5.4%** under a change of the one token the selector may not see.
+  5. **The instrument ledger.** Ten defects introduced by this work and caught by
+     its own output; four found by other agents; **three struck by the audit, two
+     of them mine** - including a figure asserted `[RUN]` with **no live
+     producer**, which is the class this project exists to prevent.
+
+**WHAT IS LEFT OPEN AND IS WORTH SOMEONE'S TIME.** K1's **sign-flip clause is
+alive and unresolved** at 8 events in 2400 draws - its interval is count
+discreteness, and the unsigned arm's exact interval **contains** the signed arm's
+rate, so the two are not separated at these sample sizes. Resolving it needs the
+contract's own 20000 draws per cell. And **what peak attention tracks, once the
+key-norm confound is removed, is not established.**
+
+**DR HOUSE WAS NEVER RELEASED, and that was a decision, not an oversight.** The
+trigger requires the cause of death to be **missing INNOVATION**. Every kill this
+round fired from a measurement with an interval, and the audit re-ran the probes
+that produced them. *"Wilson refuted it with a verified fact - dead is dead, and
+no leap un-refutes a fact."* Releasing him would have been using a leap to argue
+with a measurement.
+
+CHECKLIST: **ROUND 5 CLOSES. `TWOSPHERES: BROKEN` - ARM A, K1's dual slope,
+displacement clause.** Line 1 of `DONE.md` carries the verdict. `D1.md` ships.
+
 ### ROUND 5, ITERATION 22 - 2026-08-26 - D1 CARRIES THE AUDIT. Its own acceptance criteria self-check, and the K1 caveat is in Limits where the verdict can see it.
 
 CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.

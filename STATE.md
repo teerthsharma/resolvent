@@ -5,47 +5,51 @@
 | field | value |
 |---|---|
 | round | **5** - CEQ v7, promise `TWOSPHERES`, **30 iterations** |
-| iteration | **22 complete, 23 next** |
-| phase | **ARM A under the escalation chain; autonomous to iteration 30** |
+| iteration | **23 - ROUND CLOSED** |
+| phase | **CLOSED - `TWOSPHERES: BROKEN`, ARM A, K1 dual slope** |
 | goal | **match or SUPERSEDE self-attention**; next-equilibrium predictor |
 | calibration | GREEN [RUN] `run_calib.py --self-test` exit 0, 4/4 bit-identical |
 | inspector | tri-state; INDETERMINATE exits nonzero |
 | repo | https://github.com/teerthsharma/resolvent (private) |
 
-## THE ONE NEXT ACTION (round 5, iteration 23)
+## THE ONE NEXT ACTION (round 5 is CLOSED)
 
-**Write line 1 of `DONE.md`, deliver the prognosis, and emit the promise.**
+**Round 5 ended at iteration 23 with `TWOSPHERES: BROKEN` - ARM A, K1's dual
+slope, displacement clause.** Line 1 of `DONE.md` carries the verdict and `D1.md`
+ships.
 
-**Every precondition is met and none of them is a judgement call any more.**
+**NOTHING FURTHER IS OWED ON THIS ROUND.** The chain ran to completion, the audit
+struck three claims and all three were applied, and the deliverable meets its own
+acceptance criteria.
 
-  * **The chain is complete.** fellows (Foreman, Chase, Cameron) -> Wilson ->
-    Health Inspector. **37 claims audited, 3 struck, all applied at iteration 21.**
-  * **The write-up exists and carries the audit.** `D1.md` has the round-5
-    chapter, the strike table, the two unrecorded findings, the K1 journal-replay
-    caveat in Limits, and **5/5 acceptance criteria self-checking OK**.
-  * **`TWOSPHERES: KEPT` is FALSE.** It requires ARM A K1-K3 GREEN **and** ARM B
-    M3 GREEN at n_train=8192. K1's displacement clause resolved at **-0.4137
-    [-0.4579,-0.3704]** and **-0.4654 [-0.5173,-0.4160]**, both entirely below the
-    **-0.30** trigger; ARM A did not survive; **ARM B was never authorized and was
-    never built.**
-  * **`TWOSPHERES: BROKEN` is TRUE**, and the contract's form is
-    `TWOSPHERES: BROKEN - <item> <which kill fired>` **after the write-up with its
-    numbers.** The item is ARM A; the kill is K1's dual slope, displacement
-    clause.
+**WHAT A NEXT ROUND WOULD INHERIT, in the order it is worth having:**
 
-**The contract is explicit that this is not a lesser outcome:** *"An honest BROKEN
-outranks an unfinished KEPT, and D1 ships either way."* And: *"A slope is not a
-capability. KEPT on a statistic is a false promise."*
+  1. **K1's sign-flip clause is alive and unresolved.** 8 events in 2400 draws;
+     the interval is **count discreteness**, and the unsigned arm's exact interval
+     **contains** the signed arm's rate, so the two arms are not separated at
+     these sample sizes. **Needs the contract's own 20000 draws per cell**, about
+     eight hours at the measured per-draw cost. This is the only pre-registered
+     kill in the round that remains genuinely undecided.
+  2. **What peak attention tracks, once the key-norm confound is removed, is not
+     established.** It retains **2.9% / 13.3% / 58.9%** against a key-norm-matched
+     filler, and the match is by **rank, not value**, so those are **upper**
+     bounds. The residual at k=128 is the only part with room in it.
+  3. **The K1 slope rests on a journal replay, not a fresh derivation.** The
+     replay matched bitwise, so the journal is intact - but **nobody re-derived
+     that slope from draws**. A round that wanted to lean on it should.
+  4. **The identity is the durable result and it is a constraint, not a tool.**
+     `theta = arcsin(sqrt(TV))` on a one-token mask means **any** future
+     ablation-and-measure probe on this geometry compares two aggregations of one
+     number. A design that wants the geometry to earn something must change the
+     PROBE, not the metric.
 
-**THE PROGNOSIS CARRIES EVERY AGENT INCLUDING THE OVERRULED ONES, each with the
-reason** - that is the format's whole point, and three fellows were overruled on
-at least one finding apiece by the verified-facts pass.
-
-**DR HOUSE IS NOT RELEASED, and the record now supports that twice over.** Every
-kill fired from a measurement with an interval, and the audit re-ran the probes
-that produced them. He is for a gap in **INNOVATION**; this round has a gap in
-**RESULTS**, which is not the same thing. *"Wilson refuted it with a verified fact
-- dead is dead, and no leap un-refutes a fact."*
+**THE INSTRUMENT LESSON, since it repeated four times and is the most transferable
+thing here:** every verdict gate that failed this round measured something
+**ADJACENT** to what had been pre-registered - bulk rank where selection takes a
+top-k, argmax where the claim was about values, half of a two-part condition, and
+a control that could not reach the logic it guarded. **Each erred toward the
+flattering reading.** All four were caught by the probes' own output, which is the
+only reason they are recorded rather than shipped.
 
 ## Open REDs
 

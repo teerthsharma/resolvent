@@ -681,3 +681,14 @@ Replayed ARM A's own draw stream (published `D_FR causal` reproduced to 6 dp at 
 | the closing limit | **CORRECTED.** The inspection has returned and its strikes are applied; **its own two open gaps are named** - the verified-facts pass was outside its mandate, and one claim names a file the log never identifies. |
 | acceptance criteria | **5/5 SELF-CHECK OK** against the file, plus the audit section. Registry **13 passed, exit 0**. |
 | **completion status** | **KEPT is FALSE** - ARM A did not survive K1 and ARM B was never authorized. **BROKEN requires the write-up with its numbers, which now exists.** One mechanical step remains: line 1 of `DONE.md`. |
+
+**ROUND 5 CLOSES [r5 iter 23] - `TWOSPHERES: BROKEN`.**
+
+| item | status |
+|---|---|
+| **verdict** | **BROKEN - ARM A, K1's dual slope, displacement clause.** Slope **-0.4137 [-0.4579,-0.3704]** and **-0.4654 [-0.5173,-0.4160]**, both entirely below the **-0.30** trigger, both failing the **>= -0.10** bar. |
+| KEPT, checked not assumed | **FALSE on two grounds** - ARM A did not survive K1, **and ARM B was never authorized**. The contract's *"build only if ARM A survives"* was honoured, not relaxed. |
+| write-up | **`D1.md`**, 273 lines - round-5 chapter, audit section, defect ledger, withdrawn-claims table, limits. **5/5 acceptance criteria self-check OK.** |
+| chain | **COMPLETE.** fellows -> Wilson -> Health Inspector. **37 claims audited, 3 struck, all applied.** |
+| Dr House | **NEVER RELEASED - a decision.** Every kill fired from a measurement with an interval. He is for a gap in **innovation**; this round had a gap in **results**. |
+| left open | K1's **sign-flip clause** (8/2400, interval is count discreteness, arms not separated - needs 20000 draws/cell); **what peak attention tracks** once the key-norm confound is removed. |
