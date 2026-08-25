@@ -12,10 +12,23 @@ was `results/m2.jsonl` mtime 12:38:59 against `scale/m2_units.py` mtime 16:22:33
 
 **THE SWEEP HAS A HOLE IN IT AT 3.** `dense_signed__at_pivots/s128` reproduces
 BITWISE at `torch.set_num_threads(3)` -- every field, sigma and term included.
-So does `pivot_signed__not_in_P/s128`, and `dense_signed__at_pivots/s512`.
-`pivot_signed__in_P/s128` reproduces bitwise at 4. Different units of ONE journal
-were written under different thread counts, because `run_bucket` never pinned one
-and nothing in the record ever wrote one down.
+And the count is a property OF THE CELL, not of the unit. Measured here, torch
+2.5.1+cu121, MKL 2024.2.2, CPU only; each row is a bitwise match on all five
+fields, 10 of the 13 drifted units:
+
+    cell                      drifted  replays bitwise at  confirmed
+    dense_signed__at_pivots     4/13   threads = 3         4/4   s128, s512,
+                                                                 s1024/b0, s1024/b1
+    pivot_signed__not_in_P      2/3    threads = 3         2/2   s128, s512
+    pivot_signed__in_P          7/21   threads = 4         4/4   s128, s2048/b0,
+                                                                 s2048/b1  (+b2..b4,
+                                                                 s1024 not run)
+
+Not one drifted unit is stale. Each cell was journalled in its own `run_bucket`
+process, `run_bucket` never pinned a thread count, and nothing recorded the one
+in force. The census read all 37 at `torch.set_num_threads(2)`, so it reports
+DRIFT exactly where 2 partitions the reduction differently from 3 or 4 -- which
+is why the drift tracks size and draw count rather than any property of the code.
 
 THE ROOT CAUSE IS THE KEY, NOT THE FLOATS. `bucket.py` promises "Two units with
 the same key must produce the same number." The key is

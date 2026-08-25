@@ -5,35 +5,39 @@
 | field | value |
 |---|---|
 | round | **5** - CEQ v7, promise `TWOSPHERES`, **30 iterations** |
-| iteration | **1 complete, 2 next** |
+| iteration | **2 complete, 3 next** |
 | phase | **G1 fetches, then ARM A (the torque probe)** |
 | goal | **match or SUPERSEDE self-attention**; next-equilibrium predictor |
 | calibration | GREEN [RUN] `run_calib.py --self-test` exit 0, 4/4 bit-identical |
 | inspector | tri-state; INDETERMINATE exits nonzero |
 | repo | https://github.com/teerthsharma/resolvent (private) |
 
-## THE ONE NEXT ACTION (round 5, iteration 2)
+## THE ONE NEXT ACTION (round 5, iteration 3)
 
-**Finish G1 - two owed - then ARM A. Do not build before both land.**
+**ARM A. The torque probe. Pure measurement, no training, no build.**
 
-Owed: **Karcher-mean pooling** (is a Frechet mean already used as a pooling or
-aggregation operator in nets?) and the **Star-Transformer delta** (1902.09113
-owns relay/pivot routing - state precisely what it never measured: content-
-selected pivots on a calibrated causal bar at matched params, softmax first).
+G1 is complete at 6/6 and the gate is passed. Two cells survive - the additive-
+basis coverage theorem and the Procrustes torque as a ROUTING OBJECTIVE - and
+**both owe their kills**, which ARM A is.
 
-**Then ARM A, and it is pure measurement.** K1 dual slope, K2 filler twin, K3 the
-geometry must beat raw TV. **Nothing is built until all three survive.**
+Per draw on the LIVE `pivot_unsigned` arm: `A^c` and `A^0`; `theta_i` per row;
+`D_FR = E_i[theta_i]`; `||tau||_F`; rank profile and `gamma_r` of `Xi`.
+`k in {8,32,128,512}`, 20000 draws, **`c` and `j` uniform at random** - the
+carpet discipline that two rounds broke.
 
-**Two things the fetch changed, and they bind the write-up:**
-  * severance is **reproduction**, not discovery - arXiv 2606.02680 has it, with
-    a repair;
-  * the sphere embedding is **classical** - Cencov uniqueness is a REASON to use
-    it, never a claim to make.
+**Three kills, and K3 decides whether the round has anything:**
+  * **K1** `flip(s)` slope <= -0.4 AND `D_FR` slope >= -0.1 on the SAME draws.
+    **`D_FR` slope < -0.3 means "no leap".**
+  * **K2** `D_FR(causal c)` vs `D_FR(filler c)` with DISJOINT CIs, or the
+    statistic cannot lose to a filler and the table is VOID.
+  * **K3** `theta` must beat raw TV by standardized effect on identical draws.
+    **After this fetch round K3 is decisive:** the sphere map is textbook and the
+    TV ablation probe is occupied, so if `theta` does not beat TV, the round is
+    classical geometry pointed at an existing probe and **TV ships instead.**
 
-**K3 matters more after this fetch, not less.** If `theta` cannot beat raw TV on
-identical draws, then the round is applying textbook geometry to an occupied
-probe and has nothing left - **the sphere would be notation, and TV, which is
-already the interpretability standard, ships instead.**
+Read on X4. **No multiplication inside any sign decision** (G8). Bucket it -
+20000 draws at four sizes will not fit one call, and two unbucketed runs have
+already died here.
 
 ## Open REDs
 

@@ -398,3 +398,14 @@ The one positive result in four rounds, and it is UNSIGNED.
 
 **What is left to claim:** the Procrustes torque as a ROUTING OBJECTIVE, and the
 additive-basis COVERAGE THEOREM. Both still owe their kills.
+
+**G1 COMPLETE [CITED, r5 iter 2] - 6/6 attempted.**
+
+| cell | verdict |
+|---|---|
+| Karcher-mean pooling | **OCCUPIED** - Riemannian Mean Pooling on the SPD manifold; Frechet-mean aggregation *"such as attention"* is existing practice. **GIFT:** arXiv 2003.00335 solves differentiating through the Frechet mean, which is exactly ARM B's blocker. |
+| Star-Transformer delta | **NOT ESTABLISHED** - the abstract gives *"shared relay node"*, which reads as fixed rather than content-selected, but selection, causality and evaluation cannot be read from an abstract. **Must not be claimed.** |
+
+**FIVE of seven cells occupied before a line was built.** The two not found -
+additive-basis schedule, and Procrustes torque as a ROUTING OBJECTIVE - are what
+is left, and **a not-found cell is permission to test, not a result.**

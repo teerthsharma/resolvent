@@ -1,3 +1,75 @@
+### ROUND 5, ITERATION 2 - 2026-08-25 - G1 COMPLETE, 6/6. FIVE CELLS OCCUPIED. Two left, and one fetch brought a gift.
+
+CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.
+
+ACTION (one): finished the two owed G1 fetches. **G1 is now 6 of 6 attempted.**
+
+**FIRE 5 - KARCHER-MEAN POOLING IS OCCUPIED.**
+[CITED] *"Riemannian Mean Pooling, which aggregates metrics with the Frechet
+mean on the symmetric positive definite manifold."* And the general statement
+names attention explicitly: *"The Euclidean mean is necessary to perform
+aggregation operations such as ATTENTION and stability-enhancing operations such
+as batch normalization in Euclidean neural networks. The Euclidean mean extends
+naturally to the Frechet mean in non-Euclidean geometries."*
+
+**Frechet-mean aggregation in neural networks, attention included, is existing
+practice.** ARM B's equilibrium clause - *"the settled reading is the Karcher
+mean of its pivot readings"* - is **not a new kind of object.**
+
+**AND THE SAME FETCH IS A GIFT, worth as much as the fire.**
+[CITED] arXiv **2003.00335**, *"Differentiating through the Frechet Mean"*. The
+problem it names is exactly ARM B's blocker: *"The Frechet mean has been
+difficult to apply because it LACKS A CLOSED FORM WITH AN EASILY COMPUTABLE
+DERIVATIVE."* Solved - *"how to differentiate through the Frechet mean for
+arbitrary Riemannian manifolds, with explicit gradient expressions"*, via Karcher
+flow through log and exp maps.
+
+**ARM B needs a Karcher mean inside a trained network. That is a solved problem
+with a citable method, and we did not have to discover it.** A cell being
+OCCUPIED and a cell being ENABLING are different facts; both are recorded.
+
+**FIRE 6 - STAR-TRANSFORMER, and the delta is NOT ESTABLISHED.**
+[CITED] arXiv 1902.09113 abstract, verbatim: *"Star-Transformer, a lightweight
+alternative by careful sparsification... replace the fully-connected structure
+with a star-shaped topology, in which every two non-adjacent nodes are connected
+through a SHARED RELAY NODE."*
+
+**"Shared relay node" READS as a fixed relay rather than a per-query
+content-selected top-k**, which would be the delta. **But that is a reading of an
+abstract, not a finding.** The fetch could NOT establish: content-selected or
+fixed relays; causal or bidirectional; the evaluation methodology; whether any
+matched-parameter softmax comparison exists; whether anything measures a third
+token changing help-versus-hurt.
+
+**The Star-Transformer delta remains UNESTABLISHED and must not be claimed.**
+Saying "it never measured X" requires reading the paper, not its abstract.
+
+---
+
+**G1 TALLY, 6 OF 6 ATTEMPTED:**
+
+    OCCUPIED (5):  severance / reachability      2606.02680
+                   Fisher-Rao simplex->sphere    textbook, Cencov
+                   Procrustes in deep nets       as ANALYSIS
+                   TV ablation probe             interpretability practice
+                   Karcher-mean pooling          Riemannian Mean Pooling
+    NOT FOUND (2): additive-basis / sumset schedule for attention offsets
+                   Procrustes torque as a ROUTING OBJECTIVE inside an operator
+    NOT ESTABLISHED (1): the Star-Transformer delta
+
+**THIS IS A HARD FETCH ROUND AND IT IS REPORTED AS ONE.** Five of the round's
+seven named cells came back occupied **before a line was built**. The two that
+did not are the two the contract already identified as the claim, and **both
+still owe their kills - a not-found cell is not a result, it is permission to
+test.**
+
+**THE ORDER MATTERS: this cost two iterations, not two rounds.** Round 3 built a
+co-prime schedule and learned afterwards that it was prior art; round 4 built a
+difference-set arm on the wrong composition law. **Fetch-first is doing exactly
+what it was written to do.**
+
+CHECKLIST: **G1 COMPLETE 6/6.** 5 occupied, 2 not found, 1 not established.
+
 ### ROUND 5, ITERATION 1 - 2026-08-25 - G1 FIRES ON THREE CELLS. Severance is published. The geometry is textbook.
 
 CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.
