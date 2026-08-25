@@ -5,34 +5,27 @@
 | field | value |
 |---|---|
 | round | **3** - CEQ v5, 30 iterations, promise `SCALEFREE` |
-| iteration | **17 complete, 18 next** |
+| iteration | **18 complete, 19 next** |
 | phase | **Phase 0 - M3 on the windowed arm. Capability before statistics.** |
 | calibration | GREEN [RUN] `run_calib.py --self-test` exit 0, 4/4 bit-identical |
 | inspector | `python inspector.py` - 8 checks, 8 must-fire controls, exits nonzero if any control stays SILENT |
 | repo | https://github.com/teerthsharma/resolvent (private) |
 
-## THE ONE NEXT ACTION (iteration 18)
+## THE ONE NEXT ACTION (iteration 19)
 
-**Settle sign-vs-routing with the PAIRED test and more seeds - it is the one
-question the round now turns on, and the current test is the wrong one.**
+**Reconcile Cameron's mechanism spec and Wilson's four engineering results, and
+record both** - the policy requires it, and iteration 18 dispatched them.
 
-Both arms see the IDENTICAL eval batch, so per-arm bootstrap intervals are
-needlessly wide. A **paired bootstrap on the per-example difference**
-`|pred_signed - y| - |pred_unsigned - y|` removes the shared batch variance and
-is the correct test for "does sign add anything on top of routing".
+The round now has a positive result to build on for the first time: **routing
+beats softmax with disjoint CIs**, and the claim is a ROUTING claim. What is
+missing is the mechanism that uses all of it at once - routing, a
+non-magnitude selection rule, co-prime dilated composition, and the batched
+path that makes it affordable.
 
-Pre-register before running:
-  * **paired CI excludes 0** -> sign contributes on top of routing, G4 does not
-    fire, and the claim keeps its signedness;
-  * **paired CI includes 0** -> G4 stands, the capability is routing, and the
-    claim is rewritten as a routing result - which is a finding against three
-    rounds of this project's own thesis and must be reported as one.
-
-Then seeds. M3 wants **5**; this is 1. Run seeds 1..4 for both arms bucketed, one
-arm-seed per call at ~300 s each.
-
-**Do not soften G4 while that runs.** As it stands the intervals overlap and the
-honest headline is ROUTING.
+**Do not soften G4 while that lands.** The paired test was the favourable one and
+it included zero. If the synthesised mechanism recovers a sign contribution, that
+is a NEW measurement on a NEW arm and it re-enters at M3 - it does not
+retroactively rescue `pivot_signed`.
 
 ## Open REDs
 

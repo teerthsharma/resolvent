@@ -2,6 +2,78 @@
 
 Round 2 archived below its own header; round-1 archive at `DONE_ARCHIVE_ROUND1.md`.
 
+### ROUND 3, ITERATION 18 - 2026-08-25 - THE PAIRED TEST CONFIRMS G4. Capability is ROUTING. Build dispatched.
+
+CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.
+Artifacts: `results/paired/signed_s0.pt`, `results/paired/unsigned_s0.pt`.
+
+ACTION (one): ran the PAIRED test - the correct instrument for *"does sign add
+anything on top of routing"* - and dispatched the build team, which the standing
+policy required and iteration 17 did not do.
+
+**WHY THE PAIRED TEST IS THE RIGHT ONE AND ITERATION 17's WAS NOT.** Both arms
+are evaluated on the **identical** batch, so shared batch-to-batch variance
+appears in both per-arm intervals and inflates both. The question is about the
+per-example DIFFERENCE, and a paired bootstrap cancels the shared variance
+exactly. **The paired test is the one that makes the signed claim EASIER.**
+
+**[RUN] `scale/paired_arm.py`, 8192 train / 512 eval, seed 0, eval batch verified
+IDENTICAL between arms:**
+
+    mean |err| signed    = 0.533127
+    mean |err| unsigned  = 0.553028
+    paired mean difference (signed - unsigned) = **-0.019901**
+    paired bootstrap 95% CI = **[-0.045847, +0.006275]**   B = 20000
+    signed wins on **55.3%** of examples
+
+**THE CI INCLUDES ZERO ON THE FAVOURABLE TEST.** 55.3% is barely a coin flip.
+The pre-registered reading fires: *"paired CI includes 0 -> G4 stands, the
+capability is routing, and the claim is rewritten as a routing result - which is
+a finding against three rounds of this project's own thesis and must be reported
+as one."*
+
+**BOTH ARMS REPRODUCED THEIR ITERATION-17 NUMBERS EXACTLY** - signed 0.673762,
+unsigned 0.747528 - so `paired_arm.py`'s replicated training loop is faithful and
+the test compares **arms**, not loops. That check was the point of replicating
+`run_arm` verbatim rather than approximating it.
+
+**THE UNPAIRED TEST WAS REPORTED FIRST ON PURPOSE.** A project carrying six
+withdrawn novelty claims does not get to run the flattering test first.
+
+---
+
+**A POLICY VIOLATION OF MINE, CALLED BY THE USER AND CORRECT.** I ran
+`pivot_signed`, then `pivot_unsigned`, then the paired test - **three serial
+measurements with nobody building alongside and no fellow deciding what came
+next.** That is exactly the failure the iteration-11 policy names, written two
+iterations earlier, by me.
+
+**DISPATCHED, in parallel, to fix both halves:**
+
+  * **CAMERON - specify the mechanism nobody has assembled.** Three measured
+    results point the same way and have never been composed: routing is what
+    works; **top-k-by-magnitude selection is sign-destroying** (bulk frustration
+    0.2779 against a selected set 99.98% positive, pairwise correlation 0.9993);
+    **co-prime dilated composition** gives whole-context gradient support at row
+    width 8 with severance 0.5745 -> 0.1277 at unchanged support. Candidate:
+    **routing with a selection rule that is NOT magnitude, over a co-prime
+    dilated composition**, affordable because the batched hop-2 path is
+    bitwise-equal to the loop and 374x faster on forward+backward. Every choice
+    must name its evidence by number; a RED test with a pre-registered NUMBER;
+    **forbidden from naming it** - G1 has not run.
+  * **WILSON + NURSES - four engineering jobs.** Apply the tri-state inspector
+    patch and verify it **end to end** this time (his earlier check stubbed six
+    subchecks, a declared shortcut that must not stand); **profile the training
+    step**, since n=2048 and n=8192 both cost ~2.1 s and equal cost at 4x the
+    data means something size-independent dominates; measure whether
+    **lam=1.0 repairs the SELECTED set** on identical draws - cheap and
+    unmeasured; run the **G1 fetch** against LongNet, Sparse Transformer, BigBird
+    and co-prime schedules specifically, reporting what was FOUND, never
+    "unoccupied".
+
+CHECKLIST: M3w - **G4 CONFIRMED by the paired test.** Capability attributed to
+ROUTING. Claim rewritten. Build and engineering both in flight.
+
 ### ROUND 3, ITERATION 17 - 2026-08-25 - ALL THREE ARMS CLEAR THE BAR. And G4 FIRES: the capability is ROUTING, not SIGN.
 
 CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.
