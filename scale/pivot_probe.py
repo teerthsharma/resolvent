@@ -100,6 +100,48 @@ def pivot_hop2(a: torch.Tensor, pivots: torch.Tensor) -> torch.Tensor:
     return a[:, pivots] @ a[pivots, :]
 
 
+def batched_select_pivots(key: torch.Tensor, k: int) -> torch.Tensor:
+    """`select_pivots(key[i], k)` for every i, as ONE topk. [n,s,d] -> [n,k'].
+
+    k' is `min(k, s)` -- `select_pivots`'s `min(k, int((score > -inf).sum()))`
+    with no exclusions, where the survivor count is exactly `s`. It is NOT
+    `min(k, n*s)`: summing the batched score matrix would give that, and would
+    part company with the loop whenever k > s.
+
+    NO `exclude`. `select_pivots`'s `exclude` sets entries to -inf and then
+    counts survivors, which is per-example bookkeeping this does not replicate;
+    the batched form is not offered for that call shape rather than silently
+    ignoring the argument.
+    """
+    score = key.norm(dim=-1)                                   # [n,s]
+    return torch.topk(score, min(k, score.shape[-1]), dim=-1).indices
+
+
+def batched_pivot_hop2(a: torch.Tensor, pivots: torch.Tensor) -> torch.Tensor:
+    """`pivot_hop2(a[i], pivots[i])` for every i. a [n,s,s], pivots [n,k].
+
+    Same arithmetic as `pivot_hop2`, with the batch axis carried by tensor ops
+    instead of by the interpreter: gather the k pivot COLUMNS along dim 2, the k
+    pivot ROWS along dim 1, and replace the n matmuls with one `bmm`.
+
+    WHY IT MATTERS, and it is not the forward. Forward-only the loop is merely
+    slow (4-11x). Its BACKWARD is superlinear -- 0.0369 -> 0.6588 -> 24.5587 s
+    at n = 128 -> 512 -> 2048 -- because it builds one autograd subgraph PER
+    EXAMPLE. The batched form is ~linear (0.0024 -> 0.0156 -> 0.0656), a 374x
+    difference at n=2048, and that graph count is the memory cost as well as the
+    time cost.
+
+    BITWISE-BOUND against the loop -- `torch.equal`, never `allclose`.
+    Gradients are bound to n <= 64; at n = 2048 and 8192 the bind is FORWARD
+    ONLY, because the loop's backward there costs ~25 s per call.
+    """
+    n, s, _ = a.shape
+    kp = pivots.shape[-1]
+    cols = torch.gather(a, 2, pivots[:, None, :].expand(n, s, kp))   # [n,s,k]
+    rows = torch.gather(a, 1, pivots[:, :, None].expand(n, kp, s))   # [n,k,s]
+    return torch.bmm(cols, rows)
+
+
 #: Every arm this probe accepts. Maintained BY HAND, and the distinctness bind
 #: in `tests/loop/test_pivot_arms_distinct.py` iterates it: an arm added to the
 #: dispatch and forgotten here is exactly the ParaFormer hazard (G3).

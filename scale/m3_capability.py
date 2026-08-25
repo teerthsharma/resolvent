@@ -5,7 +5,8 @@ differing ONLY in the operator (and, for the pivot arms, the hop-2 term):
 
     softmax        : A = causal softmax operator (ceq.bench._softmax_operator)
                      out = readout(MLP(x + A@x))[:, s-1]
-    pivot_signed   : A = causal tgate operator (ceq.bench._causal_tgate_operator)
+    pivot_signed   : A = causal sgate operator (ceq.bench._causal_sgate_operator,
+                     rho=SGATE_RHO, lam=SGATE_LAM, window=0)
                      hop2 = pivot_hop2(A, select_pivots(key, k))
                      out = readout(MLP(x + A@x + hop2@x))[:, s-1]
     pivot_unsigned : A = causal softmax operator, same hop2/pivot construction
@@ -15,7 +16,7 @@ CPU ONLY. `make_batch`, `oracle`, `nrmse`, `bootstrap_ci`, `calibrate_bar` are
 IMPORTED from scale/negation_scope.py, never reimplemented. `select_pivots` and
 `pivot_hop2` are IMPORTED from scale/pivot_probe.py, never reimplemented.
 
-BATCHING NOTE. `bench._softmax_operator` / `bench._causal_tgate_operator` are
+BATCHING NOTE. `bench._softmax_operator` / `bench._causal_sgate_operator` are
 pure broadcasting ops over a [s,s] causal mask, so they accept a batched
 [n,s,d] q/k directly with no change to their math (verified by reading
 ceq/bench.py: `_causal_mask` returns [s,s] and every op is masked_fill/matmul,
@@ -47,7 +48,8 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
 from ceq import bench
 from scale.negation_scope import (make_batch, nrmse, bootstrap_ci, calibrate_bar,
                                   bar_verdict)
-from scale.pivot_probe import select_pivots, pivot_hop2
+from scale.pivot_probe import (select_pivots, pivot_hop2,
+                               batched_select_pivots, batched_pivot_hop2)
 
 ARMS = ("softmax", "pivot_signed", "pivot_unsigned", "windowed_signed")
 
@@ -140,11 +142,13 @@ class Arm(nn.Module):
             # pivots are content-selected PER EXAMPLE (key differs per row), so
             # pivot_hop2 -- which only accepts a single 2D [s,s] operator --
             # loops over the batch. `a` itself was already built batched above.
-            hop2 = torch.stack(
-                [pivot_hop2(a[i], select_pivots(k[i], self.k_pivots))
-                 for i in range(n)],
-                dim=0,
-            )
+            # Was a Python loop over the batch, one `pivot_hop2` call per
+            # example. The batched pair is BITWISE-EQUAL to that loop, gradient
+            # included (tests/wilson/test_hop2_vec.py). The loop's BACKWARD was
+            # superlinear -- 24.56 s at n=2048 against 0.066 s here -- because
+            # it built one autograd subgraph per example, which is the memory
+            # cost that killed the n_train=8192 run as well as the time cost.
+            hop2 = batched_pivot_hop2(a, batched_select_pivots(k, self.k_pivots))
             z = z + hop2 @ x
         h = self.mlp(z)
         out = self.readout(h).squeeze(-1)                      # [n, s]

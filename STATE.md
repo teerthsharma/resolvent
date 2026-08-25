@@ -5,34 +5,32 @@
 | field | value |
 |---|---|
 | round | **3** - CEQ v5, 30 iterations, promise `SCALEFREE` |
-| iteration | **15 complete, 16 next** |
+| iteration | **16 complete, 17 next** |
 | phase | **Phase 0 - M3 on the windowed arm. Capability before statistics.** |
 | calibration | GREEN [RUN] `run_calib.py --self-test` exit 0, 4/4 bit-identical |
 | inspector | `python inspector.py` - 8 checks, 8 must-fire controls, exits nonzero if any control stays SILENT |
 | repo | https://github.com/teerthsharma/resolvent (private) |
 
-## THE ONE NEXT ACTION (iteration 16)
+## THE ONE NEXT ACTION (iteration 17)
 
-**Make the 8192 reading survivable, through `scale/bucket.py` as ADR-001
-requires, with gradient accumulation for memory.**
+**Re-run the 8192 reading now that the backward is ~linear - BUCKETED, per
+ADR-001, which iteration 15 broke.**
 
-Two separate defects caused the silent death and both need fixing:
-  * **no journal** - the run left zero evidence because it was not bucketed.
-    ADR-001 exists for exactly this and was bypassed.
-  * **full-batch memory** - `[8192,64,64]` operator plus hop-2 plus autograd
-    saves, several GB per step. Wilson's vectorised path makes this WORSE, since
-    it materialises the gathers.
+The batched path turns 24.56 s per hop-2 backward into 0.066 s at n=2048, a 374x
+difference, and the per-example autograd graph count was the memory cost that
+killed the run. That removes the likely cause; it does not prove the run
+survives.
 
-**Gradient accumulation, NOT minibatching.** Minibatch SGD is a different
-optimiser and would change the numbers, which by the standing policy makes it a
-new arm rather than an optimisation. Accumulation preserves full-batch semantics.
+**Bucket it.** `scale/bucket.py` exists so a death leaves a journal, and the last
+attempt bypassed it and left 0 bytes in two files. Never again by hand.
 
-**DECLARE AND MEASURE THE NON-BITWISENESS.** Summing 8 partial gradients is not
-the same reduction order as summing 8192 terms at once, so it will NOT be
-bitwise. Measure the max relative difference against a full-batch run at a size
-that still fits (n=2048), report it, and only then use accumulation at 8192.
-Asserting "mathematically equivalent" without that number is the exact move this
-project has been burned by.
+Arms: `pivot_signed`, `pivot_unsigned` against softmax's already-timestamped
+eval **0.877168**, CI **[0.830455, 0.924226]**. **NOT `windowed_signed`** - dead
+twice over. Label the result **d=24, not M3 proper**.
+
+If it dies again with the backward linearised, the cause is not the hop-2 loop
+and the next suspect is the full-batch operator itself - `[8192,64,64]` plus
+autograd saves - which is what gradient accumulation was for.
 
 ## Open REDs
 

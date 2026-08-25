@@ -2,6 +2,61 @@
 
 Round 2 archived below its own header; round-1 archive at `DONE_ARCHIVE_ROUND1.md`.
 
+### ROUND 3, ITERATION 16 - 2026-08-25 - Batched hop-2 landed, bitwise. And my iteration-15 diagnosis was WRONG.
+
+CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.
+
+ACTION (one): applied Wilson's Job 1 patch - the batched hop-2 path - plus the
+two stale docstring sites (Job 3), and verified the bind myself.
+
+**I MEASURED THE WRONG AXIS AND TOLD THE USER THE WRONG THING.** Iteration 13 I
+timed FORWARD ONLY, got 4.1x at n=2048, and iteration 15 concluded *"Wilson's
+vectorised hop-2 makes memory WORSE, not better... an 8.6x speedup does not help
+a run that is being killed for memory."* **Wilson timed forward+backward:**
+
+    n      loop fwd+bwd   vec fwd+bwd   speedup
+    128       0.0369 s      0.0024 s     15.6x
+    512       0.6588 s      0.0156 s     42.4x
+    2048     24.5587 s      0.0656 s    **374.6x**
+
+**The loop's BACKWARD is superlinear** - 4x more data costs 18x then 37x -
+because it builds **one autograd subgraph PER EXAMPLE**. That graph count is the
+MEMORY cost as well as the time cost, so **the batched path is very likely the
+fix for the 8192 death rather than an aggravation of it.** A forward-only timing
+cannot see any of this, which is also why 0.043 s at n=512 read as "nothing to
+optimise" at iteration 11.
+
+**And it explains why my own accumulation probe produced NO OUTPUT this
+iteration:** it was running the loop's backward at n=2048 - 24.6 s per step - for
+60 steps across six configurations. It was never going to finish.
+
+**[RUN] BIND VERIFIED BY ME, not accepted on report:**
+  * forward bitwise over **12 cases** (2 arms x n in {1,5,64} x 2 seeds): ALL EQUAL
+  * **gradient bitwise at n=8: True, maxdiff 0.0**
+  * `tests/loop/test_m3_harness_operator_is_shipped.py` + `tests/wilson`: all passing
+
+**DECLARED LIMIT OF THE BIND, carried forward.** Gradients are bound bitwise only
+to **n <= 64**. At n = 2048 and 8192 the bind is **FORWARD ONLY**, because the
+loop's backward there costs ~25 s per call and Wilson would not take that from a
+running measurement. **The 8192 numbers therefore rest on a forward-only
+equivalence**, and that qualification travels with them.
+
+**JOB 3, and Wilson found MORE than was asked.** The stale claim was at **two**
+sites in the module docstring, not one: line 8 (`pivot_signed : A = causal tgate
+operator`) and line 18 (`BATCHING NOTE ... _causal_tgate_operator`). Both fixed.
+He correctly left line 111 alone - *"This branch used to return..."* is
+historical and accurate.
+
+**JOB 2 (inspector FAIL vs INDETERMINATE) is delivered as a diff with 13 must-fire
+controls fired, and is NOT yet applied.** Its key design point is one I would have
+got wrong: matching only `passed` would refile a genuine total failure
+(`3 failed in 1.2s`, no `passed` in the output) as INDETERMINATE - **the new
+state absorbing exactly what it must never absorb.** The regex accepts
+`passed|failed|error` and trusts only pytest's own exit codes 0 and 1.
+
+CHECKLIST: batched hop-2 LANDED and bitwise-bound. Docstring corrected. Inspector
+tri-state diff pending.
+
 ### ROUND 3, ITERATION 15 - 2026-08-25 - INSPECTOR CLEAN. And the 8192 measurement DIED SILENTLY - I broke my own ADR.
 
 **[RUN] `python inspector.py 15` -> exit 0. CLEAN: 8 checks, 8 controls all fired.**
