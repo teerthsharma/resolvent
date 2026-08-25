@@ -2,6 +2,92 @@
 
 Round 2 archived below its own header; round-1 archive at `DONE_ARCHIVE_ROUND1.md`.
 
+### ROUND 3, ITERATION 19 - 2026-08-25 - THE SIGNED ARM WAS NEVER SIGNED. G4 IS VOID. Round 4 opens.
+
+CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.
+
+**CAMERON'S FINDING, VERIFIED BY ME BEFORE REPEATING IT. IT VOIDS THIS ROUND'S
+HEADLINE.**
+
+At the M3 harness geometry - `make_batch` scales `x` by 0.1, so logits are
+**|w| mean 2.682399e-03, max 1.512080e-01** - the shipped operator is
+**ENTRYWISE NON-NEGATIVE**:
+
+    lam    bulk neg-frac    min entry     row-sum absmax
+    0.10       0.000000     0.000e+00        1.227e+00
+    0.90       0.000064    -1.993e-03        7.895e-02
+    0.99       0.063982    -3.155e-03        7.538e-03
+    1.00       0.500564    -5.955e-03        2.403e-07
+
+**`_causal_sgate_operator(lam=0.10)` HAS ZERO NEGATIVE ENTRIES ON THE DATA THE
+ARMS WERE SCORED ON.** min entry is exactly `0.000e+00`.
+
+**SO G4's PAIRED TEST COMPARED TWO NON-NEGATIVE OPERATORS.** `pivot_signed` was
+`pivot_unsigned` wearing a name. The paired CI `[-0.045847, +0.006275]` including
+zero was **never a measurement of sign**, and iteration 18's headline - *"sign
+does not measurably beat routing"* - is **VOID**. It is not overturned by a
+better test; it is withdrawn because the object was wrong.
+
+**WHY.** lambda is a **THRESHOLD AT 1.0, not a dial**, at this logit scale: at
+`w ~ 0` we have `pp ~ pm`, so `A ∝ (1-lam)/i` stays POSITIVE until lam crosses 1.
+At lam=1.00 row sums are exactly zero (absmax 2.403e-07), which is why a
+width-8 band matters - cancellation over 8 terms, never over s.
+
+**AND IT CONVICTS MY OWN ITERATION-7 AUDIT.** I measured frustration **0.2779**
+and reported *"sgate carries real sign structure"*. I measured it on **unit-scale
+`torch.randn(s,16)`** q/k. The harness scales x by 0.1. **Same operator, two
+regimes, opposite answers - and I never checked the scale dependence.** The
+frustration finding is TRUE at unit scale and FALSE at harness scale.
+
+**SEVENTH APPEARANCE OF ONE SHAPE** - a correct measurement of an object other
+than the one that ships: instrument #17, M4's kill, M2's vacuous clause, M5's
+hypothesis, the random-init scope, F1's linear value path, and now **an operator
+that is signed at the scale it was AUDITED and unsigned at the scale it was
+SCORED.**
+
+**CAMERON'S RED TEST**
+`tests/cameron/test_the_signed_arm_is_signed_on_this_task.py`, pre-registered
+kill `frustration(A[P,P]) >= 0.30`:
+*"KILL: frustration = 0.000000 over 14336 triangles... The routed arm is routing
+a sign-free operator; it is `pivot_unsigned` wearing a name."* **1 failed, 5
+passed**, and falsifiable both ways - at `lam=1.00` the same estimator reads
+**0.520525**.
+
+**HE ALSO REFUSED THE PREMISE I GAVE HIM, with measurement.** I briefed
+"selection by magnitude is sign-destroying, find a non-magnitude rule". He tested
+three cancellation-based rules and **none beats magnitude** (selected neg-frac
+0.5008-0.5010 across all, against random control 0.5012). **It was never the
+selection rule. It was lambda.**
+
+**ONE OPEN ITEM OF HIS I CAN RESOLVE.** He could not reproduce my 0.9993 pairwise
+correlation, reading 0.139315. **Both are right and they are different
+statistics.** Mine is the **UNCENTERED** mean pairwise product
+`E[eps_i eps_j] = (E(sum eps)^2 - k)/(k(k-1))`, which is what governs `|sum eps|`
+and follows arithmetically from `P(+) = 0.9998`. His is the **CENTERED**
+correlation, which subtracts the marginal bias. For cancellation the uncentered
+one is the relevant quantity.
+
+**SEEDS 1 MEASURED** before this landed: signed **0.687211**, unsigned
+**0.720210**. **Both now void as sign evidence** for the same reason.
+
+**COST OF CAMERON'S SYNTHESISED ARM [RUN]:** 4769 params (unchanged), **7.473 s
+per step at n=8192, peak RSS 3149.98 MB, ~1121 s for 150 steps** - 3.45x
+`pivot_unsigned`'s time. Declared shortcut: one timed step x150, so 1121 s is a
+FLOOR.
+
+---
+
+**ROUND 4 OPENS - CEQ v6', THE CHOSEN-SIGN ROUND.** v5 archived to
+`LOOP_PROMPT_ROUND3_ARCHIVE.md`. The user's contract attacks **epsilon** where
+rounds 1-3 attacked `t_p`, and **X3 (FKG) retro-explains iteration 6 as a
+theorem**: selection-coupled signs MUST align. **X4 (Levi-Civita valuations)
+explains why `floor=1e-6` discarded 100% of a live arm's flips at median |grad|
+2.8e-32.** Goal restated: the module must **survive equal to self-attention or
+supersede it**.
+
+CHECKLIST: **G4 VOID - not overturned, WITHDRAWN.** The signed arm was not signed
+at the scale it was scored. Round 4 opens.
+
 ### ROUND 3, ITERATION 18 - 2026-08-25 - THE PAIRED TEST CONFIRMS G4. Capability is ROUTING. Build dispatched.
 
 CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.

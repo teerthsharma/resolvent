@@ -24,9 +24,18 @@ test rather than a rule:
     requires it to fail. A check that cannot fail is not a check (instrument
     #15), and a check that was never seen failing is a rule, not a test.
 
-The script exits nonzero if any check fails OR if any must-fire control does not
-fire. Both halves are load-bearing: an all-green run whose controls stayed silent
-means the Inspector is blind, which is worse than a red one.
+  * every check reports one of THREE states. Iteration 11 ran the Inspector
+    under four concurrent agents and got `[FAIL] value binds + resume -- ?
+    passed`, exit 1; standalone the same command gave `107 passed`, exit 0. The
+    `? passed` is the tell -- the regex found no count, so the subprocess was
+    KILLED, not failed. **A checker that cannot separate "it failed" from "I
+    could not measure it" is worse than one that fails cleanly**, because the
+    first response to a red run is to go hunting a defect that is not there.
+
+The script exits nonzero if any check FAILS, if any check is INDETERMINATE, or if
+any must-fire control does not fire. All three halves are load-bearing: an
+all-green run whose controls stayed silent means the Inspector is blind, which is
+worse than a red one, and **an unmeasured check is not a clean one.**
 
     python inspector.py [ITERATION]
 
@@ -53,13 +62,25 @@ CALIB = [("signed", 3, 0.046875), ("sgate", 1, 0.0234375),
 #: Each is (label, thunk -> dict of name: (measured, published)).
 LOCK_M2 = "efadc390c93f"
 
-results: list[tuple[str, bool, str]] = []
+#: The three states. INDET is not a softer FAIL -- it is a REFUSAL to report, and
+#: it exits nonzero exactly like a FAIL. The only thing it changes is what the
+#: reader goes looking for afterwards.
+PASS, FAIL, INDET = "PASS", "FAIL", "INDET"
+
+results: list[tuple[str, str, str]] = []
 controls: list[tuple[str, bool]] = []
 
 
-def check(name: str, ok: bool, detail: str = "") -> bool:
-    results.append((name, ok, detail))
-    return ok
+def check(name: str, state, detail: str = "") -> str:
+    """`state` is PASS/FAIL/INDET, or a bool for a check that CANNOT be
+    indeterminate -- one computed in-process from data already in hand, where
+    there is no subprocess to be killed and no measurement to go missing."""
+    if state is True:
+        state = PASS
+    elif state is False:
+        state = FAIL
+    results.append((name, state, detail))
+    return state
 
 
 def control(name: str, fired: bool) -> None:
@@ -71,6 +92,51 @@ def run(argv: list[str], cwd: pathlib.Path | None = None) -> tuple[int, str]:
     """Run argv with NO shell and NO pipeline. The return code is the process's."""
     p = subprocess.run(argv, cwd=str(cwd or ROOT), capture_output=True, text=True)
     return p.returncode, (p.stdout or "") + (p.stderr or "")
+
+
+#: A pytest run states its verdict in TWO places, and the state is decided only
+#: when both are present, because each alone has a blind spot that has already
+#: fired in this repository.
+#:
+#: The SUMMARY LINE alone is the trap that matters. Matching only `passed` refiles
+#: `3 failed in 1.2s` -- a TOTAL failure, with no `passed` anywhere in the output
+#: -- as INDETERMINATE: the new state absorbing exactly the case it must never
+#: absorb. So the regex accepts `passed|failed|error`; its only job is to answer
+#: "did pytest reach the end and report", never "what did it report".
+#:
+#: The EXIT CODE alone is the other blind spot. On Windows a killed child does not
+#: come back as `-SIGKILL`; it comes back as a large positive code (0xC000013A =
+#: 3221225786 for a console interrupt), indistinguishable from an arbitrary
+#: failure unless checked against pytest's own documented set. pytest defines
+#: 0 (all passed) and 1 (tests failed); 2/3/4/5 are interrupted / internal error /
+#: usage error / nothing collected, and every one of those is a run that did not
+#: measure the thing.
+SUMMARY = re.compile(r"\d+ (?:passed|failed|error)")
+
+
+def pytest_state(rc: int, out: str) -> tuple[str, str]:
+    """(state, detail) for a pytest subprocess. PASS/FAIL only on rc 0/1 WITH a
+    summary line; everything else is INDETERMINATE."""
+    m = SUMMARY.search(out)
+    if m is None:
+        return INDET, f"exit={rc}, NO pytest summary line -- killed, or never started"
+    if rc == 0:
+        return PASS, m.group(0)
+    if rc == 1:
+        return FAIL, m.group(0)
+    return INDET, f"exit={rc} outside pytest's 0/1, summary was {m.group(0)!r}"
+
+
+def verdict(states: list[tuple[str, str, str]],
+            fired: list[tuple[str, bool]]) -> int:
+    """The exit code, as a FUNCTION of the two lists. Extracted out of `main` so
+    the must-fire controls can hand it known-bad input: a decision rule that only
+    ever runs on real data is a rule, and this file exists because rules do not
+    hold here."""
+    bad = [n for n, s, _ in states if s == FAIL]
+    unk = [n for n, s, _ in states if s == INDET]
+    silent = [n for n, f in fired if not f]
+    return 1 if (bad or unk or silent) else 0
 
 
 # ---------------------------------------------------------------- 1 calibration
@@ -197,8 +263,7 @@ def check_suites() -> None:
     rc, out = run([sys.executable, "-m", "pytest", "tests/loop", "tests/w11",
                    "tests/chase/test_resume_checkpoint.py", "-q",
                    "-p", "no:cacheprovider"])
-    m = re.search(r"(\d+) passed", out)
-    check("value binds + resume", rc == 0, f"{m.group(1) if m else '?'} passed")
+    check("value binds + resume", *pytest_state(rc, out))
     # MUST-FIRE: the exit-code path itself. This is instrument #13's antidote --
     # a process that fails must be SEEN to fail, with no pipeline in between.
     rc_bad, _ = run([sys.executable, "-c", "import sys; sys.exit(3)"])
@@ -207,25 +272,35 @@ def check_suites() -> None:
 
 def check_lean() -> None:
     lean = ROOT / "lean"
+    # Fired FIRST and in EVERY branch. It is a pure-function control over a
+    # literal, so it does not depend on the toolchain being present -- the old
+    # code let it go SILENT when the lakefile was missing, which forced a nonzero
+    # exit for the right reason by the wrong mechanism: a blind-Inspector alarm
+    # standing in for an unmeasured check.
+    control("sorry counter can see one",
+            len(re.findall(r"\bsorry\b", "have h : True := sorry")) == 1)
     if not (lean / "lakefile.lean").exists() and not (lean / "lakefile.toml").exists():
-        check("lake build CEQ", False, "no lakefile")
-        control("lean check present", False)
+        check("lake build CEQ (unmasked exit) + zero sorry", INDET,
+              "no lakefile -- NOT MEASURED")
         return
-    rc, _ = run(["lake", "build", "CEQ"], cwd=lean)
+    try:
+        rc, _ = run(["lake", "build", "CEQ"], cwd=lean)
+    except OSError as e:                 # lake absent from PATH: unmeasured
+        check("lake build CEQ (unmasked exit) + zero sorry", INDET,
+              f"lake not runnable: {type(e).__name__}: {e}")
+        return
     sorries = sum(len(re.findall(r"\bsorry\b", p.read_text(encoding="utf-8", errors="ignore")))
                   for p in (lean / "CEQ").rglob("*.lean"))
     check("lake build CEQ (unmasked exit) + zero sorry", rc == 0 and sorries == 0,
           f"exit={rc} sorry={sorries}")
-    control("sorry counter can see one", len(re.findall(r"\bsorry\b", "have h : True := sorry")) == 1)
 
 
 def check_struck() -> None:
     rc, out = run([sys.executable, "-m", "pytest",
                    "tests/loop/test_no_struck_constant_ships.py", "-q",
                    "-p", "no:cacheprovider"])
-    m = re.search(r"(\d+) passed", out)
-    check("struck-constant absence (9 documents + shipped code)", rc == 0,
-          f"{m.group(1) if m else '?'} passed")
+    check("struck-constant absence (9 documents + shipped code)",
+          *pytest_state(rc, out))
     control("struck registry is non-empty",
             bool(re.search(r"-1\.389", (ROOT / "tests/loop/test_no_struck_constant_ships.py")
                            .read_text(encoding="utf-8"))))
@@ -251,6 +326,39 @@ def check_attribution() -> None:
             _attr_hits("fix thing\n\nCo-Authored-By: Claude <x@y>") == 1)
 
 
+# ------------------------------------------------- 9 the tri-state logic itself
+
+def check_tri_state() -> None:
+    """The classifier and the verdict, checked as VALUES against inputs whose
+    right answer is known. Nine of this repository's failed instruments compared
+    STRUCTURE and all nine gave a false reading; three compared VALUES and none
+    ever has. The new state is decision logic, so it is checked the same way."""
+    cases = [((0, "107 passed in 387.03s"), PASS),   # the clean standalone run
+             ((1, "3 failed in 1.2s"), FAIL),        # total failure, no `passed`
+             ((1, "1 failed, 106 passed in 390.10s"), FAIL),
+             ((0, ""), INDET),                       # exited 0, reported nothing
+             ((5, "no tests ran in 0.01s"), INDET),  # collected nothing
+             ((3221225786, ""), INDET),              # Windows kill
+             ((-9, ""), INDET)]                      # POSIX SIGKILL
+    got = [pytest_state(rc, out)[0] for (rc, out), _ in cases]
+    want = [w for _, w in cases]
+    check("tri-state classifier (7 inputs with known answers)", got == want,
+          f"got={got}")
+
+    # The five controls that guard the new state. Each feeds a KNOWN-BAD input
+    # and requires the answer that is hard, not the one that is convenient.
+    control("classifier files a total failure as FAIL, not INDETERMINATE",
+            pytest_state(1, "3 failed in 1.2s")[0] == FAIL)
+    control("classifier files a killed run as INDETERMINATE, not FAIL",
+            pytest_state(3221225786, "")[0] == INDET)
+    control("classifier files 'nothing collected' (exit 5) as INDETERMINATE, not PASS",
+            pytest_state(5, "no tests ran in 0.01s")[0] == INDET)
+    control("one INDETERMINATE and zero FAIL still exits NONZERO",
+            verdict([("u", INDET, "")], [("c", True)]) == 1)
+    control("a SILENT control alone still exits NONZERO",
+            verdict([("p", PASS, "")], [("c", False)]) == 1)
+
+
 # ---------------------------------------------------------------------- driver
 
 def main() -> int:
@@ -265,29 +373,35 @@ def main() -> int:
     for fn, arg in ((check_calibration, None), (check_lock, None),
                     (check_replay, iteration), (check_published, iteration),
                     (check_suites, None), (check_lean, None),
-                    (check_struck, None), (check_attribution, None)):
+                    (check_struck, None), (check_attribution, None),
+                    (check_tri_state, None)):
         try:
             fn(iteration) if arg is not None else fn()
         except Exception as e:                       # a crashed check is a FAILED check
             check(f"{fn.__name__} (raised)", False, f"{type(e).__name__}: {e}")
 
-    for name, ok, detail in results:
-        print(f"  [{'PASS' if ok else 'FAIL'}] {name}" + (f"  -- {detail}" if detail else ""))
+    for name, state, detail in results:
+        print(f"  [{state:>5}] {name}" + (f"  -- {detail}" if detail else ""))
     print()
     for name, fired in controls:
         print(f"  [{'FIRED' if fired else 'SILENT'}] must-fire: {name}")
 
-    bad = [n for n, ok, _ in results if not ok]
+    bad = [n for n, s, _ in results if s == FAIL]
+    unk = [n for n, s, _ in results if s == INDET]
     silent = [n for n, f in controls if not f]
     print()
     if bad:
         print(f"  FAILED CHECKS: {len(bad)} -- {', '.join(bad)}")
+    if unk:
+        print(f"  INDETERMINATE CHECKS: {len(unk)} -- {', '.join(unk)}")
+        print("  These did not measure. An unmeasured check is NOT a clean one --")
+        print("  and it is not a defect either, so do not go looking for one.")
     if silent:
         print(f"  SILENT CONTROLS: {len(silent)} -- {', '.join(silent)}")
         print("  A check whose control stayed silent is BLIND. This is not a pass.")
-    if not bad and not silent:
+    if not bad and not unk and not silent:
         print(f"  CLEAN: {len(results)} checks, {len(controls)} controls all fired.")
-    return 1 if (bad or silent) else 0
+    return verdict(results, controls)
 
 
 if __name__ == "__main__":

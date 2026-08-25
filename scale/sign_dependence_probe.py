@@ -30,15 +30,23 @@ SIZES = (16, 128, 512)
 A_K = sum(abs(sum(e)) for e in itertools.product((-1, 1), repeat=K)) / 2 ** K
 
 
-def measure(s, seed=0, operator="sgate"):
-    """Return (E|sum of MEASURED signs|, P(+), mean pairwise sign corr, n)."""
+def measure(s, seed=0, operator="sgate", lam=0.10):
+    """Return (E|sum of MEASURED signs|, P(+), mean pairwise sign corr, n).
+
+    `lam` IS THE DIAL, and it is threaded here rather than into a second copy of
+    this loop. q and k are drawn from `torch.Generator().manual_seed(seed)`
+    BEFORE the operator is built and the operator consumes no randomness, so two
+    calls at the same `s` and `seed` and different `lam` see BIT-IDENTICAL draws.
+    That is what makes the two lam rows comparable at all: a lam=1.00 table on
+    fresh draws would confound the dial with the sample.
+    """
     g = torch.Generator().manual_seed(seed)
     tot, pos, corr, n = 0.0, 0, 0.0, 0
     for _ in range(DRAWS):
         q = torch.randn(s, D, generator=g)
         k = torch.randn(s, D, generator=g)
         if operator == "sgate":
-            a = bench._causal_sgate_operator(q, k, rho=1.5, lam=0.10)
+            a = bench._causal_sgate_operator(q, k, rho=1.5, lam=lam)
         else:                                   # plain Gaussian control row
             a = torch.randn(s, s, generator=g).tril(-1)
         i = s - 1
@@ -58,13 +66,26 @@ def measure(s, seed=0, operator="sgate"):
 
 
 print(f"A_8 (independent Rademacher, 2^{K} enumeration) = {A_K:.6f}\n")
-print(f"{'operator':>10} {'s':>5} {'E|sum eps|':>12} {'vs A_8':>9} "
+print(f"{'operator':>10} {'lam':>6} {'s':>5} {'E|sum eps|':>12} {'vs A_8':>9} "
       f"{'P(+)':>8} {'mean pair corr':>15} {'draws':>7}")
-for op in ("gauss", "sgate"):
+for op, lam in (("gauss", None), ("sgate", 0.10), ("sgate", 1.00)):
     for s in SIZES:
-        e, p, c, n = measure(s, operator=op)
-        print(f"{op:>10} {s:>5} {e:>12.6f} {e/A_K:>8.4f}x {p:>8.4f} "
-              f"{c:>15.6f} {n:>7}")
+        e, p, c, n = measure(s, operator=op, lam=(0.10 if lam is None else lam))
+        print(f"{op:>10} {'--' if lam is None else f'{lam:.2f}':>6} {s:>5} "
+              f"{e:>12.6f} {e/A_K:>8.4f}x {p:>8.4f} {c:>15.6f} {n:>7}")
+
+print("\n=== DRAW-IDENTITY BIND: the two lam rows must see the SAME q, k ===")
+for s in SIZES:
+    ga = torch.Generator().manual_seed(0)
+    gb = torch.Generator().manual_seed(0)
+    qa, ka = torch.randn(s, D, generator=ga), torch.randn(s, D, generator=ga)
+    qb, kb = torch.randn(s, D, generator=gb), torch.randn(s, D, generator=gb)
+    same = torch.equal(qa, qb) and torch.equal(ka, kb)
+    a10 = bench._causal_sgate_operator(qa, ka, rho=1.5, lam=0.10)
+    a100 = bench._causal_sgate_operator(qb, kb, rho=1.5, lam=1.00)
+    print(f"  s={s:>4}  torch.equal(q,q')={torch.equal(qa, qb)} "
+          f"torch.equal(k,k')={torch.equal(ka, kb)}  -> draws identical: {same}   "
+          f"and the OPERATORS differ: {not torch.equal(a10, a100)}")
 
 print("\n=== MUST-FIRE CONTROL: a known-correlated sign law must be DETECTED ===")
 g = torch.Generator().manual_seed(1)
