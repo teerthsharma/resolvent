@@ -564,3 +564,28 @@ Replayed ARM A's own draw stream (published `D_FR causal` reproduced to 6 dp at 
 | the "opposite k-trend" I claimed | **ALSO AN ARTIFACT.** Bound, the `max` advantage reads **+0.7971 / +0.5003 / +0.5088** - shrinking then flat, **her direction**. |
 | Cameron's mechanism, retested on the correct population | **STILL REFUTED.** argmax at `c+1` on **0.0250 / 0.0167 / 0.0083** vs chance **0.008959 / 0.007750 / 0.004493** (2.8x / 2.2x / 1.9x chance but **under 3% of draws**), **median offset 137 / 117 / 130**. Row `c+1` alone scores **0.2923 / 0.0583 / 0.1977** against the max's **2.3275 / 1.8900 / 1.4806**. **No O(1) shortcut.** |
 | the aggregator win | **REAL, LARGE, UNEXPLAINED** (+0.7971 / +0.5003 / +0.5088 vs a K3 quarrel of +0.0241) - **and shared with TV**, so not a sphere result. |
+
+**WILSON [RUN, r5 iter 15] - the rung whose facts settle disputes. 400 draws/cell, 6 k, bucketed, replay MATCH.**
+
+| item | verdict |
+|---|---|
+| **K1 `D_FR` clause** | **RESOLVED AND FAILED.** Slope **-0.4137 [-0.4579, -0.3704]** as-computed and **-0.4654 [-0.5173, -0.4160]** live-rows-only. **Both intervals entirely below -0.30**, so the pre-registered *"displacement dies with flip -> no leap"* trigger **FIRES**. Both also fail K1's bar of `>= -0.10`. **ARM A has NOT survived K1; ARM B is NOT authorized.** |
+| K1 flip half | **ALIVE, UNRESOLVED.** 6/0/0/1/1/0 per 400 -> pooled **8/2400 = 0.003333 CP95 [0.001440, 0.006557]**. Slope **-0.6960 CI [-1.0000, +0.0000]** straddles the -0.4 bar; the CI is **count discreteness, not an interval**. The unsigned arm's CP95 **contains** the signed arm's rate - **the two arms are not separated at these sample sizes.** Needs 20000 draws/cell (~8 h). |
+| K2 / K3 | **K2 passes at all 6 k** before and after correction. **K3 theta wins at all 6 k**; the dead-row correction is an affine map on both groups so **Cohen's d is invariant by construction** (deltas ~1e-16). |
+| **the identity** | **A THEOREM, derived and measured.** `theta_i = arcsin(sqrt(TV_i))` exactly. float32 residual **8.457280e-04** (reproducing my figure exactly), float64 **6.828570e-08**. *"K3 can only ever win by Jensen on a concave map."* |
+| **my `TV^p` control** | **VINDICATED, his words:** *"this is WHY the coordinator's held-out `TV^p` control beat theta at k=8 - that outcome is expected, not anomalous, and it is the correct control."* |
+| Chase F3(a) | **REFUTED.** Shipped dict already repaired (`slope: None`). Registry test **exit 0, 12 passed**; hardening test **exit 1**. **One stale RED, not a contradiction.** |
+| Chase F4 | **REFUTED ON THE LETTER, and the refutation is a HAZARD.** `DONE.md` now reads **1/1/1/1** - and all four sit in **F4's own text**. **Substance stands**; the hazard is that provenance could be satisfied by the report of its absence. |
+| Cameron `gamma_1` tie | **REFUTED at his geometry - G-c's kill does NOT fire.** **0.9123 / 0.9766 / 0.8507**, all CIs excluding zero, none negative. He did not run her pipeline. |
+| Chase F2 | **REFUTED in degree.** K2 is **DEGRADED, NOT VOIDED**: band-filler **0.4301 / 0.4586 / 0.5425**, all excluding zero; key-norm matching removes **~65%** at k=8. **The filler pool IS two populations** (band-vs-tail **1.0716 / 0.8782 / 0.4868**). |
+| Cameron F1 | **CONFIRMED.** max-mean **+1.1347 / +0.9355 / +0.4959**, all excluding zero. Sphere-vs-TV at the same aggregator is **+0.06 to +0.11, ~5% of the aggregator's +1.13**. |
+| dead-row floor | **VERIFIED** (1 in 1200/1200 draws, 0.0015340 rad) **with a refinement**: rows reading exactly pi/2 reach **2, 3, 4** and those extras are **LIVE**. **Detecting dead rows by `theta == pi/2` over-subtracts by up to 3.** |
+| his own AUC prediction | **REFUTED by him.** Deltas +1.06e-03 / +2.50e-05 / -9.75e-04; float64 gap = **1 discordant pair in 3600**. |
+| **B1 - OPEN, he and I disagree** | He infers B1 collapses onto salience from `rho(\|\|k_c\|\|, theta) = 0.45-0.58`. **That is key-norm vs the masked token's DISPLACEMENT, not vs SHADOW MASS per candidate.** My direct measurement of the quantity B1 proposes reads **`rho = -0.024620`, overlap below chance at every k**, three controls firing. **Needs one probe, not an argument.** |
+
+**INSPECTOR [RUN, r5 iter 15] - exit 0, CLEAN, 11 checks / 16 controls.**
+
+| item | status |
+|---|---|
+| **Chase F5** | **EXACT, verified twice independently.** `--collect-only` = **1278**; `check_suites` = **107**. **8.37%.** |
+| the repair | `inspector.py` **now prints its own coverage** with the sentence *"a CLEAN result above is a statement about these 107 tests and about NOTHING ELSE"*, a **must-fire control that the fraction is measured not assumed 100%**, and an **INDETERMINATE** if collection fails. **The misreading cannot recur.** |

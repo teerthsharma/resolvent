@@ -5,47 +5,53 @@
 | field | value |
 |---|---|
 | round | **5** - CEQ v7, promise `TWOSPHERES`, **30 iterations** |
-| iteration | **14 complete, 15 next** |
+| iteration | **15 complete, 16 next** |
 | phase | **ARM A under the escalation chain; autonomous to iteration 30** |
 | goal | **match or SUPERSEDE self-attention**; next-equilibrium predictor |
 | calibration | GREEN [RUN] `run_calib.py --self-test` exit 0, 4/4 bit-identical |
 | inspector | tri-state; INDETERMINATE exits nonzero |
 | repo | https://github.com/teerthsharma/resolvent (private) |
 
-## THE ONE NEXT ACTION (round 5, iteration 15)
+## THE ONE NEXT ACTION (round 5, iteration 16)
 
-**Iteration 15 is an Inspector pass (every 5th) - and Chase aimed a finding
-straight at it that must be acted on, not just recorded.**
+**K1 HAS FIRED. The round's shape is now decided, and the next action is to say
+so in the document that ships.**
 
-**CHASE F5: the Inspector's clean bill covers 107 of 1278 tests - 8.4%.** He
-probed two files inside the blind spot and found **8 live failures**, including
-**a struck constant (`-1.389`, `0.9938`) still PINNED by
-`tests/chase/test_hub_package_hardening.py:496-499`** while the struck-registry
-test asserts the opposite. *"INSPECTOR PASS - exit 0, CLEAN"* is true **and is not
-a statement about the repository**, and this project has written that sentence
-into `DONE.md` five times.
+Wilson resolved K1's `D_FR` clause with an interval: **-0.4137 [-0.4579, -0.3704]**
+and **-0.4654 [-0.5173, -0.4160]**, **both entirely below -0.30**. The
+pre-registered trigger *"displacement dies with flip -> no leap"* **FIRES**.
+**ARM A has not survived K1**, so per `LOOP_PROMPT.md:162` **ARM B is not
+authorized** and **`TWOSPHERES: KEPT` is not available.**
 
-So iteration 15 runs `python inspector.py` **and** decides what to do about its
-coverage. Options, in order of cost: widen `check_suites` beyond
-`tests/loop tests/w11 tests/chase/test_resume_checkpoint.py`; or make the
-Inspector **report its own coverage fraction in its output**, so a clean bill can
-never again be read as a statement about the suite. **The second is cheap and
-removes the misreading permanently.**
+**Deletion, not defense.** The contract also says an honest **BROKEN outranks an
+unfinished KEPT**, and that **D1 ships either way**.
 
-**Also owed and now cheap:** Chase's F3 says two shipped tests make **logically
-opposite demands on the same dict**. That is not a coverage problem, it is a
-**live contradiction in the test suite**, and the registry test passing while the
-other fails is exactly how a struck constant survives.
+**BEFORE the promise is emitted, two rungs remain unfinished and the chain does
+not permit skipping them:**
+  1. **The Health Inspector has not audited THIS tier.** He audits the LOG - every
+     claimed GREEN re-run, every finding matched to a RED, nobody contradicting
+     Wilson. Chase's four findings, Cameron's six, Foreman's six and my five
+     probes have not been through him.
+  2. **DR HOUSE IS STILL NOT TRIGGERED, and it matters that this is stated
+     rather than assumed.** K1 died of **EVIDENCE** - a measured slope with an
+     interval - not of missing innovation. The skill is explicit: *"Wilson
+     refuted it with a verified fact - dead is dead, and no leap un-refutes a
+     fact."* Releasing him here would be using a leap to argue with a
+     measurement.
 
-**WHAT IS SETTLED AND NEEDS NO MORE WORK:** the `max_row_mechanism` bind passes on
-all six published fields; **the contradiction I reported was mine and is
-withdrawn**; Cameron's mechanism is **refuted on the correct population**; the
-aggregator win is **real, large, unexplained, and shared with TV**.
+**THE ONE THING STILL GENUINELY OPEN AND WORTH A PROBE:** B1. Wilson and I
+disagree, and it is a disagreement about **which object was measured**. He infers
+collapse from `rho(||k_c||, theta) = 0.45-0.58` - key-norm against the masked
+token's **displacement**. I measured key-norm against **shadow mass per
+candidate**, the quantity B1 actually proposes: `rho = -0.024620`, overlap below
+chance at every k, three controls firing including a monotone-transform detector.
+**One probe settles it; an argument will not.**
 
-**Wilson holds three messages** and has `scale/wilson_probes.py` in progress.
-**Never block on him.**
-
-**Dr House stays in the box.** Nothing has died of missing innovation.
+**AND ONE HAZARD THAT MUST NOT BE LEFT STANDING:** Wilson showed `DONE.md` now
+contains `1.44x`, `1.0334`, `0.379x`, `3,319,296` exactly once each - **inside the
+text of the finding that reported their absence.** The provenance test would pass
+**on the report of the absence**. That is a self-satisfying bind and it is the
+same class as the fabricated number.
 
 ## Open REDs
 

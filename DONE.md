@@ -1,3 +1,163 @@
+### ROUND 5, ITERATION 15 - 2026-08-26 - INSPECTOR NOW STATES ITS OWN COVERAGE. AND WILSON LANDS: K1's D_FR CLAUSE IS RESOLVED AND THE PRE-REGISTERED "NO LEAP" BRANCH HAS FIRED.
+
+CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.
+[RUN] `python inspector.py` (5th-iteration pass) -> **exit 0, CLEAN, 11 checks,
+16 controls all fired.**
+
+ACTION (one): the Inspector pass, **and the repair Chase aimed at it.**
+
+**CHASE F5 IS EXACT AND I VERIFIED IT INDEPENDENTLY, AS DID WILSON.**
+`pytest --collect-only -q` -> **1278 tests**. `check_suites` runs **107**.
+**107/1278 = 8.37%.** This Inspector has printed *"CLEAN"* at every pass of five
+rounds and **that sentence has been copied into `DONE.md` as though it described
+the repository.** It describes a twelfth of it.
+
+**THE FIX IS NOT TO WIDEN THE RUN** - that makes every pass cost the full suite -
+**it is to make the instrument SAY WHAT IT COVERS**, so the misreading cannot
+recur. `inspector.py` now prints:
+
+    [ PASS] suite coverage (this bill covers only what it ran)
+            107/1278 = 8.37% -- a CLEAN result above is a statement about these
+            107 tests and about NOTHING ELSE
+
+with a **must-fire control that the fraction is measured rather than assumed
+100%**, and an **INDETERMINATE** if collection fails - an unknown denominator is
+not a small one.
+
+---
+
+**WILSON REPORTED. HE IS THE RUNG WHOSE FACTS SETTLE DISPUTES, AND HE LED WITH
+REFUTATIONS - INCLUDING ONE OF HIS OWN PREDICTIONS.**
+
+**THE HEADLINE: K1's `D_FR` CLAUSE IS RESOLVED, WITH AN INTERVAL, AND IT FAILS.**
+400 draws/cell, **six** k values, lam=0.10, threads pinned in-file, bucketed
+(returncodes 3/3/0), determinism replay MATCH each bucket:
+
+                     slope        95% CI              vs -0.30          vs bar >= -0.10
+    as-computed    **-0.4137**  [-0.4579, -0.3704]  **EXCLUDES, below**   NOT MET
+    live rows only **-0.4654**  [-0.5173, -0.4160]  **EXCLUDES, below**   NOT MET
+
+**BOTH INTERVALS SIT ENTIRELY BELOW -0.30.** The contract's pre-registered
+trigger is *"If `D_FR` slope < -0.3, displacement dies with flip and the answer
+was 'no leap.'"* **IT FIRES**, and this time it fires with an interval rather
+than a point estimate 0.006 from a line.
+
+**DELETION, NOT DEFENSE.** ARM A has **not survived K1**. `LOOP_PROMPT.md:162` -
+*"Build only if ARM A survives K1-K3"* - so **ARM B is not authorized**, and
+`TWOSPHERES: KEPT` is **not available** on the record as it stands.
+
+**THE FLIP HALF IS NOW ALIVE - AND UNRESOLVED.** It was zero by theorem on the
+unsigned arm; on the signed arm it is not:
+
+    k      8     16     32     64    128    256      pooled
+    flips  6/400  0/400  0/400  1/400  1/400  0/400   8/2400 = 0.003333
+                                                      CP95 [0.001440, 0.006557]
+
+`flip slope = -0.6960, CI [-1.0000, +0.0000]` -> **STRADDLES the -0.4 bar.**
+Wilson calls the CI **degenerate** and he is right: with **8 events total** the
+bootstrap is dominated by count discreteness. **The unsigned arm's 0/360 has
+CP95 [0, 0.010195], which CONTAINS the signed arm's pooled 0.003333** - at these
+sample sizes **the two arms are not separated, even though one is zero by theorem
+and the other is not.** Resolving it needs the contract's own **20000
+draws/cell** - about **8 hours** at the measured 0.24 s/draw over 6 k.
+
+**Raising `lam` does NOT buy flip events**: k=8 reads 4/300, 5/300, 5/300 at
+lam 0.10/0.50/1.00. **K2 passes at all 6 k**, before and after correction.
+**K3: theta wins at all 6 k**, and the dead-row correction is an increasing affine
+map applied to both groups so **Cohen's d is invariant by construction** -
+verified, deltas ~1e-16.
+
+**HIS REFUTATIONS, IN HIS ORDER:**
+
+  * **CHASE F3(a) REFUTED.** Not two contradicting greens. The shipped dict is
+    **already repaired** - `ceq/hf/modeling_ceq.py` holds `"slope": None,
+    "r2": None` plus an `exponent_status` string. `test_no_struck_constant_ships`
+    -> **exit 0, 12 passed**; `test_hub_package_hardening` -> **exit 1** at line
+    496. **One STALE RED, not a contradiction. The registry won; the hardening
+    test was not updated with it.**
+  * **CHASE F4 REFUTED ON THE LETTER, AND THE WAY IT WAS REFUTED IS ITSELF A
+    HAZARD.** Archive counts match him exactly (2/7/2/4). But `DONE.md` now reads
+    **1/1/1/1**, and **all four sit on `DONE.md:104-105` - the text of F4
+    itself.** His claim was true when made and is **falsified by its own
+    recording.** **His substance stands**: no shipped COSTS number has provenance
+    in the current run log. **And the hazard is sharp** - were `1.74` added, the
+    provenance assertions would pass **only on F4's own report text**.
+    **Provenance satisfied by the report of its absence.**
+  * **CAMERON'S `gamma_1` TIE REFUTED at his geometry. G-c's KILL DOES NOT FIRE.**
+    200 draws/cell, paired bootstrap: **0.9123 [+0.7500,+1.1020]**,
+    **0.9766 [+0.7773,+1.2103]**, **0.8507 [+0.6290,+1.0833]** - **three of three
+    exclude zero, none negative.** Her *"spans zero in 5 of 6 cells, negative at
+    k=32"* does not reproduce. **He did not run her pipeline**, so this is a
+    disagreement between geometries, not a defect located in hers.
+  * **CHASE F2's COLLAPSE REFUTED - K2 is DEGRADED, NOT VOIDED.** His direction
+    is right and his mechanism is real, but band-filler (ranks k+1..2k) reads
+    **0.4301 / 0.4586 / 0.5425**, all CIs **excluding zero**. Matching key-norm
+    removes **~65% of the effect at k=8** (1.2267 -> 0.4301) and the residual
+    survives. **The published filler pool IS at least two populations** -
+    band-vs-tail separates at **1.0716 / 0.8782 / 0.4868**, all excluding zero.
+    His *"collapses to 1.1019 OVERLAP"* does not reproduce, nor his 9.3869
+    baseline.
+  * **HE REFUTES HIS OWN PREDICTION.** He predicted `AUC(theta_max) = AUC(tv_max)`
+    exactly; measured deltas **+1.06e-03 / +2.50e-05 / -9.75e-04**. In float64 the
+    AUC gap collapses to **2.778e-04 = exactly 1 discordant pair in 3600**.
+    *"Rank-equivalence holds up to floating point; exact equality does not survive
+    finite precision, and I should not have claimed it would."*
+
+**HIS CONFIRMATIONS:**
+
+  * **THE IDENTITY IS A THEOREM, WITH THE DERIVATION.** Masking renormalises, so
+    with `p = a_c[c]`: `a_0[j] = a_c[j]/(1-p)`, `bc = sqrt(1-p)`, `TV = p`, hence
+    **`theta_i = arcsin(sqrt(TV_i))` exactly, row by row.** Measured over 5115
+    live rows: float32 **8.457280e-04** - **reproducing my figure exactly** - and
+    float64 **6.828570e-08**. *"The 4-order collapse is the signature of an exact
+    identity read through an ill-conditioned `arccos` near argument 1."*
+  * **MY K3 CONCAVITY CONTROL IS VINDICATED IN HIS WORDS:** *"K3 can only ever win
+    by Jensen on a concave map. This is WHY the coordinator's held-out `TV^p`
+    control beat theta at k=8 - that outcome is expected, not anomalous, and it
+    is the correct control."*
+  * **DEAD-ROW VERIFIED, WITH A REFINEMENT FOREMAN MISSED.** `a_c.sum(-1)==0`
+    count is **exactly 1 in 1200/1200 draws**, floor **0.0015340 rad**, and the
+    docstring contradicts the code. **But the count of rows reading exactly pi/2
+    is NOT always 1** - it reaches **2, 3, 4** in causal cells (up to 15 within
+    1e-6), and those extra rows are **LIVE**. **Detecting dead rows by
+    `theta == pi/2` would over-subtract by up to 3 rows.**
+  * **CAMERON F1 CONFIRMED.** max-mean = **+1.1347 [+0.7833,+1.5877]**,
+    **+0.9355**, **+0.4959**, all excluding zero. **The sphere-vs-TV term at the
+    same aggregator is +0.06 to +0.11 - about 5% of the aggregator's +1.13.**
+    **The aggregator is not a sphere result.**
+  * **ARM A's PUBLISHED STREAM IS EXACTLY REPLAYABLE FROM SEED** - `theta_c =
+    0.030850132878792163`, `d_theta = 1.0888309475377569`, bit-identical.
+
+**A CONFLICT WITH ME THAT I AM NOT GOING TO SWALLOW SILENTLY.** Wilson writes that
+Chase's B1 concern *"is supported, and the identity makes it sharper"*, on the
+grounds that `||xi_p||` is a function of attention mass and `rho(||k_c||, theta) =
+0.45-0.58`. **But that rho is key-norm against the DISPLACEMENT of the masked
+token c - not key-norm against SHADOW MASS per candidate p.** Those are different
+objects. **I measured the second one directly** at iteration 12 with three
+controls firing, including a monotone-transform detector: **`rho = -0.024620`,
+top-k overlap BELOW chance at every k.** His is an inference from a related
+correlation; mine is a direct measurement of the quantity B1 actually proposes.
+**OPEN, and it needs one probe, not an argument.**
+
+**AND A CLARIFICATION HE IS OWED.** He notes commit `29fe8bb` wrote his TASK 1
+numbers into the record alongside a *"ninth appearance of correct statement, wrong
+object"* framing that is not his. **That framing is mine and was labelled mine** -
+the sentence reads *"F16 was a true reading of one geometry that I generalised
+into a property of the operator ... and this one is mine."* **It describes MY
+error, not his.**
+
+**HE ALSO CORRECTS `scale/valuation.py` AGAIN, more precisely than before:** the
+underflow needs **~1e-200**, not 1e-30. `1e-30 * -1e-30 = -1.0000000000000001e-60`
+is exactly representable and **the float path gets it right**;
+`1e-200 * -1e-200 = -0.0` is where it misses. **The defect is real; its published
+demonstration is at the wrong dynamic range.**
+
+CHECKLIST: **Inspector CLEAN, 11 checks / 16 controls, and now PRINTS ITS OWN
+COVERAGE (107/1278 = 8.37%).** **K1's `D_FR` clause RESOLVED AND FAILED** -
+-0.4137 [-0.4579,-0.3704] and -0.4654 [-0.5173,-0.4160], **both entirely below
+-0.30**, so the pre-registered **"no leap" branch FIRES** and **ARM B is not
+authorized.** Flip half **ALIVE but UNRESOLVED** (8/2400). K2/K3 pass at all 6 k.
+
 ### ROUND 5, ITERATION 14 - 2026-08-26 - The contradiction was MINE. Bound to the published stream, my numbers become Cameron's exactly. The mechanism stays refuted.
 
 CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.

@@ -373,11 +373,52 @@ def check_published(iteration: int) -> None:
 
 # ------------------------------------------------------------------- 5/6/7 sub
 
+SUITE_PATHS = ["tests/loop", "tests/w11", "tests/chase/test_resume_checkpoint.py"]
+
+
+def _collected(paths) -> int:
+    """How many tests a path set collects. -1 if collection itself failed."""
+    rc, out = run([sys.executable, "-m", "pytest", *paths, "--collect-only", "-q",
+                   "-p", "no:cacheprovider"])
+    if rc != 0:
+        return -1
+    m = re.search(r"(\d+)\s+tests? collected", out)
+    return int(m.group(1)) if m else -1
+
+
 def check_suites() -> None:
-    rc, out = run([sys.executable, "-m", "pytest", "tests/loop", "tests/w11",
-                   "tests/chase/test_resume_checkpoint.py", "-q",
+    rc, out = run([sys.executable, "-m", "pytest", *SUITE_PATHS, "-q",
                    "-p", "no:cacheprovider"])
     check("value binds + resume", *pytest_state(rc, out))
+
+    # COVERAGE, PRINTED RATHER THAN IMPLIED.
+    #
+    # This Inspector has reported "CLEAN" at every pass, and that sentence has
+    # been copied into DONE.md as though it described the repository. [RUN, r5
+    # iter 15, verified independently twice] it describes 107 of 1278 tests --
+    # 8.37%. Two files probed inside the blind spot held 8 live failures,
+    # including a test still pinning a struck constant.
+    #
+    # A clean bill over a twelfth of a suite is TRUE and is NOT a statement
+    # about the suite. The fix is not to widen the run -- that would make every
+    # pass cost the full suite -- it is to make the instrument SAY WHAT IT
+    # COVERS, so the misreading cannot recur. An INDETERMINATE is filed if
+    # collection fails, because an unknown denominator is not a small one.
+    ran = _collected(SUITE_PATHS)
+    total = _collected(["."])
+    if ran < 0 or total <= 0:
+        check("suite coverage (this bill covers only what it ran)", INDET,
+              f"collection failed: ran={ran} total={total}")
+    else:
+        pct = 100.0 * ran / total
+        check("suite coverage (this bill covers only what it ran)", True,
+              f"{ran}/{total} = {pct:.2f}% -- a CLEAN result above is a statement "
+              f"about these {ran} tests and about NOTHING ELSE")
+        # MUST-FIRE: the fraction has to be able to read as partial. A coverage
+        # line that reported 100% regardless would be the decoration it exists
+        # to prevent.
+        control("coverage fraction is measured, not assumed 100%",
+                0 < ran < total)
     # MUST-FIRE: the exit-code path itself. This is instrument #13's antidote --
     # a process that fails must be SEEN to fail, with no pipeline in between.
     rc_bad, _ = run([sys.executable, "-c", "import sys; sys.exit(3)"])
