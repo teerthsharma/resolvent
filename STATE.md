@@ -5,29 +5,32 @@
 | field | value |
 |---|---|
 | round | **3** - CEQ v5, 30 iterations, promise `SCALEFREE` |
-| iteration | **1 complete, 2 next** |
+| iteration | **2 complete, 3 next** |
 | phase | **Phase 0 - M3 on the windowed arm. Capability before statistics.** |
 | calibration | GREEN [RUN] `run_calib.py --self-test` exit 0, 4/4 bit-identical |
 | inspector | `python inspector.py` - 8 checks, 8 must-fire controls, exits nonzero if any control stays SILENT |
 | repo | https://github.com/teerthsharma/resolvent (private) |
 
-## THE ONE NEXT ACTION (iteration 2)
+## THE ONE NEXT ACTION (iteration 3)
 
-**Turn the M3 harness bind GREEN by the minimum change: move `pivot_signed` onto
-the shipped `sgate` operator.** That is the smallest edit that makes the
-capability harness measure the module. It will move round 2's M3 numbers, which
-is correct - they were readings of a non-shipped operator, so they are re-scoped,
-not corrected (the round-2 precedent: the tgate measurements REPRODUCE, they were
-simply measuring the wrong object).
+**Add the windowed arm - `windowed_signed`, on `sgate` with `window=8`** - to
+`m3_capability.ARMS`. It is Phase 0's whole subject and the harness has never
+carried it, which is precisely why F4 has never been capability-tested.
 
-Then, iteration 3, add the **windowed arm on sgate with `window=8`** - built on
-sgate because [READ, DONE_ARCHIVE_ROUND1:1272] F4's flatness was measured there.
+Built on **sgate**, not tgate: [READ, DONE_ARCHIVE_ROUND1:1272] F4's flatness
+was measured on the shipped operator. `_causal_sgate_operator` already takes
+`window` natively, so this is an argument, not new operator code.
+
+Its hop-2 term is **dense within the band** (`a @ a`), NOT `pivot_hop2` - the
+claim is *windowed signed multi-hop*, and routing through pivots is a different
+arm that is already dead. The G3 bind (`hops=0` bitwise identity) ships with it,
+and `test_the_windowed_arm_that_phase_0_needs_does_not_exist_yet` must be
+UPDATED rather than deleted when it lands - it is written to fail on arrival.
 
 ## Open REDs
 
-**M3 harness operator bind - RED [RUN, iter 1].** `pivot_signed` in
-`scale/m3_capability.py` is `tgate`, which ships nowhere. 1 failed, 4 passed;
-must-fire control fires. R5 and R8 remain STRUCK before build (0/20000).
+**None.** The M3 harness bind went GREEN this iteration (5 passed, must-fire
+control firing). R5 and R8 remain STRUCK before build (0/20000 event change).
 
 ## Carried, and load-bearing
 

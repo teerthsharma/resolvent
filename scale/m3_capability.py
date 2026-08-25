@@ -60,6 +60,12 @@ HIDDEN = 128           # MLP hidden width, SAME for every arm (fair capacity).
 K_PIVOTS = 8           # pivot count, matches pivot_probe's default
 LR = 0.02
 
+#: The SHIPPED sgate settings. Kept as module constants rather than inline
+#: literals so the operator bind can assert against the same two numbers the
+#: arm is built from, instead of two copies that can drift apart -- which is
+#: how `report()` and `_verdict()` disagreed in round 2.
+SGATE_RHO, SGATE_LAM = 1.5, 0.10
+
 
 class Arm(nn.Module):
     """One arm. q/k projection + 2-layer MLP + scalar readout, all shared shape
@@ -78,18 +84,27 @@ class Arm(nn.Module):
             nn.Linear(d_model, hidden), nn.GELU(), nn.Linear(hidden, d_model)
         )
         self.readout = nn.Linear(d_model, 1)
-        if kind == "pivot_signed":
-            # extra operator params ONLY the tgate operator needs (g, tau).
-            self.g = nn.Parameter(torch.sigmoid(torch.randn(s)))
-            self.tau = nn.Parameter(torch.tensor(1.0))
-        else:
-            self.g = None
-            self.tau = None
+        # NO extra operator parameters. `sgate` is `rho`/`lam` scalars at their
+        # SHIPPED defaults, so the signed arm now has EXACTLY the same parameter
+        # count as softmax. The g[s]+tau pair the HIDDEN note above was sized
+        # against belonged to `tgate`, and tgate is gone from this file.
 
     def _operator(self, q: torch.Tensor, k: torch.Tensor) -> torch.Tensor:
+        """The operator each arm measures. BOUND: every branch must return a
+        tensor bitwise-equal to something the module ships, and
+        `tests/loop/test_m3_harness_operator_is_shipped.py` checks it by VALUE
+        over every entry of `ARMS`.
+
+        This branch used to return `_causal_tgate_operator`, which appears
+        nowhere in the shipped path. Round 2 caught that exact defect in the M2
+        probe and bound `pivot_probe.py` against it; the bind never reached this
+        file, so the CAPABILITY numbers -- the ones that decide whether any of
+        this is worth anything -- were readings of a non-shipped operator.
+        """
         if self.kind == "softmax" or self.kind == "pivot_unsigned":
             return bench._softmax_operator(q, k)              # [n,s,s], batched
-        return bench._causal_tgate_operator(q, k, self.g, self.tau)  # pivot_signed
+        # pivot_signed: the SHIPPED signed operator, at its shipped defaults.
+        return bench._causal_sgate_operator(q, k, rho=SGATE_RHO, lam=SGATE_LAM)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         n, s, _ = x.shape

@@ -2,6 +2,51 @@
 
 Round 2 archived below its own header; round-1 archive at `DONE_ARCHIVE_ROUND1.md`.
 
+### ROUND 3, ITERATION 2 - 2026-08-25 - Capability harness moved onto the SHIPPED operator. Bind GREEN, and the param match became exact.
+
+CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.
+
+ACTION (one): turned iteration 1's RED bind GREEN by the minimum change -
+`m3_capability.Arm._operator` for `pivot_signed` now returns
+`bench._causal_sgate_operator(q, k, rho=SGATE_RHO, lam=SGATE_LAM)`.
+
+**[RUN] 5 passed**, including the must-fire control still rejecting an
+explicitly-built `tgate` tensor, so the green means "shipped" and not "blind".
+
+**THE TGATE PARAMETERS WENT WITH IT, AND THAT FIXED A SEPARATE PROBLEM NOBODY
+WAS TRACKING.** `pivot_signed` carried `g[s] + tau` - operator parameters ONLY
+`tgate` needs. `HIDDEN = 128` had been sized specifically so those extras stayed
+under a 10% parameter-match bar, with a comment recording that `HIDDEN = 32`
+broke it at s=192 (1601 base against a 193-param extra, **12.05%**).
+
+`sgate` takes `rho` and `lam` as scalars at their shipped defaults, so it adds
+**zero** parameters. [RUN] at s=64:
+
+    softmax          n_params=4769
+    pivot_signed     n_params=4769
+    pivot_unsigned   n_params=4769
+
+**The M3 spec demands "matched params". The match is now EXACT rather than
+"under 10%"** - a fairness property that had been managed by tuning a hidden
+width, and is now structural.
+
+**THE TWO SGATE SETTINGS ARE MODULE CONSTANTS, NOT INLINE LITERALS.**
+`SGATE_RHO, SGATE_LAM = 1.5, 0.10`, and the bind asserts against **the same two
+names the arm is built from**. Round 2's lesson: `report()` and `_verdict()` held
+two copies of one rule, the tested copy was right and the copy that ran was
+wrong. Two literals in two files is that defect waiting to happen.
+
+**WHAT THIS DOES TO ROUND 2's M3 NUMBERS.** softmax 1.855584, pivot_signed
+1.342215, pivot_unsigned 1.956147 are **re-scoped, not corrected**. They are
+true readings of `tgate` - the round-2 precedent stands, the tgate measurements
+REPRODUCE, they were measuring the wrong object. Any re-run now reads a different
+arm and its numbers are NOT comparable to those. **The softmax and
+pivot_unsigned columns are unaffected** - both were already `_softmax_operator`
+and both still pass the bind bitwise.
+
+CHECKLIST: M3w harness bind GREEN. M3w itself remains UNTESTED - no capability
+reading has been taken on the shipped operator yet.
+
 ### ROUND 3, ITERATION 1 - 2026-08-25 - INSTRUMENT #17 IS IN THE CAPABILITY HARNESS. Bind written, RED.
 
 CALIBRATION [RUN] run_calib.py --self-test -> exit 0, 4/4 bit-identical.

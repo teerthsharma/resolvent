@@ -53,7 +53,8 @@ def _inputs():
 def _shipped_tensors(q, k, arm):
     out = {"softmax": bench._softmax_operator(q, k)}
     try:
-        out["sgate"] = bench._causal_sgate_operator(q, k, rho=1.5, lam=0.10)
+        out["sgate"] = bench._causal_sgate_operator(
+            q, k, rho=M3.SGATE_RHO, lam=M3.SGATE_LAM)
     except Exception as e:                       # signature drift is a failure
         pytest.fail(f"cannot build the shipped sgate operator: {e!r}")
     return out
