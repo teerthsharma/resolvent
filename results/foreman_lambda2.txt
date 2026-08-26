@@ -1,0 +1,161 @@
+lambda_2 := rho(Q), the Perron root of the transient block.
+P = [[Q, R], [0, I]] is block triangular, so spec(P) = spec(Q) u {1,1};
+the literal second eigenvalue of P is 1 and carries no information.
+target band [0.9, 0.95], midpoint 0.925, ladder (1, 2, 8, 32)
+
+REFUTED DIAL -- bridge weight. Cheeger's object is the ERGODIC lambda_2,
+which is not what the t* ladder truncates.
+  LargestJoin_S2Rips_64
+      w        rho(Q)          ergodic lambda_2
+        1.0  0.9789623187   0.9672204842
+        2.0  0.9796574255   0.9573497655
+        4.0  0.9810769100   0.9505674974
+       16.0  0.9870349466   0.9474294328
+       64.0  0.9945000235   0.9528533087
+      256.0  0.9983603000   0.9573836655
+     1024.0  0.9995701630   0.9589892040
+     4096.0  0.9998912353   0.9594280183
+   rho(Q) in [0.9789623187, 0.9998912353]  any in band False  increasing in w True  FIRES True
+   ergodic lambda_2 min 0.9474294328  reaches band True
+  LargestJoin_S2Rips_1024
+      w        rho(Q)          ergodic lambda_2
+        1.0  0.9984623637   0.9964078857
+        2.0  0.9984836567   0.9961448523
+        4.0  0.9985266230   0.9960026018
+       16.0  0.9987480181   0.9958911236
+       64.0  0.9992354451   0.9958628774
+      256.0  0.9997087888   0.9958568973
+     1024.0  0.9999168425   0.9958598388
+     4096.0  0.9999784611   0.9958739319
+   rho(Q) in [0.9984623637, 0.9999784611]  any in band False  increasing in w True  FIRES True
+   ergodic lambda_2 min 0.9958568973  reaches band False
+
+ENGINEERED DIAL -- killing rate. rho(alpha P_TT) = alpha rho(P_TT),
+exact, so alpha = target / rho(P_TT) with no bracket and no search.
+
+LargestJoin_S2Rips_64   nodes=18 transient=16 diameter=8  bridge=(21, 55)  absorbing=[51, 9] separation=8
+   shipped rho(P_TT) 0.9789623187   t_rel 47.5338   ergodic lambda_2 0.9672204842
+   Phi_bridge 0.0370370370  mu_2 0.0327795158  mu_2 <= 2 Phi True
+   alpha 0.9448780432   construction says 0.9250000000   MEASURED 0.9250000000
+   t_rel 13.3333   IN BAND True
+   label  std 0.1417306493  min 0.0059305986  median 0.0747028909  max 0.5197569653  dead<0.001 0.0000000000
+   ladder   t   rel err to fixed point   lambda_2**t
+            1   0.8102139940            0.9250000000
+            2   0.7404571074            0.8556250000
+            8   0.4134621952            0.5359618307
+            32  0.0535834241            0.0825154833
+   decay ratio at t=40/39 0.9237224383   vs lambda_2 0.9250000000   |diff| 0.0012775617
+   CONDITIONAL label (committor, ratio of two fixed points)
+     std 0.3681820389  mean 0.4850274900  min 0.0071813513  max 0.9656589520  dead<0.001 0.0000000000
+            1   0.9181646343            0.9250000000
+            2   0.7529716986            0.8556250000
+            8   0.1815582640            0.5359618307
+            32  0.0372605660            0.0825154833
+     monotone over t=1..44 True   decay ratio 40/39 0.9298888594   vs lambda_2 0.9250000000   |diff| 0.0048888594
+
+LargestJoin_S2Rips_1024   nodes=62 transient=60 diameter=29  bridge=(343, 354)  absorbing=[234, 681] separation=29
+   shipped rho(P_TT) 0.9984623637   t_rel 650.3488   ergodic lambda_2 0.9964078857
+   Phi_bridge 0.0117647059  mu_2 0.0035921143  mu_2 <= 2 Phi True
+   alpha 0.9264245040   construction says 0.9250000000   MEASURED 0.9250000000
+   t_rel 13.3333   IN BAND True
+   label  std 0.1104754444  min 0.0000002098  median 0.0002918966  max 0.6770826043  dead<0.001 0.5833333333
+   ladder   t   rel err to fixed point   lambda_2**t
+            1   0.6862784838            0.9250000000
+            2   0.5952108088            0.8556250000
+            8   0.2539152639            0.5359618307
+            32  0.0172219948            0.0825154833
+   decay ratio at t=40/39 0.9116421138   vs lambda_2 0.9250000000   |diff| 0.0133578862
+   CONDITIONAL label (committor, ratio of two fixed points)
+     std 0.4637871112  mean 0.5261631723  min 0.0000002975  max 0.9999996902  dead<0.001 0.1500000000
+            1   0.9829145311            0.9250000000
+            2   0.9655268044            0.8556250000
+            8   0.7921014882            0.5359618307
+            32  0.0481326124            0.0825154833
+     monotone over t=1..44 True   decay ratio 40/39 0.9476920990   vs lambda_2 0.9250000000   |diff| 0.0226920990
+
+TARGET SEPARATION vs DEAD FRACTION, at the engineered lambda_2
+  LargestJoin_S2Rips_64
+   sep 4   targets (2, 15)  UNATTAINABLE -- rho(P_TT) 0.9150351428 is already below the target, killing cannot slow a chain down
+   sep 8   targets (9, 51)  alpha 0.9448780432  lambda_2 0.9250000000  dead 0.0000000000  std 0.2263891431  lam3/lam2 0.9525291979  f(160) 1.00002297
+  LargestJoin_S2Rips_1024
+   sep 4   targets (10, 261)  alpha 0.9263334042  lambda_2 0.9250000000  dead 0.3833333333  std 0.2142890717  lam3/lam2 0.9892423096  f(160) 1.00738131
+   sep 8   targets (10, 736)  alpha 0.9304374746  lambda_2 0.9250000000  dead 0.4666666667  std 0.2192496038  lam3/lam2 0.9927200890  f(160) 0.99034549
+   sep 12  targets (10, 121)  alpha 0.9360873326  lambda_2 0.9250000000  dead 0.3166666667  std 0.2247188329  lam3/lam2 0.9994338939  f(160) 1.00096338
+   sep 16  targets (10, 717)  alpha 0.9294733542  lambda_2 0.9250000000  dead 0.2666666667  std 0.2177421835  lam3/lam2 0.9916908751  f(160) 1.00291277
+   sep 20  targets (10, 234)  alpha 0.9281778135  lambda_2 0.9250000000  dead 0.2666666667  std 0.2164582874  lam3/lam2 0.9903113973  f(160) 1.00455315
+   sep 24  targets (13, 274)  alpha 0.9270845806  lambda_2 0.9250000000  dead 0.4666666667  std 0.1513862858  lam3/lam2 0.9936504684  f(160) 1.00396742
+
+SOLVING f := decay_conditional / lambda_2 RATHER THAN CAVEATING IT
+  q_t - q = ( u * (Q^t s) - s * (Q^t u) ) / ( s * s_t ),  exact.
+  Both tails share the Perron mode, so f -> 1. DERIVED, and
+  confirmed at four values of t on both graphs.
+  THE APPROACH TO 1 IS NOT A ONE-PARAMETER LAW. A lambda_3/lambda_2
+  account was fitted on two graphs and REFUTED on six absorbing-set
+  placements of one graph: correlation -0.287101, and separation 8
+  reads f(160) = 0.99034549, BELOW one. The closed form says why --
+  the leading amplitude c(s)u - c(u)s is set by the targets, and
+  when it nearly cancels the residual decays FASTER than lambda_2.
+  LargestJoin_S2Rips_64
+    closed form max|lhs - rhs| over t in {1,2,5,8,16,32} = 1.082467e-15   compared over 3..16 of 16 transient nodes (t=1 reaches only the targets' neighbours)
+    lambda_2 0.9250000000  lambda_3 0.8810895080  ratio 0.9525291979  mode time 20.5615
+      t     ratio(t/t-1)     f = ratio / lambda_2
+    40    0.9298888594   1.00528525
+    80    0.9259151467   1.00098935
+    160   0.9250212469   1.00002297
+    320   0.9250005823   1.00000063
+    LADDER IS PRE-ASYMPTOTIC: every rung sits below the mode time, so
+    lambda_2 ** t* is the wrong predictor AT THE RUNGS even though lambda_2
+    is the right rate. The closed form is the right predictor and is free.
+    reach of the killed walk, alpha ** r:  r=3 0.8435819356  r=8 0.6353397921  r=13 0.4785031951  r=29 0.1931509974
+  LargestJoin_S2Rips_1024
+    closed form max|lhs - rhs| over t in {1,2,5,8,16,32} = 4.583348e-13   compared over 2..60 of 60 transient nodes (t=1 reaches only the targets' neighbours)
+    lambda_2 0.9250000000  lambda_3 0.9195528024  ratio 0.9941111377  mode time 169.3116
+      t     ratio(t/t-1)     f = ratio / lambda_2
+    40    0.9476920990   1.02453200
+    80    0.9395296609   1.01570774
+    160   0.9306663472   1.00612578
+    320   0.9264678763   1.00158689
+    LADDER IS PRE-ASYMPTOTIC: every rung sits below the mode time, so
+    lambda_2 ** t* is the wrong predictor AT THE RUNGS even though lambda_2
+    is the right rate. The closed form is the right predictor and is free.
+    reach of the killed walk, alpha ** r:  r=3 0.7951152826  r=8 0.5426005994  r=13 0.3702801554  r=29 0.1090161839
+
+RULE 9 -- PRICING THE FLAT READOUT AGAINST THE NON-FLAT ONE
+  phi(p) = 2 arcsin(sqrt(p)) is the Fisher-Rao geodesic coordinate
+  on the binary simplex. It does NOT apply to e3, whose label is
+  N(0, t*) on the real line; it applies here, where the label is a
+  probability.
+  LargestJoin_S2Rips_64   label mass within 0.01 of a boundary: below 0.0625000000  above 0.0000000000
+      t     Euclidean        Fisher-Rao       ratio
+    1     0.9181646343   0.9215052919   1.003638
+    2     0.7529716986   0.7792910701   1.034954
+    8     0.1815582640   0.2576242379   1.418962
+    32    0.0372605660   0.0398032360   1.068240
+    asymptotic rate  Euclid 0.9250005823   Fisher-Rao 0.9249999504   lambda_2 0.9250000000
+    PREDICTED by the rate law: the transform is a smooth monotone reparameterisation, so
+    it cannot move the leading eigenvalue. CONFIRMED to 6.319e-07.
+    PRICE: at the rungs the readouts differ by up to 1.418962x, so the readout is
+    load-bearing where the round reads and must be DECLARED BEFORE the run.
+  LargestJoin_S2Rips_1024   label mass within 0.01 of a boundary: below 0.3333333333  above 0.4333333333
+      t     Euclidean        Fisher-Rao       ratio
+    1     0.9829145311   0.9821377817   0.999210
+    2     0.9655268044   0.9639570708   0.998374
+    8     0.7921014882   0.7835527039   0.989207
+    32    0.0481326124   0.0582150553   1.209472
+    asymptotic rate  Euclid 0.9264678763   Fisher-Rao 0.9269288999   lambda_2 0.9250000000
+    PREDICTED by the rate law: the transform is a smooth monotone reparameterisation, so
+    it cannot move the leading eigenvalue. CONFIRMED to 4.610e-04.
+    PRICE: at the rungs the readouts differ by up to 1.209472x, so the readout is
+    load-bearing where the round reads and must be DECLARED BEFORE the run.
+
+MUST-FIRE CONTROLS
+  LargestJoin_S2Rips_64
+    single absorbing target, alpha=1: label std 3.108624e-15  max|label - 1| 1.110223e-14  (constant to float64, bar 1e-12)  FIRES True
+    no killing, alpha=1:              lambda_2 0.9789623187  in band False  FIRES True
+    bridge dial over w<=4096:         band reached False  FIRES True
+    closed form with one sign flipped: residual 2.625602e+00 against the correct form's 1.082467e-15  FIRES True
+  LargestJoin_S2Rips_1024
+    single absorbing target, alpha=1: label std 4.062194e-15  max|label - 1| 1.065814e-14  (constant to float64, bar 1e-12)  FIRES True
+    no killing, alpha=1:              lambda_2 0.9984623637  in band False  FIRES True
+    bridge dial over w<=4096:         band reached False  FIRES True
+    closed form with one sign flipped: residual 9.684524e+01 against the correct form's 4.583348e-13  FIRES True

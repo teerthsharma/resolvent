@@ -88,7 +88,7 @@ repository.** Recorded as the open claim rather than as a result.
 
 ---
 
-## 0. THE ARCHITECTURAL POSITION, AS IT NOW STANDS
+## 0.4 THE ARCHITECTURAL POSITION THAT FOLLOWS
 
 **Softmax attention is not the opponent. It is the base case, and the module must
 contain it.**
