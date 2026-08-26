@@ -19,3 +19,7 @@ pivot_signed     True           3             0.035156                    9     
 pivot_signed     False          3             0.007812                    2                  256             0.296875            -0.017706
 pivot_unsigned   True           4             0.012195                    3                  246             0.507812            -5.903111
 pivot_unsigned   False          4             0.000000                    0                  242             0.945312            -0.013958
+pivot_signed     True           4             0.027344                    7                  256             0.480469           -15.930339
+pivot_signed     False          4             0.007812                    2                  256             0.324219            -0.299418
+
+wrote 20 rows to results/foreman_signfloor.jsonl
