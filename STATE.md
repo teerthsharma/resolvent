@@ -4,43 +4,39 @@
 |---|---|
 | contract | `LOOP_PROMPT.md` (v8.2). Round 5 archived `LOOP_PROMPT_ROUND5_ARCHIVE.md` |
 | promise | **`HILBERT`** — D2 verbatim, or an honest `BROKEN` |
-| iteration | **14 complete, 15 next** |
-| phase | **C — the deciding measurement (iterations 10–15; RULE 2)** |
+| iteration | **15 complete, 16 next** |
+| phase | **D — the artifact (iterations 16–24)** |
 | scoreboard | **4** — Star delta +2, κ<1 measured +2 *(qualified: Birkhoff route dead, structural β earned it)* |
 | RULE 2 clock | **running.** M3 settled-vs-unsettled EXECUTES by **iteration 12** or breach review |
 | register | **caveman, all agents, every iteration.** Artifacts stay normal English |
 | autonomy | user meets the loop at **iteration 30**; no check-ins |
 
-## THE ONE NEXT ACTION (round 6, iteration 15)
+## THE ONE NEXT ACTION (round 6, iteration 16)
 
-**APPLY THE RULE 2 RULING. The last extension expired at the end of it.14.**
+**PHASE D OPENS, and the round's oldest open item is the one worth spending it
+on: EVERY NUMBER IN THIS PROJECT IS RANDOM-INIT.**
 
-**If M3 landed:** read it in the fixed order — softmax reproduced (and check the
-**producer** before concluding anything about a moved number; the last G2 was a
-producer defect, not a number defect); then settled vs twin; then **settled vs
-argmax-pivot**, which decides what may be *claimed*; then against the
-pre-registered ~0.05 NRMSE floor. **Beats twin but ties argmax ⇒ routing-only
-(+6) and T1 fires. Beats both ⇒ +12.**
+Contract Phase D names it explicitly — *"Cameron: probe re-run through TRAINED
+projections (the oldest OPEN item in the project — every probe number ever taken
+was random-init; close it)."* Five rounds of measurement, and not one figure comes
+from a trained model. **Every mechanism claim, every separation, every κ, every
+degeneracy is a statement about randomly initialised projections.**
 
-**If M3 did NOT land:** **declare the M3 cell UNRUN for round 6** and record the
-breach with its causes, **the first of which is mine** — the triple was widened to
-a quintuple at it.11 inside a two-iteration window without extending it. `D1`
-ships without the cell. **No third extension.**
+That is worth more than the artifact upload, because **if the probes read
+differently through trained projections, a large part of five rounds is about a
+regime the model never occupies.**
 
-**EXIT GATE C either way**, and the scoreboard is recomputed with G5 applied to
-every conclusion sentence.
+**Do not wait on M3.** It is UNRUN at the gate; any completion is post-deadline and
+marked. Chase's run continues and its result will be recorded when it lands.
 
-**What the round can still honestly claim, and it is worth writing down before the
-verdict:** `κ = β` **attained** to nine decimals across 72 cells; ARM S **born**
-with G3 and two birth gates GREEN; the **log-domain metric** that removed a
-precision blocker at negative cost and then turned out to fix the vertex collapse
-too; the **Star delta** established from the paper; the **2-dof lemma** verified
-with its degeneracy found; and a **G2 that inverted** — the published numbers were
-right and the producer had drifted.
+**Also live and unrouted:**
+  * **L3 leakage `E|L₃|/E|I|`** — unmeasured, so **degree-2 claims stay
+    unwarranted**. Cheap, and it gates ARM P's whole framing.
+  * **K-F is UNDECIDED** — needs `collect_callgrind` instruction counts or an
+    isolated core; the clock on this box is dispatch-bound, not arithmetic-bound.
+  * **10 standing REDs in `tests/cameron/`**, predating this round, unaudited.
 
-**What it cannot claim:** anything about *which* tokens carry the advantage — **no
-norm-matched control exists within a sequence**, and neither Cameron nor I have a
-repair. **Degree-2 claims** stay unwarranted until `E|L₃|/E|I|` is measured.
+**Iteration 20 is an `inspector.py` pass.**
 
 ## Open REDs
 

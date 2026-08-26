@@ -905,3 +905,17 @@ Replayed ARM A's own draw stream (published `D_FR causal` reproduced to 6 dp at 
 | **verdict impact** | **NONE, and stated plainly.** `-0.4137 [-0.4579,-0.3704]` lies below the `-0.30` trigger **on its own**, and reproduces exactly after it.13's repair. **Striking a corroborating number does not weaken a verdict that never needed it.** |
 | the registry caught me | Adding the three values immediately failed **`STATE.md`**, which mentioned them in a *"no locatable producer"* note **without a strike marker**. The instrument does not care that the mention was about the strike — **an unmarked number in a lead document is an assertion.** A registry firing only on other people's documents would be decoration. |
 | RULE 2 | **M3 not landed.** Last extension expires end of it.14; ruling applied at it.15. |
+
+**ROUND 6 it.15 — EXIT GATE C.**
+
+| item | status |
+|---|---|
+| **M3 cell** | **UNRUN as a completed measurement.** `D1` ships without it. `+12`/`+6` **unearned at the gate**. |
+| the run's actual state | **Executing and advancing** — journal mtime `09:22:09` later than lock `09:18:26`. **12 units**: all five arms complete at the smoke setting (`st20/ntr256`), then **2 of 25** at the money setting (`st150/ntr8192`). **The design works; the schedule did not.** |
+| method | **Keys read, values deliberately not.** The run is mid-write and a partial number quoted now is one that will change — round 4 was burned reading a mid-write file. |
+| post-deadline work | **Recorded as a POST-DEADLINE RESULT, marked as such.** Does not retroactively become "the money run delivered", does not move round 6's scoreboard. **A deadline that pays out late is not a deadline; a rule that bins good measurements is not a rule.** |
+| **breach cause, quantified** | **Mine.** Widening the triple to a quintuple at it.11: **15 → 25 units at the money setting, a 67% cost increase**, added inside a two-iteration window without extending it or accounting for the spend. **The design decision was right and would be taken again** — without the argmax cell a settled win is unattributable — **but being right about the design does not make the schedule arithmetic go away.** |
+| Chase | **Not at fault, and the record says so.** Bucketed, journalled every unit, took a cheap five-arm smoke pass before spending at `n_train=8192`, and warned in advance he would report rather than run past a deadline quietly. |
+| **G5 narrowing 1** | *"the settling arm is born"* holds for **G3 + gates 1 and 2**; **gate 3 is SPLIT and K-F UNDECIDED**. The arm is **born, not priced**. |
+| **G5 narrowing 2** | *"Birkhoff certifies the arm"* is **FALSE and must not be written.** Thm 2.9 needs a **linear** map, `T` is not linear, `κ_cert` reads **exactly 1.0** in 30/30. **What certifies it is a factorisation through four cited theorems giving `κ = β`** — weaker, and the honest claim. |
+| **+3 refused** | **No norm-matched control exists within a sequence** — top-k by norm means every other within-sequence set is strictly lower; the matcher closed **zero** of the gap in **512/512**. Structural, no repair. |
