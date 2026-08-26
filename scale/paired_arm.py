@@ -39,15 +39,31 @@ from scale.negation_scope import make_batch, nrmse              # noqa: E402
 
 
 def train_and_predict(kind: str, *, s: int, d: int, steps: int, n_train: int,
-                      n_eval: int, seed: int, batch_fn=None):
+                      n_eval: int, seed: int, batch_fn=None, device=None):
     #: `batch_fn` selects the M3 TASK (`negation_scope.M3_TASKS`); it defaults to
     #: the shipped builder, so every published reading is unchanged.
+    #:
+    #: `device=None` (the default) is the shipped CPU path, byte-identical to
+    #: every published reading. `device=torch.device("cuda")` generates both
+    #: corpora ON THE CPU with `batch_fn` and then MOVES them, so data bytes
+    #: match the CPU lane exactly, and sets
+    #: `torch.backends.cudnn.deterministic = True`. GPU rows are
+    #: tolerance-checked against CPU, never bitwise.
     bfn = batch_fn or make_batch
     x_train, y_train, _, _ = bfn(n_train, s, d, d_model=D_MODEL, seed=seed)
     x_eval, y_eval, _, _ = bfn(n_eval, s, d, d_model=D_MODEL,
                                seed=seed + 12345)
+    if device is not None:
+        if device.type == "cuda":
+            torch.backends.cudnn.deterministic = True
+        x_train = x_train.to(device)
+        y_train = y_train.to(device)
+        x_eval = x_eval.to(device)
+        y_eval = y_eval.to(device)
     torch.manual_seed(seed)
     model = Arm(kind, s)
+    if device is not None:
+        model = model.to(device)
     opt = torch.optim.Adam(model.parameters(), lr=LR)
     mu = float(y_train.mean())
     sigma = float(y_train.std(unbiased=False)) or 1.0
@@ -72,12 +88,17 @@ def main() -> int:
     ap.add_argument("--n-train", type=int, default=8192)
     ap.add_argument("--n-eval", type=int, default=512)
     ap.add_argument("--seed", type=int, default=0)
+    #: cpu (the default) is today's behaviour exactly; cuda moves training and
+    #: eval to the GPU as a separately-labelled lane (tolerance-checked, never
+    #: bitwise) and pins nothing about OMP threads.
+    ap.add_argument("--device", default="cpu", choices=["cpu", "cuda"])
     ap.add_argument("--out", required=True)
     a = ap.parse_args()
     torch.set_num_threads(2)
+    dev = torch.device(a.device) if a.device == "cuda" else None
     pred, y, npar = train_and_predict(a.arm, s=a.s, d=a.d, steps=a.steps,
                                       n_train=a.n_train, n_eval=a.n_eval,
-                                      seed=a.seed)
+                                      seed=a.seed, device=dev)
     torch.save(dict(arm=a.arm, seed=a.seed, pred=pred, y=y, n_params=npar,
                     s=a.s, d=a.d, steps=a.steps, n_train=a.n_train), a.out)
     print(f"  {a.arm} seed={a.seed} n_params={npar} eval NRMSE={nrmse(pred, y):.6f}"

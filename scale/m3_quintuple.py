@@ -176,10 +176,15 @@ def batched_log_pivot_context(q, kk, v, piv, *, chunk: int = 512,
     n, s, d = q.shape
     k = piv.shape[1]
     _, nm = bench._causal_mask_pair(s, 0, str(q.device))
-    lg = torch.empty(n, k, k, dtype=torch.float64) if need_gram else None
-    lgate = torch.empty(n, k, dtype=torch.float64)
-    av = torch.empty(n, k, v.shape[-1], dtype=torch.float64)
-    idx_last = torch.tensor([s - 1])
+    #: Buffers follow the input device. On cpu this is the default device and
+    #: the numeric path is unchanged bit for bit; on cuda the chunk loop below
+    #: would otherwise assign cuda slices into cpu buffers and raise.
+    dev = q.device
+    lg = (torch.empty(n, k, k, dtype=torch.float64, device=dev)
+          if need_gram else None)
+    lgate = torch.empty(n, k, dtype=torch.float64, device=dev)
+    av = torch.empty(n, k, v.shape[-1], dtype=torch.float64, device=dev)
+    idx_last = torch.tensor([s - 1], device=dev)
     for lo in range(0, n, chunk):
         hi = min(lo + chunk, n)
         pv = piv[lo:hi]                                            # [b, k]
@@ -404,11 +409,17 @@ def _g3_glance_is_softmax(verbose: bool = True, batch_fn=None) -> bool:
 
 
 # ------------------------------------------------------------------ the units
-def weights_path(key: str) -> pathlib.Path:
+def weights_path(key: str, *, device: str = "cpu") -> pathlib.Path:
     """Where one unit's trained tensors land. ONE definition, shared by the
     runner, its test and Foreman's consequence-fidelity column -- two copies of
-    a path is the same defect as two copies of a pass condition."""
-    return WEIGHTS_DIR / (key + ".pt")
+    a path is the same defect as two copies of a pass condition.
+
+    The cuda lane lands in its own directory so a GPU unit can never overwrite
+    the CPU artifact of the same key; the default is today's path exactly.
+    """
+    if device == "cpu":
+        return WEIGHTS_DIR / (key + ".pt")
+    return WEIGHTS_DIR.with_name(NAME + "_cuda_weights") / (key + ".pt")
 
 
 def load_unit(path):
@@ -440,6 +451,10 @@ def _unit(p: dict) -> dict:
     s, d, seed, cell = p["s"], p["d"], p["seed"], p["cell"]
     task = p.get("task", SHIPPED_TASK)
     bfn = NS.M3_TASKS[task][0]
+    #: The cuda lane generates every corpus ON THE CPU with the registered
+    #: builder and then MOVES the batches, so data bytes match the CPU lane
+    #: exactly and no task builder needs a device parameter of its own.
+    dev = torch.device(p["device"]) if p.get("device", "cpu") == "cuda" else None
 
     #: The trained module, captured by identity. `train_and_predict` builds the
     #: model internally and returns predictions, not the model; the object it
@@ -453,21 +468,40 @@ def _unit(p: dict) -> dict:
             super().__init__(kind, s_, cell=cell, k_piv=p["k"], beta=BETA,
                              t_max=p["t_max"], n_neumann=p["n_neumann"])
             built.append(self)
+            #: `M3.run_arm` constructs its own 0-step arm internally and cannot
+            #: be handed a device (m3_capability.py is CPU-only by contract),
+            #: so the module moves ITSELF; a `.to` onto the device it is
+            #: already on is a no-op for the train_and_predict path.
+            if dev is not None:
+                self.to(dev)
 
     xt, yt, _a, _b = bfn(p["n_train"], s, d, d_model=M3.D_MODEL, seed=seed)
     xe, ye, _c, _e = bfn(p["n_eval"], s, d, d_model=M3.D_MODEL,
                          seed=seed + 12345)
+    if dev is not None:
+        xt, yt = xt.to(dev), yt.to(dev)
+        xe, ye = xe.to(dev), ye.to(dev)
     old_m3, old_pa = M3.Arm, PA.Arm
     M3.Arm = PA.Arm = _A
+    old_ci = M3.bootstrap_ci
+    if dev is not None:
+        def _ci(pred_, y_, **kw):
+            #: `bootstrap_ci` resamples with a CPU generator; hand it CPU
+            #: tensors so indexing a cuda prediction cannot raise inside the
+            #: untouched instrument. `.cpu()` on a cpu tensor is that tensor.
+            return old_ci(pred_.detach().cpu(), y_.detach().cpu(), **kw)
+        M3.bootstrap_ci = _ci
     t0 = time.time()
     try:
         red = M3.run_arm("softmax", xt, yt, xe, ye, s=s, steps=0, seed=seed)
         pred, y_eval, npar = PA.train_and_predict(
             "softmax", s=s, d=d, steps=p["steps"], n_train=p["n_train"],
-            n_eval=p["n_eval"], seed=seed, batch_fn=bfn)
+            n_eval=p["n_eval"], seed=seed, batch_fn=bfn,
+            **({} if dev is None else {"device": dev}))
     finally:
         M3.Arm, PA.Arm = old_m3, old_pa
-    lo, hi = NS.bootstrap_ci(pred, y_eval, seed=seed)
+        M3.bootstrap_ci = old_ci
+    lo, hi = NS.bootstrap_ci(pred.cpu(), y_eval.cpu(), seed=seed)
     del t0
     # NO TIMING IN THE JOURNALLED VALUE. `run_bucket`'s resume audit compares
     # the whole value dict for a bitwise match, so a wall-clock field makes
@@ -493,15 +527,21 @@ def _unit(p: dict) -> dict:
         f"expected the 0-step arm and the trained arm, got {len(built)}")
     mu = float(yt.mean())
     sigma = float(yt.std(unbiased=False)) or 1.0
-    WEIGHTS_DIR.mkdir(parents=True, exist_ok=True)
-    torch.save(dict(state_dict=built[-1].state_dict(), key=_key(p), task=task,
+    wpath = weights_path(_key(p), device=p.get("device", "cpu"))
+    wpath.parent.mkdir(parents=True, exist_ok=True)
+    sd = built[-1].state_dict()
+    if p.get("device", "cpu") == "cuda":
+        #: The cuda lane saves CPU copies, so the artifact loads on a box with
+        #: no GPU. The CPU lane's serialization is untouched.
+        sd = {k_: v.detach().cpu() for k_, v in sd.items()}
+    torch.save(dict(state_dict=sd, key=_key(p), task=task,
                     cell=cell, kind="softmax", s=s, d=d, d_model=M3.D_MODEL,
                     k_piv=p["k"], beta=BETA, t_max=p["t_max"],
                     n_neumann=p["n_neumann"], steps=p["steps"],
                     n_train=p["n_train"], n_eval=p["n_eval"], seed=seed,
                     mu=mu, sigma=sigma, eval_nrmse=val["eval_nrmse"],
                     n_params=npar, torch_version=str(torch.__version__)),
-               weights_path(_key(p)))
+               wpath)
     return val
 
 
@@ -575,11 +615,26 @@ def _argparser() -> argparse.ArgumentParser:
     #: results/m3_quintuple_v2.jsonl is reproduced by the same command that
     #: produced it and keeps its journal key.
     ap.add_argument("--task", default=SHIPPED_TASK, choices=list(NS.M3_TASKS))
+    #: WHICH DEVICE. cpu (the default) is today's behaviour byte for byte: same
+    #: journal file, same weights directory, same numbers. cuda is a NEW,
+    #: separately-labelled lane -- it journals to m3_quintuple_v2_cuda.jsonl and
+    #: saves weights under m3_quintuple_v2_cuda_weights/, so a GPU row can never
+    #: append into or overwrite the registered CPU reading. CUDA rows are
+    #: tolerance-checked against their CPU counterparts, never bitwise.
+    ap.add_argument("--device", default="cpu", choices=["cpu", "cuda"])
     return ap
 
 
 def main() -> int:
     a = _argparser().parse_args()
+    dev = torch.device(a.device) if a.device == "cuda" else None
+    if dev is not None and not torch.cuda.is_available():
+        print("ABORT: --device cuda requested but torch.cuda.is_available() "
+              "is False.")
+        return 1
+    #: The cuda lane writes to its own journal and weights directory (see
+    #: --device above); the registered CPU journal is never touched from it.
+    lane_name = NAME if dev is None else NAME + "_cuda"
     n_neu = A.neumann_for(BETA)
     bfn = NS.M3_TASKS[a.task][0]
     rigged = a.task in RIGGED_ORACLE_TASKS
@@ -587,7 +642,8 @@ def main() -> int:
     print(f"=== M3 QUINTUPLE  task={a.task} s={a.s} d={a.d} steps={a.steps} "
           f"n_train={a.n_train} n_eval={a.n_eval} ks={a.ks} seeds={a.seeds} "
           f"beta={BETA} t_max={a.t_max} N={n_neu} "
-          f"threads={torch.get_num_threads()} torch {torch.__version__} ===")
+          f"threads={torch.get_num_threads()} torch {torch.__version__}"
+          + (f" device={a.device}" if dev is not None else "") + " ===")
     print("Pre-registration: M3_QUINTUPLE_PREREGISTERED_READING.md"
           if a.task == SHIPPED_TASK else
           "Pre-registration: E_LADDER_PREREGISTERED_READING.md")
@@ -652,12 +708,13 @@ def main() -> int:
             return 1
 
     cfg = dict(s=a.s, d=a.d, steps=a.steps, n_train=a.n_train,
-               n_eval=a.n_eval, t_max=a.t_max, n_neumann=n_neu, task=a.task)
+               n_eval=a.n_eval, t_max=a.t_max, n_neumann=n_neu, task=a.task,
+               device=a.device)
     us = _units(a.cells, a.ks, a.seeds, **cfg)
     print(f"\n=== {len(us)} units, bucketed, budget {a.budget:.0f}s ===")
-    acc = run_bucket(NAME, us, _unit, budget_s=a.budget)
+    acc = run_bucket(lane_name, us, _unit, budget_s=a.budget)
     missing = [k for k, _ in us if k not in __import__(
-        "scale.bucket", fromlist=["Journal"]).Journal(NAME).done()]
+        "scale.bucket", fromlist=["Journal"]).Journal(lane_name).done()]
     if missing:
         print(f"\nPARTIAL: {len(us) - len(missing)}/{len(us)} units done, "
               f"{len(missing)} remaining. Re-run to continue. "
@@ -665,7 +722,7 @@ def main() -> int:
         print(json.dumps(acc))
         return 3
 
-    vals = require_complete(NAME, us)
+    vals = require_complete(lane_name, us)
     by = {}
     for key, p in us:
         by.setdefault((p["cell"], p["k"]), {})[p["seed"]] = vals[key]

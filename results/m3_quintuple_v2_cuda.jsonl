@@ -1,0 +1,1 @@
+{"key": "softmax_k0_s64_d24_st150_ntr2048_nev2048_b21_sd0_taske3_t1", "meta": {"seconds": 2.9}, "value": {"eval_nrmse": 0.8187398705079489, "marg_hi": 0.8452842356066786, "marg_lo": 0.7917699327949096, "n_params": 4769, "nrmse0_eval": 1.0013893341237767, "nrmse0_train": 1.0035465379918123}}
