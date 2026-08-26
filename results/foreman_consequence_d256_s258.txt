@@ -26,3 +26,5 @@ softmax               1.25759     0.522901      0.46055     0.584728          13
                    flipper 0.516484 (47/91)   payload 0.526316 (90/171)   null|dyhat| 0.00257918 vs live 0.0300422   zero-effect 250   closed-form resid 0.000e+00
 pivot_signed          1.92817     0.522901      0.46055     0.584728          137          262     0.108026   0.00727788     0.241058     -0.13636    0.0456628   [1306s]
                    flipper 0.560440 (51/91)   payload 0.502924 (86/171)   null|dyhat| 0.0037694 vs live 0.0509173   zero-effect 250   closed-form resid 0.000e+00
+windowed_signed       1.51925     0.316794     0.260913     0.376877           83          262  -0.00954552    -0.114941    0.0934259    -0.136356     0.026138   [2938s]
+                   flipper 0.000000 (0/91)   payload 0.485380 (83/171)   null|dyhat| 0 vs live 0.0617789   zero-effect 250   closed-form resid 0.000e+00

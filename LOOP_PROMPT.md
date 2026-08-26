@@ -172,6 +172,35 @@ replacement is worse than an honest retirement.
 
 **RULE 6 — never block on a measurement.** Something is always built alongside.
 
+**RULE 8 — NAME THE UNSOLVABLE PART AS A FUNCTION AND SOLVE AROUND IT.** When a
+quantity cannot be computed directly, write it as `f(...)`, solve everything adjacent
+to it **exactly**, substitute into the expected result, and let the surroundings
+determine what `f` must be. Then read its **behaviour** — constant, growing,
+threshold, limit — and attack it with the derived constraint rather than a guess.
+"Unmeasurable, moving on" is not an answer; a function with a measured shape is. Most
+of the time the surrounding quantities are already in hand and `f` costs arithmetic
+rather than compute.
+
+**RULE 9 — LIGHTWEIGHT MATHEMATICS FROM WHEREVER IT LIVES, AND NOT FLAT BY DEFAULT.**
+Reach for the structure that answers the question **whole**, including from obscure
+corners, and prefer the cheap version of it. **Do not settle for flat Euclidean
+geometry when the object is not flat.**
+
+This is not decoration, and there is a live instance of it. **The readout of record is
+NRMSE — a Euclidean distance — while the objects being predicted are fixed points of
+row-stochastic maps.** Those live on a simplex, whose natural geometries are
+Fisher–Rao, Hilbert projective, or total variation, none of them flat. A Euclidean
+error on a simplex-valued target weights a move near the boundary the same as a move
+near the centre, when the two are not comparable. **Whether that costs anything here
+is measurable rather than arguable, and nobody has measured it.**
+
+The campaign's record supports the rule: the results that survived came from Hilbert
+projective geometry, Birkhoff contraction, Cheeger conductance, absorbing-chain
+fundamental matrices and exact rectangle covers — not from flat approximations of any
+of them. The rule's limit is **lightweight**: a structure that answers the question at
+the cost of one solve is in scope; one that needs its own research programme is not,
+and saying so is a REPRICE under RULE 5.
+
 **RULE 7 — G1 fetches come BEFORE any build**, and absence is recorded as *not found*,
 never as *unoccupied*.
 
