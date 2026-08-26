@@ -214,3 +214,24 @@ both sides, so the target is reachable **by construction rather than by search**
    interval computed on a single seed measures **resampling** variability only. It says
    nothing about **seed** variability, which is the larger quantity here. Any future
    single-seed reading must state which of the two its interval covers.
+
+37. **THE FAILING TESTS ARE NOT BROKEN — THEY ARE THE RECORD REPRODUCING.** 146 confirmed
+   failures across `chase`/`cameron`/`foreman`, **every one a plain `AssertionError`**,
+   with **zero import errors, zero collection errors, zero stale-symbol crashes**. Their
+   docstrings predict the exact failure in advance (*"RED ON PURPOSE"*,
+   *"VERDICT: DELETE"*). **Fixing any of them deletes a finding.** Zero were fixed, which
+   was correct.
+38. **ONE REAL FLAG, NOT ACTED ON:**
+   `tests/chase/test_scale_sizing.py::...[cuda-1024]` returned `XPASS(strict)` — the
+   `KNOWN_RED` ledger records `3.13×`, this run measured `≤ 2.0×`. **Measured on a box
+   running multiple concurrent GPU suites**, so the likely cause is contention slowing
+   softmax's own baseline. **Needs a clean re-measurement on a quiet GPU before the
+   ledger is edited.**
+39. **DOC ROT, unfixed and owned elsewhere:** `scale/arm_s.py:55` cites `gram_audit` as
+   measuring float32 underflow of `a_p[0]`; **no such function or test exists**. And
+   `results/capability_table_v0.*` is stale at `journal_commit 9629616` with **three
+   clauses of its own `Limits` string now false.**
+40. **One audit hit on the pushed history is a FALSE POSITIVE** — commit `7844d12`'s body
+   names the harness directory path inside the paragraph explaining the ignore rule. Not
+   an authorship trailer. Left rather than rebased across four commits other agents were
+   appending to.

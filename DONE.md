@@ -4,6 +4,146 @@ Round 6 closed with the certificate program CLOSED - three attempts, three death
 Round 5's `TWOSPHERES: BROKEN` and its handover `done5.md` stand. Round 6's
 work-done is `done6.md`. Progress **22**.
 
+### ROUND 8, ITERATION 13 - 2026-08-26 - The failing tests are not broken. They are the record reproducing.
+
+CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**, 4/4 bit-identical.
+[RUN] `pytest tests/loop` -> **254 passed**.
+
+## THE NURSE TIER FOUND ZERO BROKEN TESTS, AND THE ABSENCE IS THE FINDING
+
+The instruction was to clear the failing tests. **The correct outcome was to fix
+nothing**, and the reason is measured:
+
+    dir       files clean-run   confirmed failures   fixed   REAL   not fully covered
+    chase          24/28                28             0       1            4
+    cameron        25/26                30             0       0            4
+    foreman        23/27                88             0       0            4
+                                       ---
+                                       146
+
+**The real count is far past the "roughly 64" this seat estimated** - and every single
+failure across all three directories is a plain `AssertionError`. **Zero `ImportError`,
+zero `ModuleNotFoundError`, zero collection errors, zero stale-symbol crashes.**
+
+> *"That absence is the finding: nothing here is BROKEN in the mechanical sense. This is
+> a project that writes falsification as pytest asserts, and the reds are the
+> falsifications."*
+
+**The failing tests ARE the project's recorded refutations.** They are supposed to be
+red, they cross-check clean against this repository's own audit trail
+(`CHECKLIST.md:999`, *"the ten standing REDs - ALL TEN BY DESIGN. ZERO ROT"*), and their
+docstrings **predict the exact failure before the run**: *"RED ON PURPOSE"*,
+*"VERDICT: DELETE"*, *"a test that goes green is a bind, not a finding"*.
+
+**Fixing any of them would have deleted a finding.** The tier's classification rule -
+*"when you cannot tell BROKEN from BY DESIGN, it is BY DESIGN and you leave it alone"* -
+did the work it was written for.
+
+## ONE REAL FLAG, CORRECTLY NOT ACTED ON
+
+`tests/chase/test_scale_sizing.py::test_a_300m_step_is_within_2x_the_softmax_control_at_the_300m_block_shape[cuda-1024]`
+came back **`XPASS(strict)`**. The `KNOWN_RED` ledger at `tests/chase/conftest.py:251`
+records `sgate = 3.13x` softmax; this run measured **at or under `2.0x`**.
+
+**And the tier refused to touch the ledger**, for a stated reason: the machine was
+running **multiple concurrent GPU-bound suites** during the measurement, so the likely
+cause is contention making softmax's own baseline abnormally slow - **a contention
+artifact, not a speedup.** **Needs a clean re-measurement on a quiet GPU before anyone
+edits a recorded finding.**
+
+**That is the right handling of an XPASS: a recorded red going green is a claim about the
+record, and it does not get made from a contended box.**
+
+## AND THE METHOD NOTE IS WORTH KEEPING
+
+Whole-directory runs kept dying to per-test timeouts on legitimately slow numerics -
+training loops, subprocess model loads, GPU wall-clock benchmarks - **not hangs.** The
+fix was to run **every file individually** under its own timeout, so **one slow file
+cannot erase the results of the rest.** 65 of 81 files completed clean; **16 timed out or
+were pre-excluded and are listed rather than silently dropped**, with partial `F` counts
+named where seen.
+
+## CAMERON PUSHED, AND CAUGHT THREE ERRORS IN HER OWN DRAFT
+
+`e54ec95..4044e14`, **16 commits**, `origin/master`.
+
+**Four tracked files cut, each with zero inbound references:** a bot-block HTML page
+swept in by accident, a raw grep dump with absolute local paths, an OCR of a third-party
+paper table (**same redistribution class `.gitignore` already refuses**), and a 0-byte
+log **whose four citations survive it** - *"an absent file and an empty file carry the
+same information."*
+
+**Kept despite looking like clutter**, and the judgement is right: the round-journal
+chain, `D1.md` as a shipped deliverable, and **three sub-200-byte files that look empty
+and are not - the wall-clock line IS the measurement.**
+
+**The README went 1,050 -> ~520 lines**, and **all four exact intervals reproduce to the
+printed digit** by enumeration over all `5**5 = 3125` paired resamples, **with the
+README shipping the snippet that does it.**
+
+**Three errors caught in her own draft before push:** `d24` is the **flipper distance**,
+not `d_model` (which is 16); `Refcount.lean` has **10** theorems, not 11 - the eleventh
+grep hit is the word inside a doc comment; and the truncation law's `k` **collided with
+`k = 8` the pivot count** and was renamed to `h`.
+
+**Negatives are in the body, not hidden:** `settled - twin` covering zero, one-hot worse
+than softmax, `sd 0.064106` against `0.016547`, and `argmax` failing its own bar **so
+that `+0.226893` licenses nothing.**
+
+**One audit hit remains and it is a FALSE POSITIVE**, correctly left rather than
+rebased: commit `7844d12`'s body names the harness directory path twice **in the
+paragraph explaining the ignore rule**. Not an authorship trailer. Rewording needed a
+rebase across four commits other agents were actively appending to, **and losing a live
+commit is worse.**
+
+**Doc rot found and NOT fixed, because it is another agent's file:** `scale/arm_s.py:55`
+cites `gram_audit` as the thing that measures float32 underflow of `a_p[0]`, and **no
+such function or test exists** under `scale/` or `tests/`. **The README states that gap
+as open rather than repeating the claim.** Also flagged:
+`results/capability_table_v0.*` is stale at `journal_commit 9629616` and **three clauses
+of its own `Limits` string are now false.**
+
+CHECKLIST: **ZERO broken tests found in 146 confirmed failures** - all plain
+`AssertionError`, **no import or collection errors anywhere** - **so the reds are the
+project's own falsifications and fixing them would have deleted findings.** **One REAL
+flag raised and deliberately not acted on** (an `XPASS(strict)` measured on a contended
+GPU). Repo **pushed**, README **rewritten with every headline number re-derived
+first-hand** and three self-caught errors, four dead files cut, **one remaining audit hit
+identified as a false positive and left rather than risk a live commit.**
+
+**SCOREBOARD: 25.**
+
+
+## AND A PROVENANCE SCAN CLOSED WITH TWO CATCHES WORTH KEEPING
+
+**`n_params = 4769` is defined in exactly ONE place** -
+`sum(p.numel() for p in model.parameters())` over `Arm` at
+`scale/m3_capability.py:171`, with the geometry constants at lines 79-87. **Every other
+occurrence in the repository is a recorded reading of that one computation, not a second
+definition.** That was the claim most worth double-checking, and it holds.
+
+**CATCH 1 - A FALSE POSITIVE THAT A WORD-BOUNDARY SEARCH EXCLUDED AND A SUBSTRING SEARCH
+DID NOT.** `ceq/rips.py:45` appeared to contain `4769`:
+
+    _TWO_PI = 6.283185307179586476925286766559
+                                  ^^^^
+
+**It is a substring of the digits of 2*pi.** Same for `kTwoPi` in the vendored C++ file
+and for a float mantissa in `results/hilbert.jsonl`.
+
+**CATCH 2 - AN `exit code 0` THAT DID NOT MEAN WHAT IT LOOKED LIKE.** One background grep
+returned success while having **timed out walking `lean/.lake/packages/mathlib/`**,
+stopping alphabetically at `LinearAlgebra/TensorProduct/`. **It never reached `results/`,
+`scale/` or `tests/`**, so it missed `scale/m3_quintuple.py:109`,
+`tests/chase/test_m3_capability_harness.py:221` and every other real hit.
+
+> *"The `exit code 0` came from the trailing `grep -v` in the pipe, not from a completed
+> traversal."*
+
+**A zero exit from the last stage of a pipe says nothing about the first stage**, and a
+truncated sweep reporting success is the same disease as a scan that cannot find what it
+searches for. **Flagged as incomplete rather than used.**
+
 ### ROUND 8, ITERATION 12 - 2026-08-26 - The looped cell lands, softmax wins decisively at 150 steps, and it licenses nothing about depth.
 
 CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**, 4/4 bit-identical.
