@@ -692,3 +692,23 @@ Replayed ARM A's own draw stream (published `D_FR causal` reproduced to 6 dp at 
 | chain | **COMPLETE.** fellows -> Wilson -> Health Inspector. **37 claims audited, 3 struck, all applied.** |
 | Dr House | **NEVER RELEASED - a decision.** Every kill fired from a measurement with an interval. He is for a gap in **innovation**; this round had a gap in **results**. |
 | left open | K1's **sign-flip clause** (8/2400, interval is count discreteness, arms not separated - needs 20000 draws/cell); **what peak attention tracks** once the key-norm confound is removed. |
+
+
+---
+
+# CEQ v8.2 — ROUND 6, THE HILBERT ROUND
+
+| item | status |
+|---|---|
+| **K-A** `Δ̂ = +∞` → ARM S unbuilt, T2 | **REPAIRED PRE-DATUM.** Was `κ̂_cert ≥ 1`, which `tanh` saturates to exactly `1.0` at `Δ ≥ 76.246190` in float64 — a ratio of `e^76 = 3.73e+32`, ordinary for softmax rows. Now fires on `Δ̂ = +∞` only; `1−κ = 2/(e^(Δ/2)+1)` in closed form, verified against 50-digit `Decimal` to `<1e-40`. UNTESTED on live draws. |
+| **K-B** matched re-run dissolves F-green | **UNTESTED** — Cameron's matcher builds at it.0, the re-run is it.1. Decides the round's shape (+3/−5). |
+| **K-C** twin matches settled → equilibrium clause cut project-wide | **UNTESTED** — Phase C, RULE 2 pins it to iteration 12. |
+| **K-D** ARM P matched separation fails | **UNTESTED** — Phase B. |
+| **K-E** leakage ratio > 0.5 voids degree-2 claims | **UNTESTED** — Cameron, Phase B pilot. |
+| **K-F** wall clock > 1.5× | **UNTESTED** — gate applies to the SUM `cost(glance) + t*·cost(T) + N·cost(J·v)`. |
+| **K-G** any statistic of degree ≤ 1 struck unbuilt | **UNTESTED** — Foreman's degree audit; F-identity mechanised as algebra rather than judgment. |
+| **K-H** K1 by SPRT boundary, either side, +1 | **UNTESTED** — Chase derives the slope→rate mapping at it.0 **before any draw**; thresholds `±2.944439` verified two ways. |
+| **G1 Birkhoff** [U] | **OWED, FETCHING.** Foreman, it.0. Open question he must settle: Birkhoff is stated for positive **linear** maps and `T` is a normalised weighted combination — the hypotheses may not admit it. |
+| **G1 deltas** — Sinkhorn / DEQ / Star / Shapley-interaction | **OWED, IN FLIGHT.** Sinkhorn's convergence proof IS Birkhoff, so the delta must be the *settling-certificate* use, not the contraction. |
+| **RULE 2** M3 run by iteration 12 | **CLOCK RUNNING** from iteration 0. |
+| **RULE 4** caveman register, all agents | **IN FORCE.** Artifacts exempt and stay normal English. |

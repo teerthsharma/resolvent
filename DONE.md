@@ -1,3 +1,128 @@
+# HILBERT: IN PROGRESS - round 6, CEQ v8.2, iteration 0 of 30
+
+Round 5 closed at `TWOSPHERES: BROKEN - ARM A, K1's dual slope, displacement
+clause`; its handoff is `done5.md` and its negative result is `D1.md`. That
+verdict is final and is not reopened.
+
+### ROUND 6, ITERATION 0 - 2026-08-26 - PHASE A OPENS. Three fellows in parallel, and a kill is repaired before its first datum lands.
+
+**THE ROUND.** CEQ v8.2, the Hilbert round. `LOOP_PROMPT.md` rewritten; round 5
+archived at `LOOP_PROMPT_ROUND5_ARCHIVE.md`. Promise word **`HILBERT`**, 30
+iterations, **RULE 2 clock running** - the M3 settled-vs-unsettled run executes by
+iteration 12 or the round halts for breach review.
+
+**THE THESIS, and why it answers round 5's death.** Round 5 died on
+**F-identity**: `theta = arcsin(sqrt(TV))` exactly, so the angle carried no
+information total variation did not, and the `arccos` near argument 1 collapsed
+four orders between float32 and float64. Round 6 replaces the metric with the
+**Hilbert projective metric**
+
+    d_H(p, q) = max_j log(p_j/q_j) - min_j log(p_j/q_j)
+
+an oscillation of log-ratios: `O(s)`, **no sqrt, no arccos, no ill-conditioning
+near coincidence**. And it replaces round 5's **local** uniqueness with a
+**global** one - F-uniqueness measured the Karcher mean well defined on only
+**0.9333 / 0.8167 / 0.5167** of draws at k = 8/32/128, so at k=128 the settled
+reading was undefined on **48.3%** of draws. Birkhoff's contraction gives
+uniqueness on the whole cone rather than inside an injectivity radius.
+
+---
+
+**ACTION (one): dispatched Phase A iteration 0 - all three fellows in ONE message,
+in parallel, on their own cores.**
+
+  * **CAMERON** - build the Hungarian matcher (contract 1.5) and self-calibrate it
+    **in both directions**. This instrument gates the whole round: F-selector
+    established that **every causal-vs-filler contrast in this project is
+    confounded by construction** until it is norm-matched, because
+    `select_pivots` ranks by `key.norm(dim=-1)` with no reference to any
+    downstream effect. The filler pool is at least two populations and they are
+    **carried as strata, never pooled**.
+  * **FOREMAN** - the **Birkhoff fetch first, before any build** (G1), including
+    whether the theorem's hypotheses even admit our `T`, which is a normalised
+    weighted combination and **may not be linear**; then `T`'s exact form with a
+    **structural** positivity proof, not a sampled one; then the four G1 deltas -
+    Sinkhorn (whose convergence proof IS Birkhoff), DEQ (norm-settling without a
+    global-uniqueness certificate - the certificate is the delta),
+    Star-Transformer, Shapley-interaction lineage.
+  * **CHASE** - the K1 slope-to-rate mapping **written down before any draw**,
+    because the boundaries are immutable once the first one lands; the SPRT
+    machinery, **calibrated against known answers** below `r0`, above `r1`, and
+    between; and an M3 harness dry-run on a **synthetic settled arm whose verdict
+    is already known**, in both directions. If the harness cannot detect a planted
+    difference, a null at iteration 12 means nothing.
+
+---
+
+**AND A KILL WAS REPAIRED BEFORE ITS FIRST DATUM LANDED, which is the only window
+in which a pre-registered kill may be edited.**
+
+K-A as first written read *"kappa_cert >= 1 => ARM S dies pre-build"*. [RUN, two
+independent paths]:
+
+    float64 tanh(D/4) reads EXACTLY 1.0 for Delta >= 76.246190
+    float 1-tanh at Delta=75 gives 1.110223e-16
+      50-digit Decimal truth   1.035111e-16      -> the float is 7.2% high,
+                                                    already quantised to one ULP
+    from Delta=100 the float path reads exactly 0
+
+**`d_H` is an oscillation of log-ratios over softmax rows, so `Delta ~ 76` nats is
+a ratio of `e^76 = 3.73e+32`** - entirely ordinary whenever one softmax entry is
+small relative to another. **So K-A could not distinguish "positivity failed" from
+"diameter merely large", and would have fired on a live positive map for an
+arithmetic reason** - killing ARM S at iteration 3 and triggering Dr House against
+a measurement artifact, which round 5's own precedent explicitly forbids.
+
+The repair, written into contract 1.1 and into K-A:
+
+  1. **report `Delta_hat` itself, in nats, beside every `kappa_cert`** - `Delta`
+     is primary, `kappa` is derived;
+  2. **K-A fires on `Delta_hat = +inf`**, a genuine non-positive or zero entry,
+     **never on `kappa_cert == 1.0`**;
+  3. compute the gap in closed form, never by subtracting from 1:
+
+         1 - kappa = 2/(e^(Delta/2) + 1)
+
+     verified two ways - algebra (`1-tanh x = 2e^-x/(e^x+e^-x) = 2/(e^2x+1)`) and
+     50-digit `Decimal`, agreeing to **<1e-40** at Delta = 10/40/75/76/100/500 and
+     representable to **Delta ~ 1400** where the float path is long dead;
+  4. since `1/(1-kappa)` is the Neumann conditioning, **report `1-kappa` in this
+     form** - a `1-kappa` that has silently reached 0 makes the bound meaningless.
+
+**Foreman is asked to REFUTE this, not confirm it** - specifically to measure
+actual `Delta_hat` on live draws and say whether it lands anywhere near 76 nats,
+or whether a problem that does not occur has been engineered against. A refuted
+claim of mine with numbers outranks a confirmed one without.
+
+Also banked [RUN] before it.0: SPRT thresholds `+/-2.944439` agree with
+`+/-log(19)` to `<5e-5` by two paths; Neumann `N` for error `<1e-6` reads
+**7 / 21 / 153 / 1833** at kappa = 0.1 / 0.5 / 0.9 / 0.99, blowing up as
+`kappa -> 1` exactly where the theory says it must.
+
+**RULE 4 IS NEW AND BINDS EVERY AGENT.** All reports - fellows, nurses, Wilson,
+the Inspector, Dr House - are in caveman register. **Caveman compresses wording,
+never findings**: numbers, identifiers, commands, math and quoted text pass
+byte-exact, and uncertainty stays visible rather than being deleted for brevity.
+**Artifacts are exempt** - this file, `D1.md`, `CHECKLIST.md`, every commit
+message, every Lean file and docstring stay in normal precise English, because the
+record a human reads at iteration 30 is not a chat message.
+
+**THE CHAIN, refined by the user and now in the contract:**
+
+    nurses -> fellow -> Wilson -> { Health Inspector | Dr House }
+
+Every nurse is an **inference and kernel engineer**, mandated to find whatever
+hack makes this module comparable to vLLM and other production attention while
+staying original work. Wilson routes the fork **by what is missing**: not a leap
+goes to the **Health Inspector**, who is the better engineer; a leap goes to
+**Dr House on `fable`**, who is the scientist - five minutes, hard stop, no
+nurses, one leap or the words "no leap".
+
+CHECKLIST: Phase A open. Three fellows dispatched in parallel. **K-A repaired
+pre-datum.** Nothing claimed for any in-flight agent.
+
+**SCOREBOARD: 0** (ceiling ~45, floor ~15 with D1 done).
+
 # TWOSPHERES: BROKEN - ARM A, K1's dual slope, displacement clause
 
 The round's central kill fired. `D_FR` slope in k reads **-0.4137

@@ -1,74 +1,56 @@
-# State
-
-**Updated: 2026-08-25 - ROUND 5 open under CEQ v7, the two-spheres round.**
+# STATE — CEQ v8.2, ROUND 6, THE HILBERT ROUND
 
 | field | value |
 |---|---|
-| round | **5** - CEQ v7, promise `TWOSPHERES`, **30 iterations** |
-| iteration | **23 - ROUND CLOSED** |
-| phase | **CLOSED - `TWOSPHERES: BROKEN`, ARM A, K1 dual slope** |
-| goal | **match or SUPERSEDE self-attention**; next-equilibrium predictor |
-| calibration | GREEN [RUN] `run_calib.py --self-test` exit 0, 4/4 bit-identical |
-| inspector | tri-state; INDETERMINATE exits nonzero |
-| repo | https://github.com/teerthsharma/resolvent (private) |
+| contract | `LOOP_PROMPT.md` (v8.2). Round 5 archived `LOOP_PROMPT_ROUND5_ARCHIVE.md` |
+| promise | **`HILBERT`** — D2 verbatim, or an honest `BROKEN` |
+| iteration | **0 complete, 1 next** |
+| phase | **A — gates and fetches (iterations 0–4)** |
+| scoreboard | **0** (floor ~15 with D1 done; ceiling ~45) |
+| RULE 2 clock | **running.** M3 settled-vs-unsettled EXECUTES by **iteration 12** or breach review |
+| register | **caveman, all agents, every iteration.** Artifacts stay normal English |
+| autonomy | user meets the loop at **iteration 30**; no check-ins |
 
-## THE ONE NEXT ACTION (round 5 is CLOSED)
+## THE ONE NEXT ACTION (round 6, iteration 1)
 
-**Round 5 ended at iteration 23 with `TWOSPHERES: BROKEN` - ARM A, K1's dual
-slope, displacement clause.** Line 1 of `DONE.md` carries the verdict and `D1.md`
-ships.
+**Collect Phase A it.0 and run it.1 — but the reading order is fixed and it is
+not the order the reports arrive in.**
 
-**NOTHING FURTHER IS OWED ON THIS ROUND.** The chain ran to completion, the audit
-struck three claims and all three were applied, and the deliverable meets its own
-acceptance criteria.
+  1. **FOREMAN's Part 3 first.** He was asked to REFUTE the K-A float repair by
+     measuring actual `Δ̂` on live draws. If real `Δ̂` never approaches 76 nats,
+     the repair guards a problem that does not occur and should be recorded as
+     over-engineering — that is a finding, not an embarrassment. If it does
+     approach it, K-A would have fired spuriously and the repair earned itself.
+  2. **CAMERON's calibration, both directions.** A matcher that only passes the
+     null direction is instrument #15 — a control that cannot be nonzero. Round 5
+     struck four gates of exactly that shape; this is where the fifth would go.
+  3. **CHASE's SPRT calibration** below `r₀`, above `r₁`, and between. A
+     sequential test never run against a known answer is not an instrument.
+  4. **Then it.1:** Cameron's F-green matched re-run — **+3/−5, and it decides the
+     round's shape.** Foreman's `κ̂_emp`/`κ̂_cert` on live draws with the
+     consistency gate and `Δ̂` in nats. Chase's κ back-fit from round 5's 28–53
+     step journal, which must agree with Foreman's `κ̂_emp` within CI or both
+     re-derive.
 
-**WHAT A NEXT ROUND WOULD INHERIT, in the order it is worth having:**
+**Contingency, pre-registered:** F-green dead ⇒ re-plan to D1 + ARM P only, and
+**Dr House is NOT released** — that is a measurement, not missing innovation.
+`Δ̂ = +∞` ⇒ **T2 fires**.
 
-  1. **K1's sign-flip clause is alive and unresolved.** 8 events in 2400 draws;
-     the interval is **count discreteness**, and the unsigned arm's exact interval
-     **contains** the signed arm's rate, so the two arms are not separated at
-     these sample sizes. **Needs the contract's own 20000 draws per cell**, about
-     eight hours at the measured per-draw cost. This is the only pre-registered
-     kill in the round that remains genuinely undecided.
-  2. **What peak attention tracks, once the key-norm confound is removed, is not
-     established.** It retains **2.9% / 13.3% / 58.9%** against a key-norm-matched
-     filler, and the match is by **rank, not value**, so those are **upper**
-     bounds. The residual at k=128 is the only part with room in it.
-  3. **The K1 slope rests on a journal replay, not a fresh derivation.** The
-     replay matched bitwise, so the journal is intact - but **nobody re-derived
-     that slope from draws**. A round that wanted to lean on it should.
-  4. **The identity is the durable result and it is a constraint, not a tool.**
-     `theta = arcsin(sqrt(TV))` on a one-token mask means **any** future
-     ablation-and-measure probe on this geometry compares two aggregations of one
-     number. A design that wants the geometry to earn something must change the
-     PROBE, not the metric.
-
-**THE INSTRUMENT LESSON, since it repeated four times and is the most transferable
-thing here:** every verdict gate that failed this round measured something
-**ADJACENT** to what had been pre-registered - bulk rank where selection takes a
-top-k, argmax where the claim was about values, half of a two-part condition, and
-a control that could not reach the logic it guarded. **Each erred toward the
-flattering reading.** All four were caught by the probes' own output, which is the
-only reason they are recorded rather than shipped.
+**Never block on a measurement.** If the tier is still out, build alongside it.
 
 ## Open REDs
 
-None new. Round-4 carries: F-core (every additive route dead), F-cover (arm A
-redirected to an additive basis of order 2), F-journ (13/37 drift in sigma/term,
-rate intact 37/37).
+Carried from round 5, all still open:
 
-## Carried, and load-bearing
-
-- **F-green is the only positive result in four rounds, and it is UNSIGNED.**
-- **A sign measurement without its logit scale is not a measurement.**
-- **n_train >= 8192 or the reading ranks overfitting.**
-- **No multiplication inside a sign decision** (G8, new) - `lo*hi` underflows to
-  exactly -0.0 in float32 while both factors are healthy.
-- **A leap binds before it counts.** House's displacement frame is MOTIVATION
-  until a fellow writes the RED test.
-
-## Board in flight
-
-G1 fetches -> ARM A torque probe (K1 dual slope, K2 filler twin, K3 geometry
-earns itself) -> G-b reproducible summation in parallel -> ARM B birth gates ->
-M3 at n_train=8192.
+1. **K1's sign-flip clause** — the only pre-registered kill left genuinely
+   undecided. 8 events in 2400 draws, `0.003333 [0.001440, 0.006557]`; the
+   unsigned arm's interval `[0, 0.010195]` **contains** it. **Round 6 closes it
+   by SPRT (K-H, +1)** rather than by 20,000 fixed draws.
+2. **Every probe number ever taken was random-init.** The trained-projection
+   re-run is Phase D and is the oldest open item in the project.
+3. **What peak attention tracks** once the key-norm confound is removed —
+   retention 2.9% / 13.3% / 58.9%, matched by **rank not value**, so those are
+   **upper** bounds.
+4. **The provenance bind is RED deliberately** — nine shipped cost figures whose
+   run evidence lives in `DONE_ARCHIVE_ROUND1.md`. Repair by **re-pointing**,
+   never by pasting.
