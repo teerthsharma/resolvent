@@ -16,7 +16,7 @@
 
 | | item | pts | state |
 |---|---|---|---|
-| **S1** | M3 quintuple headline cell, **anytime-valid** | +12 / +6 / −4 | **HEADLINE CONTRAST READ at it.7 and it is the ROUTING-ONLY branch.** `settled − twin = −0.002959`, CI `[−0.042903, +0.031557]`, **covers zero**. Both arms beat softmax **5/5** (`+0.108` / `+0.111`, intervals excluding zero), **twin's tighter**. **Four arms of five — `trained-two-feature` at ZERO ROWS.** Not anytime-valid and provably cannot be at 5 seeds (`MIN_T_MIXTURE = 13`). |
+| **S1** | M3 quintuple headline cell, **anytime-valid** | +12 / +6 / −4 | **HEADLINE CONTRAST READ at it.7 and it is the ROUTING-ONLY branch.** `settled − twin = −0.002959`, CI `[−0.042903, +0.031557]`, **covers zero**. Both arms beat softmax **5/5** (`+0.108` / `+0.111`, intervals excluding zero), **twin's tighter**. **QUINTUPLE COMPLETE, 25 units.** The fifth cell is `argmax` (`CELLS` in `scale/m3_quintuple.py:86`); **`trained_two_feature` was never a cell** — it is `calibrate_bar` clause 5 at `scale/negation_scope.py:317`. Not anytime-valid and provably cannot be at 5 seeds (`MIN_T_MIXTURE = 13`). |
 | **S2** | Hankel-gap family; one gap task **inside** M3 | +3 | **CORPUS HALF CLOSED at it.8.** `counter_squared` runs in M3 (`--task`), params `4769/4769`, gap `rank 3` vs `rank₊ ≥ 6` at `s=64`. **Gap dies at ODD `s`** — length load-bearing, and the odd case is a **free no-gap arm**. **But the frame was retired at J3 the same day**, so the gap is now task *metadata*, not the capability claim. |
 | **S3** | Kaggle run on the signed N1–N6 cert; HF; capability table v0 | +6 | not started |
 | **S4** | Probe battery at **TRAINED** projections | +3 | **partly done** — Phase D closed 3/3; **aggregator retention NOT re-run** |
@@ -28,8 +28,7 @@
 
   * **`twin` arm running** — `m3_quintuple.py --cells twin`, seeds 0–4. When it
     lands, v2 has **four of five arms** at five seeds and the headline contrast is
-    readable as a fixed-sample paired comparison. `trained-two-feature` is still
-    at zero rows and is the last missing arm.
+    readable as a fixed-sample paired comparison. `argmax` completed the cell at it.9; **`trained-two-feature` was a misnaming** — it is a calibration clause, never an arm.
   * **Three fellows out** since it.5 on the `counter_squared` blocking item.
 
 ## THE ONE NEXT ACTION (round 7, iteration 3)
@@ -123,7 +122,7 @@ unreachable; `delta_image` is closed. **The next action is the corpus step above
 
 11. **CLOSED at it.9. The quintuple is COMPLETE** — 25 units, five arms, five seeds.
    The fifth cell is `argmax`, and it is **WORSE than softmax** (`−0.118456`, CI
-   `[−0.134115, −0.102204]`) **and fails its own bar** at `1.010779`. **The mixture
+   `[−0.134115, −0.102786]`) **and fails its own bar** at `1.010779`. **The mixture
    is the whole contribution; reading one pivot is worse than reading none.**
 12. **The settling is not paying for itself.** `settled − twin = −0.002959` with an
    interval covering zero, and the settled arm's seed spread (`sd 0.064106`) is

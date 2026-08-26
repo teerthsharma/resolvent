@@ -1054,3 +1054,257 @@ torch 2.5.1+cu121  torch.get_num_threads()=2  device=cpu (no .cuda() anywhere in
   softmax=4769  pivot_signed=4769  ratio=0.0000
 
 === WALL CLOCK: 6.359 s ===
+
+=== RUN 2026-08-26 12:48:09 s=64 d=24 steps=150 n_train=1024 n_eval=2048 seed=0 arms=['softmax', 'pivot_signed', 'pivot_unsigned', 'windowed_signed'] task=e1_anchor ===
+torch 2.5.1+cu121  torch.get_num_threads()=2  device=cpu (no .cuda() anywhere in this file)
+
+=== E-TASK e1_anchor: t* = 63 (difficulty dial, LOOP_PROMPT.md 1.7) ===
+  Model hop budgets, to read the ladder against: softmax 1, pivot_signed / pivot_unsigned / windowed_signed 2.
+  TRUNCATION LADDER -- NRMSE of a FIXED k-budget reading
+  against the label. The label requires iteration iff this is
+  bounded away from 0 at small k and tightens with k. A k=1
+  reading at ~0 would mean this task is a static expression of
+  x, like the two tasks registered before it.
+    k=   0   NRMSE=0.993286
+    k=   1   NRMSE=0.987184
+    k=   2   NRMSE=0.978921
+    k=   4   NRMSE=0.961950
+    k=   8   NRMSE=0.928319
+    k=  16   NRMSE=0.848626
+    k=  32   NRMSE=0.696708
+    k=  63   NRMSE=0.000000
+    k=  64   NRMSE=0.000000
+
+=== BAR CALIBRATION (must pass before any arm is credited) ===
+      predict_the_mean 1.000000
+          payload_only 1.014730
+                oracle 0.000000
+    flipper_dependence 0.253429
+   trained_two_feature 0.136936
+  BAR CALIBRATED  -- BAR CALIBRATED
+
+=== DATA (same train/eval batches reused across every arm) ===
+  train: n=1024 seed=0  flipper@0 payload@62
+  eval : n=2048 seed=12345 (DIFFERENT seed)  flipper@0 payload@62
+
+=== TRAIN + EVAL per arm ===
+
+  [softmax]  n_params=4769
+    RED  0-step NRMSE  train=1.001846  eval=1.001049  [OK]
+    POST steps=150  train NRMSE=0.745419   eval NRMSE=1.248126
+    eval bootstrap_ci (n_boot=400) = [1.213678, 1.288829]
+
+  [pivot_signed]  n_params=4769
+    RED  0-step NRMSE  train=1.001882  eval=1.001075  [OK]
+    POST steps=150  train NRMSE=0.766081   eval NRMSE=1.236533
+    eval bootstrap_ci (n_boot=400) = [1.195592, 1.286374]
+
+  [pivot_unsigned]  n_params=4769
+    RED  0-step NRMSE  train=1.001840  eval=1.001050  [OK]
+    POST steps=150  train NRMSE=0.757119   eval NRMSE=1.264289
+    eval bootstrap_ci (n_boot=400) = [1.222786, 1.317883]
+
+  [windowed_signed]  n_params=4769
+    RED  0-step NRMSE  train=1.002476  eval=1.001336  [OK]
+    POST steps=150  train NRMSE=0.670246   eval NRMSE=1.240181
+    eval bootstrap_ci (n_boot=400) = [1.203462, 1.275511]
+
+=== PARAM MATCH (arm 1 vs 2/3, must be within 10%) ===
+  softmax=4769  pivot_signed=4769  ratio=0.0000
+  softmax=4769  pivot_unsigned=4769  ratio=0.0000
+
+=== WALL CLOCK: 99.725 s ===
+
+=== RUN 2026-08-26 12:49:52 s=64 d=24 steps=150 n_train=1024 n_eval=2048 seed=0 arms=['softmax', 'pivot_signed', 'pivot_unsigned', 'windowed_signed'] task=e3_t32 ===
+torch 2.5.1+cu121  torch.get_num_threads()=2  device=cpu (no .cuda() anywhere in this file)
+
+=== E-TASK e3_t32: t* = 32 (difficulty dial, LOOP_PROMPT.md 1.7) ===
+  Model hop budgets, to read the ladder against: softmax 1, pivot_signed / pivot_unsigned / windowed_signed 2.
+  TRUNCATION LADDER -- NRMSE of a FIXED k-budget reading
+  against the label. The label requires iteration iff this is
+  bounded away from 0 at small k and tightens with k. A k=1
+  reading at ~0 would mean this task is a static expression of
+  x, like the two tasks registered before it.
+    k=   0   NRMSE=0.987253
+    k=   1   NRMSE=0.975330
+    k=   2   NRMSE=0.956260
+    k=   4   NRMSE=0.919398
+    k=   8   NRMSE=0.856915
+    k=  16   NRMSE=0.692908
+    k=  32   NRMSE=0.000000
+    k=  33   NRMSE=0.000000
+
+=== BAR CALIBRATION (must pass before any arm is credited) ===
+      predict_the_mean 1.000000
+          payload_only 1.023822
+                oracle 0.000000
+    flipper_dependence 0.359005
+   trained_two_feature 0.117606
+  BAR CALIBRATED  -- BAR CALIBRATED
+
+=== DATA (same train/eval batches reused across every arm) ===
+  train: n=1024 seed=0  flipper@31 payload@62
+  eval : n=2048 seed=12345 (DIFFERENT seed)  flipper@31 payload@62
+
+=== TRAIN + EVAL per arm ===
+
+  [softmax]  n_params=4769
+    RED  0-step NRMSE  train=1.000667  eval=1.001064  [OK]
+    POST steps=150  train NRMSE=0.691176   eval NRMSE=1.357586
+    eval bootstrap_ci (n_boot=400) = [1.298238, 1.435836]
+
+  [pivot_signed]  n_params=4769
+    RED  0-step NRMSE  train=1.000695  eval=1.001065  [OK]
+    POST steps=150  train NRMSE=0.708670   eval NRMSE=1.311444
+    eval bootstrap_ci (n_boot=400) = [1.248311, 1.377358]
+
+  [pivot_unsigned]  n_params=4769
+    RED  0-step NRMSE  train=1.000665  eval=1.001060  [OK]
+    POST steps=150  train NRMSE=0.704804   eval NRMSE=1.321131
+    eval bootstrap_ci (n_boot=400) = [1.266128, 1.381701]
+
+  [windowed_signed]  n_params=4769
+    RED  0-step NRMSE  train=1.000522  eval=1.001497  [OK]
+    POST steps=150  train NRMSE=0.610691   eval NRMSE=1.372158
+    eval bootstrap_ci (n_boot=400) = [1.322386, 1.422053]
+
+=== PARAM MATCH (arm 1 vs 2/3, must be within 10%) ===
+  softmax=4769  pivot_signed=4769  ratio=0.0000
+  softmax=4769  pivot_unsigned=4769  ratio=0.0000
+
+=== WALL CLOCK: 90.650 s ===
+
+=== RUN 2026-08-26 12:51:27 s=64 d=24 steps=150 n_train=1024 n_eval=2048 seed=0 arms=['softmax', 'pivot_signed', 'pivot_unsigned', 'windowed_signed'] task=e3_t8 ===
+torch 2.5.1+cu121  torch.get_num_threads()=2  device=cpu (no .cuda() anywhere in this file)
+
+=== E-TASK e3_t8: t* = 8 (difficulty dial, LOOP_PROMPT.md 1.7) ===
+  Model hop budgets, to read the ladder against: softmax 1, pivot_signed / pivot_unsigned / windowed_signed 2.
+  TRUNCATION LADDER -- NRMSE of a FIXED k-budget reading
+  against the label. The label requires iteration iff this is
+  bounded away from 0 at small k and tightens with k. A k=1
+  reading at ~0 would mean this task is a static expression of
+  x, like the two tasks registered before it.
+    k=   0   NRMSE=0.943318
+    k=   1   NRMSE=0.887218
+    k=   2   NRMSE=0.824106
+    k=   4   NRMSE=0.667859
+    k=   8   NRMSE=0.000000
+    k=   9   NRMSE=0.000000
+
+=== BAR CALIBRATION (must pass before any arm is credited) ===
+      predict_the_mean 1.000000
+          payload_only 1.061183
+                oracle 0.000000
+    flipper_dependence 0.659676
+   trained_two_feature 0.092893
+  BAR CALIBRATED  -- BAR CALIBRATED
+
+=== DATA (same train/eval batches reused across every arm) ===
+  train: n=1024 seed=0  flipper@55 payload@62
+  eval : n=2048 seed=12345 (DIFFERENT seed)  flipper@55 payload@62
+
+=== TRAIN + EVAL per arm ===
+
+  [softmax]  n_params=4769
+    RED  0-step NRMSE  train=0.998061  eval=1.002916  [INSTRUMENT BROKEN]
+INSTRUMENT BROKEN: arm=softmax untrained NRMSE below 1.0 (or NaN/Inf). Aborting, crediting nothing.
+
+=== RUN 2026-08-26 12:52:14 s=64 d=24 steps=150 n_train=2048 n_eval=4096 seed=0 arms=['softmax', 'pivot_signed', 'pivot_unsigned', 'windowed_signed'] task=e3_t8 ===
+torch 2.5.1+cu121  torch.get_num_threads()=2  device=cpu (no .cuda() anywhere in this file)
+
+=== E-TASK e3_t8: t* = 8 (difficulty dial, LOOP_PROMPT.md 1.7) ===
+  Model hop budgets, to read the ladder against: softmax 1, pivot_signed / pivot_unsigned / windowed_signed 2.
+  TRUNCATION LADDER -- NRMSE of a FIXED k-budget reading
+  against the label. The label requires iteration iff this is
+  bounded away from 0 at small k and tightens with k. A k=1
+  reading at ~0 would mean this task is a static expression of
+  x, like the two tasks registered before it.
+    k=   0   NRMSE=0.944013
+    k=   1   NRMSE=0.880512
+    k=   2   NRMSE=0.815162
+    k=   4   NRMSE=0.674331
+    k=   8   NRMSE=0.000000
+    k=   9   NRMSE=0.000000
+
+=== BAR CALIBRATION (must pass before any arm is credited) ===
+      predict_the_mean 1.000000
+          payload_only 1.055989
+                oracle 0.000000
+    flipper_dependence 0.668958
+   trained_two_feature 0.096279
+  BAR CALIBRATED  -- BAR CALIBRATED
+
+=== DATA (same train/eval batches reused across every arm) ===
+  train: n=2048 seed=0  flipper@55 payload@62
+  eval : n=4096 seed=12345 (DIFFERENT seed)  flipper@55 payload@62
+
+=== TRAIN + EVAL per arm ===
+
+  [softmax]  n_params=4769
+    RED  0-step NRMSE  train=0.999442  eval=0.998051  [INSTRUMENT BROKEN]
+INSTRUMENT BROKEN: arm=softmax untrained NRMSE below 1.0 (or NaN/Inf). Aborting, crediting nothing.
+
+=== RUN 2026-08-26 12:52:52 s=64 d=24 steps=150 n_train=2048 n_eval=4096 seed=0 arms=['softmax', 'pivot_signed', 'pivot_unsigned', 'windowed_signed'] task=e3_t2 ===
+torch 2.5.1+cu121  torch.get_num_threads()=2  device=cpu (no .cuda() anywhere in this file)
+
+=== E-TASK e3_t2: t* = 2 (difficulty dial, LOOP_PROMPT.md 1.7) ===
+  Model hop budgets, to read the ladder against: softmax 1, pivot_signed / pivot_unsigned / windowed_signed 2.
+  TRUNCATION LADDER -- NRMSE of a FIXED k-budget reading
+  against the label. The label requires iteration iff this is
+  bounded away from 0 at small k and tightens with k. A k=1
+  reading at ~0 would mean this task is a static expression of
+  x, like the two tasks registered before it.
+    k=   0   NRMSE=0.817943
+    k=   1   NRMSE=0.574068
+    k=   2   NRMSE=0.000000
+    k=   3   NRMSE=0.000000
+
+=== BAR CALIBRATION (must pass before any arm is credited) ===
+      predict_the_mean 1.000000
+          payload_only 1.151746
+                oracle 0.000000
+    flipper_dependence 1.137541
+   trained_two_feature 0.069189
+  BAR CALIBRATED  -- BAR CALIBRATED
+
+=== DATA (same train/eval batches reused across every arm) ===
+  train: n=2048 seed=0  flipper@61 payload@62
+  eval : n=4096 seed=12345 (DIFFERENT seed)  flipper@61 payload@62
+
+=== TRAIN + EVAL per arm ===
+
+  [softmax]  n_params=4769
+    RED  0-step NRMSE  train=0.995634  eval=0.994451  [INSTRUMENT BROKEN]
+INSTRUMENT BROKEN: arm=softmax untrained NRMSE below 1.0 (or NaN/Inf). Aborting, crediting nothing.
+
+=== RUN 2026-08-26 12:53:32 s=64 d=24 steps=150 n_train=2048 n_eval=4096 seed=0 arms=['softmax', 'pivot_signed', 'pivot_unsigned', 'windowed_signed'] task=e3_t1 ===
+torch 2.5.1+cu121  torch.get_num_threads()=2  device=cpu (no .cuda() anywhere in this file)
+
+=== E-TASK e3_t1: t* = 1 (difficulty dial, LOOP_PROMPT.md 1.7) ===
+  Model hop budgets, to read the ladder against: softmax 1, pivot_signed / pivot_unsigned / windowed_signed 2.
+  TRUNCATION LADDER -- NRMSE of a FIXED k-budget reading
+  against the label. The label requires iteration iff this is
+  bounded away from 0 at small k and tightens with k. A k=1
+  reading at ~0 would mean this task is a static expression of
+  x, like the two tasks registered before it.
+    k=   0   NRMSE=0.703436
+    k=   1   NRMSE=0.000000
+    k=   2   NRMSE=0.000000
+
+=== BAR CALIBRATION (must pass before any arm is credited) ===
+      predict_the_mean 1.000000
+          payload_only 1.218138
+                oracle 0.000000
+    flipper_dependence 1.409244
+   trained_two_feature 0.057939
+  BAR CALIBRATED  -- BAR CALIBRATED
+
+=== DATA (same train/eval batches reused across every arm) ===
+  train: n=2048 seed=0  flipper@62 payload@62
+  eval : n=4096 seed=12345 (DIFFERENT seed)  flipper@62 payload@62
+
+=== TRAIN + EVAL per arm ===
+
+  [softmax]  n_params=4769
+    RED  0-step NRMSE  train=0.993760  eval=0.993600  [INSTRUMENT BROKEN]
+INSTRUMENT BROKEN: arm=softmax untrained NRMSE below 1.0 (or NaN/Inf). Aborting, crediting nothing.

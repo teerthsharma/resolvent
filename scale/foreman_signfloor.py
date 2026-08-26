@@ -144,8 +144,12 @@ def sign_margin(q: torch.Tensor, k: torch.Tensor, *, rho: float, lam: float,
 
 
 # --------------------------------------------------------------- arm geometries
-def harness_batch(n: int = N, seed: int = SEED):
-    x, y, _f, _p = make_batch(n, S, D, d_model=DMODEL, seed=seed)
+def harness_batch(n: int = N, seed: int = SEED, s: int = S, d: int = D):
+    """The harness batch. `s`/`d` default to the shipped M3 geometry, so every
+    published call is bitwise unchanged; they are parameters only so the same
+    training path can be reached at the long-context cell (`s=512, d=256`) that
+    `scale/foreman_consequence.py` reads the d >= 256 falsifier at."""
+    x, y, _f, _p = make_batch(n, s, d, d_model=DMODEL, seed=seed)
     return x, y
 
 
@@ -369,14 +373,56 @@ def value_path_flip_rate(kind: str, *, nonlinear: bool, n: int = N,
                 seed=seed, j=j, gain=gain)
 
 
-def train_arm(kind: str, *, steps: int, n_train: int, seed: int = SEED):
+def value_path_repeat(kinds=("pivot_unsigned", "pivot_signed"), *, steps: int,
+                      n_train: int, seeds=(0,), n: int = N) -> list:
+    """The J3 reading, repeated across SEEDS at a stated training budget.
+
+    The J3 refutation shipped on ONE seed at `n_train=2048`: the trained
+    NON-NEGATIVE arm signed `0.492188` of drawn third-token interventions and
+    the same weights with `GELU -> nn.Identity()` signed `0.000000`. Both halves
+    are single-seed readings of a rate, and a rate read once has no interval, so
+    the claim was shipped with "repeat before any S2 number ships" attached to
+    it. This is that repeat, at the money setting.
+
+    The nonlinear and linear reads share ONE trained model per (kind, seed) --
+    `value_path_flip_rate` replaces `arm.mlp[1]` IN PLACE, so the linear read
+    takes a deep copy and the two rows differ by that one object and by nothing
+    else, which is the entire content of the control.
+    """
+    import copy
+
+    out = []
+    for seed in seeds:
+        for kind in kinds:
+            t0 = time.time()
+            model, _mu, _sd = train_arm(kind, steps=steps, n_train=n_train,
+                                        seed=seed)
+            for nonlinear in (True, False):
+                arm = model if nonlinear else copy.deepcopy(model)
+                r = value_path_flip_rate(kind, nonlinear=nonlinear, n=n,
+                                         seed=seed, arm=arm)
+                r.update(steps=steps, n_train=n_train, phase="trained",
+                         seconds=round(time.time() - t0, 3))
+                out.append(r)
+    return out
+
+
+def train_arm(kind: str, *, steps: int, n_train: int, seed: int = SEED,
+              s: int = S, d: int = D, make=None):
     """The shipped training loop, returning the model. Same optimizer, lr and
     target standardisation as `m3_capability.run_arm`; factored out so the sign
     report and the value-path probe read the SAME trained weights instead of two
-    separately-trained models that differ by an Adam trajectory."""
-    x, y = harness_batch(n_train, seed)
+    separately-trained models that differ by an Adam trajectory.
+
+    `s`, `d` and `make` all default to the shipped path -- `make=None` builds
+    `m3.Arm(kind, s)` exactly as before -- so every number already taken through
+    this function is reproduced by the same call. `make` exists so an arm that
+    is not an entry of `m3.ARMS` (the quintuple's `settled` / `twin` cells) can
+    be trained by THIS loop instead of a second copy of it.
+    """
+    x, y = harness_batch(n_train, seed, s, d)
     torch.manual_seed(seed)
-    model = m3.Arm(kind, S)
+    model = m3.Arm(kind, s) if make is None else make(kind, s)
     opt = torch.optim.Adam(model.parameters(), lr=m3.LR)
     mu = float(y.mean())
     sd = float(y.std(unbiased=False)) or 1.0
@@ -404,7 +450,32 @@ def main(argv=None) -> int:
                     help="training steps for the trained read; 0 skips it")
     ap.add_argument("--n-train", type=int, default=2048)
     ap.add_argument("--out", default="results/foreman_signfloor.jsonl")
+    ap.add_argument("--value-path-seeds", nargs="*", type=int, default=None,
+                    help="repeat the J3 third-token sign reading at trained "
+                         "weights over these seeds, and print nothing else")
     a = ap.parse_args(argv)
+
+    if a.value_path_seeds is not None:
+        print("J3 VALUE-PATH REPEAT  steps=%d n_train=%d seeds=%s n_draw=%d "
+              "threads=%d" % (a.steps, a.n_train, a.value_path_seeds, N,
+                              torch.get_num_threads()))
+        cols = ("rate", "k", "used", "neg_influence_frac", "min_influence")
+        h = "%-16s %-9s %6s" % ("kind", "nonlinear", "seed") + "".join(
+            " %20s" % c for c in cols)
+        print(h)
+        print("-" * len(h))
+        rows = value_path_repeat(steps=a.steps, n_train=a.n_train,
+                                 seeds=a.value_path_seeds)
+        for r in rows:
+            print("%-16s %-9s %6d" % (r["kind"], r["nonlinear"], r["seed"])
+                  + "".join(" %20.6f" % r[c] if not isinstance(r[c], int)
+                            else " %20d" % r[c] for c in cols))
+        p = pathlib.Path(__file__).resolve().parents[1] / a.out
+        with p.open("a", encoding="utf-8") as f:
+            for r in rows:
+                f.write(json.dumps(r) + "\n")
+        print("\nwrote %d rows to %s" % (len(rows), a.out))
+        return 0
 
     x, _y = harness_batch()
     hdr = ("%-16s" % "arm") + "".join("%14s" % c for c in _COLS)

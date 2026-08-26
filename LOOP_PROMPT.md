@@ -264,6 +264,35 @@ parameters matches the signed and settled arms on consequence fidelity at every
 distance `d ≥ 256`, the operator contributes nothing behavioral and the signed
 program retires on its own terms (RULE 5: Retire).
 
+### 1.7d CREDIT ROUTING ON THE E-LADDER, AND THE E4 CANDIDATE (House amendment, it.10)
+
+**E3 shares E1's oracle.** `M3_TASKS` registers every `e3_t{t}` with
+`equilibrium_oracle` — the same signed path sum for which E1 is declared a
+rigged demo (`scale/negation_scope.py:635` and `:640`). The settled arm's own
+resolvent computes that object, so **`settled − softmax` on any e3 task is
+credited nothing**: it inherits E1's rig at every chain length. Credit on the
+E-ladder flows through exactly one contrast — **`settled − twin` at matched
+parameters, read across the `t*` ladder** — because the twin carries the
+identical mixture and differs only in the iteration. The believable signature
+is dose-response: the contrast compatible with zero at `t* ≤ 1` and growing
+with `t*`. Flat in `t*` ⇒ routing-only (K-2E). Nonzero at `t* ≤ 1` ⇒ capacity
+leakage (G4 shape). `e2_consequence` does not share the oracle and keeps both
+contrasts.
+
+**E4 candidate — the Rips corpus (`ceq/rips.py`), admitted CONDITIONALLY.**
+The label must be the post-bridge global connectivity fact — same-component
+for a marked node pair, tokens carrying incidence rows — never the component
+count, which local density statistics predict away from criticality. Near the
+transition one bridge edge flips the label and the iteration depth required is
+the graph diameter, which diverges at the critical point: a real `t*`, not a
+knob. **Admission gates, RED-first, both must print before any E4 number is
+read:** (a) a `k`-hop label-propagation truncation is bounded away from the
+label and tightens with `k` on the critical cases (§1.7 property 2, verbatim);
+(b) a static decoder on local degree statistics FAILS on the critical cases —
+it is expected to pass on `StableSparse_S2Rips_64` and
+`SupercriticalDense_S2Rips_256`, and if it also passes at criticality, E4 is
+another adjacency and is struck without appeal.
+
 ### 1.8 STATISTICS RULE — effect-first (House amendment, it.7)
 
 `scale/eprocess.py` proves `MIN_T_MIXTURE = 13`: no contrast enters the

@@ -28,7 +28,7 @@ CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.
 ## THE ONE-HOT CONTROL FIRED, AND IN THE DIRECTION NOBODY PREDICTED
 
 **`argmax` is WORSE than plain softmax** - `-0.118456`, interval
-`[-0.134115, -0.102204]`, well clear of zero. Collapsing the pivot weights to a
+`[-0.134115, -0.102786]`, well clear of zero. Collapsing the pivot weights to a
 single one-hot reading **loses** what the architecture gains.
 
 **So the win is not "look up the best pivot."** Reading one pivot is worse than
@@ -335,7 +335,7 @@ a coin does.**
 
 ## AND THE PART THAT IS A REAL RESULT
 
-    settled vs softmax   d = +0.108437   CI [+0.068181, +0.146551]   5/5 seeds
+    settled vs softmax   d = +0.108437   CI [+0.068181, +0.147110]   5/5 seeds
     twin    vs softmax   d = +0.111396   CI [+0.100873, +0.121920]   5/5 seeds
 
 **BOTH ARMS BEAT SOFTMAX ON EVERY SEED WITH INTERVALS EXCLUDING ZERO, BY ABOUT THE

@@ -1,0 +1,20 @@
+
+=== K-5E RUN 2026-08-26 12:48:04 s=64 d=24 steps=150 n_train=1024 n_eval=512 seeds=[0, 1] cells=['softmax', 'twin', 'settled'] tasks=['e3_t1', 'e3_t2', 'e3_t8', 'e3_t32', 'e1_anchor'] ===
+torch 2.5.1+cu121  threads=2  device=cpu
+ABSOLUTE BAR: NRMSE 1.0 is predict-the-mean. K-5E asks only whether a cell is BELOW it.
+        task   t*      cell  n_par    0-step      eval      verdict       s
+       e3_t1    1   softmax   4769  0.990726  0.895545    BEATS BAR    17.0
+       e3_t1    1   softmax   4769  1.006690  0.874101    BEATS BAR    18.0
+       e3_t1    1      twin   4769  0.990479  0.863888    BEATS BAR    34.4
+       e3_t1    1      twin   4769  1.006790  0.873763    BEATS BAR    37.9
+       e3_t1    1   settled   4769  0.990390  0.859801    BEATS BAR    44.5
+       e3_t1    1   settled   4769  1.006859  0.872311    BEATS BAR    46.8
+       e3_t2    2   softmax   4769  0.992853  1.090031 AT/ABOVE BAR    15.3
+       e3_t2    2   softmax   4769  1.011421  1.001640 AT/ABOVE BAR    15.4
+       e3_t2    2      twin   4769  0.992644  0.972047    BEATS BAR    24.5
+       e3_t2    2      twin   4769  1.011445  1.044166 AT/ABOVE BAR    32.3
+       e3_t2    2   settled   4769  0.992621  0.989211    BEATS BAR    45.5
+       e3_t2    2   settled   4769  1.011471  1.045285 AT/ABOVE BAR    48.8
+       e3_t8    8   softmax   4769  0.998414  1.628593 AT/ABOVE BAR    19.9
+       e3_t8    8   softmax   4769  1.016579  1.111736 AT/ABOVE BAR    20.0
+       e3_t8    8      twin   4769  0.998344  1.200797 AT/ABOVE BAR    32.8

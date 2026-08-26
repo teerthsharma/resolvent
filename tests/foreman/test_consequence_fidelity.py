@@ -152,6 +152,40 @@ def test_the_interval_is_the_exact_binomial_inversion_and_not_wilson():
     assert clopper_pearson(n, n, alpha=alpha)[1] == 1.0
 
 
+def test_consequence_fidelity_and_nrmse_dissociate_in_both_directions():
+    """The check that this is a NEW measurement plane and not NRMSE renamed.
+
+    Two planted models, drawn on the same batch, dissociate the two columns:
+
+      the ORACLE PLUS A CONSTANT -- every intervention effect is reproduced
+      exactly, so consequence fidelity is 1.0 and the calibration slope is 1.0,
+      while NRMSE is driven arbitrarily far above the 1.0 bar by the offset;
+
+      the CONSTANT PREDICTOR -- NRMSE is exactly 1.0 when the constant is the
+      mean, the definition of the bar, while `dy_hat` is identically 0 on every
+      draw and consequence fidelity is 0.0.
+
+    So neither column determines the other, in either direction. That is why
+    the metric can still order arms in the region where NRMSE has saturated at
+    'everything is worse than a constant'.
+    """
+    from scale.foreman_consequence import consequence_fidelity
+    from scale.negation_scope import nrmse
+
+    x, y, f, p = _batch()
+
+    off = consequence_fidelity(lambda xx: oracle(xx, f, p) + 10.0, x, f, p, seed=11)
+    assert off["sign_match"] == 1.0
+    assert off["slope"] == pytest.approx(1.0, abs=1e-4)
+    assert nrmse(oracle(x, f, p) + 10.0, y) > 5.0
+
+    const = y.mean().expand_as(y)
+    flat = consequence_fidelity(lambda xx: y.mean().expand(xx.shape[0]), x, f, p, seed=11)
+    assert nrmse(const, y) == pytest.approx(1.0, abs=1e-5)
+    assert flat["sign_match"] == 0.0
+    assert flat["n_dyhat_exact_zero"] == flat["n_used"]
+
+
 def test_the_slope_recovers_a_planted_gain():
     """(b) of 1.7c. The slope must be a measurement: a planted gain of 3.0 must
     come back as 3.0 with an interval that EXCLUDES the un-planted 1.0."""

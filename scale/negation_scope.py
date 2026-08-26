@@ -43,6 +43,7 @@ before any arm is credited with beating it:
 from __future__ import annotations
 
 import argparse
+import functools
 import math
 import pathlib
 import sys
@@ -193,15 +194,472 @@ def counter_squared_flipper_dependence(s: int) -> float:
     return 4.0 * (tot / 2.0 ** m) / s
 
 
+# ==========================================================================
+# THE E-TASK FAMILY -- THE EQUILIBRIUM BECOMES THE LABEL (LOOP_PROMPT.md 1.7)
+#
+# WHAT THIS SECTION IS FOR. The two tasks above are STATIC EXPRESSIONS of their
+# input -- a product of two entries, and a sum squared. Neither has a fixed
+# point and neither needs an iteration, so an arm that runs a settling loop to
+# convergence and then predicts one of them has been asked to show a settling
+# advantage on a task where settling has nothing to compute. The project's goal
+# sentence names the prediction TARGET as an equilibrium; until this section
+# nothing in the corpus put one in a label.
+#
+# TWO FAMILIES, AND THEY ARE DIFFERENT OBJECTS ON PURPOSE.
+#
+#   the CHAIN family (E1, E3)  -- z* = (I - A)^{-1} b for a strictly lower
+#       triangular signed A carried in the tokens. Well-posedness is NILPOTENCY:
+#       (I - A) is invertible for every draw and the resolvent is a TERMINATING
+#       sum, so the stabilisation time t* is EXACT rather than asymptotic. That
+#       exactness is the whole point of E3 -- a dose-response dial that is a
+#       hop count, not a tolerance.
+#
+#   the CONSEQUENCE family (E2) -- the coordinate of the new fixed point of a
+#       damped best-response game after a one-token do()-shock. Well-posedness
+#       is CONTRACTION, and the temperature comes from `ceq.nash.safe_tau`,
+#       which already computes the threshold; nothing is invented here.
+#
+# THE ENCODING. An M3 example is a [s, d_model] float tensor, not a string, so
+# `make_batch` builds the tensor and each family overwrites the channels it
+# owns. The noise channels, the dtype, the payload draw and the (f, p) geometry
+# stay the shipped ones and cannot drift. The payload channel is KEPT in both
+# families, carrying an independent draw the label does not depend on, so
+# `calibrate_bar`'s payload_only clause stays a live control.
+# ==========================================================================
+from ceq.nash import safe_tau                                     # noqa: E402
+
+#: the chain's sub-diagonal coefficient, at every position. The first noise
+#: channel, repurposed -- the same move `counter_squared` made with CH_FLIP.
+CH_DRIVE = CH_NOISE
+
+#: E2's game: `E_GAME` players, one row of the raw game matrix per token in
+#: channels CH_GAME .. CH_GAME + E_GAME - 1, the bias in CH_GAME_BIAS. Six
+#: players fit d_model=16 with seven noise channels left over.
+E_GAME = 6
+CH_GAME = CH_NOISE
+CH_GAME_BIAS = CH_NOISE + E_GAME
+
+#: `safe_tau`'s SHIPPED default margin. The Lipschitz constant of
+#: `s -> sigmoid((M s + b) / tau)` is `||M||_2 / (4 tau)`, and `safe_tau`
+#: returns `margin * ||M||_2 / 4`, so the constant is exactly `1 / margin` for
+#: every game it is asked about -- a contraction for every drawn instance, by
+#: construction rather than by rejection sampling.
+E_TAU_MARGIN = 1.25
+E_LIPSCHITZ = 1.0 / E_TAU_MARGIN
+
+E2_ITERS = 200                 # best-response sweeps taken as the fixed point
+E2_RESIDUAL_TOL = 1e-5         # the builder raises above this
+E2_DIAL_TOL = 1e-3             # the tolerance E2's printed t* is quoted at
+
+#: E2's difficulty dial. The chain family terminates, so its t* is a hop count.
+#: E2 CONTRACTS, so its dial is the sweep count at which the closed-form bound
+#: `E_LIPSCHITZ ** k` first falls below `E2_DIAL_TOL`. That bound is
+#: conservative and is labelled as such: the MEASURED crossing of 1e-3 is at
+#: k = 16 (n=2048, s=64, d=24, seed=0, this machine), against the bound's 31.
+E2_T_STAR = math.ceil(math.log(E2_DIAL_TOL) / math.log(E_LIPSCHITZ))
+
+#: MEASURED step budget for E2's trained positive control (`calibrate_bar`
+#: clause 5). The clause trains its control on the RAW label while `run_arm`
+#: trains every arm on the STANDARDISED one, so a small-scale label makes the
+#: control strictly harder than the arms' own task. E2's label has std about
+#: 0.062, and at the shipped 150 steps the control reads 2.446646 -- above the
+#: bar, so the gate would report BROKEN for a reason that is about the control's
+#: optimisation and not about the task. At 600 it reads 0.922725, at 2000
+#: 0.525985 (n=2048, s=64, d=24, seed=0, lr=0.02, this machine). 600 is the
+#: smallest of those three that passes, and it is a measurement, not a
+#: preference. E2 must be run with `--steps 600` or more.
+E2_STEPS = 600
+
+
+def equilibrium_oracle(x: torch.Tensor, f: int, p: int) -> torch.Tensor:
+    """z*_{s-1}, the last coordinate of `(I - A)^{-1} b`. Same signature as
+    `oracle`, recomputed from `x`, nothing stored.
+
+    `A` is the strictly lower triangular matrix whose only nonzero band is the
+    sub-diagonal `A[i, i-1] = x[i, CH_DRIVE]`, and `b[i] = x[i, CH_FLIP]`. The
+    resolvent of a strictly lower triangular matrix is a terminating sum, so
+    `z* = sum_m A^m b` and its last coordinate is the forward scan below --
+    equivalently the signed path sum `sum_j (prod_{k>j} a_k) b_j`.
+
+    `f` and `p` are accepted and ignored: like `counter_squared_oracle`, this
+    task has no single decisive position, and the signature is kept so the
+    function is drop-in wherever `oracle` is.
+    """
+    a, b = x[:, :, CH_DRIVE], x[:, :, CH_FLIP]
+    z = torch.zeros(x.shape[0], dtype=x.dtype, device=x.device)
+    for i in range(x.shape[1]):
+        z = a[:, i] * z + b[:, i]
+    return z
+
+
+def equilibrium_hop_reading(x: torch.Tensor, k: int) -> torch.Tensor:
+    """The label as a `k`-HOP TRUNCATION: `sum_{m=0..k} (A^m b)_{s-1}`.
+
+    This is the object that decides whether the label needs an iteration at all.
+    Only the last `k + 1` tokens enter, so a model with a hop budget of `k`
+    cannot do better than this reading. Because the discarded tail is a sum of
+    `t* - k` independent unit-variance terms and the label is a sum of `t*` of
+    them, the truncation's NRMSE against the label is
+
+        sqrt((t* - k) / t*)   for k <= t*,   and exactly 0 for k >= t*
+
+    -- EXACTLY 1.0 at k = 0, bounded away from the label at every `k < t*`,
+    tightening with `k`, and EXACT at the full budget. The k = 0 end matters as
+    much as the k = t* end: it says a zero-hop reading of this label is
+    precisely the predict-the-mean predictor, so no part of the label is
+    legible without hops. If this read 0 at k = 1 the family would be a third
+    static task; `tests/cameron/test_m3_etasks.py` measures it at every rung.
+    """
+    a, b = x[:, :, CH_DRIVE], x[:, :, CH_FLIP]
+    s = x.shape[1]
+    z = torch.zeros(x.shape[0], dtype=x.dtype, device=x.device)
+    for i in range(max(0, s - 1 - k), s):
+        z = a[:, i] * z + b[:, i]
+    return z
+
+
+def equilibrium_features(x: torch.Tensor, f: int, p: int) -> torch.Tensor:
+    """The oracle features for `calibrate_bar`'s trained positive control.
+
+    The query token carries no driver (see `make_equilibrium_batch`), so the
+    label's last recursion step is exactly `z*_{s-1} = a_{s-1} z*_{s-2}` and the
+    control is handed those two numbers and must learn the multiply. That is the
+    SAME width and the SAME difficulty class as the shipped control's
+    (flipper, payload) product -- width 2, so this control's own initialisation
+    draw is identical to the shipped one -- and it is given the oracle's INPUTS,
+    never its output. Handing it `z*_{s-2}` alone does not work, and that is
+    measurable rather than argued: `a_{s-1}` is Rademacher, so predicting
+    `z*_{s-2}` gives NRMSE exactly `sqrt(2)`, above the bar at every `t*`.
+    """
+    a, b = x[:, :, CH_DRIVE], x[:, :, CH_FLIP]
+    s = x.shape[1]
+    z = torch.zeros(x.shape[0], dtype=x.dtype, device=x.device)
+    for i in range(s - 1):
+        z = a[:, i] * z + b[:, i]
+    return torch.stack([z, a[:, s - 1]], dim=-1)
+
+
+def make_equilibrium_batch(n: int, s: int, d: int, *, t_star: int | None = None,
+                           d_model: int = 16, seed: int = 0, device=None):
+    """(x, y, f, p) for the chain family. `t_star=None` means the full length.
+
+    THE STABILISATION TIME IS EXACT AND IT IS THE ONLY DIAL. The sub-diagonal is
+    set to zero at and before position `head = s - 1 - t_star`, so the chain
+    reaching the query at `s - 1` is exactly `t_star` hops long and `A` is
+    nilpotent of index `t_star + 1` on the coordinate that is read. `A^m b` at
+    coordinate `s-1` is identically zero for `m > t_star`, so the resolvent
+    terminates -- that is the well-posedness, and it is structural, not sampled.
+
+    THE COEFFICIENTS ARE RADEMACHER, NOT GAUSSIAN, AND THE DRIVERS ARE GAUSSIAN.
+    `|a_i| = 1` exactly inside the band, so every path weight has modulus 1 and
+    the label is `N(0, t_star + 1)` EXACTLY -- which is what puts the truncation
+    error and the flipper dependence in closed form with no constant fitted. The
+    operator is therefore NILPOTENT rather than a norm contraction, and that is
+    deliberate: a contraction would make `t*` a tolerance, and E3 needs it to be
+    a hop count. Making the drivers Rademacher too would collapse the label to a
+    parity times a magnitude, and this project already recorded parity as the
+    wrong target (`tests/cameron/test_parity_is_the_wrong_target.py`).
+
+    THE QUERY TOKEN CARRIES NO DRIVER: `b[s-1] = 0`. It was not zero in the
+    first version of this builder and that cost the family the harness's own
+    RED gate. `run_arm` requires the UNTRAINED arm to sit at or above NRMSE 1.0,
+    and every arm here computes `z = x + A@x` at row `s-1`, so the query token's
+    own channels reach the readout with ZERO hops. With a driver there, a
+    `1 / (t*+1)` share of the label's variance was legible before a single
+    training step and the untrained arm read BELOW the bar -- 0.993760 train /
+    0.993600 eval at t*=1, 0.999442 / 0.998051 at t*=8, n_train=2048,
+    n_eval=4096 -- so `m3_capability.py` aborted with INSTRUMENT BROKEN on three
+    of the five rungs. Zeroing it makes the zero-hop reading EXACTLY the
+    predict-the-mean predictor, which is the strongest form of the property this
+    family is for: no part of an equilibrium label should be readable without
+    hops.
+
+    `f` IS RETURNED AS THE HEAD OF THE CHAIN, not as `make_batch`'s flipper.
+    `make_batch` places its flipper at `s - 1 - d`, which for `t_star < d` sits
+    OUTSIDE the live band, where negating it moves the label by exactly zero and
+    the calibration's flipper clause would reject the correct task. The head is
+    the position whose driver the label depends on most, and reporting it keeps
+    `t_star` and the distance `d` independent knobs. `d` still positions the
+    distractor payload and is still range-checked by `make_batch`.
+    """
+    x, _y, _f, p = make_batch(n, s, d, d_model=d_model, seed=seed, device=device)
+    t = (s - 1) if t_star is None else int(t_star)
+    if not (1 <= t <= s - 1):
+        raise ValueError(f"t_star={t} does not fit in s={s}")
+    head = s - 1 - t
+    g = torch.Generator(device="cpu").manual_seed(seed + 777)
+    b = torch.randn(n, s, generator=g).to(x.device)
+    a = (torch.randint(0, 2, (n, s), generator=g).float() * 2 - 1).to(x.device)
+    a[:, :head + 1] = 0.0
+    b[:, s - 1] = 0.0
+    x[:, :, CH_FLIP] = b.to(x.dtype)
+    x[:, :, CH_DRIVE] = a.to(x.dtype)
+    return x, equilibrium_oracle(x, head, p), head, p
+
+
+def chain_flipper_dependence(s: int, *, t_star: int | None = None) -> float:
+    """The EXACT value `calibrate_bar`'s flipper_dependence must read, in closed
+    form -- no constant is fitted and no threshold is chosen.
+
+    Negating the driver at the head of the chain sends `b_head -> -b_head`, and
+    the head's path weight to the query has modulus 1, so the label moves by
+    exactly `2 |b_head|`. The label is a sum of the `t*` drivers at positions
+    `head .. s-2` with unit-modulus weights, so it is `N(0, t*)` exactly. Hence
+
+        flipper_dependence = 2 E|N(0,1)| / E|N(0, t*)| = 2 / sqrt(t*).
+
+    This is 2.0 for the negation-scope task and falls with `t*` here, because a
+    single driver is a smaller part of a longer path sum. That is not a defect;
+    it is the difficulty dial, seen through the bar.
+
+    THE BAND HAS A MINIMUM SAMPLE SIZE, MEASURED. The clause estimates a ratio
+    of two sample means, so the band is only a gate above the sampling spread.
+    Measured on this machine (torch 2.5.1+cu121, 2 threads), 16 seeds per cell,
+    s=64, d=24, as max |deviation from the exact value|:
+
+        t*      n=512     n=2048    n=4096    n=8192
+         1    0.103428   0.067644  0.039503  0.018844
+         2    0.079004   0.049572  0.038314  0.020496
+         8    0.102940   0.020662  0.010865  0.018129
+        32    0.040720   0.022376  0.014551  0.010011
+        63    0.029237   0.013445  0.007445  0.005243
+
+    At the shipped tolerance 0.05 the floor is therefore n >= 4096 for
+    t* in {1, 2}, n >= 2048 for t* = 8, and n >= 512 for t* >= 32. The distance
+    to the NEAREST WRONG RUNG is what the band has to cover and it does: t*=8
+    against t*=32 is 0.318511, t*=32 against t*=63 is 0.098155, both above 0.05
+    at every n at or above the floor. Both ends are measured; neither was chosen
+    to fit.
+    """
+    t = (s - 1) if t_star is None else int(t_star)
+    return 2.0 / math.sqrt(t)
+
+
+def consequence_game(x: torch.Tensor):
+    """(M, bias, tau) for E2's game, read off the tokens.
+
+    `M` is symmetrised, exactly as `ceq.nash.nash_operator` does, so the game is
+    a POTENTIAL game and its logit equilibrium is a stationary point of the
+    potential -- symmetry is enforced by the reader rather than stored, so no
+    draw can be asymmetric. `tau` is `ceq.nash.safe_tau` PER EXAMPLE. Calling
+    `safe_tau` on the whole batch would return the max over it, which makes the
+    label depend on the batch size; the per-example loop keeps the label a
+    function of the example alone, and it calls the SHIPPED function rather than
+    re-deriving `||M||_2 / 4` here.
+    """
+    g = x[:, :E_GAME, CH_GAME:CH_GAME + E_GAME]
+    m = (g + g.transpose(-2, -1)) / 2.0
+    bias = x[:, :E_GAME, CH_GAME_BIAS]
+    tau = torch.tensor([safe_tau(m[i], margin=E_TAU_MARGIN)
+                        for i in range(m.shape[0])],
+                       dtype=m.dtype, device=m.device)
+    return m, bias, tau
+
+
+def _br_sweeps(m, bias, tau, v, iters):
+    """`iters` damped best-response sweeps with player 0 CLAMPED to `v`.
+
+    Clamping is graph surgery, not a bias nudge: player 0's incoming edges are
+    removed and its stance is held, which is what `do(s_0 := v)` means. The
+    start is the barycentre `1/2`, the maximum-entropy point that privileges no
+    player -- the same start `qre_stance` uses.
+    """
+    st = torch.full((m.shape[0], E_GAME), 0.5, dtype=m.dtype, device=m.device)
+    st[:, 0] = v
+    for _ in range(iters):
+        st = torch.sigmoid(((m @ st.unsqueeze(-1)).squeeze(-1) + bias)
+                           / tau.unsqueeze(-1))
+        st[:, 0] = v
+    return st
+
+
+def consequence_oracle(x: torch.Tensor, f: int, p: int, *,
+                       k: int | None = None) -> torch.Tensor:
+    """The CONSEQUENCE of one token's intervention on a downstream equilibrium.
+
+        v  = sigmoid(x[:, f, CH_FLIP])            the intervening token's dose
+        y  = z*_{m-1} under do(s_0 := v)  -  z*_{m-1} under do(s_0 := 1 - v)
+
+    Both terms are coordinates of the NEW fixed point of the same contraction
+    system after a one-token do()-shock; the label is their contrast, and `k`
+    truncates the sweep count so the truncation ladder can be read.
+
+    WHY THE CONTRAST AND NOT THE RAW COORDINATE. The raw new-fixed-point
+    coordinate was built first and its own control killed it: an arm that
+    ignores the intervening token entirely and predicts the UN-INTERVENED
+    equilibrium reads NRMSE 0.194150 against it (n=2048, s=64, d=24, seed=0), so
+    96% of that label is the game draw and the intervention is a rounding error
+    -- the same "near zero BY CONSTRUCTION" shape this whole section exists to
+    remove, in a new dress. Against the contrast the shock-blind reading is the
+    zero predictor, whose NRMSE is `sqrt(1 + mean(y)**2 / var(y)) >= 1.0`
+    IDENTICALLY, for every game draw. The control cannot be passed by ignoring
+    the intervention.
+
+    THE MIRROR ALSO MAKES THE CALIBRATION EXACT. Negating the token sends
+    `v -> 1 - v`, which sends the label to MINUS ITSELF, so
+    `flipper_dependence` is exactly 2.0 PER EXAMPLE with no sampling spread at
+    any n -- the same exact 2.0 the negation-scope task has, reached by
+    antisymmetry rather than by a product.
+    """
+    m, bias, tau = consequence_game(x)
+    return _consequence_from_game(m, bias, tau,
+                                  torch.sigmoid(x[:, f, CH_FLIP]),
+                                  E2_ITERS if k is None else int(k))
+
+
+def _consequence_from_game(m, bias, tau, v, iters):
+    return (_br_sweeps(m, bias, tau, v, iters)[:, E_GAME - 1]
+            - _br_sweeps(m, bias, tau, 1.0 - v, iters)[:, E_GAME - 1])
+
+
+def unshocked_equilibrium(x: torch.Tensor, f: int, p: int) -> torch.Tensor:
+    """The label E2 REPLACED, kept as a wrong-task control.
+
+    No player is clamped, so nothing in this reading depends on the intervening
+    token and its flipper dependence is exactly 0.0. A band that accepted it
+    would be a band that cannot tell a consequence from a state.
+    """
+    m, bias, tau = consequence_game(x)
+    st = torch.full((m.shape[0], E_GAME), 0.5, dtype=m.dtype, device=m.device)
+    for _ in range(E2_ITERS):
+        st = torch.sigmoid(((m @ st.unsqueeze(-1)).squeeze(-1) + bias)
+                           / tau.unsqueeze(-1))
+    return st[:, E_GAME - 1]
+
+
+def consequence_features(x: torch.Tensor, f: int, p: int) -> torch.Tensor:
+    """The oracle features for `calibrate_bar`'s trained positive control: the
+    game's free entries, the bias, and the dose. 28 numbers, which is the
+    COMPLETE determining set with nothing precomputed -- the control is handed
+    the oracle's inputs and must solve the fixed point implicitly, never handed
+    a partial answer. Handing it the two clamped equilibria would make the
+    clause a subtraction and therefore vacuous.
+    """
+    m, bias, _tau = consequence_game(x)
+    iu = torch.triu_indices(E_GAME, E_GAME)
+    return torch.cat([m[:, iu[0], iu[1]], bias,
+                      torch.sigmoid(x[:, f, CH_FLIP]).unsqueeze(-1)], dim=-1)
+
+
+def make_consequence_batch(n: int, s: int, d: int, *, d_model: int = 16,
+                           seed: int = 0, device=None,
+                           settle_iters: int | None = None):
+    """(x, y, f, p) for E2. WELL-POSEDNESS IS ENFORCED HERE, NOT AT READ TIME.
+
+    Two things are checked on the drawn batch and BOTH raise rather than return:
+    the best-response map's Lipschitz constant must be `E_LIPSCHITZ` for every
+    example -- which it is by construction, because `safe_tau` sets the
+    temperature to `margin * ||M||_2 / 4` -- and the residual after the sweeps
+    must be below `E2_RESIDUAL_TOL`. A batch that did not settle is not a batch
+    of equilibria, and a caller that silently accepts one is reading a fixed
+    point that was published unconditionally after an iteration that did not
+    converge.
+
+    `settle_iters` exists ONLY so that check can be seen to fire: at 0 the
+    residual is the full step and the builder raises. The label always uses
+    `E2_ITERS`.
+
+    THE INTERVENING TOKEN IS `make_batch`'s FLIPPER, at `s - 1 - d`, so `d` is
+    still the retrieval distance between the intervention and the query while
+    the game itself sits on tokens 0 .. E_GAME-1.
+    """
+    x, _y, f, p = make_batch(n, s, d, d_model=d_model, seed=seed, device=device)
+    g = torch.Generator(device="cpu").manual_seed(seed + 5150)
+    x[:, :E_GAME, CH_GAME:CH_GAME + E_GAME] = torch.randn(
+        n, E_GAME, E_GAME, generator=g).to(x.device).to(x.dtype)
+    x[:, :E_GAME, CH_GAME_BIAS] = torch.randn(
+        n, E_GAME, generator=g).to(x.device).to(x.dtype)
+    x[:, :, CH_FLIP] = 0.0
+    x[:, f, CH_FLIP] = torch.randn(n, generator=g).to(x.device).to(x.dtype)
+
+    m, bias, tau = consequence_game(x)
+    lip = torch.linalg.matrix_norm(m, ord=2) / (4.0 * tau)
+    worst = float((lip - E_LIPSCHITZ).abs().max())
+    if worst > 1e-6:
+        raise ValueError(f"drawn game does not contract at safe_tau's margin: "
+                         f"max |L - {E_LIPSCHITZ}| = {worst:.3e}")
+    v = torch.sigmoid(x[:, f, CH_FLIP])
+    iters = E2_ITERS if settle_iters is None else int(settle_iters)
+    st = _br_sweeps(m, bias, tau, v, iters)
+    nxt = torch.sigmoid(((m @ st.unsqueeze(-1)).squeeze(-1) + bias)
+                        / tau.unsqueeze(-1))
+    nxt[:, 0] = v
+    resid = float((nxt - st).abs().max())
+    if resid > E2_RESIDUAL_TOL:
+        raise ValueError(f"consequence batch did not settle: residual "
+                         f"{resid:.3e} > {E2_RESIDUAL_TOL} after {iters} sweeps")
+    return x, _consequence_from_game(m, bias, tau, v, E2_ITERS), f, p
+
+
+def consequence_flipper_dependence(s: int) -> float:
+    """Exactly 2.0, by antisymmetry, at every `s` and every `n`. See
+    `consequence_oracle`."""
+    return 2.0
+
+
+def e_hop_reading(task: str, x: torch.Tensor, f: int, p: int, k: int):
+    """The `k`-budget reading of an E-task's label, for the truncation ladder.
+
+    ONE entry point, because the two families truncate different things and the
+    caller must not have to know which: the chain family truncates HOPS (only
+    the last `k+1` tokens enter), the consequence family truncates BEST-RESPONSE
+    SWEEPS. Both are "what a model with a budget of `k` could compute", which is
+    the quantity the ladder is about.
+    """
+    if task == "e2_consequence":
+        return consequence_oracle(x, f, p, k=k)
+    return equilibrium_hop_reading(x, k)
+
+
+def e_ladder_ks(t_star: int) -> list[int]:
+    """The rungs the ladder is printed at: powers of two up to the dial, plus
+    the dial itself and one past it, so the reading shows both the bound
+    tightening and where it stops."""
+    ks = {0, 1, 2, 4, 8, 16, 32, t_star, t_star + 1}
+    return sorted(k for k in ks if 0 <= k <= t_star + 1)
+
+
+#: task name -> callable(s) -> the difficulty dial `t*`. S2 asks for it printed
+#: per task, and it is a property of the TASK, so it lives beside the
+#: registration rather than in whichever caller happens to print it. The chain
+#: family's dial is an EXACT hop count; E2's is the sweep count at which the
+#: closed-form contraction bound reaches `E2_DIAL_TOL`, which is conservative
+#: and labelled so in `E2_T_STAR`.
+E_T_STAR = {
+    "e1_anchor": lambda s: s - 1,
+    "e2_consequence": lambda s: E2_T_STAR,
+    "e3_t1": lambda s: 1,
+    "e3_t2": lambda s: 2,
+    "e3_t8": lambda s: 8,
+    "e3_t32": lambda s: 32,
+}
+
+
 #: name -> (batch_fn, oracle_fn, feature_fn, expected flipper_dependence or None).
 #: The registration surface. `None` for the last field means "use the shipped
 #: one-sided clause"; a callable means the task supplies its own EXACT value and
 #: the clause becomes two-sided.
+#:
+#: E1 IS CREDITED NOTHING AND IT IS A RIGGED DEMO BY DESIGN. Its label is the
+#: signed path sum, which is the object the ceq resolvent computes, so an arm
+#: built on that resolvent is being asked to reproduce its own forward. It is
+#: here as a MUST-FIRE: an arm that cannot beat NRMSE 1.0 on the task its own
+#: construction computes tells us the harness cannot read an equilibrium label
+#: at all, and nothing downstream of it may be read (K-5E). No number taken from
+#: E1 is a capability claim about any construction.
 M3_TASKS = {
     "negation_scope": (make_batch, oracle, None, None),
     "counter_squared": (make_counter_batch, counter_squared_oracle,
                         counter_squared_features,
                         counter_squared_flipper_dependence),
+    "e1_anchor": (make_equilibrium_batch, equilibrium_oracle,
+                  equilibrium_features, chain_flipper_dependence),
+    "e2_consequence": (make_consequence_batch, consequence_oracle,
+                       consequence_features, consequence_flipper_dependence),
+    **{f"e3_t{t}": (functools.partial(make_equilibrium_batch, t_star=t),
+                    equilibrium_oracle, equilibrium_features,
+                    functools.partial(chain_flipper_dependence, t_star=t))
+       for t in (1, 2, 8, 32)},
 }
 
 

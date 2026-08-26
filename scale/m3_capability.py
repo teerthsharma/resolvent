@@ -47,7 +47,8 @@ import torch.nn as nn
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
 from ceq import bench
 from scale.negation_scope import (make_batch, nrmse, bootstrap_ci, calibrate_bar,
-                                  bar_verdict, M3_TASKS)
+                                  bar_verdict, M3_TASKS, E_T_STAR,
+                                  e_hop_reading, e_ladder_ks)
 from scale.pivot_probe import (select_pivots, pivot_hop2,
                                batched_select_pivots, batched_pivot_hop2)
 
@@ -258,6 +259,29 @@ def main():
               f"n_eval={a.n_eval} seed={a.seed} arms={a.arms} task={a.task} ===")
         print(f"torch {torch.__version__}  torch.get_num_threads()={torch.get_num_threads()}  "
               f"device=cpu (no .cuda() anywhere in this file)")
+
+        #: S2: the difficulty dial, printed per task. `t*` is how many hops
+        #: the label's own definition needs. It is a property of the TASK, so
+        #: it is read from the registry rather than restated here, and the
+        #: block prints ONLY for the E-family -- every line of a
+        #: negation_scope or counter_squared run stays byte-identical to the
+        #: ones already in this log, so no published reading is disturbed.
+        if a.task in E_T_STAR:
+            t_star = E_T_STAR[a.task](a.s)
+            print(f"\n=== E-TASK {a.task}: t* = {t_star} "
+                  f"(difficulty dial, LOOP_PROMPT.md 1.7) ===")
+            print("  Model hop budgets, to read the ladder against: softmax 1, "
+                  "pivot_signed / pivot_unsigned / windowed_signed 2.")
+            print("  TRUNCATION LADDER -- NRMSE of a FIXED k-budget reading")
+            print("  against the label. The label requires iteration iff this is")
+            print("  bounded away from 0 at small k and tightens with k. A k=1")
+            print("  reading at ~0 would mean this task is a static expression of")
+            print("  x, like the two tasks registered before it.")
+            xk, yk, fk, pk = batch_fn(a.n_eval, a.s, a.d, d_model=D_MODEL,
+                                      seed=a.seed + 12345)
+            for k in e_ladder_ks(t_star):
+                print(f"    k={k:>4}   NRMSE="
+                      f"{nrmse(e_hop_reading(a.task, xk, fk, pk, k), yk):.6f}")
 
         print("\n=== BAR CALIBRATION (must pass before any arm is credited) ===")
         cal = calibrate_bar(n=a.n_eval, s=a.s, d=a.d, steps=a.steps, lr=LR,
