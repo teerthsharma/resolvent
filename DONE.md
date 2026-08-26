@@ -4,6 +4,143 @@ Round 5 closed at `TWOSPHERES: BROKEN - ARM A, K1's dual slope, displacement
 clause`; its handoff is `done5.md` and its negative result is `D1.md`. That
 verdict is final and is not reopened.
 
+### ROUND 6, ITERATION 23 - 2026-08-26 - The leap goes to a fellow to be bound or killed, with both traps it could fall into named in advance.
+
+CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.
+
+ACTION (one): **dispatched Foreman to BIND OR KILL Dr House's leap.** This is the
+chain doing what it was written for - **House proposes, a fellow binds RED-first,
+and only then may a verdict cite it.** He is exempt from RED-first because five
+minutes does not fit a test, **and that exemption is exactly why his output cannot
+stand alone.**
+
+**WHY FOREMAN.** He owns the operator, the Gram, and **the beta sweep the
+prediction was extracted from** - and he has **twice this round reported against his
+own result**: the vacuous G3 control he caught before shipping, and the `0.510753`
+apparent refutation of his own bound that he chased down to the tolerance floor
+rather than explaining away. **A leap is best given to someone with a record of
+killing his own work.**
+
+**TRAP 1, NAMED BEFORE HE COULD FALL INTO IT.** The ratio `0.961793` came from
+**his** 72-cell sweep at **his** geometry, so **`Delta(G)` must be computed there.**
+Computing it at Cameron's trained projections and comparing against `0.961793`
+would be **measuring a different object** - the *"correct statement, wrong object"*
+error, made **nine times** in this project. **This is exactly where the tenth would
+go.** Trained is a **separate and larger** question: trained state-cone `Delta` is
+`83.6069`, **above the K-A float threshold**, so a small `Delta(G)` there would
+outweigh the random-init check.
+
+**TRAP 2, FROM A MISTAKE MADE TWO ITERATIONS AGO.** Use the **extreme-ray**
+diameter, never a mean or a sample - `scale/settle.py::column_diameter`, agreeing
+with scipy to `rel=1e-12` at six shapes. **Cameron had just reversed her own
+conclusion over `mean(tanh(Delta_i/4))` where Birkhoff's hypothesis is a
+SUPREMUM**, and the correction flipped the sign of her answer. **The same error
+twice in three iterations would be the round's fault, not bad luck.**
+
+**THE PART WORTH MORE THAN THE BOUND.** The certificate is finite **iff `G` is
+entrywise positive - iff the pivots overlap in support.** Orthogonal pivots put
+zeros in the Gram and no credit beyond beta survives. **If `Delta(G)` tracks pivot
+overlap, contraction becomes a property of the attention that MOVES WHEN THE
+WEIGHTS MOVE** - which is precisely what `kappa = beta` was not. **A must-fire is
+required with it**: disjoint-support pivots must read `Delta(G) = +inf`, **or the
+claim is unfalsifiable.**
+
+**HIS OWN KILL CONDITION, PASSED THROUGH VERBATIM:** *"If the ratio does not track
+`tanh(Delta(G)/4)` per-seed, the factorization is wrong and you kill this too."*
+**He named the condition that destroys his own proposal, unprompted.** Foreman is
+told **a killed leap reported plainly outranks a bound one reported loosely.**
+
+CHECKLIST: leap **DISPATCHED for binding**, both traps **named in advance**, kill
+condition **passed through verbatim**. Nothing claimed for it.
+
+**SCOREBOARD: 4** - unchanged. A hypothesis scores nothing.
+
+### ROUND 6, ITERATION 22 - 2026-08-26 - Dr House released, and returned a leap that changes which cone is certified.
+
+CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.
+
+**TRIGGER CHECK, all three required and all three held.** A theory was dying - the
+Birkhoff certificate does not apply to this map. The cause of death was **missing
+innovation, not missing evidence**: more draws will not make `T` linear and more
+seeds will not make `beta` a measurement. And the thing it was going to deliver is
+**still wanted** - it is D2's headline claim.
+
+**He was NOT released on T1**, whose premise Cameron had just measured false, **nor
+on K-A**, where positivity did not fail. **Releasing against a clean measurement is
+the one thing the round-5 precedent forbids.**
+
+## THE LEAP
+
+> *"You certified the wrong map. Stop certifying `T` on the state cone. Fold one
+> full iteration into pivot-weight space and certify the LINEAR piece that lives
+> there."*
+
+    w'_q  ~  gate_q * ( sum_p G_qp w_p ) ** beta        G_qp = <a_q, a_p>
+
+which is `P_beta o diag(gate) o G`. The diagonal is a **projective isometry and
+drops out**. `P_beta` is the dial. And **`G` is a `k x k` entrywise-positive LINEAR
+map**, so Lemmens-Nussbaum Thm 2.9's hypothesis is satisfied **verbatim** - the
+linearity objection that killed the original certificate **does not apply to `G`**:
+
+    kappa(T)  <=  beta * tanh( Delta(G) / 4 )
+
+**THE WHOLE LEAP IS WHICH CONE.** The measured `Delta_vertex = 101.3671 ..
+311.6091` nats lives on the `d`-dim **state** cone at logit scale `1.171e+01`.
+**`Delta(G)` lives on the `k`-simplex of ~7.9 pivots.**
+
+## HALF OF IT WAS VERIFIABLE IMMEDIATELY, AND IT CHECKS OUT
+
+He found the number **already in the corpse** - the attained-to-dial ratio across
+the published beta sweep [RUN, from numbers already in the record]:
+
+    beta   attained        ratio
+    0.25   0.240448   0.96179200
+     0.5   0.480897   0.96179400
+     0.9   0.865614   0.96179333
+                       spread = 2.000e-06
+
+**Constant to `2e-06` across a 3.6x range in beta.** A beta-independent residual
+factor is **exactly what a linear factor multiplying the dial looks like**.
+Inverting: `tanh(Delta(G)/4) = 0.961793` gives **`Delta(G) = 7.8772` nats**, and
+**he predicted "~7.88" without computing a Gram.**
+
+    cone                            Delta     tanh(D/4)      1-kappa
+    randn probe, STATE cone      101.3671      1.000000   1.947350e-22
+    trained, STATE cone           83.6069      1.000000   1.399659e-18
+    K-A float threshold           76.246190    1.000000   5.551115e-17
+    House's Delta(G), PIVOT cone   7.8772      0.961793   3.820689e-02
+
+**The state-cone diameter saturates `tanh`. The pivot-cone diameter is nowhere near
+it.**
+
+## THE PART WITH TEETH
+
+The certificate is finite **iff `G` is entrywise positive - iff the pivots overlap
+in support.** Trained effective support is **`3.60068` of `~7.9`**, so **trained
+attention EARNS its contraction through pivot overlap** - a property that **moves
+when the weights move**, which is exactly what `kappa = beta` was not.
+
+**STATUS: HYPOTHESIS.** The ratio constancy is `[RUN]`-verified; **`Delta(G)`
+itself is NOT measured - nobody has computed the trained pivot Gram.** It stays in
+**Open** until a fellow binds it.
+
+**ALSO THIS ITERATION: `done6.md` written and committed** - the round-6 work-done,
+320 lines, with the leap as its opening section.
+
+**AND CHASE PRODUCED A PRE-REGISTRATION.**
+`M3_QUINTUPLE_PREREGISTERED_READING.md` carries all five arms including the argmax
+attribution cell, `n_train=8192` **with its justification** (*"at 2048 the softmax
+baseline fails its own absolute bar on 3 of 5 seeds"*), **all five seeds printed**,
+the attribution rule (*"twin but ties argmax, the equilibrium bought nothing"*), and
+**the ~0.05 resolution floor with its derivation** - paired sd `0.056889` against
+unpaired `0.057089`, *"pairing bought almost nothing"*. **Written before the run,
+which is the whole point.**
+
+CHECKLIST: Dr House **RELEASED and returned a LEAP**. Ratio constancy **verified**.
+`Delta(G)` **NOT measured**. `done6.md` shipped. M3 pre-registration **written**.
+
+**SCOREBOARD: 4** - unchanged. A hypothesis scores nothing.
+
 ### ROUND 6, ITERATION 21 - 2026-08-26 - The Inspector strikes three claims, one of them mine. And Cameron overturns the round's central premise, including what I recorded one iteration ago.
 
 CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.
