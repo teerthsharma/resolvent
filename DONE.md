@@ -4,6 +4,110 @@ Round 6 closed with the certificate program CLOSED - three attempts, three death
 Round 5's `TWOSPHERES: BROKEN` and its handover `done5.md` stand. Round 6's
 work-done is `done6.md`. Progress **22**.
 
+### ROUND 7, ITERATION 5 - 2026-08-26 - The seal is used for the first time and finds no edits, one honest append, and a defect in itself.
+
+CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.
+[RUN] `pytest tests/loop` -> **243 passed** (219 -> 243), exit 0.
+
+## THE ACTION: THREE FELLOWS DISPATCHED ON THE ONE ITEM BLOCKING THE BOARD
+
+Iteration 4 left the board blocked on a single step - getting `counter_squared`
+into the M3 corpus alphabet - which gates **S2 (+3)** and also Chase's e-process
+reroute, since Dyck-1 was measured to have no gap and the reroute has nowhere else
+to go. All three fellows are on it, in one message, at three genuinely different
+angles:
+
+  * **CAMERON** owns the embedding: is `counter_squared` expressible in the M3
+    corpus, and - the part that matters - **does the gap survive the encoding?** A
+    Hankel gap on paper is worth nothing if the M3 encoding destroys it, so the
+    instrument must be re-run on the task **as encoded**, not on the abstract
+    series.
+  * **CHASE** owns whether the target is worth aiming at: his own repricing says
+    the e-process buys cheap decisions only where the effect is `>= ~0.2` NRMSE,
+    and **nobody has established that `counter_squared` clears that.** Plus the two
+    open calls that are his: pinning the alpha budget (20 against 40) and
+    implementing the adopted `B` repair - **with the must-fire calibration re-run
+    under the new constant, since a calibration that passed under the old one does
+    not transfer.**
+  * **FOREMAN** owns the assumption underneath all of it: **nobody has established
+    that a Hankel rank gap predicts an attention-architecture capability gap at
+    all.** The inference from "nonnegative automaton state count" to "attention arm
+    capability at fixed parameters" has at least three joints and none is measured.
+    He has a datum of his own against it - `parity_a` has a nontrivial group and
+    **no** nonnegativity gap - and the sharp route he named himself: `CHECKLIST.md:333`
+    records **G4 VOID**, `_causal_sgate_operator(lam=0.10)` is **entrywise
+    non-negative**, min entry `0.000e+00`. **If no arm is actually signed at its
+    measurement geometry, the ladder compares an arm against itself.**
+
+## BUILT ALONGSIDE: THE SEAL WAS USED, FOUR ITERATIONS AFTER IT WAS TAKEN
+
+S5 was scored at iteration 1 and **nothing had ever been checked against it.** A
+seal nobody runs is decoration. Run against the current tree:
+
+    contract LOOP_PROMPT.md, genesis leaf matches sealed:  True
+
+    unchanged   22
+    appended     1     results/m3_quintuple_v2.jsonl   11 -> 14 lines
+    EDITED       0
+    missing      0                                     of 23
+
+**No edits anywhere.** And the one change is an append whose **sealed prefix still
+reproduces its original root** - which is exactly the property append-only claims
+and which could not previously be checked.
+
+**THE THREE NEW LINES ARE THE SETTLED ARM, AND THEY ARE THE JOURNAL CHASE READS.**
+`settled_k8_s64_d24_st150_ntr8192_nev512_b21_sd1/sd2/sd3`, with `eval_nrmse`
+`0.7688018924834016`, `0.8746579711474933`, `0.816071366735969`. **All three below
+`1.0`** - further evidence against the struck claim that the metric routinely
+exceeds its assumed bound in the measurement geometry.
+
+## AND USING IT FOUND A DEFECT IN WHAT WAS SHIPPED AT ITERATION 1
+
+`verify_journal` answers **same-or-different, and that is not the question an
+append-only record raises.** Every honest append changes the root, so the shipped
+tool calls routine growth a failure:
+
+    verify_journal(results/m3_quintuple_v2.jsonl, ...)  ->  False
+
+**A check that fires on normal behaviour stops being read, which costs more than
+not having the check.** Across the 23 sealed journals the shipped tool passes
+**22/23**, and the one it fails is the one that behaved correctly.
+
+**THE FIX, and why the line count in the seal record was load-bearing all along.**
+An append leaves the sealed prefix intact: re-rooting the first `sealed_lines`
+lines must reproduce `sealed_root` exactly, and an edit, deletion, reordering or
+truncation inside that prefix cannot. **So the count is not metadata - it is the
+half of the seal that makes the distinction possible**, and it was recorded at
+iteration 1 without its use being known.
+
+    verify_append_only  passes 23/23, reclassifying results/m3_quintuple_v2.jsonl
+
+`scale/merkle.py:verify_append_only`, bound by `tests/loop/test_merkle_append.py`,
+**24 tests**: the edit is asserted at **every one of 16 sealed positions** rather
+than one chosen index; deletion, reordering and truncation each caught; a changed
+contract invalidates the append check exactly as it invalidates the root, so a
+journal cannot be re-interpreted against rules it was never kept under merely by
+appending to it.
+
+**`sealed_lines` IS AN INPUT AND IS NEVER INFERRED**, with a test that requires the
+function to reject a negative one. Taking it from the journal would defeat the
+check entirely: any prefix that happened to root correctly would validate, and a
+party choosing where to cut would always find one.
+
+**MUST-FIRE.** A single test requires both directions of the same function on the
+same fixture - an append accepted and a prepend rejected. **No constant
+implementation can pass it**, which is what stops the other 23 assertions being
+vacuous. Eleven vacuous controls have been struck in this campaign; this is the
+guard against a twelfth.
+
+CHECKLIST: three fellows **dispatched** on the blocking item. The seal **used for
+the first time**: 22 unchanged, 1 append with prefix intact, **0 edits**. A defect
+in the iteration-1 deliverable **found by using it** and repaired -
+`verify_append_only`, 24 tests, `22/23 -> 23/23`. The M3 v2 settled arm is **live
+and accumulating**, three seeds, all `eval_nrmse < 1.0`.
+
+**SCOREBOARD: 23.**
+
 ### ROUND 7, ITERATION 4 - 2026-08-26 - ALL THREE FELLOWS IN. The contract's own worked example is wrong, three ways, verified three times independently. S6's bar is unreachable by arithmetic.
 
 CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**, 4/4 bit-identical.

@@ -30,6 +30,7 @@ import hashlib
 from pathlib import Path
 
 __all__ = ["GENESIS_LABEL", "leaf_hash", "merkle_root", "journal_root",
+           "verify_append_only",
            "verify_journal"]
 
 #: Prefixed onto the contract bytes so the genesis leaf cannot be confused with
@@ -83,3 +84,36 @@ def journal_root(journal: Path, contract: Path) -> str:
 def verify_journal(journal: Path, contract: Path, expected_root: str) -> bool:
     """True iff the journal under this contract still hashes to `expected_root`."""
     return journal_root(journal, contract) == expected_root
+
+
+def verify_append_only(journal: Path, contract: Path, sealed_root: str,
+                       sealed_lines: int) -> bool:
+    """True iff `journal` is `sealed_lines` sealed lines, unedited, plus appends.
+
+    WHY `verify_journal` IS NOT ENOUGH. It answers same-or-different, and that is
+    not the question an append-only record raises. Every honest append changes the
+    root, so a tool that only compares roots reports routine growth as a failure --
+    and a check that fires on normal behaviour stops being read, which costs more
+    than not having the check at all. Running the seal against this tree four
+    iterations after taking it found twenty-two journals unchanged and one grown by
+    three lines, and the only available answer for the grown one was False.
+
+    WHAT DISTINGUISHES THE TWO. An append leaves the sealed prefix intact: re-rooting
+    the first `sealed_lines` lines must reproduce `sealed_root` exactly. An edit to
+    any line inside that prefix cannot, and neither can a deletion, a reordering, or
+    a truncation. So the check is a prefix re-root, and the line count is not
+    metadata -- it is the half of the seal that makes the distinction possible.
+
+    `sealed_lines` IS AN INPUT, NEVER INFERRED. Taking it from the journal would
+    defeat the check: any prefix that happened to root correctly would validate, and
+    a party choosing where to cut would always find one. It comes from the seal
+    record, and a negative value is an error rather than a default.
+    """
+    if sealed_lines < 0:
+        raise ValueError(f"sealed_lines must be >= 0, got {sealed_lines}")
+    genesis = GENESIS_LABEL + contract.read_text(encoding="utf-8", errors="replace")
+    body = [ln for ln in journal.read_text(encoding="utf-8",
+                                           errors="replace").splitlines() if ln.strip()]
+    if len(body) < sealed_lines:
+        return False
+    return merkle_root([genesis] + body[:sealed_lines]) == sealed_root

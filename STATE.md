@@ -4,7 +4,7 @@
 |---|---|
 | contract | `LOOP_PROMPT.md` (v9). Round 6 archived `LOOP_PROMPT_ROUND6_ARCHIVE.md` |
 | promise | **`HILBERT`** — D2 verbatim (needs **S1's +12 branch AND S3**), or an honest `BROKEN` |
-| iteration | **4 complete, 5 next** |
+| iteration | **5 complete, 6 next** |
 | phase | **A — foundations (0–4)** |
 | **scoreboard** | **23** — 22 carried, **S5 +1** (Merkle journal live) |
 | RULE 2 (repaired) | **SATISFIED AT ITERATION 3, due at 8.** `EP.live()` reads the journal and prints `undecided at evidence E_t = 1.0`; must-fire passes both directions (worst null `0.0367 ± 0.0019` vs `α = 0.05`) and the broken-λ control **was seen to fire at `1.0000`**. |
@@ -20,16 +20,27 @@
 | **S2** | Hankel-gap family; one gap task **inside** M3 | +3 | **instrument LANDED and self-tested.** The contract's own gap task has **no gap** (`rank₊ = 2` exactly, certified). **Rerouted to `counter_squared`** — rank 3, `rank₊ ≥ 4/5/5`. Remaining: put it in the M3 corpus alphabet. |
 | **S3** | Kaggle run on the signed N1–N6 cert; HF; capability table v0 | +6 | not started |
 | **S4** | Probe battery at **TRAINED** projections | +3 | **partly done** — Phase D closed 3/3; **aggregator retention NOT re-run** |
-| **S5** | Merkle journal + tamper must-fire | +1 | **EARNED** |
+| **S5** | Merkle journal + tamper must-fire | +1 | **EARNED.** Used for the first time at it.5: **22 unchanged, 1 append with prefix intact, 0 edits** of 23. Using it exposed a defect in the shipped tool (every honest append read as a failure); repaired with `verify_append_only`, 24 tests, `22/23 → 23/23`. |
 | **S6** | Fused settling step, clock ≤ **1.1×** | +1 | **fusion BUILT and exact** (`3.0 → 1.125` disp/step, journal bit-identical, clock `2.298×` faster). **The GATE is unreachable — floor `1.1667` at any step count.** Repriced; **unearned as written.** |
 | **S7** | D1 to acceptance, certificate post-mortem as capstone | +2 | Foreman owns it |
 
 ## THE ONE NEXT ACTION (round 7, iteration 3)
 
-**ALL THREE FELLOWS ARE IN. The board is now blocked on ONE thing: getting
-`counter_squared` into the M3 corpus alphabet.** That single step unblocks S2 (+3)
-AND Chase's e-process reroute, which no longer has anywhere else to go — Dyck-1,
-its previous target, was measured to have no gap.
+**ALL THREE FELLOWS ARE OUT AGAIN, dispatched at it.5 on the blocking item.**
+Collect them. Read in this order, because two of the three can invalidate the
+third:
+
+  1. **FOREMAN FIRST, against the instinct to read him last.** He owns the
+     assumption underneath the whole S2 line — that a Hankel rank gap predicts an
+     attention capability gap at all. **If no arm is actually signed at its
+     measurement geometry (G4 VOID: `_causal_sgate_operator(lam=0.10)` is entrywise
+     non-negative, min entry `0.000e+00`), the ladder compares an arm against
+     itself and S2's +3 is unspendable however well Cameron embeds the task.**
+  2. **CHASE.** Whether `counter_squared` clears his own `≥ 0.2` NRMSE threshold. If
+     it does not, the reroute is worthless and needs another target. Also: **α
+     pinned**, and **the `B` repair implemented with the must-fire re-run** — a
+     calibration that passed under the old constant does not transfer.
+  3. **CAMERON.** The embedding, and whether the gap survives it.
 
   1. **CHASE — DONE at it.3.** Must-fire **passed both directions**; the broken-λ
      control **was seen to fire**. **And he killed the round's headline cell before

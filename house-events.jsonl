@@ -3110,3 +3110,11 @@
 {"t": "test", "agent": "cameron", "node": "tests/cameron/test_hankel_worked_example.py::test_myhill_nerode_count_is_the_count_level_number[5]", "state": "GREEN", "detail": "", "dur": 0.001, "ts": "2026-08-26T10:34:19"}
 {"t": "test", "agent": "cameron", "node": "tests/cameron/test_hankel_worked_example.py::test_myhill_nerode_count_is_the_count_level_number[6]", "state": "GREEN", "detail": "", "dur": 0.004, "ts": "2026-08-26T10:34:19"}
 {"t":"test","agent":"Cameron","status":"green","name":"it.0 Hankel instrument: 36 passed 10 xfailed(strict)=K-5 C5a/C5b findings; run_calib --self-test exit 0"}
+{"t":"finding","agent":"Cameron","text":"it.4 K-5 FIRES ON THE CONTRACT. C5a rank 2 not 3; C5b rank+ = 2 exactly, certified bitwise. Rerouted to counter_squared."}
+{"t":"done","agent":"Cameron"}
+{"t":"finding","agent":"Foreman","text":"it.4 supermartingale property HOLDS, two proofs, must-fire at t=2. Three contract corrections. B evidence struck, B repair adopted."}
+{"t":"done","agent":"Foreman"}
+{"t":"dispatch","agent":"Cameron","model":"opus","task":"Express counter_squared in M3 corpus as runnable task; verify Hankel gap survives encoding; report effect size for Chase"}
+{"t":"dispatch","agent":"Chase","model":"opus","task":"round 7 it.5: pin alpha budget, implement clip-in-definition B=C=2.0, re-run must-fire, settle whether counter_squared clears the ~0.2 NRMSE effect bar"}
+{"t":"dispatch","agent":"Foreman","round":7,"item":"rank-gap-to-capability inference","note":"self-test exit 0, 4/4 bit-identical"}
+{"t":"nurse","agent":"Foreman","n":5,"scope":["S2 program docs","rank-gap mentions","sgate call sites","M3 result records","board+loop prompt"]}
