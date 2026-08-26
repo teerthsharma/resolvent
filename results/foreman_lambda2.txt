@@ -45,6 +45,13 @@ LargestJoin_S2Rips_64   nodes=18 transient=16 diameter=8  bridge=(21, 55)  absor
             8   0.4134621952            0.5359618307
             32  0.0535834241            0.0825154833
    decay ratio at t=40/39 0.9237224383   vs lambda_2 0.9250000000   |diff| 0.0012775617
+   CONDITIONAL label (committor, ratio of two fixed points)
+     std 0.3681820389  mean 0.4850274900  min 0.0071813513  max 0.9656589520  dead<0.001 0.0000000000
+            1   0.9181646343            0.9250000000
+            2   0.7529716986            0.8556250000
+            8   0.1815582640            0.5359618307
+            32  0.0372605660            0.0825154833
+     monotone over t=1..44 True   decay ratio 40/39 0.9298888594   vs lambda_2 0.9250000000   |diff| 0.0048888594
 
 LargestJoin_S2Rips_1024   nodes=62 transient=60 diameter=29  bridge=(343, 354)  absorbing=[234, 681] separation=29
    shipped rho(P_TT) 0.9984623637   t_rel 650.3488   ergodic lambda_2 0.9964078857
@@ -58,6 +65,13 @@ LargestJoin_S2Rips_1024   nodes=62 transient=60 diameter=29  bridge=(343, 354)  
             8   0.2539152639            0.5359618307
             32  0.0172219948            0.0825154833
    decay ratio at t=40/39 0.9116421138   vs lambda_2 0.9250000000   |diff| 0.0133578862
+   CONDITIONAL label (committor, ratio of two fixed points)
+     std 0.4637871112  mean 0.5261631723  min 0.0000002975  max 0.9999996902  dead<0.001 0.1500000000
+            1   0.9829145311            0.9250000000
+            2   0.9655268044            0.8556250000
+            8   0.7921014882            0.5359618307
+            32  0.0481326124            0.0825154833
+     monotone over t=1..44 True   decay ratio 40/39 0.9476920990   vs lambda_2 0.9250000000   |diff| 0.0226920990
 
 TARGET SEPARATION vs DEAD FRACTION, at the engineered lambda_2
   LargestJoin_S2Rips_64

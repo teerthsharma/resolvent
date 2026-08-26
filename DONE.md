@@ -4,6 +4,323 @@ Round 6 closed with the certificate program CLOSED - three attempts, three death
 Round 5's `TWOSPHERES: BROKEN` and its handover `done5.md` stand. Round 6's
 work-done is `done6.md`. Progress **22**.
 
+### ROUND 8, ITERATION 3 - 2026-08-26 - The fetch kills the delta as stated, the contract's own dial is refuted, and the oracle separation is proved in Lean.
+
+CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**, 4/4 bit-identical.
+[RUN] `lake build CEQ` -> **exit 0**.
+
+## A CORRECTION I OWE FIRST, BECAUSE I RELAYED NUMBERS AS COMPLETE THAT ARE NOT
+
+At iteration 2 the consequence-fidelity numbers were quoted here and into a dispatch as
+*"the money setting"*. **Both files are PARTIAL and neither says so in its summary:**
+
+* `results/foreman_consequence_money.txt` is **24 lines**. Seed 0 is complete; **the
+  seed 1 header is written with ZERO rows.** `seeds=[0,1,2,3,4]` was requested and
+  **1 of 5 was delivered. No cross-seed claim is available from that file.**
+* `results/foreman_consequence_d256.txt` is **11 lines** and carries **two of four
+  arms** - `pivot_unsigned` and `windowed_signed` never ran.
+
+The seed-0 numbers themselves stand. **What does not stand is the framing.** A file
+whose header announces five seeds and whose body holds one is exactly the shape that
+gets read as five, and it was.
+
+**AND THE DISTINCTION FOREMAN DREW IS THE ONE THAT MATTERS:** the `d >= 256` falsifier
+**correctly withheld** - both measured intervals cover `0.5`
+(`[0.435833, 0.560379]` and `[0.493016, 0.616819]`) and `eval_nrmse 1.35611` is above
+the bar, so the cell is **not informative**. **But the cell is also not fully read, and
+those are different statements.** The pre-registration worked; the coverage did not.
+
+## PART 1 - THE G1 FETCH KILLS THE DELTA AS STATED
+
+Every component of *"equilibrium-labels-as-attention-capability-bar"* is **separately
+occupied**, with thirteen explicit `NOT FOUND` lines recorded in `PRIOR_ART.md` §4:
+
+* **Equilibrium labels as a capability bar** - CLRS, `arXiv:2205.15659`
+  (Bellman-Ford, Floyd-Warshall, SCC); CLRS-Text `arXiv:2406.04229`.
+* **For attention specifically** - Sanford et al., NeurIPS 2024, OpenReview
+  `AfzbDw6DSp`: *"logarithmic depth is necessary and sufficient"*, a nine-problem
+  capability hierarchy for transformers.
+* **Equilibrium-solving arms on those labels** - Deep Equilibrium Algorithmic
+  Reasoner, `arXiv:2402.06445` and `arXiv:2410.15059`.
+* **The "provably cannot" framing on a linear-algebra target** - `arXiv:2206.11941`
+  Thm C.1, *"impossible for a GNN to compute single-source effective resistances"*.
+  **Effective resistance IS the two-boundary Dirichlet problem - it is this oracle.**
+
+**What is genuinely NOT FOUND:** `B = N R` as a supervised neural-network label; the
+spectral gap or `t_rel` used as a benchmark **difficulty dial**; prescribed-gap
+synthetic graphs producing a depth dose-response. LRGB (`arXiv:2206.08164`) uses
+shortest-path and diameter, with **zero** hits for "spectral gap" or "Cheeger".
+
+**AND THE SURVIVING DELTA IS BOTH NARROW AND CONTESTED.** `arXiv:2607.21607` reports
+`SFC(G,k) = 1 - (1 - gamma(G))^k` with `R^2 = 0.910 / 0.881 / 0.863` at `k = 2, 3, 4`
+- **a spectral-gap-predicted dose-response curve in depth, which may occupy the
+surviving delta outright.**
+
+**HE FLAGGED ITS PROVENANCE RATHER THAN CITING IT CLEAN.** The abstract reads
+*"Submitted on 16 May 2026"* while the identifier prefix is July 2026, and **he did not
+resolve the discrepancy.** **That paper must be verified by someone else before any
+round-8 number is written up** - an unresolved citation is the same disease as a
+control that cannot fire.
+
+What survives: attention rather than message-passing, engineered rather than surveyed,
+and the label being the equilibrium rather than an accuracy. **Thin, and written as
+thin.**
+
+## PART 2 - THE CONTRACT'S OWN DIAL IS REFUTED, AND THE RED WAS THE CONTRACT
+
+`LOOP_PROMPT.md` §1.2's Cheeger construction fails **two ways**, both measured:
+
+**1. Wrong matrix.** Cheeger (Levin-Peres-Wilmer **Thm 13.10**,
+`Phi*^2/2 <= gamma <= 2 Phi*`) governs the **ergodic** second eigenvalue. **The ladder
+truncates `rho(Q)`.** On `LargestJoin_S2Rips_1024`: ergodic **`0.9964078857`** against
+`rho(Q)` **`0.9984623637`**.
+
+**2. The dial runs backwards and cannot reach.** `rho(Q)` **increases** with bridge
+weight - `_64` goes `0.9789623187 -> 0.9998912353` and `_1024` goes
+`0.9984623637 -> 0.9999784611` across `w = 1..4096`. **The band is never attained.**
+The ergodic value *does* reach it on `_64` (`0.9474294328` at `w=16`), **which is
+precisely the point: the two quantities are different objects.**
+
+**3.** One cut bounds `Phi*` from **above** only, so even ergodically it buys *"not too
+fast"* and never *"not too slow"*.
+
+**REROUTE, EXACT RATHER THAN BRACKETED.** Set `Q := alpha * P_TT`, so
+`rho(alpha P_TT) = alpha * rho(P_TT)` and `alpha = target / rho(P_TT)`. **Measured
+`lambda2 = 0.9250000000` on both graphs, `t_rel = 13.3333` - inside the band**, with
+`alpha = 0.9448780432` and `0.9264245040`.
+
+**AND `lambda2` IS NOW DEFINED RATHER THAN ASSUMED:** `P = [[Q, R], [0, I]]` is
+block-triangular, so the literal second eigenvalue of `P` is **`1`** and says nothing.
+**`lambda2 := rho(Q)`.**
+
+**The ladder is monotone and K-2 does NOT fire:** `0.9829 / 0.9655 / 0.7921 / 0.0481`
+at `t* = 1, 2, 8, 32`, monotone across `t = 1..44`.
+
+**THE FIFTEENTH VACUOUS CONTROL, CAUGHT PRE-DISPATCH.** A single absorbing target makes
+the label **constant to `1.11e-14`** - with one absorbing class the absorption
+probability is identically 1. Caught before it was handed to anyone.
+
+**TWO COSTS, BOTH STATED:**
+
+* The raw label **dies far from the targets** - `_1024` dead fraction **`0.5833`**,
+  because the diameter is 29 against a `t_rel` of 13.33. **The conditional (committor)
+  label fixes it: `0.5833 -> 0.1500`, standard deviation `0.1105 -> 0.4638`.**
+* **The conditional label does NOT inherit `lambda2` as its rate.** It is a ratio of
+  fixed points; measured decay `0.9298888594` (`_64`) and `0.9476920990` (`_1024`)
+  against `0.9250000000`. **So read against the conditional label, the `lambda2` claim
+  is MONOTONICITY, not rate equality.** That is a downgrade of the round's headline
+  prediction, stated by the fellow who owns it.
+
+**INDEPENDENT REPLICATION, AND IT DESERVES ITS NAME.** Cameron reached the killed walk
+from a different direction (`scale/e4_harmonic_reroute.py`, `kill = 0.0625`,
+`rho(Q) ~ 0.935968`, antipodal caps, `n = 2048`), and **her raw label was STRUCK by K-1
+at `0.340523` - which is his dead-fraction cost appearing as a decoder leak - and her
+conditional label fixed it.** **Two fellows, two substrates, the same construction, the
+same failure, the same fix.**
+
+## PART 3 - `oracle != resolvent`, PROVED IN LEAN
+
+`lean/CEQ/OracleSeparation.lean`, `lake build CEQ` **exit 0**.
+
+**It turns on nilpotency rather than on label shape.** The arm's operator is strictly
+lower triangular, so `A^n = 0`. The oracle's `Q` is non-negative with symmetric support
+and at least one positive entry, so it is **never** nilpotent - doubling on the
+diagonal, with `n < 2^n`. Hence **`oracle_ne_resolvent : Q != A`.**
+
+**And the second theorem is the one the ladder actually needs:
+`truncation_never_exact`** - the partial sum `sum_{k<N} Q^k` is **not** the inverse of
+`(1 - Q)` at **any** `N`. For the arm's own operator it becomes an equality at `N = n`.
+**So every rung leaves a real residual, and that is now proved rather than assumed.**
+
+`SymmSupport` is deliberately weaker than symmetry, because `D^-1 W` is not symmetric
+at unequal degrees, and `zero_not_a_counterexample` records that the edge hypothesis is
+load-bearing.
+
+**BOUND TO THE SHIPPED OBJECT, not to a paper statement.**
+`tests/foreman/test_oracle_separation_binding.py`, **6/6 pass in 103.46 s**:
+reachability from the root module, `#print axioms` on five names **with a planted
+`sorryAx` seen to fire**, the three Lean hypotheses checked **entrywise on the actual
+`Q`**, and a must-fire in which the arm's own `.tril(-1)` operator is **rejected** by
+the support check. `MODEL_CARD.md` goes **27 -> 39 theorems across six modules**.
+
+## AND HE CORRECTED THE FRAMING OF ROW H, WHICH I HAD RELAYED WRONG
+
+> *"If the pivot arms lose to plain softmax on `e3`, that is NOT the `lambda2` theory
+> failing."*
+
+`e3_t*` binds `equilibrium_oracle`, **which is still the signed path sum the resolvent
+computes** (`scale/negation_scope.py:661-668`, RED 18 unchanged). **The `lambda2`
+prediction has never been tested on `e3`.** It lives on the absorbing-chain corpus,
+**which is not yet registered in `M3_TASKS`.**
+
+**So Row H, if it lands, is a statement about the `e3` ladder and NOT about the round's
+central prediction.** Both are worth knowing and they are different claims.
+
+## A HARNESS HAZARD THAT WILL BITE AGAIN
+
+Two lake gates failed inside one 39:58 pytest run with returncode **`3221225794`**
+(`0xC0000142`, `STATUS_DLL_INIT_FAILED`) and **empty stdout AND stderr**. Both pass
+alone, in `9.04 s` and `30.75 s`.
+
+**A Windows process-launch failure surfaces as a plain returncode assert, which is
+indistinguishable in a summary from a broken proof.** **Any lean gate failing with
+empty stderr must be re-run alone before it is read as a proof breakage.**
+
+CHECKLIST: **the delta does NOT survive the fetch as stated** - CLRS, Sanford et al.,
+DEQ reasoners and an effective-resistance impossibility all occupy pieces of it; the
+narrow survivor is **contested by `arXiv:2607.21607`, whose provenance is unresolved
+and must be verified before write-up.** **The contract's `lambda2` dial is REFUTED**
+(wrong matrix, and the dial runs backwards) and **rerouted exactly** to
+`Q := alpha P_TT`, `lambda2 = 0.9250000000`, `t_rel = 13.3333`. **The conditional label
+does not inherit `lambda2` as a rate, so the claim is monotonicity, not rate
+equality.** **`oracle != resolvent` PROVED**, with `truncation_never_exact` alongside
+it. **Fifteenth vacuous control caught pre-dispatch.** **Two consequence files are
+PARTIAL and were relayed here as complete.**
+
+**SCOREBOARD: 25.**
+
+### ROUND 8, ITERATION 2 - 2026-08-26 - The label provably requires iteration, and the near-zero contrast finally means something. Row H becomes Row A.
+
+CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**, 4/4 bit-identical.
+
+## THE AUTHOR'S RULING, AND IT IS THE FRAME FOR EVERYTHING BELOW
+
+> *"if it is beaten by softmax the row H is new row A"*
+
+**An honest negative is the headline, not a footnote.** Row H - the settled arm losing -
+is promoted to the round's primary outcome if that is what the numbers say. Recorded
+before the ladder completes, so it cannot be read as a rationalisation afterwards.
+
+## THE CHECK THAT FAILED TWICE BEFORE NOW PASSES
+
+**The label provably requires iteration**, with a closed form rather than a
+demonstration:
+
+    k-hop truncation NRMSE  =  sqrt((t* - k) / t*)
+
+    t*   k=0        k=1        k=2        k=4        k=8        k=16       k=32
+     1   1.000248   0.000000
+     2   1.000023   0.701860   0.000000
+     8   1.000007   0.932740   0.863514   0.714329   0.000000
+    32   1.000004   0.983744   0.969120   0.934971   0.867263   0.704263   0.000000
+    63   1.000030   0.990328   0.986177   0.972203   0.938035   0.866643   0.705080
+
+**`k = 0` is EXACTLY the bar in every row.** E2 decays geometrically, bounded by
+`L^k x (k=0 error)` with `L = 0.8` exactly: `1.000067 / 0.410387 / 0.203305 /
+0.070732 / 0.013666 / 0.001017`.
+
+**AND IT HAD TO BE EARNED.** The first encoding gave the query token a driver, so
+`1/(t*+1)` of the label was legible at **zero hops**, and `m3_capability`'s 0-step RED
+gate aborted `INSTRUMENT BROKEN` on three of five rungs (`0.993760` / `0.993600` at
+`t* = 1`). Setting `b[s-1] = 0` makes zero hops exactly predict-the-mean. **This is a
+third static task avoided by a gate firing, not by care.**
+
+## THE NEAR-ZERO CONTRAST NOW MEANS SOMETHING IT NEVER DID
+
+One seed, not a verdict - **§1.8 requires 13**:
+
+    rung     settled     twin      softmax
+    t* = 1   0.978314   0.923118   0.819665
+    t* = 2   1.012262   1.010072   0.952020
+
+`settled - twin = 0.002190` at `t* = 2`. **Near zero again - but for the first time on
+a task that PROVABLY requires iteration**, which is exactly what the previous
+`-0.002959` could not claim.
+
+**And plain softmax beats both arms at both rungs.** Under the author's ruling that is
+**Row A**.
+
+**It also sharpens against the `argmax` finding rather than merely repeating it:** the
+mixture beats a lookup (`argmax` is `-0.118456` worse than softmax), **but a fixed
+point over the mixture buys nothing measurable here.** Two different negatives about
+two different components.
+
+## THE HOP WALL - THE MOST ACTIONABLE DEFECT IN THE PROJECT RIGHT NOW
+
+    rung     best arm (n_train=2048)   2-hop ceiling   gap
+    t* = 1          0.817476              0.000000     below bar
+    t* = 2          0.946352              0.000000     below bar
+    t* = 8          1.112208              0.866025     +0.246
+
+**At `t* = 8` the arms miss a target their own hop budget allows, by `0.246`.** Every
+arm here has a hop budget of 2 (softmax 1; pivot, windowed and settled 2).
+
+**So the binding constraint at that rung is not the settling and not the task - it is
+the arm failing to reach its own ceiling.** That is measurable rather than arguable:
+hand an arm the `k = 2` truncation as a feature and see whether the gap closes. If it
+does, **the readout binds**; if it does not, the budget does.
+
+## K-5E FIRES ON E1, AND THE DIAGNOSIS MATTERS MORE THAN THE FIRING
+
+E1, `n_train=512 n_eval=2048` seed 0: settled **1.464949**, twin **1.358240**, softmax
+**1.644332** - all above the bar.
+
+**But E1 was never winnable by any arm in this harness.** At `t* = 63` the best
+possible 2-hop reading is `sqrt(61/63) = 0.983870`, so **E1's entire headroom below the
+bar is `0.016130` before any learning happens.** K-5E at that rung diagnoses the arms'
+hop budget, not the harness.
+
+**AND THE HARNESS IS DEMONSTRABLY NOT BROKEN**, one rung down: `e3_t1` has a 2-hop
+ceiling of `0.000000`, and settled reads `0.978314`, below the bar, with the bar
+CALIBRATED.
+
+## RULE 5 - AND THE RETIREMENT IS A RESULT IN ITS OWN RIGHT
+
+**REROUTE.** The must-fire's goal - prove the harness can read an equilibrium label -
+survives; E1 at `t* = 63` died as its method. **`e3_t1` is sharper: same family, same
+code path, same registry, but a 2-hop ceiling of `0.000000` instead of `0.983870`, so a
+failure there is unambiguous.** It answered YES. **The corpse taught the rule: a
+must-fire needs headroom larger than the arms' own ceiling, and E1's was `0.016130`.**
+
+**REPRICE.** `calibrate_bar` clause 5 trains its control on **RAW** `y` while
+`run_arm` trains arms on **STANDARDISED** `y`, so a small-scale label makes the control
+harder than the arms' own task. E2's label standard deviation is `0.061984`. Measured:
+150 steps -> `2.446646` **BROKEN**; 600 -> `0.922725`; 2000 -> `0.525985`. **Cost is 4x
+the steps and 1.4 s -> 2.2 s of calibration wall clock. Run E2 at `--steps 600`.**
+
+**RETIRE, and this one closes a question the whole campaign has circled.** Rank cannot
+be a difficulty column for this family: `z' = a*z + b` is a **2-dimensional linear
+recursion**, so the ring-weighted-automaton rank is **exactly 2 for the entire E3
+ladder while `t*` runs 1 -> 63** - the same rank as the plain counter, whose `t*` is 1.
+**Rank is CONSTANT while difficulty spans the ladder.** Replacement metadata: **`t*`
+itself**, now printed per task. **That is an independent confirmation that retiring the
+Hankel frame was correct, arrived at from a different direction.**
+
+## CONTROLS SEEN TO FIRE - ALL DRAWN, NONE HAND-BUILT
+
+**E2's first design was killed by its own control.** The raw new-fixed-point
+coordinate let a shock-blind reading score **0.194150** - **96 % of that label was the
+un-intervened game.** Replaced by a mirror-intervention contrast, for which
+shock-blind is identically `sqrt(1 + mean^2/var) >= 1.0`; measured `1.000067`.
+
+Also fired: an unshocked equilibrium gives `flipper_dependence` exactly `0.0` and the
+band rejects; a `k=1` truncation likewise; and the band **separates rungs** - the
+`t*=32` batch is rejected by both the `t*=8` and `t*=63` exact values.
+
+**Well-posedness is enforced at generation, not hoped for.** The chain is strictly
+lower triangular, checked by value on drawn batches; nilpotency makes `t*` **exact
+rather than a tolerance**. E2 uses `ceq/nash.py::safe_tau` per example at margin 1.25,
+giving a Lipschitz constant of **`0.800000` exactly on every draw**, and the builder
+**raises** rather than warns - `settle_iters=0` makes it raise, and that is tested.
+
+## STATED AS PARTIAL RATHER THAN HIDDEN
+
+**No arm has been trained on `e2_consequence`** - and that is **the one rung Ladder E
+actually predicts on**, since `t* = 31` is far beyond the hop budget of 2. Its bar
+calibrates and every control fires; the capability column is simply not taken. Killed
+at roughly 40 minutes under three-way CPU contention.
+
+CHECKLIST: **the label provably requires iteration** - closed form `sqrt((t*-k)/t*)`,
+`k=0` exactly the bar, and a leak caught by the 0-step gate before it shipped. **The
+near-zero contrast (`0.002190`) is read for the first time on a task that requires
+iteration.** Softmax beats both arms at both rungs, so **Row H is Row A** per the
+author's ruling. **The hop wall is the actionable defect: `+0.246` short of the arms'
+own 2-hop ceiling at `t*=8`.** K-5E fires on E1 with a diagnosis - headroom
+`0.016130`, so it measures the budget, not the harness. **Rank RETIRED as a difficulty
+column with a proof: constant at 2 across a ladder whose difficulty spans 1 to 63.**
+
+**SCOREBOARD: 25.**
+
 ### ROUND 8, ITERATION 1 - 2026-08-26 - Both blockers cleared, the evidence process rebuilt per draw, and an early signal that points away from the hypothesis.
 
 CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**, 4/4 bit-identical.

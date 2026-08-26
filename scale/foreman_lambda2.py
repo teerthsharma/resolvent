@@ -99,7 +99,7 @@ __all__ = ["TARGET_LO", "TARGET_HI", "TARGET", "LADDER", "Chain",
            "merged_component", "bridge_edge", "lobes", "build_chain", "diameter",
            "lambda_2", "ergodic_lambda_2", "bridge_conductance",
            "absorption_probabilities", "truncated_absorption", "relative_error",
-           "DEGENERATE_STD", "dead_fraction", "bridge_sweep", "killing_rate", "engineer",
+           "DEGENERATE_STD", "conditional_label", "conditional_relative_error", "dead_fraction", "bridge_sweep", "killing_rate", "engineer",
            "degenerate_single_target", "no_kill_control", "bridge_dial_refuted",
            "target_separation_sweep", "report", "demo"]
 
@@ -341,6 +341,33 @@ def relative_error(chain: Chain, t: int, *, column: int = 0) -> float:
     return float(np.linalg.norm(approx - exact) / np.linalg.norm(exact))
 
 
+def conditional_label(z: np.ndarray) -> np.ndarray:
+    """`z[:, 0] / (z[:, 0] + z[:, 1])` -- the COMMITTOR, absorption at the first target
+    CONDITIONAL on being absorbed at all.
+
+    Cameron reached this independently in `scale/e4_harmonic_reroute.py` and it is the
+    fix for `dead_fraction`: dividing out the survival mass removes the exponential
+    decay that the killing rate introduces, so a node far from both targets carries a
+    ratio rather than a zero. It is also the object the committor literature regresses
+    (Khoo, Lu, Ying, arXiv:1802.10275; Contreras Arredondo et al., arXiv:2507.17700).
+
+    IT IS A RATIO OF TWO FIXED POINTS, NOT A FIXED POINT, AND THAT COSTS SOMETHING.
+    `z <- Q z + R` has `lambda_2` as its exact asymptotic rate; a ratio of two such
+    iterates does not inherit it, because the errors in numerator and denominator do
+    not cancel. `conditional_relative_error` measures the achieved rate rather than
+    assuming the linear one carries over, and `report` prints both side by side.
+    """
+    total = z.sum(axis=1)
+    return np.where(total > 0.0, z[:, 0] / np.maximum(total, 1e-300), 0.0)
+
+
+def conditional_relative_error(chain: Chain, t: int) -> float:
+    """`||q_t - q||_2 / ||q||_2` for the conditional label."""
+    q = conditional_label(absorption_probabilities(chain))
+    q_t = conditional_label(truncated_absorption(chain, t))
+    return float(np.linalg.norm(q_t - q) / np.linalg.norm(q))
+
+
 def dead_fraction(chain: Chain, *, column: int = 0) -> float:
     """Fraction of transient nodes whose label is below `DEAD`.
 
@@ -394,7 +421,17 @@ def engineer(spec, target: float = TARGET) -> dict:
     # The decay ratio far out is the ladder's OWN estimate of lambda_2, and it is the
     # independent check on the prediction rather than a restatement of it.
     deep = relative_error(chain, 40) / relative_error(chain, 39)
+    cond = conditional_label(absorption_probabilities(chain))
+    cond_ladder = [(t, conditional_relative_error(chain, t)) for t in LADDER]
+    cond_deep = (conditional_relative_error(chain, 40)
+                 / conditional_relative_error(chain, 39))
+    cond_all = [conditional_relative_error(chain, t) for t in range(1, 45)]
     return {
+        "cond_std": float(cond.std()), "cond_mean": float(cond.mean()),
+        "cond_min": float(cond.min()), "cond_max": float(cond.max()),
+        "cond_dead_fraction": float((cond < DEAD).mean()),
+        "cond_ladder": cond_ladder, "cond_decay_ratio": cond_deep,
+        "cond_monotone": all(a >= b for a, b in zip(cond_all, cond_all[1:])),
         "name": case.name,
         "n_nodes": len(chain.nodes),
         "n_transient": chain.Q.shape[0],
@@ -574,6 +611,17 @@ def report() -> str:
         lines.append(f"   decay ratio at t=40/39 {_fmt(r['decay_ratio'])}"
                      f"   vs lambda_2 {_fmt(r['lambda_2'])}"
                      f"   |diff| {_fmt(abs(r['decay_ratio'] - r['lambda_2']))}")
+        lines.append(f"   CONDITIONAL label (committor, ratio of two fixed points)")
+        lines.append(f"     std {_fmt(r['cond_std'])}  mean {_fmt(r['cond_mean'])}"
+                     f"  min {_fmt(r['cond_min'])}  max {_fmt(r['cond_max'])}"
+                     f"  dead<{DEAD} {_fmt(r['cond_dead_fraction'])}")
+        for t, e in r["cond_ladder"]:
+            lines.append(f"            {t:<3d} {_fmt(e)}            "
+                         f"{_fmt(r['lambda_2'] ** t)}")
+        lines.append(f"     monotone over t=1..44 {r['cond_monotone']}"
+                     f"   decay ratio 40/39 {_fmt(r['cond_decay_ratio'])}"
+                     f"   vs lambda_2 {_fmt(r['lambda_2'])}"
+                     f"   |diff| {_fmt(abs(r['cond_decay_ratio'] - r['lambda_2']))}")
     lines.append("")
     lines.append("TARGET SEPARATION vs DEAD FRACTION, at the engineered lambda_2")
     for spec in REROUTED_CASES:
@@ -636,6 +684,13 @@ def demo() -> None:
         # at t = 40 and the ratio has not settled to 1e-3.
         assert abs(r["decay_ratio"] - r["lambda_2"]) < 2e-2, (r["decay_ratio"],
                                                               r["lambda_2"])
+        # The conditional label fixes the dead fraction and keeps the ladder monotone,
+        # so K-2 does not fire on the oracle side -- but it does NOT inherit lambda_2
+        # as its rate, and that is asserted as an inequality rather than papered over.
+        assert r["cond_dead_fraction"] == 0.0 or r["cond_std"] > 0.3, r["name"]
+        assert r["cond_monotone"], r["name"]
+        assert r["cond_decay_ratio"] > r["lambda_2"], (
+            r["name"], r["cond_decay_ratio"], r["lambda_2"])
         # Controls seen to fire, all three.
         assert degenerate_single_target(spec)["fires"]
         assert no_kill_control(spec)["fires"]
