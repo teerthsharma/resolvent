@@ -4,6 +4,141 @@ Round 5 closed at `TWOSPHERES: BROKEN - ARM A, K1's dual slope, displacement
 clause`; its handoff is `done5.md` and its negative result is `D1.md`. That
 verdict is final and is not reopened.
 
+### ROUND 6, ITERATION 21 - 2026-08-26 - The Inspector strikes three claims, one of them mine. And Cameron overturns the round's central premise, including what I recorded one iteration ago.
+
+CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.
+
+ACTION (one): **applied the Health Inspector's three strikes**, closed the scan gap
+that let one of them hide, and caveated the coverage figure.
+
+---
+
+## THE AUDIT: ALL TEN REDs ARE **BY DESIGN**. ZERO ROT.
+
+Re-ran exact: `39 collected`, **10 failed, 28 passed, 1 xfailed**, rc=1.
+
+**The proof is the board, not the code.** Every one of the ten reads `states=RED` on
+**every** recorded run - 6 to 13 runs each - and **never GREEN once.** **Rot shows
+GREEN-then-RED. These were born RED.** Every assertion message states a finding in
+the failing direction, and every must-fire and bitwise bind in the same files is
+GREEN.
+
+**TWO FLAGS ON TESTS - and he is careful that these are not strikes, because he
+strikes CLAIMS, not tests:**
+
+**#9/#10 CANNOT EVER PASS.** `A = sigmoid(g) * softmax(S)` is non-negative by
+construction, so `A[2,0] < -0.05` is **unfalsifiable for any data and any seed** -
+his pinned probe reads `min(A) = 0.00011968078438773533`. **A definition wearing
+failing-assert clothes.** It records a true fact and **cannot detect drift**. The
+first assertion in the same test IS empirical and passes, so half of it is live.
+
+**#5's NUMBER IS NOT QUOTABLE.** He pinned threads as the house rule requires and
+the margin moved **`3.5e-05` -> `1.06e-03`, about 30x, on thread count alone.**
+Direction (`>1`) holds at both settings and both devices; **the value does not.**
+For #7 the same pinning moved `1.417211` -> `1.409810`, but the margin there is
+`0.41` and decisive, **so that finding survives and he says which is which.**
+
+## THREE STRIKES, APPLIED
+
+**STRIKE 1 - AND IT IS MINE.** I recorded *"RED since 2026-08-25T09:40, across five
+runs."* The board says the RED set at that stamp was **7, not 10**;
+`test_composition_is_the_uncosted_route.py` had **no board entry before
+`2026-08-25T18:18:15`** and entered git **8h38m after** the stamp I quoted. The
+ten-node set appears in **3** sessions, not five. **Corrected in place. The
+*"predating round 6"* half survives** - round 6 opened `8ba52e1` at
+`2026-08-26 08:14:54`, the ten-set first appeared `2026-08-25T23:25:56`.
+
+**STRIKE 2 - `CHECKLIST.md:50`, the reach half.** *"windowed arms buy flatness only
+by surrendering reach"* is bound by a RED test reading **reach 1.000000** at
+s=32/128/512 with row width exactly 8. A GREEN sibling pins `nnz(row)==8` with
+gradient support `== s`, and **a GREEN control reads 0.0 for a contiguous band**, so
+zero IS reachable and the non-zero is a fact rather than a dead instrument.
+**The kill was PRE-REGISTERED in `DONE_ARCHIVE_ROUND1.md:5093-5095` and its
+refutation recorded in `DONE.md` and `done3.md` - the sentence was simply never
+amended.** The **flatness half goes to Open**: the test that measured decay was
+**removed** at `84779d0` rather than left RED, with a dangling reference still at
+`tests/cameron/test_composition_is_the_uncosted_route.py:158`.
+
+**STRIKE 3 - `THEORY.md`, the contraction guarantee.** *"The Banach certificate...
+becomes a structural guarantee"* holds for the **zero-action operator only**.
+Conditioning on a held-out intervention, `rho` reaches **1.4172 / 1.4135 / 1.4098**.
+**Nothing published recorded this before the audit.**
+
+**AND THE SCAN THAT SHOULD HAVE CAUGHT IT COULD NOT - TWO MECHANISM GAPS HE
+NAMED:**
+  1. **`THEORY.md` was outside `LEAD_DOCS` entirely.** Same class as the `D1.md`
+     gap already on record. **Closed this iteration; the suite now reads 14.**
+  2. **The scan hunts NUMERIC CONSTANTS**, and `CHECKLIST.md:50` carries **no
+     number** - so **the scan structurally cannot catch Strike 2 at all.** That one
+     is recorded, not closed.
+
+**CLEAN:** `REQUIREMENTS.md:73-75` reproduces test #4's failure message
+**byte-exact** (`0.3667 / 0.3654 / 0.3654`). Bound, no strike.
+
+**COVERAGE: mechanism honest, number STALE.** Numerator `collected == executed ==
+passed`, zero skips; denominator agrees between `.` and `tests` at 1446; `pytest.ini`
+hides nothing. **But `191/1413` was quoted as current fact** while live reads during
+the audit were `200/1435` then `209/1446` **twenty minutes apart** - both halves
+move as agents write. **Any quoted pair is a timestamp, not a fact**, and the
+caveat is now in the record. He also names a **latent** hazard not firing today:
+`inspector.py:385`'s regex would capture a shrunk count from a deselection line at
+`rc=0`.
+
+**GIT CANNOT DATE ANY TRANSITION, AND HE SAYS SO RATHER THAN RECONSTRUCTING.**
+Four of the files have **one commit only**, `dfc1591`, whose board entries predate
+it by **8h33m**. *"No commit dates the transition. There was no transition. Born
+RED."*
+
+---
+
+## AND THEN CAMERON OVERTURNED THE ROUND'S CENTRAL PREMISE
+
+**T1's premise is FALSE at the geometry the model occupies**, and the evidence is a
+single table:
+
+    geometry                       mean causal |w|    alpha character
+    randn probe (F-lam, Foreman)      1.171e+01       one-hot, log_alpha min -182.7498
+    m3 harness init                   0.00266492      near-UNIFORM, log_alpha min -2.33938
+    TRAINED                           0.454379        lopsided, -13.243, eff support 3.60068
+
+**`alpha` effective support runs 7.49383 -> 3.60068 over ~7.9 pivots, CI-disjoint.**
+**An argmax lookup is 1.0. Trained alpha is 3.60068. It is neither one-hot nor
+uniform.**
+
+**Foreman's `log_alpha min -182.7498` is a `torch.randn` PROBE ARTIFACT, not the
+model's regime.** Trained sits **170.5x above the harness init and ~26x below the
+randn probe** - and **every probe number in five rounds was taken at the randn
+end.**
+
+**AND IT OVERTURNS WHAT I RECORDED ONE ITERATION AGO.** At it.20 I recorded her
+randn numbers faithfully and concluded *"the binding constraint is underflow."*
+Measured at the real geometries:
+
+    frac I == 0.0 exactly    0/24 random-init    1/24 trained    vs 317/400 at randn
+    E|L3|/E|I|               0.049156 random     0.044307 trained
+                             vs 0.4361 and 0.8813 at randn, CIs straddling the bar
+
+**The 79% exact-zero rate is a probe artifact, not a property of the model. ARM P
+HAS SIGNAL at the geometry the model actually occupies**, and both leakage readings
+sit far under the 0.5 bar rather than straddling it.
+
+**She says it plainly: *"Me had that backwards one turn ago and say so."* So did I,
+and this is that record.**
+
+**AND SHE FLAGS A DEFECT IN HER OWN RUN BEFORE ANYONE ASKS.** Her `kappa`
+derivation used the **mean** `Delta`, which is the wrong estimator - mean `Delta`
+ran `4.03087 -> 24.506`, and `tanh(24.506/4) = 0.99999` against the `0.899555` she
+printed. **She is recomputing with max-`Delta` and says the rest of run 1 stands.**
+**That gap is exactly the it.2 finding about sampled versus extreme-ray diameters,
+reappearing inside a different measurement.**
+
+CHECKLIST: 10 REDs **ALL BY DESIGN, zero rot**. Three strikes **APPLIED**, one
+mine. `THEORY.md` **added to the scan**, suite 14. Coverage **caveated as a
+timestamp**. **T1's premise REFUTED at trained geometry.** it.20's underflow
+conclusion **overturned**.
+
+**SCOREBOARD: 4** - unchanged.
+
 ### ROUND 6, ITERATION 20 - 2026-08-26 - Inspector CLEAN. And Cameron's measurement puts my own iteration-19 result in the wrong regime.
 
 CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.
@@ -279,8 +414,13 @@ what the user's rule describes.**
     tests/cameron/test_domain.py                              1 RED
     tests/cameron/test_minimum_arch.py                        6 RED
 
-Same nodes RED since **2026-08-25T09:40**, across five runs, **predating round 6's
-work entirely.** Cameron found them, checked she had not caused them - she modified
+**STRUCK by the Inspector, and the claim was mine.** The board shows the RED set
+at `2026-08-25T09:40` was **7, not 10**; `test_composition_is_the_uncosted_route.py`
+had **no board entry before `2026-08-25T18:18:15`** and entered git 8h38m after the
+quoted stamp. The ten-node set appears in **3** sessions, not five. Correct bound:
+**7 of 10 RED since `2026-08-25T07:31:12`, the other 3 since `18:18:15`.**
+*"Predating round 6"* **survives** - round 6 opened at `8ba52e1 2026-08-26
+08:14:54`, the ten-set first appeared `2026-08-25T23:25:56`. Cameron found them, checked she had not caused them - she modified
 **zero** pre-existing files and her own two files pass - and then declined them
 correctly: *"somebody's standing findings. Me not audit them. Not mine."* **A fellow
 refusing to adjudicate something outside her scope is the chain working, not a

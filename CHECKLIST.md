@@ -47,7 +47,17 @@ precondition. Novelty lives in M2xM3.
 Claim: sign-flip rate for pivot-routed tokens is flat in s while reach stays
 global (no window).
 Baseline impossibility: softmax exactly 0 at every s; every dense signed arm
-decays s^-1.1..-1.7; windowed arms buy flatness only by surrendering reach.
+decays s^-1.1..-1.7; ~~windowed arms buy flatness only by surrendering reach~~
+**- REACH HALF STRUCK, r6 it.21.** `test_windowed_operators_surrender_reach` binds
+it and is RED: reach reads **1.000000** at s=32/128/512 with row width exactly 8,
+and a GREEN sibling pins `nnz(row)==8` with gradient support `== s`. A GREEN
+control reads **0.0** for a contiguous band at s=512, so zero IS reachable and the
+non-zero is a fact rather than a dead instrument. **The kill was pre-registered in
+`DONE_ARCHIVE_ROUND1.md:5093-5095` and its refutation recorded in `DONE.md` and
+`done3.md` - this sentence was simply never amended.** The **flatness half goes to
+Open**: the test that measured decay was **removed** at `84779d0` rather than left
+RED, and a dangling reference to it survives at
+`tests/cameron/test_composition_is_the_uncosted_route.py:158`.
 Test: bench.py pivot arm, stream-isolated, s = 8..2048, 16,384 draws at the
 tail, c in P vs c not-in P vs windowed placement.
 Kill: slope(c in P) < -0.3, OR c not-in P is ALSO flat (mechanism story false
@@ -837,7 +847,7 @@ Replayed ARM A's own draw stream (published `D_FR causal` reproduced to 6 dp at 
 
 | item | status |
 |---|---|
-| `inspector.py` (scheduled) | **CLEAN, exit 0.** 11 checks, 16 controls all fired. **Coverage printed: 191/1413 = 13.52%** (was 8.37%), with the bill stating it covers *"these 191 tests and NOTHING ELSE"*. |
+| `inspector.py` (scheduled) | **CLEAN, exit 0.** 11 checks, 16 controls all fired. **Coverage printed: 191/1413 = 13.52%** (was 8.37%) - **STALE, and the staleness is structural: both halves move as agents write into the tree. Live reads during the it.20 audit were 200/1435 and 209/1446 twenty minutes apart. The MECHANISM is honest - numerator collected == executed == passed with zero skips, denominator agrees between `.` and `tests` - but any quoted pair is a timestamp, not a fact**, with the bill stating it covers *"these 191 tests and NOTHING ELSE"*. |
 | **ARM S — G3** | **PASS**, 24/24 bitwise at `t_max=0`. **Control was vacuous first**: row 0 of `tril(-1)` sums to exactly 0.0 → `NaN` → `torch.equal` False *for the wrong reason* → `max(0.0, nan)` = 0.0 hid the witness. **Fired on a divide-by-zero, not the float claim.** Sixth vacuous control this round, third distinct author. |
 | **the RED that mattered** | Probability-domain settle **converged to a VERTEX** in 3 steps, residual exactly 0.0 — the settled reading was one pivot row copied out, i.e. the arm round 5 killed. **The fixed point was not missing, it was unrepresentable** (coordinates ~`e^-1000`). **The it.5 log-domain path fixed it**: `log_alpha min -182.7498`, converged **72/72**, `left_cone 0/72`. **One root cause, four symptoms.** |
 | **birth gate 1** | **PASS on the right contrast.** `d_H(settled, glance)` proves nothing; **settled vs ONE STEP** reads `0.986111`, CI **[0.925029, 0.999648]** against G7's 1% bar — **92× on the lower bound**. Threshold `1e-6` calibrated: noise ~`1e-13`, signal to `18.73` nats. |
@@ -981,3 +991,22 @@ Replayed ARM A's own draw stream (published `D_FR causal` reproduced to 6 dp at 
 | **the sharper Phase D question** | Ties to **F-lam**: the peaked softmax comes from logit scale `1.171e+01`. **If trained projections lower it, the zero rate must fall. If not, ARM P has no signal to measure at scale** — which matters more than the L3 ratio ever could. **A gate that cannot be decided is an inconvenience; a statistic that is identically zero on most draws is not a statistic.** |
 | her bind | **FAILED and she let it.** QUICK config made the arm worse (`1.2727945382163208` vs 0-step `1.0194284829799736`) — 4769 params on 256 examples overfits. **Refused to report trained numbers, refused to lower the bind**, left the broken constant as a **named open defect in her own test file.** |
 | independent L3 check | `L3 == I(m absent) − I(m masked)` — **a different grouping of the same eight terms**, so a transposed sign fails there and nowhere else. **9 passed.** |
+
+**ROUND 6 it.21 - three strikes applied, and T1's premise refuted.**
+
+| item | status |
+|---|---|
+| **the ten standing REDs** | **ALL TEN BY DESIGN. ZERO ROT.** Proof is the board: each reads RED on **every** recorded run, 6-13 runs each, **never GREEN once**. Rot shows GREEN-then-RED; these were born RED. |
+| test flag: #9/#10 | **Assertion CANNOT ever pass** — `sigmoid * softmax` is non-negative, so `A[2,0] < -0.05` is unfalsifiable for any data (`min(A) = 0.00011968078438773533`). **A definition wearing failing-assert clothes**; records a true fact, **cannot detect drift**. The first assertion in the same test is empirical and live. |
+| test flag: #5 | **Number not quotable.** Pinning threads moved the margin `3.5e-05 → 1.06e-03`, **~30×**. Direction holds, value does not. #7 moved `1.417211 → 1.409810` but its margin is `0.41` and decisive — **so that finding survives, and he says which is which.** |
+| **STRIKE 1 — MINE** | *"RED since 2026-08-25T09:40, across five runs"* is **wrong**. Board shows **7, not 10**, at that stamp; the third file had **no entry before `18:18:15`** and entered git **8h38m later**. Ten-set in **3** sessions. **Corrected in place.** *"Predating round 6"* survives. |
+| **STRIKE 2** | `CHECKLIST.md:50` reach half — RED test reads **reach 1.000000** at s=32/128/512, GREEN sibling pins `nnz(row)==8`, GREEN control reads **0.0** for a band so zero IS reachable. **The kill was pre-registered in round 1 and its refutation recorded — the sentence was never amended.** Flatness half → **Open** (its measuring test was **removed** at `84779d0`, dangling reference at line 158). |
+| **STRIKE 3** | `THEORY.md` contraction guarantee — holds for the **zero-action operator only**; intervention-conditioned `ρ` reaches **1.4172 / 1.4135 / 1.4098**. **Nothing published recorded this.** |
+| **scan gap 1, CLOSED** | **`THEORY.md` was outside `LEAD_DOCS`** — same class as the `D1.md` gap already on record. Added; suite now **14 passed**. |
+| **scan gap 2, RECORDED** | The scan hunts **numeric constants**; `CHECKLIST.md:50` carries **no number**, so **it structurally cannot catch Strike 2**. Not closed. |
+| CLEAN | `REQUIREMENTS.md:73-75` reproduces test #4's message **byte-exact**. |
+| coverage | **Mechanism honest** (collected==executed==passed, zero skips; `.` and `tests` agree at 1446), **number STALE** — live reads `200/1435` then `209/1446` **20 min apart**. **Any quoted pair is a timestamp, not a fact.** Latent hazard named: the collection regex would capture a deselected count at `rc=0`. |
+| git provenance | **Cannot date any transition, and he says so rather than reconstructing** — four files have one commit whose board entries predate it by **8h33m**. *"There was no transition. Born RED."* |
+| **T1's PREMISE — REFUTED** | `alpha` eff support **7.49383 → 3.60068** over ~7.9 pivots, **CI-disjoint**. **Argmax is 1.0; trained is 3.60068** — neither one-hot nor uniform. **`log_alpha min -182.7498` is a `torch.randn` probe artifact**, not the model's regime. Trained `\|w\|` sits **170.5× above harness init, ~26× below the randn probe** — and **every probe number in five rounds was taken at the randn end.** |
+| **it.20 OVERTURNED** | `frac I == 0.0`: **0/24 random, 1/24 trained** vs **317/400** at randn. `E\|L3\|/E\|I\|`: **0.049156 / 0.044307** vs `0.4361`/`0.8813` straddling. **The 79% exact-zero rate is a probe artifact. ARM P HAS SIGNAL.** My "underflow is the binding constraint" is withdrawn. |
+| her own defect, self-flagged | **`kappa` derived from MEAN `Delta`** — wrong estimator; mean ran `4.03087 → 24.506` and `tanh(24.506/4) = 0.99999` against the `0.899555` printed. Recomputing with max-`Delta`. **The it.2 sampled-vs-extreme-ray finding reappearing inside a different measurement.** |

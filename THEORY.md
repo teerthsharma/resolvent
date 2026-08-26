@@ -62,9 +62,16 @@ Under those two constraints `(I − γP)⁻¹ b` *is* discounted expected future
 occupancy, and the action-conditioned `Tₖ` blocks make it `p(· | do(aₖ))` rather than
 `p(· | aₖ)` — provided the training data contains real interventions.
 
-**Consequence for the contraction certificate.** With `P` row-stochastic,
-`ρ(γP) = γ < 1` holds *by construction*, not by measurement. The Banach certificate
-stops being something `sigmoid` hopes for and becomes a structural guarantee. This
+**Consequence for the contraction certificate. STRUCK IN PART, r6 it.21 - the
+guarantee covers the ZERO-ACTION operator only.** With `P` row-stochastic,
+`ρ(γP) = γ < 1` holds *by construction*, and a GREEN sibling test confirms it. But
+`test_the_contraction_guarantee_survives_conditioning_on_an_intervention` is RED:
+conditioning on a held-out intervention, `ρ(T0 + Σ a_k T_k)` reaches **1.4172**
+(cpu), **1.4135** (cuda), **1.4098** (cpu, threads pinned to 2). ~~The Banach
+certificate stops being something `sigmoid` hopes for and becomes a structural
+guarantee.~~ **It becomes a structural guarantee for the zero-action operator and
+for nothing else.** A do()-conditioned solve is owed before the sentence can be
+restored. Nothing published recorded this before the audit. This
 also disposes of the `rho_max` problem the sigmoid README already documents and
 rejects: clipping `ρ` to 0.995 degraded Lorenz one-step NRMSE from 0.067 to 0.317,
 because clipping misreports chaotic dynamics. Constraining `P` to be stochastic does

@@ -113,8 +113,13 @@ STRIKE_MARKERS = (
 #:    DELIVERABLE (`LOOP_PROMPT.md` clause 10) and it ships. A shipped document
 #:    outside the struck-constant scan is exactly how `1.471448` survived
 #:    eighteen iterations -- a number in an artifact nothing checked.
+#: THIRD COVERAGE REPAIR, r6 it.21. `THEORY.md` was NOT covered, and the audit
+#: found an unstruck claim in it -- the contraction guarantee, which holds only
+#: for the zero-action operator. Same class as the `D1.md` gap already on record:
+#: a document a stranger reads as a current claim, outside the scan that exists to
+#: check current claims.
 LEAD_DOCS = ("README.md", "MODEL_CARD.md", "PROGNOSIS.md", "D1.md",
-             "CHECKLIST.md", "LOOP_PROMPT.md", "STATE.md")
+             "CHECKLIST.md", "LOOP_PROMPT.md", "STATE.md", "THEORY.md")
 
 #: Source that ships.
 SHIPPED_SRC = ("ceq/hf/modeling_ceq.py", "ceq/hf/configuration_ceq.py",
