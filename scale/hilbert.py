@@ -52,7 +52,7 @@ import math
 
 import torch
 
-__all__ = ["d_H", "delta_hat", "n_parts", "parts", "kappa_cert",
+__all__ = ["d_H", "d_H_logits", "delta_hat", "n_parts", "parts", "kappa_cert",
            "one_minus_kappa", "neumann_terms"]
 
 
@@ -106,6 +106,56 @@ def parts(rows: torch.Tensor) -> dict[tuple[bool, ...], list[int]]:
         key = tuple(bool(v) for v in (rows[i] > 0).tolist())
         out.setdefault(key, []).append(i)
     return out
+
+
+def d_H_logits(u: torch.Tensor, v: torch.Tensor,
+               su: torch.Tensor | None = None,
+               sv: torch.Tensor | None = None) -> float:
+    """Hilbert distance between two softmax rows, computed from their LOGITS.
+
+    d_H(softmax u, softmax v) = osc(u - v) exactly, where osc is max minus min
+    over the shared support. Because softmax(u)_j = e^{u_j}/Z_u,
+
+        log( softmax(u)_j / softmax(v)_j ) = (u_j - v_j) - log(Z_u / Z_v)
+
+    and the log-partition term is CONSTANT in j while d_H is an oscillation over
+    j, so it cancels. Measured at 6 seeds against the softmax path: agreement to
+    2.842e-14 or exact.
+
+    WHY THIS PATH EXISTS. The softmax route cannot carry ARM S in float32. At ARM
+    A logit scales exp() underflows to exact zeros on the ALLOWED support — 16861
+    of 523776 entries at s=1024 — which moves the two rows into different parts
+    and makes d_H read +inf. The metric is destroyed on the objects it exists to
+    measure. Measured here at spreads of 30/60/115 nats: 146, 1904 and 2028 zeros
+    respectively, d_H = +inf in every case, while the log-domain value stays
+    finite and exact.
+
+    It is also strictly cheaper: one subtraction and two reductions, with no exp
+    and no log. The softmax route computes exp, normalises, then takes logs to
+    undo the exp. Removing the float32 blocker costs nothing rather than costing
+    a promotion to float64, which would have been an uncosted wall-clock line
+    under contract 1.7 and is subject to K-F.
+
+    SUPPORT IS CARRIED BY THE MASK, not by which entries happened to underflow —
+    that is the point. Rows whose masks differ lie in different parts and read
+    +inf, per the same-part ruling.
+    """
+    u = u.reshape(-1).double()
+    v = v.reshape(-1).double()
+    if u.numel() != v.numel():
+        raise ValueError(f"length mismatch: {u.numel()} vs {v.numel()}")
+    if sv is None:
+        sv = su
+    if su is None:
+        su = sv = torch.ones_like(u, dtype=torch.bool)
+    su = su.reshape(-1).bool()
+    sv = sv.reshape(-1).bool()
+    if not bool((su == sv).all()) or not bool(su.any()):
+        return math.inf                       # different parts, or empty support
+    if not (bool(torch.isfinite(u[su]).all()) and bool(torch.isfinite(v[su]).all())):
+        return math.inf
+    d = u[su] - v[su]
+    return float(d.max() - d.min())
 
 
 def delta_hat(rows: torch.Tensor) -> float:

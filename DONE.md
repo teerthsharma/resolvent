@@ -4,6 +4,130 @@ Round 5 closed at `TWOSPHERES: BROKEN - ARM A, K1's dual slope, displacement
 clause`; its handoff is `done5.md` and its negative result is `D1.md`. That
 verdict is final and is not reopened.
 
+### ROUND 6, ITERATION 5 - 2026-08-26 - The log-domain metric removes Foreman's blocker for free. Cameron returns and overrules her own contribution.
+
+CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.
+[RUN] `pytest tests/loop` -> **149 passed**, exit 0.
+
+---
+
+## THE ACTION: `d_H` WITHOUT `exp()`. Foreman's blocker dissolves at no cost.
+
+Foreman's iteration-4 finding was a build blocker: **ARM S cannot ship float32**,
+because `exp()` underflows to exact zeros on the ALLOWED support - **16861 of
+523776 entries at s=1024** - which moves rows into different parts and makes `d_H`
+read `+inf`. The remedy on the table was float64 or log-domain, and **float64 is an
+uncosted wall-clock line under 1.7, subject to K-F.**
+
+**His own identity gives the third option, and it is free.** [RUN] verified
+independently of him - different draws, different scale, 6 seeds:
+
+    d_H(softmax u, softmax v) = osc(u - v)      exactly
+
+    seed 0  d_H=147.459873923494428  osc=147.459873923494456  |diff|=2.842e-14
+    seed 4  d_H=229.832895021640724  osc=229.832895021640724  |diff|=0.000e+00
+
+**Derived, not just measured:** `softmax(u)_j = e^{u_j}/Z_u`, so
+`log(softmax(u)_j/softmax(v)_j) = (u_j - v_j) - log(Z_u/Z_v)`. **The log-partition
+term is CONSTANT in j and `d_H` is an oscillation over j, so it cancels exactly.**
+
+**THE PAYOFF, measured at ARM A logit scales [RUN]:**
+
+    spread ~30   s=256    float32 zeros  146    d_H via softmax = +inf   log-domain =  215.668228
+    spread ~60   s=1024   float32 zeros 1904    d_H via softmax = +inf   log-domain =  581.454498
+    spread ~115  s=1024   float32 zeros 2028    d_H via softmax = +inf   log-domain = 1114.454407
+
+**The softmax route destroys the metric on exactly the objects it exists to
+measure. The log-domain route never forms `exp()`, so underflow cannot arise** -
+and it is **strictly cheaper**: one subtraction and two reductions, against
+exp-normalise-then-log-to-undo-the-exp.
+
+`scale/hilbert.py::d_H_logits(u, v, su, sv)`. **Support is carried by the MASK, not
+by which entries happened to underflow** - that is the whole point - and differing
+masks read `+inf` per the same-part ruling. Four tests, RED shown first, including
+a must-fire that a path returning 0 unconditionally would fail.
+
+---
+
+## CAMERON RETURNS, AND THE BEST PART IS THAT SHE OVERRULED HERSELF
+
+RED first [RUN]: `ImportError: cannot import name 'matcher'`, `RETURNCODE= 2`.
+Then 13 passed. scipy 1.17.1 present; `linear_sum_assignment` used.
+
+**She did not write Jonker-Volgenant and gives the reason:** the cost `|a_i - b_j|`
+on a line is **Monge**, so sorted pairing is provably optimal at `O(n log n)`. She
+uses that as a **free exact oracle** - `match()` raises if the solver disagrees
+past `1e-9`.
+
+**SHE RAN THE DELETION TEST AND IT WENT AGAINST HER.** Replacing the solver with
+the identity permutation:
+
+    Monge guard RAISES:  solver 4.180597461410942 vs closed form 0.5161177889087822
+    guard off, null direction        fired = False   (correct)
+    guard off, separated direction   fired = True    <- STILL PASSES, DELETED
+    effect d byte-identical intact vs deleted:  0.097105  and  1.476579
+
+**Cause, and it is structural:** equal-size pools make the assignment a full
+bijection, so `y_filler[filler_idx]` is the same multiset under any permutation and
+**Cohen's d is permutation-invariant. A square calibration CANNOT test the solver
+through the effect.** That is instrument #15's shape and she says plainly she
+nearly shipped it. **Fixed by a third, RECTANGULAR direction** (64 causal vs 2000
+filler) where the assignment actually *selects* which fillers are used - and that
+one does fail when the solver is deleted, pinned by its own test.
+
+**SECOND DEFECT: THE NAIVE BOOTSTRAP MANUFACTURES SIGNIFICANCE.** Matching is part
+of the estimator, so resampling matched PAIRS is invalid. n=256, seed=20260826:
+
+    naive-pairs bootstrap   sd 0.045302   CI [ 0.009888, 0.188523]   EXCLUDES ZERO ON NULL DATA
+    re-match bootstrap      sd 0.089484   CI [-0.078196, 0.270299]   contains zero
+    truth, 200 seeds        sd 0.096312   mean -0.001635   t -0.2401
+
+**Naive understates by 2.1x and returns a significant result on data with no
+effect.** Every matched contrast must re-match inside each replicate. The naive
+number is kept and printed but **never gates**. She also caught that the point
+estimate was unpaired `cohen_d` while the CI was paired `d_z` - **two different
+quantities on one line.**
+
+**STRATA, AND THE POOLED TABLE IS WORSE THAN THOUGHT.** s=1024, d=16, seed=0:
+
+    k=8     band residual 2.072291   tail residual 3.485376 (identity 12.408169)
+    k=32    band residual 2.470484   tail residual 3.829049 (identity  9.231035)
+    k=128   band residual 3.673077   tail residual 5.486502 (identity  8.729744)
+
+**The pooled residual EQUALS the band residual at every k.** The pooled match
+spends its entire budget inside the band and **touches zero tail tokens** - so a
+pooled table **carries no tail information at all**. F-selector said carry them as
+strata; this measures why.
+
+**AND HER RESULT IS NOT IN HER FAVOUR, WHICH SHE STATES BEFORE THE GATE RATHER
+THAN AFTER.** On band rows, `identity == residual` at **every** k. The band is
+ranks k..2k of the same key-norm score that orders the causal set, so both arrive
+sorted and **rank matching already IS optimal value matching there**. **Her matcher
+does not improve the existing probes against band.** What it adds is the *number* -
+the "uncontrolled residual gap" those files declare in prose is now measured at
+2.07 / 2.47 / 3.67 key-norm units. **Where it does change the answer is the TAIL:
+12.408169 -> 3.485376 at k=8.**
+
+**Bearing on the +3/-5 gate, in her words: switching to Hungarian will NOT move the
+band contrast.** Said in advance, which is the only time it is worth anything.
+
+**Her own OPEN list is long and honest** - the null-residual bar is one she picked
+rather than one the contract pre-registered; the `n^-0.5` ratios sit consistently
+**above** prediction (`1.0000 / 0.5861 / 0.2809` vs `1.0000 / 0.5000 / 0.2500`)
+and she has **not explained the gap**; the rectangular no-scipy fallback is
+unimplemented; the Monge oracle only covers the square case while **rectangular is
+the shape it.1 actually uses**; the calibration `effect` is synthetic; the strata
+table is one draw with **no CI, so G6 is not satisfied and no comparative sentence
+is made from it**; band/tail definitions are inherited rather than re-derived;
+whether "at least two" populations is actually three is unchecked; and the 2-dof
+lemma is not started.
+
+CHECKLIST: `d_H_logits` GREEN, 4 tests, blocker removed at negative cost. Matcher
+GREEN, 13 tests, **two self-caught instrument defects**, strata measured.
+
+**SCOREBOARD: 4** - unchanged. The matcher is instrument work; the F-green re-run
+that pays +3/-5 has not run.
+
 ### ROUND 6, ITERATION 4 - 2026-08-26 - Foreman returns. The float repair is what kept the arm alive; the certificate is confirmed AND vacuous; and my own metric was wrong twice.
 
 CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.

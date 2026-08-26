@@ -271,3 +271,64 @@ def test_must_fire_the_same_part_reading_can_still_be_infinite():
     rows[1, 1] = 0.0
     assert n_parts(rows) == 2                # they are no longer the same part
     assert delta_hat(rows) == 0.0            # and no PAIR survives to be measured
+
+
+# --------------------------------------- the log-domain path (round 6 it.5)
+
+def test_log_domain_equals_the_softmax_path_exactly():
+    """d_H(softmax u, softmax v) = osc(u - v), so the metric never needs exp().
+
+    Algebra: softmax(u)_j = e^{u_j}/Z_u, so log(softmax(u)_j / softmax(v)_j)
+    = (u_j - v_j) - log(Z_u/Z_v). The log-partition term is CONSTANT in j and
+    d_H is an oscillation over j, so it cancels exactly.
+    """
+    from scale.hilbert import d_H_logits
+    for seed in range(6):
+        g = torch.Generator().manual_seed(seed)
+        u = torch.randn(64, generator=g, dtype=torch.float64) * 30
+        v = torch.randn(64, generator=g, dtype=torch.float64) * 30
+        assert d_H_logits(u, v) == pytest.approx(
+            d_H(torch.softmax(u, 0), torch.softmax(v, 0)), abs=1e-11)
+
+
+def test_log_domain_survives_where_float32_softmax_destroys_the_metric():
+    """The blocker this path exists to remove.
+
+    At ARM A logit scales a float32 softmax underflows to exact zeros, the two
+    rows land in different parts, and d_H reads +inf — the metric is destroyed on
+    the objects it exists to measure. The log-domain route never forms exp(), so
+    underflow cannot arise, and it is cheaper: no exp, no log.
+    """
+    from scale.hilbert import d_H_logits
+    g = torch.Generator().manual_seed(7)
+    u = torch.randn(1024, generator=g) * 60
+    v = torch.randn(1024, generator=g) * 60
+    p32, q32 = torch.softmax(u, 0), torch.softmax(v, 0)
+    assert int((p32 == 0).sum() + (q32 == 0).sum()) > 0, "no underflow to defend against"
+    assert d_H(p32.double(), q32.double()) == math.inf
+    got = d_H_logits(u, v)
+    assert math.isfinite(got) and got > 0.0
+
+
+def test_log_domain_honours_the_same_part_rule_through_the_mask():
+    """Support is carried by the mask, not by which entries underflowed. Rows
+    with different masks are in different parts and must read +inf."""
+    from scale.hilbert import d_H_logits
+    u = torch.tensor([1.0, 2.0, 3.0, 4.0], dtype=torch.float64)
+    v = torch.tensor([2.0, 1.0, 5.0, 0.0], dtype=torch.float64)
+    m1 = torch.tensor([True, True, True, False])
+    m2 = torch.tensor([True, True, False, False])
+    assert math.isfinite(d_H_logits(u, v, m1))
+    assert d_H_logits(u, v, m1) == pytest.approx(
+        float((u[m1] - v[m1]).max() - (u[m1] - v[m1]).min()), rel=1e-12)
+    assert d_H_logits(u, v, m1, m2) == math.inf
+
+
+def test_must_fire_log_domain_is_not_trivially_zero():
+    """A path that returned 0 unconditionally would pass an equality test against
+    a second zero. It must track the actual oscillation."""
+    from scale.hilbert import d_H_logits
+    u = torch.tensor([0.0, 5.0, 10.0], dtype=torch.float64)
+    assert d_H_logits(u, u) == 0.0                      # same ray
+    assert d_H_logits(u, u + 3.0) == 0.0                # softmax-invariant shift
+    assert d_H_logits(u, 2.0 * u) == pytest.approx(10.0, rel=1e-12)
