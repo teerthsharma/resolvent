@@ -4,6 +4,77 @@ Round 5 closed at `TWOSPHERES: BROKEN - ARM A, K1's dual slope, displacement
 clause`; its handoff is `done5.md` and its negative result is `D1.md`. That
 verdict is final and is not reopened.
 
+### ROUND 6, ITERATION 14 - 2026-08-26 - A headline number in the shipped deliverable has no producer. Struck.
+
+CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.
+[RUN] `pytest tests/loop` -> **181 passed**, exit 0.
+
+**M3 has not landed.** RULE 2's last extension expires at the end of this
+iteration; the ruling stands and is applied at it.15.
+
+**Never block on a measurement**, so the iteration went to the most serious
+unowned item: **Wilson's parting flag that `-0.4654 [-0.5173,-0.4160]` has no
+locatable producer.** It is published in **`D1.md:43` - the verdict table of the
+round's negative-result deliverable - and in `done5.md:45`, the round-5 handoff.**
+
+## THE HUNT, AND IT IS WORSE THAN WILSON COULD ESTABLISH
+
+**1. The interval exists in NO code and NO data.** [RUN] a sweep of every `.py`,
+`.json`, `.jsonl` and `.txt` in the tree for `0.5173` or `0.4160` returns **only
+`.md` prose**, plus one coincidental substring inside a `gamma` array in
+`results/arm_a_k1.jsonl`. **The interval lives only in sentences.**
+
+**2. The one file that computes a live-rows slope disagrees with it.**
+`scale/foreman_theta_tv.py:255-262` computes `sl = slope(ks, [corr_c[k] for k in
+ks])` and prints it inside a `check()` detail string. Run [RUN]:
+
+    D_FR slope in k: as ARM A computes it = -0.3061 ; live rows only = -0.3323
+    RETURNCODE = 1
+
+**It emits `-0.3323`, not `-0.4654`** - because it operates on the **120-draw,
+three-point** data from round 5 iteration 4, whose as-computed slope was `-0.3061`.
+The published pair came from the **400-draw, six-k** re-run. **And it exits 1.**
+
+**3. It contains no resampling machinery at all.** [RUN] a grep for
+`boot|percentile|randint|resample|Generator` returns only draw-level sampling
+inside `one()` - **there is no bootstrap, so this file could not have produced a
+confidence interval even on the right data.**
+
+**4. The 400-draw producer has no live-rows path.** [RUN] `scale/arm_a_k1.py`
+contains **no occurrence of `live` or `dead`**. The producer that made `-0.4137
+[-0.4579,-0.3704]` **cannot** have made a live-rows variant.
+
+**CONCLUSION: BOTH HALVES ARE UNREACHABLE.** Not the interval only - **the point
+estimate too.** No file in the tree computes a live-rows slope on the 400-draw data,
+with or without a CI.
+
+## STRUCK, IN THE DELIVERABLES
+
+**This is the `1.471448` class** - a number asserted in a shipped document with no
+producer behind it - and this one sat in a **verdict table**. Three values added to
+the struck registry with their provenance (`-0.5173`, `-0.4160`, `-0.4654`), and
+the live-rows row in **`D1.md`** and **`done5.md`** now reads
+**`STRUCK - unverified`** rather than a number.
+
+**THE VERDICT IS UNAFFECTED AND THAT IS SAID PLAINLY.** The as-computed slope
+`-0.4137 [-0.4579,-0.3704]` lies entirely below the `-0.30` trigger **on its own**,
+and after iteration 13's repair **that pair reproduces exactly from the shipped
+producer.** Round 5's `TWOSPHERES: BROKEN` stands on evidence that survives.
+**Striking a corroborating number does not weaken a verdict that never needed it -
+it removes a claim that could not be defended.**
+
+**AND THE STRUCK-CONSTANT TEST CAUGHT ME MID-REPAIR.** Adding the three values
+immediately failed `STATE.md`, which mentioned them in a *"no locatable producer"*
+note **without a strike marker**. The instrument does not care that the mention was
+itself about the strike; **an unmarked number in a lead document is an assertion**,
+and it made me mark it. **A registry that only fires on other people's documents
+would be decoration.**
+
+CHECKLIST: `-0.4654 [-0.5173,-0.4160]` **STRUCK** in both shipped deliverables,
+three registry entries, 181 passed. **Verdict unaffected.**
+
+**SCOREBOARD: 4** - unchanged.
+
 ### ROUND 6, ITERATION 13 - 2026-08-26 - The G2 inverts: the numbers were right, the code drifted. And RULE 2's breach is called.
 
 CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.

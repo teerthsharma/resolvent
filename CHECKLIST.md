@@ -891,3 +891,17 @@ Replayed ARM A's own draw stream (published `D_FR causal` reproduced to 6 dp at 
 | breach cause 2 | Run is **real and in progress, not stalled** — `m3_quintuple.py`, `arm_s_batched.py`, `m3_flops.py` all appeared during it.12–13. |
 | **ruling** | Round does **not** halt outright; the review is what the rule demands and this is it. **M3 gets iteration 14. If it has not landed by end of it.14, the cell is declared UNRUN for round 6 and `D1` ships without it.** **No third extension** — a deadline moved twice is not a deadline. |
 | standing REDs, not ours | Cameron reports **10 pre-existing REDs** in `tests/cameron/` (`test_composition_is_the_uncosted_route` 3, `test_domain` 1, `test_minimum_arch` 6), RED since **2026-08-25T09:40**, five runs before her work. She modified zero pre-existing files. **Unaudited, not hers, recorded.** |
+
+**ROUND 6 it.14 — a headline number with no producer, struck.**
+
+| item | status |
+|---|---|
+| **`-0.4654 [-0.5173,-0.4160]`** | **STRUCK in `D1.md:43` and `done5.md:45`.** Both halves unreachable, not the interval alone. |
+| evidence 1 | The interval appears in **no `.py`, `.json`, `.jsonl` or `.txt`** — only in `.md` prose (plus one coincidental substring in a `gamma` array). **It lives only in sentences.** |
+| evidence 2 | The one live-rows producer, `scale/foreman_theta_tv.py:255-262`, emits **`-0.3323`, not `-0.4654`** — it runs on the **120-draw three-point** data (as-computed `-0.3061`), not the 400-draw six-k re-run — **and exits 1**. |
+| evidence 3 | That file contains **no resampling machinery at all** — no bootstrap, so **it could not have produced a CI even on the right data**. |
+| evidence 4 | `scale/arm_a_k1.py`, the 400-draw producer, contains **no occurrence of `live` or `dead`** — it cannot have made a live-rows variant. |
+| class | **The `1.471448` class**: a number asserted in a shipped document with no producer. This one sat in a **verdict table**. |
+| **verdict impact** | **NONE, and stated plainly.** `-0.4137 [-0.4579,-0.3704]` lies below the `-0.30` trigger **on its own**, and reproduces exactly after it.13's repair. **Striking a corroborating number does not weaken a verdict that never needed it.** |
+| the registry caught me | Adding the three values immediately failed **`STATE.md`**, which mentioned them in a *"no locatable producer"* note **without a strike marker**. The instrument does not care that the mention was about the strike — **an unmarked number in a lead document is an assertion.** A registry firing only on other people's documents would be decoration. |
+| RULE 2 | **M3 not landed.** Last extension expires end of it.14; ruling applied at it.15. |

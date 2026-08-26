@@ -4,48 +4,43 @@
 |---|---|
 | contract | `LOOP_PROMPT.md` (v8.2). Round 5 archived `LOOP_PROMPT_ROUND5_ARCHIVE.md` |
 | promise | **`HILBERT`** — D2 verbatim, or an honest `BROKEN` |
-| iteration | **13 complete, 14 next** |
+| iteration | **14 complete, 15 next** |
 | phase | **C — the deciding measurement (iterations 10–15; RULE 2)** |
 | scoreboard | **4** — Star delta +2, κ<1 measured +2 *(qualified: Birkhoff route dead, structural β earned it)* |
 | RULE 2 clock | **running.** M3 settled-vs-unsettled EXECUTES by **iteration 12** or breach review |
 | register | **caveman, all agents, every iteration.** Artifacts stay normal English |
 | autonomy | user meets the loop at **iteration 30**; no check-ins |
 
-## THE ONE NEXT ACTION (round 6, iteration 14)
+## THE ONE NEXT ACTION (round 6, iteration 15)
 
-**THE M3 RESULT, OR THE CELL IS DECLARED UNRUN. This is the last extension.**
+**APPLY THE RULE 2 RULING. The last extension expired at the end of it.14.**
 
-RULE 2's breach was called at it.13. The round did not halt — the review is what
-the rule demands — but **the M3 cell gets this iteration and no more.** If it has
-not landed by the end of it.14 it is **UNRUN for round 6** and `D1` ships without
-it, with the breach and its causes on the record. **A deadline moved twice is not a
-deadline.**
+**If M3 landed:** read it in the fixed order — softmax reproduced (and check the
+**producer** before concluding anything about a moved number; the last G2 was a
+producer defect, not a number defect); then settled vs twin; then **settled vs
+argmax-pivot**, which decides what may be *claimed*; then against the
+pre-registered ~0.05 NRMSE floor. **Beats twin but ties argmax ⇒ routing-only
+(+6) and T1 fires. Beats both ⇒ +12.**
 
-**Reading order when it lands, unchanged and still the whole point:**
-  1. **Softmax reproduced?** If the baseline moved it is a **G2 event before it is
-     an M3 result**. Note the bar for that just got higher: the last G2 turned out
-     to be a **producer** defect, not a number defect, so check the producer before
-     concluding anything about the number.
-  2. **settled vs unsettled twin** — the headline.
-  3. **settled vs ARGMAX-PIVOT** — decides what may be *claimed*. **Beats twin but
-     ties argmax ⇒ the equilibrium bought nothing, claim is routing-only (+6), and
-     T1 fires.** Beats both ⇒ +12 available.
-  4. **Against the pre-registered ~0.05 NRMSE floor**, so a null is interpretable
-     rather than an excuse.
+**If M3 did NOT land:** **declare the M3 cell UNRUN for round 6** and record the
+breach with its causes, **the first of which is mine** — the triple was widened to
+a quintuple at it.11 inside a two-iteration window without extending it. `D1`
+ships without the cell. **No third extension.**
 
-**If T1 fires, release Dr House — and only then.** The trigger is a twin that
-matches: the fixed point exists, is unique, is reached, **and changes nothing.**
-Innovation gap, not evidence gap. **Never against a clean measurement.**
+**EXIT GATE C either way**, and the scoreboard is recomputed with G5 applied to
+every conclusion sentence.
 
-**Carried, and none of it blocks the run:**
-  * `-0.4654 [-0.5173,-0.4160]` has **no locatable producer** — worse than a
-    drifted interval, and still unresolved.
-  * **No norm-matched control exists within a sequence** (Cameron, structural). No
-    mechanism claim about *which* tokens may be made. She has no repair and
-    neither do I.
-  * **L3 leakage `E|L₃|/E|I|` unmeasured** — degree-2 claims stay unwarranted.
-  * **10 standing REDs in `tests/cameron/`**, predating this round's work,
-    unaudited.
+**What the round can still honestly claim, and it is worth writing down before the
+verdict:** `κ = β` **attained** to nine decimals across 72 cells; ARM S **born**
+with G3 and two birth gates GREEN; the **log-domain metric** that removed a
+precision blocker at negative cost and then turned out to fix the vertex collapse
+too; the **Star delta** established from the paper; the **2-dof lemma** verified
+with its degeneracy found; and a **G2 that inverted** — the published numbers were
+right and the producer had drifted.
+
+**What it cannot claim:** anything about *which* tokens carry the advantage — **no
+norm-matched control exists within a sequence**, and neither Cameron nor I have a
+repair. **Degree-2 claims** stay unwarranted until `E|L₃|/E|I|` is measured.
 
 ## Open REDs
 

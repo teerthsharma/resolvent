@@ -42,7 +42,7 @@ bucketed, determinism replay matching each bucket.
 | statistic | slope | 95% CI | vs the −0.30 trigger | vs K1's bar ≥ −0.10 |
 |---|---|---|---|---|
 | as computed | **−0.4137** | [−0.4579, −0.3704] | excludes, CI below | not met |
-| live rows only | **−0.4654** | [−0.5173, −0.4160] | excludes, CI below | not met |
+| live rows only | **STRUCK — unverified** | **STRUCK — unverified** | — | — |
 
 Both intervals lie entirely below the pre-registered *"displacement dies with
 flip ⇒ no leap"* line. **ARM A did not survive, so ARM B was never authorized and

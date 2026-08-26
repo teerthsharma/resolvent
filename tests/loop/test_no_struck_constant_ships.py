@@ -53,6 +53,24 @@ STRUCK: dict[float, str] = {
         "of the claim, never substitution of a number nobody can defend."
     ),
     0.9938: "R^2 belonging to the withdrawn -1.389; withdrawn with it.",
+    -0.5173: (
+        "Lower endpoint of the 'live rows only' K1 slope interval published in "
+        "D1.md and done5.md. UNVERIFIED: the interval exists in no .py, .json, "
+        ".jsonl or .txt in the tree, and no producer computing a live-rows slope "
+        "with a confidence interval could be located. The only file that computes "
+        "a live-rows slope, scale/foreman_theta_tv.py, runs on the 120-draw "
+        "three-point data, emits -0.3323 rather than -0.4654, contains no "
+        "resampling machinery at all, and exits 1. The 400-draw producer, "
+        "scale/arm_a_k1.py, has no live-rows path. Round 6 iteration 14."
+    ),
+    -0.4160: "Upper endpoint of the same unverified interval; withdrawn with it.",
+    -0.4654: (
+        "The 'live rows only' K1 point slope. UNVERIFIED for the same reason as "
+        "-0.5173: no producer emits it. The verdict does NOT depend on it -- the "
+        "as-computed slope -0.4137 [-0.4579, -0.3704] lies entirely below the "
+        "-0.30 trigger on its own, and that pair reproduces exactly from the "
+        "shipped producer."
+    ),
     -1.826: (
         "M2 slope as first reported. Contradicted by measurement at iteration 20 — "
         "the shipped operator reads -1.298. Propagated in a RUN voice at iteration 17."
