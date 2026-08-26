@@ -47,7 +47,7 @@ import torch.nn as nn
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
 from ceq import bench
 from scale.negation_scope import (make_batch, nrmse, bootstrap_ci, calibrate_bar,
-                                  bar_verdict)
+                                  bar_verdict, M3_TASKS)
 from scale.pivot_probe import (select_pivots, pivot_hop2,
                                batched_select_pivots, batched_pivot_hop2)
 
@@ -239,7 +239,13 @@ def main():
     ap.add_argument("--n-eval", type=int, default=256)
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--arms", nargs="+", default=list(ARMS), choices=list(ARMS))
+    #: WHICH TASK. Default is the shipped negation-scope task, so every number
+    #: already in results/m3_capability.txt is reproduced by the same command
+    #: that produced it. `counter_squared` is the S2 Hankel-gap task; see
+    #: scale/negation_scope.py::M3_TASKS.
+    ap.add_argument("--task", default="negation_scope", choices=list(M3_TASKS))
     a = ap.parse_args()
+    batch_fn, oracle_fn, feature_fn, fd_fn = M3_TASKS[a.task]
 
     out_path = pathlib.Path(__file__).resolve().parents[1] / "results" / "m3_capability.txt"
     log_f = open(out_path, "a", encoding="utf-8")
@@ -249,12 +255,14 @@ def main():
     try:
         print(f"\n=== RUN {time.strftime('%Y-%m-%d %H:%M:%S')} "
               f"s={a.s} d={a.d} steps={a.steps} n_train={a.n_train} "
-              f"n_eval={a.n_eval} seed={a.seed} arms={a.arms} ===")
+              f"n_eval={a.n_eval} seed={a.seed} arms={a.arms} task={a.task} ===")
         print(f"torch {torch.__version__}  torch.get_num_threads()={torch.get_num_threads()}  "
               f"device=cpu (no .cuda() anywhere in this file)")
 
         print("\n=== BAR CALIBRATION (must pass before any arm is credited) ===")
-        cal = calibrate_bar(n=a.n_eval, s=a.s, d=a.d, steps=a.steps, lr=LR)
+        cal = calibrate_bar(n=a.n_eval, s=a.s, d=a.d, steps=a.steps, lr=LR,
+                            batch_fn=batch_fn, oracle_fn=oracle_fn,
+                            feature_fn=feature_fn)
         for name, v in cal.items():
             print(f"  {name:>20} {v:.6f}")
         # ONE gate, owned by `negation_scope`. This block used to hold a private
@@ -264,15 +272,16 @@ def main():
         # `oracle(x,f,p)` as `y`. A flipper-blind label passed it. Round 2 also
         # shipped a verdict whose tested copy was right while the copy that ran
         # was wrong; two copies of one rule is that defect waiting.
-        cal_ok, why = bar_verdict(cal)
+        cal_ok, why = bar_verdict(
+            cal, flipper_dependence=None if fd_fn is None else fd_fn(a.s))
         print(f"  BAR {'CALIBRATED' if cal_ok else 'BROKEN'}  -- {why}")
         if not cal_ok:
             print("ABORT: calibration bar failed.")
             return 1
 
         print(f"\n=== DATA (same train/eval batches reused across every arm) ===")
-        x_train, y_train, f_tr, p_tr = make_batch(a.n_train, a.s, a.d, d_model=D_MODEL, seed=a.seed)
-        x_eval, y_eval, f_ev, p_ev = make_batch(a.n_eval, a.s, a.d, d_model=D_MODEL, seed=a.seed + 12345)
+        x_train, y_train, f_tr, p_tr = batch_fn(a.n_train, a.s, a.d, d_model=D_MODEL, seed=a.seed)
+        x_eval, y_eval, f_ev, p_ev = batch_fn(a.n_eval, a.s, a.d, d_model=D_MODEL, seed=a.seed + 12345)
         print(f"  train: n={a.n_train} seed={a.seed}  flipper@{f_tr} payload@{p_tr}")
         print(f"  eval : n={a.n_eval} seed={a.seed + 12345} (DIFFERENT seed)  flipper@{f_ev} payload@{p_ev}")
 

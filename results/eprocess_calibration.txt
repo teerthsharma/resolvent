@@ -1,51 +1,84 @@
 threads=2 numpy=1.26.4
 === E-PROCESS CONSTRUCTION (fixed before the first real seed) ===
-  E_t = mean_lam PROD_i (1 + lam*d_i/B),  d_i = NRMSE_ref - NRMSE_arm
-  B = 1.0   from the credited NRMSE range [0.0, 1.0)
-    negation_scope.nrmse >= 0 (ratio of nonnegative terms), = 1.0 for the mean predictor
-    M3_QUINTUPLE_PREREGISTERED_READING.md section 5: seed-mean NRMSE >= 1.0 is credited with nothing
+  E_t = mean_lam PROD_i (1 + lam*d_i/B)
+  d_i = min(NRMSE_ref, C) - min(NRMSE_arm, C)   CLIP INSIDE THE DEFINITION, both arms, before differencing
+  C = 2.0   B = C - 0.0 = 2.0   min(x, C) in [0, C] for every x >= 0, so |d_i| <= B unconditionally
+    negation_scope.nrmse >= 0 (ratio of nonnegative terms), = 1.0 for the mean predictor, UNBOUNDED ABOVE
+    the section-5 bar 1.0 is a CREDIT bar, not a bound: 21 of 59 readings in results/**/*.jsonl are >= 1.0 (max 1.0742670875495859)
+    the clip moves the estimand to E[min(NRMSE, C)]; INERT on the reading path (max journal reading 1.0742670875495859 < C), ACTIVE elsewhere -- 10 readings in results/m3_capability.txt exceed C, max 3.696671 at line 589 -- but all 10 are n_train=128 cells far above the section-5 credit bar 1.0, so the truncated region earns nothing anyway
   Lambda = (0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5)   |Lambda| = 10
-  alpha = 0.05   threshold = 20.0 PER DIRECTION (either-direction union bound = 0.1)
+  alpha family-wise = 0.05 over 2 live directions -> alpha = 0.025 per direction -> threshold = 40.0
+    union bound actually reported: 2/40.0 = 0.05  (threshold 20 would have given 0.1)
   worst-case factor at |d| = B, lam = 1/2: 0.5  (> 0, so nonnegativity holds)
 
 === THE CEILING: what no data can beat ===
-   t    max mixture E_t   max single-arm 1.5**t   >= 20?
+   t    max mixture E_t   max single-arm 1.5**t >= 40.0?
    5           3.801691                7.593750       no
    8           9.605773               25.628906       no
   10          18.534076               57.665039       no
-  11          25.991893               86.497559      YES
-  12          36.651565              129.746338      YES
+  11          25.991893               86.497559       no
+  12          36.651565              129.746338       no
+  13          51.937990              194.619507      YES
   20         659.503543             3325.256730      YES
-  MIN_T_MIXTURE = 11  MIN_T_SINGLE_ARM = 8
-  The pre-registered FIVE seeds cannot cross in either direction: ceiling 3.80169140625 < 20.0.
+  MIN_T_MIXTURE = 13  MIN_T_SINGLE_ARM = 10
+  The pre-registered FIVE seeds cannot cross in either direction: ceiling 3.80169140625 < 40.0.
 
-=== MUST-FIRE  n_rep=10000 horizon=400 alpha=0.05 threshold=20.0 ===
-                            stream  cross settled  cross twin   either  frac E>2    max peak   med t                   expected
-        null +-B (max-variance H0)         0.0325      0.0367   0.0692    0.4142        2162      46         both <= alpha=0.05
-              null N(0, sd_paired)         0.0000      0.0000   0.0000    0.0231       4.189       -         both <= alpha=0.05
-   planted at the resolution floor         1.0000      0.0000   1.0000    1.0000   1.584e+04     174            settled crosses
-             planted 10x the floor         1.0000      0.0000   1.0000    1.0000   3.156e+38      19            settled crosses
-null +-B (max-variance H0)  [lambda PEEKS: broken]         1.0000      1.0000   1.0000    1.0000   2.732e+70       8  BROKEN: must exceed alpha
+=== MUST-FIRE  n_rep=10000 horizon=400 alpha=0.025 threshold=40.0 ===
+                            stream  horizon  cross settled  cross twin   either  frac E>2    max peak   med t                   expected
+        null +-B (max-variance H0)      400         0.0157      0.0180   0.0337    0.4142        2162      61        both <= alpha=0.025
+              null N(0, sd_paired)      400         0.0000      0.0000   0.0000    0.0000       1.984       -        both <= alpha=0.025
+   planted at the resolution floor      972         1.0000      0.0000   1.0000    1.0000   1.082e+05     411            settled crosses
+             planted 10x the floor      400         1.0000      0.0000   1.0000    1.0000   7.669e+19      43            settled crosses
+null +-B (max-variance H0)  [lambda PEEKS: broken]      400         1.0000      1.0000   1.0000    1.0000   2.732e+70      10  BROKEN: must exceed alpha
 
-  DIRECTION 1 (null does NOT cross): PASS  -- worst empirical rate 0.0367 +- 0.0019 (1 s.e., n_rep=10000) vs nominal alpha 0.05
-      worst either-direction rate 0.0692 vs the union bound 0.1
+  DIRECTION 1 (null does NOT cross): PASS  -- worst empirical rate 0.0180 +- 0.0013 (1 s.e., n_rep=10000) vs nominal alpha 0.025
+      worst either-direction rate 0.0337 vs the union bound 0.05 (= the family-wise budget 0.05)
   DIRECTION 2 (planted effect DOES cross): PASS
   CONTROL (predictability deleted -> null breaks): SEEN TO FIRE
 
 === THE PRICE: paired seeds needed to CROSS, by effect size ===
   effect (NRMSE)   log-rate/seed   seeds, best lam   seeds, mixture   seeds, measured  cross rate   units (2/seed)
-          0.0500      0.02433432               124              218               175      1.0000              436
-          0.1000      0.04844936                62              110                88      1.0000              220
-          0.2000      0.09500081                32               56                45      1.0000              112
-          0.5000      0.22290664                14               24                19      1.0000               48
-          1.0000      0.39782939                 8               14                11      1.0000               28
+          0.0500      0.01233742               299              486               413      1.0000              972
+          0.1000      0.02460974               150              244               207      1.0000              488
+          0.2000      0.04871150                76              123               104      1.0000              246
+          0.5000      0.11771532                32               51                43      1.0000              102
+          1.0000      0.22308979                17               27                23      1.0000               54
   One unit = one (cell, k, seed) training run; the settled-vs-twin contrast is 2 units per seed.
   The pre-registered run is 5 seeds = 10 units for this contrast, and 5 seeds cannot cross at any effect size.
-  Measured column: n_rep=2000 horizon=600; a '-' means the stream did not cross within the horizon.
+  Clipping the outcome moved B from 1.0 to 2.0, which halves lam*d/B; raising the threshold from 20.0 to 40.0 adds a further factor log(40*10)/log(20*10) = 1.1308240206478128 on the mixture bound.
+  Measured against the pre-clip table at DONE.md:369-388, the mixture column moved 218->486, 110->244, 56->123, 24->51, 14->27, i.e. by 2.229, 2.218, 2.196, 2.125, 1.929.
+  Measured column: n_rep=2000 horizon=1500; a '-' means the stream did not cross within the horizon.
+
+=== THE REROUTE: what a budget would have to buy ===
+ paired seeds  units (2/seed)   min detectable effect (NRMSE)
+           12              24 unreachable at any legal effect
+           13              26 unreachable at any legal effect
+           20              40                          1.3974
+           26              52                          1.0369
+           40              80                          0.6466
+           60             120                          0.4204
+          100             200                          0.2473
+          123             246                          0.2000
+  Two floors, and they differ because one is exact and one is a bound. EXACT CEILING: 13 seeds = 26 units, reached only if every seed lands at d_i = B = 2.0. CONSERVATIVE BOUND (what to plan with): 15 seeds = 30 units at the same effect.
+  The pre-registered run is 10 units. NO effect size rescues it.
+
+  PILOT SCREEN (SIZING ONLY, NEVER A VERDICT): 3 paired seeds = 6 units, go iff paired mean >= 0.1
+  true effect      P(GO)
+       0.0000     0.0012
+       0.0500     0.0644
+       0.1000     0.5001
+       0.2000     0.9989
+       0.5000     1.0000
+  It decides a 246-unit commitment at 6 units. It is a fixed-sample paired mean, so it carries no anytime-validity and may not be quoted as a result.
+  SENSITIVITY: sd_paired = 0.056889 was measured on negation_scope, NOT on the reroute target. If the target's paired spread is larger the screen degrades:
+  sd multiple   P(GO | 0.20)     P(GO | 0.05)
+          1.0         0.9989           0.0644
+          2.0         0.9359           0.2246
+          3.0         0.8457           0.3061
 
 === LIVE READING  journal=C:\Users\seal\Desktop\New folder (32)\results\m3_quintuple_v2.jsonl ===
-  paired seeds t = 0   per-seed d = []
-  E_t settled-direction = 1.0  peak 1.0
-  E_t twin-direction    = 1.0  peak 1.0
-  ceiling at t = 0: 1.0   decidable here: False
-  undecided at evidence E_t = 1.0 (settled direction), 1.0 (twin direction), t = 0
+  paired seeds t = 4   per-seed d = [(0, 0.013821137757012436), (1, 0.015595124842990749), (2, -0.08015261458754097), (3, -0.018070203507735028)]
+  E_t settled-direction = 0.9905097132878669  peak 1.0040499225957493
+  E_t twin-direction    = 1.0094313134253716  peak 1.0094313134253716
+  ceiling at t = 4: 2.8445831249999998   decidable here: False
+  undecided at evidence E_t = 0.9905097132878669 (settled direction), 1.0094313134253716 (twin direction), t = 4

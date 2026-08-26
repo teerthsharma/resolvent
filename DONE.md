@@ -4,6 +4,270 @@ Round 6 closed with the certificate program CLOSED - three attempts, three death
 Round 5's `TWOSPHERES: BROKEN` and its handover `done5.md` stand. Round 6's
 work-done is `done6.md`. Progress **22**.
 
+### ROUND 7, ITERATION 7 - 2026-08-26 - THE HEADLINE CONTRAST IS READ. The settling buys nothing over its twin, and the architecture's whole gain is routing.
+
+CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.
+[RUN] `scale/m3_quintuple.py --cells twin --seeds 0 1 2 3 4 --ks 8` -> **exit 0**, 5/5 units.
+
+## THE NUMBER THE ROUND WAS BUILT AROUND
+
+Four arms, five seeds each, ONE geometry, `n_params = 4769` on every arm.
+`s=64 d=24 steps=150 n_train=8192 n_eval=512 beta=21`.
+
+    seed     softmax      glance     settled        twin
+       0    0.877168    0.877168    0.753581    0.767403
+       1    0.889523    0.889523    0.768802    0.784397
+       2    0.919148    0.919148    0.874658    0.794505
+       3    0.890175    0.890175    0.816071    0.798001
+       4    0.885603    0.885603    0.706317    0.760328
+    mean    0.892323    0.892323    0.783886    0.780927
+      sd    0.015866    0.015866    0.064106    0.016547
+
+**THE HEADLINE CONTRAST, PAIRED BY SEED:**
+
+    seed       twin    settled   d = twin - settled
+       0   0.767403   0.753581            +0.013821
+       1   0.784397   0.768802            +0.015595
+       2   0.794505   0.874658            -0.080153
+       3   0.798001   0.816071            -0.018070
+       4   0.760328   0.706317            +0.054011
+
+    mean d = -0.002959   sd = 0.050146   3/5 seeds favour settled
+    paired bootstrap B=10000, seed=0:  95% CI [-0.042903, +0.031557]
+    CI EXCLUDES ZERO: False
+
+**THE SETTLING BUYS NOTHING OVER ITS UNSETTLED TWIN.** The point estimate is
+**negative** - the twin is very slightly ahead - and the interval covers zero
+comfortably in both directions. **Three of five seeds favour settled, which is what
+a coin does.**
+
+## AND THE PART THAT IS A REAL RESULT
+
+    settled vs softmax   d = +0.108437   CI [+0.068181, +0.146551]   5/5 seeds
+    twin    vs softmax   d = +0.111396   CI [+0.100873, +0.121920]   5/5 seeds
+
+**BOTH ARMS BEAT SOFTMAX ON EVERY SEED WITH INTERVALS EXCLUDING ZERO, BY ABOUT THE
+SAME MARGIN - AND THE TWIN'S INTERVAL IS TIGHTER THAN THE SETTLED ARM'S.**
+
+`sd` tells the same story: `0.016547` for the twin against `0.064106` for settled.
+**The settling adds variance and no mean.**
+
+**THIS IS THE ROUTING-ONLY OUTCOME, and the contract named it in advance** - S1's
+middle branch, *"routing-only outcome: +6"*. The pivot-reading architecture is worth
+about **`+0.11` NRMSE against softmax, on every seed**. **The equilibrium solve is
+worth nothing on top of it.**
+
+## BUT DR HOUSE READ THIS NUMBER DIFFERENTLY, AND HE IS RIGHT
+
+He was released on the whole repository with authority over the contract. His
+verdict on the result above:
+
+> **"the headline contrast was near-zero BY CONSTRUCTION"**
+
+**Checked before accepting it. Both M3 task oracles, in full:**
+
+    negation_scope    x[:, p, CH_PAYLOAD] * x[:, f, CH_FLIP]     a product of two entries
+    counter_squared   x[:, :, CH_FLIP].sum(dim=1) ** 2           a sum, squared
+
+**Neither has a fixed point. Neither requires an iteration. Neither has an
+equilibrium.** The settled arm runs a Neumann series to convergence and then
+predicts **a product of two numbers**. The twin does one softmax normalisation and
+predicts the same product. **They tie because there is nothing for the settling to
+compute.**
+
+**SO THE NEGATIVE RESULT ABOVE DOES NOT SAY WHAT IT APPEARS TO SAY.** It is not
+evidence that settling fails. **It is evidence that settling has never been
+tested.** `settled - twin = -0.002959` is the correct answer to a question nobody
+should have been asking.
+
+**AND THE PATTERN IS WORSE THAN THE BRIEF STATED.** The brief offered "every
+instrument measured something adjacent"; House accepted it and extended it:
+
+> *"Not just instruments adjacent. TASKS adjacent. The deepest instrument of all -
+> the corpus - measures the wrong object."*
+
+His diagnosis of the cause is the part worth keeping: **the room repeatedly chose
+objects that have theorems attached** - cones, ranks, linear maps - **over the
+object named in the goal, because a theorem feels like progress.** Section 4.9 is
+the proof: the theorem was about linear value paths, the arm has a GELU, and
+**nobody checked which object was being trained until round seven.**
+
+**His one sentence for the author:** *"'next-equilibrium predictor' has never once,
+in seven rounds, been asked to predict an equilibrium."*
+
+## FOUR LEAPS, EACH WITH ITS FALSIFIER. HYPOTHESES, NOT FINDINGS.
+
+**LEAP 1 - THE TASK INVERSION. Put the equilibrium in the LABEL.** An E-task family
+in the M3 tensor format. **E1** anchor: `y` a coordinate of `z* = (I-A)^-1 b`, tokens
+carrying rows of a strictly-lower-triangular signed `A` - **credited nothing, because
+the ceq path-sum computes exactly this and a win there is a rigged demo; it is
+must-fire calibration only.** **E2** consequence: `y` a coordinate of the NEW fixed
+point after a one-token `do()` shock. **E3** dose-response: an iterate-to-stable rule
+with a known stabilisation time `t*` as a printed difficulty dial - **which makes the
+contract's own Phase E question ("does settling depth correlate with capability")
+measurable now.** *Falsifier:* E2 at `s=64`, matched params, 5 seeds, pre-registered
+paired bootstrap - if `settled - twin` covers zero while both beat NRMSE 1.0, the
+leap is dead; if settled wins at `t* <= 1`, it is capacity leakage and routing-only
+stands. *Cost:* about one Cameron iteration plus one to two of Chase's, on the
+existing harness.
+
+**LEAP 2 - CONSEQUENCE FIDELITY REPLACES THE HANKEL FRAME.** The instrument that
+killed J3 is the best this project has built - **the only one that measured the
+actual trained object and returned a decisive number** (`0.492188 -> 0.000000` under
+`GELU -> Identity`). Promote it to *the* capability metric: at trained weights, the
+fraction of drawn `do()` interventions where `sign(model Δŷ) = sign(oracle Δy)`,
+with an exact interval, plus the slope of `Δŷ` on `Δy`. **Computable for softmax
+too, so it is a capability-table column rather than an arm-specific plea.**
+*Falsifier:* softmax matches the signed and settled arms at every `d >= 256` implies
+the operator contributes nothing behavioural and the signed program retires on its
+own terms.
+
+**LEAP 3 - EFFECT-FIRST STATISTICS.** The e-process is only worth building for
+contrasts planned at `>= 13` seeds; below that, one pre-registered fixed-sample
+paired bootstrap sized by a pilot. **An effect that needs more than 13 seeds at the
+deciding geometry is too small to be the goal, and is not chased.** *Falsifier:* a
+pilot at a shrunk cell whose paired SD does not shrink kills the cheap-seeds half.
+
+**LEAP 4 - SHIP THE TABLE FROM WHAT ALREADY EXISTS.** The capability table and the
+HuggingFace upload **have no dependency on winning.** `ceq/hf` exists, the phaseD
+weights for seeds 0-2 are on disk and reproduce in milliseconds, and
+`results/m3_capability.txt` holds numbers. Table v0 prints **NO DIFFERENCE where
+that is what is true.** **The honest negatives ARE the deliverable seven rounds
+declined to assemble.**
+
+## HE EDITED THE CONTRACT, AS AUTHORISED. SEVEN CHANGES.
+
+§1.1 Hankel **retired as a capability frame** (rank/rank₊/Myhill-Nerode kept as task
+*metadata*); new **§1.7** E-task family and Ladder E, **§1.7c** consequence fidelity,
+**§1.8** the effect-first rule; the scoreboard re-aimed, with **S3 split into S3a
+(+3, table and HF from existing artifacts) and S3b (+3, the Kaggle run)** so that
+**shipping is no longer hostage to the run**; three new kills including **K-5E** -
+the settled arm failing NRMSE 1.0 on E1, the task its own forward computes, means a
+broken harness and nothing may be read; and **§3 redirected so the twin arm that ran
+this iteration is READ rather than discarded** - paid work gets read.
+
+**AND HE CAUGHT A LIVE INCONSISTENCY IN THE CONTRACT.** §1.2 carried the threshold
+`20` while `scale/eprocess.py:213-216` uses `40`. **Chase pinned 40 this same
+iteration and the contract had not caught up.** Corrected here, with the arithmetic
+written in so it is not re-litigated: two live directions make the reported event a
+**union**, `2/τ ≤ 0.05` forces `τ ≥ 40`, and a threshold of 20 buys `0.10` rather
+than `0.05`.
+
+**IT IS NOT THE QUINTUPLE.** `trained-two-feature` has **zero rows**. Four arms of
+five. The headline contrast the round exists for is complete; the cell is not.
+
+**AND IT IS NOT ANYTIME-VALID, WHICH WAS KNOWN BEFORE IT RAN.** Chase's e-process,
+reading both arms for the first time:
+
+    undecided at evidence E_t = 0.9978465225545524 (settled direction),
+                                1.0019156582048507 (twin direction), t = 5
+
+**Exactly as proved at iteration 3.** Five seeds cannot cross whatever the numbers
+are; `MIN_T_MIXTURE` is now **13**, not 11, because Chase pinned the threshold this
+iteration. **The word "undecided" here is structural, not a data outcome**, and it
+ships beside the ceiling so no reader mistakes it for weak evidence.
+
+## AND SOFTMAX IS BITWISE GLANCE, CONFIRMED BY THE RUN
+
+`0.877168 / 0.889523 / 0.919148 / 0.890175 / 0.885603` on both arms, every seed,
+identical. The run's own gate prints `G3 glance == softmax, bitwise: YES`. **Two of
+the five arms are the same arm by construction**, which is worth stating plainly
+rather than presenting as two agreeing measurements.
+
+## A CLAIM OF MINE IS RETRACTED. CHASE CAUGHT IT AND HE IS RIGHT.
+
+`CHECKLIST.md:1129`, written by me at iteration 4:
+
+> *"Zero NRMSE readings above 1.0 in any `results/*.jsonl`."*
+
+**FALSE.** A recursive scan finds **68** `eval_nrmse` readings of which **22 are
+`>= 1.0`**, up to `1.194555`.
+
+**THE MECHANISM IS THE ONE THIS CAMPAIGN HAS STRUCK ELEVEN TIMES, AND THIS TIME IT
+IS MINE.** The scan that produced the claim was
+
+    for k, v in r.items():            # TOP LEVEL ONLY
+        if "nrmse" in k.lower() ...
+
+and the journal nests the value: `{"key": ..., "value": {"eval_nrmse": ...}}`. **The
+loop never descended into `value`. It could not have returned a hit on any input.**
+A search structurally incapable of finding a thing, reporting zero, is **not
+evidence of absence** - and it was used at iteration 4 to strike a colleague's
+evidence.
+
+**WHAT SURVIVES OF THAT STRIKE, AND WHAT DOES NOT.** Foreman's literal `2.1166` is
+**REAL** - `results/m3_capability.txt:819`, `2.116579`. The *attribution* strike
+stands: it is an `n_train=128` cell, far below the credit bar. **But telling him the
+readings did not exist was wrong, and the correction is his.** Twelfth vacuous
+control in this campaign, third authored by me, and **the first of mine that was not
+caught before shipping** - it stood two iterations.
+
+**What does still stand, and Chase established it independently:** no paired `|d|`
+in any journal has ever exceeded `1.0`; the maximum over every same-config
+same-seed pair is `0.003911898881962639`. **`B = 1.0` was never broken by a
+difference. It was broken as a derivation**, because the credit bar governs what a
+cell EARNS, not what `nrmse` RETURNS.
+
+## CHASE'S OTHER TWO, BOTH SHIPPED
+
+**ALPHA PINNED, THRESHOLD ROUTE, `tau = 40`.** Foreman was right. Ville gives
+`P(sup E_t >= tau) <= 1/tau` per process, two directions are live, so the reported
+event is the **union** and the bound is `N/tau`. `2/tau <= 0.05` forces
+`tau >= 40`, `alpha = 0.025` per direction. **The framing route was valid arithmetic
+enforced by prose rather than by a constant**, and the direction is not
+pre-specified here. `MIN_T_MIXTURE` goes `11 -> 13`, `MIN_T_SINGLE_ARM` `8 -> 10`.
+**The five-seed kill gets stronger, and it does not depend on `B`** - the largest
+legal increment is `d = B`, so the factor is `1 + lambda` whatever `B` is. Pinned by
+`test_the_ceiling_does_not_depend_on_the_bound`.
+
+**`B` REPAIR SHIPPED AND RE-CALIBRATED AT `C = B = 2.0`**, must-fire re-run at
+`n_rep=10000`: worst null crossing `0.0180 +- 0.0013` against `alpha = 0.025`,
+either-direction `0.0337` against `0.05`, broken-lambda control **seen to fire at
+`1.0000`**. **The planted horizon had to move** - the old `400` sat under the new
+crossing time (`med t = 411`), so leaving it would have measured the schedule rather
+than the instrument.
+
+**AND CHASE CORRECTED THE ITERATION-4 RECORD ON HIS OWN REPAIR.** `CHECKLIST.md:1130`
+says the repair costs nothing. **It costs two things, both measured.** The estimand
+moves - on the very instance that refuted post-hoc clipping, the per-arm clip **also
+flips the sign** (`-0.505` raw, `+0.48` per-arm clipped) - so the null under test is
+now about `E[min(NRMSE, C)]` and must never be read as a claim about raw NRMSE. And
+**the price roughly doubles**, `2.229 / 2.218 / 2.196 / 2.125 / 1.929` across the
+effect column, plus `1.1308240206478128` from the threshold move.
+
+## FOREMAN'S KILL, AND HIS SELF-REVERSAL
+
+**J3 IS REFUTED AT TRAINED WEIGHTS.** The trained **non-negative** arm puts a
+**negative** sign on a token's influence in `0.492188` of drawn third-token
+interventions. Same trained weights, `GELU` swapped for `nn.Identity()`, one object
+changed: **`0.000000`**. Signed arm with a linear readout: `0.917969`. **Controls
+fire both ways.**
+
+**So the M3 arm is not a nonnegative weighted automaton, and `rank_+ > rank` bounds
+nothing about it.** The readout is `Linear -> GELU -> Linear`; the theorem is about
+linear value paths. **The nonlinearity supplies the sign the operator withholds.**
+
+**AND HE OVERTURNED HIS OWN EARLIER KILL WITH HIS OWN MEASUREMENT.** F16 / G4-VOID -
+*"`pivot_signed` was `pivot_unsigned` wearing a name"* - is **INIT-ONLY**. Trained
+`pivot_signed` has min entry **`-0.136364`**, `neg_frac 0.0135285`. **The signed arm
+IS signed when it is scored.** `max_range` goes `0.204402` at init to `52.2851`
+trained, **45.4x** the sign floor `0.5*ln(1/lambda) = 1.151292546497023`. The kill
+must be scoped to init in `CHECKLIST.md:333`; as written it voids trained readings
+it does not reach.
+
+CHECKLIST: **DR HOUSE released, and his reframing survived checking** — both M3
+oracles are static functions of the input, so the headline contrast was near-zero by
+construction and the settling **has never been tested**. Four leaps filed with
+falsifiers; the contract re-aimed at equilibrium-labelled tasks; a stale threshold
+corrected. **The headline contrast is READ** - `settled - twin = -0.002959`, CI
+`[-0.042903, +0.031557]`, **covering zero**; both arms beat softmax `5/5` at
+`+0.108` / `+0.111` with intervals excluding zero. **Routing-only outcome, named in
+advance by the contract.** Four arms of five; `trained-two-feature` still at zero
+rows. **A claim of mine RETRACTED with its mechanism.** Alpha pinned at `tau = 40`,
+`B` repair shipped and re-calibrated, J3 refuted, F16 scoped to init.
+
+**SCOREBOARD: 23.**
+
 ### ROUND 7, ITERATION 6 - 2026-08-26 - The twin arm had never been run. It is running. And a standing OPEN that blocked three seeds of evidence was stale.
 
 CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.

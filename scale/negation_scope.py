@@ -93,6 +93,118 @@ def make_batch(n: int, s: int, d: int, *, d_model: int = 16, seed: int = 0,
     return x, oracle(x, f, p), f, p
 
 
+# ==========================================================================
+# SECOND M3 TASK: counter_squared, the Hankel-gap task (S2)
+#
+# The M3 corpus is not a word corpus -- an example is a [s, d_model] float
+# tensor, not a string. `counter_squared`, f(w) = ((#a) - (#b))**2, is expressed
+# in it by letting CH_FLIP carry the LETTERS at every position rather than a
+# single sign at one position: +1 is 'a', -1 is 'b'. Nothing else about the
+# encoding changes, so the same arms, the same operator and the same training
+# loop run unmodified.
+#
+# WHY THIS TASK AND NOT THE PLAIN COUNTER. The plain counter's Hankel is
+# additive, H[u,v] = c_u + c_v, and `ceq/hankel.py::additive_nonneg_certificate`
+# pins its rank_+ at exactly 2 with an explicit nonnegative factorisation -- no
+# gap at any block size. Squaring is the smallest departure from the same
+# counter that breaks additivity: H[u,v] = (c_u + c_v)**2 has real rank 3 and a
+# rectangle-covering lower bound on rank_+ that GROWS with the number of count
+# levels.
+#
+# THE PAYLOAD CHANNEL IS KEPT. It carries an independent N(0,1) draw that the
+# label does not depend on, so `calibrate_bar`'s payload_only clause stays a
+# live control rather than a comparison against a channel of zeros.
+# ==========================================================================
+
+def counter_squared_oracle(x: torch.Tensor, f: int, p: int) -> torch.Tensor:
+    """((#a) - (#b))**2, read off CH_FLIP. Same signature as `oracle`.
+
+    `f` and `p` are accepted and ignored: this task has no single flipper
+    position, which is exactly the property that gives it the Hankel gap. The
+    signature is kept so the function is drop-in wherever `oracle` is, including
+    `calibrate_bar(oracle_fn=...)` and `m3_synthetic_settled.SyntheticSettledArm`.
+    """
+    return x[:, :, CH_FLIP].sum(dim=1) ** 2
+
+
+def counter_squared_features(x: torch.Tensor, f: int, p: int) -> torch.Tensor:
+    """The oracle features for `calibrate_bar`'s trained positive control.
+
+    For `y = payload * sign` those are (flipper, payload). For this task the
+    only sufficient statistic is the SUM of the letters, so handing the control
+    a single letter would make the control fail for the right reason on the
+    wrong features. The payload rides along as a distractor the control must
+    learn to ignore, which also keeps the feature width at 2 and therefore the
+    control's own initialisation draw identical to the shipped one.
+    """
+    return torch.stack([x[:, :, CH_FLIP].sum(dim=1), x[:, p, CH_PAYLOAD]], dim=-1)
+
+
+def make_counter_batch(n: int, s: int, d: int, *, d_model: int = 16,
+                       seed: int = 0, device=None):
+    """(x, y, f, p) for `counter_squared`, in the M3 tensor format.
+
+    `make_batch` builds the tensor, so the noise channels, the dtype, the
+    payload draw and the (f, p) positions are the shipped ones and cannot drift.
+    CH_FLIP is then overwritten at EVERY position with a drawn letter, and the
+    label is recomputed from the tensor -- no answer key is stored, same rule as
+    `oracle`.
+
+    `d` is still required and still range-checked by `make_batch`, but it only
+    positions the distractor payload here: this task has no distance parameter
+    because it has no single decisive token.
+
+    USE AN EVEN `s`. The task is well defined at any length, but the GAP is only
+    DETECTABLE at even `s`. The fixed-length Hankel block at split `k` is
+    ``H[u,v] = (c_u + c_v)**2``, whose zero entries sit where ``c_u = -c_v``;
+    that needs the two count parities to agree, i.e. ``k = s - k (mod 2)``, i.e.
+    `s` even. At odd `s` the block has NO zero entry, the rectangle-covering
+    number collapses to 1, and `ceq.hankel.rank_plus_lower` returns nothing
+    above the trivial `rank_R = 3` at any split. This is not guarded here
+    because the task is still the task; it is measured, at every split, by
+    `tests/cameron/test_m3_counter_squared.py`. M3's default s=64 is even.
+    """
+    x, _y, f, p = make_batch(n, s, d, d_model=d_model, seed=seed, device=device)
+    g = torch.Generator(device="cpu").manual_seed(seed + 31337)
+    letters = torch.randint(0, 2, (n, s), generator=g).float() * 2 - 1
+    x[:, :, CH_FLIP] = letters.to(x.device)
+    return x, counter_squared_oracle(x, f, p), f, p
+
+
+def counter_squared_flipper_dependence(s: int) -> float:
+    """The EXACT value `calibrate_bar`'s flipper_dependence must read, in closed
+    form -- no constant is fitted and no threshold is chosen.
+
+    Negating the letter at position `f` sends c = sigma_f + r to c - 2*sigma_f,
+    so the label moves by |(c - 2*sigma_f)**2 - c**2| = |4*sigma_f*r| = 4*|r|
+    exactly, where r is the sum of the OTHER s-1 letters. The denominator is
+    E|c**2| = E[c**2] = s. Hence
+
+        flipper_dependence = 4 * E|S_{s-1}| / s,   S_m a sum of m Rademachers,
+
+    with E|S_m| = 2**-m * sum_k C(m,k) |2k - m|, computed here exactly.
+
+    This is 2.0 for the negation-scope task and falls with s here, because no
+    single letter dominates a global aggregate. That is not a defect of the
+    task; it is the same property as the Hankel gap, seen through the bar.
+    """
+    m = s - 1
+    tot = sum(math.comb(m, k) * abs(2 * k - m) for k in range(m + 1))
+    return 4.0 * (tot / 2.0 ** m) / s
+
+
+#: name -> (batch_fn, oracle_fn, feature_fn, expected flipper_dependence or None).
+#: The registration surface. `None` for the last field means "use the shipped
+#: one-sided clause"; a callable means the task supplies its own EXACT value and
+#: the clause becomes two-sided.
+M3_TASKS = {
+    "negation_scope": (make_batch, oracle, None, None),
+    "counter_squared": (make_counter_batch, counter_squared_oracle,
+                        counter_squared_features,
+                        counter_squared_flipper_dependence),
+}
+
+
 def nrmse(pred: torch.Tensor, y: torch.Tensor) -> float:
     """RMSE normalised by the std of y. Exactly 1.0 for the mean predictor."""
     sd = float(y.std(unbiased=False))
@@ -121,7 +233,8 @@ def bootstrap_ci(pred, y, *, n_boot: int = 400, seed: int = 0, alpha=0.05):
 # ==========================================================================
 
 def calibrate_bar(n: int = 2048, s: int = 512, d: int = 256, *,
-                  oracle_fn=None, steps: int = 150, lr: float = 0.02,
+                  oracle_fn=None, batch_fn=None, feature_fn=None,
+                  steps: int = 150, lr: float = 0.02,
                   seed: int = 0) -> dict:
     """Five reference points pin the scale AND prove the task and budget are real.
 
@@ -153,7 +266,11 @@ def calibrate_bar(n: int = 2048, s: int = 512, d: int = 256, *,
        `oracle` entry is an identity rather than a trained model.
     """
     ofn = oracle_fn or oracle
-    x, y, f, p = make_batch(n, s, d, seed=seed)
+    #: A SECOND task needs a second tensor builder, not just a second label:
+    #: `make_batch` writes CH_FLIP at ONE position, so `counter_squared` over
+    #: that tensor is identically 1.0 and every clause below reads NaN. The hook
+    #: defaults to the shipped builder, so the shipped path is unchanged.
+    x, y, f, p = (batch_fn or make_batch)(n, s, d, seed=seed)
     if oracle_fn is not None:
         y = ofn(x, f, p)
     out = {}
@@ -177,9 +294,15 @@ def calibrate_bar(n: int = 2048, s: int = 512, d: int = 256, *,
 
     # 5. TRAINED POSITIVE CONTROL -- model-level, at the harness's own budget.
     g = torch.Generator().manual_seed(seed)
-    feats = torch.stack([x[:, f, CH_FLIP], x[:, p, CH_PAYLOAD]], dim=-1)
-    net = torch.nn.Sequential(torch.nn.Linear(2, 32), torch.nn.GELU(),
-                              torch.nn.Linear(32, 1))
+    #: WHICH features are the oracle features is a property of the TASK. For
+    #: `counter_squared` the sufficient statistic is the sum of every letter, and
+    #: handing this control (flipper, payload) would make it fail for the right
+    #: reason on the wrong features -- reading "no arm can pass" when what was
+    #: measured is "these two numbers do not determine the label".
+    feats = (feature_fn(x, f, p) if feature_fn is not None else
+             torch.stack([x[:, f, CH_FLIP], x[:, p, CH_PAYLOAD]], dim=-1))
+    net = torch.nn.Sequential(torch.nn.Linear(feats.shape[-1], 32),
+                              torch.nn.GELU(), torch.nn.Linear(32, 1))
     for layer in net:
         if isinstance(layer, torch.nn.Linear):
             torch.nn.init.normal_(layer.weight, 0.0, 0.5, generator=g)
@@ -199,17 +322,56 @@ def calibrate_bar(n: int = 2048, s: int = 512, d: int = 256, *,
 #: pass condition; round 2 shipped a verdict whose tested copy was correct while
 #: the copy that executed was not, and two copies of one rule is that defect
 #: waiting to happen.
-def bar_verdict(cal: dict) -> tuple[bool, str]:
-    """(ok, reason). Every clause must be EVALUABLE and must be able to fail."""
+def bar_verdict(cal: dict, *, flipper_dependence: float | None = None,
+                flipper_tol: float = 0.05) -> tuple[bool, str]:
+    """(ok, reason). Every clause must be EVALUABLE and must be able to fail.
+
+    `flipper_dependence` is the EXACT value the task predicts in closed form.
+    When it is None the shipped one-sided clause (`> 0.5`) runs unchanged; when
+    it is supplied the clause becomes TWO-SIDED, which is strictly stronger --
+    a one-sided threshold accepts every label that moves more than enough, while
+    the band accepts only labels that move by the predicted amount.
+
+    THE BAND HAS A MINIMUM SAMPLE SIZE, MEASURED. `flipper_dependence` is a
+    ratio of two sample means, so the band is only a gate if it is wider than
+    the sampling spread and narrower than the distance to a wrong task. Measured
+    on this machine at s=64, 12 seeds each, `counter_squared`:
+
+        n= 256   sd 0.023352   max|dev from exact| 0.083739
+        n= 512   sd 0.010428   max|dev from exact| 0.029482
+        n=2048   sd 0.005960   max|dev from exact| 0.010315
+        n=4096   sd 0.003289   max|dev from exact| 0.005910
+
+    The default tolerance 0.05 therefore REQUIRES n >= 512: at n=256 the spread
+    alone exceeds it and the gate would reject the correct task. The distance to
+    the nearest wrong task -- the plain counter, at 0.31455481755627596 against
+    0.39738701499186757 -- is 0.08283, so 0.05 still rejects it at every n above
+    the floor. Both ends are measured; neither was chosen to fit.
+
+    THE ONE-SIDED THRESHOLD IS TASK-SPECIFIC AND WAS NOT WEAKENED. 0.5 is
+    calibrated for `y = payload * sign`, where negating the flipper negates the
+    label and the ratio is exactly 2.0. `counter_squared` is a global aggregate:
+    its exact ratio is `4 * E|S_{s-1}| / s`, which reads 0.39738701499186757 at
+    s=64 and would be REJECTED by the shipped clause. Replacing it with a looser
+    one-sided threshold would have made the clause unable to reject the plain
+    counter (0.31455481755627596 at s=64), whose Hankel has no gap at all. The
+    band rejects it; `tests/cameron/test_m3_counter_squared.py` runs that
+    rejection.
+    """
     if abs(cal["predict_the_mean"] - 1.0) > 1e-6:
         return False, f"predict_the_mean={cal['predict_the_mean']:.6f}, not 1.0 -- nrmse is mis-implemented"
     if not (cal["payload_only"] >= 1.0):
         return False, f"payload_only={cal['payload_only']:.6f} BEATS the bar -- the label is the payload"
     if not (cal["oracle"] < 1e-6):
         return False, f"oracle={cal['oracle']:.6f}, not ~0 -- the task is unsolvable"
-    if not (cal["flipper_dependence"] > 0.5):
-        return False, (f"flipper_dependence={cal['flipper_dependence']:.6f} -- the label barely "
-                       f"moves when the flipper is negated, so this is NOT the negation-scope task")
+    if flipper_dependence is None:
+        if not (cal["flipper_dependence"] > 0.5):
+            return False, (f"flipper_dependence={cal['flipper_dependence']:.6f} -- the label barely "
+                           f"moves when the flipper is negated, so this is NOT the negation-scope task")
+    elif abs(cal["flipper_dependence"] - flipper_dependence) > flipper_tol:
+        return False, (f"flipper_dependence={cal['flipper_dependence']:.6f} is not the value this "
+                       f"task predicts in closed form, {flipper_dependence:.6f} "
+                       f"(tol {flipper_tol}) -- this is NOT the task")
     if not (cal["trained_two_feature"] < 1.0):
         return False, (f"trained_two_feature={cal['trained_two_feature']:.6f} >= 1.0 -- a model "
                        f"given the ORACLE FEATURES cannot beat the bar at this budget, so no arm "

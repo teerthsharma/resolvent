@@ -39,10 +39,13 @@ from scale.negation_scope import make_batch, nrmse              # noqa: E402
 
 
 def train_and_predict(kind: str, *, s: int, d: int, steps: int, n_train: int,
-                      n_eval: int, seed: int):
-    x_train, y_train, _, _ = make_batch(n_train, s, d, d_model=D_MODEL, seed=seed)
-    x_eval, y_eval, _, _ = make_batch(n_eval, s, d, d_model=D_MODEL,
-                                      seed=seed + 12345)
+                      n_eval: int, seed: int, batch_fn=None):
+    #: `batch_fn` selects the M3 TASK (`negation_scope.M3_TASKS`); it defaults to
+    #: the shipped builder, so every published reading is unchanged.
+    bfn = batch_fn or make_batch
+    x_train, y_train, _, _ = bfn(n_train, s, d, d_model=D_MODEL, seed=seed)
+    x_eval, y_eval, _, _ = bfn(n_eval, s, d, d_model=D_MODEL,
+                               seed=seed + 12345)
     torch.manual_seed(seed)
     model = Arm(kind, s)
     opt = torch.optim.Adam(model.parameters(), lr=LR)

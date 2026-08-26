@@ -1022,3 +1022,35 @@ torch 2.5.1+cu121  torch.get_num_threads()=2  device=cpu (no .cuda() anywhere in
 === PARAM MATCH (arm 1 vs 2/3, must be within 10%) ===
 
 === WALL CLOCK: 143.144 s ===
+
+=== RUN 2026-08-26 11:02:26 s=64 d=24 steps=30 n_train=256 n_eval=512 seed=0 arms=['softmax', 'pivot_signed'] task=counter_squared ===
+torch 2.5.1+cu121  torch.get_num_threads()=2  device=cpu (no .cuda() anywhere in this file)
+
+=== BAR CALIBRATION (must pass before any arm is credited) ===
+      predict_the_mean 1.000000
+          payload_only 1.226624
+                oracle 0.000000
+    flipper_dependence 0.409477
+   trained_two_feature 0.590196
+  BAR CALIBRATED  -- BAR CALIBRATED
+
+=== DATA (same train/eval batches reused across every arm) ===
+  train: n=256 seed=0  flipper@39 payload@62
+  eval : n=512 seed=12345 (DIFFERENT seed)  flipper@39 payload@62
+
+=== TRAIN + EVAL per arm ===
+
+  [softmax]  n_params=4769
+    RED  0-step NRMSE  train=1.001495  eval=1.004808  [OK]
+    POST steps=30  train NRMSE=0.884128   eval NRMSE=1.088559
+    eval bootstrap_ci (n_boot=400) = [1.033372, 1.149546]
+
+  [pivot_signed]  n_params=4769
+    RED  0-step NRMSE  train=1.001501  eval=1.004946  [OK]
+    POST steps=30  train NRMSE=0.855833   eval NRMSE=1.089049
+    eval bootstrap_ci (n_boot=400) = [1.023881, 1.159167]
+
+=== PARAM MATCH (arm 1 vs 2/3, must be within 10%) ===
+  softmax=4769  pivot_signed=4769  ratio=0.0000
+
+=== WALL CLOCK: 6.359 s ===

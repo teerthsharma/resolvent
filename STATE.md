@@ -4,7 +4,7 @@
 |---|---|
 | contract | `LOOP_PROMPT.md` (v9). Round 6 archived `LOOP_PROMPT_ROUND6_ARCHIVE.md` |
 | promise | **`HILBERT`** — D2 verbatim (needs **S1's +12 branch AND S3**), or an honest `BROKEN` |
-| iteration | **6 complete, 7 next** |
+| iteration | **7 complete, 8 next** |
 | phase | **A — foundations (0–4)** |
 | **scoreboard** | **23** — 22 carried, **S5 +1** (Merkle journal live) |
 | RULE 2 (repaired) | **e-process SATISFIED at it.3. The RUN is now EXECUTING** — the `twin` arm had **zero rows** in v2 and was launched at it.6, seeds 0–4, paired to the settled key exactly. `EP.live()` reads the journal and prints `undecided at evidence E_t = 1.0`; must-fire passes both directions (worst null `0.0367 ± 0.0019` vs `α = 0.05`) and the broken-λ control **was seen to fire at `1.0000`**. |
@@ -16,7 +16,7 @@
 
 | | item | pts | state |
 |---|---|---|---|
-| **S1** | M3 quintuple headline cell, **anytime-valid** | +12 / +6 / −4 | **instrument LANDED and calibrated; the 5-seed CELL is dead** — `MIN_T_MIXTURE = 11`, max `E_5 = 3.801691` vs threshold `20`. **Repriced 436 units; rerouted to the Dyck-1 gap task.** |
+| **S1** | M3 quintuple headline cell, **anytime-valid** | +12 / +6 / −4 | **HEADLINE CONTRAST READ at it.7 and it is the ROUTING-ONLY branch.** `settled − twin = −0.002959`, CI `[−0.042903, +0.031557]`, **covers zero**. Both arms beat softmax **5/5** (`+0.108` / `+0.111`, intervals excluding zero), **twin's tighter**. **Four arms of five — `trained-two-feature` at ZERO ROWS.** Not anytime-valid and provably cannot be at 5 seeds (`MIN_T_MIXTURE = 13`). |
 | **S2** | Hankel-gap family; one gap task **inside** M3 | +3 | **instrument LANDED and self-tested.** The contract's own gap task has **no gap** (`rank₊ = 2` exactly, certified). **Rerouted to `counter_squared`** — rank 3, `rank₊ ≥ 4/5/5`. Remaining: put it in the M3 corpus alphabet. |
 | **S3** | Kaggle run on the signed N1–N6 cert; HF; capability table v0 | +6 | not started |
 | **S4** | Probe battery at **TRAINED** projections | +3 | **partly done** — Phase D closed 3/3; **aggregator retention NOT re-run** |
@@ -120,3 +120,17 @@ unreachable; `delta_image` is closed. **The next action is the corpus step above
    the worked-example reproduction; one agent cannot fail its own consistency
    check. It fired this round only because Foreman read the contract text
    independently. **Needs a second reader or it is decorative.**
+
+11. **`trained-two-feature` has ZERO ROWS.** It is the fifth arm of the quintuple
+   and the only thing between the read headline contrast and a complete S1 cell.
+   The other four are done at five seeds each in one geometry.
+12. **The settling is not paying for itself.** `settled − twin = −0.002959` with an
+   interval covering zero, and the settled arm's seed spread (`sd 0.064106`) is
+   **4×** the twin's (`0.016547`). **The whole gain over softmax is routing.** Any
+   claim that the equilibrium solve contributes must now clear this, and it is
+   directly against the round's promise.
+13. **Twelfth vacuous control, and the first of mine to ship.** A top-level-only
+   scan reported "zero readings above 1.0" from a journal that nests its values,
+   and it was used to strike a colleague's evidence. **Every negative-result scan
+   in this repo now needs its own must-fire** — a scan that cannot find the thing
+   must be shown to find a planted one.

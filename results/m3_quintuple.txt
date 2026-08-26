@@ -1,5 +1,5 @@
 
-########## DRIVER PASS 0 rc=3 ##########
+########## DRIVER PASS 0 rc=1 ##########
 === M3 QUINTUPLE  s=64 d=24 steps=150 n_train=8192 n_eval=512 ks=[8] seeds=[0, 1, 2, 3, 4] beta=0.5 t_max=21 N=21 threads=2 torch 2.5.1+cu121 ===
 Pre-registration: M3_QUINTUPLE_PREREGISTERED_READING.md
 Cost: analytic FLOPs only. Every seconds figure below is PROVISIONAL, CONTENDED BOX, NOT A MEASUREMENT.
@@ -28,20 +28,4 @@ Cost: analytic FLOPs only. Every seconds figure below is PROVISIONAL, CONTENDED 
            ci_hi published=0.924226 re-taken=0.924226 MATCH
 
 === 25 units, bucketed, budget 1500s ===
-[m3_quintuple_v2] 0/25 units already journalled, 25 remaining, budget 1500s
-  [1/25] softmax_k0_s64_d24_st150_ntr8192_nev512_b21_sd0 -> {'eval_nrmse': 0.8771677350487059, 'n_params': 4769, 'nrmse0_train': 1.003286692996844, 'nrmse0_eval': 1.0003401311119928, 'marg_lo': 0.8304546757225448, 'marg_hi': 0.9242257809747121} (103s)
-  [2/25] softmax_k0_s64_d24_st150_ntr8192_nev512_b21_sd1 -> {'eval_nrmse': 0.8895233704358247, 'n_params': 4769, 'nrmse0_train': 1.0133552926767762, 'nrmse0_eval': 1.021831548594072, 'marg_lo': 0.847865172674097, 'marg_hi': 0.9323447930162745} (102s)
-  [3/25] softmax_k0_s64_d24_st150_ntr8192_nev512_b21_sd2 -> {'eval_nrmse': 0.9191477552755476, 'n_params': 4769, 'nrmse0_train': 1.0022367796997365, 'nrmse0_eval': 1.0017699079276992, 'marg_lo': 0.8766590630038109, 'marg_hi': 0.9772157942057456} (107s)
-  [4/25] softmax_k0_s64_d24_st150_ntr8192_nev512_b21_sd3 -> {'eval_nrmse': 0.8901746162956505, 'n_params': 4769, 'nrmse0_train': 1.0077348068947676, 'nrmse0_eval': 1.0231816160522818, 'marg_lo': 0.8509054006488737, 'marg_hi': 0.9281421679727537} (103s)
-  [5/25] softmax_k0_s64_d24_st150_ntr8192_nev512_b21_sd4 -> {'eval_nrmse': 0.8856028755736706, 'n_params': 4769, 'nrmse0_train': 1.0262962331113343, 'nrmse0_eval': 1.0378589166982721, 'marg_lo': 0.8508433218585443, 'marg_hi': 0.9219684870246844} (116s)
-  [6/25] glance_k0_s64_d24_st150_ntr8192_nev512_b21_sd0 -> {'eval_nrmse': 0.8771677350487059, 'n_params': 4769, 'nrmse0_train': 1.003286692996844, 'nrmse0_eval': 1.0003401311119928, 'marg_lo': 0.8304546757225448, 'marg_hi': 0.9242257809747121} (123s)
-  [7/25] glance_k0_s64_d24_st150_ntr8192_nev512_b21_sd1 -> {'eval_nrmse': 0.8895233704358247, 'n_params': 4769, 'nrmse0_train': 1.0133552926767762, 'nrmse0_eval': 1.021831548594072, 'marg_lo': 0.847865172674097, 'marg_hi': 0.9323447930162745} (126s)
-  [8/25] glance_k0_s64_d24_st150_ntr8192_nev512_b21_sd2 -> {'eval_nrmse': 0.9191477552755476, 'n_params': 4769, 'nrmse0_train': 1.0022367796997365, 'nrmse0_eval': 1.0017699079276992, 'marg_lo': 0.8766590630038109, 'marg_hi': 0.9772157942057456} (176s)
-  [9/25] glance_k0_s64_d24_st150_ntr8192_nev512_b21_sd3 -> {'eval_nrmse': 0.8901746162956505, 'n_params': 4769, 'nrmse0_train': 1.0077348068947676, 'nrmse0_eval': 1.0231816160522818, 'marg_lo': 0.8509054006488737, 'marg_hi': 0.9281421679727537} (211s)
-  [10/25] glance_k0_s64_d24_st150_ntr8192_nev512_b21_sd4 -> {'eval_nrmse': 0.8856028755736706, 'n_params': 4769, 'nrmse0_train': 1.0262962331113343, 'nrmse0_eval': 1.0378589166982721, 'marg_lo': 0.8508433218585443, 'marg_hi': 0.9219684870246844} (173s)
-  [11/25] settled_k8_s64_d24_st150_ntr8192_nev512_b21_sd0 -> {'eval_nrmse': 0.7535814923070905, 'n_params': 4769, 'nrmse0_train': 1.0032871667031815, 'nrmse0_eval': 1.0002842436469923, 'marg_lo': 0.7131063578712011, 'marg_hi': 0.79269020627898} (316s)
-  budget spent (1656s); stopping cleanly with 14 units left
-[m3_quintuple_v2] bucket end: 11/25 done, 14 remaining
-
-PARTIAL: 11/25 units done, 14 remaining. Re-run to continue. NO VERDICT ON A PARTIAL SET.
-{"name": "m3_quintuple_v2", "total": 25, "done": 11, "remaining": 14, "ran_this_bucket": 11, "verified": []}
+REFUSING TO START: C:\Users\seal\Desktop\New folder (32)\results\m3_quintuple_v2.lock is held by live PID 9488. Another run of this measurement is in flight. Kill it or wait; do not start a second copy.
