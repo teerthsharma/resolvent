@@ -170,6 +170,14 @@ percentile bootstrap, `B = 10000`, `seed = 0`, over the 5 seeds.
 | **E** | CI excludes zero and is **positive at `t* = 1`** | **G4 SHAPE — capacity leakage**, not settling. §1.7d. The claim degrades to routing-only whatever `t* = 32` says. |
 | **F** | CI excludes zero and is **negative** (settled loses) at `t* = 8` or `t* = 32`, **and** positive at `t* = 1` | **K-2E FIRES** as literally written in §4: *"Ladder E fails in both directions — settled loses on deep-`t*` E-tasks AND wins on `t* ≤ 1` tasks"*. Theory death; §2's five-minute question is asked. |
 | **G** | any cell's `settled` or `twin` seed-mean NRMSE `≥ 1.0` at a rung | that rung is **credited nothing in either direction** — nothing beat predict-the-mean, so a contrast between two cells that both failed is a contrast between two failures. Printed, never read as a verdict. |
+| **H** | CI excludes zero and is **negative** at some rung, and is never positive at any rung | **SETTLING IS A STRICT COST.** Not a tie and not a two-directional failure: the iteration measurably *hurts* at matched parameters. K-3E's conclusion holds a fortiori — the twin ships — and the retirement sentence is stronger than "bought nothing". |
+
+**Row H was added at 13:35, after rows A–G and before any number from this
+run existed, because A–G did not cover it.** Rows A, B, E and F all condition on
+settled *winning* somewhere; C and D condition on every CI covering zero. A
+ladder where settled only ever loses fell through all of them. A pre-registration
+with a hole in it is not a pre-registration, and the hole is patched before the
+data rather than after.
 
 **On the brief's wording.** The dispatch called outcome C "K-2E". It is not.
 K-2E as written in `LOOP_PROMPT.md:400` requires failure in *both* directions —
@@ -199,6 +207,66 @@ If row **C** or row **F** fires, this is what ships, and it is already earned on
 The retirement sentence is therefore *"the fixed point bought nothing; the mixture
 bought +0.111396"*, and the deliverable is the twin module plus this table, not a
 withdrawal.
+
+## 7b. DISCLOSURE — the pilot rows that were visible before this table was closed
+
+`LOOP_PROMPT.md` §1.8 permits the fixed-sample `N` to be set by power analysis
+*on the pilot*, so looking at a pilot is legal. Hiding *which* pilot was looked
+at is not. At 13:26–13:29, before this run had produced anything, the following
+rows from another fellow's K-5E screen (`scale/etask_k5e.py`, seed 0 only, one
+cell per row, no interval) were on disk and were read:
+
+`results/etask_k5e.txt`, `n_train = 1024`, `n_eval = 2048`, seed 0:
+
+```
+       e3_t1    1   softmax   4769  1.002204  0.890073    BEATS BAR    83.2
+       e3_t1    1      twin   4769  1.002255  0.966837    BEATS BAR   122.1
+       e3_t1    1   settled   4769  1.002293  1.061138 AT/ABOVE BAR   188.7
+       e3_t2    2   softmax   4769  1.003282  1.101813 AT/ABOVE BAR    79.2
+       e3_t2    2      twin   4769  1.003317  1.077695 AT/ABOVE BAR   117.1
+       e3_t2    2   settled   4769  1.003326  1.100449 AT/ABOVE BAR   190.3
+       e3_t8    8   softmax   4769  1.007414  1.337387 AT/ABOVE BAR    84.3
+       e3_t8    8      twin   4769  1.007418  1.273078 AT/ABOVE BAR   136.5
+```
+
+`results/etask_k5e_e1.txt`, `n_train = 512`, `n_eval = 2048`, seed 0:
+
+```
+   e1_anchor   63   settled   4769  1.000638  1.464949 AT/ABOVE BAR   115.8
+   e1_anchor   63      twin   4769  1.000644  1.358240 AT/ABOVE BAR    67.2
+   e1_anchor   63   softmax   4769  1.000655  1.644332 AT/ABOVE BAR    40.9
+      e3_t32   32   settled   4769  1.000908  1.296438 AT/ABOVE BAR    95.5
+      e3_t32   32      twin   4769  1.000876  1.302336 AT/ABOVE BAR    67.3
+      e3_t32   32   softmax   4769  1.000847  1.423038 AT/ABOVE BAR    41.3
+```
+
+**What that changes, stated now so it cannot be claimed as a discovery later:**
+
+1. **Row G is the expected outcome at `t* ≥ 2`.** At `n_train ≤ 1024` every cell
+   at every rung above `t* = 1` sits *above* predict-the-mean. This run doubles
+   `n_train` to 2048, which is unlikely to move 1.27 below 1.00. If row G fires
+   at those rungs, the ladder is **unreadable at this budget** — and that is a
+   statement about the ARMS' capacity, not about settling. It is not a kill for
+   settling and this document does not permit it to be reported as one.
+2. **Row H is live.** At `t* = 1`, `n_train = 1024`, seed 0, `settled` read
+   `1.061138` against `twin`'s `0.966837` — settled on the wrong side of the
+   bar while the twin cleared it. That single unreplicated point is what forced
+   row H into the table. It is one seed at a different `n_train` with no
+   interval and it decides nothing; it is disclosed because it was seen.
+3. **The `t* = 8` two-hop floor is `0.815162`, not zero.** The truncation ladder
+   printed by `scale/m3_capability.py --task e3_t8` at `n_train = 2048` reads
+   `k=0 0.944013, k=1 0.880512, k=2 0.815162, k=4 0.674331, k=8 0.000000`
+   (`results/m3_capability.txt:1212`). Every arm here has a hop budget of 2, so
+   `0.815162` is the best NRMSE any of them could reach at `t* = 8` even with
+   perfect training. It is below 1.0, so the rung is not structurally
+   uncreditable — the arms are simply nowhere near their own ceiling at these
+   budgets. `e3_t1`'s ladder reads `k=1 0.000000`
+   (`results/m3_capability.txt:1280`), so `t* = 1` is exactly representable by
+   a one-hop arm, which is why it is the rung that clears the bar.
+
+**No change is made to the geometry, the seeds, the rungs or the outcome table
+on the strength of these rows**, except the addition of row H, which adds a
+losing branch rather than a winning one. The run proceeds as specified in §3.
 
 ## 8. Limits, collected once
 

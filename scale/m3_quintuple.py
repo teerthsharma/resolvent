@@ -657,10 +657,21 @@ def main() -> int:
                   f"{c['ci_lo']:>+10.6f} {c['ci_hi']:>+10.6f} "
                   f"{'VOID' if void else c['verdict']:>15}  "
                   f"{RIG_NOTE if void else note}")
-            if c["verdict"] == "NO DIFFERENCE":
+            if c["verdict"] == "NO DIFFERENCE" and not void:
                 print("             ^ pre-registered floor: with five seeds a "
                       "real gap below ~0.05 NRMSE reads NO DIFFERENCE whether "
                       "or not it is real.")
+                # The floor is quantified from the run's OWN spread rather than
+                # quoted from the negation_scope pilot, because a resolution
+                # sentence carried across corpora is a resolution sentence about
+                # the wrong corpus. E_LADDER_PREREGISTERED_READING.md section 5.
+                dd = c["per_seed_delta"]
+                mn = sum(dd) / len(dd)
+                sdd = (sum((v - mn) ** 2 for v in dd) / (len(dd) - 1)) ** 0.5
+                print(f"             ^ realised sd of the paired difference "
+                      f"{sdd:.6f}; normal-approx half-width at N={len(dd)} is "
+                      f"{1.96 * sdd / len(dd) ** 0.5:.6f}, at N=13 it is "
+                      f"{1.96 * sdd / 13 ** 0.5:.6f}.")
     print("\n" + json.dumps(out))
     return 0
 
