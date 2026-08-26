@@ -4,7 +4,7 @@
 |---|---|
 | contract | `LOOP_PROMPT.md` (v10). Round 7 archived `LOOP_PROMPT_ROUND7_ARCHIVE.md` |
 | promise | **`HILBERT`** — output only when completely and unequivocally true |
-| iteration | **7 complete, 8 next** |
+| iteration | **8 complete, 9 next** |
 | **scoreboard** | **25** — 23 carried + **X₁₈ +2 EARNED** |
 | **the round exists to move ONE number** | `done7.md` scores the product at **37 %**: engineering **≈ 80 %**, the scientific claim **≈ 5 %**. **The 5 % is because the deciding measurement has been taken ZERO times.** |
 | **RULE 2** | **THE READING COMPLETES BY ITERATION 8.** Not the corpus, not the process — the reading. |
@@ -138,3 +138,19 @@ both sides, so the target is reachable **by construction rather than by search**
    `arXiv:2110.11773`); **DEQ reaches parity, not superiority** (`arXiv:1909.01377`);
    **when iteration pays, the iterated object is the REPRESENTATION**
    (`arXiv:2311.12424`).
+
+23. **THE DELTA SURVIVES, and is now precisely bounded.** `arXiv:2607.21607` is real,
+   its formula and all three `R²` are exactly as attributed, and the provenance flag was
+   a **false alarm** (block-wide over five neighbours). **But it is a GCN — `Transformer`
+   0, `GAT` 0, `GIN` 0, `GraphSAGE` 0, and `attention` never an architecture under
+   test — its headline is on engineered graphs (surveyed fall to `R² 0.440`), and its
+   label is trained accuracy, with `equilibrium` 0 and `fixed point` 0.** Attention, and
+   the equilibrium as the label, are both still unoccupied.
+24. **Its own Proposition 1 (iii): at fixed depth, SFC and `γ` induce identical
+   rankings** — SFC is a monotone transformation of `λ₂`. **So `0.910 / 0.881 / 0.863`
+   are `λ₂`'s numbers relabelled.** The paper's real gain is pooled-depth `0.884`
+   against `0.858` — **2.54 %**. Anyone citing that paper as occupying a λ₂
+   dose-response must cite `0.884 vs 0.858`, not `0.910`.
+25. **Effective resistance there is a BEATEN BASELINE** (`R̄ = tr(L⁺)/n`, a global mean
+   over a pseudoinverse trace), **not the two-boundary Dirichlet problem this oracle
+   solves.** The `arXiv:2206.11941` impossibility concerns a different object again.

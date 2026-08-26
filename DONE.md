@@ -4,6 +4,127 @@ Round 6 closed with the certificate program CLOSED - three attempts, three death
 Round 5's `TWOSPHERES: BROKEN` and its handover `done5.md` stand. Round 6's
 work-done is `done6.md`. Progress **22**.
 
+### ROUND 8, ITERATION 8 - 2026-08-26 - The contested paper is real, says exactly what was attributed to it, and the delta survives on all three axes.
+
+CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.
+
+## THE PAPER EXISTS AND THE PROVENANCE FLAG WAS A FALSE ALARM
+
+`arXiv:2607.21607v1`, **"Spectral Flow Certificates for Depth-Aware Long-Range
+Propagation in Graph Neural Networks"**, Veerabhadraswamy and Emerson, VIT-AP.
+Verified from the **arXiv API** rather than a search summary:
+`<opensearch:totalResults>1</opensearch:totalResults>`, `published
+2026-05-16T19:55:28Z`, `cs.AI` / `cs.LG`. **The title matches the attribution exactly -
+this is not the resolvable-identifier-with-invented-title pattern.**
+
+**The date/identifier mismatch Foreman flagged is BLOCK-WIDE, not a property of this
+record.** Five neighbours checked, `2607.21600 / .21605 / .21607 / .21610 / .21620`,
+and **all five carry a May-or-June submission date under a July identifier.**
+
+**Wilson reported the pattern and refused to assert the cause:** *"The mechanism
+producing it is NOT verified by me - I did not confirm any arXiv on-hold/announcement
+rule."* **Foreman was right to flag it and right to hand it over, and it does not
+impeach the paper.**
+
+## IT SAYS WHAT WAS ATTRIBUTED, BYTE-EXACT
+
+Equation (1), lifted from the MathML annotation:
+
+    \operatorname{SFC}(G,k)=1-(1-\gamma(G))^{k},
+
+with `L_norm = I - D^{-1/2} A D^{-1/2}` and **`gamma(G) = lambda_2(L_norm)`** - so
+`gamma` is the algebraic connectivity, and *"a lambda2-predicted dose-response curve in
+depth"* was a fair description.
+
+And the three values, in Table 2, in prose, and as three figure-panel labels:
+**`R^2 = 0.910 / 0.881 / 0.863` at `k = 2, 3, 4`, all `p < 10^-11`.** **Nothing
+invented.**
+
+## AND THE DELTA SURVIVES ON ALL THREE AXES
+
+**1. MESSAGE-PASSING, NOT ATTENTION.** *"We use a fixed-graph GCN with hidden dimension
+32."* Full-text term counts: **`Transformer` 0, `GAT` 0, `GIN` 0, `GraphSAGE` 0.**
+`attention` appears **three** times and **never as an architecture under test** - two in
+prose about over-squashing, one as a suggested remedy (*"pivoting to a global attention
+mechanism"*). **One GCN, three depths, no attention model anywhere in the experiments.**
+
+**2. THE HEADLINE IS ON ENGINEERED GRAPHS; SURVEYED GRAPHS SCORE MUCH LOWER.** The
+`0.910 / 0.881 / 0.863` row reads `Synthetic` - paths, cycles, grids, 3-regular randoms
+and Erdos-Renyi. The real-graph side of the same table:
+
+    ENZYMES  (n=50)   R^2 0.767      PROTEINS (n=50)   R^2 0.581
+    MUTAG    (n=50)   R^2 0.701      single networks (n=10)  R^2 0.440, p 3.65e-02
+
+**That last row is the only result in the paper not at `p < 10^-9`.**
+
+**3. THE LABEL IS TRAINED ACCURACY. THERE IS NO EQUILIBRIUM IN IT.** Counts:
+**`equilibrium` 0, `fixed point` 0, `fixed-point` 0, `CLRS` 0, `algorithmic reasoning`
+0, `Dirichlet` 0.** The task, verbatim: *"predict the sign of the global signal sum from
+the query node after `k` message-passing layers."* **A sign-of-sum readout, scored by
+accuracy.**
+
+**So the surviving delta holds exactly where Foreman said it would: attention rather
+than message-passing, and the equilibrium itself as the label rather than an accuracy.**
+
+## WILSON FOUND SOMETHING FOREMAN DID NOT, AND IT CUTS BOTH WAYS
+
+**Proposition 1 (iii), verbatim: *"At fixed `k`, SFC and `gamma` induce identical
+rankings over graphs."*** The proof line: *"follows from (ii) since SFC is a monotone
+transformation of `gamma` at fixed `k`."*
+
+**So at any single depth, SFC is `lambda2` relabelled, and `0.910 / 0.881 / 0.863` are
+`lambda2`'s own numbers reparametrised. The paper says so itself.**
+
+**The real claimed gain is much smaller and lives only in the pooled depth-varying
+setting:**
+
+    pooled depths, SFC     R^2 0.884
+    pooled depths, gamma   R^2 0.858
+
+Author's summing-up: *"taking into account the number of layers, SFC provides `2.54`
+percent more predictive power than spectral gap alone."*
+
+**So the dose-response-in-depth is real and it is `0.884` against `0.858`. The `0.910`
+is not the delta; it is the level `lambda2` already reaches on its own.**
+
+**AND ONE MORE SEPARATION THAT MATTERS TO THIS PROJECT'S OWN CITATION.** Effective
+resistance appears there as a **beaten baseline** - `R_bar(G) = tr(L^+)/n`, a global
+mean over a pseudoinverse trace. **That is not the two-boundary Dirichlet problem this
+project's oracle solves**, so the impossibility result cited from `arXiv:2206.11941` is
+about a different object than the comparator in this paper.
+
+The paper's own stated limitation is worth carrying: *"SFC is a diagnostic for
+topologies, not an architectural fix."* Hardware: an `i5-12500H` with an `RTX 3050
+Laptop GPU` and 16 GB.
+
+## WHAT WILSON COULD NOT VERIFY, CARRIED IN FULL
+
+He read the **HTML v1 render** (196,329 bytes, HTTP 200) and **did not open the PDF**,
+so a disagreement between them would be invisible. **No repository link and no
+data-availability statement were found**, so **reproducibility is entirely
+unverified** - every number is the paper's own reporting, with no data, no code and no
+re-run. The `R^2` triple is corroborated three ways, but the `r` values
+`0.954 / 0.939 / 0.929` and the `p`-values rest on a **single table read**. *"Two to
+three independent seeds"* is the paper's own wording and **no per-cell seed count was
+found, so the variance behind every `R^2` is unknown.** The `2.54 %` figure was **not
+checked** against `0.884 - 0.858 = 0.026`. Appendix A was **not read**, so the
+mutual-information claim is unchecked. The block-numbering anomaly is **an observed
+pattern over five identifiers with no verified mechanism.** And **he verified this one
+paper only** - the five other prior-art items Foreman cited remain **unchecked by
+him**, so *"the surviving delta is narrow to begin with"* is still Foreman's claim
+alone.
+
+CHECKLIST: **`arXiv:2607.21607` EXISTS**, title matches exactly, formula and all three
+`R^2` values **byte-exact as attributed**. **The provenance flag is a FALSE ALARM** -
+block-wide across five neighbours, cause unverified and not asserted. **The delta
+SURVIVES on all three axes**: the paper is a **GCN with zero attention models under
+test**, its headline is on **engineered graphs** (surveyed ones fall to `0.440`), and
+its label is **trained accuracy with zero occurrences of "equilibrium" or "fixed
+point"**. **And its own Proposition 1 (iii) says SFC is `lambda2` relabelled at fixed
+depth**, so the real gain is `0.884` against `0.858`, not `0.910`.
+
+**SCOREBOARD: 25.**
+
 ### ROUND 8, ITERATION 7 - 2026-08-26 - THE COMPARISON WAS CONFOUNDED BY CONSTRUCTION. Dr House finds the pivot family cannot see the token the label depends on.
 
 CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.
