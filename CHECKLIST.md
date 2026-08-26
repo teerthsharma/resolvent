@@ -795,3 +795,19 @@ Replayed ARM A's own draw stream (published `D_FR causal` reproduced to 6 dp at 
 | **vacuous control, mine** | The greedy must-fire used a hand-built 2×2 example and **could not fire**: on two points the monotone assignment is **forced**, so greedy and optimal coincide for every such instance. Replaced by a **drawn** control — greedy strictly worse in **111/400** random (4,9) instances — asserting both that greedy never beats the optimum and that it differs often enough (`>50/400`) to mean anything. Second control: the **crossed** assignment costs strictly more. |
 | pattern, now specific | **Fifth vacuous control this round, second authored by me.** A hand-built minimal example is exactly where a control goes vacuous, because the smallest case is usually where right and wrong answers coincide. **Drawn instances with a count** are the repair. |
 | RULE 1 | **BREACHED, ~4 of 7 iterations.** Stated, not argued away. Reason: this instrument gates the measurement. |
+
+**ROUND 6 it.7 — Phase B opens; Chase's Phase A return; a G2 event.**
+
+| item | status |
+|---|---|
+| **ARM S** | **DISPATCHED TO BE BUILT.** Everything around it GREEN; the arm itself never assembled, no birth gate fired. |
+| SPRT thresholds | **GREEN**, reproduced **three** ways independently; `\|hi − log(19)\| = 0.000e+00` against a `5e-5` bar. |
+| SPRT calibration | **GREEN**, 4000 reps/stream. α `0.0372 ≤ 0.05`, β `0.0457 ≤ 0.05`, truncation `0.0000` everywhere, indifference region **measured**. Overshoot +3.1% / +17.5% over Wald `E[N]` — budget on mean `N`. Must-fire seen firing. |
+| anchor design | **Anchor carries zero information by construction** — `r0(8) = r1(8)`, LLR increment exactly `0.0`, bound by test. Fresh seed for real draws, since round-5 counts at k>8 were seen. |
+| Wald savings | **NOT uniform** — `3.7×` at k=16 vs `46.2×` at k=256. Primary cell pre-registered **k=256**. |
+| M3 synthetic dry-run | **CORRECT BOTH DIRECTIONS.** Planted `+1.005203 [+0.967798, +1.040972]` → SETTLED WINS; null `+0.000000` → NO DIFFERENCE. Softmax re-taken first, **7/7 fields MATCH**. `n_params` asserted in the null case too, closing a silent-class-swap trap. |
+| **M3 softmax bar at n_train=2048** | **FAILS ITS OWN BAR on 3 of 5 seeds** — `0.949529 / 1.040708 / 1.045348 / 0.957720 / 1.042073`, mean **1.007076** above the 1.0 predict-the-mean line. **Published `0.949529` is rank 1 of 5.** Money run must be **n_train=8192**, all five seeds printed. |
+| **harness resolution floor** | **~0.05 NRMSE at 5 seeds, and pairing buys almost nothing** (paired sd `0.056889` vs unpaired `0.057089`) — an extra parameter changes the Adam trajectory so shared variance does not cancel. **A real gap below ~0.05 reads NO DIFFERENCE at it.12 regardless of truth.** Goes into it.12's **pre-registration**. |
+| **G2 EVENT** | **OPEN.** `D_FR` slope CI re-takes as `[-0.4573, -0.3712]` against published `[-0.4579, -0.3704]` — endpoints moved `+0.0006 / -0.0008` at fixed `manual_seed(4242)`, B=2000. Point estimate reproduces exactly. **Round-5 verdict unaffected** (both below −0.30) **but a published number moved.** Published in 7 places. → **WILSON**, not Dr House: provenance, not a leap. |
+| K-H | **NOT EARNED** — machinery calibrated, **zero fresh draws taken**. |
+| `flip(s)` vs `flip(k)` | **UNRESOLVED.** Clause says `s`, code fits `k`. If the round wants `s` the mapping re-anchors, and **the boundary-freezing window closes at the first draw**. |

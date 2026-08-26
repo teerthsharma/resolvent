@@ -4,6 +4,135 @@ Round 5 closed at `TWOSPHERES: BROKEN - ARM A, K1's dual slope, displacement
 clause`; its handoff is `done5.md` and its negative result is `D1.md`. That
 verdict is final and is not reopened.
 
+### ROUND 6, ITERATION 7 - 2026-08-26 - Phase B opens, ARM S dispatched to be built. Chase lands with the last Phase A report, and it carries a G2 event.
+
+CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.
+
+**NO NEW INSTRUMENT THIS ITERATION.** RULE 1 stood breached at ~4 of 7 and the
+corrective is to build the arm, not another gauge.
+
+**THE OBSERVATION THAT DROVE IT: ARM S DOES NOT EXIST.** Seven iterations in,
+everything around the arm is GREEN - `T`'s form, `kappa(T) = beta`, the settling
+driver, the metric, the log-domain path, the rectangular oracle, 165 tests - and
+**the arm itself has never been assembled and no birth gate has fired.** Phase B
+runs iterations 5-9 and this is 7.
+
+ACTION (one): **resumed Foreman for Phase B** rather than dispatching fresh, so
+`T`'s exact form and his 30-cell measurements survive instead of being re-derived.
+Sent with it: G3 first and nothing counts until it passes; birth gate 1 (settled
+!= glance through `d_H`, against G7's >= 1%); birth gate 2 (gradcheck at rtol 1e-4
+float64 **plus** the must-fire that `beta -> 1` blows the conditioning up, `N` =
+153 at 0.9 and 1833 at 0.99); birth gate 3 (wall clock decomposed, K-F on the
+SUM). Plus his three open items: **beta is a knob** against ideal 3; the
+**consistency gate is vacuous** at `0.1 <= 1.0`; every number is random-init.
+
+**His float32 blocker went with it, closed at negative cost** - `d_H_logits`
+deletes the float64 promotion from 1.7 before it was ever costed.
+
+---
+
+## CHASE LANDS. Machinery calibrated properly, and three findings that hurt.
+
+RED first [RUN]: two `ImportError`s, `RETURNCODE= 1` and `2`. Then **31 passed**.
+
+**SPRT thresholds reproduced THREE ways, independently of the value I gave him:**
+module formula, 50-digit `Decimal` agreeing `< 1e-15`, and the closed form with
+`|hi - log(19)| = 0.000e+00` against a contract bar of `5e-5`.
+
+**Calibrated against known answers, 4000 replicates per stream:**
+
+    far below r0   accept H0 0.9980   accept H1 0.0020   mean N  333.4
+    at r0          accept H0 0.9627   accept H1 0.0372   mean N  446.6
+    between        accept H0 0.6270   accept H1 0.3730   mean N  641.8
+    at r1          accept H0 0.0457   accept H1 0.9543   mean N  324.1
+    far above r1   accept H0 0.0003   accept H1 0.9998   mean N  117.7
+
+**alpha held at 0.0372 <= 0.05, beta at 0.0457 <= 0.05, truncation 0.0000
+everywhere**, and the indifference region is **measured, not assumed**. Overshoot
+is real - mean `N` runs **+3.1%** and **+17.5%** above Wald's `E[N]` - so he
+budgets on mean `N`, not on the formula. **Must-fire seen firing:** a data-blind
+version reads `accept_h1 = 0.0000` against the real test's `0.9500`.
+
+**AN ELEGANT PIECE OF DESIGN worth recording.** The anchor is round 5's `k=8`
+count, and **at the anchor `r0(8) = r1(8) = 0.015`, so the LLR increment is exactly
+`0.0`.** Reusing that cell as an anchor therefore **does not reuse it as
+evidence** - bound by its own test. And because he has *seen* the round-5 counts
+at `k > 8`, the SPRT will run on **fresh draws with a freshly declared seed**;
+replaying the old journal through boundaries built after it would be testing data
+that predates its own test.
+
+**Wald savings are NOT uniform:** `3.7x` at k=16 against `46.2x` at k=256. Primary
+cell pre-registered at **k=256**.
+
+**M3 SYNTHETIC DRY-RUN: CORRECT IN BOTH PRE-REGISTERED DIRECTIONS.** Softmax
+re-taken first, **7 of 7 fields MATCH**. Then:
+
+    planted   delta +1.005203  95% CI [+0.967798, +1.040972]   SETTLED WINS   [CORRECT]
+    null      delta +0.000000  95% CI [+0.000000, +0.000000]   NO DIFFERENCE  [CORRECT]
+
+**And he closed a trap in it:** `n_params settled=4770` is asserted **in the null
+case too**, because without that a silently-failed class swap gives a perfect
+`NO DIFFERENCE` for a reason having nothing to do with the comparison.
+
+---
+
+## THREE FINDINGS THAT HURT, ALL HIS OWN, ALL RED-BOUND
+
+**1. M3's softmax baseline FAILS ITS OWN ABSOLUTE BAR at n_train=2048, on 3 of 5
+seeds.** Twin eval NRMSE across seeds 0-4:
+
+    0.949529   1.040708   1.045348   0.957720   1.042073
+    mean 1.007076   sd 0.048909      -> ABOVE the 1.0 predict-the-mean bar
+
+**The published `0.949529` is rank 1 of 5 - the best seed, not a typical one.**
+The money run at it.12 must therefore be at **n_train=8192** (published
+`0.877168`) and **must print all five seeds**.
+
+**2. THE HARNESS HAS A RESOLUTION FLOOR OF ~0.05 NRMSE AT FIVE SEEDS, AND PAIRING
+BUYS ALMOST NOTHING.** Genuine paired null sd `0.056889`; unpaired null sd
+`0.057089`. **Pairing cancelled essentially no variance, because an arm with an
+extra parameter takes a different Adam trajectory and the shared variance does not
+cancel.** The planted effect is 20x the floor and trivially detected - but **a real
+settled-vs-twin gap below ~0.05 NRMSE will read NO DIFFERENCE at it.12 whether or
+not it exists.** That number belongs in it.12's **pre-registration, not in the
+write-up afterwards**, and it is going there.
+
+**3. A PUBLISHED ROUND-5 CI DOES NOT REPRODUCE. THIS IS A G2 EVENT.** He ran it
+himself rather than delegating:
+
+    re-taken   D_FR slope in k = -0.4137  [-0.4573, -0.3712]
+    published                     -0.4137  [-0.4579, -0.3704]
+                                           endpoints moved +0.0006 / -0.0008
+
+Seed is fixed at `manual_seed(4242)`, `B=2000`, fit on 6/6 k with 2000/2000 usable
+reps. **The point estimate reproduces exactly; the interval endpoints do not.**
+`flip slope -0.6960 [-1.0000, +0.0000]` reproduces exactly.
+
+**The round-5 verdict is UNAFFECTED** - both intervals still lie entirely below
+`-0.30`, so the kill that fired still fires. **But G2 says published numbers are
+immutable and one has moved**, and that is a global stop regardless of whether the
+verdict survives. Published in seven places: `CHECKLIST.md:572`, `:689`,
+`DONE.md:408, 669, 753, 1121, 1241`.
+
+**Per the escalation chain this goes to WILSON, and it is NOT a Dr House trigger** -
+a bootstrap interval that will not reproduce is an **engineering and provenance
+question, not a missing leap**.
+
+**His own OPEN list, and item 2 is a real unresolved contract question:** no K1
+datum yet, so **K-H is NOT earned**; **the clause says `flip(s)` and the code fits
+`flip(k)`** - unresolved, and if the round wants `s` the whole mapping re-anchors
+and **the boundary-freezing window closes at the first draw**; k=16's 3.7x saving
+barely beats fixed-n; anchor uncertainty (`CP95 [0.0055, 0.0323]`) is not
+propagated; more seeds is the only lever he sees on the pairing floor and he has
+not costed it; and **every wall-clock figure is journalled or contended, so he
+reports none as evidence.**
+
+CHECKLIST: Phase B **OPEN**, ARM S dispatched. SPRT **CALIBRATED**, boundaries
+frozen at first draw. M3 harness **CORRECT BOTH DIRECTIONS**. **G2 EVENT OPEN.**
+
+**SCOREBOARD: 4** - unchanged. Chase scores nothing: K1 has **no fresh draw yet**,
+so K-H is not earned, and M3 has not run.
+
 ### ROUND 6, ITERATION 6 - 2026-08-26 - The rectangular oracle, so the pivot gate is not read on an unchecked assignment. Three of my own tests were wrong and one could not fire.
 
 CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.
