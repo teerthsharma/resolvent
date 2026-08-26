@@ -848,3 +848,13 @@ Replayed ARM A's own draw stream (published `D_FR causal` reproduced to 6 dp at 
 | **β is a knob** | **ADJUDICATED: yes.** `κ = β` attained and **invariant across s, d, k, logit scale, seed — 72/72 cells, one value**, so scale-free. **But chosen**, and it sets `t*` and `N` directly. *"A dial with a known transfer function, not a measured property of attention."* Whether ideal 3 accepts a constant chosen once is **a ruling, not a measurement**. |
 | consistency gate | **STRUCK as written; third leg supplied.** Now gates on `κ_emp ≤ κ_struct`, tight to nine decimals and violable. `κ_cert = 1.0` stays printed as the record that Birkhoff's constant does not carry this arm. |
 | **THE CENTRAL OPEN RISK** | **`alpha` is near one-hot even after the log fix** (`log_alpha min -182.7498`, max `-0.0`). The fixed point is **unique, reached, and lopsided**. **Whether a lopsided equilibrium carries anything a single argmax-pivot lookup does not is exactly T1's question, and no birth gate answers it.** Flagged by Foreman **before** anyone banks +12. **Every gate can pass while the arm is an expensive argmax.** |
+
+**ROUND 6 it.11 — Phase C, the money run dispatched.**
+
+| item | status |
+|---|---|
+| **M3 deciding measurement** | **DISPATCHED**, RULE 2 satisfied if it lands by it.12. Chase resumed, so the calibrated SPRT, the both-directions-correct harness and the reproduced softmax baseline all survive. |
+| **the triple → a QUINTUPLE** | **softmax / glance / settled / unsettled-twin / ARGMAX-PIVOT.** The fifth cell is not in the contract; it is there because **`alpha` is near one-hot after settling** (`log_alpha min -182.7498`) and no birth gate asks whether a lopsided equilibrium beats a single argmax lookup. **Without it a settled win is unattributable.** Settled beats twin but ties argmax ⇒ honest claim is **routing-only (+6), not +12**. |
+| pre-registration | **WRITTEN BEFORE THE RUN.** `n_train=8192` (softmax fails its own bar at 2048 on **3/5** seeds, mean `1.007076`; published `0.949529` is **rank 1 of 5**); **all five seeds printed**; **the ~0.05 NRMSE resolution floor stated in advance** so a null is interpretable; `k ∈ {8,16,32}` only; bootstrap CIs on every contrast. |
+| cost reporting | **FLOPs only. No wall-clock claim.** K-F **UNDECIDED** — FLOP `1.010420…3.851464` vs clock `1.6546…45.0608` on a contended box; accounting fetched (arXiv 2302.06117; pytorch#41383 *"7 microseconds"*), and **NOT FOUND** any doc claiming `torch.compile` removes per-op dispatch overhead **on CPU**. |
+| deadline discipline | Told to report inability to finish **now, not at the deadline** — a partial result with its bucket count beats a breach review. |

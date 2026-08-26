@@ -4,44 +4,44 @@
 |---|---|
 | contract | `LOOP_PROMPT.md` (v8.2). Round 5 archived `LOOP_PROMPT_ROUND5_ARCHIVE.md` |
 | promise | **`HILBERT`** — D2 verbatim, or an honest `BROKEN` |
-| iteration | **10 complete, 11 next** |
+| iteration | **11 complete, 12 next** |
 | phase | **C — the deciding measurement (iterations 10–15; RULE 2)** |
 | scoreboard | **4** — Star delta +2, κ<1 measured +2 *(qualified: Birkhoff route dead, structural β earned it)* |
 | RULE 2 clock | **running.** M3 settled-vs-unsettled EXECUTES by **iteration 12** or breach review |
 | register | **caveman, all agents, every iteration.** Artifacts stay normal English |
 | autonomy | user meets the loop at **iteration 30**; no check-ins |
 
-## THE ONE NEXT ACTION (round 6, iteration 11)
+## THE ONE NEXT ACTION (round 6, iteration 12)
 
-**PHASE C. The money run. RULE 2 gives it iterations 11–12 and no more.**
+**RULE 2's DEADLINE. The M3 run must have EXECUTED by the end of this iteration or
+the round halts for breach review.**
 
-Audit #1 is done and CLEAN, which is the precondition. ARM S has passed G3 and
-birth gates 1 and 2; gate 3 is split with **K-F UNDECIDED on a contended box**.
+**Read it in this order when it lands, and the order is the whole point:**
 
-**Dispatch CHASE for the M3 triple**, and the pre-registration must carry all of
-this **before** the run, not after:
-  * **n_train=8192**, because softmax **fails its own 1.0 bar at 2048 on 3 of 5
-    seeds** (mean `1.007076`) and the published `0.949529` is **rank 1 of 5**;
-  * **print all five seeds**, never a single figure;
-  * **the ~0.05 NRMSE resolution floor**, because pairing buys almost nothing
-    (`0.056889` paired vs `0.057089` unpaired) — **a real gap below 0.05 reads NO
-    DIFFERENCE regardless of truth**;
-  * **softmax reproduced first**, as always;
-  * **k ∈ {8,16,32} only** — k=128 fails K-F on FLOPs *and* sits outside the
-    uniqueness-safe regime (round 5: 0.5167 of draws).
+  1. **Softmax reproduced?** If the baseline moved, nothing downstream is readable
+     and it is a G2 event before it is an M3 result.
+  2. **settled vs unsettled twin** — the headline cell.
+  3. **settled vs ARGMAX-PIVOT** — the attribution cell, and the one that decides
+     what may be *claimed*. **Beats the twin but ties argmax ⇒ the equilibrium
+     bought nothing, the claim is routing-only (+6), and T1 fires.** Beats both
+     ⇒ +12 is available.
+  4. **Against the ~0.05 NRMSE floor.** A gap below it reads NO DIFFERENCE
+     regardless of truth, and that was pre-registered, so a null there is
+     *interpretable* rather than an excuse.
 
-**AND THE THING THAT DECIDES WHETHER +12 IS EVEN MEANINGFUL.** Foreman's item 5:
-`alpha` is near one-hot after settling (`log_alpha min -182.7498`). The fixed point
-is unique, reached, and **lopsided**. **No birth gate asks whether a lopsided
-equilibrium carries anything a single argmax-pivot lookup does not** — and that is
-T1's question verbatim. **The M3 triple must therefore include a fourth cell: the
-argmax-pivot lookup**, or a settled win is unattributable and +12 cannot be banked
-honestly. Foreman flagged this before the run; it goes into the design, not the
-write-up.
+**If T1 fires, Dr House is released — but ONLY then, and not against a clean
+measurement.** The trigger is a twin that matches: the fixed point exists, is
+unique, is reached, **and changes nothing.** That is a genuine innovation gap, not
+an evidence gap, which is exactly what separates him from the Inspector.
 
-**Still open and unrouted:** Wilson on the G2 (does anything else from the same
-bootstrap drift — one number or a class?); Cameron on the +3/−5 pivot and now also
-a second 2-dof implementation to cross-check against mine.
+**Two fellows still out and unrouted:**
+  * **WILSON on the G2** — the severity question is still unanswered: **one number
+    or a class?** A stable point estimate with drifted endpoints implicates the
+    **resampler**, and then every bootstrap CI in the record is suspect.
+  * **CAMERON on the +3/−5 pivot**, plus a second 2-dof implementation to
+    cross-check against `tests/loop/test_two_dof_lemma.py`. **Disagreement between
+    the two is a finding, not something to reconcile quietly** — that is how the
+    `d_H` defect was caught.
 
 ## Open REDs
 

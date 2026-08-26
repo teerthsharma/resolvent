@@ -4,6 +4,81 @@ Round 5 closed at `TWOSPHERES: BROKEN - ARM A, K1's dual slope, displacement
 clause`; its handoff is `done5.md` and its negative result is `D1.md`. That
 verdict is final and is not reopened.
 
+### ROUND 6, ITERATION 11 - 2026-08-26 - The money run is dispatched, and the triple becomes a quintuple.
+
+CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.
+
+ACTION (one): **dispatched Chase for the M3 deciding measurement.** Resumed rather
+than dispatched fresh, so the calibrated SPRT machinery, the harness verified
+correct in both directions, and the reproduced softmax baseline all survive.
+
+## THE DESIGN CHANGE, AND IT CAME FROM FOREMAN CLOSING HIS OWN REPORT AGAINST HIMSELF
+
+The contract specifies a **triple** - glance, settled, unsettled twin. It now runs
+as a **quintuple**, because of the last item in Foreman's ARM S report:
+
+    alpha near ONE-HOT even after the log-domain fix
+    log_alpha min -182.7498    max -0.0
+
+**The fixed point is unique, reached, and LOPSIDED.** Every birth gate can pass on
+that, and **no birth gate asks whether a lopsided equilibrium carries anything a
+single argmax-pivot lookup does not.** That is **T1's pre-drafted question
+verbatim**, and he raised it **before** anyone could bank +12 on the arm he had
+just built.
+
+**So a fourth arm goes into the run: ARGMAX-PIVOT LOOKUP** - take the single
+highest-weight pivot row, no settling, no mixing. The cells are now:
+
+    1  softmax          reproduced first, always
+    2  glance           single pass
+    3  settled          ARM S, log-domain, beta=0.5, N=21
+    4  unsettled twin   matched params, no settling
+    5  argmax-pivot     THE ATTRIBUTION CONTROL
+
+**Without cell 5 a settled win is UNATTRIBUTABLE.** If settled beats the twin but
+**ties argmax-pivot**, the equilibrium bought nothing, and the honest claim is
+**routing-only (+6), not +12.** **That is a result worth learning from our own
+control rather than from a reviewer.**
+
+## THE PRE-REGISTRATION, WRITTEN BEFORE THE RUN
+
+  * **n_train = 8192**, because Chase's own finding is that **softmax fails its
+    own 1.0 bar at n_train=2048 on 3 of 5 seeds** - `0.949529 / 1.040708 /
+    1.045348 / 0.957720 / 1.042073`, mean **1.007076** - and **the published
+    `0.949529` is rank 1 of 5**, the best seed rather than a typical one.
+  * **All five seeds printed.** Never a single figure.
+  * **The ~0.05 NRMSE resolution floor is IN the pre-registration**, because
+    pairing buys almost nothing (paired sd `0.056889` against unpaired
+    `0.057089` - an extra parameter changes the Adam trajectory so shared
+    variance does not cancel). **A real gap below 0.05 will read NO DIFFERENCE
+    whether or not it exists**, and stating that in advance is what makes a null
+    interpretable rather than an excuse afterwards.
+  * **k in {8, 16, 32} only.** k=128 fails K-F on FLOPs (`3.851464` / `1.667480`)
+    **and** sits outside the uniqueness-safe regime - round 5 measured Karcher
+    uniqueness on only **0.5167** of draws there.
+  * **The headline cell is settled-vs-twin. The headline CAVEAT is
+    settled-vs-argmax-pivot.**
+
+## AND WHAT HE IS BARRED FROM CLAIMING
+
+**No wall-clock number.** K-F is **UNDECIDED, not passed**. Foreman measured FLOP
+ratios `1.010420 .. 3.851464` against clock ratios `1.6546 .. 45.0608` on a
+contended box, and **fetched the accounting rather than asserting it** - arXiv
+2302.06117 on framework-boundedness, pytorch/pytorch#41383 *"Large overhead (7
+microseconds) for PyTorch operation"*, and **NOT FOUND** any documentation
+claiming `torch.compile` removes per-op dispatch overhead **on CPU**. Closing K-F
+needs `collect_callgrind` instruction counts or an isolated core. **If cost is
+reported at all it is reported as FLOPs, with the clock named as not a
+measurement.**
+
+He was also told to **say now, not at the deadline**, if the run cannot finish by
+iteration 12 - **a partial result with its bucket count beats a breach review.**
+
+CHECKLIST: **M3 DISPATCHED** with a fifth cell the contract did not ask for.
+Pre-registration written **before** the run.
+
+**SCOREBOARD: 4** - unchanged. The action was a dispatch; nothing measured.
+
 ### ROUND 6, ITERATION 10 - 2026-08-26 - Inspector CLEAN. ARM S is born, and the one thing it cannot answer is the one thing worth +12.
 
 CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.
