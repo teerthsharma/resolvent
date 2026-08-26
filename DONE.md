@@ -4,6 +4,106 @@ Round 5 closed at `TWOSPHERES: BROKEN - ARM A, K1's dual slope, displacement
 clause`; its handoff is `done5.md` and its negative result is `D1.md`. That
 verdict is final and is not reopened.
 
+### ROUND 6, ITERATION 20 - 2026-08-26 - Inspector CLEAN. And Cameron's measurement puts my own iteration-19 result in the wrong regime.
+
+CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.
+[RUN] `python inspector.py` (scheduled command pass) -> **exit 0, CLEAN, 11 checks,
+18 controls all fired.** Coverage **209/1446 = 14.45%** (was 191/1413 = 13.52%),
+still stating in its own output that a clean bill covers *"these 209 tests and
+about NOTHING ELSE"*.
+
+**The command and the AGENT are different things and both ran this round** - the
+scheduled `inspector.py` pass here, and the Health Inspector agent auditing the ten
+standing REDs since it.17. **Conflating them was a real error earlier in this
+project and it is not repeated.**
+
+---
+
+## CAMERON'S L3 MEASUREMENT, AND IT REFRAMES ITERATION 19
+
+[RUN] `scale/twodof.py --geoms 200`, float64, threads pinned, rc=0:
+
+    geoms          E|I|         E|L3|   E|L3|/E|I|   I == 0.0 exactly
+      200  3.212183e-06  1.400754e-06       0.4361            35/200
+
+**The ratio sits under the 0.5 bar - and she refuses to claim the gate passes.**
+Bootstrap CI, B=10000, resampling draws:
+
+    s    d   ratio                 95% CI          voids?
+    32   8  0.4361 [   0.0009,   7.5146]      borderline
+    32  16  0.8813 [   0.0000,   3.1259]      borderline
+    64  16  0.0000 [   0.0000,   0.0006]              no
+   128  16  0.0157 [   0.0002,   1.1990]      borderline
+
+**The CI straddles the bar in 3 of 4 cells, so G6 forbids the verdict. L3 is
+UNDECIDED at n=200**, and one cell reads a point estimate of **0.8813, above the
+bar.** **She had a number under the bar and declined to bank it.**
+
+## AND THE REAL FINDING IS NOT THE RATIO AT ALL
+
+    s     d     I == 0.0      L3 == 0.0   median min(p)
+    32    8       71/400        75/400     6.5480e-08
+    32   16      243/400       167/400     7.5700e-16
+    64   16      279/400       205/400     1.7938e-18
+   128   16      317/400       229/400     1.2454e-20
+
+**79.3% of draws carry EXACTLY ZERO interaction at s=128, d=16.** Not small.
+Exactly `0.0`.
+
+**Mechanism, and it is arithmetic:** `I` is a fourth difference of coordinates of
+size `~1/s`. When `min(p_c,p_j)` falls below float64's resolution of `1/(1-p)`,
+**renormalisation IS the identity**, all four terms coincide, and the fourth
+difference is exactly zero. **That is her locus-1 with a float mechanism attached.**
+
+**MY ITERATION-19 CLOSED FORM IS CORRECT MATHEMATICS ABOUT A REGIME THE PROBE
+NEVER OCCUPIES.** I characterised the leakage ratio at masses of **0.02 to 0.2**.
+The measured **median `min(p)` is `1.2454e-20`.** So my per-draw rule -
+*"degree-2 claims are admissible where the third token's mass is below ~0.115"* -
+is **vacuously satisfied at every real draw**, and is therefore **not the binding
+constraint on anything.**
+
+**The binding constraint is underflow.** The leakage gate is not what blocks ARM P;
+**`I` being exactly zero on four draws in five is.** My analysis is not wrong - **it
+is about the wrong regime**, which is a distinct failure from a wrong number and is
+recorded as its own kind.
+
+**Her diagnosis of why the ratio is unstable follows immediately**: it is a **ratio
+of two mostly-zero quantities.** Mean-of-ratios reads **`16575508.2152`** - garbage
+- which confirms the contract's ratio-of-means is the right estimator **and that
+even the right estimator cannot decide this here.**
+
+## THE PHASE D QUESTION IS NOW SHARPER THAN THE ONE IT REPLACED
+
+This ties to **F-lam** - the peaked softmax comes from a logit scale of
+`1.171e+01`. **Her prediction: if trained projections lower the logit scale, the
+zero rate must fall.**
+
+**If it does not, ARM P has no signal to measure at scale - and that matters more
+than the L3 ratio ever could.** A gate that cannot be decided is an inconvenience;
+**a statistic that is identically zero on most draws is not a statistic.**
+
+## HER BIND FAILED AND SHE LET IT
+
+The QUICK training config made the arm **worse** - eval `1.2727945382163208`
+against a 0-step `1.0194284829799736`. **4769 parameters on 256 examples
+overfits.** She **refused to report trained numbers, refused to lower the bind**,
+and left the broken constant as **a named open defect in her own test file.**
+*"Me not lower the bind. Me find config that trains."*
+
+**And she verified the L3 sign pattern independently** - a test checking
+`L3 == I(m absent) - I(m masked)`, **a different grouping of the same eight
+terms**, so a transposed sign fails there and nowhere else. **9 passed.**
+
+She also confirmed **Chase's quintuple is genuinely in flight** (PID 2904,
+1390 MB) alongside her own run (PID 13444) - **and that she did not couple to it**,
+which was the call made at it.16.
+
+CHECKLIST: Inspector **CLEAN**, coverage **14.45%**. L3 **UNDECIDED** by G6, 3 of 4
+CIs straddling. **`I == 0.0` on up to 79.3% of draws** - the real blocker.
+Iteration 19's rule **relegated to a regime that does not occur.**
+
+**SCOREBOARD: 4** - unchanged.
+
 ### ROUND 6, ITERATION 19 - 2026-08-26 - The leakage gate turns out to be computable, and it fires in the opposite direction from its name.
 
 CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.

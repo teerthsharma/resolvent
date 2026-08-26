@@ -967,3 +967,17 @@ Replayed ARM A's own draw stream (published `D_FR causal` reproduced to 6 dp at 
 | leading order is **optimistic** | `3*p_k` predicts `1/6 = 0.1667`; the exact crossing is **~0.115**, so the series **overstates the safe region by ~45%**. At `p_k = 0.1667` the true ratio is **0.7863**, past the gate. **Using it as the bar would admit draws that void the claim** — bound by its own test. |
 | **what ARM P gets** | **A per-draw admissibility rule, not a per-geometry sweep**: degree-2 claims hold where the third token's mass is below **~0.115**, a quantity measurable on every draw and stratifiable exactly as `min(p_c,p_j)` already is. **A blocking gate becomes a reported column.** |
 | still owed, Cameron's | The **empirical** half — `E\|L3\|/E\|I\|` at real geometries, on her **asymmetric** readout family, through **trained** projections. **The closed form predicts what she should find; it does not replace finding it.** |
+
+**ROUND 6 it.20 - scheduled Inspector pass, and the L3 measurement.**
+
+| item | status |
+|---|---|
+| `inspector.py` (scheduled) | **CLEAN, exit 0.** 11 checks, **18 controls** all fired. Coverage **209/1446 = 14.45%** (was 13.52%). |
+| command vs agent | **Both ran this round and they are different things** — the scheduled command here, the Health Inspector agent auditing the ten standing REDs since it.17. Conflating them was an earlier error, not repeated. |
+| **L3 gate** | **UNDECIDED by G6.** Ratio-of-means `0.4361` sits under the bar, but the bootstrap CI **straddles 0.5 in 3 of 4 cells**, and one cell reads **0.8813** point-estimate, above it. **She had a number under the bar and declined to bank it.** |
+| **the real finding** | **`I` is EXACTLY `0.0` on up to 79.3% of draws** (`317/400` at s=128 d=16). Median `min(p)` = **`1.2454e-20`**. Mechanism: `I` is a fourth difference of `~1/s` coordinates; below float64's resolution of `1/(1-p)`, **renormalisation is the identity** and the difference is exactly zero. **Locus-1 with a float mechanism attached.** |
+| **iteration 19 relegated** | My closed form is **correct mathematics about a regime the probe never occupies** — it characterised masses `0.02–0.2` against a measured median of `1.2454e-20`. The rule *"admissible where the third mass is below ~0.115"* is **vacuously satisfied at every real draw** and is **not the binding constraint**. **The binding constraint is underflow.** Not a wrong number — a wrong regime, recorded as its own kind. |
+| why the ratio is unstable | **A ratio of two mostly-zero quantities.** Mean-of-ratios reads `16575508.2152` — garbage — confirming ratio-of-means is the right estimator **and that even it cannot decide this here.** |
+| **the sharper Phase D question** | Ties to **F-lam**: the peaked softmax comes from logit scale `1.171e+01`. **If trained projections lower it, the zero rate must fall. If not, ARM P has no signal to measure at scale** — which matters more than the L3 ratio ever could. **A gate that cannot be decided is an inconvenience; a statistic that is identically zero on most draws is not a statistic.** |
+| her bind | **FAILED and she let it.** QUICK config made the arm worse (`1.2727945382163208` vs 0-step `1.0194284829799736`) — 4769 params on 256 examples overfits. **Refused to report trained numbers, refused to lower the bind**, left the broken constant as a **named open defect in her own test file.** |
+| independent L3 check | `L3 == I(m absent) − I(m masked)` — **a different grouping of the same eight terms**, so a transposed sign fails there and nowhere else. **9 passed.** |

@@ -4,39 +4,42 @@
 |---|---|
 | contract | `LOOP_PROMPT.md` (v8.2). Round 5 archived `LOOP_PROMPT_ROUND5_ARCHIVE.md` |
 | promise | **`HILBERT`** — D2 verbatim, or an honest `BROKEN` |
-| iteration | **19 complete, 20 next** |
+| iteration | **20 complete, 21 next** |
 | phase | **D — the artifact (iterations 16–24)** |
 | scoreboard | **4** — Star delta +2, κ<1 measured +2 *(qualified: Birkhoff route dead, structural β earned it)* |
 | RULE 2 clock | **running.** M3 settled-vs-unsettled EXECUTES by **iteration 12** or breach review |
 | register | **caveman, all agents, every iteration.** Artifacts stay normal English |
 | autonomy | user meets the loop at **iteration 30**; no check-ins |
 
-## THE ONE NEXT ACTION (round 6, iteration 20)
+## THE ONE NEXT ACTION (round 6, iteration 21)
 
-**`python inspector.py` — the scheduled COMMAND pass (iterations 10, 20, 28).**
+**The Phase D side-by-side, and it now answers a sharper question than the one it
+was dispatched for.**
 
-Distinct from the Inspector **agent** currently auditing the ten standing REDs.
-Both exist; conflating them was a real error earlier in this project and it is not
-repeated.
+Cameron's run is live (PID 13444). When it lands, **read the zero rate before
+anything else:**
 
-**Then collect whoever has landed.** Three agents live:
-  1. **CAMERON — trained projections.** `alpha` first: **spreads => the
-     equilibrium has something to carry; still one-hot => T1 fires on evidence**
-     and the round's claim is routing-only, which is a *result*. Then `Delta_hat`,
-     the logit scale that predicts it, then `min(p_c,p_j)`. **Her empirical L3 half
-     is also owed** — iteration 19 gives the closed-form prediction to check it
-     against, on a different readout family, so agreement would be a genuine
-     second path and disagreement a finding.
-  2. **THE INSPECTOR — the 10 standing REDs.** **Question 2 first**: does anything
-     published depend on a RED test? **An unbound published claim is struck.**
-  3. **CHASE — M3 and `arm_s_batched.py`.** M3 is UNRUN at the gate; any
-     completion is **post-deadline and marked**. The batched arm is the it.18
-     kernel target — **3.0 dispatches per settling step, removable at zero FLOP
-     cost.**
+  * **`I == 0.0` on up to 79.3% of draws at random init**, median `min(p)` =
+    `1.2454e-20`. **If trained projections lower the logit scale, that rate must
+    fall.**
+  * **If it does not, ARM P has no signal to measure at scale.** That outranks the
+    L3 ratio, the degeneracy loci, and the matcher — **a gate that cannot be
+    decided is an inconvenience; a statistic that is identically zero on four
+    draws in five is not a statistic.**
+  * Then `alpha` (**spreads => the equilibrium carries something; still one-hot =>
+    T1 fires on evidence**), then `Delta_hat`, then the logit scale that predicts
+    both.
 
-**Nothing cheap remains unrouted.** Every item on the open list now has an owner or
-a stated reason it cannot be closed here (K-F's `collect_callgrind` needs a
-platform this box is not).
+**Also live:** the Health Inspector on the ten standing REDs — **question 2 first,
+does anything published depend on a RED test**; and Chase's quintuple (PID 2904),
+**UNRUN at the gate**, any completion **post-deadline and marked**.
+
+**A defect of mine to carry forward, not to bury:** iteration 19's leakage rule is
+**correct mathematics in a regime that does not occur**. It stays in the record
+with that label. **The lesson is narrower than "check your regime" — it is that a
+closed form derived at convenient masses must be evaluated at MEASURED ones before
+it is offered as a rule**, and the measured masses were available in Cameron's own
+earlier report had I looked.
 
 ## Open REDs
 
