@@ -101,6 +101,7 @@ __all__ = ["TARGET_LO", "TARGET_HI", "TARGET", "LADDER", "Chain",
            "lambda_2", "ergodic_lambda_2", "bridge_conductance",
            "absorption_probabilities", "truncated_absorption", "relative_error",
            "DEGENERATE_STD", "RATE_TS", "REACH_RADII", "committor_rate_law", "closed_form_control",
+           "fisher_rao", "readout_geometry",
            "conditional_label", "conditional_relative_error", "dead_fraction", "bridge_sweep", "killing_rate", "engineer",
            "degenerate_single_target", "no_kill_control", "bridge_dial_refuted",
            "target_separation_sweep", "report", "demo"]
@@ -525,6 +526,78 @@ def closed_form_control(spec, target: float = TARGET) -> dict:
             "fires": residual > 1e-6 and int(live.sum()) > 0}
 
 
+def fisher_rao(p_: np.ndarray) -> np.ndarray:
+    """`2 arcsin(sqrt(p))`, the Fisher-Rao geodesic coordinate on the BINARY simplex.
+
+    RULE 9's lightweight non-flat readout, and it is one transform rather than a new
+    metric library. On a two-outcome simplex the Fisher-Rao line element is
+    `ds = dp / sqrt(p (1 - p))`, whose antiderivative is `2 arcsin(sqrt(p))`; the
+    geodesic distance between `p` and `p'` is exactly `|phi(p) - phi(p')|`, twice the
+    Bhattacharyya angle. Applying it to both prediction and label and then taking the
+    ordinary Euclidean norm IS the Fisher-Rao distance, so no scoring code changes.
+    """
+    return 2.0 * np.arcsin(np.sqrt(np.clip(p_, 0.0, 1.0)))
+
+
+def readout_geometry(spec, target: float = TARGET, ts=LADDER) -> dict:
+    """PRICE the flat readout against the non-flat one. RULE 9, measured.
+
+    ## Where the objection bites, and where it does not
+
+    RULE 9's live instance is that NRMSE is Euclidean while the predicted objects are
+    fixed points of row-stochastic maps, which live on a simplex. THAT DOES NOT APPLY
+    TO THE `e3` CORPUS: `equilibrium_oracle` returns `z*_{s-1}`, which is exactly
+    `N(0, t*)` on the real line (`negation_scope.make_equilibrium_batch` documents the
+    Rademacher construction that makes it exact), so the target's own geometry is flat
+    and NRMSE is the right readout there. It applies to THIS corpus, whose label is an
+    absorption probability in `[0, 1]`.
+
+    ## The derived prediction, and it is the point of measuring rather than switching
+
+    `phi` is a smooth strictly monotone reparameterisation, so near the fixed point it
+    acts as a diagonal scaling of the residual and CANNOT move the leading eigenvalue.
+    So `foreman_lambda2`'s rate law predicts the ASYMPTOTIC rate is identical under
+    both readouts. Measured at `t = 320/319`: `0.9250005823` Euclidean against
+    `0.9249999504` Fisher-Rao on the 64-node case, both against `lambda_2 =
+    0.9250000000`. Confirmed.
+
+    ## The price, and it is not zero
+
+    AT THE LADDER'S OWN RUNGS the two readouts disagree materially, because the rungs
+    are pre-asymptotic and the label piles against the boundary where the metrics
+    diverge. Measured `fisher_rao / euclidean` reaches `1.418962` at `t = 8` on the
+    64-node case and `1.209472` at `t = 32` on the 1024-node case, and the 1024-node
+    conditional label carries `0.3333` of its mass below `0.01` and `0.4333` above
+    `0.99` -- `0.7666` within one hundredth of a boundary.
+
+    **So the readout must be DECLARED BEFORE the corpus run, not chosen after.** A
+    42 % swing in a rung value is larger than most effects this project has reported,
+    and picking the readout once the curve is visible would be choosing the answer.
+    """
+    case = make_case(*spec)
+    base = build_chain(case, spec, 1.0)
+    chain = build_chain(case, spec, 1.0, alpha=killing_rate(base, target))
+    q = conditional_label(absorption_probabilities(chain))
+    pq = fisher_rao(q)
+    deep = max(ts) * 10
+    z, euclid, fr = np.zeros_like(chain.R), {}, {}
+    for t in range(1, deep + 1):
+        z = chain.Q @ z + chain.R
+        q_t = conditional_label(z)
+        euclid[t] = float(np.linalg.norm(q_t - q) / np.linalg.norm(q))
+        fr[t] = float(np.linalg.norm(fisher_rao(q_t) - pq) / np.linalg.norm(pq))
+    return {
+        "name": case.name,
+        "ladder": [(t, euclid[t], fr[t], fr[t] / euclid[t]) for t in ts],
+        "max_rung_ratio": max(fr[t] / euclid[t] for t in ts),
+        "rate_euclid": euclid[deep] / euclid[deep - 1],
+        "rate_fisher_rao": fr[deep] / fr[deep - 1],
+        "lambda_2": lambda_2(chain),
+        "frac_below_0.01": float((q < 0.01).mean()),
+        "frac_above_0.99": float((q > 0.99).mean()),
+    }
+
+
 def dead_fraction(chain: Chain, *, column: int = 0) -> float:
     """Fraction of transient nodes whose label is below `DEAD`.
 
@@ -841,6 +914,31 @@ def report() -> str:
         lines.append("    reach of the killed walk, alpha ** r:  " + "  ".join(
             f"r={r_:d} {_fmt(a)}" for r_, a in r["reach"]))
     lines.append("")
+    lines.append("RULE 9 -- PRICING THE FLAT READOUT AGAINST THE NON-FLAT ONE")
+    lines.append("  phi(p) = 2 arcsin(sqrt(p)) is the Fisher-Rao geodesic coordinate")
+    lines.append("  on the binary simplex. It does NOT apply to e3, whose label is")
+    lines.append("  N(0, t*) on the real line; it applies here, where the label is a")
+    lines.append("  probability.")
+    for spec in REROUTED_CASES:
+        g = readout_geometry(spec)
+        lines.append(f"  {g['name']}   label mass within 0.01 of a boundary: "
+                     f"below {_fmt(g['frac_below_0.01'])}  above "
+                     f"{_fmt(g['frac_above_0.99'])}")
+        lines.append("      t     Euclidean        Fisher-Rao       ratio")
+        for t, e, f_, r in g["ladder"]:
+            lines.append(f"    {t:<5d} {_fmt(e)}   {_fmt(f_)}   {r:.6f}")
+        lines.append(f"    asymptotic rate  Euclid {_fmt(g['rate_euclid'])}"
+                     f"   Fisher-Rao {_fmt(g['rate_fisher_rao'])}"
+                     f"   lambda_2 {_fmt(g['lambda_2'])}")
+        lines.append(f"    PREDICTED by the rate law: the transform is a smooth "
+                     f"monotone reparameterisation, so")
+        lines.append(f"    it cannot move the leading eigenvalue. CONFIRMED to "
+                     f"{abs(g['rate_euclid'] - g['rate_fisher_rao']):.3e}.")
+        lines.append(f"    PRICE: at the rungs the readouts differ by up to "
+                     f"{g['max_rung_ratio']:.6f}x, so the readout is")
+        lines.append("    load-bearing where the round reads and must be DECLARED "
+                     "BEFORE the run.")
+    lines.append("")
     lines.append("MUST-FIRE CONTROLS")
     for spec in REROUTED_CASES:
         d = degenerate_single_target(spec)
@@ -932,6 +1030,16 @@ def demo() -> None:
     assert min(fs) < 1.0 < max(fs), fs
     corr = float(np.corrcoef([r["lambda_3_over_2"] for r in rows], fs)[0, 1])
     assert abs(corr) < 0.6, corr
+
+    # RULE 9, and the derived half is the one that is asserted: a smooth monotone
+    # reparameterisation cannot move the leading eigenvalue, so the two readouts must
+    # share an asymptotic rate. The rung disagreement is asserted to be LARGE, because
+    # a readout that changed nothing would not need declaring in advance.
+    for spec in REROUTED_CASES:
+        g = readout_geometry(spec)
+        assert abs(g["rate_euclid"] - g["rate_fisher_rao"]) < 1e-3, (
+            g["name"], g["rate_euclid"], g["rate_fisher_rao"])
+        assert g["max_rung_ratio"] > 1.15, (g["name"], g["max_rung_ratio"])
     print("foreman_lambda2 demo OK")
 
 

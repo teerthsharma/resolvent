@@ -28,3 +28,15 @@ Thumbs.db
 # See data/README.md for provenance and exact fetch commands.
 data/*.tsv
 data/*.txt
+
+# Agent-harness state. `.claude/worktrees/` holds full repo copies (tens of MB)
+# and `.claude/settings.local.json` is machine-local; neither is evidence and
+# both were held back only by .git/info/exclude, which no clone inherits.
+.claude/
+.benchmarks/
+
+# Python packaging artefacts. `ceq/` is packaged for the Hub, so an editable
+# install drops these in.
+*.egg-info/
+/build/
+/dist/

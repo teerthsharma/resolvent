@@ -11,6 +11,83 @@ against.
 
 ---
 
+## 0. THE THESIS — WHAT THE MODULE IS SUPPOSED TO PREDICT
+
+Self-attention is called a next-token predictor, and that description is accurate: it
+guesses the next best symbol. **This module is meant to guess the next best SHAPE** — the
+configuration the sequence settles into — so that the next equilibrium can be reached
+rather than the next word emitted.
+
+Concretely, and in the author's framing: it does not predict *a* word. Given the words
+already present, it predicts **several at once**, jointly, because their values are
+determined together. And the way it decides which existing tokens matter is causal:
+**inject an existing token, and observe how the whole shape moves** — read through the
+embedding geometry and the topology of the sequence, not through a similarity score.
+
+### 0.1 THIS PROJECT HAS NOT BEEN TESTING THAT. `READ`, AND IT IS THE CENTRAL DEFECT.
+
+`scale/negation_scope.py:274`, `equilibrium_oracle`:
+
+> *"`z*_{s-1}`, the last coordinate of `(I - A)^{-1} b`."*
+
+**The label is one coordinate. `z*` is the shape; `z*_{s-1}` is a single point on it.**
+And `nrmse` at `scale/negation_scope.py:672` is a root-mean-square error on that scalar.
+
+So every task in this repository — the static ones **and** the equilibrium ones —
+**asks for a point prediction.**
+
+**That is why softmax wins, and the reason is a theorem rather than an accident.**
+Predicting one scalar from a sequence, where the answer is a payload at a latent
+location times a query-side transform, **is exactly the single-location regression
+problem on which one softmax layer is provably Bayes-optimal** (`arXiv:2410.01537`).
+**The corpus was built as the one task softmax cannot lose.**
+
+### 0.2 WHAT THE THESIS REQUIRES INSTEAD
+
+Three changes, each of which is a build rather than an argument:
+
+**(a) The label becomes the shape.** Predict `z*` — the whole fixed point, a vector of
+length `s` — not `z*_{s-1}`. The oracle already computes the entire vector and then
+discards all but one entry.
+
+**(b) The readout must not be flat.** RULE 9 applies with force here. A root-mean-square
+error over a configuration weights every coordinate independently and identically, which
+is precisely the assumption a shape violates: the coordinates of a fixed point are
+**coupled**, and a prediction that is right in aggregate but wrong in arrangement is not
+a good prediction of a shape. The candidate readouts are the ones that respect that
+coupling — Hilbert projective distance on the positive part, Fisher–Rao or total
+variation where the object is a distribution, and a Procrustes-style or optimal-transport
+cost where only the arrangement matters and scale does not.
+
+**(c) The consequence test becomes vector-valued.** The existing fidelity metric asks
+whether `sign(Δŷ)` matches `sign(Δy)` for a scalar. Under the thesis it should ask **how
+the whole shape moves** under an intervention — a displacement field, compared by
+direction and magnitude across all coordinates, not a sign on one.
+
+### 0.3 WHERE SOFTMAX CANNOT FOLLOW — the novelty claim, stated narrowly
+
+**One softmax step computes a convex mixture per query row, and each row is computed
+independently of the others.** There is no mechanism in that step by which the value
+assigned to position `i` constrains the value assigned to position `j`. A jointly
+determined configuration — where the coordinates must be mutually consistent because
+they solve a fixed point together — **is not what a single independent-per-row mixture
+computes.**
+
+That is the sharpest available statement of what this module could do that softmax
+cannot, and it is **narrow on purpose**:
+
+* It is **not** a claim that softmax cannot predict any single coordinate — the theorem
+  says it can, optimally.
+* It is **not** a claim about depth — depth composition is separately governed by
+  `L = floor(log2 k) + 2` (§2), and stacked softmax layers get that too.
+* It **is** a claim about **joint determination in one read**, which is the only place
+  the fixed point is doing work a mixture is not.
+
+**And it is currently UNTESTED, because no vector-valued label exists in the
+repository.** Recorded as the open claim rather than as a result.
+
+---
+
 ## 0. THE ARCHITECTURAL POSITION, AS IT NOW STANDS
 
 **Softmax attention is not the opponent. It is the base case, and the module must

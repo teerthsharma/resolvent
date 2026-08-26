@@ -5914,3 +5914,9 @@
 {"t": "test", "agent": "cameron", "node": "tests/cameron/test_r6_matcher_red.py::test_calibration_separated_direction_residual_and_effect_are_nonzero", "state": "GREEN", "detail": "", "dur": 1.936, "ts": "2026-08-26T15:18:06"}
 {"t": "test", "agent": "cameron", "node": "tests/cameron/test_r6_matcher_red.py::test_calibration_selection_direction_removes_a_planted_confound", "state": "GREEN", "detail": "", "dur": 2.301, "ts": "2026-08-26T15:18:09"}
 {"t": "test", "agent": "cameron", "node": "tests/cameron/test_r6_matcher_red.py::test_the_selection_direction_fails_when_the_solver_is_deleted", "state": "GREEN", "detail": "", "dur": 2.575, "ts": "2026-08-26T15:18:11"}
+{"t": "test", "agent": "cameron", "node": "tests/cameron/test_r6_matcher_red.py::test_the_shipped_interval_re_runs_the_match_and_the_naive_one_does_not", "state": "GREEN", "detail": "", "dur": 3.439, "ts": "2026-08-26T15:18:15"}
+{"t": "test", "agent": "cameron", "node": "tests/cameron/test_r6_matcher_red.py::test_null_interval_covers_zero_at_about_its_nominal_rate", "state": "GREEN", "detail": "", "dur": 44.38, "ts": "2026-08-26T15:18:59"}
+{"t": "test", "agent": "cameron", "node": "tests/cameron/test_r6_matcher_red.py::test_strata_are_never_pooled", "state": "GREEN", "detail": "", "dur": 0.007, "ts": "2026-08-26T15:18:59"}
+{"t": "test", "agent": "cameron", "node": "tests/cameron/test_r6_matcher_red.py::test_pooling_beats_every_stratum_by_identity_not_by_measurement", "state": "GREEN", "detail": "", "dur": 0.102, "ts": "2026-08-26T15:18:59"}
+{"t": "test", "agent": "cameron", "node": "tests/cameron/test_r6_matcher_red.py::test_pooling_understates_the_tail_by_a_margin_that_could_have_been_small", "state": "GREEN", "detail": "", "dur": 0.084, "ts": "2026-08-26T15:18:59"}
+{"t": "test", "agent": "cameron", "node": "tests/cameron/test_r6_matcher_red.py::test_module_reports_which_assignment_path_it_took", "state": "GREEN", "detail": "", "dur": 0.0, "ts": "2026-08-26T15:18:59"}
