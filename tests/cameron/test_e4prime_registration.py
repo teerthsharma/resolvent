@@ -222,10 +222,12 @@ def test_the_label_is_not_a_closed_form_of_any_bounded_neighbourhood():
     the mean predictor through k=8 (measured 1.2694 there,
     results/e4_gate.txt:48) and is still far from resolved at k=16 (measured
     0.7943), tightens monotonically, and becomes EXACTLY the label once the
-    budget covers every drawn pair's hop distance. Endpoint half: on a drawn
-    instance re-marked to the bridge endpoints themselves, the reading says
-    NOT-connected at one hop short of their distance and connected exactly at
-    it -- no fixed neighbourhood radius decides the label."""
+    budget covers every drawn pair's hop distance. Endpoint half: on ONE drawn
+    do()-on instance, taken on ITS OWN drawn pair -- left x right across the
+    bridge exactly as `draw_do_paired` draws them, and never the bridge edge
+    itself -- the reading says NOT-connected at one hop short of that pair's
+    hop distance and connected exactly at it. No fixed neighbourhood radius
+    decides the label."""
     _require_e4prime()
     pre, post, edge, _sizes = _reference_substrate()
     x, y, _f, _p = _state()
@@ -241,18 +243,23 @@ def test_the_label_is_not_a_closed_form_of_any_bounded_neighbourhood():
             assert got > 0.75, (k, got)
         prev = got
     assert prev == 0.0, prev
-    # endpoint half: ONE drawn do()-on instance, re-marked to the endpoints.
+    # endpoint half: ONE drawn do()-on instance, on ITS OWN drawn pair. The
+    # bridge edge itself is the one cross-component pair that IS adjacent in
+    # the post graph -- it is the added edge (scale/negation_scope.py:691,
+    # ceq/rips.py:204) -- so re-marking to its endpoints would make `dist > 1`
+    # impossible for every faithful implementation and the near/exact demo
+    # vacuous (k=0 vs k=1). Every OTHER left-x-right pair is non-adjacent by
+    # construction: the pre graph has no cross edges and the post graph adds
+    # only this one, which is why the control below can demand dist > 1.
     on = int((y > 0).nonzero()[0].item())
-    xe = x[on:on + 1].clone()
-    a, b = edge
-    xe[0, :, NS.CH_QA] = 0.0
-    xe[0, :, NS.CH_QB] = 0.0
-    xe[0, a, NS.CH_QA] = 1.0
-    xe[0, b, NS.CH_QB] = 1.0
-    dist = _hop_distance(post, a, b)
+    xe = x[on:on + 1]
+    qi = int((xe[0, :, NS.CH_QA] != 0).nonzero()[0].item())
+    qj = int((xe[0, :, NS.CH_QB] != 0).nonzero()[0].item())
+    assert (qi, qj) != tuple(edge), "the draw handed the control the bridge"
+    dist = _hop_distance(post, qi, qj)
     assert dist > 1, dist
-    near = NS.e4prime_hop_reading(xe, a, b, dist - 1)
-    exact = NS.e4prime_hop_reading(xe, a, b, dist)
+    near = NS.e4prime_hop_reading(xe, _f, _p, dist - 1)
+    exact = NS.e4prime_hop_reading(xe, _f, _p, dist)
     assert float(near[0]) == -1.0, float(near[0])
     assert float(exact[0]) == 1.0, float(exact[0])
 
