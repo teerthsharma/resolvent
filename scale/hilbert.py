@@ -52,7 +52,8 @@ import math
 
 import torch
 
-__all__ = ["d_H", "delta_hat", "kappa_cert", "one_minus_kappa", "neumann_terms"]
+__all__ = ["d_H", "delta_hat", "n_parts", "parts", "kappa_cert",
+           "one_minus_kappa", "neumann_terms"]
 
 
 def _in_open_cone(v: torch.Tensor) -> bool:
@@ -63,35 +64,100 @@ def _in_open_cone(v: torch.Tensor) -> bool:
 def d_H(p: torch.Tensor, q: torch.Tensor) -> float:
     """Hilbert projective distance, as a difference of logs.
 
-    Returns +inf when either vector leaves the open cone, which is the honest
-    reading: the metric is defined on rays through the interior, and a boundary
-    point is infinitely far from any interior one.
+    FINITE WITHIN A PART, +inf ACROSS PARTS. Two vectors lie in the same part of
+    the cone exactly when they have the same SUPPORT, and restricted to that
+    support both are strictly positive, so the log-ratio oscillation is finite.
+    Only a change of support puts them at infinite distance.
+
+    REPAIRED at round 6 iteration 4. The earlier version demanded the strict
+    interior and returned +inf whenever any coordinate was zero — including when
+    BOTH vectors shared that zero, which is the same part and a perfectly finite
+    distance. The defect surfaced from a cross-check against an independently
+    written second implementation, which read 1.503823 where this read inf; the
+    disagreement was reported rather than reconciled, and this side was wrong.
+    It matters because every masked attention row has zeros: under the old
+    reading no two causal rows were ever a finite distance apart.
+
+    A negative coordinate is not a cone point and still gives +inf, as does a
+    vector with empty support, which belongs to no part and cannot be normalised.
     """
     p = p.reshape(-1).double()
     q = q.reshape(-1).double()
     if p.numel() != q.numel():
         raise ValueError(f"length mismatch: {p.numel()} vs {q.numel()}")
-    if not (_in_open_cone(p) and _in_open_cone(q)):
+    if not (bool(torch.isfinite(p).all()) and bool(torch.isfinite(q).all())):
         return math.inf
-    lr = torch.log(p) - torch.log(q)
+    if bool((p < 0).any()) or bool((q < 0).any()):
+        return math.inf                       # not a cone point at all
+    sp, sq = (p > 0), (q > 0)
+    if not bool((sp == sq).all()) or not bool(sp.any()):
+        return math.inf                       # DIFFERENT parts, or no support
+    lr = torch.log(p[sp]) - torch.log(q[sp])   # finite WITHIN the shared part
     return float(lr.max() - lr.min())
 
 
-def delta_hat(rows: torch.Tensor) -> float:
-    """Projective diameter over a batch: max over pairs of d_H.
+def parts(rows: torch.Tensor) -> dict[tuple[bool, ...], list[int]]:
+    """Group row indices by SUPPORT. Two vectors lie in the same part of the cone
+    exactly when they have the same support, and the Hilbert metric is finite
+    only within a part."""
+    rows = rows.reshape(rows.shape[0], -1).double()
+    out: dict[tuple[bool, ...], list[int]] = {}
+    for i in range(rows.shape[0]):
+        key = tuple(bool(v) for v in (rows[i] > 0).tolist())
+        out.setdefault(key, []).append(i)
+    return out
 
-    Reported in NATS and treated as primary. Returns +inf as soon as any row
-    leaves the cone, so a single non-positive entry anywhere fires K-A rather
-    than being averaged away by the pairs that happen to be well behaved.
+
+def delta_hat(rows: torch.Tensor) -> float:
+    """Projective diameter, as a sup over SAME-PART pairs. Reported in nats.
+
+    REPAIRED at round 6 iteration 4, on a disagreement between this module and
+    `scale/foreman_hilbert.py` that read 1.503823 against inf on identical input.
+    The earlier version returned +inf as soon as any row left the open cone. That
+    is not the theorem's Delta. Lemmens-Nussbaum Thm 2.9 states
+
+        Delta(L) = sup{ d(Lx, Ly) : x, y in C with Lx ~_K Ly }
+
+    and the restriction sits on DELTA, not on d. `d_H` stays strict — it is a
+    metric on each part, extended by +inf between parts, and that is unchanged.
+    But Delta is a supremum taken ONLY over pairs whose images share a part, so
+    it can be finite while other pairs in the cone sit at infinite distance.
+
+    Why this is not a technicality: causal rows at different indices ALWAYS have
+    different supports, so the unrestricted reading is +inf on every draw. It was
+    measured at +inf in 30/30 live cells while the same-part reading gave
+    148.8022 to 403.5583 nats. An unrestricted K-A would fire always, forever,
+    carrying no information — the vacuous-control class this project has already
+    struck five times.
+
+    A row that is entirely zero has empty support and belongs to no part; it is
+    excluded rather than counted, because it cannot be normalised and cannot be a
+    pivot. `n_parts` is what a caller checks to see whether the map landed its
+    image in one part, which is the question K-A actually asks.
     """
     rows = rows.reshape(rows.shape[0], -1).double()
-    if not _in_open_cone(rows):
-        return math.inf
-    lr = torch.log(rows)
-    # d_H(p_a, p_b) = max_j(l_aj - l_bj) - min_j(l_aj - l_bj) over all pairs;
-    # formed pairwise rather than by a loop, at n^2 memory in the row count.
-    diff = lr.unsqueeze(0) - lr.unsqueeze(1)
-    return float((diff.amax(-1) - diff.amin(-1)).max())
+    if not bool(torch.isfinite(rows).all()) or bool((rows < 0).any()):
+        return math.inf                      # a negative entry is not a cone point
+    best = 0.0
+    for key, idx in parts(rows).items():
+        if not any(key) or len(idx) < 2:     # empty support, or nothing to pair
+            continue
+        sub = rows[idx][:, list(key.index(True) for _ in range(0))] if False else rows[idx]
+        mask = torch.tensor(key)
+        lr = torch.log(sub[:, mask])
+        diff = lr.unsqueeze(0) - lr.unsqueeze(1)
+        best = max(best, float((diff.amax(-1) - diff.amin(-1)).max()))
+    return best
+
+
+def n_parts(rows: torch.Tensor) -> int:
+    """How many parts of the cone the rows occupy, ignoring all-zero rows.
+
+    K-A asks whether T lands its image in a SINGLE part. More than one part means
+    the map does not have a well-defined projective diameter over its image, and
+    that is a design fault to report rather than a contraction to certify.
+    """
+    return sum(1 for key in parts(rows) if any(key))
 
 
 def kappa_cert(delta: float) -> float:

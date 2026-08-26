@@ -4,6 +4,189 @@ Round 5 closed at `TWOSPHERES: BROKEN - ARM A, K1's dual slope, displacement
 clause`; its handoff is `done5.md` and its negative result is `D1.md`. That
 verdict is final and is not reopened.
 
+### ROUND 6, ITERATION 4 - 2026-08-26 - Foreman returns. The float repair is what kept the arm alive; the certificate is confirmed AND vacuous; and my own metric was wrong twice.
+
+CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.
+[RUN] `pytest tests/loop` -> **145 passed**, exit 0.
+
+---
+
+## FOREMAN'S REPORT. The headline is that my repair was not over-engineering.
+
+He was asked to **REFUTE** the K-A float repair. He confirmed it, and harder than
+it was claimed. `scale/foreman_hilbert.py`, s in {256,1024}, d=16, k in {8,32,128},
+seeds 0-4, **30 cells**, threads pinned in file:
+
+    Delta_vertex range            101.3671 .. 311.6091 nats
+    Delta_vertex >= 76.246190     30/30 cells
+    kappa_cert = tanh(Delta/4)    EXACTLY 1.0 in 30/30 cells
+
+**Real `Delta` does not land near 76. It lands 1.3x to 4.1x PAST it, in every
+cell, every seed, both sequence lengths.** Written the original way, **K-A kills
+ARM S 30/30 at iteration 0 for a purely arithmetic reason.** The repair is not
+guarding a hypothetical; it is the only thing keeping the arm alive.
+
+**And the sampled-estimator finding confirmed too:** interior sampling understates
+the exact vertex diameter by **1.492x .. 3.814x**, over the cell range
+41.6540 .. 133.2257 nats.
+
+**HE ALSO FOUND THE MECHANISM, which neither of us had.** [RUN] a bound identity:
+
+    d_H(softmax u, softmax v) == osc(u - v)
+    d_H = 26.133774518966675   osc = 26.133774518966675   |diff| = 0.000e+00
+
+**The Hilbert distance between two softmax rows IS the oscillation of their logit
+difference** - nothing of the softmax survives but the logits. So `Delta_H` scales
+**linearly in logit scale**, and measured logit spreads are median **65.1404**
+(s=256) and **92.4548** (s=1024), max **231.2793**. **`Delta ~ 76` nats is not
+large - it is below the median row spread at s=1024.** Same root cause as F-lam.
+
+---
+
+## THE CERTIFICATE IS CONFIRMED AND VACUOUS. Both.
+
+    kappa_emp  (median ratio d_H(Tm,Tm')/d_H(m,m'))   0.062005 .. 0.193645
+    kappa_cert (tanh(Delta_vertex/4))                 1.0000000000, all 30 cells
+
+The consistency gate `kappa_emp <= kappa_cert` **passes 30/30 because 0.1 <= 1.0**.
+**It has no teeth.** That is a G6 problem and it is his finding, not mine.
+
+**Neumann cost on the Birkhoff route, which kills 1.2 through that door:**
+
+    N at Delta_vertex   4.5e28 .. 7.4e64
+    N at Delta_image    1.9e10 .. 3.4e30
+    N at STRUCTURAL kappa = beta = 0.5                  N = 21
+
+**Same map. 4.5e28 terms against 21. The difference is the ESTIMATOR, not the
+operator.** And his beta sweep reproduces iteration 1's banked numbers byte-exact
+(`kappa=0.5 -> 21`, `kappa=0.9 -> 153`), so that is a **second path agreeing**.
+
+## `T` IS NOT LINEAR, ANSWERED PLAINLY - AND HE FOUND THE WAY AROUND IT
+
+Six independent sources all carry **linear** in the hypothesis (Lemmens-Nussbaum
+1304.7921 Thm 2.9; Reeb/Kastoryano/Wolf 1102.5170 Thm 4; Gautier-Tudisco
+1808.04180 Thm 2.5; Cohen-Fausti 2309.02413 Thm 2.4; Eckstein 2311.04041 Thm 2.1;
+Carli-Sepulchre 1503.09113 Thm 2.1). Nonlinear maps get **nonexpansive only** -
+1304.7921 Cor 2.7. A nonlinear map with a strict `tanh(Delta/4)`: **NOT FOUND.**
+
+**So Birkhoff's Thm 2.9 does not apply to our `T`.** But `T` **factors**, and every
+factor is cited:
+
+    L      linear positive        -> nonexpansive            [1304.7921 Thm 2.9]
+    diag   positive diagonal      -> projective ISOMETRY     [2605.08123]
+    ^beta  order-preserving, homogeneous degree beta
+                                  -> d_H(x^b,y^b) <= b d_H   [1304.7921 Prop 2.6]
+    N      linear positive        -> nonexpansive            [1304.7921 Thm 2.9]
+
+**Composing: `d_H(Tm, Tm') <= beta * d_H(m, m')`. `kappa(T) = beta`, exact, by
+construction** - independent of `s`, of logit scale, of the pivot readings.
+Measured 30/30 with adversarial corner draws, `max observed ratio 0.480897` at
+`beta=0.5`, and tracking across the sweep: `0.0 -> 0.000000`, `0.25 -> 0.240448`,
+`0.5 -> 0.480897`, `0.9 -> 0.865614`.
+
+**His reframing, and it is the right one:** `tanh(Delta/4)` is the **wrong half of
+Birkhoff** for this map. The right half is **nonexpansiveness plus the
+degree-of-homogeneity bound**, and the degree **is** `beta`. `Delta(L)` is a sup
+over the whole cone; **`T` never visits the cone's edges.** That gap is 4.5e28
+Neumann terms against 21.
+
+## THE CONTRACT'S POSITIVITY CLAIM IS FALSE, and he showed it four ways
+
+1.1 asserts *"every entry of every `a_p > 0` (softmax rows guarantee it)"*. They do
+not. `ceq/bench.py:188` masked_fill writes **exact zeros**; `_causal_mask_pair` is
+`tril(-1)` so rows have **different supports**; **row 0 is entirely zero**; and
+**float32 softmax underflows on the allowed support**:
+
+    s=1024 float32   16861 / 523776 exact zeros    min positive 1.401298e-45
+    s=1024 float64       0 / 523776                min positive 2.511396e-101
+
+`1.401298e-45` is float32's smallest subnormal. Structural, because max spread
+**231.2793 > 103.278930**, the float32 `exp` underflow threshold. **float64 is safe
+here by a MEASURED margin (231.2793 < 744.440072), not by guarantee.**
+
+## G1 DELTAS - and one of them refutes the contract's hope
+
+**SINKHORN: OCCUPIED, textbook.** Franklin & Lorenz 1989, LAA 114-115:717-735 -
+*"Hilbert's projective metric and a theorem of G. Birkhoff are used to prove that
+Sinkhorn's original iterative procedure converges geometrically"*. No delta there.
+
+**BIRKHOFF AS A SETTLING CERTIFICATE FOR ATTENTION: NOT UNCLAIMED.** arXiv
+**2605.08123** (Forde, v1 2026-04-28, v2 2026-05-20, verified twice by independent
+nurses after the first gave a wrong date) already publishes **Proposition 4,
+"Projective Sinkhorn Contraction Certificate"**, `rho_H = tanh(Delta(K)/4)
+tanh(Delta(K^T)/4) < 1`, **including the masked-exclusion design Foreman had
+arrived at independently**, with median `rho_H = 0.241` over 228 active blocks.
+**The delta survives only narrowly**: that paper certifies the Sinkhorn
+column-scaling map, and *"attention readout" / "equilibrium" / "settling"* are
+**absent** from it. So the claim is a Birkhoff-class certificate for a **settling
+map over pivot readings**, not "for attention". **Said any wider, G5 breaks.**
+
+**DEQ: delta holds but is SMALLER than the contract assumed.** 1909.01377 has
+**0 occurrences of "unique"**. But four families do carry uniqueness certificates,
+and **2403.00720 Thm 3.7 uses the Thompson metric with subhomogeneity** - the same
+family as the beta bound. Hilbert/Birkhoff by name in any DEQ paper: **NOT FOUND**.
+
+**SHAPLEY 4-POINT: the ALGEBRA is occupied, the TARGET is not.** Lundberg
+1802.03888 Eq 4 and Sundararajan 1902.05622 Eq 2 are the identical four-term
+difference. **The delta is the READOUT** - a 4-point mask probe on an *attention
+row*, not a model output. **NOT FOUND**, 6 queries logged.
+
+---
+
+## MY OWN MODULE WAS WRONG TWICE, AND HIS DISAGREEMENT IS WHAT FOUND IT
+
+His OPEN #1: the same input read **1.503823** in his module and **inf** in mine.
+He reported the divergence rather than reconciling it. **He was right and I was
+wrong, twice.**
+
+**RULING, and it settles where the restriction sits.** Lemmens-Nussbaum Thm 2.9
+reads `Delta(L) = sup{ d(Lx,Ly) : x,y in C with Lx ~_K Ly }`.
+
+  1. **`delta_hat` was wrong.** It returned `+inf` if any row left the open cone.
+     That is not the theorem's `Delta`, which is a sup **restricted to same-part
+     image pairs**. Causal rows at different indices **always** have different
+     supports, so the unrestricted reading is `+inf` on every draw - Foreman
+     measured `Delta_naive == +inf in 30/30` against `Delta_hull =
+     148.8022 .. 403.5583`. **An unrestricted K-A fires always, forever, carrying
+     no information** - the vacuous-control class struck five times already.
+  2. **`d_H` was ALSO wrong, and this one is worse.** It demanded the strict
+     interior, so it returned `+inf` even when **both** vectors shared the same
+     zero - which is the **same part** and a perfectly finite distance. **Every
+     masked attention row carries zeros, so under that reading no two causal rows
+     were ever a finite distance apart** and the metric was unusable on the
+     objects it exists to measure. Found by the cross-check printing
+     `d_H = inf` where the repaired `delta_hat` read `2.079442` on the same pair.
+
+Both repaired: `d_H` is **finite within a part, `+inf` across parts**; `delta_hat`
+is a **sup over same-part pairs**; `n_parts` added, because *"did the image land
+in ONE part"* is what K-A actually asks. Two earlier tests **superseded and
+rewritten rather than deleted**, each carrying why it was wrong.
+
+**A TRANSIENT NOT DIAGNOSED, recorded rather than swept.** One run of
+`pytest tests/loop` exited `3221226505` (`0xC0000409`, a Windows stack-buffer
+fault) with no output. It **did not reproduce** - the file passes 35, the
+directory passes 145, both exit 0. Two fellows were running heavy concurrent jobs.
+**That is a plausible cause, not a diagnosis, and no claim here rests on it.**
+
+---
+
+**SCOREBOARD RULING, over Foreman's dissent, with his dissent recorded.** He
+declined to bank `kappa<1` because it reads three ways: `kappa_cert = 1.0` fails,
+`kappa_emp ~ 0.1` passes, `kappa_struct = beta` passes by construction. **He is
+right that it is ambiguous.** The item says *"kappa<1 **measured**"*, not
+*"certified by Birkhoff"* - and a contraction below 1 **was** measured, 30/30, with
+a four-point sweep showing it tracks `beta`. **+2 banked, and the qualification
+travels with it: the Birkhoff `tanh(Delta/4)` route is DEAD at this geometry, and
+what earned the point is a different and weaker certificate.**
+
+CHECKLIST: K-A repair **CONFIRMED 30/30**. `T` **NOT LINEAR**; Birkhoff Thm 2.9
+inapplicable; **factorisation gives `kappa = beta` exactly**. Contract positivity
+claim **FALSE**. Sinkhorn **OCCUPIED**; Birkhoff-for-attention **PARTIALLY
+OCCUPIED (2605.08123)**; Shapley algebra **OCCUPIED**, readout **NOT FOUND**.
+`d_H` and `delta_hat` **both repaired** on Foreman's disagreement.
+
+**SCOREBOARD: 4** - Star delta +2, kappa<1 measured +2 (qualified).
+
 ### ROUND 6, ITERATION 3 - 2026-08-26 - The Star-Transformer delta, ESTABLISHED from the paper rather than its abstract. +2.
 
 CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.

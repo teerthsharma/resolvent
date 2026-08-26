@@ -25,7 +25,7 @@ import math
 import pytest
 import torch
 
-from scale.hilbert import (d_H, delta_hat, kappa_cert, neumann_terms,
+from scale.hilbert import (d_H, delta_hat, kappa_cert, n_parts, neumann_terms,
                           one_minus_kappa)
 
 torch.set_num_threads(2)
@@ -88,12 +88,27 @@ def test_negative_entry_is_infinite_distance():
     assert d_H(p, q) == math.inf
 
 
-def test_both_zero_in_the_same_slot_is_still_infinite():
-    """Neither vector is in the open cone; a 0/0 slot must not be silently
-    dropped into a finite reading."""
+def test_both_zero_in_the_same_slot_is_FINITE():
+    """SUPERSEDED AND REWRITTEN at round 6 iteration 4, not deleted.
+
+    This originally asserted +inf, on the reasoning that neither vector is in the
+    open cone. That reasoning was wrong. A shared zero means a shared SUPPORT,
+    which means the same part, and the Hilbert metric is finite within a part —
+    restricted to the support both vectors are strictly positive.
+
+    The error was not academic: every masked attention row carries zeros, so
+    under the old reading no two causal rows were ever a finite distance apart,
+    and the whole metric was unusable on the objects it exists to measure. It was
+    found by cross-checking against an independently written implementation that
+    read a finite value here, and reporting the disagreement instead of
+    reconciling it quietly.
+    """
     p, q = _pos(16, 13).clone(), _pos(16, 14).clone()
     p[2] = q[2] = 0.0
-    assert d_H(p, q) == math.inf
+    got = d_H(p, q)
+    assert math.isfinite(got) and got > 0.0
+    assert got == pytest.approx(d_H(p[[i for i in range(16) if i != 2]],
+                                    q[[i for i in range(16) if i != 2]]), rel=1e-12)
 
 
 # ------------------------------------------------- the arithmetic K-A depends on
@@ -149,14 +164,27 @@ def test_must_fire_a_scale_sensitive_metric_is_caught():
     assert scale_blind(3.0 * p, p) > 1e-6, "the control cannot detect the defect"
 
 
-def test_must_fire_delta_hat_sees_a_non_positive_map():
-    """delta_hat over a batch containing one non-positive row must be infinite,
-    or K-A can never fire for the reason it exists."""
+def test_must_fire_delta_hat_sees_a_row_leaving_its_part():
+    """SUPERSEDED AND REWRITTEN at round 6 iteration 4, not deleted.
+
+    This test originally asserted that one zero among ninety-six entries drives
+    Delta to +inf. That is precisely the behaviour the same-part ruling removes:
+    a zeroed row simply moves to a different part, and the remaining rows still
+    form a part with a perfectly good finite diameter. Written the old way, K-A
+    fires on every causal draw forever, because causal rows at different indices
+    always have different supports.
+
+    What K-A actually asks is whether the image lands in ONE part, so that is
+    what is asserted now — the part count rises, and the surviving part is still
+    measurable rather than poisoned.
+    """
     g = torch.Generator().manual_seed(16)
     rows = torch.rand(8, 12, generator=g, dtype=torch.float64) + 0.1
     assert math.isfinite(delta_hat(rows))
+    assert n_parts(rows) == 1
     rows[4, 7] = 0.0
-    assert delta_hat(rows) == math.inf
+    assert n_parts(rows) == 2, "the zeroed row must be seen to leave its part"
+    assert math.isfinite(delta_hat(rows)), "the surviving part stays measurable"
 
 
 # ------------------------------------------- the defect this module made itself
@@ -189,3 +217,57 @@ def test_neumann_cost_explodes_long_before_kappa_reaches_one():
     """
     assert neumann_terms(20.0) == 254653
     assert neumann_terms(60.0) > 10 ** 14
+
+
+# ------------------------------------- the same-part ruling (round 6 it.4)
+
+def test_d_H_stays_strict_across_parts():
+    """The RULING keeps d_H unchanged: it is a metric on each part, extended by
+    +inf between them. Only Delta gained the restriction."""
+    p = torch.tensor([1.0, 2.0, 0.0, 4.0], dtype=torch.float64)
+    q = torch.tensor([2.0, 1.0, 3.0, 1.0], dtype=torch.float64)
+    assert d_H(p, q) == math.inf
+
+
+def test_delta_hat_is_a_sup_over_SAME_PART_pairs():
+    """Rows with differing supports must not force Delta to +inf.
+
+    Causal rows at different indices always have different supports, so the
+    unrestricted reading was +inf on every draw — measured at +inf in 30/30 live
+    cells while the same-part reading gave 148.8022 to 403.5583 nats. A kill on
+    the unrestricted number fires always and carries no information.
+    """
+    rows = torch.tensor([[1.0, 2.0, 0.0, 0.0],
+                         [2.0, 1.0, 0.0, 0.0],       # same support as row 0
+                         [1.0, 1.0, 1.0, 1.0]],      # a different part
+                        dtype=torch.float64)
+    got = delta_hat(rows)
+    assert math.isfinite(got) and got > 0.0
+    expected = d_H(rows[0][:2], rows[1][:2])
+    assert got == pytest.approx(expected, rel=1e-12)
+
+
+def test_n_parts_counts_what_K_A_actually_asks():
+    rows = torch.tensor([[1.0, 2.0, 0.0, 0.0],
+                         [2.0, 1.0, 0.0, 0.0],
+                         [1.0, 1.0, 1.0, 1.0],
+                         [0.0, 0.0, 0.0, 0.0]],      # all-zero: belongs to no part
+                        dtype=torch.float64)
+    assert n_parts(rows) == 2
+
+
+def test_a_negative_entry_is_still_infinite():
+    """The restriction is about supports, not about sign. A negative entry is not
+    a cone point at all and must survive the repair as +inf."""
+    rows = torch.tensor([[1.0, 2.0], [1.0, -1.0]], dtype=torch.float64)
+    assert delta_hat(rows) == math.inf
+
+
+def test_must_fire_the_same_part_reading_can_still_be_infinite():
+    """The repair must not make Delta unconditionally finite. Two rows sharing a
+    support but with an entry driven to zero inside it leave the part."""
+    rows = torch.tensor([[1.0, 1.0, 1.0], [1.0, 1.0, 1.0]], dtype=torch.float64)
+    assert math.isfinite(delta_hat(rows))
+    rows[1, 1] = 0.0
+    assert n_parts(rows) == 2                # they are no longer the same part
+    assert delta_hat(rows) == 0.0            # and no PAIR survives to be measured

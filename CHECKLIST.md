@@ -750,3 +750,24 @@ Replayed ARM A's own draw stream (published `D_FR causal` reproduced to 6 dp at 
 | ablation scope | **Connection TYPES, not tokens** (§5.5, radial vs ring). `interaction` reads **0** — nothing measures a third token changing help-vs-hurt. |
 | parameter matching | **NOT REPORTED.** Hyper-parameter table gives `H DIM`/`#head`/`head DIM`, no total counts. Whether the reported gains were parameter-matched is **unanswerable from the paper** — recorded as NOT FOUND, never as "they did not match". |
 | RULE 1 | instrument work **2 of 4 = 50%**, over the 40% cap but falling. |
+
+**ROUND 6 it.4 — Foreman's Phase A return, and two repairs to the metric module.**
+
+| item | status |
+|---|---|
+| **K-A float repair** | **CONFIRMED 30/30, and it is load-bearing.** `Δ_vertex` **101.3671 … 311.6091** nats, ≥76.246190 in **30/30**; `κ̂_cert` exactly **1.0** in 30/30. Written the original way ARM S dies 30/30 at it.0 on arithmetic alone. |
+| sampled-Δ̂ optimism | **CONFIRMED** — interior sampling understates by **1.492× … 3.814×**. |
+| mechanism | `d_H(softmax u, softmax v) == osc(u−v)`, `|diff| = 0.000e+00`. Δ scales **linearly in logit scale**; median row spread **65.1404** / **92.4548**, so Δ≈76 is *below* the s=1024 median. |
+| **is `T` linear?** | **NO.** Six sources carry "linear" in the hypothesis; nonlinear gets nonexpansive only; a nonlinear strict `tanh(Δ/4)`: **NOT FOUND**. **Birkhoff Thm 2.9 does not apply to `T`.** |
+| the repair | **`T` factors** into four cited pieces ⇒ **`κ(T) = β` exactly, by construction**, independent of `s`, logit scale, pivot readings. Measured 30/30, max ratio **0.480897** at β=0.5; sweep tracks 0.0/0.25/0.5/0.9 → 0.000000/0.240448/0.480897/0.865614. |
+| consistency gate | **VACUOUS** — passes 30/30 because `0.1 ≤ 1.0`. No teeth. G6 problem, Foreman's finding. |
+| Neumann via Birkhoff | **DEAD** — `N` = 4.5e28 … 7.4e64 at `Δ_vertex` vs **21** at structural β=0.5. Same map; the difference is the estimator. β-sweep reproduces it.1's banked 21/153 byte-exact. |
+| contract 1.1 positivity claim | **FALSE.** masked_fill writes exact zeros; rows have different supports; row 0 entirely zero; **float32 underflows on the allowed support, 16861/523776 at s=1024** (float64: 0/523776, by a *measured* margin 231.2793 < 744.440072). **ARM S must be float64 or log-domain — an uncosted line in 1.7.** |
+| G1 Sinkhorn | **OCCUPIED**, textbook (Franklin & Lorenz 1989). |
+| G1 Birkhoff-as-attention-certificate | **PARTIALLY OCCUPIED.** arXiv **2605.08123** Prop 4 already publishes a projective contraction certificate *with* the masked-exclusion design. Delta survives narrowly: it certifies the Sinkhorn scaling map; *"attention readout"/"equilibrium"/"settling"* absent. **Wider than that and G5 breaks.** |
+| G1 DEQ | **Delta holds but SMALLER** — 1909.01377 has 0 "unique", but 2403.00720 Thm 3.7 is Thompson-metric subhomogeneity, same family as β. |
+| G1 Shapley 4-point | **ALGEBRA OCCUPIED** (Lundberg Eq 4, Sundararajan Eq 2); **READOUT NOT FOUND**. |
+| **`scale/hilbert.py::d_H`** | **WAS WRONG, REPAIRED.** Demanded the strict interior, so two vectors sharing a zero read `+inf` — same support is the **same part** and finite. **Every masked row has zeros, so no two causal rows were ever finitely apart.** Now finite within a part. |
+| **`scale/hilbert.py::delta_hat`** | **WAS WRONG, REPAIRED.** Now a sup over **same-part** pairs. Unrestricted it read `+inf` in 30/30 live cells against `148.8022 … 403.5583` restricted. `n_parts` added — K-A asks whether the image landed in ONE part. |
+| superseded tests | **2 rewritten, not deleted**, each carrying why it was wrong. |
+| unresolved | One `pytest tests/loop` exited `3221226505` (`0xC0000409`) with no output; **did not reproduce** (35 pass, 145 pass, exit 0). Concurrent heavy jobs are a plausible cause, **not a diagnosis**. |
