@@ -4,6 +4,114 @@ Round 6 closed with the certificate program CLOSED - three attempts, three death
 Round 5's `TWOSPHERES: BROKEN` and its handover `done5.md` stand. Round 6's
 work-done is `done6.md`. Progress **22**.
 
+### ROUND 7, ITERATION 6 - 2026-08-26 - The twin arm had never been run. It is running. And a standing OPEN that blocked three seeds of evidence was stale.
+
+CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.
+
+## THE ACTION: RULE 2's ARM WAS MISSING AND NOBODY HAD LOOKED
+
+RULE 2's deadline is iteration 12. Iteration 5 found the settled arm appending
+seeds to `results/m3_quintuple_v2.jsonl`, which made it worth asking what else was
+in there. **Audited rather than assumed:**
+
+    results/m3_quintuple_v2.jsonl        15 rows
+      softmax    seeds [0, 1, 2, 3, 4]
+      glance     seeds [0, 1, 2, 3, 4]
+      settled    seeds [0, 1, 2, 3, 4]
+      twin       ZERO ROWS
+      trained-two-feature                ZERO ROWS
+
+**Three of the five arms are complete at five seeds each. The arm the entire
+comparison is AGAINST has never been run in this geometry.** That is why Chase's
+`EP.live()` reads `t = 0, E_t = 1.0` - not because the evidence is weak, but
+because **one side of the contrast does not exist.**
+
+It was also nobody's: Chase is on the alpha budget, `B`, and the effect-size
+question; Cameron on the corpus; Foreman on the rank-gap inference. **A missing arm
+on the round's hard deadline, owned by no one.**
+
+**LAUNCHED.** `python scale/m3_quintuple.py --cells twin --seeds 0 1 2 3 4 --ks 8`,
+whose defaults (`s=64 d=24 steps=150 n_train=8192 n_eval=512 t_max=21`) reproduce
+the settled arm's key exactly - `settled_k8_s64_d24_st150_ntr8192_nev512_b21_sd*` -
+so the contrast is paired rather than assembled from two geometries. **That
+distinction has already produced one reversed conclusion in this campaign** and is
+not repeated here. `run_bucket` resumes, so the three finished arms are not
+recomputed. The run cleared both gating binds (`_bind_batched_against_arm_s` at the
+run's own shapes, and `_g3_glance_is_softmax`), either of which aborts it.
+
+**Note what this does and does not buy.** Chase proved at iteration 3 that five
+seeds **cannot** cross the e-process threshold in either direction
+(`MIN_T_MIXTURE = 11`, max `E_5 = 3.801691` against `20`). So this run does **not**
+produce an anytime-valid verdict. **It produces the fixed-sample paired contrast
+with intervals, and it satisfies RULE 2's requirement that the run EXECUTE** -
+which is a requirement about evidence accumulating, not about a threshold being
+crossed.
+
+## BUILT ALONGSIDE: OPEN #5 IS STALE, AND IT WAS SUPPRESSING TWO THIRDS OF THE EVIDENCE
+
+Open #5 has stood for several rounds: *"Seed 2's trained weights NOT FOUND on disk.
+The free bind reproduces the published F-green cell on **seed 0 only**."*
+`scale/trained_projections.py:369` carries the same limit in code: *"One seed, one
+small model, one arm."*
+
+**Both are false.**
+
+    results/phaseD_weights_s64_d24_n8192_st150_seed0.pt   2108341 bytes  545868bcc98c1de8
+    results/phaseD_weights_s64_d24_n8192_st150_seed1.pt   2108341 bytes  1c7062b36cf25b23
+    results/phaseD_weights_s64_d24_n8192_st150_seed2.pt   2108341 bytes  93243d25ed9c5402
+    seed3, seed4                                          NOT FOUND
+
+**Three seeds, all present, all loading, and all genuinely distinct** - which
+matters because three identical files would make a seed sweep vacuous, the failure
+mode this campaign has struck eleven times:
+
+    seed 0 vs 1   identical=False   max|diff| = 7.050182
+    seed 0 vs 2   identical=False   max|diff| = 7.004653
+    seed 1 vs 2   identical=False   max|diff| = 7.346674
+
+**And they reproduce the cell, at a cost of about two milliseconds each**, because
+`train_pair` caches and the cache key (`st150_n8192`) is exactly what is on disk:
+
+    seed   load       n_params   nrmse0_eval   eval_nrmse   CI
+    0      0.004s       4769      1.0003345     0.7475277   [0.6968489, 0.7977164]
+    1      0.002s       4769      1.0218348     0.7202100   [0.6796718, 0.7645387]
+    2      0.002s       4769      1.0022374     0.7662302   [0.7272855, 0.8043426]
+
+**All three carry the parameter-matched `n_params = 4769` exactly, all three start
+at the mean predictor (`nrmse0_eval` about 1.0), and all three train below it with
+intervals excluding 1.0.** The published cell reproduces on **three** seeds, not
+one, **and it always could have** - the weights were sitting in `results/`.
+
+**The cost of the stale note is the point.** Every trained-projection claim this
+round has been carrying "one seed" as a limit while three seeds of evidence sat on
+disk. **S4's re-run is not blocked on producing weights; it is unblocked, and has
+been.**
+
+## AND AN HONEST INSTANCE OF THE READING FOREMAN NEEDED
+
+Foreman argued at iteration 4 that NRMSE is unbounded above and therefore `B = 1.0`
+is an assumption rather than a bound. **His repair was adopted; his four cited
+literals were struck**, all four tracing to undertrained cells, a pre-registered-out
+cell, or a round-1 archive on a different arm.
+
+**Here is a correct instance he could have used.** `nrmse0_eval = 1.0218348382072056`
+at seed 1 - **a real reading above 1.0, from the current geometry, in the file the
+trained-projection work reads.**
+
+**It still does not support the claim he made.** That is the **untrained**, zero-step
+baseline, and the e-process compares two **trained** arms. Across all three seeds
+every *trained* reading is `0.72`-`0.77`, comfortably inside the bound. **The metric
+demonstrably can exceed 1.0; the trained measurement geometry has not been observed
+to.** Both halves are now on the record with a number attached.
+
+CHECKLIST: the **twin arm LAUNCHED** - it had **zero rows** in v2 while three other
+arms were complete at five seeds, and it was owned by nobody on RULE 2's deadline.
+**Open #5 struck as stale**: three seeds present, distinct, loading in milliseconds,
+all reproducing the cell at `n_params = 4769`. A correct instance of `NRMSE > 1.0`
+recorded, **with the reason it still does not carry Foreman's claim.**
+
+**SCOREBOARD: 23.**
+
 ### ROUND 7, ITERATION 5 - 2026-08-26 - The seal is used for the first time and finds no edits, one honest append, and a defect in itself.
 
 CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.

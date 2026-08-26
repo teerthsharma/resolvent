@@ -4,10 +4,10 @@
 |---|---|
 | contract | `LOOP_PROMPT.md` (v9). Round 6 archived `LOOP_PROMPT_ROUND6_ARCHIVE.md` |
 | promise | **`HILBERT`** — D2 verbatim (needs **S1's +12 branch AND S3**), or an honest `BROKEN` |
-| iteration | **5 complete, 6 next** |
+| iteration | **6 complete, 7 next** |
 | phase | **A — foundations (0–4)** |
 | **scoreboard** | **23** — 22 carried, **S5 +1** (Merkle journal live) |
-| RULE 2 (repaired) | **SATISFIED AT ITERATION 3, due at 8.** `EP.live()` reads the journal and prints `undecided at evidence E_t = 1.0`; must-fire passes both directions (worst null `0.0367 ± 0.0019` vs `α = 0.05`) and the broken-λ control **was seen to fire at `1.0000`**. |
+| RULE 2 (repaired) | **e-process SATISFIED at it.3. The RUN is now EXECUTING** — the `twin` arm had **zero rows** in v2 and was launched at it.6, seeds 0–4, paired to the settled key exactly. `EP.live()` reads the journal and prints `undecided at evidence E_t = 1.0`; must-fire passes both directions (worst null `0.0367 ± 0.0019` vs `α = 0.05`) and the broken-λ control **was seen to fire at `1.0000`**. |
 | register | **caveman, all agents.** Artifacts stay normal English |
 | **RULE 5** | **Every kill ships a replacement route** — reroute / reprice / retire. **Now in the skill file, not just here.** |
 | note | The stop-hook's prompt string still says *"CEQ v8.2 ROUND 6"*. **The file is round 7 and the file governs.** Stale label, current contract. |
@@ -23,6 +23,14 @@
 | **S5** | Merkle journal + tamper must-fire | +1 | **EARNED.** Used for the first time at it.5: **22 unchanged, 1 append with prefix intact, 0 edits** of 23. Using it exposed a defect in the shipped tool (every honest append read as a failure); repaired with `verify_append_only`, 24 tests, `22/23 → 23/23`. |
 | **S6** | Fused settling step, clock ≤ **1.1×** | +1 | **fusion BUILT and exact** (`3.0 → 1.125` disp/step, journal bit-identical, clock `2.298×` faster). **The GATE is unreachable — floor `1.1667` at any step count.** Repriced; **unearned as written.** |
 | **S7** | D1 to acceptance, certificate post-mortem as capstone | +2 | Foreman owns it |
+
+## LIVE RIGHT NOW
+
+  * **`twin` arm running** — `m3_quintuple.py --cells twin`, seeds 0–4. When it
+    lands, v2 has **four of five arms** at five seeds and the headline contrast is
+    readable as a fixed-sample paired comparison. `trained-two-feature` is still
+    at zero rows and is the last missing arm.
+  * **Three fellows out** since it.5 on the `counter_squared` blocking item.
 
 ## THE ONE NEXT ACTION (round 7, iteration 3)
 
@@ -83,8 +91,13 @@ unreachable; `delta_image` is closed. **The next action is the corpus step above
    about *which* tokens may be made.**
 4. **Aggregator retention `2.9% / 13.3% / 58.9%`** still random-init **and**
    rank-matched — upper bounds twice over. Part of S4.
-5. **Seed 2's trained weights NOT FOUND on disk.** The free bind reproduces the
-   published F-green cell on **seed 0 only**.
+5. **STRUCK AS STALE at it.6.** Seeds **0, 1 and 2** are all on disk, all load, all
+   genuinely distinct (`max|diff|` 7.00–7.35, three different sha256), and **all
+   three reproduce the published cell** at `n_params = 4769` with `eval_nrmse`
+   `0.7475277 / 0.7202100 / 0.7662302`, intervals excluding 1.0 — **at about two
+   milliseconds each**, because the cache key matches what is on disk. Seeds 3 and
+   4 are genuinely absent. **`scale/trained_projections.py:369` still carries the
+   stale "one seed" limit in code.**
 6. **Ten standing REDs in `tests/cameron/`** — all **BY DESIGN**, audited. Two
    pairs' findings are recorded in **no document**, and one pair's assertion
    **cannot ever fail** (`sigmoid × softmax` is non-negative by construction).
