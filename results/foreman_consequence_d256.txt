@@ -11,3 +11,13 @@ pivot_signed          1.31793     0.555556     0.493016     0.616819          14
                    flipper 0.512821 (40/78)   payload 0.573770 (105/183)   null|dyhat| 0.00183793 vs live 0.0168316   zero-effect 251   closed-form resid 0.000e+00
 windowed_signed       1.43904     0.333333     0.276413     0.394089           87          261   -0.0596422     -0.13163   0.00540385    -0.136308    0.0325325   [2470s]
                    flipper 0.000000 (0/78)   payload 0.475410 (87/183)   null|dyhat| 0 vs live 0.0663037   zero-effect 251   closed-form resid 0.000e+00
+settled               1.31164     0.444444     0.383181     0.506984          116          261     0.140322    0.0655965     0.221208  1.96776e-33            0   [654s]
+                   flipper 0.538462 (42/78)   payload 0.404372 (74/183)   null|dyhat| 0.000333975 vs live 0.0514695   zero-effect 251   closed-form resid 0.000e+00
+
+  PAIRED exact McNemar vs softmax (same interventions, byte-identical draws):
+    softmax vs pivot_signed     b=43 c=58 n_disc=101  p=0.163279  no reject
+    softmax vs windowed_signed  b=86 c=43 n_disc=129  p=0.000191942  REJECT
+    softmax vs settled          b=67 c=53 n_disc=120  p=0.235203  no reject
+
+CELL INFORMATIVE: False   above chance 0 / 4 arm-seed rows (CP interval entirely > 0.5);  below chance 1
+wrote 7 rows to results/foreman_consequence.jsonl

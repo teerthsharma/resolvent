@@ -13,3 +13,9 @@ pivot_unsigned   True           2             0.012931                    3     
 pivot_unsigned   False          2             0.000000                    0                  233             0.910156            -1.339274
 pivot_signed     True           2             0.027344                    7                  256             0.554688           -14.185878
 pivot_signed     False          2             0.000000                    0                  256             0.699219            -0.603038
+pivot_unsigned   True           3             0.000000                    0                  243             0.402344            -4.128444
+pivot_unsigned   False          3             0.000000                    0                  239             0.933594            -0.215431
+pivot_signed     True           3             0.035156                    9                  256             0.453125            -4.881998
+pivot_signed     False          3             0.007812                    2                  256             0.296875            -0.017706
+pivot_unsigned   True           4             0.012195                    3                  246             0.507812            -5.903111
+pivot_unsigned   False          4             0.000000                    0                  242             0.945312            -0.013958

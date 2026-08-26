@@ -28,3 +28,18 @@ pivot_signed         0.687211     0.856574     0.807007     0.897481          21
                    flipper 0.775000 (62/80)   payload 0.894737 (153/171)   null|dyhat| 0.0016135 vs live 0.271612   zero-effect 261   closed-form resid 0.000e+00
 pivot_unsigned        0.72021     0.784861     0.728806     0.834052          197          251     0.441668     0.367355     0.522734  6.00456e-41            0   [987s]
                    flipper 0.812500 (65/80)   payload 0.771930 (132/171)   null|dyhat| 0.0013676 vs live 0.205344   zero-effect 261   closed-form resid 0.000e+00
+windowed_signed       1.04846     0.330677     0.272795     0.392615           83          251    0.0286678  -0.00868468    0.0771692    -0.136341    0.0566242   [638s]
+                   flipper 0.000000 (0/80)   payload 0.485380 (83/171)   null|dyhat| 0 vs live 0.0164122   zero-effect 261   closed-form resid 0.000e+00
+
+  PAIRED exact McNemar vs softmax (same interventions, byte-identical draws):
+    softmax vs pivot_signed     b=30 c=36 n_disc=66  p=0.538583  no reject
+    softmax vs pivot_unsigned   b=32 c=20 n_disc=52  p=0.126347  no reject
+    softmax vs windowed_signed  b=138 c=12 n_disc=150  p=2.64234e-28  REJECT
+
+--- seed 2 ---
+arm                eval_nrmse   sign_match        ci_lo        ci_hi            k       n_used        slope     slope_lo     slope_hi    min_entry     neg_frac
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+softmax              0.919148     0.793774     0.739095     0.841539          204          257      0.23857     0.162557     0.325638  1.07495e-18            0   [270s]
+                   flipper 0.750000 (60/80)   payload 0.813559 (144/177)   null|dyhat| 0.00141503 vs live 0.0271564   zero-effect 255   closed-form resid 0.000e+00
+pivot_signed         0.743804     0.859922     0.811383     0.899924          221          257     0.458684     0.375135     0.543825    -0.136364    0.0298859   [339s]
+                   flipper 0.737500 (59/80)   payload 0.915254 (162/177)   null|dyhat| 0.00164908 vs live 0.190746   zero-effect 255   closed-form resid 0.000e+00
