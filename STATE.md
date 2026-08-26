@@ -11,36 +11,35 @@
 | register | **caveman, all agents, every iteration.** Artifacts stay normal English |
 | autonomy | user meets the loop at **iteration 30**; no check-ins |
 
-## THE ONE NEXT ACTION (round 6, iteration 26)
+## THE ONE NEXT ACTION (round 6, iteration 27)
 
-**Three agents live. Collect whichever lands, in this reading order:**
+**`Δ(G)` AT TRAINED PROJECTIONS. It is the one measurement that could revive the
+certificate, and nobody has taken it.**
 
-  1. **FOREMAN — House's bind** (`scale/foreman_gram.py`). **BOUND / KILLED / NOT
-     ESTABLISHED first**, then: right geometry? extreme-ray diameter? did the
-     disjoint-support must-fire fire? **v9 kill is live** — factorisation failing
-     per-seed tracking means **the leap dies bound and `κ = β`, chosen, stands as
-     the round's final verdict on the certificate.**
-  2. **WILSON — the prior-work mining.** Read the **four correspondence verdicts
-     first**. **NOT FOUND on three of four would still be a good result** — it
-     closes guesses cheaply. Correspondence 2 is the one that could pay +3
-     immediately if sigmoid already implements a coupling coefficient.
-  3. **CHASE — M3.** UNRUN at the gate; any completion is **post-deadline and
-     marked**.
+Foreman states the arithmetic plainly: **`1.18×` drop to pay anything at all,
+`11.43×` to pay what House predicted.** And there is a real reason to think trained
+is lower — Cameron measured trained state-cone `Δ = 83.6069` against random-init
+`101.3671 … 311.6091`. **Trained is lower on the state cone. Nobody has looked at
+the pivot Gram.**
 
-**Cameron is IDLE and owns two v9 items** — X₁₃ (Hankel-rank instrument, gap-task
-corpus, the row-stochastic fork experiment) and the **aggregator retention re-run
-at trained projections**. **Dispatch her next unless Wilson's mining changes what
-X₁₃ should be**, which is a real possibility: if caustic's bounds or sigmoid's
-operators bear on the signed/non-negative fork, the corpus should be built to test
-them rather than built blind.
+**Two things that must be in the dispatch or the measurement is worthless:**
+  1. **Use the LOG-DOMAIN Gram.** `G min` already runs to `8.1603e-48` at
+     random-init — **four decades from the float64 subnormal floor**. At `s=1024`
+     or a wider logit scale `G` underflows and `Δ(G) = +inf` **for an arithmetic
+     reason, not a structural one**. A log-domain Gram exists in `scale/arm_s.py`;
+     `scale/foreman_gram.py` does **not** use it. **Without this the answer is
+     guaranteed to be `+inf` and to mean nothing.**
+  2. **Extreme-ray diameter only.** A mean or a sampled max is the estimator that
+     has now produced two reversed conclusions in four iterations.
 
-**A head start she does not know about, and it belongs in her dispatch:** the
-row-stochastic fork is **already half measured**. `A = sigmoid(g)·softmax(S)` is
-**non-negative for any parameters** — verified two ways at it.22 — so it
-**structurally cannot represent a decrementing loop**, while the unconstrained
-operator **loses the contraction guarantee** (`ρ = 1.0010632` under sustained
-action). **That tradeoff is measured and recorded in NO document.** X₁₃'s corpus
-should start from it.
+**If trained `Δ(G)` stays saturated, the certificate ambition is finished** and
+`κ = β`, chosen, is the round's final answer — which is v9's dial verdict arriving
+by a better-established route than the kill anticipated.
+
+**Also live:** Wilson mining `caustic` / `sigmoid` / `kernels#22` — **correspondence
+2 could pay +3 immediately** if sigmoid already implements a coupling coefficient,
+and Dobrushin exists precisely because `tanh` saturates where this round keeps
+landing. Cameron replicating seeds 1 and 2. Chase on M3.
 
 ## Open REDs
 

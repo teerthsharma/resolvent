@@ -4,6 +4,151 @@ Round 5 closed at `TWOSPHERES: BROKEN - ARM A, K1's dual slope, displacement
 clause`; its handoff is `done5.md` and its negative result is `D1.md`. That
 verdict is final and is not reopened.
 
+### ROUND 6, ITERATION 26 - 2026-08-26 - The leap is KILLED three ways. One of the kills is my error, not House's. And what survives is sharper than what died.
+
+CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.
+
+## THE VERDICT, SPLIT THREE WAYS BECAUSE THEY DO NOT ALL DIE
+
+    the factorisation  kappa(T_w) = beta * kappa(G)     BOUND - verified, and TIGHT
+    the certificate    beta * tanh(Delta(G)/4)          KILLED - zero credit, exactly beta
+    overlap => contraction "moves with weights"          NOT ESTABLISHED - real, 11.4x out of range
+
+**AND THE PRE-REGISTERED KILL IS NOT WHAT KILLED IT.** v9 says *"House's
+factorisation fails per-seed tracking => the leap dies bound."* **The tracking did
+NOT fail - it succeeded, 18/18 cells, tight to 1e-5.** The leap died for a
+different and better reason. **Recording that distinction because a kill that fires
+for a reason other than the one written is the adjacent-gate class this round has
+struck four times.**
+
+## KILL 1 - `Delta(G)` MEASURED, AND OFF BY 11.4x TO 33x
+
+Extreme-ray diameter via `scale/settle.py::column_diameter`, exact over all column
+pairs - **not a mean, not a sampled max**, which is the estimator error that
+reversed Cameron's conclusion two iterations back.
+
+    k  seed  |P|  G zeros       G min      Delta(G)   tanh(D/4)
+    8     0    8        0  1.5889e-35     160.1547  1.00000000
+    8     1    8        0  3.8556e-43     195.3232  1.00000000
+    8     2    8        0  1.8733e-31     141.5015  1.00000000
+   32     0   31        0  5.9815e-39     176.0234  1.00000000
+   32     1   32        0  8.1603e-48     216.8204  1.00000000
+   32     2   32        0  2.0262e-36     164.3736  1.00000000
+
+**Predicted `7.8772`. Measured `141.5015 .. 216.8204` here, `90.0696 .. 259.6998`
+over 24 seeds at k=8.**
+
+## KILL 2 - THE LEAP RETURNS EXACTLY THE BOUND IT WAS RELEASED TO IMPROVE
+
+`Delta(G)` sits above **`76.246190`** - the float64 saturation line established at
+it.0 - in **24/24 seeds**. So `tanh(Delta(G)/4) = 1.00000000` in **18/18 cells**,
+and
+
+    beta * tanh(Delta(G)/4)  =  beta * 1.0  =  beta
+
+**Not a weaker improvement. NO improvement.** Distance to any credit at all:
+`90.0696 / 76.246190 = 1.18x`. Distance to House's predicted number:
+`90.0696 / 7.8772 = 11.43x`.
+
+## KILL 3 - AND THIS ONE IS MINE
+
+House inferred a linear residual factor from `0.961793` being **beta-independent**
+across `0.25 / 0.5 / 0.9`. Foreman **held beta at 0.5 and moved only the sampler**:
+
+    per_conc=3    max ratio 0.480897   /beta = 0.961794
+    per_conc=6    max ratio 0.432197   /beta = 0.864394
+    per_conc=12   max ratio 0.469987   /beta = 0.939974
+    per_conc=20   max ratio 0.492743   /beta = 0.985486
+
+**The "constant to 2e-06" moves 12% when the sampler changes, and climbs toward
+1.0. It is a SAMPLED SUPREMUM falling short of the true one.**
+
+**And the beta-independence is real and means nothing.** It follows from
+`kappa(T) = beta * kappa(linear part)`, which Foreman proved at it.0 and which holds
+for **any** `Delta(G)` whatsoever. In his words: *"A quantity that is invariant
+under the thing House varied and not invariant under the thing he did not is not
+evidence about Delta(G)."*
+
+**AND IT WAS THE WRONG OBJECT BESIDES, AND THAT ERROR IS MINE.** `0.961793` came
+from `scale/foreman_hilbert.py`, whose `kappa_emp_max` is the **STATE-cone** map
+`T_state(m) = R^T(gate * (Rm)^beta)`, which carries **TWO** Birkhoff factors -
+`beta * tanh(Delta(R)/4) * tanh(Delta(R^T)/4)`, **the shape of Proposition 4 in
+arXiv:2605.08123** - not one. Comparing it against a w-space `tanh(Delta(G)/4)` is
+the **tenth instance of the wrong-object error**, and Foreman's own sentence is the
+one that lands: ***"it is in the handover."*** **I wrote the handover that named
+the object trap, and then handed him a number taken from the wrong object.**
+
+## WHAT SURVIVES, AND IT IS SHARPER THAN WHAT DIED
+
+**The factorisation is BOUND, and Birkhoff is TIGHT on `G`.** In w-space the
+normalisation is a constant shift and `diag(gate)` cancels in every coordinate
+ratio, so both drop out of an oscillation **exactly**:
+
+    d_H(T_w w, T_w w') = osc_q[ beta * log((Gw)_q/(Gw')_q) ] = beta * d_H(Gw, Gw')
+
+**`kappa(T_w) = beta * kappa(G)` is an IDENTITY, not a bound.** And Thm 2.9 states
+`kappa(L) = tanh(Delta(L)/4)` as an **EQUALITY**, so it predicts a number:
+
+    attained/beta across all 18 cells:  0.99998779 .. 1.00000000
+    tightness (att/beta / tanh(D/4)):   0.999988   .. 1.000000
+    bound holds:                        18/18
+
+**`kappa(G)` really is 1 - attained, not merely bounded. House's STRUCTURE IS
+RIGHT.** And that is precisely why it pays nothing: **the linear piece he moved the
+certificate onto has no contraction to give.**
+
+## MUST-FIRES, BOTH DIRECTIONS, DRAWN NOT HAND-BUILT
+
+    disjoint-support pivots -> Delta(G) = +inf :  8/8 draws
+    overlapping pivots      -> Delta(G) finite :  8/8 draws, max 0.692036
+
+**Drawn from 8 seeds rather than one constructed example** - the it.6 lesson
+applied by someone else. **And the reverse direction is present so the control
+cannot pass by returning `inf` for everything.**
+
+## THE TEETH: REAL, SIGNED AS PREDICTED, AND USELESS HERE
+
+    Pearson r(overlap_min, Delta(G)) = -0.370687
+    bootstrap B=10000  95% CI [-0.601459, -0.057877]   excludes zero: True
+
+**`Delta(G)` does fall as pivot overlap rises, in the direction House predicted,
+with G6 satisfied.** So contraction **is** a property of the attention that moves
+when the weights move.
+
+**But the entire measured range is saturated.** The most overlapping of 24 seeds,
+`overlap_min = 124`, still gives `Delta(G) = 107.0736` and `tanh = 1.00000000`.
+**A mechanism that moves a quantity inside a region where the certificate cannot
+read it is not a certificate.**
+
+## AND HE REPAIRED ONE OF HIS OWN CONTROLS RATHER THAN DELETING IT
+
+`foreman_hilbert.py`'s control **C9** asserted that his module and `scale/hilbert.py`
+**diverged** on a shared-zero coordinate. **`hilbert.py` adopted the same-part
+ruling at it.4, so they now agree - and the control DID NOT FIRE, halting his run.**
+He updated it to assert **agreement** and **kept it**, because *"it is the only
+place the shared-zero case is exercised, and a silent regression to the
+strict-interior reading would make K-A fire on every causal draw."*
+
+## CAMERON, CONCURRENTLY
+
+Seed 1 running, seed 2 queued; she is **replicating rather than reporting a
+one-seed negative verdict**, because trained `max Delta = 83.6069` rests on a **tail
+cell** - the median was `17.6298`. **And she confirms the K-A float repair is
+load-bearing on real trained data**: `tanh(83.6069/4)` saturates to exactly `1.0`
+while the closed form gives `1-kappa = 1.399670e-18`.
+
+**She also lists two corrections she made to her own reporting this session, both
+of which flipped a conclusion** - the `mean` vs `max` estimator, and the claim that
+the randn probe overstates everything (it does not: **wrong about alpha, roughly
+right about the diameter**).
+
+CHECKLIST: **LEAP KILLED**, three ways. **Pre-registered kill NOT the mechanism.**
+Factorisation **BOUND and TIGHT** (identity, 18/18). Teeth **real but saturated**.
+Wrong-object error **mine, tenth instance**.
+
+**SCOREBOARD: 4 carried.** A killed leap is not points. **bind-House (+3) is NOT
+earned** - the bind succeeded, the certificate it was binding does not pay.
+
 ### ROUND 6, ITERATION 25 - 2026-08-26 - Wilson mines three of the owner's own prior works, with four correspondences named as hypotheses rather than assumed.
 
 CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.
