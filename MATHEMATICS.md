@@ -88,6 +88,45 @@ repository.** Recorded as the open claim rather than as a result.
 
 ---
 
+### 0.35 THE USE CASE, AND IT IS WHY JOINT DETERMINATION IS NOT A METAPHOR
+
+The target application is **embodied systems — robots and anything else that must
+understand causality, consequence, pattern and link** rather than emit plausible
+continuations. That is not a marketing frame; it is the setting in which the thesis of
+§0.3 stops being a preference and becomes a requirement.
+
+**A language model predicting the next token is well served by per-row independence.**
+Each position's continuation can be scored against the context on its own, and softmax's
+independent-per-query mixture is exactly the right shape for that — which is why it is
+Bayes-optimal on the single-location problem and why it has been so hard to beat here.
+
+**A robot predicting what happens next is not.** Joint angles, contact forces and body
+positions are **coupled by constraints**, so they are determined *together* or not at
+all: moving one joint changes the reachable set of every other, a contact that makes or
+breaks reconfigures the whole kinematic chain, and a force applied at one point
+propagates through the linkage. **There is no ordering in which these can be read off
+independently, because the constraint is simultaneous.** That is a fixed point in the
+literal sense, and it is the thing a per-row mixture cannot represent in one read.
+
+**The intervention test of §0.2(c) is the robot's own question, stated exactly.** *"If I
+move this, what else moves?"* is a displacement field over a configuration under a
+`do()` operation — which is the consequence-fidelity metric of §6 generalised from a
+sign on one scalar to a vector over the whole shape. **An embodied system needs the
+vector answer; the scalar answer is not a weaker version of it but a different
+question.**
+
+**And the provenance is not a coincidence.** This project's own recovered graph corpus
+comes from a physics engine, where the merged upstream contribution computes connected
+components over **constraint/tree incidence** — which is precisely the coupling
+structure above, expressed as a graph. Bodies joined by constraints form islands that
+must be solved together; bodies in different islands do not interact. **The corpus and
+the use case are the same object seen twice**, which is why an absorbing-chain label on
+that substrate is the natural test rather than an arbitrary one.
+
+**What this does NOT license.** No claim is made here about robotic performance, about
+control, or about any embodied benchmark — nothing in this repository has been run on
+one. **This section states why the target shape is what it is, and nothing more.**
+
 ## 0.4 THE ARCHITECTURAL POSITION THAT FOLLOWS
 
 **Softmax attention is not the opponent. It is the base case, and the module must
