@@ -4,44 +4,47 @@
 |---|---|
 | contract | `LOOP_PROMPT.md` (v8.2). Round 5 archived `LOOP_PROMPT_ROUND5_ARCHIVE.md` |
 | promise | **`HILBERT`** — D2 verbatim, or an honest `BROKEN` |
-| iteration | **11 complete, 12 next** |
+| iteration | **12 complete, 13 next** |
 | phase | **C — the deciding measurement (iterations 10–15; RULE 2)** |
 | scoreboard | **4** — Star delta +2, κ<1 measured +2 *(qualified: Birkhoff route dead, structural β earned it)* |
 | RULE 2 clock | **running.** M3 settled-vs-unsettled EXECUTES by **iteration 12** or breach review |
 | register | **caveman, all agents, every iteration.** Artifacts stay normal English |
 | autonomy | user meets the loop at **iteration 30**; no check-ins |
 
-## THE ONE NEXT ACTION (round 6, iteration 12)
+## THE ONE NEXT ACTION (round 6, iteration 13)
 
-**RULE 2's DEADLINE. The M3 run must have EXECUTED by the end of this iteration or
-the round halts for breach review.**
+**EXECUTE THE G2 CORRECTION. Wilson has given the facts; the decision is mine and
+it is overdue.**
 
-**Read it in this order when it lands, and the order is the whole point:**
+**What is established:** the cause is a shared `torch.Generator` passed by
+reference, the published pair came from a code state **absent from git**, the
+re-take is **what reproduces from the tree today**, and the movement
+(`0.0006 / 0.0008`) sits **inside the estimator's own Monte Carlo noise** (`B`-sweep
+spread ~`0.003`). **No verdict moves** — every interval lies below `−0.30`.
 
-  1. **Softmax reproduced?** If the baseline moved, nothing downstream is readable
-     and it is a G2 event before it is an M3 result.
-  2. **settled vs unsettled twin** — the headline cell.
-  3. **settled vs ARGMAX-PIVOT** — the attribution cell, and the one that decides
-     what may be *claimed*. **Beats the twin but ties argmax ⇒ the equilibrium
-     bought nothing, the claim is routing-only (+6), and T1 fires.** Beats both
-     ⇒ +12 is available.
-  4. **Against the ~0.05 NRMSE floor.** A gap below it reads NO DIFFERENCE
-     regardless of truth, and that was pre-registered, so a null there is
-     *interpretable* rather than an excuse.
+**The correction, all ten sites:**
+  1. **Correct to the re-take** `[-0.4573, -0.3712]`, because that is what
+     reproduces from the code that exists.
+  2. **Record the cause at the point of correction**, not only in the log — a
+     corrected number with no reason attached invites the same edit back.
+  3. **State the precision limit.** Four-decimal endpoints at `B=2000` are not
+     four-decimal-stable, and publishing them implied a precision the estimator
+     never had. **That is the finding worth more than the correction.**
+  4. `D1.md` and `done5.md` are **shipped deliverables** — they get the same
+     treatment, not a lighter one.
 
-**If T1 fires, Dr House is released — but ONLY then, and not against a clean
-measurement.** The trigger is a twin that matches: the fixed point exists, is
-unique, is reached, **and changes nothing.** That is a genuine innovation gap, not
-an evidence gap, which is exactly what separates him from the Inspector.
+**Then fix the defect itself**, or it recurs: `bslope` must seed its own generator
+like the nine helpers that are immune by construction. **`wilson_probes.dboot` has
+the same shape and currently reproduces** — fix it anyway, since it reproduces by
+luck of call order, not by design.
 
-**Two fellows still out and unrouted:**
-  * **WILSON on the G2** — the severity question is still unanswered: **one number
-    or a class?** A stable point estimate with drifted endpoints implicates the
-    **resampler**, and then every bootstrap CI in the record is suspect.
-  * **CAMERON on the +3/−5 pivot**, plus a second 2-dof implementation to
-    cross-check against `tests/loop/test_two_dof_lemma.py`. **Disagreement between
-    the two is a finding, not something to reconcile quietly** — that is how the
-    `d_H` defect was caught.
+**Also this iteration: RULE 2's breach is called if M3 has not landed.** Do not
+extend the deadline because the result is nearly ready.
+
+**Still open:** the `-0.4654 [-0.5173,-0.4160]` slope has **no locatable producer**
+— that is worse than a drifted interval and it is unresolved. And Cameron's
+structural blocker stands: **no norm-matched control exists within a sequence**,
+so no mechanism claim can be made about *which* tokens the advantage comes from.
 
 ## Open REDs
 

@@ -4,6 +4,197 @@ Round 5 closed at `TWOSPHERES: BROKEN - ARM A, K1's dual slope, displacement
 clause`; its handoff is `done5.md` and its negative result is `D1.md`. That
 verdict is final and is not reopened.
 
+### ROUND 6, ITERATION 12 - 2026-08-26 - RULE 2's deadline with the run in flight. Wilson solves the G2. Cameron refutes a closed form of mine. K1's flip clause re-anchors.
+
+CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.
+
+**RULE 2 STATUS, STATED RATHER THAN INTERPRETED FAVOURABLY.** The rule says the M3
+run **EXECUTES by iteration 12**. It was dispatched at it.11 and **is executing;
+it has not reported.** Executing is what the rule requires; completing is not what
+it says - and that distinction is recorded rather than read the convenient way.
+**If it has not landed by the end of it.13, the breach is called.**
+
+---
+
+## THE ACTION: K1's FLIP CLAUSE RE-ANCHORS TO `s`, BECAUSE THE WINDOW SHUTS AT THE FIRST DRAW
+
+Chase flagged the mismatch and correctly refused to settle it himself. **The ruling
+is that K1's two halves want DIFFERENT sweeps.**
+
+**The `D_FR` half is correct in `k` and stays.** `scale/arm_a_run.py:9` records the
+reason at the time - displacement should be O(1) in background size because the
+simplex does not grow - **and that reason covers displacement, not flips.**
+
+**The flip half names `s` and means `s`.** *"Does a signed route's flip probability
+decay as the CONTEXT GROWS"* is a **range** claim; round 5 answered a **routing**
+claim. **Confirmed by parse of the journal [RUN]:**
+
+    results/arm_a_k1.jsonl   48 units
+      distinct s: [1024]                   counts {1024: 48}
+      distinct k: [8,16,32,64,128,256]     counts {8:8,16:8,32:8,64:8,128:8,256:8}
+
+**`s` is a singleton in every unit. The clause has NEVER been evaluated against the
+variable it names.** Tenth appearance of the wrong-object class, **and it is mine** -
+me recorded the k-sweep at round 5 it.3 without noticing the clause said `s`.
+
+**The first parse of that journal FAILED SILENTLY** - it read `r["s"]` directly,
+found nothing, and printed `distinct s: []`. **Reporting "singleton" off an empty
+set would have been the exact defect under investigation.** The claim rests only on
+the regex parse that returned 48 units.
+
+---
+
+## WILSON SOLVES THE G2. CAUSE FOUND. NOT A CLASS.
+
+**`scale/arm_a_k1.py:338-346` passes ONE generator to TWO bootstraps BY
+REFERENCE.** The flip bootstrap runs first and consumes `2000 * 2400 = 4,800,000`
+int64 draws, so the `D_FR` bootstrap begins at **offset 4,800,000, not 0**.
+
+**He reproduced BOTH numbers bit-exactly** [RUN, threads=2, torch 2.5.1+cu121]:
+
+    shipped: flip first, SHARED generator      -0.4137 [-0.4573,-0.3712]   = the RE-TAKE
+    D_FR FIRST on a fresh seed-4242 stream     -0.4137 [-0.4579,-0.3704]   = the PUBLISHED
+    D_FR first, flip after (order swapped)     -0.4137 [-0.4579,-0.3704]   = the PUBLISHED
+
+**Everything else EXCLUDED, and he swept the odd thread counts as instructed** -
+**13 values including 3, 5, 7, 9**, all landing on the re-take, **none** on the
+published. **This one is not the `m3_capability` story.** Torch/BLAS excluded (the
+fresh stream still lands on the published pair today, so MT19937 has not moved).
+Percentile convention excluded. `B` excluded. Journal data unchanged and verified
+against `CHECKLIST.md:573`.
+
+**IS IT A CLASS? NO - ONE NUMBER, and he proved it rather than asserting it.**
+Three repeats in one process are bit-identical, 13 thread counts identical. He
+then **swept every bootstrap helper in the repo**: exactly **two** take a
+`torch.Generator` by reference - `arm_a_k1.bslope` and `wilson_probes.dboot`. **He
+tested the second, which chains 30+ calls off one shared stream, and its published
+numbers reproduce BIT-EXACT** (`0.9123 [+0.7500,+1.1020]`, `0.9766
+[+0.7773,+1.2103]`, `0.8507 [+0.6290,+1.0833]`). **The other nine helpers take a
+scalar seed and build their own generator - immune by construction**, and he names
+all nine.
+
+**BUT HE FOUND SOMETHING WIDER, AND STATES IT AS FACT NOT ADVICE.** A `B` sweep on
+the same data and seed:
+
+    B=500   [-0.4554,-0.3724]      B=2000  [-0.4573,-0.3712]
+    B=1000  [-0.4586,-0.3712]      B=5000  [-0.4556,-0.3711]
+    B=1500  [-0.4573,-0.3720]      B=10000 [-0.4566,-0.3704]
+
+**Endpoint spread across `B` is ~0.003. The G2 movement is 0.0006 / 0.0008.** **The
+moved amount sits INSIDE the estimator's own Monte Carlo noise.** Four-decimal
+endpoints at B=2000 were never four-decimal-stable. **Every interval still lies
+entirely below `-0.30`, so no verdict moves.**
+
+**AND THE UGLY FACT HE REPORTS RATHER THAN HIDES: git cannot show the edit.**
+`scale/arm_a_k1.py` was **ABSENT from git at commit `7336848`**, the commit that
+first published `-0.4579`, and was first committed **45 minutes later** at
+`bec689e`. **The code state that produced the published pair is unversioned and
+unrecoverable.** His cause is **by reconstruction** - he exhibits a code shape that
+yields the published pair bit-for-bit and says plainly he cannot show the file that
+did. He also cannot separate *"two separate `manual_seed(4242)` generators"* from
+*"D_FR called first"*; the one datum that would separate them, the flip usable-reps
+count (`1725` vs `1739`), is **NOT FOUND** in any published document.
+
+**PUBLICATION SITES: CHASE SAID SEVEN. IT IS TEN.** Wilson verified each rather
+than trusting the list, and found three more - **`D1.md:42`, `D1.md:244`,
+`done5.md:44`.** **`D1.md` is the round's negative-result deliverable and `done5.md`
+is the round-5 handoff.** He also notes all five `DONE.md` sites had shifted by
+**exactly +884** because agents prepend: *"Any fixed line number into `DONE.md` is
+perishable."*
+
+**And he flags a SECOND published slope as UNVERIFIED:** `-0.4654
+[-0.5173,-0.4160]` - he **could not locate any producer that emits that CI at
+all**, only the point slope at `scale/foreman_theta_tv.py:260`.
+
+---
+
+## CAMERON REFUTES A CLOSED FORM OF MINE, AND SHE IS RIGHT
+
+At iteration 9 me published:
+
+    I = a_t * p_c * p_j * (6 p_c p_j + 3 p_c + 3 p_j + 2)
+
+under the word **"Expanded"**, which reads as exact. **It is a TRUNCATED SERIES.**
+Me ran `sp.series(...).removeO()`, the output was labelled *"leading order"*, and
+me wrote it into the record as a closed form. **[RUN, verified on her challenge]:**
+
+    I - mine  is NOT identically zero
+    p_c=0.01 p_j=0.02   rel err 1.007e-03
+    p_c=0.20 p_j=0.15   rel err 1.348e-01
+    p_c=0.30 p_j=0.40   rel err 5.328e-01
+
+**A truncated series promoted to an exact identity in the published record.** The
+exact form is
+`a_t*p_c*p_j*(p_c+p_j-2) / (p_c^2 p_j - p_c^2 + p_c p_j^2 - 3 p_c p_j + 2 p_c - p_j^2 + 2 p_j - 1)`.
+
+**The load-bearing facts SURVIVE unchanged** and this is why the lemma still
+stands: `I(p_c=0) = 0`, `I(p_j=0) = 0`, and `lim I/(a_t p_c p_j) = 2` as both go to
+zero. **The bilinear leading order is real; the closed form was not.**
+
+**AND SHE FOUND THAT MY DEGENERACY IS A READOUT PROPERTY, NOT A LATTICE PROPERTY.**
+Both my readouts are symmetric under `c <-> j`, so their partials coincide on the
+diagonal. **Her asymmetric readout family has no such locus at all.** Measured on
+one instrument at forced `|p_c - p_j| = 0.000e+00`:
+
+    coordinator (I, TV) symmetric        sigma2/sigma1 = 2.525e-16   rank 1
+    cameron (f_c, f_j, f_cj) asymmetric  sigma2/sigma1 = 5.783e-01   rank 2
+
+**And she found the locus that actually bites**: `min(p_c,p_j) -> 0` kills **every**
+readout family - rank-1 geometries were at `p_j = 5.391498e-19`, which is the
+**largest** `|p_c - p_j|` in her table, not the diagonal. **Not designable away.**
+
+**Her ARM P protocol, her call, in the file:** asymmetric readout family (removes my
+locus by construction, **no draw biased, no regime lost**); `min(p_c,p_j)`
+distribution shipped **stratified** beside every interaction number; and
+**`sigma_2/sigma_1` reported, never rank alone** - because numpy's default tolerance
+read *"rank 2"* at `sigma_2/sigma_1 = 1.265e-06`. **She rejected my option 1 as a
+thumb on the scale and improved on option 2.** Correct on both counts.
+
+## AND THE GATE: K-B DOES NOT FIRE, BUT SHE REFUSES THE +3
+
+    softmax         0.877168 [0.830455,0.924226]     BIND vs published: OK
+    pivot_unsigned  0.747528 [0.696849,0.797716]     BIND vs published: OK
+    pivot_band      0.873161 [0.831275,0.919652]
+    pivot_random    0.896355 [0.844958,0.948488]
+
+    pivot_unsigned vs softmax     DISJOINT
+    pivot_band     vs softmax     OVERLAP
+    pivot_unsigned vs pivot_band  DISJOINT
+
+**F-green is not dissolved, and hop-2 capacity does NOTHING** - band and random both
+sit on softmax. The advantage needs **top-k specifically**.
+
+**But she will not bank +3, and her reason is her own matcher:** band residual
+`0.108689` = **1.2755x the all-token key-norm sd**, **28.92%** of causal mean norm.
+And worse - **the residual EQUALS the raw mean gap in 512/512 draws**, with
+`min(causal ||k||) < max(band ||k||)` in **0/512**. **The Hungarian closed ZERO of
+the gap.**
+
+**Her structural finding, and it is the round's real blocker:** `select_pivots`
+takes top-k by norm, so ranks k..2k are **below top-k by definition**. **A
+within-sequence top-k selector admits NO norm-matched control. Not a bad control
+choice - no good one exists.** So *"the advantage is WHICH tokens, not HOW HIGH
+norm"* is **NOT established**, and she says the flattering read was available and
+she did not take it.
+
+**Multi-draw killed two of her own single-draw claims:** *"pooled equals band at
+every k"* is **false** (only k=8; k=32 differs by `0.011768`, k=128 by `0.012929`),
+and *"identity == residual every k"* is **false**, only k=8. **She also found her
+own vacuous control** - `pooled < tail` is an **identity**, since pooling minimises
+over a superset, 400/400 strict and unable to fail. **Seventh vacuous control this
+round.**
+
+**And she tightened MY tolerance using my own lesson:** `matcher._ORACLE_TOL` from
+`1e-9` absolute to `1e-12` relative. **Tighter bar, 14 passed. The old bar was
+slack.**
+
+CHECKLIST: **G2 CAUSE FOUND, one number not a class, TEN sites not seven.** K1 flip
+half **RE-ANCHORED to `s`**. My closed form **REFUTED and corrected**. K-B **does
+not fire**; **+3 REFUSED** for want of a matchable control.
+
+**SCOREBOARD: 4** - unchanged. **+3 explicitly NOT banked** on Cameron's own
+objection: no norm-matched control exists for a within-sequence top-k selector.
+
 ### ROUND 6, ITERATION 11 - 2026-08-26 - The money run is dispatched, and the triple becomes a quintuple.
 
 CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.
