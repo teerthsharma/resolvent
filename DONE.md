@@ -4,6 +4,80 @@ Round 5 closed at `TWOSPHERES: BROKEN - ARM A, K1's dual slope, displacement
 clause`; its handoff is `done5.md` and its negative result is `D1.md`. That
 verdict is final and is not reopened.
 
+### ROUND 6, ITERATION 19 - 2026-08-26 - The leakage gate turns out to be computable, and it fires in the opposite direction from its name.
+
+CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.
+[RUN] `pytest tests/loop` -> **195 passed** (186 -> 195), exit 0.
+
+Three agents live. The fused-settling-step target named at it.18 is **already
+taken** - Chase is building `scale/arm_s_batched.py` - so the iteration went to the
+last cheap unrouted item: **contract 1.3's L3 leakage gate**, which has blocked
+every degree-2 claim in the round.
+
+## IT DID NOT NEED AN EMPIRICAL SWEEP
+
+1.3 leaves the leakage bound to be *"bounded empirically by the triple-mask
+check"*. On the readout family this round has used throughout, **it is available in
+closed form** [RUN, sympy]:
+
+    I  = f() - f(c) - f(j) + f(c,j)                        ~   2 * a_t p_c p_j
+    L3 = f() - f(c) - f(j) - f(k)
+         + f(c,j) + f(c,k) + f(j,k) - f(c,j,k)             ~  -6 * a_t p_c p_j p_k
+
+**`I` is BILINEAR and `L3` is TRILINEAR.** The leakage term is **one order HIGHER**
+in the masked masses, so the ratio is
+
+    |L3| / |I|  ~  3 * p_k
+
+## AND IT FIRES IN THE OPPOSITE DIRECTION FROM WHAT ITS NAME SUGGESTS
+
+**Leakage vanishes as the third token gets LIGHT, and becomes a problem when it is
+HEAVY.** *"Leakage"* invites the reading that a delicate probe leaks; **the
+arithmetic says the reverse** - degree-2 structure is cleanest exactly where the
+masses are small, and is contaminated only when a third token carries real weight.
+
+**That property is why ARM P can exist at all.** A leakage term of the **same**
+order as `I` would make degree-2 claims hopeless at every geometry, and a must-fire
+constructs exactly that case and confirms the test discriminates.
+
+## THE CROSSING, PINNED - AND THE LEADING ORDER IS OPTIMISTIC
+
+    p_c = p_j     exact crossing p_k     3*p_k would say
+        0.010          0.125146              0.166667
+        0.020          0.123854              0.166667
+        0.050          0.119861              0.166667
+        0.100          0.112769              0.166667
+        0.200          0.096521              0.166667
+
+**The exact ratio crosses 0.5 near `p_k ~ 0.115`, and barely moves with `p_c` or
+`p_j`.** The leading order predicts `1/6 = 0.1667`, so **the series OVERSTATES the
+safe region by about 45%** - at `p_k = 0.1667` the exact ratio is already
+**0.7863**, well past the gate.
+
+**Using the leading order as the admissibility bar would admit draws that void the
+claim**, and that is bound by its own test rather than left as a remark. **The
+crossings are pinned as VALUES at `abs=1e-5`, not as inequalities** - this project
+lost a published tail norm once to an inequality that let a number drift.
+
+## WHAT THIS GIVES ARM P: A PER-DRAW RULE, NOT A PER-GEOMETRY SWEEP
+
+**Degree-2 claims are admissible where the third token's mass is below ~0.115.**
+That is a quantity the probe can **measure on every draw and stratify on**, exactly
+as Cameron already does for `min(p_c, p_j)`. **It needs no leakage sweep to be
+actionable**, and it converts a blocking gate into a reported column.
+
+**WHAT IS STILL OWED, AND IT IS HERS.** This is the **analytic** half, on **one**
+readout family, at **random-init** masses. The **empirical** half - `E|L3|/E|I|`
+measured at real geometries, on her **asymmetric** readout family, through
+**trained** projections - is Cameron's and is not done. **The closed form predicts
+what she should find; it does not replace finding it.**
+
+CHECKLIST: L3 leakage **COMPUTED**, crossing **pinned at ~0.115**, leading order
+shown **optimistic by 45%**. Degree-2 claims now have a **stated per-draw
+admissibility rule**. Empirical half **still owed**.
+
+**SCOREBOARD: 4** - unchanged. The gate is characterised, not a scored item.
+
 ### ROUND 6, ITERATION 18 - 2026-08-26 - K-F's gap stops being a citation and becomes two exact numbers with the clock between them.
 
 CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.

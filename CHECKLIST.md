@@ -955,3 +955,15 @@ Replayed ARM A's own draw stream (published `D_FR causal` reproduced to 6 dp at 
 | **the bracket** | At `s=1024,k=8`: FLOP `1.010420` (exact, ignores per-op cost) · clock `1.6546` (contended, not a measurement) · dispatch **`23.00x`** (exact, ignores per-op work). **The clock lies BETWEEN the two exact bounds, much nearer the FLOP end** — that is amortisation: 23× the dispatches costs 1.65× the time. |
 | what it names | **The fix, and it is the nurses' mandate exactly.** 3 dispatches/step × `t*` is **removable by batching or fusing the inner loop, changing ZERO FLOPs**. Arithmetic is already `1.010420`; the overhead is structural Python. **The highest-value kernel target in the round, now quantified rather than asserted.** |
 | K-F status | **BRACKETED, NOT PASSED.** The 1.5× bar applies to the SUM, and the trustworthy numbers still straddle it at k=128. |
+
+**ROUND 6 it.19 - the L3 leakage gate, computed.**
+
+| item | status |
+|---|---|
+| **L3 leakage** | **COMPUTED IN CLOSED FORM**, no empirical sweep needed for the analytic half. `I` is **bilinear**, `L3` is **trilinear**, so `\|L3\|/\|I\| ~ 3*p_k`. |
+| direction of the gate | **It fires OPPOSITE to its name.** Leakage **vanishes as the third token gets light** and is a problem only when it is **heavy**. Degree-2 structure is cleanest where the masses are small. |
+| why ARM P can exist | A **same-order** leakage would make degree-2 claims hopeless at every geometry. A must-fire constructs that case and confirms the test discriminates. |
+| **the crossing, pinned** | Exact ratio crosses `0.5` at `p_k` = **0.125146 / 0.123854 / 0.119861 / 0.112769 / 0.096521** for `p_c=p_j` = 0.010/0.020/0.050/0.100/0.200. **Pinned as values at `abs=1e-5`, not as inequalities** — a published tail norm was lost once to an inequality that let a number drift. |
+| leading order is **optimistic** | `3*p_k` predicts `1/6 = 0.1667`; the exact crossing is **~0.115**, so the series **overstates the safe region by ~45%**. At `p_k = 0.1667` the true ratio is **0.7863**, past the gate. **Using it as the bar would admit draws that void the claim** — bound by its own test. |
+| **what ARM P gets** | **A per-draw admissibility rule, not a per-geometry sweep**: degree-2 claims hold where the third token's mass is below **~0.115**, a quantity measurable on every draw and stratifiable exactly as `min(p_c,p_j)` already is. **A blocking gate becomes a reported column.** |
+| still owed, Cameron's | The **empirical** half — `E\|L3\|/E\|I\|` at real geometries, on her **asymmetric** readout family, through **trained** projections. **The closed form predicts what she should find; it does not replace finding it.** |
