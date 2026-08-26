@@ -85,6 +85,26 @@ from scale.pivot_probe import select_pivots                        # noqa: E402
 NAME = "m3_quintuple_v2"
 CELLS = ("softmax", "glance", "settled", "twin", "argmax")
 BETA = 0.5
+
+#: The shipped task. Every reading already in results/m3_quintuple_v2.jsonl was
+#: taken on it, and `_key` appends nothing for it, so those 25 units keep their
+#: byte-identical keys and resume instead of re-running (6685.3 s of journalled
+#: work, by their own meta.seconds).
+SHIPPED_TASK = "negation_scope"
+
+#: Tasks whose label is `equilibrium_oracle` -- the signed path sum that the ceq
+#: resolvent already computes. LOOP_PROMPT.md 1.7d: an arm built on that
+#: resolvent reproduces its own forward, so on these tasks `settled - softmax`
+#: is credited NOTHING and only `settled - twin` carries credit. Named by
+#: ORACLE IDENTITY rather than by a name prefix, so a task registered later
+#: against the same oracle is caught without editing this line.
+RIGGED_ORACLE_TASKS = frozenset(
+    n for n, e in NS.M3_TASKS.items() if e[1] is NS.equilibrium_oracle)
+RIG_NOTE = ("VOID -- shares e1_anchor's oracle, arm reproduces its own "
+            "forward (LOOP_PROMPT.md 1.7d)")
+
+WEIGHTS_DIR = pathlib.Path(__file__).resolve().parents[1] / "results" / (
+    NAME + "_weights")
 PUBLISHED_SOFTMAX_8192 = dict(
     s=64, d=24, steps=150, n_train=8192, n_eval=512, seed=0, n_params=4769,
     nrmse0_train=1.003287, nrmse0_eval=1.000340,
@@ -255,7 +275,8 @@ class QuintArm(M3.Arm):
 DIAG_SHAPES = ((4, 64, 24, 8, 0), (3, 64, 24, 16, 1), (2, 128, 16, 32, 2))
 
 
-def _bind_batched_against_arm_s(shapes=DIAG_SHAPES, verbose: bool = True) -> bool:
+def _bind_batched_against_arm_s(shapes=DIAG_SHAPES, verbose: bool = True,
+                                batch_fn=None) -> bool:
     """BITWISE bind of the batched map against `scale/arm_s.py`, per example.
 
     Runs before any cell. If it fails, the run does not start: a batched kernel
@@ -280,10 +301,16 @@ def _bind_batched_against_arm_s(shapes=DIAG_SHAPES, verbose: bool = True) -> boo
        backfilled. The divergence RATE is measured here and printed, and it is
        carried into the report rather than described as equality.
     """
+    #: The bind is arithmetic -- batched kernel against per-example kernel -- so
+    #: it holds for any input. It is nonetheless taken on THE RUN'S OWN CORPUS,
+    #: because a bind taken on a distribution the run never sees is a bind on a
+    #: different tensor. Defaults to the shipped builder, so the negation_scope
+    #: path is byte-identical to every run already logged.
+    bfn = batch_fn or NS.make_batch
     ok = True
     div_n = div_tot = 0
     for (n, s, d, k_piv, seed) in shapes:
-        x, _y, _f, _p = NS.make_batch(n, s, d, d_model=M3.D_MODEL, seed=seed)
+        x, _y, _f, _p = bfn(n, s, d, d_model=M3.D_MODEL, seed=seed)
         torch.manual_seed(seed)
         arm = M3.Arm("softmax", s=s)
         with torch.no_grad():
@@ -326,9 +353,10 @@ def _bind_batched_against_arm_s(shapes=DIAG_SHAPES, verbose: bool = True) -> boo
     return ok
 
 
-def _g3_glance_is_softmax(verbose: bool = True) -> bool:
+def _g3_glance_is_softmax(verbose: bool = True, batch_fn=None) -> bool:
     """Cell 2 must be bitwise cell 1. This is the G3 bind, taken at the run."""
-    x, _y, _f, _p = NS.make_batch(8, 64, 24, d_model=M3.D_MODEL, seed=0)
+    x, _y, _f, _p = (batch_fn or NS.make_batch)(8, 64, 24, d_model=M3.D_MODEL,
+                                                seed=0)
     torch.manual_seed(0)
     a1 = QuintArm("softmax", 64, cell="softmax")
     torch.manual_seed(0)
@@ -341,20 +369,59 @@ def _g3_glance_is_softmax(verbose: bool = True) -> bool:
 
 
 # ------------------------------------------------------------------ the units
+def weights_path(key: str) -> pathlib.Path:
+    """Where one unit's trained tensors land. ONE definition, shared by the
+    runner, its test and Foreman's consequence-fidelity column -- two copies of
+    a path is the same defect as two copies of a pass condition."""
+    return WEIGHTS_DIR / (key + ".pt")
+
+
+def load_unit(path):
+    """Rebuild the trained arm from a saved unit. Returns `(model, record)`.
+
+    Lives here rather than in the caller because the constructor arguments that
+    make a `QuintArm` the cell it is -- `cell`, `k_piv`, `beta`, `t_max`,
+    `n_neumann` -- are this file's, and a consumer that re-derives them derives
+    them wrong exactly once and then reports a `twin` number under `settled`.
+    """
+    rec = torch.load(path, weights_only=True)
+    m = QuintArm(rec["kind"], rec["s"], cell=rec["cell"], k_piv=rec["k_piv"],
+                 beta=rec["beta"], t_max=rec["t_max"],
+                 n_neumann=rec["n_neumann"])
+    m.load_state_dict(rec["state_dict"])
+    m.eval()
+    return m, rec
+
+
 def _unit(p: dict) -> dict:
     """One cell at one seed. Training is `paired_arm.train_and_predict`'s loop,
-    which is `run_arm`'s loop verbatim; only the instantiated class differs."""
+    which is `run_arm`'s loop verbatim; only the instantiated class differs.
+
+    `p["task"]` selects the corpus from `negation_scope.M3_TASKS` and MUST reach
+    all four batches -- the RED 0-step pair built here and the training pair
+    built inside `train_and_predict` -- or the 0-step gate is taken on one task
+    while the trained number is taken on another.
+    """
     s, d, seed, cell = p["s"], p["d"], p["seed"], p["cell"]
+    task = p.get("task", SHIPPED_TASK)
+    bfn = NS.M3_TASKS[task][0]
+
+    #: The trained module, captured by identity. `train_and_predict` builds the
+    #: model internally and returns predictions, not the model; the object it
+    #: trains IS the object this list holds, so no copy and no re-derivation is
+    #: involved. `run_arm` builds one first (the 0-step RED reading), so the
+    #: TRAINED one is the last, and the count is asserted rather than assumed.
+    built = []
 
     class _A(QuintArm):
         def __init__(self, kind, s_):
             super().__init__(kind, s_, cell=cell, k_piv=p["k"], beta=BETA,
                              t_max=p["t_max"], n_neumann=p["n_neumann"])
+            built.append(self)
 
-    xt, yt, _a, _b = NS.make_batch(p["n_train"], s, d, d_model=M3.D_MODEL,
-                                   seed=seed)
-    xe, ye, _c, _e = NS.make_batch(p["n_eval"], s, d, d_model=M3.D_MODEL,
-                                   seed=seed + 12345)
+    xt, yt, _a, _b = bfn(p["n_train"], s, d, d_model=M3.D_MODEL, seed=seed)
+    xe, ye, _c, _e = bfn(p["n_eval"], s, d, d_model=M3.D_MODEL,
+                         seed=seed + 12345)
     old_m3, old_pa = M3.Arm, PA.Arm
     M3.Arm = PA.Arm = _A
     t0 = time.time()
@@ -362,7 +429,7 @@ def _unit(p: dict) -> dict:
         red = M3.run_arm("softmax", xt, yt, xe, ye, s=s, steps=0, seed=seed)
         pred, y_eval, npar = PA.train_and_predict(
             "softmax", s=s, d=d, steps=p["steps"], n_train=p["n_train"],
-            n_eval=p["n_eval"], seed=seed)
+            n_eval=p["n_eval"], seed=seed, batch_fn=bfn)
     finally:
         M3.Arm, PA.Arm = old_m3, old_pa
     lo, hi = NS.bootstrap_ci(pred, y_eval, seed=seed)
@@ -375,14 +442,45 @@ def _unit(p: dict) -> dict:
     # field was bit-identical (eval_nrmse 0.8771677350487059 both times).
     # `run_bucket` already journals its own {"seconds": ...} into META, which
     # the audit does not compare, so the field was redundant as well as wrong.
-    return dict(eval_nrmse=NS.nrmse(pred, y_eval), n_params=npar,
-                nrmse0_train=red["nrmse0_train"], nrmse0_eval=red["nrmse0_eval"],
-                marg_lo=lo, marg_hi=hi)
+    val = dict(eval_nrmse=NS.nrmse(pred, y_eval), n_params=npar,
+               nrmse0_train=red["nrmse0_train"], nrmse0_eval=red["nrmse0_eval"],
+               marg_lo=lo, marg_hi=hi)
+
+    # THE TRAINED TENSORS, BESIDE THE METRIC. scale/capability_table.py:232
+    # records the exact cost of not doing this, in the shipped artifact:
+    # "scale/m3_quintuple.py journals metrics only and saves no per-cell
+    # weights, so no trained settled/twin/argmax/glance weights exist to
+    # intervene on", which is why the consequence-fidelity column (1.7c) reads
+    # NOT MEASURED for every arm. The weights do NOT go in the journal value:
+    # `run_bucket`'s resume audit compares the whole value dict bitwise, and a
+    # tensor in there is the same defect that `provisional_seconds` already was.
+    assert len(built) == 2, (
+        f"expected the 0-step arm and the trained arm, got {len(built)}")
+    mu = float(yt.mean())
+    sigma = float(yt.std(unbiased=False)) or 1.0
+    WEIGHTS_DIR.mkdir(parents=True, exist_ok=True)
+    torch.save(dict(state_dict=built[-1].state_dict(), key=_key(p), task=task,
+                    cell=cell, kind="softmax", s=s, d=d, d_model=M3.D_MODEL,
+                    k_piv=p["k"], beta=BETA, t_max=p["t_max"],
+                    n_neumann=p["n_neumann"], steps=p["steps"],
+                    n_train=p["n_train"], n_eval=p["n_eval"], seed=seed,
+                    mu=mu, sigma=sigma, eval_nrmse=val["eval_nrmse"],
+                    n_params=npar, torch_version=str(torch.__version__)),
+               weights_path(_key(p)))
+    return val
 
 
 def _key(p):
+    #: THE TASK SUFFIX IS APPENDED ONLY FOR A NON-SHIPPED TASK. Every key in
+    #: results/m3_quintuple_v2.jsonl was written before this file had a task at
+    #: all; suffixing them all would orphan 25 completed units AND make the
+    #: resume audit compare a negation_scope number against an e3 one under the
+    #: same key. Two corpora in one bucket is the collision `scale/etask_k5e.py`
+    #: opened a whole second runner to avoid.
+    task = p.get("task", SHIPPED_TASK)
     return (f"{p['cell']}_k{p['k']}_s{p['s']}_d{p['d']}_st{p['steps']}"
-            f"_ntr{p['n_train']}_nev{p['n_eval']}_b{p['t_max']}_sd{p['seed']}")
+            f"_ntr{p['n_train']}_nev{p['n_eval']}_b{p['t_max']}_sd{p['seed']}"
+            + ("" if task == SHIPPED_TASK else f"_task{task}"))
 
 
 def _units(cells, ks, seeds, **cfg):
@@ -402,7 +500,11 @@ CONTRASTS = (("settled", "twin", "HEADLINE"),
              ("argmax", "softmax", ""))
 
 
-def main() -> int:
+def _argparser() -> argparse.ArgumentParser:
+    """The CLI, exposed so its contract can be tested by VALUE rather than by
+    driving `main()` with `--help` -- argparse exits 0 on `--help` before it
+    reports an unrecognised optional, so that route passes against a file with
+    no flag at all."""
     ap = argparse.ArgumentParser()
     ap.add_argument("--s", type=int, default=64)
     ap.add_argument("--d", type=int, default=24)
@@ -414,55 +516,89 @@ def main() -> int:
     ap.add_argument("--cells", nargs="+", default=list(CELLS))
     ap.add_argument("--budget", type=float, default=420.0)
     ap.add_argument("--t-max", type=int, default=21)
-    a = ap.parse_args()
-    n_neu = A.neumann_for(BETA)
+    #: WHICH TASK, ported from scale/m3_capability.py:246. Default is the
+    #: shipped negation-scope corpus, so every number already in
+    #: results/m3_quintuple_v2.jsonl is reproduced by the same command that
+    #: produced it and keeps its journal key.
+    ap.add_argument("--task", default=SHIPPED_TASK, choices=list(NS.M3_TASKS))
+    return ap
 
-    print(f"=== M3 QUINTUPLE  s={a.s} d={a.d} steps={a.steps} "
+
+def main() -> int:
+    a = _argparser().parse_args()
+    n_neu = A.neumann_for(BETA)
+    bfn = NS.M3_TASKS[a.task][0]
+    rigged = a.task in RIGGED_ORACLE_TASKS
+
+    print(f"=== M3 QUINTUPLE  task={a.task} s={a.s} d={a.d} steps={a.steps} "
           f"n_train={a.n_train} n_eval={a.n_eval} ks={a.ks} seeds={a.seeds} "
           f"beta={BETA} t_max={a.t_max} N={n_neu} "
           f"threads={torch.get_num_threads()} torch {torch.__version__} ===")
-    print("Pre-registration: M3_QUINTUPLE_PREREGISTERED_READING.md")
+    print("Pre-registration: M3_QUINTUPLE_PREREGISTERED_READING.md"
+          if a.task == SHIPPED_TASK else
+          "Pre-registration: E_LADDER_PREREGISTERED_READING.md")
     print("Cost: analytic FLOPs only. Every seconds figure below is "
           "PROVISIONAL, CONTENDED BOX, NOT A MEASUREMENT.")
+    if a.task in NS.E_T_STAR:
+        print(f"  E-TASK: t* = {NS.E_T_STAR[a.task](a.s)}  (difficulty dial, "
+              f"LOOP_PROMPT.md 1.7). Arm hop budget here is 2.")
+    if rigged:
+        print(f"  RIG CAVEAT -- {a.task} is labelled by equilibrium_oracle, the "
+              f"signed path sum the ceq resolvent itself computes.")
+        print(f"  {RIG_NOTE}. ONLY `settled vs twin` is creditable on this "
+              f"task; every other contrast below is printed VOID.")
 
     print("\n=== BINDS (the run does not start if either fails) ===")
     print("  REQUIRED -- the shapes this run actually uses:")
     req = tuple((2, a.s, a.d, k, sd) for k in a.ks for sd in (0, 1))
-    if not _bind_batched_against_arm_s(req):
+    if not _bind_batched_against_arm_s(req, batch_fn=bfn):
         print("ABORT: batched map is not bitwise scale/arm_s.py at the run's "
               "own shapes.")
         return 1
     print("  DIAGNOSTIC -- other shapes. Reported, NOT gating this run, and "
           "carried into the report as a limit on the follow-on k sweep:")
-    _bind_batched_against_arm_s(DIAG_SHAPES)
-    if not _g3_glance_is_softmax():
+    _bind_batched_against_arm_s(DIAG_SHAPES, batch_fn=bfn)
+    if not _g3_glance_is_softmax(batch_fn=bfn):
         print("ABORT: G3 broken, glance is not bitwise softmax.")
         return 1
 
-    print("\n=== SOFTMAX FIRST: the published n_train=8192 reading, re-taken ===")
-    P = PUBLISHED_SOFTMAX_8192
-    xt, yt, _f, _p = NS.make_batch(P["n_train"], P["s"], P["d"],
-                                   d_model=M3.D_MODEL, seed=P["seed"])
-    xe, ye, _g, _h = NS.make_batch(P["n_eval"], P["s"], P["d"],
-                                   d_model=M3.D_MODEL, seed=P["seed"] + 12345)
-    got = M3.run_arm("softmax", xt, yt, xe, ye, s=P["s"], steps=P["steps"],
-                     seed=P["seed"])
-    ok = True
-    for f in ("n_params", "nrmse0_train", "nrmse0_eval", "train_nrmse",
-              "eval_nrmse", "ci_lo", "ci_hi"):
-        w, g = P[f], got[f]
-        same = (w == g) if isinstance(w, int) else (f"{w:.6f}" == f"{g:.6f}")
-        ok = ok and same
-        ws = str(w) if isinstance(w, int) else format(w, ".6f")
-        gs = str(g) if isinstance(w, int) else format(g, ".6f")
-        print(f"  {f:>14} published={ws} re-taken={gs} "
-              f"{'MATCH' if same else 'DRIFT'}")
-    if not ok:
-        print("ABORT: published softmax reading did not reproduce.")
-        return 1
+    # THE PUBLISHED READING IS A negation_scope READING. Re-taking it on another
+    # corpus compares two different tasks and aborts every legitimate run, so it
+    # is SKIPPED rather than adapted -- and the skip is printed, because a
+    # reproduction gate that quietly stops running is worse than one that never
+    # existed.
+    if a.task != SHIPPED_TASK:
+        print(f"\n=== SOFTMAX FIRST: SKIPPED. PUBLISHED_SOFTMAX_8192 is a "
+              f"{SHIPPED_TASK} reading and this run is {a.task}. ===")
+        print("  No published reading exists for this task, so this run is "
+              "NOT anchored to one. Stated as a limit, not omitted.")
+    else:
+        print("\n=== SOFTMAX FIRST: the published n_train=8192 reading, "
+              "re-taken ===")
+        P = PUBLISHED_SOFTMAX_8192
+        xt, yt, _f, _p = NS.make_batch(P["n_train"], P["s"], P["d"],
+                                       d_model=M3.D_MODEL, seed=P["seed"])
+        xe, ye, _g, _h = NS.make_batch(P["n_eval"], P["s"], P["d"],
+                                       d_model=M3.D_MODEL,
+                                       seed=P["seed"] + 12345)
+        got = M3.run_arm("softmax", xt, yt, xe, ye, s=P["s"], steps=P["steps"],
+                         seed=P["seed"])
+        ok = True
+        for f in ("n_params", "nrmse0_train", "nrmse0_eval", "train_nrmse",
+                  "eval_nrmse", "ci_lo", "ci_hi"):
+            w, g = P[f], got[f]
+            same = (w == g) if isinstance(w, int) else (f"{w:.6f}" == f"{g:.6f}")
+            ok = ok and same
+            ws = str(w) if isinstance(w, int) else format(w, ".6f")
+            gs = str(g) if isinstance(w, int) else format(g, ".6f")
+            print(f"  {f:>14} published={ws} re-taken={gs} "
+                  f"{'MATCH' if same else 'DRIFT'}")
+        if not ok:
+            print("ABORT: published softmax reading did not reproduce.")
+            return 1
 
     cfg = dict(s=a.s, d=a.d, steps=a.steps, n_train=a.n_train,
-               n_eval=a.n_eval, t_max=a.t_max, n_neumann=n_neu)
+               n_eval=a.n_eval, t_max=a.t_max, n_neumann=n_neu, task=a.task)
     us = _units(a.cells, a.ks, a.seeds, **cfg)
     print(f"\n=== {len(us)} units, bucketed, budget {a.budget:.0f}s ===")
     acc = run_bucket(NAME, us, _unit, budget_s=a.budget)
@@ -510,10 +646,17 @@ def main() -> int:
             c = contrast([by[kr][sd]["eval_nrmse"] for sd in a.seeds],
                          [by[ka][sd]["eval_nrmse"] for sd in a.seeds],
                          n_boot=10000, seed=0)
-            out[f"{arm}_vs_{ref}_k{k}"] = c["verdict"]
+            # LOOP_PROMPT.md 1.7d: on a task labelled by the resolvent's own
+            # object, credit flows through `settled - twin` and nothing else.
+            # The other rows are printed -- suppressing them is how a reader
+            # ends up assuming they were favourable -- but they are printed VOID
+            # and their verdict is not journalled as a verdict.
+            void = rigged and {arm, ref} != {"settled", "twin"}
+            out[f"{arm}_vs_{ref}_k{k}"] = "VOID" if void else c["verdict"]
             print(f"{arm:>10} {ref:>10} {k:>4} {c['delta']:>+10.6f} "
                   f"{c['ci_lo']:>+10.6f} {c['ci_hi']:>+10.6f} "
-                  f"{c['verdict']:>15}  {note}")
+                  f"{'VOID' if void else c['verdict']:>15}  "
+                  f"{RIG_NOTE if void else note}")
             if c["verdict"] == "NO DIFFERENCE":
                 print("             ^ pre-registered floor: with five seeds a "
                       "real gap below ~0.05 NRMSE reads NO DIFFERENCE whether "

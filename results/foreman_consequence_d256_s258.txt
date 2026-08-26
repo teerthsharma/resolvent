@@ -1,7 +1,9 @@
-CONSEQUENCE FIDELITY  s=512 d=256 steps=150 n_train=512 n_eval=512 seeds=[0] threads=2
+CONSEQUENCE FIDELITY  s=258 d=256 steps=150 n_train=512 n_eval=512 seeds=[0, 1, 2] threads=2
 interval: Clopper-Pearson exact, alpha=0.05. paired arm-vs-softmax test: exact McNemar.
 PRE-REGISTERED (module docstring): the d>=256 falsifier fires only if the cell is INFORMATIVE -- some arm's CP interval excludes 0.5.
 
 --- seed 0 ---
 arm                eval_nrmse   sign_match        ci_lo        ci_hi            k       n_used        slope     slope_lo     slope_hi    min_entry     neg_frac
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------
+softmax               1.45738     0.485294     0.424506     0.546406          132          272   0.00298989   -0.0571301    0.0557647  9.44803e-09            0   [326s]
+                   flipper 0.561798 (50/89)   payload 0.448087 (82/183)   null|dyhat| 0.00237526 vs live 0.0438716   zero-effect 240   closed-form resid 0.000e+00

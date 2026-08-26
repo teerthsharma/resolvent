@@ -1,6 +1,7 @@
 
-=== K-5E RUN 2026-08-26 12:58:00 s=64 d=24 steps=150 n_train=2048 n_eval=2048 seeds=[0, 1] cells=['softmax', 'twin', 'settled'] tasks=['e3_t1', 'e3_t2', 'e3_t8', 'e3_t32', 'e1_anchor'] ===
+=== K-5E RUN 2026-08-26 13:09:27 s=64 d=24 steps=150 n_train=1024 n_eval=2048 seeds=[0] cells=['softmax', 'twin', 'settled'] tasks=['e3_t1', 'e3_t2', 'e3_t8', 'e3_t32', 'e1_anchor'] ===
 torch 2.5.1+cu121  threads=2  device=cpu
 ABSOLUTE BAR: NRMSE 1.0 is predict-the-mean. K-5E asks only whether a cell is BELOW it.
         task   t*      cell  n_par    0-step      eval      verdict       s
-       e3_t1    1   softmax   4769  1.001389  0.819665    BEATS BAR    70.9
+       e3_t1    1   softmax   4769  1.002204  0.890073    BEATS BAR    83.2
+       e3_t1    1      twin   4769  1.002255  0.966837    BEATS BAR   122.1

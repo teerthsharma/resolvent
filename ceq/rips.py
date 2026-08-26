@@ -35,7 +35,8 @@ import math
 from dataclasses import dataclass, field
 
 __all__ = ["GraphCase", "splitmix64", "sample_sphere", "rips_edges",
-           "components", "make_case", "corpus", "CASES"]
+           "components", "make_case", "corpus", "CASES",
+           "rerouted_corpus", "REROUTED_CASES"]
 
 _MASK = (1 << 64) - 1
 _GOLDEN = 0x9E3779B97F4A7C15
@@ -155,17 +156,44 @@ def _count(node_count: int, edges) -> int:
     return len({x for x in lab if x >= 0})
 
 
-def _add_critical_bridge(points, edges, node_count):
-    """Join the two nearest distinct components with one geodesic edge.
+def _add_critical_bridge(points, edges, node_count, join: str = "nearest"):
+    """Join two distinct components with one geodesic edge.
 
     One edge is what carries a graph across the connectivity transition, which is the
     property this corpus exists to exhibit. Adding several would step over it.
+
+    `join` SELECTS WHICH TWO COMPONENTS, AND THAT CHOICE DECIDES WHETHER THE LABEL IS
+    LOCAL. Upstream uses `"nearest"`: the globally closest cross-component pair. On
+    `S^2` at these degrees the closest such pair is always a speck against the giant --
+    measured `3 x 222` on `CriticalBridge_S2Rips_256` and `1016 x 4` on
+    `CriticalLarge_S2Rips_1024`. A speck is saturated by a ball of radius two or three,
+    so "am I in the merged component" degenerates into "did my own small ball grow",
+    which a static local decoder reads without traversing anything. `"largest"` joins
+    the two LARGEST components instead, so neither endpoint's neighbourhood saturates
+    and the question cannot be answered locally. `scale/rips_gate.py` measures both.
     """
     lab = components(node_count, edges)
+    if join == "largest":
+        sizes: dict[int, int] = {}
+        for x in lab:
+            if x >= 0:
+                sizes[x] = sizes.get(x, 0) + 1
+        if len(sizes) < 2:
+            return None
+        top = sorted(sizes, key=lambda c: (-sizes[c], c))[:2]
+        allowed = set(top)
+    elif join == "nearest":
+        allowed = None
+    else:
+        raise ValueError(f"join must be 'nearest' or 'largest', not {join!r}")
     best = None
     for i in range(node_count):
+        if lab[i] < 0 or (allowed is not None and lab[i] not in allowed):
+            continue
         for j in range(i + 1, node_count):
-            if lab[i] < 0 or lab[j] < 0 or lab[i] == lab[j]:
+            if lab[j] < 0 or lab[i] == lab[j]:
+                continue
+            if allowed is not None and lab[j] not in allowed:
                 continue
             xi, yi, zi = points[i]
             xj, yj, zj = points[j]
@@ -177,13 +205,15 @@ def _add_critical_bridge(points, edges, node_count):
 
 
 def make_case(name: str, node_count: int, target_degree: float, seed: int,
-              bridge: bool, static_rows: bool, repeated_rows: bool) -> GraphCase:
+              bridge, static_rows: bool, repeated_rows: bool) -> GraphCase:
+    """`bridge` is `False`, `True` (upstream's nearest-pair join) or `"largest"`."""
     points = sample_sphere(node_count, seed)
     edges = rips_edges(points, target_degree)
     pre = -1
     if bridge:
         pre = _count(node_count, edges)
-        e = _add_critical_bridge(points, edges, node_count)
+        join = bridge if isinstance(bridge, str) else "nearest"
+        e = _add_critical_bridge(points, edges, node_count, join=join)
         if e is not None and pre >= 2:
             edges = edges + [e]
     unique = list(edges)
@@ -216,5 +246,21 @@ CASES = [
 ]
 
 
+#: The RULE 5 reroute measured in `scale/rips_gate.py`. Same generator, same seeds,
+#: same arithmetic; the ONLY change is which two components the single bridge edge
+#: joins. These are subcritical draws whose components are comparable in size
+#: (`10 x 8` and `32 x 30`), so no endpoint ball saturates and the post-bridge
+#: connectivity fact stops being a local statistic. They are NOT part of the ported
+#: corpus and are kept separate so `CASES` still matches the upstream file 6/6.
+REROUTED_CASES = [
+    ("LargestJoin_S2Rips_64", 64, 2.0, 0x33960001, "largest", False, False),
+    ("LargestJoin_S2Rips_1024", 1024, 2.0, 0x33960005, "largest", False, False),
+]
+
+
 def corpus() -> list[GraphCase]:
     return [make_case(*c) for c in CASES]
+
+
+def rerouted_corpus() -> list[GraphCase]:
+    return [make_case(*c) for c in REROUTED_CASES]

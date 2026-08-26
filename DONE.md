@@ -4,6 +4,123 @@ Round 6 closed with the certificate program CLOSED - three attempts, three death
 Round 5's `TWOSPHERES: BROKEN` and its handover `done5.md` stand. Round 6's
 work-done is `done6.md`. Progress **22**.
 
+### ROUND 7, ITERATION 11 - 2026-08-26 - E4 IS STRUCK BY ITS OWN GATE, and the gate that struck it was partly vacuous when it shipped.
+
+CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**, before and after, 4/4
+bit-identical.
+
+## GATE (a), TRUNCATION - PASSES
+
+`do()`-paired draws, `k`-hop reachability, NRMSE against a mean predictor of 1.0:
+
+    case                          k=0     k=1     k=8    k=16    k=32    k=64
+    CriticalBridge_S2Rips_256   1.4142  1.4135  1.3229  1.1850  1.0174  0.0000
+    CriticalLarge_S2Rips_1024   1.4142  1.4142  1.3317  1.0597  0.0000  0.0000
+
+**A 1-hop reading is WORSE than the mean.** Monotone in `k`, exact only at the
+diameter. Giant-component diameters **4 / 10 / 62 / 32** - **the dial diverges at
+criticality rather than being a knob.** This is the first substrate in the project
+where a truncated reading is bounded away from the label and tightens.
+
+## GATE (b), THE DECODER MUST-FIRE - STRIKES E4, THREE WAYS
+
+**1. THE PRESCRIBED PASS-CASE IS VACUOUS, AND THAT IS THE FOURTEENTH.**
+`SupercriticalDense_S2Rips_256` has all 256 nodes in **one** component: 0 isolated,
+base rate **1.000000**, label standard deviation **0.0**, NRMSE undefined. Cameron
+drew 1024 same-component pairs and **0** different-component pairs. **The label is
+constant, so no control exists.** `GroundedStaticRepeated_S2Rips_256` is identical.
+
+**THIS ONE IS MINE.** The gate came from Dr House and **I relayed it into her
+dispatch as *"that contrast IS the control"* without checking that the pass-case
+could produce a non-constant label.** A corpus case with one component cannot answer
+"are these two nodes in the same component" any way but yes. **Fourteenth vacuous
+control in this campaign, fourth that I have authored or passed on, and it was in the
+control half of a must-fire - the exact place this project has been burned before.**
+
+**2. The other prescribed pass-case does not pass.** `StableSparse_S2Rips_64` reads
+**0.8927** degree-only. **So both halves of the prescribed control were unusable and
+gate (b) shipped with no control at all.**
+
+**3. THE STRIKE ITSELF. The decoder PASSES at criticality.**
+`CriticalLarge_S2Rips_1024`, balanced marginal, held-out half, degree-only:
+**0.4710**. A nurse with an independent probe and its own seed: **0.3360**. Both
+under `PASS_BAR = 0.5`. **E4 as specified is struck, no appeal.**
+
+## THE ROOT CAUSE IS IN THE CODE I PORTED, AND IT IS ONE LINE
+
+`ceq/rips.py::_add_critical_bridge` joins the two **nearest** components. On `S^2` at
+these degrees the nearest cross-component pair is **always a speck against the
+giant** - measured **`3 x 222`** on `CriticalBridge_S2Rips_256` and **`1016 x 4`** on
+`CriticalLarge_S2Rips_1024`, with the bridges confirmed by a nurse as `(25,41)` and
+`(193,312)`.
+
+**A speck is saturated by a ball of radius two or three, so "am I in the merged
+component" degenerates into "did my own small ball grow"** - which a static local
+decoder reads without traversing anything. Static radius-3 ball decoder: **0.1948**
+(r2) / **0.1585** (r3) on CriticalBridge, **0.1565** on CriticalLarge.
+
+**AND SHE FOUND A DEFECT IN GATE (a) ITSELF, WHICH IS THE SHARPEST LINE IN THE
+REPORT:**
+
+> *"Gate (a) truncated the wrong reading. `i -> j` reachability needs the 62-hop
+> diameter; DECIDING the label never requires reaching `j`."*
+
+**Gate (a) passing therefore did not mean what it appeared to mean.** A task can have
+a diverging diameter and still be decidable locally, and only gate (b) could tell
+them apart. **That is a defect in the gate design, not only in the corpus.**
+
+## RULE 5 - REROUTE, MEASURED, ONE LINE OF CODE
+
+Join the two **largest** components instead of the two nearest, so neither endpoint's
+neighbourhood saturates. `ceq.rips.rerouted_corpus()`, `LargestJoin_S2Rips_1024`,
+merging **30 x 32**:
+
+    radius                       0       1       2       3       5
+    struck CriticalBridge     0.9470  0.4939  0.1948  0.1585  0.1162
+    rerouted LargestJoin_1024 1.0001  1.0018  1.0035  0.9951  0.8220
+
+**The leak closes from `0.1565` to `0.9951` at radius 3.** And the control was
+**seen to fire** on identical instances, features and split: a planted degree-sum
+label reads **0.0000**, a planted balanced degree-median reads **0.5530**. Gap from
+the rerouted task to the planted control: **`1.0001 - 0.5530 = 0.4471`**.
+
+The ladder still tightens on the rerouted case: `k=1` **1.4128** -> `k=16` **0.7943**
+-> `k=32` **0.0000**.
+
+**THE UPSTREAM CASES ARE UNTOUCHED.** Counts still **15 / 6 / 1 / 1 / 178 / 3**, both
+bridge cases still satisfy `pre == components + 1`, build **0.28 s**. The port's
+fidelity to the author's original is preserved; the reroute is a new case list beside
+it, not an edit of it.
+
+## AND SHE CORRECTED A BAR OF HER OWN, UNPROMPTED
+
+> *"I moved my own planted-median control off `PASS_BAR` - a linear decoder cannot
+> represent a step label, so 0.5 was a category error on my part."*
+
+It is now read as a contrast against the connectivity label on identical instances,
+gap `> 0.30`. **`PASS_BAR = 0.5` and `FAIL_BAR = 0.9` themselves are unchanged**, so
+the strike above stands on the bars as written.
+
+## WHAT IS ADMISSIBLE AND WHAT IS NOT
+
+**E4 as specified: STRUCK.** **E4-prime (largest-join, `n = 1024`): passes both
+gates**, but is **not registered in `M3_TASKS`** - it still needs the M3 tensor batch
+format, which is a build, not a measurement.
+
+**And the 64-node rerouted case is NOT admissible:** `LargestJoin_S2Rips_64` still
+leaks at radius 5 (**0.0055**), because 8x10 components are too small to hide from a
+5-ball. **The reroute requires `n = 1024`.** Stated rather than discovered later.
+
+CHECKLIST: **E4 STRUCK by gate (b)** - decoder reads `0.4710` / `0.3360` at
+criticality against `PASS_BAR 0.5`. **Root cause is one line**: the bridge joins
+nearest, which on `S^2` is always speck-vs-giant (`3 x 222`, `1016 x 4`), collapsing
+a global label into "did my own ball grow". **Gate (a) passed and did not mean what
+it appeared to** - reachability needs the diameter, deciding does not. **REROUTE
+measured**: join largest, leak `0.1565 -> 0.9951`, control fires at `0.5530`.
+**Fourteenth vacuous control, and this one was in the gate I relayed.**
+
+**SCOREBOARD: 23.**
+
 ### ROUND 7, ITERATION 10 - 2026-08-26 - Dr House answers the distance question, catches a rig before it fires, and a corpus with a real critical point enters the repo.
 
 CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.

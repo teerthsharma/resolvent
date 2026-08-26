@@ -57,6 +57,7 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import os
 import pathlib
 import sys
 import time
@@ -374,7 +375,7 @@ def value_path_flip_rate(kind: str, *, nonlinear: bool, n: int = N,
 
 
 def value_path_repeat(kinds=("pivot_unsigned", "pivot_signed"), *, steps: int,
-                      n_train: int, seeds=(0,), n: int = N) -> list:
+                      n_train: int, seeds=(0,), n: int = N, sink=None) -> list:
     """The J3 reading, repeated across SEEDS at a stated training budget.
 
     The J3 refutation shipped on ONE seed at `n_train=2048`: the trained
@@ -404,6 +405,12 @@ def value_path_repeat(kinds=("pivot_unsigned", "pivot_signed"), *, steps: int,
                 r.update(steps=steps, n_train=n_train, phase="trained",
                          seconds=round(time.time() - t0, 3))
                 out.append(r)
+                #: Handed out AS PRODUCED, not after the last seed. A 40-minute
+                #: sweep that only journals at the end loses every completed
+                #: seed to one interrupted process, which is exactly what
+                #: happened to this cell's first attempt.
+                if sink is not None:
+                    sink(r)
     return out
 
 
@@ -464,16 +471,20 @@ def main(argv=None) -> int:
             " %20s" % c for c in cols)
         print(h)
         print("-" * len(h))
-        rows = value_path_repeat(steps=a.steps, n_train=a.n_train,
-                                 seeds=a.value_path_seeds)
-        for r in rows:
+        jp = pathlib.Path(__file__).resolve().parents[1] / a.out
+        jf = jp.open("a", encoding="utf-8")
+
+        def sink(r):
             print("%-16s %-9s %6d" % (r["kind"], r["nonlinear"], r["seed"])
                   + "".join(" %20.6f" % r[c] if not isinstance(r[c], int)
-                            else " %20d" % r[c] for c in cols))
-        p = pathlib.Path(__file__).resolve().parents[1] / a.out
-        with p.open("a", encoding="utf-8") as f:
-            for r in rows:
-                f.write(json.dumps(r) + "\n")
+                            else " %20d" % r[c] for c in cols), flush=True)
+            jf.write(json.dumps(r) + "\n")
+            jf.flush()
+            os.fsync(jf.fileno())
+
+        rows = value_path_repeat(steps=a.steps, n_train=a.n_train,
+                                 seeds=a.value_path_seeds, sink=sink)
+        jf.close()
         print("\nwrote %d rows to %s" % (len(rows), a.out))
         return 0
 

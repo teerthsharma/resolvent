@@ -4,7 +4,7 @@
 |---|---|
 | contract | `LOOP_PROMPT.md` (v9). Round 6 archived `LOOP_PROMPT_ROUND6_ARCHIVE.md` |
 | promise | **`HILBERT`** — D2 verbatim (needs **S1's +12 branch AND S3**), or an honest `BROKEN` |
-| iteration | **10 complete, 11 next** |
+| iteration | **11 complete, 12 next** |
 | phase | **A — foundations (0–4)** |
 | **scoreboard** | **23** — 22 carried, **S5 +1** (Merkle journal live) |
 | RULE 2 (repaired) | **e-process SATISFIED at it.3. The RUN is now EXECUTING** — the `twin` arm had **zero rows** in v2 and was launched at it.6, seeds 0–4, paired to the settled key exactly. `EP.live()` reads the journal and prints `undecided at evidence E_t = 1.0`; must-fire passes both directions (worst null `0.0367 ± 0.0019` vs `α = 0.05`) and the broken-λ control **was seen to fire at `1.0000`**. |
@@ -156,7 +156,19 @@ unreachable; `delta_image` is closed. **The next action is the corpus step above
 18. **`e3_*` inherits `e1_anchor`'s rig** — same `equilibrium_oracle`, and E1's label
    is the signed path sum the resolvent already computes. **Only `settled − twin` is
    creditable on the ladder.** Caught before the run, not after the number.
-19. **E4 (Rips) is conditionally admitted behind two gates**, and the second is the
-   real one: a static local-degree decoder must **fail at criticality AND pass on the
-   stable and dense cases**. **The component count is banned as a feature** because it
-   leaks the label.
+19. **E4 AS SPECIFIED IS STRUCK at it.11.** The decoder reads **0.4710** (and
+   **0.3360** on an independent nurse probe) at criticality against `PASS_BAR = 0.5`.
+   **Root cause is one line**: the bridge joins the two NEAREST components, which on
+   `S²` is always speck-vs-giant (`3 × 222`, `1016 × 4`), so a global label collapses
+   into "did my own ball grow". **E4′ — join the two LARGEST — passes both gates
+   (leak `0.1565 → 0.9951`) and needs `n = 1024`; the 64-node case still leaks at
+   `0.0055`. NOT yet registered in `M3_TASKS`: it needs the M3 tensor batch format.**
+20. **Gate (a) passing did not mean what it appeared to mean**, and this generalises:
+   `i→j` reachability needs the diameter, but **deciding a label never requires
+   reaching `j`**. **A diverging diameter does not imply the task is not locally
+   decidable.** Any future substrate needs the decoder gate, not just the truncation
+   gate.
+21. **Fourteenth vacuous control, and it was in a gate relayed from here** — the
+   prescribed pass-case `SupercriticalDense_S2Rips_256` has ONE component, so its
+   label is constant and it could never have controlled anything. **Every must-fire's
+   PASS half now needs its own non-degeneracy check before dispatch.**
