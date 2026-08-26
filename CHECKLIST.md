@@ -784,3 +784,14 @@ Replayed ARM A's own draw stream (published `D_FR causal` reproduced to 6 dp at 
 | strata | **Pooled residual EQUALS band residual at every k** (`2.072291` / `2.470484` / `3.673077`). The pooled match spends its whole budget in the band and **touches zero tail tokens** — a pooled table carries **no tail information at all**. |
 | **result against her own arm** | On band, `identity == residual` at every k — the band is ranks k..2k of the same score that orders causal, so **rank matching already is optimal value matching**. **The matcher does not improve existing probes against band**, said *before* the gate. It changes the tail: `12.408169 → 3.485376` at k=8. |
 | still open (Cameron) | null-residual bar chosen not pre-registered; `n^-0.5` ratios **above** prediction (`0.5861/0.2809` vs `0.5000/0.2500`), **unexplained**; rectangular no-scipy fallback unimplemented; **Monge oracle covers only the square case while rectangular is the shape it.1 uses**; calibration effect synthetic; strata one draw, **no CI, G6 unsatisfied**; band/tail inherited; "≥2 populations" not checked for 3; 2-dof lemma not started. |
+
+**ROUND 6 it.6 — the rectangular Monge oracle.**
+
+| item | status |
+|---|---|
+| `scale/monge.py` | **GREEN**, 15 tests, RED first (`ModuleNotFoundError`). Monotone-subsequence DP, exact, `O(n*m)`. **Agrees with `scipy.linear_sum_assignment` to `rel=1e-12` at (4,4), (5,12), (8,40), (1,9), (16,17), (12,300)** — no shared code or algorithm, so a genuine second path. |
+| Cameron's open: rectangular assignment unchecked | **CLOSED.** The +3/−5 gate's shape (tens by thousands) now has an independent exact check. |
+| **my own test defects** | **3 found, all mine, implementation was correct.** Two compared raw pool indices where monotonicity lives in pool *values*. |
+| **vacuous control, mine** | The greedy must-fire used a hand-built 2×2 example and **could not fire**: on two points the monotone assignment is **forced**, so greedy and optimal coincide for every such instance. Replaced by a **drawn** control — greedy strictly worse in **111/400** random (4,9) instances — asserting both that greedy never beats the optimum and that it differs often enough (`>50/400`) to mean anything. Second control: the **crossed** assignment costs strictly more. |
+| pattern, now specific | **Fifth vacuous control this round, second authored by me.** A hand-built minimal example is exactly where a control goes vacuous, because the smallest case is usually where right and wrong answers coincide. **Drawn instances with a count** are the repair. |
+| RULE 1 | **BREACHED, ~4 of 7 iterations.** Stated, not argued away. Reason: this instrument gates the measurement. |

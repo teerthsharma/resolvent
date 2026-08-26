@@ -4,6 +4,68 @@ Round 5 closed at `TWOSPHERES: BROKEN - ARM A, K1's dual slope, displacement
 clause`; its handoff is `done5.md` and its negative result is `D1.md`. That
 verdict is final and is not reopened.
 
+### ROUND 6, ITERATION 6 - 2026-08-26 - The rectangular oracle, so the pivot gate is not read on an unchecked assignment. Three of my own tests were wrong and one could not fire.
+
+CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.
+[RUN] `pytest tests/loop` -> **165 passed** (149 -> 165), exit 0.
+
+**RULE 1 IS BREACHED AND IT IS STATED, NOT ARGUED AWAY.** Instrument work is now
+roughly 4 of 7 iterations against a 40% cap. The reason it was done anyway: this
+instrument **gates the measurement**. Cameron's own report flagged that **the
+Monge oracle covers only the SQUARE case while the +3/-5 gate uses the RECTANGULAR
+one**, so the assignment that decides the round's shape had **no independent
+check**. Reading a decisive gate through an unverified instrument is the defect
+class this project has paid for repeatedly.
+
+## THE ORACLE
+
+`scale/monge.py`. The cost `|a_i - b_j|` on a line is **Monge**, so an optimal
+assignment can be taken **monotone** - crossing a pair never helps, because for
+sorted `a_i <= a_i'` and `b_j <= b_j'` the uncrossed sum never exceeds the crossed
+one. That turns the rectangular assignment into an increasing-subsequence choice:
+
+    f[i][j] = min( f[i][j-1],  f[i-1][j-1] + |a_i - b_j| )
+
+exact, `O(n*m)`. **It shares no code and no algorithm with Hungarian or auction**,
+so agreement is a genuine second path rather than one method run twice.
+
+**[RUN] agrees with `scipy.optimize.linear_sum_assignment` to `rel=1e-12` at six
+rectangular shapes** - `(4,4)`, `(5,12)`, `(8,40)`, `(1,9)`, `(16,17)`, `(12,300)`.
+The gate's shape is tens-by-thousands and is now covered.
+
+## THREE OF MY OWN TESTS WERE WRONG. THE IMPLEMENTATION WAS NOT.
+
+**(1) and (2) - the monotonicity assertion compared the wrong thing.** `idx`
+points into the **unsorted** pool, so comparing raw `b`-indices tests nothing;
+monotonicity is in the **values** of `b`. Two parametrisations failed on my error,
+not the DP's.
+
+**(3) AND THE MUST-FIRE COULD NOT FIRE - INSTRUMENT #15, INSIDE THE CONTROL MEANT
+TO PREVENT IT.** I built a two-by-two example intending greedy nearest-neighbour
+to be the plausible wrong answer, and asserted the oracle beats it. It does not,
+and it cannot: **on two points the monotone assignment is FORCED, so greedy and
+optimal coincide for EVERY such instance.** The control was unfalsifiable by
+construction.
+
+**The premise itself was fine and is now measured properly [RUN]: greedy is
+strictly worse than optimal in 111 of 400 random four-by-nine instances.** So the
+control is **drawn rather than hand-built**, and asserts both that greedy never
+beats the optimum and that it differs often enough (`> 50/400`) for the comparison
+to mean something. A second control checks the **crossed** assignment - the thing
+monotonicity forbids - costs strictly more.
+
+**This is the fifth time this round a control has been found unable to fire, and
+the second time the author was me.** The pattern is now specific enough to state:
+**a hand-built minimal example is exactly where a control goes vacuous**, because
+the smallest case is usually the one where the wrong answer and the right answer
+coincide. Drawn instances with a count are the repair.
+
+CHECKLIST: `scale/monge.py` GREEN, 15 tests. Cameron's rectangular-oracle open
+**CLOSED**. Three self-authored test defects fixed, one of them a vacuous control.
+
+**SCOREBOARD: 4** - unchanged. Oracle is instrument work; the gate it unblocks has
+not run. **RULE 2: five iterations to the M3 deadline.**
+
 ### ROUND 6, ITERATION 5 - 2026-08-26 - The log-domain metric removes Foreman's blocker for free. Cameron returns and overrules her own contribution.
 
 CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.

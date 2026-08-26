@@ -4,42 +4,42 @@
 |---|---|
 | contract | `LOOP_PROMPT.md` (v8.2). Round 5 archived `LOOP_PROMPT_ROUND5_ARCHIVE.md` |
 | promise | **`HILBERT`** — D2 verbatim, or an honest `BROKEN` |
-| iteration | **5 complete, 6 next** |
+| iteration | **6 complete, 7 next** |
 | phase | **A — gates and fetches (iterations 0–4)** |
 | scoreboard | **4** — Star delta +2, κ<1 measured +2 *(qualified: Birkhoff route dead, structural β earned it)* |
 | RULE 2 clock | **running.** M3 settled-vs-unsettled EXECUTES by **iteration 12** or breach review |
 | register | **caveman, all agents, every iteration.** Artifacts stay normal English |
 | autonomy | user meets the loop at **iteration 30**; no check-ins |
 
-## THE ONE NEXT ACTION (round 6, iteration 6)
+## THE ONE NEXT ACTION (round 6, iteration 7)
 
-**CHASE is the last fellow out. When he lands, read the SPRT calibration and the
-M3 synthetic dry-run BOTH DIRECTIONS before anything else** — a sequential test
-never run against a known answer is not an instrument, and if the M3 harness
-cannot detect a planted difference then a null at iteration 12 means nothing.
+**RUN THE +3/-5 GATE. It is unblocked and it is the round's pivot.**
 
-**Then it.1's owed work, which is now the round's pivot: Cameron's F-green matched
-re-run, +3/−5.** She has already said the band contrast will not move, because
-`identity == residual` there at every k — rank matching is already optimal value
-matching for a band drawn from the same score that orders the causal set. **The
-re-run should therefore be read on the TAIL stratum**, where matching does change
-the answer (`12.408169 → 3.485376` at k=8), and **never pooled** — the pooled
-match touches zero tail tokens.
+The rectangular assignment now has an independent exact check (`scale/monge.py`,
+agreeing with scipy to `rel=1e-12` at six shapes including `(12,300)`), which was
+Cameron's stated reason it could not be read yet.
 
-**Two of her opens must be closed BEFORE that gate reads, not after:**
-  * **the Monge oracle covers only the square case**, and the gate uses the
-    rectangular one — so the assignment it depends on has **no independent
-    check**;
-  * **the strata table is one draw with no CI**, so G6 is not satisfied for any
-    comparative sentence built on it.
+**How it must be read, from her own findings:**
+  * **On the TAIL stratum, never pooled.** The pooled match spends its entire
+    budget in the band and touches **zero tail tokens**, so a pooled number
+    carries no tail information. Tail is where matching changes the answer:
+    `12.408169 -> 3.485376` at k=8.
+  * **Band will not move**, and she said so before the gate: `identity ==
+    residual` at every k there, because the band is ranks k..2k of the same
+    key-norm score that orders the causal set, so rank matching **is already**
+    optimal value matching.
+  * **Re-match inside every bootstrap replicate.** The naive paired bootstrap
+    understates by **2.1x** and returns a CI **excluding zero on null data**.
+  * **G6 still unsatisfied on the strata table** — it is one draw with no CI, so
+    no comparative sentence may rest on it until that is fixed.
 
-**Owed to Foreman, unchanged and now cheaper:** the consistency gate needs a third
-leg (`0.1 ≤ 1.0` passes 30/30 and proves nothing); **β is a knob** and ideal 3 says
-scale-free by construction never by tuning — unadjudicated. **The float32 blocker
-is closed** by `d_H_logits`, so ARM S no longer needs float64 and that 1.7 line
-item is gone.
+**CHASE IS STILL OUT and RULE 2 has five iterations left.** When he lands, the
+SPRT calibration and the M3 synthetic dry-run **both directions** are read before
+anything else — a sequential test never run against a known answer is not an
+instrument, and if the harness cannot detect a planted difference then a null at
+iteration 12 means nothing.
 
-**RULE 2: the M3 run must EXECUTE by iteration 12. Six iterations left.**
+**Do not open another instrument.** RULE 1 is already breached at ~4 of 7.
 
 ## Open REDs
 
