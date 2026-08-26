@@ -153,16 +153,17 @@ The equilibrium tasks take their labels from an absorbing-chain solve — `N = (
 `B = N R`, the fixed point of `z ← Q z + R`. That is not a closed-form function of any
 bounded neighbourhood, so an arm that iterates has something to compute.
 
-The label provably requires iteration, with a closed form rather than a demonstration. A
-`k`-hop truncated reading incurs
+The label provably requires iteration, with a closed form rather than a demonstration. An
+`h`-hop truncated reading — `h` is the hop budget here, not the pivot count `k` of the
+sections above — incurs
 
 $$
-\mathrm{NRMSE}(k, t^\*) \;=\; \sqrt{\frac{t^\* - k}{t^\*}}
+\mathrm{NRMSE}(h, t^\*) \;=\; \sqrt{\frac{t^\* - h}{t^\*}}
 $$
 
 Measured, against a predict-the-mean bar of `1.0`:
 
-| `t*` | `k=0` | `k=1` | `k=2` | `k=4` | `k=8` | `k=16` | `k=32` |
+| `t*` | `h=0` | `h=1` | `h=2` | `h=4` | `h=8` | `h=16` | `h=32` |
 |---|---|---|---|---|---|---|---|
 | 1 | 1.000248 | 0.000000 | | | | | |
 | 2 | 1.000023 | 0.701860 | 0.000000 | | | | |
@@ -170,11 +171,24 @@ Measured, against a predict-the-mean bar of `1.0`:
 | 32 | 1.000004 | 0.983744 | 0.969120 | 0.934971 | 0.867263 | 0.704263 | 0.000000 |
 | 63 | 1.000030 | 0.990328 | 0.986177 | 0.972203 | 0.938035 | 0.866643 | 0.705080 |
 
-`k = 0` is **exactly** the bar in every row, which is the property that had to be earned:
+`h = 0` is **exactly** the bar — the closed form is exactly `1.0` there, and the
+drawn-data test asserts `>= 1.0` with the closed-form match held under `0.03`. That
+property had to be earned:
 the first encoding gave the query token a driver, so `1/(t*+1)` of the label was legible at
 zero hops and a 0-step RED gate aborted three of five rungs. Setting `b[s-1] = 0` in
 `make_equilibrium_batch` makes zero hops exactly predict-the-mean.
-(`scale/negation_scope.py`.)
+
+The construction is deliberately nilpotent rather than contractive: the sub-diagonal is
+zeroed at and before `head = s − 1 − t*`, so `A` is nilpotent of index `t* + 1` on the read
+coordinate and the resolvent *terminates* instead of converging. A contraction would make
+`t*` a tolerance, and it has to be a hop count. Coefficients are Rademacher and drivers
+Gaussian, so the label is exactly `N(0, t*+1)` — which is what puts the truncation error in
+closed form with no constant fitted. Generator `make_equilibrium_batch` and oracle
+`equilibrium_oracle` in `scale/negation_scope.py`; the closed form is executable as
+`ceiling(t_star, hops)` in `scale/e_ladder.py`; the check that the whole family exists for
+is `tests/cameron/test_m3_etasks.py::test_a_fixed_k_hop_truncation_cannot_get_the_chain_label`,
+parametrised over `t* ∈ {2, 8, 32}`, which asserts the closed-form match, the bar at
+`h = 0`, monotone decrease in `h`, and NRMSE exactly `0.0` at `h = t*`.
 
 ### 5) The oracle is not the arm's own resolvent
 
@@ -235,7 +249,10 @@ aborts the run if it fails.
 Lean 4.7.0 with mathlib. `lake build CEQ` exits 0, there is **zero `sorry`**, and
 `#print axioms` lists only `[propext, Quot.sound, Classical.choice]` — no `sorryAx`.
 **39 theorems across six modules**: `Contraction` 5, `Nilpotent` 4, `Occupancy` 3,
-`OracleSeparation` 12, `OrbitBound` 5, `Refcount` 11.
+`OracleSeparation` 12, `OrbitBound` 5, `Refcount` 10. Every declaration is a `theorem`;
+there are no `lemma`s, so the count is not theorems-plus-lemmas rounded up. A naive
+grep for an indented `theorem` reads 40, because `Refcount.lean:39` is the word inside a
+doc comment.
 
 | theorem | statement |
 |---|---|
@@ -258,9 +275,12 @@ arm's own `.tril(-1)` operator is correctly *rejected* by the support check.
 
 ### The deciding measurement
 
-Task `negation_scope`, geometry `s64_d24_st150_ntr8192_nev512_b21` (`s = 64`, `d = 24`,
-150 steps, `n_train = 8192`, `n_eval = 512`), `k = 8` pivots, five seeds, and
-`n_params = 4769` on **every** arm. Metric is eval NRMSE, so lower is better and `1.0` is
+Task `negation_scope`, geometry `s64_d24_st150_ntr8192_nev512_b21`: sequence length `s = 64`,
+**flipper distance** `d = 24` (*not* `d_model`, which is 16), 150 steps,
+`n_train = 8192`, `n_eval = 512`, settle cap `t_max = 21`, `k = 8` pivots, five seeds,
+and `n_params = 4769` on **every** arm — 256 + 256 for `wq`/`wk`, 2048 + 128 + 2048 + 16
+for the MLP at `hidden = 128`, 16 + 1 for the readout. Asserted against the module rather
+than against a file by `tests/chase/test_m3_capability_harness.py:220`. Metric is eval NRMSE, so lower is better and `1.0` is
 predict-the-mean. Journal `results/m3_quintuple_v2.jsonl` at commit `9629616`;
 pre-registered outcome table in `M3_QUINTUPLE_PREREGISTERED_READING.md`, written before the
 file produced a number.
@@ -383,7 +403,9 @@ provenance and the exact fetch commands.
 
 ## Requirements
 
-Python 3.11.9. Pins are the versions actually installed and exercised, read off the
+Developed and measured on Python 3.11.9. No `python_requires`, `setup.py` or
+`pyproject.toml` is declared, so no supported range is claimed or tested. Pins are the
+versions actually installed and exercised, read off the
 installed packages rather than taken from PyPI's latest — see `requirements.txt` for the
 reasoning behind each.
 
@@ -397,7 +419,8 @@ reasoning behind each.
 | `pytest` | `9.0.3` | |
 | `triton-windows` | `3.7.1.post27`, `sys_platform == "win32"` | imported at module scope by `ceq/mz_kernel.py`, exercised only behind CUDA compute capability ≥ 8.0. On Linux/macOS the package is `triton`; no version is pinned there because none could be verified on this machine |
 
-Lean 4.7.0 with mathlib, pinned by `lean/lean-toolchain` and `lean/lake-manifest.json`.
+Lean 4.7.0, pinned by `lean/lean-toolchain`; mathlib4 at git tag `v4.7.0`, pinned by
+`lean/lake-manifest.json` to rev `a45ae63747140c1b2cbad9d46f518015c047047a`.
 CUDA is optional throughout: every test parametrises over `cpu` and `cuda` and skips the
 `cuda` leg when `torch.cuda.is_available()` is false. GPU figures elsewhere in the
 repository were taken on an RTX 4060 Laptop (`sm_89`, 8.0 GiB, 24 SMs) and a utilization
@@ -421,6 +444,22 @@ against mode times `20.5615` and `169.3116`, so `λ₂^{t*}` is the wrong predic
 rungs* even though `λ₂` is the right asymptotic rate. Reading the curve with `λ₂^{t*}`
 makes it look wrong for arithmetic reasons rather than architectural ones. The closed form
 `q_t − q = (u ⊙ Qᵗ s − s ⊙ Qᵗ u)/(s ⊙ s_t)` is the right predictor and costs one solve.
+
+**The ladder is one rung of four.** `results/m3_quintuple_v2.jsonl` holds 35 rows: the 25
+`negation_scope` units reported above, plus 10 `e3_t1` units (settled ×5, twin ×5) taken at
+a *different* geometry, `n_train = 2048, n_eval = 2048`. `t* ∈ {2, 8, 32}` have zero rows.
+`scale/e_ladder.py` reads the same journal and refuses a verdict on a partial ladder, so no
+row of the pre-registered outcome table has fired.
+
+**The built table on disk is behind this document.** `results/capability_table_v0.{md,json}`
+records `journal_commit` and `head_commit` both at `9629616` and prints the Monte-Carlo
+interval family; regenerate it with `python -m scale.capability_table` before citing it as
+current. Three clauses of its own `Limits` string have also gone stale — it says
+`scale/m3_quintuple.py` has no `--task` flag (it has one, at line 542), it cites a
+`CHECKLIST.md` line for the defective `+0.146551` endpoint that now reads `+0.147110`, and
+it gives "the quintuple journals metrics only" as the reason the consequence-fidelity
+column is empty, though per-cell weights now exist under `results/m3_quintuple_v2_weights/`.
+The column is still empty; the reason given for it is not the current one.
 
 **Five seeds cannot decide anything anytime-validly.** `eprocess.MIN_T_MIXTURE = 13` and
 `max_attainable(5) = 3.80169140625` against `THRESHOLD = 40.0`. Every interval in this

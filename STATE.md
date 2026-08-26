@@ -182,3 +182,22 @@ both sides, so the target is reachable **by construction rather than by search**
    to what was affordable. The 600-step half is unrun and `150` is measured to
    undertrain. **A near-tie at one seed is UNDECIDED** — there is an interval on each arm
    and none on the difference.
+
+31. **MOVE 1 IS DEAD, PRE-REGISTERED AND CHEAP.** Lifting the pivot exclusion made the
+   arm **worse**: `twin_plus 0.938728` against a threshold of `0.871391`, gap closed
+   **`−0.1509`**, `0.015610` worse than `twin`. **So the exclusion really does hide the
+   answer token AND removing it does not help — whatever costs the pivot cells
+   `0.103453` at `t*=1` is not pivot access.**
+32. **THE FIX RELAYED FROM THIS SEAT WAS INERT AND WAS CAUGHT BEFORE SHIPPING.**
+   `exclude=(0,)` only sets `-inf` in a top-k over key-norm, so `s-1` became eligible and
+   was selected in **0 of 32** examples; the permitted set was `torch.equal` to the
+   shipped one. **It would have been a vacuous control shipped as the repair for a
+   vacuous-control problem.** The working form reserves the slot unconditionally, and a
+   test is kept so the inert version cannot be re-proposed.
+33. **THE `e3` LADDER MAY HAVE NO USABLE RUNG.** `t* = 1` is where softmax is provably
+   Bayes-optimal (`arXiv:2410.01537`); `t* ≥ 8` needs depth ≈5 against depth-1 arms
+   (`arXiv:2402.09268` Thm 4.2). **Creditable and informative may not overlap on this
+   family.** The reading's home is the absorbing-chain corpus.
+34. **The pilot spread was `2.18×` optimistic** — realised `sd 0.109199` against a piloted
+   `0.050146`, so the true five-seed half-width is `≈0.0957`, not `0.043955`. **Every
+   sizing decision made on the pilot figure is correspondingly under-powered.**

@@ -4,6 +4,148 @@ Round 6 closed with the certificate program CLOSED - three attempts, three death
 Round 5's `TWOSPHERES: BROKEN` and its handover `done5.md` stand. Round 6's
 work-done is `done6.md`. Progress **22**.
 
+### ROUND 8, ITERATION 11 - 2026-08-26 - MOVE 1 RAN AND DIED, PRE-REGISTERED. The exclusion hides the answer token, and removing it does not help.
+
+CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.
+
+## THE CONFOUND REPRODUCED INDEPENDENTLY
+
+`ceq/bench.py:154` is `tril(-1)`, strictly causal, so the largest legal pivot is `s-2`
+and that row reads only `j <= s-3`. Perturbing `x[:, s-2, :]` by `+100` on `e3_t1`,
+seed 0:
+
+    softmax row s-1 (a@x) moves   100.216400   <- DIRECT VALUE
+    pivot av moves                  2.060300   <- weight channel only
+    pivot log_gate moves           11.198860   <- weight channel only
+
+**Confirmed from a second direction.** And Chase's `f` had been pointing at it from the
+other side all along: `ceiling(1, 2 hops) = 0.000000` **measured**, so the hop budget
+explained none of the shortfall.
+
+## AND THE FIX RELAYED FROM HERE WAS INERT. HE CAUGHT IT BEFORE IT SHIPPED.
+
+**`exclude=(0,)` does not work**, and the reason is mechanical: `select_pivots` is a
+plain top-k over key-norm, and `exclude` only sets `-inf`. **So `s-1` becomes ELIGIBLE
+and is never SELECTED:**
+
+    rank of s-1 by key-norm:   min 10   median 19   max 27
+    in the top-8 for 0 of 32 examples
+
+**The permitted pivot set is `torch.equal` to the shipped one.**
+
+> *"Shipping that as the fix would have been the fifteenth vacuous control - a change
+> that moves no number, reported as a fix."*
+
+**That prescription was relayed from this seat without checking that it would change the
+selected set, and a fellow caught it.** The class is the one this project has struck
+more than any other, and it very nearly shipped **as the repair for a different instance
+of the same class.**
+
+**The real fix, shipped:** `batched_pivots(..., reserve_query=True)` - `k-1` positions
+content-selected from `exclude=(0, s-1)`, with `s-1` **appended unconditionally**, `k`
+unchanged. **Mechanism bind fires:** `av` at the reserved slot equals
+`_softmax_operator(q,k) @ x` at row `s-1` to `atol 1e-9`, so **softmax genuinely is an
+interior point of `twin_plus`'s function class.** **Control fires:** the same assertion
+**fails** on the shipped pivot set. And `test_permitting_the_query_row_is_not_enough` is
+kept **so the inert version cannot be re-proposed.**
+
+## THE FALSIFIER, AND THE MOVE DIES
+
+    softmax      0.819665
+    twin         0.923118
+    twin_plus    0.938728      <- measured
+    threshold    0.871391      <- pre-registered BEFORE the run
+    fraction of the gap closed:  -0.1509
+
+**`0.938728 > 0.871391`. Outcome row 1: the move dies.** It closed **none** of the gap -
+`twin_plus` is **`0.015610` worse** than `twin`.
+
+**SO BOTH THINGS ARE NOW MEASURED: the exclusion hides the answer token, AND removing it
+does not help.** Whatever costs the pivot cells `0.103453` at `t* = 1` **is not pivot
+access.**
+
+That is a clean, cheap, pre-registered kill of the leading structural hypothesis, and it
+cost about twenty-five minutes.
+
+## RULE 5 - ALL THREE SHAPES, AND THE RETIREMENT IS THE IMPORTANT ONE
+
+**REROUTE.** `t* = 1` is the wrong discriminating rung, and now for a **measured** reason
+rather than only a cited one: softmax is Bayes-optimal on single-location regression
+(`arXiv:2410.01537`), `e3_t1` is exactly that shape, **and the one structural
+explanation for the gap has now been excluded.** Read the contrast at `t* >= 2`, where no
+optimality theorem applies.
+
+**REPRICE.** The 5-seed `t1`/`t2` confirmation, about **2.5 hours, is NOT spent** - it
+was made conditional on survival before the run. **Saved by the pre-registration.**
+
+**RETIRE, with the replacement named.** `arXiv:2402.09268` Thm 4.2 gives
+`L = floor(log2 k) + 2`, so with depth-1 arms `t* = 8` needs about 5 and is out of every
+cell's reach. **Therefore `t* = 1` is where softmax is provably optimal and `t* >= 8` is
+unreachable - and the `e3` ladder may have NO rung that is both creditable and
+informative.** **The reading's home is the absorbing-chain corpus, not `e3`.**
+
+## RUNG 1 COMPLETED MEANWHILE, AND THE PILOT SPREAD WAS OPTIMISTIC
+
+     task  t*      delta      ci_lo      ci_hi  sd_paired   settled      twin
+    e3_t1   1  -0.036025  -0.118936  +0.062209   0.109199  0.994399  0.958373
+
+**NO DIFFERENCE.** And the sizing was wrong in the safe direction to know about:
+**realised `sd 0.109199` is `2.18x` the pilot's `0.050146`**, so the true five-seed
+half-width is about **`0.0957`, not the `0.043955` that was priced.**
+
+`|delta| = 0.036025` exceeds the thirteen-seed resolution - a row-D shape - **but the
+ladder is partial, so no row is claimed, and the rung is confounded per §8 regardless.**
+
+**No headline shipped.** `print_scope` still prints the scope caveat,
+`SHAPE NOT READABLE` still prints below three rungs, and the ladder runs as registered.
+`test_pivot_exclusion_lift.py` **6/6** after RED at 4/2; regression **25/25**; shipped
+`CELLS` untouched, with `PLUS_CELLS` separate and the `--cells` default asserted
+unchanged.
+
+CHECKLIST: **MOVE 1 RAN AND DIED on a pre-registered threshold** - `twin_plus 0.938728`
+against `0.871391`, gap closed **`-0.1509`**, so lifting the exclusion made it **worse**.
+**The confound is real AND is not the cause.** **The fix relayed from this seat was
+INERT** (`s-1` eligible but selected in **0 of 32** examples, permitted set
+`torch.equal` to the shipped one) **and was caught before shipping** - it would have been
+a vacuous control shipped as the repair for a vacuous-control problem. **The `e3` ladder
+may have no rung that is both creditable and informative**, so the reading's home is the
+absorbing-chain corpus. **Pilot spread was `2.18x` optimistic.**
+
+**SCOREBOARD: 25.**
+
+
+**FOREMAN CLOSED IN THE SAME ITERATION, AND REFUSED TO PREDICT AN UNFINISHED CELL.**
+
+    e3_t2  softmax  steps=150   eval_nrmse 0.9704371404137836
+                                CI [0.9536301088926267, 0.9877856292539604]
+                                0-step eval 1.0033507309692542        [267.8s]
+
+**The looped3 cell had not finished when he closed and he did not guess at it.**
+`falsifier()` returns `complete: False`, `depth_via_loop_dies: False` - **the instrument
+refusing to decide on a partial table, which is it working.** The 600-step half is
+**unrun**, and `150` is already measured to undertrain a width-2 control that passes at
+`600` (`2.446646` against `0.922725`).
+
+Closing gates, all green: `run_calib --self-test` exit 0 (4/4 bit-identical); `demo()`
+OK; `loops=1` bitwise equal to shipped softmax at `0.000e+00`; `loops=3` differing at
+`0.023987`; `n_params 4769 == 4769`; `rho(A) = 0.000e+00`, `max|A^s| = 0.000e+00`,
+nilpotent.
+
+**AND HE NAMED THE FOUR RESULTS THAT OUTLIVE THE CELLS:** the delta does not survive as
+stated (13 explicit `NOT FOUND` in `PRIOR_ART.md` §4, with the narrow survivor contested
+by `arXiv:2607.21607`); **`lambda2 = 0.9250000000` measured by an exact construction**
+after the contract's own conductance dial was refuted; **`oracle != resolvent` proved**
+with `truncation_never_exact` beside it, `lake build CEQ` exit 0, **39 theorems, zero
+`sorry`**; and **`f -> 1` derived and confirmed to `1.082467e-15`**, with his own
+`lambda3/lambda2` mechanism **refuted by his own six-placement test**.
+
+**THE ONE OPEN ITEM THAT BITES NEXT, in his words:** every ladder rung is
+**pre-asymptotic** - `t* in {1,2,8,32}` all sit below the mode times `20.5615` and
+`169.3116` - so **whoever reads the dose-response curve must predict it with the closed
+form and NOT with `lambda2^t*`.** The closed form costs one solve and no training; using
+`lambda2^t*` makes the curve look wrong at `t*=8` and `t*=32` **for reasons that are
+arithmetic, not architectural.**
+
 ### ROUND 8, ITERATION 10 - 2026-08-26 - The round winds down. A cost estimate is corrected before it is paid, and a pre-registration is declared incomplete rather than redefined.
 
 CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.

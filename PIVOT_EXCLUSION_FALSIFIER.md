@@ -120,3 +120,38 @@ over-read:
   `hop_k` needs `L = floor(log2 k) + 2`. These arms are depth 1; `t* = 8` needs
   about 5. An arm that trains onto its 2-hop ceiling and evaluates far above it
   is memorising noise, not failing to settle.
+
+---
+
+# RESULT — the move dies
+
+`e3_t1`, `n_train = 2048`, `n_eval = 2048`, seed 0, run `2026-08-26 15:19:05`,
+`results/etask_k5e_plus.txt`:
+
+```
+       e3_t1    1 twin_plus   4769  1.001431  0.938728    BEATS BAR   371.9
+```
+
+| quantity | value |
+|---|---|
+| `softmax` (reference, on disk) | `0.819665` |
+| `twin` (reference, on disk) | `0.923118` |
+| **`twin_plus`** | **`0.938728`** |
+| gap `twin - softmax` | `0.103453` |
+| pre-registered threshold | `<= 0.871391` |
+| **fraction of the gap closed** | **`-0.1509`** |
+
+`0.938728 > 0.871391`. **Outcome row 1 of §4 fires: THE MOVE DIES.** The lift did
+not close half the gap; it did not close any of it. `twin_plus` is `0.015610`
+*worse* than `twin` — it moved 15 % further from softmax.
+
+**The confound is real and it is not the binding constraint.** Both statements
+are now measured. The exclusion demonstrably hides the answer token
+(`100.216400` against `2.060300`), and removing it demonstrably does not help.
+Whatever costs the pivot cells `0.103453` at `t* = 1` is not pivot access.
+
+Per §6, no re-reading of the e3 ladder is licensed by this file, and the e3
+numbers stand as they were taken.
+
+**`settled_plus` was still running when this was written.** The §4 table makes
+the verdict independent of it: outcome row 1 is keyed on `twin_plus` alone.
