@@ -603,6 +603,294 @@ def consequence_flipper_dependence(s: int) -> float:
     return 2.0
 
 
+# ==========================================================================
+# FOURTH E-FAMILY: E4' -- RIPS CONNECTIVITY ON THE LARGEST-JOIN SUBSTRATE
+# (LOOP_PROMPT.md 1.7d as rerouted by CHECKLIST.md RULE 5; STATE.md item 2)
+#
+# E4 AS SPECIFIED IS STRUCK AND THIS IS THE MEASURED REPLACEMENT. The struck
+# task joins the two NEAREST components with the single bridge edge, which on
+# S^2 is always a speck against the giant, so component membership collapses
+# into "is my own ball small" and a static local-degree decoder reads the
+# label at criticality. The reroute joins the two LARGEST instead. Measured,
+# on record, and the numbers below are cited rather than re-derived:
+#
+#     results/e4_gate.txt:47-54  LargestJoin_S2Rips_1024 [REROUTE]
+#         merge 30 x 32; gate (a) closes at k=32 (0.0000); gate (b)
+#         degree-only 1.0001, +3hop 0.9951, +5hop 0.8220;
+#         PLANTED degree-sum 0.0000, PLANTED degree-median 0.5530.
+#     results/e4_gate.txt:38-45  LargestJoin_S2Rips_64 [REROUTE] still leaks
+#         at radius 5 (0.0055): NOT admissible. THE REROUTE REQUIRES n=1024,
+#         so the builder refuses to draw anything smaller.
+#     STATE.md item 2: leak closes 0.1565 -> 0.9951 at n=1024.
+#
+# THE ENCODING. One M3 example is a [s, d_model] float tensor, so token =
+# node and the substrate rides in the tokens: three channels carry each
+# node's unit-sphere coordinates (the graph definition itself, from which the
+# oracle rebuilds the Rips graph -- nothing about the label is stored), one
+# channel carries the PER-EXAMPLE do()-bit at the two bridge endpoints
+# (+1 = edge present), and two channels mark the queried node pair, drawn
+# left x right across the bridge exactly as `draw_do_paired` draws them. The
+# label varies because the TENSOR varies: it is carried entirely by the one
+# edge the do()-bit adds or removes, which is the definition of the paired
+# draw this substrate was admitted on.
+#
+# CHANNEL OWNERSHIP. Like every family, this one overwrites the channels it
+# owns and leaves the shipped noise/dtype/payload machinery alone. Its four
+# channels sit above E2's game block, which nothing else touches.
+# ==========================================================================
+from ceq.rips import (_add_critical_bridge,                     # noqa: E402
+                      components as _rips_components,
+                      rips_edges as _rips_edges,
+                      REROUTED_CASES, sample_sphere as _sample_sphere)
+from scale.rips_gate import adjacency as _rg_adjacency          # noqa: E402
+from scale.rips_gate import ball as _rg_ball                    # noqa: E402
+from scale.rips_gate import local_features as _rg_local_features  # noqa: E402
+
+#: THE SHIPPED ADMISSIBLE SPEC, verbatim from ceq.rips.REROUTED_CASES so no
+#: seed or degree expression is copied by hand. LargestJoin_S2Rips_1024.
+E4P_SPEC = next(spec for spec in REROUTED_CASES if spec[1] == 1024)
+E4P_NODES = E4P_SPEC[1]
+E4P_TARGET_DEGREE = E4P_SPEC[2]
+E4P_SEED = E4P_SPEC[3]
+
+#: Admissibility floor, measured: at n=64 the same reroute leaks 0.0055 to a
+#: radius-5 static decoder (results/e4_gate.txt:44). Below this many nodes the
+#: builder raises rather than register an inadmissible task under an
+#: admissible name.
+E4P_MIN_NODES = 1024
+
+CH_COORD = CH_GAME_BIAS + 1     # ..+2: unit-sphere xyz of each node (shared)
+CH_BRIDGE = CH_COORD + 3        # per-example do()-bit at both bridge endpoints
+CH_QA = CH_BRIDGE + 1           # one-hot mark of the queried node in `left`
+CH_QB = CH_BRIDGE + 2           # one-hot mark of the queried node in `right`
+
+
+@functools.lru_cache(maxsize=4)
+def _e4prime_points(nodes: int, seed: int):
+    """The reference point set, cached: the sampler is deterministic in its
+    seed and rebuilding it is pure waste."""
+    return tuple(tuple(pt) for pt in _sample_sphere(nodes, seed))
+
+
+@functools.lru_cache(maxsize=4)
+def _e4prime_graph(points, target_degree: float):
+    """(pre_edges, bridge_edge) for a point set. Cached because the oracle,
+    the hop reading and the feature reader all walk the SAME graph and the
+    O(s^2) edge rule must not be paid per call."""
+    pre_edges = _rips_edges(list(points), target_degree)
+    edge = _add_critical_bridge(list(points), pre_edges, len(points),
+                                join="largest")
+    if edge is None:
+        raise ValueError("the drawn substrate has fewer than two components; "
+                         "no largest-join bridge exists")
+    return tuple(pre_edges), edge
+
+
+def _e4prime_adjacency(points, target_degree: float, bridged: bool):
+    pre_edges, edge = _e4prime_graph(points, target_degree)
+    edges = pre_edges + (edge,) if bridged else pre_edges
+    return _rg_adjacency(len(points), edges)
+
+
+def _e4prime_marks(x):
+    """Per example: (query_i, query_j, bridged?) read back out of the tensor.
+    The markers are the instance; nothing about them is stored elsewhere."""
+    n = x.shape[0]
+    out = []
+    for bidx in range(n):
+        qa = (x[bidx, :, CH_QA] != 0).nonzero().flatten()
+        qb = (x[bidx, :, CH_QB] != 0).nonzero().flatten()
+        br = (x[bidx, :, CH_BRIDGE] != 0).nonzero().flatten()
+        if qa.numel() != 1 or qb.numel() != 1 or br.numel() != 2:
+            raise ValueError(f"example {bidx}: malformed query/bridge marks")
+        bit = float(x[bidx, br[0], CH_BRIDGE])
+        if float(x[bidx, br[1], CH_BRIDGE]) != bit:
+            raise ValueError(f"example {bidx}: bridge endpoints disagree")
+        out.append((int(qa[0]), int(qb[0]), bit > 0))
+    return out
+
+
+def make_e4prime_batch(n: int, s: int, d: int, *, d_model: int = 16,
+                       seed: int = E4P_SEED, device=None):
+    """(x, y, f, p) for E4'. WELL-POSEDNESS IS ENFORCED HERE, NOT HOPED FOR.
+
+    THE SCALE CLAUSE IS THE ADMISSION. `s` is the node count, and the gates
+    were measured on the n=1024 substrate only: at n=64 the same reroute
+    leaks 0.0055 to a static radius-5 decoder (results/e4_gate.txt:44). The
+    builder raises below `E4P_MIN_NODES`, so the registered task cannot be
+    quietly instantiated at a scale where its admissibility was refuted.
+
+    THE SUBSTRATE IS SHARED, THE INTERVENTION IS PER EXAMPLE. All examples of
+    a batch carry the same drawn graph in their coordinate channels -- the
+    corpus object is the substrate, as for every E-task -- and each example
+    carries its own do()-bit at the two bridge endpoints plus its own queried
+    left-x-right pair, so the batch is exactly the paired instance set the
+    gates were read on (`draw_do_paired`), with the intervention living in
+    the tensor where an arm -- and the executable oracle -- can read it.
+    Bits are balanced EXACTLY half on / half off before shuffling, the same
+    by-construction balance the paired draw has, so no sampling knob decides
+    the label's base rate.
+
+    `f` AND `p` ARE THE BRIDGE ENDPOINTS, the pair whose connection the
+    intervention IS -- the analogue of `make_equilibrium_batch` returning the
+    chain head instead of `make_batch`'s flipper. They are also derivable
+    from the tensor: they are the two nodes whose CH_BRIDGE channel is ever
+    nonzero. The distractor payload stays at `make_batch`'s payload position,
+    an independent draw the label does not depend on, keeping the
+    `payload_only` clause live; `d` remains required and range-checked for
+    signature parity but positions nothing decisive, because no SINGLE
+    position is decisive in this family -- that absence is the property being
+    registered (see `e4prime_flipper_dependence`).
+    """
+    if s < E4P_MIN_NODES:
+        raise ValueError(
+            f"s={s} nodes is below the measured admissibility floor "
+            f"{E4P_MIN_NODES}: LargestJoin_S2Rips_64 leaks 0.0055 at radius 5 "
+            f"(results/e4_gate.txt:44); the reroute requires n=1024")
+    if d_model < CH_QB + 1:
+        raise ValueError(f"d_model={d_model} cannot hold the E4' channels")
+    x, _y, _f, p = make_batch(n, s, d, d_model=d_model, seed=seed,
+                              device=device)
+    points = _e4prime_points(s, seed)
+    pre_edges, edge = _e4prime_graph(points, E4P_TARGET_DEGREE)
+    a, b = edge
+    lab = _rips_components(s, list(pre_edges))
+    left = [v for v in range(s) if lab[v] == lab[a]]
+    right = [v for v in range(s) if lab[v] == lab[b]]
+
+    pts = torch.tensor(points, dtype=torch.float32).to(x.device)
+    x[:, :, CH_COORD:CH_COORD + 3] = pts.to(x.dtype)
+    x[:, :, CH_FLIP] = 0.0
+    for ch in (CH_BRIDGE, CH_QA, CH_QB):
+        x[:, :, ch] = 0.0
+
+    g = torch.Generator(device="cpu").manual_seed(seed + 104729)
+    bits = torch.cat([torch.ones(n // 2), -torch.ones(n - n //2)])
+    bits = bits[torch.randperm(n, generator=g)]
+    x[:, a, CH_BRIDGE] = bits.to(x.device)
+    x[:, b, CH_BRIDGE] = bits.to(x.device)
+    li = torch.randint(0, len(left), (n,), generator=g)
+    ri = torch.randint(0, len(right), (n,), generator=g)
+    qi = torch.tensor(left)[li]
+    qj = torch.tensor(right)[ri]
+    rows = torch.arange(n)
+    x[rows, qi, CH_QA] = 1.0
+    x[rows, qj, CH_QB] = 1.0
+
+    #: the label comes from the EXECUTABLE ORACLE, never from the draw bookkeeping
+    #: above -- one source of truth, same rule as every sibling builder.
+    f = a
+    return x, e4prime_oracle(x, f, b), f, b
+
+
+def e4prime_oracle(x: torch.Tensor, f: int, p: int) -> torch.Tensor:
+    """+1 if the marked pair shares a component under the example's own
+    do()-bit, -1 otherwise. Recomputed ENTIRELY from `x`: the coordinate
+    channels rebuild the Rips graph, the bridge-bit channels decide whether
+    the single bridge edge is present, the marker channels name the queried
+    pair. Nothing is stored and no answer key exists.
+
+    `f` and `p` are accepted for signature parity with every sibling oracle
+    and are ignored: the queried pair is PER EXAMPLE here, which is what lets
+    one shared substrate carry a varying label.
+    """
+    points = tuple(tuple(pt) for pt in
+                   x[0, :, CH_COORD:CH_COORD + 3].tolist())
+    marks = _e4prime_marks(x)
+    pre_adj = None
+    post_adj = None
+    out = torch.empty(x.shape[0], dtype=x.dtype, device=x.device)
+    for bidx, (qi, qj, bridged) in enumerate(marks):
+        if bridged:
+            if post_adj is None:
+                post_adj = _e4prime_adjacency(points, E4P_TARGET_DEGREE, True)
+            adj = post_adj
+        else:
+            if pre_adj is None:
+                pre_adj = _e4prime_adjacency(points, E4P_TARGET_DEGREE, False)
+            adj = pre_adj
+        seen = {qi}
+        frontier = [qi]
+        while frontier and qj not in seen:
+            nxt = []
+            for u in frontier:
+                for v in adj[u]:
+                    if v not in seen:
+                        seen.add(v)
+                        nxt.append(v)
+            frontier = nxt
+        out[bidx] = 1.0 if qj in seen else -1.0
+    return out
+
+
+def e4prime_hop_reading(x: torch.Tensor, f: int, p: int, k: int) -> torch.Tensor:
+    """The `k`-hop reachability reading of the label: +1 iff the marked pair
+    is connected by a path of length at most `k`. This is exactly what a
+    model with a hop budget of `k` can know, and it is the reading gate (a)
+    was measured on (`truncation_ladder`). Bounded away from the label at
+    every sub-diameter budget and EXACT once the budget covers the pair --
+    the property that makes this an equilibrium-family task and not a third
+    static one.
+
+    `f` and `p` are accepted for signature parity and ignored, as in
+    `e4prime_oracle`.
+    """
+    points = tuple(tuple(pt) for pt in
+                   x[0, :, CH_COORD:CH_COORD + 3].tolist())
+    marks = _e4prime_marks(x)
+    pre_adj = None
+    post_adj = None
+    out = torch.empty(x.shape[0], dtype=x.dtype, device=x.device)
+    for bidx, (qi, qj, bridged) in enumerate(marks):
+        if bridged:
+            if post_adj is None:
+                post_adj = _e4prime_adjacency(points, E4P_TARGET_DEGREE, True)
+            adj = post_adj
+        else:
+            if pre_adj is None:
+                pre_adj = _e4prime_adjacency(points, E4P_TARGET_DEGREE, False)
+            adj = pre_adj
+        out[bidx] = 1.0 if qj in _rg_ball(adj, qi, k) else -1.0
+    return out
+
+
+def e4prime_features(x: torch.Tensor, f: int, p: int) -> torch.Tensor:
+    """Gate (b)'s OWN static local feature matrix for this task: degrees and
+    ball sizes out to radius 5 for the marked pair, the strongest strictly-
+    local features available, built by `scale.rips_gate.local_features` so
+    the registered task is measured with the very decoder that measured the
+    substrate. HONEST STATUS, stated rather than buried: on this label these
+    features are EXPECTED TO SIT AT THE BAR -- that absence is gate (b)'s
+    finding and is asserted in `tests/cameron/test_e4prime_registration.py`
+    alongside the planted degree controls that must fire on the same rows.
+    The positive control for this family is the planted-degree probe and the
+    hop-exactness of the truncation ladder, not a two-feature net; handing
+    this control the bridge-bit channel would make clause 5 vacuous by
+    construction, which is the defect class this project strikes on sight.
+    """
+    points = tuple(tuple(pt) for pt in
+                   x[0, :, CH_COORD:CH_COORD + 3].tolist())
+    marks = _e4prime_marks(x)
+    pairs = [((qi, qj), 1 if bridged else 0) for qi, qj, bridged in marks]
+    graphs = [_e4prime_adjacency(points, E4P_TARGET_DEGREE, False),
+              _e4prime_adjacency(points, E4P_TARGET_DEGREE, True)]
+    return torch.from_numpy(_rg_local_features(pairs, graphs, 5)).to(x.dtype)
+
+
+def e4prime_flipper_dependence(s: int) -> float:
+    """Exactly 0.0, by construction, at every admissible `s`.
+
+    CH_FLIP is identically zero in this family: NO single token decides the
+    label, because the label is a component-membership fact about a PAIR
+    under a graph intervention. That exact zero is not the defect
+    `unshocked_equilibrium` was replaced for -- there the zero meant the
+    intervention did not reach the label; here it is CHECKLIST RULE 5's whole
+    point, the measured globality of the rerouted substrate, and it is why
+    the registration supplies the closed form instead of leaving the
+    one-sided clause to reject the correct task."""
+    return 0.0
+
+
 def e_hop_reading(task: str, x: torch.Tensor, f: int, p: int, k: int):
     """The `k`-budget reading of an E-task's label, for the truncation ladder.
 
@@ -666,6 +954,12 @@ M3_TASKS = {
                     equilibrium_oracle, equilibrium_features,
                     functools.partial(chain_flipper_dependence, t_star=t))
        for t in (1, 2, 8, 32)},
+
+    #: E4', the RULE 5 reroute (STATE.md item 2): admissible at n=1024 ONLY,
+    #: which `make_e4prime_batch` enforces. Its flipper dependence is the
+    #: exact 0.0 of a label no single token decides.
+    "e4prime": (make_e4prime_batch, e4prime_oracle, e4prime_features,
+                e4prime_flipper_dependence),
 }
 
 
