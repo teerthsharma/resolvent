@@ -216,6 +216,68 @@ The retirement sentence is therefore *"the fixed point bought nothing; the mixtu
 bought +0.111396"*, and the deliverable is the twin module plus this table, not a
 withdrawal.
 
+## 6b. TWO DERIVED FUNCTIONS, ADDED 15:0x, AFTER THE FIRST RUNG'S NUMBERS
+
+Both are deterministic functions of readings this document already fixed, and
+neither changes the outcome table in §6. They are recorded here with their
+timestamp because they were defined *after* `e3_t1` numbers existed, and a
+quantity defined after the data is a quantity whose definition could have been
+chosen to flatter them. Neither is a verdict; both are diagnostics.
+
+**The method, from the author, in his words:**
+
+> "if a problem cannot be solved put that as a fn x and solve all around it and
+> then put it into expected result and find the value of this function or there
+> behaviour and then from there use maths to solve it whenever u face a problem"
+
+**f — the hop-wall shortfall.**
+
+    f(t*, cell) := achieved(t*, cell) - ceiling(t*, HOP_BUDGET[cell])
+    ceiling(t*, h) = sqrt(max(0, t* - h) / t*)
+
+The label is a sum of `t*` independent equal-variance path terms, so an arm
+seeing `h` of them leaves `(t*-h)/t*` of the variance, and NRMSE is the square
+root of that ratio. **Everything around `f` is exact**: the ceiling is closed
+form at every rung and `achieved` is measured at every rung already being run,
+so `f` costs nothing but arithmetic. Verified against
+`negation_scope.e_hop_reading` on drawn batches of 2048 at the ladder's own eval
+seed — the closed form is high by at most `+0.012088`:
+
+    e3_t2  k=1  formula 0.707107  drawn 0.719195
+    e3_t8  k=2  formula 0.866025  drawn 0.873949
+    e3_t32 k=2  formula 0.968246  drawn 0.969735
+
+**Each cell is scored against its OWN budget** — `softmax` reaches 1 hop, the
+pivot cells 2. One shared ceiling would credit `softmax` with a shortfall it
+cannot structurally close.
+
+Pre-named readings, so the shape is not chosen after seeing it:
+
+| shape of `f` in `t*` | reading |
+|---|---|
+| roughly constant | a fixed overhead in the readout. **The readout binds, not the budget.** |
+| growing with `t*` | the arm degrades as the target recedes. **The budget binds.** |
+| near zero low, jumping at `t* = 8` | a threshold, and its **location** is the finding |
+
+**Fewer than three rungs cannot separate these three**, so the reader refuses to
+name a shape below three and prints `SHAPE NOT READABLE`.
+
+**g — the softmax gap.**
+
+    g(t*) := softmax(t*) - settled(t*)      NEGATIVE means softmax is better
+
+`g` shrinking as `t*` grows ⇒ settling buys something that only shows at depth.
+`g` flat or growing ⇒ it does not. `softmax` cells were added to rungs 2–4 and
+backfilled for rung 1 to get `g` at five seeds; cost arithmetic in §4b.
+
+## 4b. THE SOFTMAX ADDITION, PRICED
+
+`softmax` measured `161.1` s at this geometry (`results/etask_k5e_t1.txt`).
+5 seeds x 4 rungs = 20 units ~ `3222` s ~ 54 min on top of a ~5 h ladder, **+18 %**.
+It displaces nothing: cells run in the order `settled, twin, softmax`, so the
+creditable contrast completes first inside every rung and `softmax` is what gets
+truncated if the budget runs out.
+
 ## 7b. DISCLOSURE — the pilot rows that were visible before this table was closed
 
 `LOOP_PROMPT.md` §1.8 permits the fixed-sample `N` to be set by power analysis

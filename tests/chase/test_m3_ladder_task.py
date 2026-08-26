@@ -25,6 +25,7 @@ check below is paired with a control that must FAIL the same assertion.
 from __future__ import annotations
 
 import json
+import math
 import pathlib
 import sys
 
@@ -230,6 +231,31 @@ def test_saved_weights_carry_the_full_rebuild_recipe():
 from scale import e_ladder as EL                                   # noqa: E402
 
 
+
+def _journal_with(triples):
+    """A temp journal holding exactly the (task, cell, nrmse) rows named.
+
+    Values are STATED here because these tests check the ARITHMETIC of f and g
+    -- given a reading, is the right ceiling subtracted -- not the readings
+    themselves. The readings are drawn, and
+    `test_the_ceiling_formula_matches_the_drawn_truncation_reading` is where
+    drawn data meets the ceiling.
+    """
+    import tempfile
+    d = pathlib.Path(tempfile.mkdtemp())
+    f = d / "j.jsonl"
+    with f.open("w", encoding="utf-8") as fh:
+        for task, cell, val in triples:
+            p_ = dict(cell=cell, k=0 if cell in Q.CELLS[:2] else 8, s=64, d=24,
+                      steps=150, n_train=2048, n_eval=2048, t_max=21, seed=0,
+                      task=task)
+            fh.write(json.dumps(dict(
+                key=Q._key(p_),
+                value=dict(eval_nrmse=val, n_params=4769, nrmse0_train=1.0,
+                           nrmse0_eval=1.0, marg_lo=val, marg_hi=val),
+                meta={}), sort_keys=True) + chr(10))
+    return f
+
 def _rung(task, t_star, delta, half=0.01, credited=True):
     """One ladder row with a CI of the requested width around `delta`."""
     return dict(task=task, t_star=t_star, state="RUN", delta=delta,
@@ -374,3 +400,80 @@ def test_an_e3_row_in_the_bucket_does_not_reach_the_negation_scope_table():
         json.dumps(b["arms"], sort_keys=True)
     assert json.dumps(a["contrasts"], sort_keys=True) == \
         json.dumps(b["contrasts"], sort_keys=True)
+
+
+# ------------------------------------------------- f: the hop-wall function ---
+def test_the_ceiling_formula_matches_the_drawn_truncation_reading():
+    """`ceiling(t*, k) = sqrt((t*-k)/t*)` is the load-bearing object under `f`,
+    so it is checked against the corpus's OWN truncation reader on DRAWN
+    batches rather than trusted as algebra.
+
+    THE CONTROL IS THE SECOND HALF: a formula that ignored `k` would still
+    match at `k = 0`, so `k = 1` and `k = 2` are checked too, and the ceiling is
+    required to MOVE with `k`.
+    """
+    import torch
+    from scale import m3_capability as M3
+    torch.set_num_threads(2)
+    seen = []
+    for task, t in (("e3_t2", 2), ("e3_t8", 8), ("e3_t32", 32)):
+        bfn = NS.M3_TASKS[task][0]
+        x, y, f, p = bfn(512, 64, 24, d_model=M3.D_MODEL, seed=12345)
+        for k in (0, 1, 2):
+            meas = NS.nrmse(NS.e_hop_reading(task, x, f, p, k), y)
+            form = EL.ceiling(t, k)
+            assert abs(meas - form) < 0.03, (
+                f"{task} k={k}: formula {form!r} vs drawn {meas!r}")
+            seen.append((task, k, form))
+    # the control: the ceiling must actually depend on k
+    for task, t in (("e3_t8", 8),):
+        assert EL.ceiling(t, 0) > EL.ceiling(t, 1) > EL.ceiling(t, 2)
+
+
+def test_the_ceiling_clamps_where_the_budget_covers_the_label():
+    """A budget at or past `t*` expresses the label exactly, so the ceiling is
+    0 -- and at `t* = 1` a two-hop arm therefore has NO budget excuse at all."""
+    assert EL.ceiling(1, 2) == 0.0
+    assert EL.ceiling(2, 2) == 0.0
+    assert EL.ceiling(8, 2) == math.sqrt(6 / 8)
+    with pytest.raises(ValueError):
+        EL.ceiling(0, 2)
+
+
+def test_each_cell_is_scored_against_its_own_hop_budget():
+    """softmax reaches 1 hop and the pivot cells 2, so at one rung they have
+    DIFFERENT ceilings. Scoring both against one ceiling would credit softmax
+    with a shortfall it cannot structurally close."""
+    assert EL.HOP_BUDGET["softmax"] == 1
+    assert EL.HOP_BUDGET["settled"] == EL.HOP_BUDGET["twin"] == 2
+    cur = EL.read(_journal_with(
+        [("e3_t8", "settled", 0.90), ("e3_t8", "softmax", 0.95)]), seeds=(0,))
+    got = {r["cell"]: r for r in cur["shortfall"]}
+    assert got["softmax"]["ceiling"] == math.sqrt(7 / 8)
+    assert got["settled"]["ceiling"] == math.sqrt(6 / 8)
+    assert got["softmax"]["ceiling"] != got["settled"]["ceiling"]
+    assert abs(got["settled"]["f"] - (0.90 - math.sqrt(6 / 8))) < 1e-12
+    # g convention: NEGATIVE means softmax has the lower error
+    assert len(cur["gaps"]) == 1
+    assert abs(cur["gaps"][0]["g"] - (0.95 - 0.90)) < 1e-12
+
+
+def test_the_f_shape_is_refused_below_three_rungs(capsys):
+    """Two points cannot separate flat from growing from a threshold, and the
+    reader must say so instead of naming a shape."""
+    cur = EL.read(_journal_with(
+        [("e3_t1", "settled", 0.9), ("e3_t8", "settled", 0.9)]), seeds=(0,))
+    EL.print_f(cur)
+    assert "SHAPE NOT READABLE" in capsys.readouterr().out
+
+    flat = EL.read(_journal_with(
+        [("e3_t1", "settled", 0.10), ("e3_t2", "settled", 0.10),
+         ("e3_t8", "settled", math.sqrt(6 / 8) + 0.10)]), seeds=(0,))
+    EL.print_f(flat)
+    assert "THE READOUT BINDS" in capsys.readouterr().out
+
+    grow = EL.read(_journal_with(
+        [("e3_t1", "settled", 0.05), ("e3_t2", "settled", 0.30),
+         ("e3_t8", "settled", math.sqrt(6 / 8) + 0.60)]), seeds=(0,))
+    EL.print_f(grow)
+    assert "THE BUDGET BINDS" in capsys.readouterr().out

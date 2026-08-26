@@ -34,6 +34,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import pathlib
 import sys
 
@@ -45,6 +46,45 @@ from scale.m3_synthetic_settled import contrast                    # noqa: E402
 from scale import negation_scope as NS                             # noqa: E402
 
 RUNGS = ("e3_t1", "e3_t2", "e3_t8", "e3_t32")
+
+#: How many hops each cell's forward can reach. `softmax` forms `x + A@x`, one
+#: hop. The pivot cells add a hop-2 term, and `settled` settles the pivot
+#: WEIGHTS rather than the token chain, so it too reads a two-hop
+#: neighbourhood -- settling does not buy a third hop and must not be scored as
+#: though it did.
+HOP_BUDGET = {"softmax": 1, "glance": 1, "settled": 2, "twin": 2, "argmax": 2}
+
+#: The cells whose journal key carries `k0` rather than the pivot count.
+K0_CELLS = ("softmax", "glance")
+
+
+def ceiling(t_star: int, hops: int) -> float:
+    """`sqrt((t* - hops) / t*)` -- the best NRMSE a `hops`-budget arm can reach.
+
+    The label is a sum of `t*` independent equal-variance path terms
+    (`make_equilibrium_batch` draws Rademacher coefficients inside the band, so
+    every path weight has modulus 1). An arm that can see `hops` of them leaves
+    `t* - hops` unexplained, and NRMSE is the residual standard deviation over
+    the label's, hence the square root of the variance ratio. Clamped at 0
+    because a budget at or beyond `t*` expresses the label exactly.
+
+    CHECKED, NOT ASSUMED. Against `negation_scope.e_hop_reading` on drawn
+    batches of 2048 at the ladder's own eval seed, the closed form is high by at
+    most `+0.012088` and typically under `+0.008`:
+
+        e3_t2  k=1  formula 0.707107  measured 0.719195
+        e3_t8  k=2  formula 0.866025  measured 0.873949
+        e3_t32 k=2  formula 0.968246  measured 0.969735
+
+    `test_the_ceiling_formula_matches_the_drawn_truncation_reading` re-takes
+    that comparison. NOTE the stale trap: `results/m3_capability.txt:1212`
+    records `e3_t8 k=2 NRMSE=0.815162`, which does NOT agree -- that log
+    predates `b[:, s-1] = 0.0` in `make_equilibrium_batch` and describes a
+    corpus that no longer exists.
+    """
+    if t_star <= 0:
+        raise ValueError(t_star)
+    return math.sqrt(max(0.0, float(t_star - hops)) / float(t_star))
 
 #: E_LADDER_PREREGISTERED_READING.md section 5: `1.96 * 0.050146 / sqrt(13)`,
 #: the half-width the section-1.8 e-process floor of 13 seeds would buy at the
@@ -67,9 +107,27 @@ def _rows(journal: pathlib.Path, cells, seeds, cfg) -> dict:
     for task in RUNGS:
         for cell in cells:
             for sd in seeds:
-                k = _key(dict(cfg, cell=cell, seed=sd, task=task))
+                kk = 0 if cell in K0_CELLS else cfg["k"]
+                k = _key(dict(cfg, cell=cell, seed=sd, task=task, k=kk))
                 if k in done:
                     out.setdefault((task, cell), {})[sd] = done[k]["value"]
+    return out
+
+
+def _means(rows, task, seeds) -> dict:
+    """Seed-mean eval NRMSE per cell at one rung, over the seeds ACTUALLY
+    present. Partial means are reported with their count rather than withheld,
+    because f needs no pairing -- but the count travels with the number so a
+    two-seed mean is never read as a five-seed one."""
+    out = {}
+    for cell in ("settled", "twin", "softmax"):
+        got = rows.get((task, cell))
+        if not got:
+            continue
+        ev = [got[s]["eval_nrmse"] for s in seeds if s in got]
+        if ev:
+            out[cell] = sum(ev) / len(ev)
+            out[cell + "_n"] = len(ev)
     return out
 
 
@@ -78,7 +136,7 @@ def read(journal=None, *, seeds=(0, 1, 2, 3, 4), **cfg) -> dict:
     conf = dict(k=8, s=64, d=24, steps=150, n_train=2048, n_eval=2048,
                 t_max=21, n_neumann=21)
     conf.update(cfg)
-    rows = _rows(journal, ("settled", "twin"), seeds, conf)
+    rows = _rows(journal, ("settled", "twin", "softmax"), seeds, conf)
 
     ladder = []
     for task in RUNGS:
@@ -86,8 +144,12 @@ def read(journal=None, *, seeds=(0, 1, 2, 3, 4), **cfg) -> dict:
         st, tw = rows.get((task, "settled")), rows.get((task, "twin"))
         if not st or not tw or any(s not in st or s not in tw for s in seeds):
             have = 0 if not st else len(st), 0 if not tw else len(tw)
+            # A rung with no COMPLETE pair still has cells worth scoring: f is
+            # per cell and needs no pairing, so a partial rung reports the f it
+            # can and withholds only the contrast.
             ladder.append(dict(task=task, t_star=t_star, state="NOT RUN",
-                               have_settled=have[0], have_twin=have[1]))
+                               have_settled=have[0], have_twin=have[1],
+                               means=_means(rows, task, seeds)))
             continue
         ev_s = [st[s]["eval_nrmse"] for s in seeds]
         ev_t = [tw[s]["eval_nrmse"] for s in seeds]
@@ -97,6 +159,7 @@ def read(journal=None, *, seeds=(0, 1, 2, 3, 4), **cfg) -> dict:
         sd_ = (sum((v - m) ** 2 for v in dd) / (len(dd) - 1)) ** 0.5
         mean_s, mean_t = sum(ev_s) / len(ev_s), sum(ev_t) / len(ev_t)
         ladder.append(dict(
+            means=_means(rows, task, seeds),
             task=task, t_star=t_star, state="RUN", delta=c["delta"],
             ci_lo=c["ci_lo"], ci_hi=c["ci_hi"], sd_paired=sd_,
             verdict=c["verdict"], per_seed_delta=dd,
@@ -107,7 +170,44 @@ def read(journal=None, *, seeds=(0, 1, 2, 3, 4), **cfg) -> dict:
             credited=(mean_s < PREDICT_THE_MEAN and mean_t < PREDICT_THE_MEAN),
             excludes_zero=(c["ci_lo"] > 0.0 or c["ci_hi"] < 0.0),
         ))
-    return dict(ladder=ladder, seeds=list(seeds), config=conf,
+    # f AND g -- THE AUTHOR'S METHOD: name the part that will not solve as a
+    # function, solve everything around it exactly, and let the surroundings
+    # report what the function is doing.
+    #
+    #   f(t*, cell) := achieved(t*, cell) - ceiling(t*, HOP_BUDGET[cell])
+    #   g(t*)       := softmax(t*) - settled(t*)
+    #
+    # `ceiling` is exact and `achieved` is measured, so f is fully determined by
+    # the ladder already running, at ZERO extra cost. Its SHAPE is the
+    # diagnosis: flat in t* => a fixed readout overhead, the readout binds;
+    # growing in t* => the arm degrades as the target recedes, the budget binds;
+    # near zero low and jumping at t*=8 => a threshold, and its location is
+    # itself the finding.
+    #
+    # f IS PER CELL AND EACH CELL IS SCORED AGAINST ITS OWN BUDGET. Scoring
+    # one-hop `softmax` against the two-hop ceiling would credit it with a
+    # shortfall it is not structurally able to close, which is the same error as
+    # crediting `settled` with a third hop.
+    shortfall, gaps = [], []
+    for r in ladder:
+        t = r["t_star"]
+        for cell in ("settled", "twin", "softmax"):
+            m = r.get("means", {}).get(cell)
+            if m is None:
+                continue
+            c = ceiling(t, HOP_BUDGET[cell])
+            shortfall.append(dict(task=r["task"], t_star=t, cell=cell,
+                                  hops=HOP_BUDGET[cell], achieved=m,
+                                  ceiling=c, f=m - c))
+        sm = r.get("means", {}).get("softmax")
+        st = r.get("means", {}).get("settled")
+        tw = r.get("means", {}).get("twin")
+        if sm is not None and st is not None:
+            gaps.append(dict(task=r["task"], t_star=t, softmax=sm, settled=st,
+                             g=sm - st,
+                             g_twin=None if tw is None else sm - tw))
+    return dict(shortfall=shortfall, gaps=gaps,
+                ladder=ladder, seeds=list(seeds), config=conf,
                 resolution_13=RESOLUTION_13,
                 complete=all(r["state"] == "RUN" for r in ladder),
                 all_credited=all(r.get("credited") for r in ladder
@@ -193,6 +293,100 @@ def verdict(cur: dict) -> tuple[str, str]:
             .format(RESOLUTION_13))
 
 
+def cur_n(cur: dict, task: str, cell: str) -> int:
+    """Seeds behind one cell's mean at one rung."""
+    for r in cur["ladder"]:
+        if r["task"] == task:
+            return r.get("means", {}).get(cell + "_n", 0)
+    return 0
+
+
+def print_f(cur: dict) -> None:
+    """f(t*) := achieved - ceiling(t*, hops), per cell, against its OWN budget.
+
+    THE AUTHOR'S METHOD, applied to the hop wall. The part that would not solve
+    -- "why do the arms underperform" -- is named as a function; everything
+    around it is exact (the ceiling is closed form at every rung, the achieved
+    value is measured at every rung already being run); so f is fully determined
+    at ZERO extra cost and its SHAPE is the diagnosis.
+    """
+    print()
+    print("=== f(t*) := achieved - ceiling(t*, hops),  "
+          "ceiling = sqrt((t*-hops)/t*) ===")
+    print("    Each cell scored against ITS OWN budget: softmax 1 hop, pivot "
+          "cells 2. n = seeds in the mean.")
+    if not cur["shortfall"]:
+        print("    (no cell has a reading yet)")
+        return
+    print(f"{'task':>8} {'t*':>4} {'cell':>9} {'hops':>5} {'n':>3} "
+          f"{'achieved':>10} {'ceiling':>10} {'f':>11}")
+    for r in cur["shortfall"]:
+        print(f"{r['task']:>8} {r['t_star']:>4} {r['cell']:>9} "
+              f"{r['hops']:>5} {cur_n(cur, r['task'], r['cell']):>3} "
+              f"{r['achieved']:>10.6f} {r['ceiling']:>10.6f} "
+              f"{r['f']:>+11.6f}")
+    by = {}
+    for r in cur["shortfall"]:
+        by.setdefault(r["cell"], []).append((r["t_star"], r["f"]))
+    for cell, pts in sorted(by.items()):
+        pts.sort()
+        vals = [v for _, v in pts]
+        if len(pts) < 3:
+            print(f"    {cell:>9}: {len(pts)} rung(s) -- SHAPE NOT READABLE. "
+                  f"Three rungs are needed to separate flat from growing from "
+                  f"a threshold. f = "
+                  + ", ".join(f"t*={t}:{v:+.6f}" for t, v in pts))
+            continue
+        spread = max(vals) - min(vals)
+        rising = all(b >= a for a, b in zip(vals, vals[1:]))
+        shape = ("FLAT in t* -- a fixed overhead; THE READOUT BINDS, not the "
+                 "budget" if spread < 0.05 else
+                 "GROWING in t* -- the arm degrades as the target recedes; "
+                 "THE BUDGET BINDS" if rising else
+                 "NON-MONOTONE -- neither a fixed overhead nor a clean "
+                 "degradation; report the shape, name no cause")
+        print(f"    {cell:>9}: spread {spread:.6f} over "
+              f"t*={[t for t, _ in pts]} -> {shape}")
+
+
+def print_g(cur: dict) -> None:
+    """g(t*) := softmax(t*) - settled(t*). NEGATIVE means softmax is better."""
+    print()
+    print("=== g(t*) := softmax(t*) - settled(t*)   "
+          "(NRMSE; NEGATIVE means softmax has the LOWER error) ===")
+    if not cur["gaps"]:
+        print("    NOT AVAILABLE: no rung yet has both a softmax and a "
+              "settled reading in this journal.")
+        return
+    print(f"{'task':>8} {'t*':>4} {'softmax':>10} {'settled':>10} "
+          f"{'g':>11} {'g_twin':>11}")
+    for r in cur["gaps"]:
+        gt = "--" if r["g_twin"] is None else f"{r['g_twin']:+.6f}"
+        print(f"{r['task']:>8} {r['t_star']:>4} {r['softmax']:>10.6f} "
+              f"{r['settled']:>10.6f} {r['g']:>+11.6f} {gt:>11}")
+    print("    g SHRINKING as t* grows => settling buys something that only "
+          "shows at depth.")
+    print("    g flat or growing            => it does not.")
+
+
+def print_scope() -> None:
+    """The distinction Foreman corrected, printed BESIDE the result.
+
+    An e3 loss is not a failure of the round's central prediction, and the two
+    must not be allowed to blur into one sentence in a later summary.
+    """
+    print()
+    print("SCOPE OF ANY e3 RESULT -- IT IS NOT THE ROUND'S PREDICTION.")
+    print("    e3_t* binds equilibrium_oracle, still the signed path sum the "
+          "resolvent computes")
+    print("    (scale/negation_scope.py::M3_TASKS). The lambda2 / Cheeger "
+          "prediction lives on the")
+    print("    ABSORBING-CHAIN corpus, which is NOT REGISTERED YET, so it has "
+          "never been tested here.")
+    print("    A settled loss on this ladder is a statement about e3, NOT "
+          "about the lambda2 theory.")
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--seeds", type=int, nargs="+", default=[0, 1, 2, 3, 4])
@@ -229,6 +423,9 @@ def main() -> int:
               f"{r['verdict']}"
               + ("" if r["credited"] else
                  "  [G: a cell is at/above predict-the-mean, CREDITED NOTHING]"))
+    print_f(cur)
+    print_g(cur)
+    print_scope()
     row, why = verdict(cur)
     print(f"\n    ladder complete: {cur['complete']}   "
           f"pre-registered 13-seed resolution: {RESOLUTION_13:.6f}")

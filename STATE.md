@@ -4,7 +4,7 @@
 |---|---|
 | contract | `LOOP_PROMPT.md` (v10). Round 7 archived `LOOP_PROMPT_ROUND7_ARCHIVE.md` |
 | promise | **`HILBERT`** — output only when completely and unequivocally true |
-| iteration | **3 complete, 4 next** |
+| iteration | **4 complete, 5 next** |
 | **scoreboard** | **25** — 23 carried + **X₁₈ +2 EARNED** |
 | **the round exists to move ONE number** | `done7.md` scores the product at **37 %**: engineering **≈ 80 %**, the scientific claim **≈ 5 %**. **The 5 % is because the deciding measurement has been taken ZERO times.** |
 | **RULE 2** | **THE READING COMPLETES BY ITERATION 8.** Not the corpus, not the process — the reading. |
@@ -78,3 +78,16 @@ both sides, so the target is reachable **by construction rather than by search**
    2-dimensional linear recursion, so ring-automaton rank is **exactly 2 across the
    whole ladder while `t*` runs 1 → 63.** **Constant rank, spanning difficulty.**
    Replacement metadata: `t*`.
+
+12. **TWO HYPOTHESES FROM `NeMo-Relay#481`, unbound, needing a fellow and a RED test.**
+   (a) **The ultrametric order-independence argument** — `d(x,y) = 2^-lcp(x,y)`, under
+   which every point of a closed ball is a centre, so a ball is fixed by its members
+   rather than by traversal order. **That property is FALSE in Euclidean geometry**, so
+   a flat metric cannot prove what it proves. It instantiates RULE 9, and it was
+   written upstream before RULE 9 was written here. Nearest live target: the ragged
+   pivot-set tie-break in `arm_s.pivots_of`, which currently needs a declared deviation
+   because top-k drops index 0 and the batched path backfills it.
+   (b) **`A = Σ c_i(c_i−1) / (N(N−1))`**, a **graded** agreement rate that is `1`
+   exactly when an analysis is seed-independent. **This project checks determinism by
+   bit-identity, which is binary**, and has already hit a case it cannot describe — a
+   replay where every `eval_nrmse` matched bitwise and only a wall-clock field drifted.

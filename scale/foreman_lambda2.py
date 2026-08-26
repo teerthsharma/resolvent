@@ -89,6 +89,7 @@ decision is made against numbers. It is Cameron's decision, not this file's.
 """
 from __future__ import annotations
 
+import math
 from collections import deque
 
 import numpy as np
@@ -99,7 +100,8 @@ __all__ = ["TARGET_LO", "TARGET_HI", "TARGET", "LADDER", "Chain",
            "merged_component", "bridge_edge", "lobes", "build_chain", "diameter",
            "lambda_2", "ergodic_lambda_2", "bridge_conductance",
            "absorption_probabilities", "truncated_absorption", "relative_error",
-           "DEGENERATE_STD", "conditional_label", "conditional_relative_error", "dead_fraction", "bridge_sweep", "killing_rate", "engineer",
+           "DEGENERATE_STD", "RATE_TS", "REACH_RADII", "committor_rate_law", "closed_form_control",
+           "conditional_label", "conditional_relative_error", "dead_fraction", "bridge_sweep", "killing_rate", "engineer",
            "degenerate_single_target", "no_kill_control", "bridge_dial_refuted",
            "target_separation_sweep", "report", "demo"]
 
@@ -368,6 +370,161 @@ def conditional_relative_error(chain: Chain, t: int) -> float:
     return float(np.linalg.norm(q_t - q) / np.linalg.norm(q))
 
 
+#: Where the `f(t)` table is read. Stops at 320 because `relerr` there is already
+#: `0.925 ** 320 ~ 1e-11` and the ratio starts reading float64 noise rather than the
+#: chain: at `t = 399` it comes back as `0.9243492884`, BELOW `lambda_2`, which is the
+#: floor and not a finding.
+RATE_TS = (40, 80, 160, 320)
+
+#: The reach radii the killing rate is reported at: the decoder gate's radius, the
+#: ladder's middle rung, `t_rel` itself, and the 1024-case diameter.
+REACH_RADII = (3, 8, 13, 29)
+
+
+def committor_rate_law(spec, target: float = TARGET, ts=RATE_TS) -> dict:
+    """SOLVE `f`, do not caveat it.
+
+    `report` previously recorded that the conditional label's measured decay ratio
+    exceeds `lambda_2` -- `0.9298888594` and `0.9476920990` against an engineered
+    `0.9250000000` -- and narrowed the round's claim from a rate equality to a
+    monotonicity. THAT NARROWING WAS PREMATURE. Everything around the discrepancy is
+    an exact solve, so the discrepancy is a determined quantity and not a constant to
+    be measured and shrugged at.
+
+    ## The closed form
+
+    Write `u`, `v` for the two columns of `B` and `s = u + v`. The truncation residual
+    of a Neumann series is the series itself pushed forward,
+
+        u - u_t = Q^t u,    v - v_t = Q^t v,    s - s_t = Q^t s
+
+    -- exactly, no approximation, because `u = sum_{m>=0} Q^m R_A` and the discarded
+    tail factors as `Q^t` times the whole sum. Substituting into
+    `q_t - q = u_t/s_t - u/s` and clearing denominators gives
+
+        q_t - q = ( u * (Q^t s) - s * (Q^t u) ) / ( s * s_t )
+
+    with `*` elementwise. `closed_form_residual` below checks this against the actual
+    iterate and it holds to `1.082467e-15` and `4.583348e-13`.
+
+    ## What the closed form says
+
+    Both `Q^t s` and `Q^t u` are dominated by the same Perron mode, `Q^t x ->
+    lambda_2^t c(x) w`, so the numerator's leading term is
+    `lambda_2^t * w * (c(s) u - c(u) s)` -- a fixed vector times `lambda_2^t`. The
+    denominator converges to `s * s`. **Therefore `f := decay_conditional / lambda_2`
+    tends to exactly `1`**, and the excess at finite `t` is the sub-dominant modes
+    still being alive. MEASURED, and it is the derivation confirmed rather than a fit:
+    `f` runs `1.00528525 -> 1.00098935 -> 1.00002297 -> 1.00000063` on the 64-node
+    case and `1.02453200 -> 1.01570774 -> 1.00612578 -> 1.00158689` on the 1024-node
+    case, over `t = 40, 80, 160, 320`.
+
+    ## Which quantity sets the excess -- A CLAIM OF MINE THAT ITS OWN TEST REFUTED
+
+    The two-graph reading was that `lambda_3 / lambda_2` sets it: `0.9525291979` with
+    mode time `1/ln(lambda_2/lambda_3) = 20.5615` on the 64-node case against
+    `0.9941111377` and `169.3116` on the 1024-node case, the slower one carrying the
+    larger excess. That is a two-point fit, and `placement_rate_sweep` tests it at six
+    absorbing-set placements on ONE graph, where `lambda_3/lambda_2` moves and the
+    graph does not.
+
+    **IT FAILS.** Pearson correlation between `lambda_3/lambda_2` and `f(160)` over the
+    six placements is `-0.287101`, and the placement at separation `8` reads
+    `f(160) = 0.99034549` -- BELOW one, so the conditional label there decays FASTER
+    than `lambda_2`, which no story about sub-dominant modes arriving late can produce.
+    The claim is withdrawn rather than rescued.
+
+    The closed form already says why, and this is the one reading that survives: the
+    leading term is `lambda_2^t * w * (c(s) u - c(u) s)`, and that AMPLITUDE is a
+    property of the two boundary columns, i.e. of where the targets sit. When `u` is
+    nearly parallel to `s` the leading mode nearly cancels, the sub-dominant modes
+    carry the residual, and the measured rate drops below `lambda_2`. So the excess is
+    set by BOTH the spectrum and the absorbing-set geometry, and the geometry can flip
+    its sign. Only `f -> 1` is derived; the approach to it is not a one-parameter law.
+
+    ## WHAT THIS COSTS THE ROUND, AND IT IS NOT NOTHING
+
+    The rate equality is recovered ASYMPTOTICALLY. The ladder's own rungs
+    `t* in {1, 2, 8, 32}` sit BELOW the mode time on both graphs and are therefore
+    entirely pre-asymptotic, so `lambda_2 ** t*` is the wrong predictor AT THE RUNGS
+    even though `lambda_2` is the right rate. The closed form is the right predictor
+    there, and it needs no training to evaluate.
+    """
+    case = make_case(*spec)
+    base = build_chain(case, spec, 1.0)
+    alpha = killing_rate(base, target)
+    chain = build_chain(case, spec, 1.0, alpha=alpha)
+    Q, R = chain.Q, chain.R
+    B = absorption_probabilities(chain)
+    u, v = B[:, 0], B[:, 1]
+    s = u + v
+    q = conditional_label(B)
+
+    # THE DENOMINATOR IS ZERO AT SMALL t AND THAT NEARLY MADE THIS CHECK VACUOUS.
+    # `s_t` vanishes at any node more than `t` hops from both targets, so an unguarded
+    # `rhs` carries `inf` and `nan`, and `max(0.0, nan)` returns `0.0` in Python --
+    # every disagreement would have been silently dropped and the residual would have
+    # read as `0.0` no matter how wrong the formula was. The comparison is restricted
+    # to nodes where the denominator is live, and the COUNT of those nodes is returned
+    # so a residual computed over an empty set cannot pass for a small one.
+    residual, counts = 0.0, []
+    for t in (1, 2, 5, 8, 16, 32):
+        z_t = truncated_absorption(chain, t)
+        lhs = conditional_label(z_t) - q
+        Qt = np.linalg.matrix_power(Q, t)
+        denom = s * (z_t[:, 0] + z_t[:, 1])
+        live = denom > 0.0
+        rhs = (u * (Qt @ s) - s * (Qt @ u))[live] / denom[live]
+        assert np.isfinite(rhs).all(), (case.name, t)
+        residual = max(residual, float(np.abs(lhs[live] - rhs).max()))
+        counts.append(int(live.sum()))
+
+    z = np.zeros_like(R)
+    errs = {}
+    for t in range(1, max(ts) + 1):
+        z = Q @ z + R
+        errs[t] = float(np.linalg.norm(conditional_label(z) - q) / np.linalg.norm(q))
+
+    ev = np.sort(np.abs(np.linalg.eigvals(Q)))[::-1]
+    lam2, lam3 = float(ev[0]), float(ev[1])
+    return {
+        "name": case.name, "alpha": alpha,
+        "closed_form_residual": residual,
+        "closed_form_compared_min": min(counts),
+        "closed_form_compared_max": max(counts),
+        "n_transient": int(Q.shape[0]),
+        "lambda_2": lam2, "lambda_3": lam3, "lambda_3_over_2": lam3 / lam2,
+        "mode_time": 1.0 / math.log(lam2 / lam3),
+        "f": [(t, errs[t] / errs[t - 1], (errs[t] / errs[t - 1]) / lam2) for t in ts],
+        "reach": [(r, alpha ** r) for r in REACH_RADII],
+        "ladder_closed_form": [(t, errs[t]) for t in LADDER],
+    }
+
+
+def closed_form_control(spec, target: float = TARGET) -> dict:
+    """MUST-FIRE. The closed form with ONE SIGN FLIPPED must not reproduce the iterate.
+
+    A residual of `1e-15` is only evidence if a wrong formula gives a large one. This
+    negates the second term, which is the smallest edit that still type-checks, and
+    reports the residual it produces so the passing half has something to be measured
+    against rather than being read as small in the abstract.
+    """
+    case = make_case(*spec)
+    base = build_chain(case, spec, 1.0)
+    chain = build_chain(case, spec, 1.0, alpha=killing_rate(base, target))
+    B = absorption_probabilities(chain)
+    u, s = B[:, 0], B[:, 0] + B[:, 1]
+    q = conditional_label(B)
+    z_t = truncated_absorption(chain, 8)
+    Qt = np.linalg.matrix_power(chain.Q, 8)
+    denom = s * (z_t[:, 0] + z_t[:, 1])
+    live = denom > 0.0
+    wrong = (u * (Qt @ s) + s * (Qt @ u))[live] / denom[live]
+    residual = float(np.abs((conditional_label(z_t) - q)[live] - wrong).max())
+    return {"wrong_residual": residual, "compared": int(live.sum()),
+            "fires": residual > 1e-6 and int(live.sum()) > 0}
+
+
 def dead_fraction(chain: Chain, *, column: int = 0) -> float:
     """Fraction of transient nodes whose label is below `DEAD`.
 
@@ -550,8 +707,18 @@ def target_separation_sweep(spec, separations=(4, 8, 12, 16, 20, 24),
             continue
         chain = build_chain(case, spec, 1.0, alpha=alpha, targets=[u, v])
         label = absorption_probabilities(chain)[:, 0]
+        ev = np.sort(np.abs(np.linalg.eigvals(chain.Q)))[::-1]
+        lam2, lam3 = float(ev[0]), float(ev[1])
+        q = conditional_label(absorption_probabilities(chain))
+        z, prev, cur = np.zeros_like(chain.R), None, None
+        for step in range(1, 161):
+            z = chain.Q @ z + chain.R
+            prev, cur = cur, float(np.linalg.norm(conditional_label(z) - q)
+                                   / np.linalg.norm(q))
         out.append({"separation": sep, "targets": (u, v), "alpha": alpha,
-                    "lambda_2": lambda_2(chain), "dead_fraction": dead_fraction(chain),
+                    "lambda_2": lam2, "lambda_3_over_2": lam3 / lam2,
+                    "f_160": (cur / prev) / lam2,
+                    "dead_fraction": dead_fraction(chain),
                     "label_std": float(label.std()),
                     "label_median": float(np.median(label)),
                     "unattainable": None})
@@ -637,7 +804,42 @@ def report() -> str:
                          f"  alpha {_fmt(row['alpha'])}"
                          f"  lambda_2 {_fmt(row['lambda_2'])}"
                          f"  dead {_fmt(row['dead_fraction'])}"
-                         f"  std {_fmt(row['label_std'])}")
+                         f"  std {_fmt(row['label_std'])}"
+                         f"  lam3/lam2 {_fmt(row['lambda_3_over_2'])}"
+                         f"  f(160) {row['f_160']:.8f}")
+    lines.append("")
+    lines.append("SOLVING f := decay_conditional / lambda_2 RATHER THAN CAVEATING IT")
+    lines.append("  q_t - q = ( u * (Q^t s) - s * (Q^t u) ) / ( s * s_t ),  exact.")
+    lines.append("  Both tails share the Perron mode, so f -> 1. DERIVED, and")
+    lines.append("  confirmed at four values of t on both graphs.")
+    lines.append("  THE APPROACH TO 1 IS NOT A ONE-PARAMETER LAW. A lambda_3/lambda_2")
+    lines.append("  account was fitted on two graphs and REFUTED on six absorbing-set")
+    lines.append("  placements of one graph: correlation -0.287101, and separation 8")
+    lines.append("  reads f(160) = 0.99034549, BELOW one. The closed form says why --")
+    lines.append("  the leading amplitude c(s)u - c(u)s is set by the targets, and")
+    lines.append("  when it nearly cancels the residual decays FASTER than lambda_2.")
+    for spec in REROUTED_CASES:
+        r = committor_rate_law(spec)
+        lines.append(f"  {r['name']}")
+        lines.append(f"    closed form max|lhs - rhs| over t in "
+                     f"{{1,2,5,8,16,32}} = {r['closed_form_residual']:.6e}"
+                     f"   compared over {r['closed_form_compared_min']}"
+                     f"..{r['closed_form_compared_max']} of {r['n_transient']} "
+                     f"transient nodes (t=1 reaches only the targets' neighbours)")
+        lines.append(f"    lambda_2 {_fmt(r['lambda_2'])}  lambda_3 "
+                     f"{_fmt(r['lambda_3'])}  ratio {_fmt(r['lambda_3_over_2'])}"
+                     f"  mode time {r['mode_time']:.4f}")
+        lines.append("      t     ratio(t/t-1)     f = ratio / lambda_2")
+        for t, ratio, f in r["f"]:
+            lines.append(f"    {t:<5d} {_fmt(ratio)}   {f:.8f}")
+        lines.append("    LADDER IS PRE-ASYMPTOTIC: every rung sits below the mode "
+                     "time, so")
+        lines.append("    lambda_2 ** t* is the wrong predictor AT THE RUNGS even "
+                     "though lambda_2")
+        lines.append("    is the right rate. The closed form is the right predictor "
+                     "and is free.")
+        lines.append("    reach of the killed walk, alpha ** r:  " + "  ".join(
+            f"r={r_:d} {_fmt(a)}" for r_, a in r["reach"]))
     lines.append("")
     lines.append("MUST-FIRE CONTROLS")
     for spec in REROUTED_CASES:
@@ -655,6 +857,11 @@ def report() -> str:
                      f"  FIRES {n['fires']}")
         lines.append(f"    bridge dial over w<=4096:         band reached "
                      f"{b['any_in_band']}  FIRES {b['fires']}")
+        c = closed_form_control(spec)
+        lines.append(f"    closed form with one sign flipped: residual "
+                     f"{c['wrong_residual']:.6e} against the correct form's "
+                     f"{committor_rate_law(spec)['closed_form_residual']:.6e}"
+                     f"  FIRES {c['fires']}")
     return "\n".join(lines)
 
 
@@ -691,10 +898,40 @@ def demo() -> None:
         assert r["cond_monotone"], r["name"]
         assert r["cond_decay_ratio"] > r["lambda_2"], (
             r["name"], r["cond_decay_ratio"], r["lambda_2"])
+
+        # And f is SOLVED, not caveated: the closed form is exact, f falls toward 1
+        # monotonically, and a sign-flipped form is seen to be rejected.
+        rl = committor_rate_law(spec)
+        assert rl["closed_form_residual"] < 1e-11, rl["closed_form_residual"]
+        # Non-degeneracy of the PASS half: a residual over an empty comparison set is
+        # small for the wrong reason. At t = 1 only the targets' own neighbours have a live denominator, which is
+        # the physics and not a defect; by t = 32 the comparison must cover most of
+        # the graph or the residual is small for the wrong reason.
+        assert rl["closed_form_compared_min"] >= 1, rl["name"]
+        assert rl["closed_form_compared_max"] > 0.5 * rl["n_transient"], (
+            rl["name"], rl["closed_form_compared_max"], rl["n_transient"])
+        fs = [f for _t, _ratio, f in rl["f"]]
+        assert fs == sorted(fs, reverse=True), fs
+        assert fs[0] > fs[-1] > 1.0, fs
+        assert fs[-1] < 1.002, fs
+        assert rl["lambda_3"] < rl["lambda_2"], rl["name"]
+        assert closed_form_control(spec)["fires"]
         # Controls seen to fire, all three.
         assert degenerate_single_target(spec)["fires"]
         assert no_kill_control(spec)["fires"]
         assert bridge_dial_refuted(spec)["fires"]
+
+    # THE REFUTATION IS BOUND, not just written down. Across absorbing-set placements
+    # on one graph, f(160) straddles 1: some placements decay slower than lambda_2 and
+    # at least one decays FASTER, which no lambda_3-only account allows. If a future
+    # edit makes f one-sided again, this fails and the docstring above is wrong.
+    rows = [r for r in target_separation_sweep(REROUTED_CASES[1])
+            if r["alpha"] is not None]
+    fs = [r["f_160"] for r in rows]
+    assert len(fs) >= 5, len(fs)
+    assert min(fs) < 1.0 < max(fs), fs
+    corr = float(np.corrcoef([r["lambda_3_over_2"] for r in rows], fs)[0, 1])
+    assert abs(corr) < 0.6, corr
     print("foreman_lambda2 demo OK")
 
 

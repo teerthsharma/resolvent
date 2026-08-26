@@ -4,6 +4,123 @@ Round 6 closed with the certificate program CLOSED - three attempts, three death
 Round 5's `TWOSPHERES: BROKEN` and its handover `done5.md` stand. Round 6's
 work-done is `done6.md`. Progress **22**.
 
+### ROUND 8, ITERATION 4 - 2026-08-26 - The merged upstream work is found, and it already contains the rule added to the contract an hour earlier.
+
+CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.
+
+## WHAT IT IS
+
+**`NVIDIA/NeMo-Relay#481`**, *"fix(adaptive): reuse stable ACG scaffolds"*, merged
+**`2026-08-10T13:50:25Z`**, `merge_commit_sha 57a7032a143347b4e0f15b3464b670d717b0ca47`,
+**`+1370 / -86` across 23 files, all `status = modified`** - a rewrite inside an
+existing crate, not a new module. On `main` and shipped in the `0.8.0` release
+candidates; **not** in `0.7.3`. Apache-2.0, with **copyright assigned to NVIDIA in the
+per-file SPDX headers**, DCO `Signed-off-by` on all eight author commits.
+
+**ACG is the Adaptive Cache Governor** - it decides when an LLM prompt prefix is stable
+enough to hand a provider a cache hint. **Checked, not assumed:** it is not "adaptive
+context graph" and it is not topology.
+
+**AND IT TOUCHES NONE OF THIS PROJECT'S SURFACES.** Attention: absent from all five
+source diffs. KV caching: **no KV cache is implemented, read or written** - ACG sits a
+level above and emits hints about a *provider's* cache. Iterative solvers or fixed
+points: **absent** - `dominant_prefix_length` is a single monotone descent that stops at
+the first depth where no child holds a majority, converging because the member set
+shrinks, **not because a residual falls**. Kernel fusion: absent, pure Rust hashing.
+
+**Test-to-source ratio `938 : 432`** - more test than implementation.
+
+## THE PART THAT MATTERS HERE, AND THE TIMING IS UNCANNY
+
+**RULE 9 was added to this contract an hour before this fetch returned:** *"lightweight
+mathematics from wherever it lives, and not flat by default."* **The merged work already
+does exactly that**, in a doc comment quoted byte-exact:
+
+> Under `d(x, y) = 2^-lcp(x, y)` the window is ultrametric: closed balls are the sets
+> agreeing on a prefix, and every point of a ball is a center, so a ball is fixed by its
+> members rather than by traversal order. Descent also requires a strict majority, which
+> two disjoint children cannot both hold, so the dominant child is unique where it
+> exists and no tie-break is reachable.
+
+**That argument is unavailable in Euclidean geometry.** "Every point of a ball is a
+centre" is **false** in a normed space and **true** in an ultrametric one, and it is
+precisely what buys order-independence here. **A flat metric proves nothing about this
+descent; the ultrametric proves it in one line.** The author was already applying RULE 9
+in production before it was written down as a rule.
+
+**AND THERE IS A SECOND TRANSFERABLE OBJECT - a graded determinism invariant.** From the
+doc comment on `analyze_stability`, byte-exact:
+
+    A = sum_i c_i * (c_i - 1) / (N * (N - 1))
+
+*"the probability that two independent processes agree... `A = 1` exactly when the
+analysis is seed-independent."*
+
+**This project checks determinism by bit-identity, which is binary.** `A` is **graded**,
+so a run that is *mostly* reproducible gets a number instead of a pass/fail - and this
+repository has already hit exactly that case, a `NONDETERMINISM` on replay where every
+`eval_nrmse` matched bitwise and only a wall-clock field drifted. **A binary check
+cannot distinguish those two situations and `A` can.**
+
+**Both are HYPOTHESES, not findings.** Wilson was instructed to make no recommendations
+and made none: *"whether that shape is worth anything to your solve-versus-one-step
+question is a fellow's call, not mine."* Binding either one needs a fellow and a RED
+test.
+
+## THREE FACTS ABOUT THE RECORD THAT ARE WORTH KEEPING
+
+**1. The topology PRs are the ones that died.** `#282`, `#321`, `#322` are all titled
+*topology-aware* and **all three closed unmerged** (`merged_at None`). **The one that
+landed is the one with the topology stripped out.** This project's own record carries
+`NeMo-Relay#282` as *"CLOSED. Not otherwise verified"* at `CHECKLIST.md:1027`, and
+**`#481` is absent from the record everywhere.**
+
+**2. The human review was 66 characters.** Four reviews: three from `coderabbitai[bot]`
+at `31899`, `13369` and `36299` characters, and one human approval from `willkill07`
+whose entire body is:
+
+> *"Approving. Approach seems sensible and is limited in scope to ACG."*
+
+**Zero human inline comments; all eight inline comments are the bot's.** The bot's one
+*Functional Correctness / Major* finding **was taken** - it is the
+`source_request_hash.as_deref()?` fail-closed line in the merged code. **Merged yes;
+reviewed by a human, barely.** The same check applied to `triton-lang/kernels#22` last
+round found the same shape, and the phrase *"upstream-reviewed"* was struck then for
+the same reason.
+
+**3. The PR states its own limits, and they are real.** Verbatim: *"No provider-cache,
+cost, or latency improvement is claimed."* The analysis-only trace report, the
+three-arm interleaved experiment, and the provider cache-read/cache-write, billed-cost
+and percentile evidence **are not supplied.**
+
+## WHAT WILSON COULD NOT VERIFY, CARRIED IN FULL
+
+**Every number in the determinism table** (`A = 0.000 / 0.479 / 1.000`, prefix `1`
+against `6`), the two fragmentation keys quoted from `main`, and the whole validation
+suite (`538/538` lib, `11/11` Redis, `609 passed`, `342 passed`) are **author-reported
+in the PR body and were not re-run.** Only the **82 GitHub check-run conclusions** are
+API-verified (73 `success`, 9 `skipped`, 0 failures), and no individual job log was
+opened. The 18 test files were counted, **not read**, so *"adversarial coverage"* is the
+PR body's claim. Whether the bot's remaining seven inline findings were addressed or
+ignored is **unresolved**. Whether any of the 1370 added lines derive from outside the
+repository is **unproven in both directions** - a DCO sign-off is an assertion, not
+evidence. The two SPDX header lines came through a nurse with HTML entities and were
+un-escaped by inspection, so they are **one remove from byte-exact**; everything quoted
+from the diff was fetched directly and is byte-exact. And `merged_by = rapids-bot[bot]`
+is what the API says - that `willkill07`'s `/merge` nine seconds earlier drove it is
+**inference from timestamps**, not a confirmed mechanism.
+
+CHECKLIST: **`NeMo-Relay#481` FOUND**, merged, Apache-2.0 under NVIDIA copyright,
+`+1370/-86`. **It touches none of this project's surfaces** - no attention, no KV cache,
+no solver, no fixed point. **Two transferable objects, both HYPOTHESES:** an
+**ultrametric order-independence argument** that is unavailable in flat geometry and
+instantiates RULE 9 before RULE 9 existed, and a **graded determinism invariant `A`**
+where this project currently has only a binary bit-identity check. **The three
+topology-titled PRs all died unmerged; the one that landed had the topology removed.**
+Human review was **66 characters**.
+
+**SCOREBOARD: 25.**
+
 ### ROUND 8, ITERATION 3 - 2026-08-26 - The fetch kills the delta as stated, the contract's own dial is refuted, and the oracle separation is proved in Lean.
 
 CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**, 4/4 bit-identical.

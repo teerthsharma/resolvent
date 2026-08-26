@@ -28,3 +28,14 @@ pivot_signed          1.92817     0.522901      0.46055     0.584728          13
                    flipper 0.560440 (51/91)   payload 0.502924 (86/171)   null|dyhat| 0.0037694 vs live 0.0509173   zero-effect 250   closed-form resid 0.000e+00
 windowed_signed       1.51925     0.316794     0.260913     0.376877           83          262  -0.00954552    -0.114941    0.0934259    -0.136356     0.026138   [2938s]
                    flipper 0.000000 (0/91)   payload 0.485380 (83/171)   null|dyhat| 0 vs live 0.0617789   zero-effect 250   closed-form resid 0.000e+00
+settled               1.57337     0.446565     0.385368     0.508985          117          262     0.129546    0.0486645     0.210379  5.62001e-24            0   [340s]
+                   flipper 0.637363 (58/91)   payload 0.345029 (59/171)   null|dyhat| 0.000313768 vs live 0.0944691   zero-effect 250   closed-form resid 0.000e+00
+
+  PAIRED exact McNemar vs softmax (same interventions, byte-identical draws):
+    softmax vs pivot_signed     b=37 c=37 n_disc=74  p=1  no reject
+    softmax vs windowed_signed  b=92 c=38 n_disc=130  p=2.43082e-06  REJECT
+    softmax vs settled          b=72 c=52 n_disc=124  p=0.0875528  no reject
+
+--- seed 2 ---
+arm                eval_nrmse   sign_match        ci_lo        ci_hi            k       n_used        slope     slope_lo     slope_hi    min_entry     neg_frac
+---------------------------------------------------------------------------------------------------------------------------------------------------------------

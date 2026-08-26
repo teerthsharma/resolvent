@@ -76,21 +76,58 @@ LargestJoin_S2Rips_1024   nodes=62 transient=60 diameter=29  bridge=(343, 354)  
 TARGET SEPARATION vs DEAD FRACTION, at the engineered lambda_2
   LargestJoin_S2Rips_64
    sep 4   targets (2, 15)  UNATTAINABLE -- rho(P_TT) 0.9150351428 is already below the target, killing cannot slow a chain down
-   sep 8   targets (9, 51)  alpha 0.9448780432  lambda_2 0.9250000000  dead 0.0000000000  std 0.2263891431
+   sep 8   targets (9, 51)  alpha 0.9448780432  lambda_2 0.9250000000  dead 0.0000000000  std 0.2263891431  lam3/lam2 0.9525291979  f(160) 1.00002297
   LargestJoin_S2Rips_1024
-   sep 4   targets (10, 261)  alpha 0.9263334042  lambda_2 0.9250000000  dead 0.3833333333  std 0.2142890717
-   sep 8   targets (10, 736)  alpha 0.9304374746  lambda_2 0.9250000000  dead 0.4666666667  std 0.2192496038
-   sep 12  targets (10, 121)  alpha 0.9360873326  lambda_2 0.9250000000  dead 0.3166666667  std 0.2247188329
-   sep 16  targets (10, 717)  alpha 0.9294733542  lambda_2 0.9250000000  dead 0.2666666667  std 0.2177421835
-   sep 20  targets (10, 234)  alpha 0.9281778135  lambda_2 0.9250000000  dead 0.2666666667  std 0.2164582874
-   sep 24  targets (13, 274)  alpha 0.9270845806  lambda_2 0.9250000000  dead 0.4666666667  std 0.1513862858
+   sep 4   targets (10, 261)  alpha 0.9263334042  lambda_2 0.9250000000  dead 0.3833333333  std 0.2142890717  lam3/lam2 0.9892423096  f(160) 1.00738131
+   sep 8   targets (10, 736)  alpha 0.9304374746  lambda_2 0.9250000000  dead 0.4666666667  std 0.2192496038  lam3/lam2 0.9927200890  f(160) 0.99034549
+   sep 12  targets (10, 121)  alpha 0.9360873326  lambda_2 0.9250000000  dead 0.3166666667  std 0.2247188329  lam3/lam2 0.9994338939  f(160) 1.00096338
+   sep 16  targets (10, 717)  alpha 0.9294733542  lambda_2 0.9250000000  dead 0.2666666667  std 0.2177421835  lam3/lam2 0.9916908751  f(160) 1.00291277
+   sep 20  targets (10, 234)  alpha 0.9281778135  lambda_2 0.9250000000  dead 0.2666666667  std 0.2164582874  lam3/lam2 0.9903113973  f(160) 1.00455315
+   sep 24  targets (13, 274)  alpha 0.9270845806  lambda_2 0.9250000000  dead 0.4666666667  std 0.1513862858  lam3/lam2 0.9936504684  f(160) 1.00396742
+
+SOLVING f := decay_conditional / lambda_2 RATHER THAN CAVEATING IT
+  q_t - q = ( u * (Q^t s) - s * (Q^t u) ) / ( s * s_t ),  exact.
+  Both tails share the Perron mode, so f -> 1. DERIVED, and
+  confirmed at four values of t on both graphs.
+  THE APPROACH TO 1 IS NOT A ONE-PARAMETER LAW. A lambda_3/lambda_2
+  account was fitted on two graphs and REFUTED on six absorbing-set
+  placements of one graph: correlation -0.287101, and separation 8
+  reads f(160) = 0.99034549, BELOW one. The closed form says why --
+  the leading amplitude c(s)u - c(u)s is set by the targets, and
+  when it nearly cancels the residual decays FASTER than lambda_2.
+  LargestJoin_S2Rips_64
+    closed form max|lhs - rhs| over t in {1,2,5,8,16,32} = 1.082467e-15   compared over 3..16 of 16 transient nodes (t=1 reaches only the targets' neighbours)
+    lambda_2 0.9250000000  lambda_3 0.8810895080  ratio 0.9525291979  mode time 20.5615
+      t     ratio(t/t-1)     f = ratio / lambda_2
+    40    0.9298888594   1.00528525
+    80    0.9259151467   1.00098935
+    160   0.9250212469   1.00002297
+    320   0.9250005823   1.00000063
+    LADDER IS PRE-ASYMPTOTIC: every rung sits below the mode time, so
+    lambda_2 ** t* is the wrong predictor AT THE RUNGS even though lambda_2
+    is the right rate. The closed form is the right predictor and is free.
+    reach of the killed walk, alpha ** r:  r=3 0.8435819356  r=8 0.6353397921  r=13 0.4785031951  r=29 0.1931509974
+  LargestJoin_S2Rips_1024
+    closed form max|lhs - rhs| over t in {1,2,5,8,16,32} = 4.583348e-13   compared over 2..60 of 60 transient nodes (t=1 reaches only the targets' neighbours)
+    lambda_2 0.9250000000  lambda_3 0.9195528024  ratio 0.9941111377  mode time 169.3116
+      t     ratio(t/t-1)     f = ratio / lambda_2
+    40    0.9476920990   1.02453200
+    80    0.9395296609   1.01570774
+    160   0.9306663472   1.00612578
+    320   0.9264678763   1.00158689
+    LADDER IS PRE-ASYMPTOTIC: every rung sits below the mode time, so
+    lambda_2 ** t* is the wrong predictor AT THE RUNGS even though lambda_2
+    is the right rate. The closed form is the right predictor and is free.
+    reach of the killed walk, alpha ** r:  r=3 0.7951152826  r=8 0.5426005994  r=13 0.3702801554  r=29 0.1090161839
 
 MUST-FIRE CONTROLS
   LargestJoin_S2Rips_64
     single absorbing target, alpha=1: label std 3.108624e-15  max|label - 1| 1.110223e-14  (constant to float64, bar 1e-12)  FIRES True
     no killing, alpha=1:              lambda_2 0.9789623187  in band False  FIRES True
     bridge dial over w<=4096:         band reached False  FIRES True
+    closed form with one sign flipped: residual 2.625602e+00 against the correct form's 1.082467e-15  FIRES True
   LargestJoin_S2Rips_1024
     single absorbing target, alpha=1: label std 4.062194e-15  max|label - 1| 1.065814e-14  (constant to float64, bar 1e-12)  FIRES True
     no killing, alpha=1:              lambda_2 0.9984623637  in band False  FIRES True
     bridge dial over w<=4096:         band reached False  FIRES True
+    closed form with one sign flipped: residual 9.684524e+01 against the correct form's 4.583348e-13  FIRES True
