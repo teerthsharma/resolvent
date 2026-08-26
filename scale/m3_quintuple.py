@@ -84,6 +84,14 @@ from scale.pivot_probe import select_pivots                        # noqa: E402
 
 NAME = "m3_quintuple_v2"
 CELLS = ("softmax", "glance", "settled", "twin", "argmax")
+
+#: THE EXCLUSION-LIFTED CELLS. Identical to `twin` / `settled` except that the
+#: pivot set RESERVES a slot for row `s-1`, so `av` contains the softmax cell's
+#: own row and `softmax` becomes an INTERIOR POINT of the twin's function class.
+#: See PIVOT_EXCLUSION_FALSIFIER.md. NOT in `CELLS`, so a default run measures
+#: exactly what it measured before and no published reading moves.
+PLUS_CELLS = ("twin_plus", "settled_plus")
+ALL_CELLS = CELLS + PLUS_CELLS
 BETA = 0.5
 
 #: The shipped task. Every reading already in results/m3_quintuple_v2.jsonl was
@@ -114,7 +122,8 @@ PUBLISHED_SOFTMAX_8192 = dict(
 
 
 # ------------------------------------------------------------- the batched map
-def batched_pivots(kk: torch.Tensor, k_piv: int) -> torch.Tensor:
+def batched_pivots(kk: torch.Tensor, k_piv: int, *,
+                   reserve_query: bool = False) -> torch.Tensor:
     """[n, k] pivot indices, one row per example, matching `arm_s.pivots_of`.
 
     `arm_s.pivots_of` excludes the query row and then drops pivot 0, whose row
@@ -124,8 +133,28 @@ def batched_pivots(kk: torch.Tensor, k_piv: int) -> torch.Tensor:
     same set, because `select_pivots(exclude=(0, s-1))` cannot return 0 at all.
     `_bind_batched_against_arm_s` checks that claim by value rather than
     trusting this paragraph.
+
+    RESERVE_QUERY LIFTS THE EXCLUSION, AND MERELY PERMITTING IT DOES NOT WORK.
+    `select_pivots` is a top-k over the key-norm and `exclude` only sets entries
+    to `-inf`, so `exclude=(0,)` leaves `s-1` eligible and unselected: measured
+    over 32 drawn `e3_t1` examples at untrained keys, `s-1` ranks min 10, median
+    19, max 27, and is in the top-8 for **0 of 32**. A lift that changes nothing
+    in every example is not a lift. So the slot is RESERVED instead: `k-1`
+    pivots are content-selected exactly as above and `s-1` is appended
+    unconditionally, keeping `k` fixed.
+
+    WHY IT MATTERS. `ceq/bench.py:154` masks with `tril(-1)`, so row `i` reads
+    `j <= i-1`. With the largest legal pivot at `s-2`, no pivot row reads
+    `v[s-2]` -- while softmax's own row `s-1` reads it directly. At `t* = 1` the
+    label sits on exactly that token, so the pivot cells were being scored on a
+    task whose answer they structurally could not see.
     """
     n, s, _ = kk.shape
+    if reserve_query:
+        base = [select_pivots(kk[i], min(k_piv - 1, s - 3), exclude=(0, s - 1))
+                for i in range(n)]
+        last = torch.tensor([s - 1], device=kk.device)
+        return torch.stack([torch.cat([b, last]) for b in base])
     out = [select_pivots(kk[i], min(k_piv, s - 3), exclude=(0, s - 1))
            for i in range(n)]
     return torch.stack(out)
@@ -235,24 +264,30 @@ class QuintArm(M3.Arm):
                  k_piv: int = 8, beta: float = BETA, t_max: int = 21,
                  n_neumann: int = 21):
         super().__init__("softmax", s)
-        if cell not in CELLS:
+        if cell not in ALL_CELLS:
             raise ValueError(cell)
+        #: A `_plus` cell runs the SAME alpha rule as its base cell and differs
+        #: only in the pivot set, so the contrast between `twin` and
+        #: `twin_plus` isolates the exclusion and nothing else.
+        self.reserve_query = cell in PLUS_CELLS
+        self.base_cell = cell[:-5] if self.reserve_query else cell
         self.cell, self.k_piv, self.beta = cell, k_piv, beta
         self.t_max, self.n_neumann = t_max, n_neumann
 
     def _alpha(self, q, kk, x):
-        piv = batched_pivots(kk, self.k_piv)
-        need_gram = self.cell == "settled"
+        piv = batched_pivots(kk, self.k_piv,
+                             reserve_query=self.reserve_query)
+        need_gram = self.base_cell == "settled"
         log_gram, log_gate, av = batched_log_pivot_context(
             q, kk, x, piv, need_gram=need_gram)
-        if self.cell == "settled":
+        if self.base_cell == "settled":
             la = BatchedSettled.apply(log_gate, log_gram, self.beta,
                                       self.t_max, self.n_neumann)
             alpha = la.exp()
-        elif self.cell == "twin":
+        elif self.base_cell == "twin":
             alpha = (log_gate
                      - torch.logsumexp(log_gate, dim=-1, keepdim=True)).exp()
-        elif self.cell == "argmax":
+        elif self.base_cell == "argmax":
             alpha = torch.zeros_like(log_gate)
             alpha.scatter_(1, log_gate.argmax(dim=-1, keepdim=True), 1.0)
         else:
@@ -264,7 +299,7 @@ class QuintArm(M3.Arm):
         q, k = self.wq(x), self.wk(x)
         a = bench._softmax_operator(q, k)
         z = x + a @ x
-        if self.cell not in ("softmax", "glance"):
+        if self.base_cell not in ("softmax", "glance"):
             z = z.clone()
             z[:, s - 1] = x[:, s - 1] + self._alpha(q, k, x).to(z.dtype)
         h = self.mlp(z)

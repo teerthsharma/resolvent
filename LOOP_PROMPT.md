@@ -17,6 +17,47 @@ is not released on a schedule; he is released only on a NEW missing-innovation d
 
 ---
 
+## AMENDMENT — WIND-DOWN, AND THE ARCHITECTURAL POSITION REVERSES
+
+**HOUSE MODE IS OFF.** No further parallel dispatches. Agents already in flight finish
+or do not; nothing new is spawned. The remaining effort goes to **documentation and
+mathematics**, which is where the round's value now is.
+
+**AND THE POSITION ON SOFTMAX REVERSES, ON EVIDENCE.**
+
+Softmax is **not the opponent — it is the base case, and the module must contain it.**
+Three independent results force this:
+
+* **Softmax is Bayes-optimal on the single-location task shape** — one softmax layer
+  attains Bayes risk where linear attention provably cannot (`arXiv:2410.01537`, ICLR
+  2025). The shallow rung of this project's own ladder **is** that shape, so attacking
+  softmax there attacks it at its proven optimum.
+* **Softmax's single step is already a converged fixed-point step** — the attention
+  update is a modern Hopfield update that *"converges with one update"* with
+  exponentially small retrieval error (`arXiv:2008.02217`, ICLR 2021). **The one step is
+  not pre-equilibrium; it is at equilibrium.** That is the answer to why a one-step
+  normalised mixture resists improvement.
+* **Iterating the normalisation is published and buys little** — Sinkformer, 3–5
+  iterations, small gains (`arXiv:2110.11773`, AISTATS 2022).
+
+**THE DESIGN CONSEQUENCE IS EXACT.** If softmax lies **inside** the module's function
+class, the module is bounded below by softmax and every equilibrium mechanism is a
+**strict addition**. If it lies **outside** — which is what was built, see the pivot
+exclusion — the comparison measures the exclusion rather than the idea.
+
+**So the goal is unchanged and its route is corrected: build equilibrium, consequence
+and causality ON TOP of softmax, so that they work better BECAUSE of it rather than
+instead of it.** A module that contains softmax and adds a settled correction can only
+tie or win; a module that excludes it has to win a fight it was never going to win.
+
+**And where iteration is known to pay, the iterated object is the REPRESENTATION, not
+the mixture weights** (`arXiv:2311.12424`, ICLR 2024) — which is the one live direction
+that has not yet been measured here.
+
+**The full derivations, evidence classes and provenance are in `MATHEMATICS.md`.**
+
+---
+
 ## 0. SCOREBOARD
 
 | item | points |
