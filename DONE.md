@@ -4,6 +4,106 @@ Round 6 closed with the certificate program CLOSED - three attempts, three death
 Round 5's `TWOSPHERES: BROKEN` and its handover `done5.md` stand. Round 6's
 work-done is `done6.md`. Progress **22**.
 
+### ROUND 8, ITERATION 10 - 2026-08-26 - The round winds down. A cost estimate is corrected before it is paid, and a pre-registration is declared incomplete rather than redefined.
+
+CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.
+
+## THE ROUND IS WINDING DOWN, BY INSTRUCTION
+
+House mode is **off**. No further parallel dispatches; agents in flight finish or do not
+and nothing new is spawned. Remaining effort goes to **documentation and mathematics**,
+which is where the round's value now sits. `MATHEMATICS.md` is the theory of record and
+carries an evidence class on every load-bearing claim.
+
+## A COST ESTIMATE CORRECTED BEFORE IT WAS PAID, NOT AFTER
+
+Foreman's brief said the looped falsifier would cost about **40 minutes**. He measured
+`267.8 s` on the cheapest cell and derived the real figure:
+
+    softmax @150    268 s   MEASURED
+    looped3 @150   ~600 s
+    softmax @600  ~1000 s
+    looped3 @600  ~2500 s
+                            e3_t2 alone  ~4370 s = 73 min
+                            both tasks   ~146 min = 2.4 h
+
+**He reported the overrun against the brief rather than quietly running over it**, which
+is RULE 4b working as written.
+
+**And then he caught his own error inside that same correction.** He had quoted
+`~73 min per task` and `≈21 min for e3_t2 alone` in one message - **both cannot be
+true** - and flagged it **after a decision had already been taken on the wrong figure**:
+
+> *"My `≈21 min` was arithmetic error and you accepted the cut partly on it - correcting
+> before anything is built on it."*
+
+**The cut itself survives the correction** - `t* = 8` cannot separate *"depth does not
+pay"* from *"3 < 5"* at any price, since the depth wall is `L = floor(log2 8) + 2 = 5`
+against three loops - **but it is a 2.4 h to 1.1 h cut, not 2.4 h to 21 min.**
+
+**Recorded as a process finding because that is what it is: an uncorrected slip in a cost
+estimate is how a round quietly overruns, and this one was stopped at the estimate rather
+than at the bill.**
+
+## AND THE PRE-REGISTRATION IS DECLARED INCOMPLETE RATHER THAN REDEFINED
+
+Only the missing `e3_t2 looped3 @150` cell was started - about ten minutes - completing a
+**paired, same-step-count, byte-identical-draw comparison** at `t* = 2`, seed 0.
+
+**It does not complete the pre-registration.** The 600-step half is unrun, and `150` is
+**already measured to undertrain** a width-2 control that passes at `600`. So
+`falsifier()` reports `complete: False`, correctly.
+
+> *"I am declaring the pre-registration incomplete rather than quietly redefining it to
+> whatever I could afford - the disjunction over both step counts was written to stop
+> exactly that move, and it binds me too."*
+
+**That is the instrument working, not the round failing.** The 600-step half was declined
+at about 58 minutes for a stated reason: **it would still be one seed, so there would
+still be an interval on each arm and none on the difference. Paying an hour to upgrade
+"incomplete" to "undecided" is the wrong trade at a usage ceiling.**
+
+## THE MARGIN CAVEAT SHIPS WITH THE NUMBER, NOT AFTER IT
+
+Softmax at `t* = 2`, 150 steps: **`0.9704371404137836`**, CI
+`[0.9536301088926267, 0.9877856292539604]` - **barely under the mean predictor.**
+
+**One seed per cell means an interval on each arm and none on the difference.** If the
+looped cell lands inside that interval the honest reading is **UNDECIDED** - not a win
+for either side - and it will be reported that way whichever direction it falls.
+
+**The harness gate is clear and stays in the record:** `nrmse0_eval
+1.0033507309692542`, `nrmse0_train 1.0036319944756966`, **both at or above `1.0`**, so
+the untrained arm is not reading the label. **That gate aborted three of five rungs in an
+earlier build**, so it earned its line.
+
+## WHAT IS SAFE ON THE RECORD, SO NOTHING IS LOST BY CLOSING
+
+**The nilpotency separation.** `rho(A) = 0.000e+00`, `max|A^s| = 0.000e+00`, nilpotent -
+**the loop accumulates hops and terminates rather than converging**, so the `lambda2`
+rate law **does not describe it**. He declined to borrow his own language for an arm it
+does not fit.
+
+**The Fisher-Rao narrowing.** Flat is **correct** on the chain family
+(`z*_{s-1} ~ N(0, t*)` on the real line); non-flat is load-bearing **only** on the
+probability corpus (`1.418962x` at a rung, `0.7666` of mass within `0.01` of a
+boundary), **declared before that run rather than after.**
+
+**The thesis and its two target settings**, in `MATHEMATICS.md` §0: predict the **shape**
+rather than the next symbol; the corpus has been testing the opposite, since
+`equilibrium_oracle` returns `z*_{s-1}`, one coordinate of a vector; and the narrow
+novelty claim is **joint determination in one read**, which a per-row independent mixture
+does not compute - **untested, because no vector-valued label exists here yet.**
+
+CHECKLIST: **round winding down, house mode OFF.** A cost estimate **corrected before it
+was paid** and an arithmetic slip inside the correction **caught by its own author after
+a decision had been taken on it.** The pre-registration is **declared INCOMPLETE rather
+than redefined to what was affordable.** The margin caveat **ships with the number**: one
+seed gives no interval on the difference, so a near-tie is **UNDECIDED**. `MATHEMATICS.md`
+is the theory of record.
+
+**SCOREBOARD: 25.**
+
 ### ROUND 8, ITERATION 9 - 2026-08-26 - Move 2 built with a two-sided bind, and the non-flat-readout rule is narrowed by measurement rather than by argument.
 
 CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**. `demo()` OK.

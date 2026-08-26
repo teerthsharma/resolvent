@@ -4,13 +4,13 @@
 |---|---|
 | contract | `LOOP_PROMPT.md` (v10). Round 7 archived `LOOP_PROMPT_ROUND7_ARCHIVE.md` |
 | promise | **`HILBERT`** — output only when completely and unequivocally true |
-| iteration | **8 complete, 9 next** |
+| iteration | **10 complete — WINDING DOWN** |
 | **scoreboard** | **25** — 23 carried + **X₁₈ +2 EARNED** |
 | **the round exists to move ONE number** | `done7.md` scores the product at **37 %**: engineering **≈ 80 %**, the scientific claim **≈ 5 %**. **The 5 % is because the deciding measurement has been taken ZERO times.** |
 | **RULE 2** | **THE READING COMPLETES BY ITERATION 8.** Not the corpus, not the process — the reading. |
 | register | **caveman, all agents.** Artifacts stay normal English |
 | **RULE 5** | Every kill ships a replacement route — reroute / reprice / retire |
-| House | **IDLE.** Released only on a NEW missing-innovation death. The round has its innovation; it needs execution. |
+| House | **OFF.** House mode is stopped by instruction. No further parallel dispatches; agents in flight finish or do not, and nothing new is spawned. |
 
 ## THE v10 BOARD
 
@@ -154,3 +154,31 @@ both sides, so the target is reachable **by construction rather than by search**
 25. **Effective resistance there is a BEATEN BASELINE** (`R̄ = tr(L⁺)/n`, a global mean
    over a pseudoinverse trace), **not the two-boundary Dirichlet problem this oracle
    solves.** The `arXiv:2206.11941` impossibility concerns a different object again.
+
+26. **THE ROUND IS WINDING DOWN.** House mode **off**; remaining effort is
+   **documentation and mathematics**. **`MATHEMATICS.md` is the theory of record**, with
+   an evidence class (`RUN` / `READ` / `CITED` / `DERIVED`) on every load-bearing claim
+   and limits collected once at the end.
+27. **THE THESIS, and the corpus has been testing its opposite.** The module should
+   predict the **shape** the sequence settles into, not the next symbol. But
+   `equilibrium_oracle` (`scale/negation_scope.py:274`) returns **`z*_{s-1}`, one
+   coordinate** of the fixed point, and `nrmse` is a squared error on that scalar. **So
+   every task here asks for a point prediction — which is exactly the single-location
+   problem where one softmax layer is provably Bayes-optimal.** The corpus was built as
+   the one task softmax cannot lose.
+28. **THE NOVELTY CLAIM, narrow and UNTESTED:** one softmax step computes a convex
+   mixture **per query row, independently of the other rows**, so nothing in it lets the
+   value at position `i` constrain the value at position `j`. **A jointly determined
+   configuration is not what that computes.** Not a claim about single coordinates (a
+   theorem says softmax is optimal there); not a claim about depth (separately governed,
+   and stacked layers get it too). **Untested because no vector-valued label exists
+   here.**
+29. **Two target settings, sharing the structure:** embodied control, where joint angles,
+   contacts and forces are **coupled by constraints** and determined simultaneously; and
+   retrieval, where a false passage is an **intervention on the context** whose
+   consequence **propagates** through claims conditioned on it, producing answers locally
+   plausible everywhere and globally wrong.
+30. **The `e3_t2` looped pre-registration is INCOMPLETE and declared so**, not redefined
+   to what was affordable. The 600-step half is unrun and `150` is measured to
+   undertrain. **A near-tie at one seed is UNDECIDED** — there is an interval on each arm
+   and none on the difference.
