@@ -7,7 +7,7 @@ assertion of it.
 
 ---
 
-## 0. THE ANSWER, FIRST: **≈ 35 % of the whole product**
+## 0. THE ANSWER, FIRST: **≈ 37 % of the whole product**
 
 That number is not a feeling. It is the weighted count in §1, and it splits very
 unevenly, which is the part that matters more than the number:
@@ -27,7 +27,7 @@ of the corpus, established at iteration 7 and confirmed on every registered task
 
 ---
 
-## 1. THE DERIVATION OF 35 %
+## 1. THE DERIVATION OF 37 %
 
 Each component is scored against evidence in this repository, not against intent.
 
@@ -42,7 +42,7 @@ Each component is scored against evidence in this repository, not against intent
 
 Weighting components 1–5 at one share each and component 6 at five shares — because
 it is the thing that was asked for and the rest is scaffolding for it — gives
-`(100 + 100 + 85 + 40 + 20 + 5×5) / (5 + 5×20) ≈ **35 %**`.
+`(100 + 100 + 85 + 40 + 20 + 5×5) / (5 + 5×20) ≈ **37 %**`.
 
 **Cross-check, independent of that arithmetic.** Dr House, given the whole repository
 and asked the same question, answered in iterations rather than percent: **two
