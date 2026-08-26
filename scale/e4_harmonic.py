@@ -257,9 +257,6 @@ def cheeger_t_rel_floor(adjacency, nodes, bridge) -> float:
     small to carry a label that any bounded ball fails to read. The band and the
     bottleneck are the same quantity pulling in opposite directions.
     """
-    label = components(len(adjacency), [(a, b) for a in nodes for b in adjacency[a]
-                                        if b in set(nodes) and a < b])
-    del label
     side = _bridge_side(adjacency, nodes, bridge)
     volume = sum(len(adjacency[v]) for v in side)
     return volume / 2.0
