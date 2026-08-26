@@ -734,10 +734,15 @@ def main() -> int:
     for (cell, k), rows in sorted(by.items()):
         ev = [rows[sd]["eval_nrmse"] for sd in a.seeds]
         m = sum(ev) / len(ev)
-        sd_ = (sum((v - m) ** 2 for v in ev) / (len(ev) - 1)) ** 0.5
+        # A variance over ONE observation is undefined; a single-seed probe run
+        # must still reach its summary. `n/a` keeps the column count while the
+        # n >= 2 path formats byte-for-byte as every published line before it.
+        sd_s = ("n/a" if len(ev) < 2 else
+                "%.6f" % ((sum((v - m) ** 2 for v in ev)
+                          / (len(ev) - 1)) ** 0.5))
         means[(cell, k)] = m
         print(f"{cell:>10} {k:>4} {' '.join('%.6f' % v for v in ev):>56} "
-              f"{m:>9.6f} {sd_:>9.6f} "
+              f"{m:>9.6f} {sd_s:>9} "
               f"{min(rows[sd]['nrmse0_eval'] for sd in a.seeds):>11.6f} "
               f"{rows[a.seeds[0]]['n_params']:>7}")
         if m >= 1.0:

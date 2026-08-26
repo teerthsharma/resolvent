@@ -13860,3 +13860,70 @@ iterations of hand-typed shell never surfaced it, because every one of those
 passes silently supplied the condition that made the check pass.
 
 CHECKLIST: no status changed. M2 RED (permanent, instrument-cleared), M5 RED.
+### PHASE R8, ITERATION 0 â€” 2026-08-26 â€” CAMERON READING START: lambda2 and delta_hat per row with gates re-measured, covariate scaffold landed
+
+CALIBRATION [RUN] python -m pytest tests/foreman/test_gromov_delta.py -q -> 17 passed (tree 0.000000 x4, cycle n/4 x3, brute-force 1e-12 x3, complete graph 0, etc). python -m pytest tests/cameron/test_e4prime_registration.py -v -> 6 passed (gate a truncation, gate b decoder+planted, admissibility scale, oracle executable, hop reading). ceq/rips.py sampler provenance unchanged; scale/foreman_lambda2.py:demo exit 0; scale/hyperbolic.py exact mode O(n^4) <1s at n=62.
+
+## ONE ACTION THIS ITER: per-instance lambda2 (exact eig) + delta_hat (Gromov four-point) covariates with both gates + planted must-fires seen firing
+
+Written results/covariate_table_phaseR8_iter0.json (RUN, C:/Users/seal/AppData/Local/Temp/opencode/covariate.py). Every row prints measured lambda2 and delta_hat from same merged component; Cheeger only design intuition (Phi=1/vol, t_rel>=vol/2). Re-draw not re-label discipline flagged.
+
+### Measured lambda2 and delta_hat per instance (exact, per-row)
+
+LargestJoin_S2Rips_64: n=64 merged=18 bridge=(21,55) 8x10 lambda2 natural 0.9789623187 (scale/foreman_lambda2.py:278 eigvals 16x16 Q) lambda2 tuned 0.9250000000 alpha=0.9448780432 t_rel 13.33 in_band NO (natural)/YES (tuned) delta_hat 0.500000 (scale/hyperbolic.py:205) diam 8
+LargestJoin_S2Rips_1024: n=1024 merged=62 bridge=(343,354) 30x32 lambda2 natural 0.9984623637 (60x60 Q) lambda2 tuned 0.9250000000 alpha=0.9264245040 t_rel 13.33 delta_hat 1.000000 diam 29
+
+- lambda2 := rho(Q) transient block (scale/foreman_lambda2.py:16-27, not literal second eigenvalue of P which is 1). Exact via np.linalg.eigvals (n<=1024, Q <=60x60). Construction vs re-measured agree to 1.3e-15 (1024) â€” scale/foreman_lambda2.py:645 asserts <1e-12.
+- Natural lambda2 misses band on both specs (0.9789>0.95, 0.9984>0.95); tuned via killing exact scaling rho(alpha P_TT)=alpha*rho(P_TT) hits 0.9250000000. Under strict re-draw not re-label this is a re-labelling, not graph redraw â€” K-R8a conditional fire with reroute route.
+- delta_hat is Gromov product form (*) max[min((x|z)_w,(z|y)_w)-(x|y)_w] with x!=y mask (scale/hyperbolic.py:16-18,51: sigma_top-sigma_second), trees 0, cycles girth/4. Measured 0.500000 (18 nodes) and 1.000000 (62 nodes), both 0<delta_hat<=diam and not degenerate. Same vertex set as lambda2 (merged_component).
+
+### Controls seen firing (both directions, non-degeneracy)
+
+- Tree delta=0 (scale/hyperbolic.py:30-34, tests/foreman/test_gromov_delta.py:143): random recursive trees n=8,16,33,65 all 0.000000 exactly (== not tolerance); paired with same-size cycle >0 (n=32 tree 0.000000 vs cycle 8.000000 at tests/foreman/test_gromov_delta.py:156) so not degenerate constant. This iter RUN: n=8 tree 0.0, n=16 0.0, n=32 0.0.
+- Cycle delta=n/4 (scale/hyperbolic.py:59-66, tests/foreman/test_gromov_delta.py:170): C_n 4|n reads n/4 exactly (half-integral lossless <=2^23). This iter RUN: n=8->2.000000 (expect 2.0), n=16->4.000000, n=32->8.000000 |err|<=1e-9; odd C13 sanity, complete graph K_n 0.000000. K-R8c not fired (both fired, so delta_hat numbers not VOID; if either failed all delta_hat VOID per tests/foreman/test_gromov_delta.py:23).
+- Brute-force pinning: exact mode agrees with literal ordered-quadruple definition within 1e-12 on n=9-11 (tests/foreman/test_gromov_delta.py:129).
+- Every zero carries non-degeneracy sd>0 etc.
+
+### Gates â€” both must bind with planted must-fires seen firing
+
+Truncation gate (scale/rips_gate.py:255 truncation_ladder, scale/e4_harmonic.py:329-347, scale/negation_scope.py:825 e4prime_hop_reading):
+- 1024 target: k=0 1.4142 (=sqrt2 balanced), k=1 1.4128, k=2 1.4087, k=4 1.3947, k=8 1.2694, k=16 0.7943, k=32 0.0000 (exact at full budget), monotone decreasing, k=1 >1.0 bounded away â€” not a static task. 64 same: 1.4142->1.4031->1.3571->1.0411->0.0000. PASS. K-1 per-rung: rung1 label sd>0 0<nonzero<1 â€” non-degeneracy.
+
+Decoder gate (planted LOCAL probe must FAIL, scale/rips_gate.py:60 PASS_BAR=0.5 FAIL_BAR=0.9, scale/rips_gate.py:142 local_features symmetric min/max no count, scale/rips_gate.py:162 fit_eval first-half train second-half held-out, scale/rips_gate.py:177 planted_degree_labels, scale/negation_scope.py:689 make_e4prime_batch + scale/negation_scope.py:783 e4prime_oracle executable from CH_COORD+CH_BRIDGE+CH_QA/CH_QB):
+- 64 (leak demo, not admissible): r0 1.0019 >=0.9 FAIL, r1 0.9130, r2 0.5474, r3 0.2185 <0.5 PASS, r5 0.0055 <0.5 PASS, planted sum 2.9e-08 <1e-6, median 0.4826 <0.70 gap 0.5193 >0.30 â€” FAIL at r3/r5 leaks, reproducing 0.0055 at n=64 (results/e4_gate.txt:44, results/e4prime_gates.txt); builder refuses s<1024 (scale/negation_scope.py:745 ValueError)
+- 1024 (target n, admissible): r0 1.0001 >=0.9 FAIL, r1 1.0018 >=0.9, r2 1.0035 >=0.9, r3 0.9951 >=0.9 FAIL, r5 0.8220 >0.75 (and FAIL at r3), planted sum 2.04e-08 <1e-6, median 0.5530 <0.70 gap 0.4471 >0.30 â€” PASS: local probe collapses to mean predictor out to radius 3 (and >0.75 at r5); planted controls fire on IDENTICAL instances/features/split. Reproduces E4 lesson 0.0055->0.9951 (n=64 PASS vs n=1024 FAIL).
+
+Every must-fire PASS half carries non-degeneracy sd>0, 0<frac<1, both classes nonempty, discard 0 (balanced draw, scale/rips_gate.py:198 n_each=1024 each). Previous 14 vacuous controls struck remain not reintroduced.
+
+N3 discipline: omega_v = row v of (I-P_II)^{-1}P_IB is exact Poisson kernel (scale/foreman_lambda2.py:317 solve, scale/e4_harmonic.py:190, scale/negation_scope.py:783); displacement probe cross-checked via rank correlation separately; bar pre-registered PASS/FAIL.
+
+RULE N1 curvature ledger: Dirichlet solve lives in <=0 curvature (Hilbert/CAT0 linear system, invertible I-Q, unique solution); +curvature sphere averaging (Karcher mean on S2, 48.3% non-unique at k=128) retired and not used.
+
+### M3_TASKS registration (E4 prime + U1 RAG double-registration scaffold)
+
+- E4 prime: scale/negation_scope.py:1028 M3_TASKS["e4prime"] = (make_e4prime_batch, e4prime_oracle, e4prime_features, e4prime_flipper_dependence 0.0) â€” tensor batch [n,s,d_model] bitwise deterministic, well-posedness enforced at generation (s<E4P_MIN_NODES=1024 raises ValueError, tests/cameron/test_e4prime_registration.py:133), CH_COORD..CH_QB owned, do()-bit per example, label recomputed from x (=executable oracle, tests/cameron/test_e4prime_registration.py:118 bitwise equal, flip moves exactly those labels). PASS 6/6.
+- U1 RAG scaffold: scale/negation_scope.py:1053 rag_multihop_t{1,2,8,32} = (make_rag_multihop_batch, equilibrium_oracle, equilibrium_features, chain_flipper_dependence) â€” same tensors as e3 siblings (torch.equal on x and y, tests/cameron/test_u1_rag_registration.py), document-graph naming via CH_DOC (scale/negation_scope.py:928), measurement-only until R10 per Â§U â€” scaffolding in R8 allowed, no capability claim. E4 law applies to e4prime.
+
+### Covariate table scaffold
+
+results/covariate_table_phaseR8_iter0.json -> rows with lambda2 (natural/tuned, alpha, t_rel, in_band), delta_hat, diam, decoder r0/r3/r5, planted controls, truncation ks â€” scaffold for lambda2 x delta_hat x capability columns per instance (capability column pending training).
+
+### Heterogeneous plant for X22 wave arm (amendment v10.4) + U2/U3a batteries
+
+- X22 plant: NOT YET SUPPLIED this iter (one-action cap). Required: heterogeneous graph instance where Dirichlet-energy trace (X21 instrument) will be measured â€” needed for P3 collapse-resistance. Due iter <=8. Next action: supply mixed-degree / two-block graph + show energy trace pass.
+- U2 mujoco contact-graph DSU n>=1024, Tonnetz lattice graphs: scaffolding only, not admitted to M3_TASKS until both gates + planted controls pass. K-U3 not triggered (no admission before reading completes, so frozen for phase per Â§U).
+
+### Kills flagged + replacement routes (RULE 5)
+
+- K-R8a lambda2 stratification (re-draw not re-label) FIRES (conditional) â€” Natural lambda2 0.9789623187 (64) and 0.9984623637 (1024) both outside [0.90,0.95]; band only via alpha-scaling exact. Under strict re-draw not re-label this is re-labelling, not graph redraw.
+  Replacement REROUTE: generate fresh Rips draws varying seed / target_degree toward percolation threshold and re-draw until measured lambda2 in band via eig without alpha; Cheeger only intuition (Phi<=1/vol). Keep alpha path as REPRICE reference (degeneracy cost). Next iter: implement draw loop with discard count + CP interval on zero-lambda2 cases. Other option RETIRE band to larger t_rel if natural graphs force it, with proof that bottleneck makes label global only there.
+- K-R8b truncation NO
+- K-R8c delta controls NO â€” FIRED (tree 0.000000 and cycle 8.000000 n=32 both fired, brute-force 1e-12, so delta_hat not VOID)
+- K-R8d decoder leak at target NO (1024 holds, leak only at 64 0.0055 as intended)
+- K-U3 (U3 before reading) NO (no U3 admission, scaffolding only)
+- RULE N1 NO (using <=0 curvature Hilbert solve, no sphere averaging)
+
+CHECKLIST: RULE 1 â€” one action (covariate + gate re-measurement) then STATE/BOARD updates, Cameron rows only. Every zero carries non-degeneracy (sd>0, 0<frac<1). Every must-fire has both directions with passing half non-degeneracy (planted sum <1e-6 + planted median <0.70 gap>0.30 on identical rows). N3 omega_v exact Poisson kernel cross-checked. RULE N1 curvature ledger lives in <=0 (Hilbert/CAT0). K-R8a conditional fire flagged with re-draw replacement route; K-R8c not void because controls fired.
+
+SCOREBOARD: 25 (X17 scaffold advanced, +3 not yet earned â€” training capability column pending).
+

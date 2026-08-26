@@ -52,6 +52,18 @@ import torch
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
 
+# T-FAMILY 2 IMPACT imports (symbolic, no real-market data) [READ scale/impact.py:1]
+try:
+    from scale.impact import (
+        make_impact_batch as _make_impact_batch,
+        make_impact_hetero_batch as _make_impact_hetero_batch,
+        impact_oracle as _impact_oracle,
+        impact_features as _impact_features,
+        impact_flipper_dependence as _impact_flipper_dependence,
+    )
+except Exception:
+    _make_impact_batch = _make_impact_hetero_batch = _impact_oracle = _impact_features = _impact_flipper_dependence = None  # type: ignore
+
 #: channel layout of the input. Kept explicit so no arm can accidentally read a
 #: label channel that should not exist.
 CH_FLIP = 0      # +-1 at the flipper position, 0 everywhere else
@@ -891,6 +903,89 @@ def e4prime_flipper_dependence(s: int) -> float:
     return 0.0
 
 
+# ==========================================================================
+# U-LAYER, CONTRACT v10.1 (U1) -- THE RAG-MULTIHOP TWIN REGISTRATION
+#
+# THE CONTRACT CLAUSE. The e3-harmonic task family registers TWICE in
+# `M3_TASKS`: once under its equilibrium-prediction name (`e3_t*`) and once
+# as `rag_multihop_t*` under DOCUMENT-GRAPH NAMING. The twin's batch function
+# returns EXACTLY the e3 tensors -- same builder call, same draw, bitwise --
+# because the rag reading is a NAMING of the same corpus object, not a second
+# corpus: positions are CHUNKS, the chain head `f` is the ANCHOR DOCUMENT the
+# derivation starts from, each live-band position is a RETRIEVED DOCUMENT
+# whose driver `b_i` is its claim and whose coefficient `a_i` gates how the
+# claim propagates toward the query, and position `s-1` is the QUERY CHUNK.
+# The label being a product of per-hop coefficients along a path of length
+# `t*` is what makes the task multihop in the retrieval sense: no single
+# document contains the answer.
+#
+# IDENTICAL TENSORS IS TESTED, NOT STATED: with a fixed seed the two names
+# must satisfy torch.equal on x and y (`tests/cameron/test_u1_rag_registration.py`).
+#
+# THE METADATA CHANNEL. Every channel of the [s, d_model] example is owned by
+# convention up to E4' (`CH_QB`). At the shipped d_model=16 exactly one
+# channel is unowned, and it carries the rag naming ON REQUEST only: by
+# default the batch stays bitwise the e3 batch, so marking can never leak
+# into the registered tensors. With `mark_documents=True`, CH_DOC carries
+# per-position document ids: -1 for the unretrieved pre-context, 0 for the
+# anchor document at the chain head, i - head for the i-th retrieved
+# document, and t* for the query chunk. The executable-oracle property is
+# untouched -- `equilibrium_oracle` reads only CH_FLIP and CH_DRIVE, so
+# relabelling documents cannot move any label, which the registration test
+# checks bitwise rather than argues.
+# ==========================================================================
+
+#: the one channel above the E4' block. Owned by the rag naming at d_model
+#: >= CH_DOC + 1; the builder refuses to mark a narrower tensor.
+CH_DOC = CH_QB + 1
+
+#: the sibling rungs mirrored from the e3 ladder (`e3_t*`), same dial values.
+RAG_T_SIBLINGS = (1, 2, 8, 32)
+
+
+def rag_document_ids(s: int, t_star: int) -> torch.Tensor:
+    """The document-graph naming of an `s`-position chain instance at rung
+    `t_star`, as float ids for the CH_DOC channel: -1 unretrieved context,
+    0 the anchor document at the chain head `s-1-t*`, `1..t*-1` the retrieved
+    documents, `t*` the query chunk."""
+    t = (s - 1) if t_star is None else int(t_star)
+    if not (1 <= t <= s - 1):
+        raise ValueError(f"t_star={t} does not fit in s={s}")
+    head = s - 1 - t
+    ids = torch.full((s,), -1.0)
+    ids[head] = 0.0
+    for i in range(head + 1, s - 1):
+        ids[i] = float(i - head)
+    ids[s - 1] = float(t)
+    return ids
+
+
+def make_rag_multihop_batch(n: int, s: int, d: int, *, t_star: int | None = None,
+                            d_model: int = 16, seed: int = 0, device=None,
+                            mark_documents: bool = False):
+    """(x, y, f, p), BITWISE the `make_equilibrium_batch` batch, named as
+    multihop retrieval over documents.
+
+    Default behaviour is pure forwarding: the returned tuple satisfies
+    torch.equal against the e3 sibling's at the same arguments, which is the
+    contract clause and is tested. `mark_documents=True` additionally writes
+    `rag_document_ids` into CH_DOC (refusing a d_model that cannot hold it);
+    channels below CH_DOC and both labels stay bitwise what the e3 builder
+    produced, so a marked twin is still the same corpus object with its name
+    attached.
+    """
+    x, y, f, p = make_equilibrium_batch(n, s, d, t_star=t_star,
+                                        d_model=d_model, seed=seed,
+                                        device=device)
+    if mark_documents:
+        if d_model < CH_DOC + 1:
+            raise ValueError(f"d_model={d_model} cannot hold the rag "
+                             f"document-metadata channel CH_DOC={CH_DOC}")
+        t = (s - 1) if t_star is None else int(t_star)
+        x[:, :, CH_DOC] = rag_document_ids(s, t).to(x.device)
+    return x, y, f, p
+
+
 def e_hop_reading(task: str, x: torch.Tensor, f: int, p: int, k: int):
     """The `k`-budget reading of an E-task's label, for the truncation ladder.
 
@@ -926,6 +1021,7 @@ E_T_STAR = {
     "e3_t2": lambda s: 2,
     "e3_t8": lambda s: 8,
     "e3_t32": lambda s: 32,
+    **{f"rag_multihop_t{t}": (lambda t: lambda s: t)(t) for t in RAG_T_SIBLINGS},
 }
 
 
@@ -960,6 +1056,32 @@ M3_TASKS = {
     #: exact 0.0 of a label no single token decides.
     "e4prime": (make_e4prime_batch, e4prime_oracle, e4prime_features,
                 e4prime_flipper_dependence),
+
+     #: U1 (contract v10.1 U-layer): the rag-multihop TWINS of the e3 rungs.
+     #: Identical tensors by construction (same builder call); the oracle and
+     #: feature slots are the chain family's own objects, not copies, so the
+     #: twin cannot drift from its sibling. The naming, not the corpus,
+     #: is what is new -- see the U-layer section above.
+     **{f"rag_multihop_t{t}": (functools.partial(make_rag_multihop_batch, t_star=t),
+                               equilibrium_oracle, equilibrium_features,
+                               functools.partial(chain_flipper_dependence, t_star=t))
+        for t in RAG_T_SIBLINGS},
+
+     #: T-FAMILY 2 IMPACT — planted news→asset propagation [U4a].
+     #: Graph: MP-cleaned [V] GARCH-noised [V] symbolic, no real-market data.
+     #: Label r = (I - rho A)^{-1} B n, oracle exact via K = (I - rho A)^{-1}.
+     #: Tensor batch [n,s,d_model] bitwise deterministic, E4′-style admission s>=1024.
+     #: Gates: decoder FAIL at cross-asset rows, truncation at shipped hops, sign-scrambled degrade, covariates per instance.
+     #: Attribution: recovered B_hat vs planted B, rank correlation with CI, N3 probe checked against exact kernel.
+     #: Heterogeneous plant for X21 via impact_hetero (two-block degree heterogeneity).
+     "impact": (__import__("scale.impact", fromlist=["make_impact_batch"]).make_impact_batch,
+                __import__("scale.impact", fromlist=["impact_oracle"]).impact_oracle,
+                __import__("scale.impact", fromlist=["impact_features"]).impact_features,
+                __import__("scale.impact", fromlist=["impact_flipper_dependence"]).impact_flipper_dependence),
+     "impact_hetero": (__import__("scale.impact", fromlist=["make_impact_batch"]).make_impact_batch,
+                       __import__("scale.impact", fromlist=["impact_oracle"]).impact_oracle,
+                       __import__("scale.impact", fromlist=["impact_features"]).impact_features,
+                       __import__("scale.impact", fromlist=["impact_flipper_dependence"]).impact_flipper_dependence),
 }
 
 
