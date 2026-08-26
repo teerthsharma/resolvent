@@ -1025,3 +1025,15 @@ Replayed ARM A's own draw stream (published `D_FR causal` reproduced to 6 dp at 
 | the two `triton-lang/triton` PRs | **BOTH CLOSED, neither merged** — `#11147`, `#10768`. **Reporting "merged into Triton" would be a true-sounding sentence about the wrong object**, the error class recorded ten times here. Checked, not assumed. |
 | test ratio | `test/test_topology_sparse_attention.py` **+338** against `kernels/topology_sparse_attention.py` **+303** — **more test than implementation.** |
 | other upstream, API-reported only | `vllm#47942` OPEN · `xformers#1370` OPEN · `TensorRT-LLM#10305` OPEN · `NeMo-Relay#282` CLOSED. Not otherwise verified. |
+
+**ROUND 6 it.25 - mining the owner's prior work.**
+
+| item | status |
+|---|---|
+| **prior-work mining** | **DISPATCHED to Wilson** — `caustic`, `sigmoid`, `triton-lang/kernels#22`. Foreman/Chase/Cameron all carry v9 assignments; extraction-with-citations is the verified-facts tier's job anyway. |
+| **correspondence 1** | caustic's *"orbit partition of a relation"* vs **parts of a cone** — two vectors share a part iff they share a support, and **parts are orbits of the positive-scaling action**. If the same object, it applies to `Δ(G)` and the same-part ruling. **HYPOTHESIS.** |
+| **correspondence 2** | sigmoid's *"topological coupling operators"* vs the **Dobrushin coefficient**, which **is** a coupling coefficient. v9's **+3** item, needed because `tanh(Δ/4)` **saturates to exactly 1.0** at `Δ ≥ 76.246190` and trained `Δ` is `83.6069`. **HYPOTHESIS.** |
+| **correspondence 3** | caustic's *"five proved bounds"* vs the missing certificate — `κ = β` is **chosen**, and **a proved bound is exactly what is lacking**. **HYPOTHESIS.** |
+| **correspondence 4** | `kernels#22` vs the **fused settling step** (+1). Merged, upstream-reviewed, `+303` kernel / `+338` test / `+146` benchmark. Target already quantified: **3.0 dispatches per step, removable at zero FLOP cost**. **HYPOTHESIS.** |
+| the standing warning | *"A mined result that turns out to be a different object is the eleventh"* instance of the wrong-object class. **Wilson is instructed to return NOT FOUND when a correspondence is not there**, because that saves a fellow a wasted iteration. |
+| constraints | **READ-ONLY on GitHub**, no writes; no edits to this repo; **"a description is not a source"** — every claim quoted from a file with a path, or NOT FOUND; a private repo or 404 is **NOT ACCESSIBLE**, never an inference from the blurb. |

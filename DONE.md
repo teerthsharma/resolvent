@@ -4,6 +4,70 @@ Round 5 closed at `TWOSPHERES: BROKEN - ARM A, K1's dual slope, displacement
 clause`; its handoff is `done5.md` and its negative result is `D1.md`. That
 verdict is final and is not reopened.
 
+### ROUND 6, ITERATION 25 - 2026-08-26 - Wilson mines three of the owner's own prior works, with four correspondences named as hypotheses rather than assumed.
+
+CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.
+
+ACTION (one): **dispatched WILSON to mine `caustic`, `sigmoid` and
+`triton-lang/kernels#22` for anything this round can use.** Foreman, Chase and
+Cameron all carry v9 assignments, so this goes to the verified-facts tier - which
+is the right home for it anyway, because **the job is extraction with citations,
+not invention.**
+
+**All three are the owner's own work**, verified live at it.24:
+`teerthsharma/caustic`, `teerthsharma/sigmoid`, and `triton-lang/kernels#22` -
+merged `2026-07-28T00:00:33Z` by ThomasRaoux, `+804 -1` over 5 files. A fourth,
+`teerthsharma/branchcut`, is downstream of caustic by its own description.
+
+## FOUR CORRESPONDENCES, HANDED OVER AS HYPOTHESES
+
+**Each is a guess about a shared object, and Wilson is told to return NOT FOUND
+when it is not there** - because *"a mined result that turns out to be a different
+object is the eleventh"* instance of the class this round has recorded ten times.
+
+**1. caustic's "orbit partition of a relation" against our "parts of a cone".** In
+the Hilbert metric two vectors share a **part** exactly when they share a support,
+and **parts are orbits of the positive-scaling action.** If caustic's orbit
+partition is the same object, its machinery may apply directly to `Delta(G)` and to
+the same-part ruling made at it.4.
+
+**2. sigmoid's "topological coupling operators" against the Dobrushin
+coefficient.** **Dobrushin's ergodic coefficient IS a coupling coefficient** - a
+contraction in total variation. That is v9's **+3** item, and it exists precisely
+because `tanh(Delta/4)` **saturates to exactly 1.0** for `Delta >= 76.246190` while
+trained `Delta` is `83.6069`. **If sigmoid already implements one, the instrument
+is written.**
+
+**3. caustic's "five proved bounds" against our missing certificate.** `kappa = beta`
+is a **chosen** constant. **A proved bound is exactly what item A lacks**, and
+caustic advertises five.
+
+**4. `kernels#22` against the fused settling step.** It is **merged, upstream-
+reviewed sparse attention** with `+303` kernel, `+338` test, `+146` benchmark.
+Item E is worth **+1** and is already quantified: **exactly 3.0 aten dispatches per
+settling step**, `O(t*)` while the FLOPs are `O(1)`, **removable at zero FLOP
+cost.** A reviewed fused inner loop, block-sparse layout or masking strategy would
+be usable directly - **and its benchmark harness may measure what a contended box
+cannot.**
+
+## WHAT HE WAS BARRED FROM
+
+**READ-ONLY on GitHub** - no writes of any kind. No edits to this repository. And
+one instruction that matters more than the others: **"A description is not a
+source."** The one-line repository blurbs are metadata; **every claim must be
+quoted from an actual file with a path**, or returned as NOT FOUND. A private repo
+or a 404 is **NOT ACCESSIBLE**, never an inference from the blurb.
+
+**Nothing is claimed for any of it.** Four correspondences are four guesses until
+he reports, and **the useful answer may well be that three of them are different
+objects.**
+
+CHECKLIST: prior-work mining **DISPATCHED to Wilson**. Four correspondences named
+as **hypotheses**. Foreman live on House's bind (`scale/foreman_gram.py`), Chase
+live on M3.
+
+**SCOREBOARD: 4 carried.** Nothing on the v9 board earned.
+
 ### ROUND 6, ITERATION 24 - 2026-08-26 - Contract v9, ceiling 60. And the upstream merge is real, but it is not in the repository its name suggests.
 
 CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.
