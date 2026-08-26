@@ -4,6 +4,93 @@ Round 6 closed with the certificate program CLOSED - three attempts, three death
 Round 5's `TWOSPHERES: BROKEN` and its handover `done5.md` stand. Round 6's
 work-done is `done6.md`. Progress **22**.
 
+### ROUND 7, ITERATION 1 - 2026-08-26 - S5 SCORED. The journal is sealed to the contract, and a vacuous assertion of mine was caught before it shipped.
+
+CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.
+[RUN] `pytest tests/loop` -> **207 passed** (196 -> 207), exit 0.
+
+**A DISCREPANCY NOTED RATHER THAN IGNORED.** The stop-hook's prompt string still
+describes `LOOP_PROMPT.md` as *"CEQ v8.2 ROUND 6 the Hilbert round"*. **The file is
+now round 7, CEQ v9.** The hook's instruction is *"read `LOOP_PROMPT.md` and follow
+it exactly"*, and the file is current, so the file governs and the label is stale.
+**Recorded because a reader hitting both would otherwise have to guess which is
+authoritative.**
+
+## S5 — THE MERKLE JOURNAL, LIVE, WITH ITS TAMPER MUST-FIRE
+
+Fellows are on the critical path (Cameron the Hankel instrument, Chase the
+e-process), so this iteration took the one scoreable item nobody was blocking on —
+**and the contract's own task slot asks for it: *"the Merkle root of this contract
+committed as the journal's genesis."***
+
+**WHY IT IS WORTH HAVING.** Append-only JSONL is **a convention, not a guarantee**.
+A line edited in place leaves no trace, a deleted line leaves less — and **this
+project has already found a published number whose producer entered version
+control forty-five minutes after the number did.** A hash tree makes *"the record
+was not edited"* a checkable statement rather than a claim.
+
+**THE GENESIS LEAF IS THE CONTRACT.** A root does not merely say *"these lines, in
+this order"* — it says **"these lines, in this order, UNDER THIS CONTRACT."**
+Change the contract and every root changes, **which is what stops a journal being
+quietly re-interpreted against rules it was never kept under.**
+
+    contract     LOOP_PROMPT.md  (17379 bytes)
+    GENESIS leaf f8f98b49af22b15a934179b42d3f0c980b47df6943365f13c0e96bb657a9fc9f
+    sealed       23 journals -> results/merkle_roots.json
+
+    hilbert.jsonl        142 lines  07098be37b40b6b361957dbf03578c302c5aeff75c84833f31567040718fe92a
+    arm_a_k1.jsonl        48 lines  aaeb876656b7e2c5c217df5c4447e0a3e5684b6506899ea0801a87ea997420e1
+    m2.jsonl              40 lines  aab4dc4c0a682cf84f19555431ab8844664fe19b3215232691d6a6bfacd5f4e1
+    gram.jsonl            18 lines  3a2e9c7cf5fc2594a402817faaa24357ea816910bcd5f8cee0e2208ff5cf33e5
+    m3_quintuple.jsonl    19 lines  c8df1928948ba8d886e89fa4255f3476cf3ad87f66ea5e20fa5fd067a929e14e
+
+## TWO CONSTRUCTION CHOICES THAT ARE NOT COSMETIC, AND BOTH ARE TESTED
+
+**Domain separation.** Leaves carry a `0x00` prefix, internal nodes `0x01`.
+**Without it an internal digest can be presented as a leaf** and a tree of `n`
+leaves forged as a tree of fewer. One byte, whole class removed.
+
+**Odd levels PROMOTE, they do not DUPLICATE.** Padding an odd level by repeating
+its last node makes `[a,b,c]` and `[a,b,c,c]` produce **the same root** — that is
+**CVE-2012-2459**, the Bitcoin duplicate-leaf flaw. **A test asserts the two do not
+collide.**
+
+## THE TAMPER TESTS ARE DRAWN, NOT HAND-PICKED
+
+The single-line tamper is asserted **at every one of 16 positions**, not one chosen
+index — **a hand-built minimal example is where a control goes vacuous**, and this
+project has struck **nine** of them across four authors. Also bound: **a single
+byte** (`0.16511 -> 0.16512`) suffices; **reordering** two entries is a tamper;
+**deletion** is caught, which is the tamper an append-only convention hides best;
+and **appending is caught too**, because append-only is not a defence against a
+root taken earlier.
+
+**MUST-FIRE:** a constant hash is constructed and `leaf_hash` is required to
+separate distinct inputs — **without it every tamper test above is vacuous.**
+
+## AND ONE OF MY OWN ASSERTIONS WAS VACUOUS. CAUGHT ON RE-READING.
+
+The genesis test first contained:
+
+    assert GENESIS_LABEL in leaf_hash(GENESIS_LABEL + "contract A")[:0] + GENESIS_LABEL
+
+**`[:0]` is the empty string, so this reduces to `X in "" + X` — true for every
+input.** It asserted nothing. **Tenth vacuous control in this project and the third
+authored by me**, and the only difference this time is that it was caught **before
+it shipped** rather than by a fellow two iterations later.
+
+Replaced with one that **can fail**: rebuild the root by hand and require the
+label to participate —
+`journal_root(j,c1) == merkle_root([GENESIS_LABEL + "contract A"] + body)` **and**
+`!= merkle_root(["contract A"] + body)`, the second line failing if the label is
+not part of the genesis leaf.
+
+CHECKLIST: **S5 GREEN.** `scale/merkle.py`, 11 tests, 23 journals sealed to the
+contract. Domain separation and the CVE-2012-2459 collision both **bound**. One
+self-authored vacuous assertion **caught pre-ship and replaced**.
+
+**SCOREBOARD: 23** — 22 carried + **S5 +1**.
+
 ### ROUND 7, ITERATION 0 - 2026-08-26 - RULE 5 goes into the SKILL, not just the contract. Three fellows out. And Wilson kills three of my four correspondences.
 
 CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.

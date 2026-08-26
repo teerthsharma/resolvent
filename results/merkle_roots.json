@@ -1,0 +1,121 @@
+{
+  "contract": "LOOP_PROMPT.md",
+  "genesis_leaf": "f8f98b49af22b15a934179b42d3f0c980b47df6943365f13c0e96bb657a9fc9f",
+  "journals": [
+    {
+      "journal": "results/agg_matched.jsonl",
+      "lines": 4,
+      "root": "5afb396c57eaf1ec50ad6c54994db6153bd068569c1f5d2917fb10c0d88d2384"
+    },
+    {
+      "journal": "results/aggregator_mech.jsonl",
+      "lines": 3,
+      "root": "6ebf6728eaa8449f33a80384e424256fe74b55bd6c23bfde9a49a7ea51766681"
+    },
+    {
+      "journal": "results/arm_a.jsonl",
+      "lines": 3,
+      "root": "47ac593832886bd1dd034f8c3023a75e5b69c50f8eb08a0bdc85685a4e170b23"
+    },
+    {
+      "journal": "results/arm_a_k1.jsonl",
+      "lines": 48,
+      "root": "aaeb876656b7e2c5c217df5c4447e0a3e5684b6506899ea0801a87ea997420e1"
+    },
+    {
+      "journal": "results/arm_s.jsonl",
+      "lines": 82,
+      "root": "381ea80f30f82ea4cd8a422251d0c6e0115adffd2e44c66835ec1f88a12e9ca7"
+    },
+    {
+      "journal": "results/b1_collapse.jsonl",
+      "lines": 6,
+      "root": "b4f67ed0738944487a4bdf4fb89225c13d52049fc9efb903a7f5ff82bb427b4f"
+    },
+    {
+      "journal": "results/b1_decomposition.jsonl",
+      "lines": 4,
+      "root": "1c8d4716b12ead9a4d22db48a3c30ebd75216afaf328df22a5c1280088084c61"
+    },
+    {
+      "journal": "results/cameron_aggregators.jsonl",
+      "lines": 8,
+      "root": "030afeb9ec4e1db860e988a4eede649d569b7a50a0726da2718deea555b4957d"
+    },
+    {
+      "journal": "results/chase_m3_synth.jsonl",
+      "lines": 25,
+      "root": "81b5b188e34e2b2096753c82a87695b28dc9191f993eaf42cf9b9157a57289b0"
+    },
+    {
+      "journal": "results/equilibrium.jsonl",
+      "lines": 9,
+      "root": "5c1622087611bc24ea3f2a62dbd28ba459d64939817bcdd84a0603ceb2028c17"
+    },
+    {
+      "journal": "results/foreman_theta_tv.jsonl",
+      "lines": 27,
+      "root": "0a40580b7a644a5ec1cddf1d456b8288f640d945b05d0641fb8dab53babfdcb8"
+    },
+    {
+      "journal": "results/gram.jsonl",
+      "lines": 18,
+      "root": "3a2e9c7cf5fc2594a402817faaa24357ea816910bcd5f8cee0e2208ff5cf33e5"
+    },
+    {
+      "journal": "results/hilbert.jsonl",
+      "lines": 142,
+      "root": "07098be37b40b6b361957dbf03578c302c5aeff75c84833f31567040718fe92a"
+    },
+    {
+      "journal": "results/journal_census.jsonl",
+      "lines": 4,
+      "root": "1d60dc813b4583782e2a6be4563a2113aaebc660d3f029016b23fe8adcc90621"
+    },
+    {
+      "journal": "results/k3_concavity.jsonl",
+      "lines": 6,
+      "root": "023fb2d170a68b082687dead28fd7f978dd558ac13850ff20983fa0a20b5adde"
+    },
+    {
+      "journal": "results/m2.jsonl",
+      "lines": 40,
+      "root": "aab4dc4c0a682cf84f19555431ab8844664fe19b3215232691d6a6bfacd5f4e1"
+    },
+    {
+      "journal": "results/m3_quintuple.jsonl",
+      "lines": 19,
+      "root": "c8df1928948ba8d886e89fa4255f3476cf3ad87f66ea5e20fa5fd067a929e14e"
+    },
+    {
+      "journal": "results/m3_quintuple_v2.jsonl",
+      "lines": 11,
+      "root": "ecab31708d8fc2774c026cae9ddb702a69a310fc3ff7215270f4124b7a98cea7"
+    },
+    {
+      "journal": "results/max_row.jsonl",
+      "lines": 6,
+      "root": "fa2292d12f6f338f797fc267fe2f4f7fbb72353aae4d139d9d1ab3d7ba76f0f4"
+    },
+    {
+      "journal": "results/r2.jsonl",
+      "lines": 36,
+      "root": "b211f3a0e77539a6fb9bf41d6734f73717703c8420e658a743ee39d28cc23ca8"
+    },
+    {
+      "journal": "results/s2.jsonl",
+      "lines": 13,
+      "root": "ce9b3982b99f599a165bcd7d05224bf3c47df070c151a2902c44377cd0c49953"
+    },
+    {
+      "journal": "results/tau_trajectory.jsonl",
+      "lines": 10,
+      "root": "28a3cfe840a7a9ec9da308315e84845d545f264815f147ed462fadbf5d3091ce"
+    },
+    {
+      "journal": "results/wilson_arms.jsonl",
+      "lines": 36,
+      "root": "c6104c75e7eb7c071f911010f38f5cb121ec3eef1e2aff9bdb55bee844c96327"
+    }
+  ]
+}
