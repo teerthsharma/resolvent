@@ -4,6 +4,164 @@ Round 5 closed at `TWOSPHERES: BROKEN - ARM A, K1's dual slope, displacement
 clause`; its handoff is `done5.md` and its negative result is `D1.md`. That
 verdict is final and is not reopened.
 
+### ROUND 6, ITERATION 10 - 2026-08-26 - Inspector CLEAN. ARM S is born, and the one thing it cannot answer is the one thing worth +12.
+
+CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.
+[RUN] `python inspector.py` (scheduled pass) -> **exit 0, CLEAN, 11 checks, 16
+controls all fired.** Coverage printed: **191/1413 = 13.52%** (was 107/1278 =
+8.37%), and the bill says in its own output that a clean result *"is a statement
+about these 191 tests and about NOTHING ELSE"*.
+
+---
+
+## FOREMAN: ARM S IS BORN. G3 PASS. GATE 1 PASS. GATE 2 PASS. GATE 3 SPLIT.
+
+`python scale/arm_s.py --ss 256 1024 --ks 8 32 128 --seeds 0..11 --repeats 20`,
+d=16, beta=0.5, tol=1e-12, threads pinned in file, **72 cells**.
+
+## G3 - and he caught his own control being vacuous first
+
+    t_max=0 BITWISE identical to glance:   24/24
+    RED control, LIVE ROWS ONLY:           24/24   worst |diff| = 1.192093e-06
+
+**His first version scored 24/24 with `worst |diff| = 0.000000e+00` - a
+contradiction he chased rather than shipped.** Cause: row 0 of a `tril(-1)`
+operator sums to **exactly 0.0**, so the renormalising rewrite produced `NaN`,
+`torch.equal` returned False **for the wrong reason**, and `max(0.0, nan)` returns
+`0.0` in Python so the witness vanished. **The control was firing on a
+divide-by-zero, not on the float claim it advertised.** Fixed to live rows only,
+dead rows counted separately. **Sixth vacuous control this round, and the third
+different author.**
+
+## THE RED THAT MATTERED - the arm was, at first, the arm round 5 killed
+
+Before the fix ARM S *"converged"* in 3 steps with residual **exactly 0.0**:
+
+    seed 0  steps 3  alpha max 1.000000  min 0.000e+00  entropy 0.0000  nnz 1
+    gate max: 1.000000 / 0.999997 / 0.999709 / 0.999838
+
+**Row i's softmax over its own pivots is already one-hot, so the settled reading
+was one pivot row copied out.** That is decoration.
+
+**And the fixed point was not missing - it was unrepresentable.** `kappa <= beta <
+1` on the open simplex, complete under `d_H`, so Banach gives existence and
+uniqueness; **the true fixed point has coordinates around `e^-1000` and float64
+rounds it to the nearest vertex.** Same class as reading `tanh(Delta/4)` at
+Delta=100: **the mathematics is fine and the arithmetic is dead.**
+
+**The log-domain tool built at iteration 5 fixed it**, exactly as it fixed the
+float32 underflow: `log_alpha min -182.7498`, **converged 72/72, left_cone 0/72**.
+**One root cause, four symptoms** - F-lam's logit scale, `Delta ~ 100` nats, the
+float32 underflow, and now the vertex collapse.
+
+## BIRTH GATE 1 - and he threw out the flattering contrast himself
+
+    d_H(settled, glance)   > 1e-06:  72/72 = 1.000000
+    d_H(settled, ONE step) > 1e-06:  71/72 = 0.986111  95% CI [0.925029, 0.999648]
+    steps  min 3  median 43  max 45     range 2.349586e-08 .. 18.734009 nats
+
+**`d_H(settled, glance)` proves nothing** - it can be large merely because a pivot
+row is not the query row. **The deciding contrast is settled vs ONE STEP**, and
+that is what he reports: `0.986111` with a **lower CI bound of 0.925029 against
+G7's 1% bar - a factor of 92.** The `1e-6` threshold is calibrated and stated:
+noise floor ~`1e-13`, real separations to `18.73` nats, so it sits seven decades
+above noise and seven below signal.
+
+## THE CERTIFICATE IS ATTAINED, NOT MERELY RESPECTED
+
+First read looked like a refutation of his own bound: **worst step ratio
+`0.510753` against `beta = 0.5`.** He ran it down over 2665 step-ratios:
+
+    r_t > 0      n=2665   max ratio 0.510752688
+    r_t > 1e-09  n=2046   max ratio 0.500013909
+    r_t > 1e-06  n=1426   max ratio 0.500000013
+    r_t > 0.001  n=813    max ratio 0.500000000
+
+**Every violator sits at `r_t ~ 1e-12`, at the tolerance floor where float64
+`d_H` has four significant digits left. Above the noise the bound reads
+`0.500000000` - exactly beta, to nine decimals.** He declines to call it refuted
+and declines to call it slack. **`kappa(T) = beta` is attained.**
+
+## BIRTH GATE 2 - gradcheck TRUE, and the certified N is 15x conservative
+
+    beta 0.25 -> N=11  True     beta 0.5 -> N=21  True     beta 0.9 -> N=153  True
+    MUST-FIRE  beta 0.9, N=3  -> False   ("Jacobian mismatch for output 0")
+               beta 0.9, N=10 -> True
+
+`gradcheck` re-solves the fixed point at every perturbed input, so this is the
+implicit formula against a finite difference of the **true fixed point**, not an
+unrolled solve. Backward never forms `J`. **N reproduces contract 1.1's banked
+table byte-exact: `0.5 -> 21`, `0.9 -> 153`, `0.99 -> 1833`.**
+
+**And he states the unflattering half: `N=10` already passes at rtol 1e-4 where
+the certificate demands 153.** Conservative by ~15x. That is what a worst-case
+bound does, and `flop bwd` is being priced at 153.
+
+## BIRTH GATE 3 - K-F PASSES ON FLOPs AT k<=32, FAILS AT k=128, AND THE CLOCK IS NOT A MEASUREMENT
+
+       s     k  steps   flop glance   flop setup   flop settle   FLOP ratio   clock ratio
+     256     8      3    4.194e+06     1.72e+05          384      1.042389       4.6604
+     256    32      8    4.194e+06     1.008e+06    1.538e+04     1.263268       9.6520
+     256   128      8    4.194e+06     1.035e+07    2.581e+05     3.851464      45.0608
+    1024     8     45    6.711e+07     6.881e+05         5760      1.010420       1.6546
+    1024    32     45    6.711e+07     4.227e+06    9.216e+04     1.065643       2.4850
+    1024   128     44    6.711e+07     4.198e+07    1.442e+06     1.667480      14.4709
+
+**SETTLING IS NOT THE COST. SETUP IS.** `flop settle` runs 384 to 1.442e6 against
+a glance of 4.194e6 to 6.711e7. The `2k^2 s` Gram term dominates at k=128.
+
+**One kernel win already taken:** the pivot context reads only `k+1` query rows,
+`O(k s d)` not `O(s^2 d)` - **31x off the setup term at s=1024, k=32.** A second
+is priced and **deliberately not taken**: never form `G`, two `O(k s)` matvecs per
+step, crossover at `k < 84`, reading `1.47x` against the measured `1.667480x` at
+k=128. **He prices k=128 out honestly rather than optimising for it**, noting the
+contract sweeps k in {8,16,32} and round 5 found Karcher uniqueness on only
+**0.5167** of draws at k=128 anyway.
+
+**THE CLOCK IS NOT OFFERED AS EVIDENCE.** Clock 1.65x-45x against FLOPs
+1.01x-3.85x; the gap is dispatch, not arithmetic. He fetched the accounting rather
+than asserting it - arXiv 2302.06117, *"When the execution of GPU kernel
+computation is largely blocked by CPU framework operations such as kernel
+dispatches, the model's execution becomes framework-bound"*; pytorch/pytorch#41383
+*"Large overhead (7 microseconds) for PyTorch operation"*; and **NOT FOUND**: any
+doc claiming `torch.compile` removes per-op dispatch overhead **on CPU**, the docs
+saying the opposite scope. **K-F is UNDECIDED, not passed**, and closing it needs
+`collect_callgrind` instruction counts or an isolated core.
+
+## THE THREE OPEN ITEMS, ANSWERED
+
+**beta is a knob - ADJUDICATED, and the answer is yes.** `kappa = beta` exactly,
+attained, and **invariant across s, d, k, logit scale and seed - 72/72 cells, one
+value.** So it is scale-free, which is what ideal 3 asks. **But it is chosen, and
+it sets both `t*` and `N` directly.** His words: *"The certificate is a dial with a
+known transfer function, not a measured property of attention."* **He refuses to
+dress it up and says whether ideal 3 accepts a constant chosen once for all
+geometries is a ruling, not a measurement, and not his to make.**
+
+**The consistency gate - STRUCK as written, third leg supplied.** Gate now on
+`kappa_emp <= kappa_struct`, tight to nine decimals and violable by a broken map;
+`kappa_cert = 1.0000000000` stays **printed as the record of why Birkhoff's
+constant does not carry this arm.**
+
+## AND HIS ITEM 5 IS THE ONE THAT MATTERS MOST
+
+**`alpha` is near one-hot even after the log fix** - `log_alpha min -182.7498`,
+max `-0.0`. **The fixed point is unique, reached, and lopsided.**
+
+**Whether a lopsided equilibrium carries anything a single argmax-pivot lookup
+does not is exactly T1's question, and NO GATE ABOVE ANSWERS IT.** He flags it
+**before** anyone banks +12 on ARM S. That is the right instinct and it is
+recorded as the round's central open risk: **every birth gate can pass while the
+arm still turns out to be an expensive way to take an argmax.**
+
+CHECKLIST: Inspector **CLEAN**, coverage **13.52%** printed. ARM S **BORN** - G3,
+gate 1, gate 2 GREEN; **gate 3 SPLIT, K-F UNDECIDED**. `kappa = beta` **attained**.
+beta **is a knob** and it is said plainly. Consistency gate **STRUCK and repaired**.
+
+**SCOREBOARD: 4** - unchanged. Birth gates are not on the board, and Foreman
+declines to bank `kappa<1` on the ambiguity. The +2 banked at it.4 stands and is
+now **better supported** (`kappa_emp = 0.500000000` attained, not merely bounded).
+
 ### ROUND 6, ITERATION 9 - 2026-08-26 - The 2-dof lemma holds, and it has a degeneracy the contract does not mention.
 
 CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.

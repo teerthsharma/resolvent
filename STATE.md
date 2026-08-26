@@ -4,45 +4,44 @@
 |---|---|
 | contract | `LOOP_PROMPT.md` (v8.2). Round 5 archived `LOOP_PROMPT_ROUND5_ARCHIVE.md` |
 | promise | **`HILBERT`** — D2 verbatim, or an honest `BROKEN` |
-| iteration | **9 complete, 10 next** |
-| phase | **B — birth gates and the probe (iterations 5–9)** |
+| iteration | **10 complete, 11 next** |
+| phase | **C — the deciding measurement (iterations 10–15; RULE 2)** |
 | scoreboard | **4** — Star delta +2, κ<1 measured +2 *(qualified: Birkhoff route dead, structural β earned it)* |
 | RULE 2 clock | **running.** M3 settled-vs-unsettled EXECUTES by **iteration 12** or breach review |
 | register | **caveman, all agents, every iteration.** Artifacts stay normal English |
 | autonomy | user meets the loop at **iteration 30**; no check-ins |
 
-## THE ONE NEXT ACTION (round 6, iteration 10)
+## THE ONE NEXT ACTION (round 6, iteration 11)
 
-**`python inspector.py` — the scheduled audit pass (iterations 10, 20, 28).**
+**PHASE C. The money run. RULE 2 gives it iterations 11–12 and no more.**
 
-It runs **before** the money run, which is what the contract intends: audit #1 sits
-at it.10 and Phase C's deciding measurement at it.11–12.
+Audit #1 is done and CLEAN, which is the precondition. ARM S has passed G3 and
+birth gates 1 and 2; gate 3 is split with **K-F UNDECIDED on a contended box**.
 
-**Then collect whoever has landed.** Four agents live: Wilson (G2), Foreman (ARM S
-birth gates), Cameron (`scale/fgreen_matched.py`, the +3/−5 pivot), Chase (idle,
-calibrated).
+**Dispatch CHASE for the M3 triple**, and the pre-registration must carry all of
+this **before** the run, not after:
+  * **n_train=8192**, because softmax **fails its own 1.0 bar at 2048 on 3 of 5
+    seeds** (mean `1.007076`) and the published `0.949529` is **rank 1 of 5**;
+  * **print all five seeds**, never a single figure;
+  * **the ~0.05 NRMSE resolution floor**, because pairing buys almost nothing
+    (`0.056889` paired vs `0.057089` unpaired) — **a real gap below 0.05 reads NO
+    DIFFERENCE regardless of truth**;
+  * **softmax reproduced first**, as always;
+  * **k ∈ {8,16,32} only** — k=128 fails K-F on FLOPs *and* sits outside the
+    uniqueness-safe regime (round 5: 0.5167 of draws).
 
-**Reading order is fixed and is not arrival order:**
-  1. **WILSON on the G2.** The question that sets the severity: **does anything
-     else from the same bootstrap drift?** Stable point estimate with moved
-     endpoints points at the **resampler** — one drifted interval is a defect, a
-     drifting resampler is a class, and then every bootstrap CI in the record is
-     suspect.
-  2. **FOREMAN — G3 first.** If the hops=0 bitwise bind fails, nothing else counts.
-  3. **CAMERON — the +3/−5 pivot**, read on the **tail** stratum, never pooled.
+**AND THE THING THAT DECIDES WHETHER +12 IS EVEN MEANINGFUL.** Foreman's item 5:
+`alpha` is near one-hot after settling (`log_alpha min -182.7498`). The fixed point
+is unique, reached, and **lopsided**. **No birth gate asks whether a lopsided
+equilibrium carries anything a single argmax-pivot lookup does not** — and that is
+T1's question verbatim. **The M3 triple must therefore include a fourth cell: the
+argmax-pivot lookup**, or a settled win is unattributable and +12 cannot be banked
+honestly. Foreman flagged this before the run; it goes into the design, not the
+write-up.
 
-**CARRY INTO ARM P'S DRAW PROTOCOL, from it.9:** the four-point probe is rank 2
-**generically** but **rank 1 exactly where `p_c = p_j`**. A top-k selector chooses
-tokens of *similar* score, so pairing `c` and `j` from within the selected set
-**sits near the degenerate locus by construction**. **The protocol must either
-draw `c` and `j` with deliberately unequal mass, or report the `|p_c − p_j|`
-distribution beside every interaction number.** Unstated, this is the mechanism
-that would quietly reproduce round 5's collapse inside a probe designed to escape
-it.
-
-**RULE 2: two iterations after this one.** The money run must be at
-**n_train=8192**, print **all five seeds**, and carry the **~0.05 NRMSE resolution
-floor in its pre-registration**.
+**Still open and unrouted:** Wilson on the G2 (does anything else from the same
+bootstrap drift — one number or a class?); Cameron on the +3/−5 pivot and now also
+a second 2-dof implementation to cross-check against mine.
 
 ## Open REDs
 
