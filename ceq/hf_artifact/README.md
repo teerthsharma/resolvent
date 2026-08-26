@@ -4,7 +4,12 @@ Task `negation_scope` at `s64_d24_st150_ntr8192_nev512_b21`, 5 seeds, `n_params 
 
 **Softmax is the baseline and is measured first.** A verdict of NO DIFFERENCE is printed wherever that is what the interval says.
 
-**This package carries NO trained weights.** v0 is the card and the modelling code; the numbers below come from `results/m3_quintuple_v2.jsonl`, which journals metrics and not tensors. A trained checkpoint is a separate deliverable and does not exist yet.
+**This package ships no language-model weights, and its table cells carry no weights
+either.** The numbers below come from `results/m3_quintuple_v2.jsonl`, which journals
+metrics and not tensors. What IS shipped, since the e3 ladder completed, is a separate,
+verified set of trained probe-arm tensors under `weights/` -- five 4,769-parameter `twin`
+checkpoints at task `e3_t1`, one per seed. See "Weights shipped with this package" below;
+none of them loads into `CEQForCausalLM` and none is named `model.safetensors`.
 
 ## Arms
 
@@ -57,7 +62,42 @@ The word `undecided` here is a property of the schedule, not of the data: at fiv
 
 ## Consequence fidelity (1.7c): NOT MEASURED
 
-Owner: Foreman (LOOP_PROMPT.md 1.7c). scale/m3_quintuple.py journals metrics only and saves no per-cell weights, so no trained settled/twin/argmax/glance weights exist to intervene on. The only trained weights on disk are results/phaseD_weights_*.pt, whose metrics.kind is pivot_unsigned -- a different arm family, from scale/trained_projections.py.
+Owner: Foreman (LOOP_PROMPT.md 1.7c). For the cells in the table above this is still true:
+`scale/m3_quintuple.py` journals metrics and, for the ntr8192 `negation_scope` units, saved
+no per-cell weights, so no trained settled/twin/argmax/glance weights exist to intervene on
+AT THIS TABLE'S GEOMETRY. What exists on disk now: the e3-ladder units under
+`results/m3_quintuple_v2_weights/` (60 checkpoints, of which the five shipped twin t\*=1 files
+above are a verified subset) and results/phaseD_weights_*.pt, whose metrics.kind is
+pivot_unsigned -- a different arm family, from scale/trained_projections.py.
+
+## Weights shipped with this package
+
+`weights/` carries five safetensors files, one per seed, all `twin` at `taske3_t1` (the
+chain-family equilibrium task at t* = 1, geometry `k8_s64_d24_st150_ntr2048_nev2048_b21`):
+
+| seed | file (`weights/`) | eval NRMSE (journal) |
+|---|---|---|
+| 0 | `twin_k8_s64_d24_st150_ntr2048_nev2048_b21_sd0_taske3_t1.safetensors` | 0.9231181827 |
+| 1 | `twin_k8_s64_d24_st150_ntr2048_nev2048_b21_sd1_taske3_t1.safetensors` | 1.0785056996 |
+| 2 | `twin_k8_s64_d24_st150_ntr2048_nev2048_b21_sd2_taske3_t1.safetensors` | 0.9293004878 |
+| 3 | `twin_k8_s64_d24_st150_ntr2048_nev2048_b21_sd3_taske3_t1.safetensors` | 0.9568415797 |
+| 4 | `twin_k8_s64_d24_st150_ntr2048_nev2048_b21_sd4_taske3_t1.safetensors` | 0.9041007794 |
+
+Seed mean **0.958373** (`results/e_ladder_reading.txt`). Seed 1 sits ABOVE predict-the-mean;
+the t\* = 1 rung is underpowered (settled−twin −0.036025, CI [−0.118936, +0.062209], N=5),
+so these tensors carry no capability claim -- they are the ship candidate's arm at the one
+rung where both cells cleared the bar, exported for inspection and intervention work.
+
+Provenance and verification, per file (`scripts/export_hf_weights.py`, manifest in
+`weights/MANIFEST.json`): metrics matched by key against `results/m3_quintuple_v2.jsonl`
+(journal commit `1cc7900`; export HEAD `1c56985`, both stamped into each file's metadata);
+each tensor set reloaded from disk into a fresh `scale.m3_quintuple.QuintArm` and re-evaluated
+on the task's own eval batch -- tensor round-trip drift exactly 0.0, |delta NRMSE vs journal|
+exactly 0.000e+00 on all five shipped files, against an acceptance bar of 1e-6. A checkpoint
+that fails is deleted and left out of the manifest rather than shipped with a caveat.
+Compute context: the registered geometry pins `torch.set_num_threads(2)`
+(`scale/m3_quintuple.py:74`) and every number here is a CPU-lane number; the CUDA lane is
+opened but has produced no journalled figure yet.
 
 ## Limits
 

@@ -52,8 +52,10 @@ tags:
 ## Model Details
 
 - **Type:** a `transformers`-registerable attention function plus a small causal-LM
-  architecture (`CEQForCausalLM`), byte-level vocabulary. **No trained weights are published
-  here.**
+  architecture (`CEQForCausalLM`), byte-level vocabulary. **No language-model weights are
+  published here** — what ships under `weights/` are 4,769-parameter trained task-probe arm
+  checkpoints (`scale.m3_quintuple.QuintArm`), a different and much smaller object. See
+  "Weights and checkpoints" below.
 - **Operator:** `out = stock_attention(q, k, v) + Σ_{h=1..K} (α A)^h v`, `A` strictly lower
   triangular and signed; shipped default `sgate` at `rho=1.5, lam=0.10, hops=2`.
 - **Sizes ever trained:** 3.3M and 3.65M parameters. **Nothing above 3.65M has ever run.**
@@ -63,10 +65,12 @@ tags:
 - **License:** MIT. **Contact / issues:** the source repository.
 - **The headline result is a loss.** Read "Limits, first" before anything else.
 
-**This card describes a MODULE, not a trained checkpoint.** There are no weights here. It
-is a `transformers`-registerable attention function that adds one term to an existing model's
-attention, and it is measured against that model rather than presented on its own. The one
-capability comparison ever run at matched parameters went against it.
+**This card describes a MODULE; its language model is not a trained checkpoint.** There are no weights here
+for `CEQForCausalLM`. What does ship, since the e3 ladder completed, is a set
+of trained task-probe arm tensors under `ceq/hf_artifact/weights/` — 4,769-parameter
+`QuintArm` modules trained by `scale/m3_quintuple.py`, each verified bit-exact against its
+journal row before export. The card remains measured against softmax rather than presented on
+its own, and the one capability comparison ever run at matched parameters went against it.
 
 ```
 out = stock_attention(q, k, v) + Σ_{h=1..K} (α A)^h v      A strictly lower triangular, SIGNED
@@ -77,6 +81,37 @@ Every number below names the test that produces it. Reproduction commands are at
 ---
 
 ## Limits, first
+
+**THE e3 LADDER COMPLETED. ROW G FIRED AT t\* ∈ {2, 8, 32}; THE t\* = 1 RUNG IS
+UNDERPOWERED — NOT A KILL, AND NOT A WIN.** The settled-vs-twin ladder over the chain-family
+equilibrium tasks (`e3_t*`, 60 units: {settled, twin, softmax} × seeds 0–4 × t\* ∈
+{1, 2, 8, 32}, n_train=2048, n_eval=2048, journal keys `*_taske3_t{1,2,8,32}` in
+`results/m3_quintuple_v2.jsonl`, reading in `results/e_ladder_reading.txt`) closed today with
+three findings, stated in the pre-registration's own order:
+
+- **Row G (pre-registered) fired on three of four rungs.** At t\* ∈ {2, 8, 32} a cell sits at
+  or above predict-the-mean — twin 0.996743 and settled 1.013958 at t\*=2; settled 1.096009
+  and twin 1.091725 at t\*=8; settled 1.103711 and twin 1.119745 at t\*=32 (`results/e_ladder_reading.txt`,
+  per-cell means) — so those rungs **credit nothing in either direction**. This is a statement
+  about the arms' capacity budget at depth, not a settling kill.
+- **t\* = 1 is underpowered, not a kill.** The settled−twin contrast reads **−0.036025**,
+  95% CI **[−0.118936, +0.062209]**, N=5 paired seeds, verdict NO DIFFERENCE (reading's own
+  convention: delta = NRMSE_twin − NRMSE_settled, positive favours settled). The interval
+  spans zero and five seeds cannot resolve gaps below roughly 0.05 NRMSE
+  (`M3_QUINTUPLE_PREREGISTERED_READING.md` floor). The route owed is pre-registered:
+  **seeds 5→13 at that rung**, at which the realised resolution is 0.027260
+  (`results/e_ladder_reading.txt`). Until that run completes, no sentence about settling at
+  t\* = 1 is licensed by this data.
+- **The headline claim is unchanged and stays exactly what was earned, with its interval:**
+  pivot-routed mixture attention (twin) beats the softmax baseline by **+0.111396 NRMSE,
+  95% CI [+0.100873, +0.121920], 5/5 seeds**, on `negation_scope` at n_train=8192
+  (`results/m3_quintuple_v2.jsonl`; contrast table in [`ceq/hf_artifact/README.md`](ceq/hf_artifact/README.md)).
+  No superiority claim beyond that interval is made anywhere in this card.
+
+Scope caveat carried from the reading itself: every e3 task binds `equilibrium_oracle`, the
+signed path sum the ceq resolvent computes, so only the settled-vs-twin contrast is
+creditable on this ladder and a loss here is a statement about e3, not about the round's
+prediction.
 
 **THE CAPABILITY NUMBER CAME BACK AND THE OPERATOR LOST IT.** COGS generalization, exact
 match, 512 items, **3,652,096 parameters in both arms**, identical steps / lr / batch / seed
@@ -485,7 +520,8 @@ wraps.
 memory — and the distinguishing property decays in context length *and* in window width, so it
 is a short-range property either way.
 
-**In production.** There are no weights, no KV cache, no backward pass for the Triton kernel,
+**In production.** There are no language-model weights (only the 4,769-parameter probe arms
+under `weights/`), no KV cache, no backward pass for the Triton kernel,
 and every number was measured on one laptop GPU.
 
 ## What this is for, and which niche it might occupy
@@ -515,6 +551,55 @@ accuracies on `sentential_negation_npi_scope` are 5-gram 45, LSTM 23, Transforme
 not saturated and there is room to be measured. **It has never been run here, and the prior is
 against it:** the one matched-parameter capability comparison this project ever ran went to
 softmax. `README.md` carries the pre-registered kill.
+
+## Weights and checkpoints
+
+**What ships here are trained probe-arm tensors, not language-model weights.** Five files
+under [`ceq/hf_artifact/weights/`](ceq/hf_artifact/weights/MANIFEST.json), one per seed, each
+a trained `QuintArm` — 4,769 parameters, module class `scale.m3_quintuple.QuintArm`
+(q/k projection + 2-layer MLP + scalar readout). **The `CEQForCausalLM` model in
+`modeling_ceq.py` still has no published checkpoint**, and no file in `weights/` is named
+`model.safetensors`, because none of them loads into it.
+
+| file (`ceq/hf_artifact/weights/`) | task | cell | seed | eval NRMSE (journal) |
+|---|---|---|---|---|
+| `twin_k8_s64_d24_st150_ntr2048_nev2048_b21_sd0_taske3_t1.safetensors` | e3_t1 (t\*=1) | twin | 0 | 0.9231181827 |
+| `twin_k8_s64_d24_st150_ntr2048_nev2048_b21_sd1_taske3_t1.safetensors` | e3_t1 (t\*=1) | twin | 1 | 1.0785056996 |
+| `twin_k8_s64_d24_st150_ntr2048_nev2048_b21_sd2_taske3_t1.safetensors` | e3_t1 (t\*=1) | twin | 2 | 0.9293004878 |
+| `twin_k8_s64_d24_st150_ntr2048_nev2048_b21_sd3_taske3_t1.safetensors` | e3_t1 (t\*=1) | twin | 3 | 0.9568415797 |
+| `twin_k8_s64_d24_st150_ntr2048_nev2048_b21_sd4_taske3_t1.safetensors` | e3_t1 (t\*=1) | twin | 4 | 0.9041007794 |
+
+Seed mean **0.958373** (`results/e_ladder_reading.txt`), and note honestly: **seed 1 sits
+above predict-the-mean (NRMSE > 1.0)**. These weights belong to the underpowered t\* = 1 rung
+described at the top of Limits; they are the ship candidate's arm at the only rung where both
+cells beat the bar, and they carry no capability claim of their own.
+
+- **Geometry string = journal key**: `{cell}_k{k}_s{s}_d{d}_st{steps}_ntr{n_train}_nev{n_eval}_b{t_max}_sd{seed}_task{task}`
+  (`scale/m3_quintuple.py::_key`). Here: k=8 pivots, s=64, d=24 (task distance), d_model=16,
+  150 steps, n_train=2048, n_eval=2048, t_max=21.
+- **Provenance.** Metrics come from `results/m3_quintuple_v2.jsonl`, matched by key; the
+  journal's last commit is `1cc7900` and the export HEAD is `1c56985`. Both are stamped into
+  every safetensors metadata block and into `weights/MANIFEST.json`.
+- **Verification, per file.** Exported by `scripts/export_hf_weights.py`: tensors reloaded
+  from the safetensors file into a fresh `QuintArm`, forward re-run on the task's own eval
+  batch (rebuilt as `bfn(n_eval, s, d, d_model=16, seed=seed+12345)`, exactly as training
+  built it), recomputed NRMSE compared against the journal row. All five shipped files:
+  tensor round-trip drift exactly **0.0**, |Δ NRMSE vs journal| exactly **0.000e+00**
+  (bit-exact; acceptance bar was 1e-6). A checkpoint that fails is deleted and excluded from
+  the manifest rather than shipped with a caveat.
+
+## Compute
+
+- **CPU lane (everything measured so far).** The registered geometry pins
+  `torch.set_num_threads(2)` inside `scale/m3_quintuple.py:74`, before any unit runs, and the
+  export script above pins the same count before verifying — CPU matmul reduction order
+  depends on thread count, so an unpinned verifier could manufacture a phantom delta. Every
+  journalled number this card cites from m3 ran under that pin on one machine: Windows,
+  Python 3.11.9, torch 2.5.1+cu121, RTX 4060 Laptop (see the single-machine caveat below).
+- **CUDA lane: opened, IN PROGRESS.** A CUDA execution lane for the same registered geometry
+  exists as work in progress and has produced **no journalled number yet**. No figure in this
+  card is a CUDA figure, and none should be quoted as one until it appears in
+  `results/` with its own commit.
 
 ## Training Details
 
