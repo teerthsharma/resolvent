@@ -1,3 +1,244 @@
+# HILBERT: IN PROGRESS - round 7, CEQ v9, THE CAPABILITY ROUND, iteration 0 of 30
+
+Round 6 closed with the certificate program CLOSED - three attempts, three deaths.
+Round 5's `TWOSPHERES: BROKEN` and its handover `done5.md` stand. Round 6's
+work-done is `done6.md`. Progress **22**.
+
+### ROUND 7, ITERATION 0 - 2026-08-26 - RULE 5 goes into the SKILL, not just the contract. Three fellows out. And Wilson kills three of my four correspondences.
+
+CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.
+
+## RULE 5 IS NOW IN THE SKILL FILE ITSELF
+
+**The flaw the user named is real and it was structural, not stylistic.** Round 6
+ended with three theories dead, every kill correct and well-evidenced, and **nobody
+required to say what to do instead.** An excellent map of dead ends and no path.
+
+**`~/.claude/skills/dispatching-house-mode/SKILL.md` now carries
+`## Every Kill Ships A Replacement Route`** as a first-class section, plus a bullet
+in the test-bound *"No exceptions"* list, an entry in Common Mistakes, and the
+Chart format extended so **every kill line in a prognosis carries its replacement
+route.**
+
+**The nurse did the right thing on a conflict rather than the instructed thing.**
+Two of four edits were **already present** from an interrupted earlier run, worded
+slightly differently. **It refused to duplicate them**, made a separate safety copy
+rather than overwriting the only true pre-edit original as literally instructed,
+and reported both deviations with the diff evidence. **A nurse that follows an
+instruction into a duplicated section is worse than one that stops and says why.**
+
+Three shapes, and they are the whole rule: **REROUTE** (goal survives, method
+died) - **REPRICE** (reachable, costs X, here is the arithmetic) - **RETIRE**
+(cannot be had, because {measured fact}, and here is what to want instead).
+**Retire is the hardest and it is a real answer.** *"I could not find one"* is not
+a retirement; **a speculative replacement is worse than an honest retirement.**
+
+## ROUND 7 OPENED. CONTRACT v9.
+
+`LOOP_PROMPT.md` rewritten, round 6 archived. **The certificate program is CLOSED
+and proposing one is a G-stop.** RULE 2 replaced by **1.4: the deciding cell's
+e-process must be LIVE and accumulating by iteration 8** - *a deadline can slip;
+evidence accumulation cannot be deferred.*
+
+**PHASE A it.0 DISPATCHED, three fellows in one message, RULE 5 binding on each:**
+Cameron the Hankel instrument with **the worked example reproduced as a test**
+(K-5: if it disagrees, the instrument is broken and nothing downstream is read);
+Foreman the fetch batch plus `METHODS.md`, **with the near-miss delta first
+because it gates a framing**; Chase the e-process **with its must-fire before any
+real seed** - a null must NOT cross 20 in 10,000 replays, **and seen failing to
+fire IS the calibration.**
+
+## CAMERON CLOSED PHASE D ON THREE SEEDS, AND IT SHUTS THE LAST DOOR
+
+    seed   nrmse0     nrmse   logit t/r   median D     max D      1-kappa   alpha ES
+       0 1.000335  0.747528      170.5    17.6298   83.6069  1.399670e-18   3.60068
+       1 1.021835  0.720210      204.8    26.2701  172.3926  7.352844e-38   3.34857
+       2 1.001767  0.766230      308.7    29.3392   85.4201  5.653121e-19   3.02830
+
+**Trained is 13-27x WORSE than harness init** (`~6.3`), not better. **Contract
+1.2's Neumann route is INFEASIBLE at trained projections**, `N ~ 3.9e19`, 3/3.
+**The hope that trained `Delta` would drop below ~20 is dead by measurement.**
+
+**T1 answered 3/3:** trained `alpha` effective support `3.60068 / 3.34857 /
+3.02830` of ~7.92 pivots. **An argmax is 1.0.** Lopsided, not degenerate. **T1 does
+not fire.** And `E|L3|/E|I|` reads `0.044308 / 0.043985 / 0.049042` - **degree-2
+claims survive, 3/3** - with `frac I == 0.0` at `1/24, 1/24, 0/24` against
+**279/400 at randn**. **The 79% exact-zero rate was a probe artifact.**
+
+**K-A does NOT fire** - `Delta` finite, 0 of 24 cells infinite, all seeds - **and
+the K-A float repair earned its keep on real trained data**: all three trained
+maxima exceed `76.246190`, so `tanh` reads exactly `1.0` while the closed form
+gives nonzero. **Anyone reading `kappa_cert` off a float at trained projections
+gets a wrong answer.**
+
+## WILSON MINED THE THREE PRIOR WORKS AND KILLED THREE OF FOUR
+
+**1. caustic's orbits vs our cone parts - NOT FOUND. Different object.** Ours
+groups **vectors in the positive cone by SUPPORT**; caustic's partitions **entity
+STRINGS by argmax token id** - `orbits.setdefault(a, []).append(e)` on
+`dict[int, list[str]]`. Sweep of all **87 blobs**: cone **0**, Hilbert metric
+**0**, projective diameter **0**, Birkhoff **0**, Gram **0**, positive scaling
+**0**. **A fiber partition of a many-to-one map is not a partition of a cone into
+parts. No machinery transfers.**
+
+**2. sigmoid's coupling operators vs Dobrushin - NOT FOUND.** All **30** modules
+swept: Dobrushin **0**, ergodic **0**, total variation **0**, Cheeger **0**,
+conductance **0**, spectral gap **0**, Perron **0**, nonexpansive **0**. sigmoid's
+only contraction number is `rho_ = sigma_max(A)` - **a spectral norm, not a total
+variation coefficient.** **Item B is new code, and no Dobrushin exists in our repo
+either.**
+
+**AND HE FLAGGED A TRAP.** sigmoid exports `hilbert_coefficients` - **the Hilbert
+SERIES of a graded module applied to a barcode**, `N(s) = sum s^{b_i} - sum
+s^{d_i}`. **Wrong Hilbert. Anyone grepping will hit it.**
+
+**3. caustic's five proved bounds - REAL, and useless for item A.** Eleven proved,
+one no-go. But **every one is about many-to-one collapse of a discrete answer
+map** - orbit error, pooling recovery, dissipative pooling, a no-local-criterion
+no-go. **None bounds an operator.** Lipschitz, operator norm, mixing coefficient,
+cone: **all NOT FOUND.**
+
+**And it is ALREADY MINED.** `lean/CEQ/OrbitBound.lean` carries *"Provenance:
+`caustic` Theorem 1, the Orbit Error Bound"* with its DOI, formalised and proved
+with tightness. **Round 6 would have been re-mining a worked seam.**
+
+**4. `kernels#22` - PARTIAL. Pattern yes, harness no.** It **does** fuse: one
+`@triton.jit` kernel, **one launch per forward**, online-softmax accumulator in
+registers, CSR over key blocks. **But the harness is CUDA-only** - `raise
+SystemExit("CUDA is required")`, `torch.cuda.Event` timing, **no `do_bench`, no
+dispatch count, no analytic FLOPs, no stddev.** **Nothing a contended CPU box can
+read.**
+
+**And the inheritance carries holes he named:** **no all-masked-row guard**
+(`out = acc / l_i[:, None]`, unguarded), **no backward pass**, no determinism
+test, no gradient test.
+
+**HIS REVIEW-DEPTH CHECK IS THE PART WORTH KEEPING.** One review, `COMMENTED`,
+body *"looks good to me, just one comment"* - and **the one comment was about
+`benchmarking/__init__.py`**. Five issue comments, all pandas. **No reviewer
+touched the kernel. Merged yes; kernel math reviewed, no.** *"Upstream-reviewed"*
+was my phrase and it was doing work it had not earned.
+
+## AND HE CORRECTED TWO THINGS IN MY OWN BRIEF
+
+**A. `Delta(G)` IS measured, and I wrote "NOT yet measured" into the Wilson
+dispatch.** It was measured at it.26 - `90.0696 .. 259.6998`, `kappa_G: 1.0` on all
+18 journal lines. **The leap had already failed when I sent him looking for
+material to revive it.**
+
+**B. THERE IS ONE NON-SATURATING DIAMETER SITTING IN THE JOURNALS AND NOBODY
+LOOKED.** `results/hilbert.jsonl`, 142 lines: `delta_naive` and `delta_hull` both
+Infinity, **but**
+
+    delta_image      = 2.517898719097161 / 1.8227455242048691 / 3.2026399097564138
+    kappa_cert_image = 0.5576903857145132 / 0.42656198036250703 / 0.6644055723849551
+
+**The only restriction in the entire journal that does not saturate.** He states
+plainly he **did not verify what that restriction is** and hands it to Foreman.
+**It is the closest thing in this repository to item B**, and it has been sitting
+in a committed journal unread.
+
+---
+
+## FOREMAN LANDED TOO, AND THE CERTIFICATE WAKES UP - FOR A REASON NOBODY EXPECTED
+
+**And the premise behind my own ask is REFUTED.**
+
+    claim                                          verdict
+    trained Delta(G) median below 76.246190        YES - 10.4519 / 19.7012 nats. READABLE.
+    training LOWERS Delta(G)                       REFUTED - it RAISES it 5.6865x / 9.4530x
+    "trained state-cone lower than random-init"    CROSS-GEOMETRY ARTIFACT
+    his own it.26 kill of the leap                 CORRECT, and GEOMETRY-BOUND
+
+Log-domain Gram, extreme-ray diameter, cached weights, per seed, never pooled:
+
+    seed 0 trained  Delta(G) med  10.4519  max  85.8787   >= 76.246190:  2/512
+                    tanh(med/4) = 0.9893068617   1-kappa(med) = 1.069314e-02
+    seed 1 trained  Delta(G) med  19.7012  max 145.0499   >= 76.246190: 26/512
+                    tanh(med/4) = 0.9998945738   1-kappa(med) = 1.054262e-04
+
+**THE MEDIAN DOES NOT CROSS. THE TAIL DOES.**
+
+**AND THE KILL IS OF MY FRAMING.** I told him *"trained is lower on the state
+cone"*, comparing Cameron's `83.6069` against his ARM A `101.3671 .. 311.6091`.
+**Paired, same harness, only the projection differing:**
+
+    STATE CONE  seed 0  init med 0.0593 -> trained med 16.6946   263.2529x  CI [254.4452, 272.1340]
+                seed 1  init med 0.0481 -> trained med 27.0656   538.1351x  CI [516.1070, 561.1990]
+
+**Training raises every diameter measured, both seeds, every CI excluding zero.**
+The two random-init numbers sit 40x apart in `Delta(G)` **because they are 4372x
+apart in logit scale** - ARM A's `randn(d,d)` at `1.171e+01` against this
+harness's `nn.Linear` default at `0.002678`. **I compared across geometries and
+handed him the comparison as a reason for hope.**
+
+**WHY THE CERTIFICATE IS ALIVE ANYWAY, and he states it so it cannot be
+misread:** **not because training helped - because this geometry starts 40x
+tamer.** Init `Delta(G)` here is `2.1969` against ARM A's `90.0696`. Training
+pushes it **up** 5.7-9.5x and it **still lands under the line** - from `2.20` to
+`10.45`, not from `90` to `10`.
+
+**So the round has a measured contraction constant for the first time -
+`kappa_G = 0.9893068617` at the median trained cell, seed 0 - and it is a property
+of the s=64 harness geometry, NOT a property of training.**
+
+**HE UPDATED HIS OWN it.26 KILL AGAINST HIMSELF.** At ARM A the leap paid
+**exactly zero**, 18/18. Here:
+
+    beta * tanh(Delta(G)/4)   trained median seed 0 -> pays 1.07%
+                              trained median seed 1 -> pays 0.011%
+                              on the tail           -> pays 0%
+
+**The leap is ALIVE AND MARGINAL, not dead** - and still **3.6x short** of House's
+predicted `0.961793` at its best measured point. His words: *"My kill was correct
+and was geometry-bound, and I did not say so at the time. That is the
+correction."*
+
+**AND THE MECHANISM IS READABLE AT LAST - AND IT IS NOT RAW OVERLAP.**
+
+    eff_supp    vs Delta(G):  r=-0.307188 CI [-0.384712,-0.228269] | r=-0.215658 CI [-0.316396,-0.114451]  BOTH exclude 0
+    overlap_min vs Delta(G):  r=-0.068937 CI [-0.154851,+0.019811] | r=-0.104961 CI [-0.189663,-0.012345]  seed 1 only
+
+**Effective support tracks `Delta(G)`; the raw overlap count does not.** His it.26
+`r = -0.370687` on `overlap_min` was **inside the saturated region and did not
+survive the move to a readable one.** `effective_support`'s own docstring had
+predicted it: *"0.999 on one pivot and 0.6 on one pivot are the same max-based
+story and completely different equilibria."*
+
+**TWO OF HIS OWN CONTROLS WERE WRONG FIRST AND HE REPORTS BOTH.** The formula
+bind read **0/4** because it compared a float64 log Gram against a **float32**
+operator - rebuilt at matching dtype, **4/4 exact**, with the `1.505e-06` kept and
+reported separately as the size of the float32 gap in his *published* random-init
+`Delta(G)`. And the underflow must-fire read **0/8** at scales 60 and 200 because
+**it is the log-Gram min that must cross `-745.13`, not the row range** - scale 200
+gives a row range of `1201.8` but a log-Gram min of only `-426.67`. Fixed at scale
+400: **8/8**.
+
+**AND AN HONEST LIMIT HE VOLUNTEERS:** at trained here `log_gram_min` is `-43.43`
+and `-72.52`, far above `-745.13`. **The probability path would have worked at this
+geometry too.** The log Gram was **insurance, not load-bearing for these cells** -
+it becomes load-bearing at ARM A's scale where `G min` reached `8.1603e-48`.
+
+**HE REFUSES TO BANK IT.** Seed 2 **NOT FOUND on disk**; the free bind reproduces
+the published F-green cell **on seed 0 only**. **The tail grew with training** -
+`0/512 -> 2/512 -> 26/512` - and *"a certificate that holds at the median and fails
+on 5% of draws is not yet a certificate."* One geometry; s=256 and s=1024 **NOT
+MEASURED**; `eff_supp` explains **under 10%** of the variance while logit scale
+explains far more **and is not a property anyone chose**. His close: *"`kappa = beta`
+is still the only certificate that holds everywhere... Me will not call that a
+contraction certificate for attention."*
+
+**And the contract agrees with him: a certificate is not a capability, and v9 pays
+nothing for one.**
+
+
+CHECKLIST: RULE 5 **in the skill**. Round 7 **opened**, contract v9. Three fellows
+**dispatched**. Phase D **closed 3/3** - trained `Delta` **13-27x worse**. Three
+correspondences **NOT FOUND**, one **PARTIAL**. **A non-saturating diameter found
+in a journal.**
+
+**SCOREBOARD: 22 carried.** Nothing on the v9 board earned.
+
 # HILBERT: IN PROGRESS - round 6, CEQ v8.2, iteration 0 of 30
 
 Round 5 closed at `TWOSPHERES: BROKEN - ARM A, K1's dual slope, displacement
