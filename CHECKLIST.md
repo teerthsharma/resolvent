@@ -944,3 +944,14 @@ Replayed ARM A's own draw stream (published `D_FR causal` reproduced to 6 dp at 
 | question 4 | **Is 13.52% itself honest?** Verify `1413` is the true collected count. **A wrong coverage figure is worse than none.** |
 | constraints | **May not edit a test to make it pass, nor any published document** — he audits, he does not repair. Six live-agent files off limits. |
 | Cameron | **NOT at fault and it is recorded** — she modified zero pre-existing files, her own two pass, and she declined the audit as outside her scope. **A fellow refusing to adjudicate outside scope is the chain working.** |
+
+**ROUND 6 it.18 - K-F bracketed by two exact measurements.**
+
+| item | status |
+|---|---|
+| `collect_callgrind` route | **UNAVAILABLE ON THIS PLATFORM.** `valgrind` and `callgrind_annotate` both **NOT FOUND** on Windows; the Timer attribute exists but the tool does not. **K-F cannot be closed by that route here at all** — a platform constraint, not an open task. |
+| **dispatch diagnosis** | **PROMOTED FROM `CITED` TO `RUN`.** It was attributed to framework overhead on fetched literature. **A citation explains a mechanism; it does not measure this arm.** `TorchDispatchMode` counts every aten call — exact, deterministic, **unaffected by machine load**, which is why it works where a timer cannot. |
+| **the falsifiable prediction** | A settling loop issues `O(t*)` dispatches while doing `O(1)` FLOPs in `t*`. **Measured: exactly 3.0 dispatches per step, constant to every digit** across steps 1/10/20/44/80. Must-fire confirms a loop-free computation does **not** grow with the step argument. |
+| **the bracket** | At `s=1024,k=8`: FLOP `1.010420` (exact, ignores per-op cost) · clock `1.6546` (contended, not a measurement) · dispatch **`23.00x`** (exact, ignores per-op work). **The clock lies BETWEEN the two exact bounds, much nearer the FLOP end** — that is amortisation: 23× the dispatches costs 1.65× the time. |
+| what it names | **The fix, and it is the nurses' mandate exactly.** 3 dispatches/step × `t*` is **removable by batching or fusing the inner loop, changing ZERO FLOPs**. Arithmetic is already `1.010420`; the overhead is structural Python. **The highest-value kernel target in the round, now quantified rather than asserted.** |
+| K-F status | **BRACKETED, NOT PASSED.** The 1.5× bar applies to the SUM, and the trustworthy numbers still straddle it at k=128. |

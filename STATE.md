@@ -4,41 +4,41 @@
 |---|---|
 | contract | `LOOP_PROMPT.md` (v8.2). Round 5 archived `LOOP_PROMPT_ROUND5_ARCHIVE.md` |
 | promise | **`HILBERT`** — D2 verbatim, or an honest `BROKEN` |
-| iteration | **17 complete, 18 next** |
+| iteration | **18 complete, 19 next** |
 | phase | **D — the artifact (iterations 16–24)** |
 | scoreboard | **4** — Star delta +2, κ<1 measured +2 *(qualified: Birkhoff route dead, structural β earned it)* |
 | RULE 2 clock | **running.** M3 settled-vs-unsettled EXECUTES by **iteration 12** or breach review |
 | register | **caveman, all agents, every iteration.** Artifacts stay normal English |
 | autonomy | user meets the loop at **iteration 30**; no check-ins |
 
-## THE ONE NEXT ACTION (round 6, iteration 18)
+## THE ONE NEXT ACTION (round 6, iteration 19)
 
-**Collect whoever lands. Three agents live, and each answers a different kind of
-question.**
+**Collect whoever has landed; three agents are live and each answers a different
+kind of question.**
 
-  1. **CAMERON — the trained-projection re-run.** Read `alpha` first: **spreads =>
-     the equilibrium has something to carry; still one-hot => T1 fires on
-     evidence** and the round's claim is routing-only, which is a *result*. Then
-     `Delta_hat`, then the logit scale that predicts it, then `min(p_c,p_j)`.
+  1. **CAMERON — trained projections.** Read `alpha` first: **spreads => the
+     equilibrium has something to carry; still one-hot => T1 fires on evidence**
+     and the claim is routing-only, which is a *result*. Then `Delta_hat`, the
+     logit scale that predicts it, then `min(p_c,p_j)`.
   2. **THE INSPECTOR — the 10 standing REDs.** Read **question 2 first**: does
      anything published depend on a RED test? **An unbound published claim is
-     struck**, and that outranks the classification of the tests themselves.
-  3. **CHASE — M3.** UNRUN at the gate. Any completion is **post-deadline and
-     marked**; it does not move round 6's scoreboard.
+     struck**, and that outranks classifying the tests.
+  3. **CHASE — M3.** UNRUN at the gate; any completion is **post-deadline and
+     marked**.
 
-**Build alongside if none has landed — but not another instrument.** RULE 1 has
-been breached most of this round and the corrective is measurement or fetch.
+**If none has landed, the highest-value build is now named and quantified:** a
+**fused or batched settling step**. Iteration 18 measured **exactly 3.0 aten
+dispatches per settling step**, so the overhead is `O(t*)` structural Python while
+the arithmetic is `O(1)` in `t*` and already sits at a **1.010420** FLOP ratio.
+**Removing it changes zero FLOPs and is the single highest-value kernel target in
+the round.** That is the nurses' mandate — inference and kernel engineers, whatever
+hack makes this comparable to vLLM.
 
-**Cheap and still unrouted:**
-  * **L3 leakage `E|L3|/E|I|`** — **degree-2 claims stay unwarranted until it is
-    measured**, and it gates ARM P's entire framing.
-  * **K-F** — undecided; needs `collect_callgrind` or an isolated core, because
-    the clock on this box is **dispatch-bound, not arithmetic-bound**, and that is
-    measured rather than assumed.
+**Still unrouted:** **L3 leakage `E|L3|/E|I|`** — degree-2 claims stay unwarranted
+until measured, and it gates ARM P's framing.
 
-**Iteration 20 is an `inspector.py` pass** — the command, which is a different
-thing from the Inspector agent now auditing. **Both, and do not conflate them
-again.**
+**Iteration 20 is the `inspector.py` COMMAND** — distinct from the Inspector agent
+currently auditing. Both exist; they are not the same thing.
 
 ## Open REDs
 

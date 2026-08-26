@@ -4,6 +4,88 @@ Round 5 closed at `TWOSPHERES: BROKEN - ARM A, K1's dual slope, displacement
 clause`; its handoff is `done5.md` and its negative result is `D1.md`. That
 verdict is final and is not reopened.
 
+### ROUND 6, ITERATION 18 - 2026-08-26 - K-F's gap stops being a citation and becomes two exact numbers with the clock between them.
+
+CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.
+[RUN] `pytest tests/loop` -> **186 passed** (181 -> 186), exit 0.
+
+Three agents live, so the build-alongside went to the gate nobody owns: **K-F**.
+
+## FIRST, THE ROUTE FOREMAN NAMED IS NOT MERELY UNDONE - IT IS UNAVAILABLE
+
+He wrote that closing K-F needs *"`collect_callgrind` instruction counts, or an
+isolated core"*. [RUN]:
+
+    platform      : Windows 10
+    valgrind      : NOT FOUND
+    callgrind_ann : NOT FOUND
+    Timer.collect_callgrind attribute exists: True
+
+**The API exists; valgrind does not, and it is Linux-only.** So K-F **cannot be
+closed by that route on this box at all** - not *"not done yet"*, **not
+available**. Recording that converts an open task into a **platform constraint**,
+which is a different and more useful thing for a write-up to say.
+
+## AND THE DISPATCH DIAGNOSIS WAS A CITATION. NOW IT IS A COUNT.
+
+Foreman attributed the clock/FLOP gap to framework dispatch overhead **on the
+strength of fetched literature** - arXiv 2302.06117, pytorch#41383. **That was the
+right diagnosis in the wrong evidence class: a citation explains a mechanism, it
+does not measure this arm.**
+
+`TorchDispatchMode` intercepts **every** aten call, so the count is **exact,
+deterministic, and unaffected by machine load** - which is precisely why it works
+where a timer does not on a contended box.
+
+**THE PREDICTION THE DIAGNOSIS MAKES, AND IT IS FALSIFIABLE.** A settling loop is a
+Python loop: it issues `O(t*)` dispatches while performing `O(1)` FLOPs **in t***.
+So the dispatch count must grow **linearly** in the step count while the arithmetic
+does not. [RUN]:
+
+    steps   dispatches   per step   vs glance
+        0            6                  1.00x
+        1            9        3.0       1.50x
+       10           36        3.0       6.00x
+       20           66        3.0      11.00x
+       44          138        3.0      23.00x
+       80          246        3.0      41.00x
+
+    glance = 6 dispatches
+
+**Exactly 3.0 dispatches per step, constant to every digit across the ladder.**
+The prediction holds precisely, and a must-fire shows a loop-free computation does
+**not** grow with the step argument, so the linearity test could have failed.
+
+## THE FINDING: THE CLOCK IS BOUNDED BY TWO EXACT NUMBERS AND LIES BETWEEN THEM
+
+At `s=1024, k=8`:
+
+    FLOP ratio      1.010420    exact, ignores per-op COST
+    clock ratio     1.6546      contended, NOT a measurement
+    dispatch ratio  23.00x      exact, ignores per-op WORK
+
+**The clock sits between the two exactly-measurable bounds, much nearer the FLOP
+end.** That is what **amortisation** looks like: at `s=1024` the matmuls are large
+enough that **23x the dispatches costs 1.65x the time.**
+
+**So K-F's gap is neither a mystery nor a borrowed explanation.** It is bracketed
+by two quantities that can both be taken on a loaded machine, and the untrustworthy
+number lies between them. **The bracket is the result; the clock was never going to
+be one.**
+
+**AND IT NAMES THE FIX, WHICH IS THE NURSES' MANDATE EXACTLY.** Three dispatches
+per step times `t*` is **removable by batching or fusing the inner loop, and that
+changes ZERO FLOPs.** The arithmetic is already at `1.010420`; the overhead is
+structural Python, not work. **A fused settling step is the single highest-value
+kernel target in the round**, and it is now quantified rather than asserted.
+
+CHECKLIST: K-F's `collect_callgrind` route **UNAVAILABLE on this platform**,
+recorded as a constraint. Dispatch diagnosis **promoted from CITED to RUN**.
+Linearity **3.0/step exact**. Clock **bracketed** by two exact bounds.
+
+**SCOREBOARD: 4** - unchanged. K-F is bracketed, not passed: the 1.5x bar is on the
+SUM and the trustworthy numbers still straddle it at k=128.
+
 ### ROUND 6, ITERATION 17 - 2026-08-26 - Ten failing tests nobody has audited, and the chain says who they belong to.
 
 CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.
