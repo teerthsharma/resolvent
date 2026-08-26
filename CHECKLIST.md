@@ -1051,3 +1051,46 @@ Replayed ARM A's own draw stream (published `D_FR causal` reproduced to 6 dp at 
 | his own control | **REPAIRED, not deleted.** `C9` asserted divergence with `scale/hilbert.py`; the it.4 same-part ruling made them agree, so **the control did not fire and halted his run**. Updated to assert **agreement** and kept — *"the only place the shared-zero case is exercised."* |
 | open | **`Δ(G)` at TRAINED: NOT MEASURED.** `G min` runs to `8.1603e-48`, four decades from the subnormal floor — at `s=1024` or wider logit scale `G` underflows and `Δ(G) = +inf` **for an arithmetic reason**. A log-domain Gram exists in `scale/arm_s.py`; `foreman_gram.py` does not use it. |
 | Cameron | **Replicating rather than reporting a one-seed negative** — trained `max Δ = 83.6069` rests on a **tail cell**, median `17.6298`. Confirms **the K-A float repair is load-bearing on real trained data**. Lists **two of her own corrections that each flipped a conclusion**. |
+
+
+---
+
+# CEQ v9 — ROUND 7, THE CAPABILITY ROUND
+
+**The certificate program is CLOSED.** Three attempts, three deaths — the sphere
+(F-identity), Birkhoff-on-`T` (linear hypothesis, six sources), Birkhoff-on-`G`
+(pivot-Gram factorisation, geometry-bound and marginal). **`κ = β`, chosen, stands
+as final.** Proposing another certificate is a **G-stop**.
+
+**RULE 5 IS NEW AND IT IS IN THE SKILL FILE.** Every kill ships a replacement
+route — **reroute**, **reprice**, or **retire** with a measured reason and a
+replacement goal. **A kill without a route is an incomplete report and goes back.**
+
+| item | pts | status |
+|---|---|---|
+| **S1** M3 quintuple headline cell, anytime-valid | +12 / +6 / −4 | **IN FLIGHT** — Chase, `scale/eprocess.py` |
+| **S2** Hankel-gap family; one gap task inside M3 | +3 | **IN FLIGHT** — Cameron, `ceq/hankel.py` |
+| **S3** Kaggle run on the signed cert; HF; capability table v0 | +6 | **NOT STARTED** |
+| **S4** Probe battery at TRAINED projections | +3 | **PARTIAL** — Phase D closed 3/3; **aggregator retention NOT re-run** |
+| **S5** Merkle journal + tamper must-fire | +1 | **EARNED** — 23 journals sealed, genesis `f8f98b49…`, 11 tests |
+| **S6** Fused settling step, clock ≤ 1.1× | +1 | **UNOWNED** — target quantified at **3.0 dispatches/step, zero FLOP cost** |
+| **S7** D1 to acceptance + certificate post-mortem | +2 | Foreman owns it |
+
+| kill | status |
+|---|---|
+| **K-1** e-process crosses for the TWIN ⇒ equilibrium clause **CUT project-wide** | UNTESTED |
+| **K-2** prediction ladder fails **both** directions ⇒ Hankel frame dead, House exception | UNTESTED |
+| **K-3** gap task solved **equally** by the non-negative arm ⇒ signed program **capability-irrelevant on its own best terrain** | UNTESTED |
+| **K-4** training cannot cross a session boundary **bitwise** ⇒ S3 halts, **N1 certificate REVOKED, not patched** | UNTESTED |
+| **K-5** rank/rank₊ machinery disagrees with the worked example ⇒ **instrument broken, nothing downstream read** | **IN FLIGHT** — Cameron's it.0 |
+
+**ROUND 7 it.1 — S5 EARNED.**
+
+| item | status |
+|---|---|
+| `scale/merkle.py` | **GREEN**, 11 tests, RED shown first (`ModuleNotFoundError`). 23 journals sealed to the contract as genesis leaf `f8f98b49af22b15a934179b42d3f0c980b47df6943365f13c0e96bb657a9fc9f`. |
+| domain separation | **BOUND** — `0x00` leaves / `0x01` nodes. Without it an internal digest can be presented as a leaf. |
+| **CVE-2012-2459** | **BOUND** — odd levels **promote, never duplicate**; `[a,b,c]` and `[a,b,c,c]` are asserted not to collide. |
+| tamper coverage | **DRAWN, not hand-picked** — single-line edit asserted at **every one of 16 positions**; single byte (`0.16511→0.16512`); reordering; deletion; **and appending**, because append-only is no defence against an earlier root. |
+| must-fire | **FIRES** — a constant hash is constructed and `leaf_hash` required to separate distinct inputs, without which every tamper test is vacuous. |
+| **self-caught defect** | The genesis assertion first read `assert GENESIS_LABEL in leaf_hash(...)[:0] + GENESIS_LABEL` — **`[:0]` is empty, so it reduces to `X in "" + X`, true for every input.** **Tenth vacuous control in this project, third authored here — and the first caught BEFORE shipping.** Replaced with one that rebuilds the root by hand and fails if the label does not participate. |

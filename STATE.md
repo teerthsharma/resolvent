@@ -1,59 +1,80 @@
-# STATE — CEQ v8.2, ROUND 6, THE HILBERT ROUND
+# STATE — CEQ v9, ROUND 7, THE CAPABILITY ROUND
 
 | field | value |
 |---|---|
-| contract | `LOOP_PROMPT.md` (**v9 delta** over v8.2). Round 5 archived `LOOP_PROMPT_ROUND5_ARCHIVE.md` |
-| promise | **`HILBERT`** — D2 verbatim, or an honest `BROKEN` |
-| iteration | **21 complete, 22 next** |
-| phase | **D — the artifact (iterations 16–24)** |
-| scoreboard | **4** carried — Star delta +2, κ<1 +2 *(qualified)*. **v9 scoreboard now governs; nothing on it is earned yet.** |
-| RULE 2 clock | **running.** M3 settled-vs-unsettled EXECUTES by **iteration 12** or breach review |
-| register | **caveman, all agents, every iteration.** Artifacts stay normal English |
-| autonomy | user meets the loop at **iteration 30**; no check-ins |
+| contract | `LOOP_PROMPT.md` (v9). Round 6 archived `LOOP_PROMPT_ROUND6_ARCHIVE.md` |
+| promise | **`HILBERT`** — D2 verbatim (needs **S1's +12 branch AND S3**), or an honest `BROKEN` |
+| iteration | **2 complete, 3 next** |
+| phase | **A — foundations (0–4)** |
+| **scoreboard** | **23** — 22 carried, **S5 +1** (Merkle journal live) |
+| RULE 2 (repaired) | **e-process LIVE and accumulating by iteration 8.** Breach = no live e-process at audit #1. **A deadline can slip; evidence accumulation cannot be deferred.** |
+| register | **caveman, all agents.** Artifacts stay normal English |
+| **RULE 5** | **Every kill ships a replacement route** — reroute / reprice / retire. **Now in the skill file, not just here.** |
+| note | The stop-hook's prompt string still says *"CEQ v8.2 ROUND 6"*. **The file is round 7 and the file governs.** Stale label, current contract. |
 
-## THE ONE NEXT ACTION (round 6, iteration 27)
+## THE v9 BOARD — nothing on it earned except S5
 
-**`Δ(G)` AT TRAINED PROJECTIONS. It is the one measurement that could revive the
-certificate, and nobody has taken it.**
+| | item | pts | state |
+|---|---|---|---|
+| **S1** | M3 quintuple headline cell, **anytime-valid** | +12 / +6 / −4 | Chase — `scale/eprocess.py` in flight |
+| **S2** | Hankel-gap family; one gap task **inside** M3 | +3 | Cameron — `ceq/hankel.py` in flight |
+| **S3** | Kaggle run on the signed N1–N6 cert; HF; capability table v0 | +6 | not started |
+| **S4** | Probe battery at **TRAINED** projections | +3 | **partly done** — Phase D closed 3/3; **aggregator retention NOT re-run** |
+| **S5** | Merkle journal + tamper must-fire | +1 | **EARNED** |
+| **S6** | Fused settling step, clock ≤ **1.1×** | +1 | target quantified: **3.0 dispatches/step, removable at zero FLOP cost** |
+| **S7** | D1 to acceptance, certificate post-mortem as capstone | +2 | Foreman owns it |
 
-Foreman states the arithmetic plainly: **`1.18×` drop to pay anything at all,
-`11.43×` to pay what House predicted.** And there is a real reason to think trained
-is lower — Cameron measured trained state-cone `Δ = 83.6069` against random-init
-`101.3671 … 311.6091`. **Trained is lower on the state cone. Nobody has looked at
-the pivot Gram.**
+## THE ONE NEXT ACTION (round 7, iteration 3)
 
-**Two things that must be in the dispatch or the measurement is worthless:**
-  1. **Use the LOG-DOMAIN Gram.** `G min` already runs to `8.1603e-48` at
-     random-init — **four decades from the float64 subnormal floor**. At `s=1024`
-     or a wider logit scale `G` underflows and `Δ(G) = +inf` **for an arithmetic
-     reason, not a structural one**. A log-domain Gram exists in `scale/arm_s.py`;
-     `scale/foreman_gram.py` does **not** use it. **Without this the answer is
-     guaranteed to be `+inf` and to mean nothing.**
-  2. **Extreme-ray diameter only.** A mean or a sampled max is the estimator that
-     has now produced two reversed conclusions in four iterations.
+**Collect the three fellows. All are live and none has landed.**
 
-**If trained `Δ(G)` stays saturated, the certificate ambition is finished** and
-`κ = β`, chosen, is the round's final answer — which is v9's dial verdict arriving
-by a better-established route than the kill anticipated.
+  1. **CHASE — the e-process must-fire, read before anything else he says.** A null
+     simulation must **NOT** cross 20 in 10,000 replays at `α = 0.05`, **and seen
+     failing to fire IS the calibration.** If the empirical null crossing rate
+     exceeds `0.05`, **the construction is wrong and nothing anytime-valid may be
+     claimed this round** — which would take RULE 2's repair with it.
+  2. **CAMERON — the worked example, and K-5 rides on it.** If her rank/rank₊
+     machinery disagrees with §1.1 (`rank_ℝ = 2` for the difference series; no
+     nonnegative factorisation on raw entries; `rank 2–3 vs Ω(n)` after shifting),
+     **the instrument is broken and nothing downstream of it is read.**
+  3. **FOREMAN — the near-miss delta first** (it gates the Krohn–Rhodes framing),
+     then **whether the supermartingale property actually holds for the grid
+     mixture.** `tests/foreman/test_methods_mixture_identity.py` is in flight.
+     **Every anytime-valid claim this round rests on that step.**
 
-**Also live:** Wilson mining `caustic` / `sigmoid` / `kernels#22` — **correspondence
-2 could pay +3 immediately** if sigmoid already implements a coupling coefficient,
-and Dobrushin exists precisely because `tanh` saturates where this round keeps
-landing. Cameron replicating seeds 1 and 2. Chase on M3.
+**Build alongside if none has landed. The two cheapest unowned items:**
+  * **S6's fused settling step** — the target is already quantified at **exactly
+    3.0 aten dispatches per settling step**, `O(t*)` while the FLOPs are `O(1)`,
+    **removable at zero FLOP cost**. Worth **+1** at clock ≤ 1.1×.
+  * **The unread `delta_image`** — see Open #2. It is the only non-saturating
+    diameter in the entire journal set and **nobody has established what the
+    restriction is.**
 
-## Open REDs
+## Open REDs, carried
 
-Carried from round 5, all still open:
-
-1. **K1's sign-flip clause** — the only pre-registered kill left genuinely
-   undecided. 8 events in 2400 draws, `0.003333 [0.001440, 0.006557]`; the
-   unsigned arm's interval `[0, 0.010195]` **contains** it. **Round 6 closes it
-   by SPRT (K-H, +1)** rather than by 20,000 fixed draws.
-2. **Every probe number ever taken was random-init.** The trained-projection
-   re-run is Phase D and is the oldest open item in the project.
-3. **What peak attention tracks** once the key-norm confound is removed —
-   retention 2.9% / 13.3% / 58.9%, matched by **rank not value**, so those are
-   **upper** bounds.
-4. **The provenance bind is RED deliberately** — nine shipped cost figures whose
-   run evidence lives in `DONE_ARCHIVE_ROUND1.md`. Repair by **re-pointing**,
-   never by pasting.
+1. **Trained `Δ(G)` is readable but geometry-bound.** `κ_G = 0.9893068617` at the
+   median trained cell, seed 0 — **a property of the s=64 harness, not of
+   training**, which **raises** every diameter measured (`5.6865×` / `9.4530×`
+   paired, CIs excluding zero). **The tail grew: `0/512 → 2/512 → 26/512`.**
+   `s=256`, `s=1024` **NOT MEASURED**. **`κ = β` is still the only certificate
+   that holds everywhere.**
+2. **One non-saturating diameter sits unread in a committed journal.**
+   `results/hilbert.jsonl`: `delta_image = 2.517898719097161 / 1.8227455242048691 /
+   3.2026399097564138`, `kappa_cert_image = 0.5576903857145132 /
+   0.42656198036250703 / 0.6644055723849551` — **the only restriction in the file
+   that does not saturate, and nobody has established what the restriction IS.**
+3. **No within-sequence norm-matched control exists.** Top-k by norm means every
+   other within-sequence set is strictly lower; the matcher closed **zero** of the
+   gap in **512/512** draws. **Structural, no repair known. No mechanism claim
+   about *which* tokens may be made.**
+4. **Aggregator retention `2.9% / 13.3% / 58.9%`** still random-init **and**
+   rank-matched — upper bounds twice over. Part of S4.
+5. **Seed 2's trained weights NOT FOUND on disk.** The free bind reproduces the
+   published F-green cell on **seed 0 only**.
+6. **Ten standing REDs in `tests/cameron/`** — all **BY DESIGN**, audited. Two
+   pairs' findings are recorded in **no document**, and one pair's assertion
+   **cannot ever fail** (`sigmoid × softmax` is non-negative by construction).
+7. **The row-stochastic tradeoff is measured and written nowhere:** non-negative
+   **cannot represent a decrementing loop**; unconstrained **loses the contraction
+   guarantee** (`ρ = 1.0010632`). **§1.1 turns this into the Hankel gap — it is now
+   S2's subject.**

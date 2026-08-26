@@ -4,6 +4,49 @@ Round 6 closed with the certificate program CLOSED - three attempts, three death
 Round 5's `TWOSPHERES: BROKEN` and its handover `done5.md` stand. Round 6's
 work-done is `done6.md`. Progress **22**.
 
+### ROUND 7, ITERATION 2 - 2026-08-26 - The loop's own navigation was pointing at a dead round.
+
+CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.
+
+ACTION (one): **reset `STATE.md` and `CHECKLIST.md` for round 7.**
+
+**Both were still round-6 documents.** `STATE.md` opened *"CEQ v8.2, ROUND 6, THE
+HILBERT ROUND"* with a next-action pointing at measurements that closed two
+iterations ago, and **every iteration reads `STATE.md` first.** Bookkeeping, but
+the loop was navigating by a map of a finished round.
+
+**`STATE.md` now carries** the v9 board with per-item ownership and live state, the
+repaired RULE 2 (**e-process live by iteration 8, not a deadline**), RULE 5, and
+**seven carried Open REDs** rather than round 6's list.
+
+**`CHECKLIST.md` now carries** the round-7 header stating the certificate program
+closed with all three deaths named, the v9 scoreboard, **all five kills as
+UNTESTED or IN FLIGHT**, and it.1's S5 row.
+
+**AND THE STALE-LABEL DISCREPANCY IS RECORDED IN BOTH.** The stop-hook's prompt
+string still reads *"CEQ v8.2 ROUND 6 the Hilbert round"* while `LOOP_PROMPT.md`
+is round 7. **The hook's instruction is to read the file and follow it exactly, the
+file is current, so the file governs.** Written down because **a reader hitting
+both would otherwise have to guess which is authoritative**, and guessing is how a
+round gets run against the wrong contract.
+
+**ALL THREE FELLOWS ARE LIVE AND NONE HAS LANDED** — Chase `scale/eprocess.py`,
+Cameron `ceq/hankel.py`, Foreman `tests/foreman/test_methods_mixture_identity.py`.
+**Foreman needed no dispatch; he went to `METHODS.md` on his own**, which is the
+supermartingale question every anytime-valid claim this round depends on.
+
+**Two unowned items are now named in `STATE.md` for the next build-alongside:**
+**S6's fused settling step**, whose target is already quantified at **exactly 3.0
+aten dispatches per settling step, removable at zero FLOP cost**; and **the unread
+`delta_image`** in `results/hilbert.jsonl` — `2.517898719097161 /
+1.8227455242048691 / 3.2026399097564138` — **the only non-saturating diameter in
+the entire journal set, and nobody has established what the restriction is.**
+
+CHECKLIST: navigation **reset to round 7**. Stale-label discrepancy **recorded**.
+Three fellows live.
+
+**SCOREBOARD: 23.**
+
 ### ROUND 7, ITERATION 1 - 2026-08-26 - S5 SCORED. The journal is sealed to the contract, and a vacuous assertion of mine was caught before it shipped.
 
 CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.
