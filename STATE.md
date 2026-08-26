@@ -4,7 +4,7 @@
 |---|---|
 | contract | `LOOP_PROMPT.md` (v9). Round 6 archived `LOOP_PROMPT_ROUND6_ARCHIVE.md` |
 | promise | **`HILBERT`** — D2 verbatim (needs **S1's +12 branch AND S3**), or an honest `BROKEN` |
-| iteration | **7 complete, 8 next** |
+| iteration | **8 complete, 9 next** |
 | phase | **A — foundations (0–4)** |
 | **scoreboard** | **23** — 22 carried, **S5 +1** (Merkle journal live) |
 | RULE 2 (repaired) | **e-process SATISFIED at it.3. The RUN is now EXECUTING** — the `twin` arm had **zero rows** in v2 and was launched at it.6, seeds 0–4, paired to the settled key exactly. `EP.live()` reads the journal and prints `undecided at evidence E_t = 1.0`; must-fire passes both directions (worst null `0.0367 ± 0.0019` vs `α = 0.05`) and the broken-λ control **was seen to fire at `1.0000`**. |
@@ -17,7 +17,7 @@
 | | item | pts | state |
 |---|---|---|---|
 | **S1** | M3 quintuple headline cell, **anytime-valid** | +12 / +6 / −4 | **HEADLINE CONTRAST READ at it.7 and it is the ROUTING-ONLY branch.** `settled − twin = −0.002959`, CI `[−0.042903, +0.031557]`, **covers zero**. Both arms beat softmax **5/5** (`+0.108` / `+0.111`, intervals excluding zero), **twin's tighter**. **Four arms of five — `trained-two-feature` at ZERO ROWS.** Not anytime-valid and provably cannot be at 5 seeds (`MIN_T_MIXTURE = 13`). |
-| **S2** | Hankel-gap family; one gap task **inside** M3 | +3 | **instrument LANDED and self-tested.** The contract's own gap task has **no gap** (`rank₊ = 2` exactly, certified). **Rerouted to `counter_squared`** — rank 3, `rank₊ ≥ 4/5/5`. Remaining: put it in the M3 corpus alphabet. |
+| **S2** | Hankel-gap family; one gap task **inside** M3 | +3 | **CORPUS HALF CLOSED at it.8.** `counter_squared` runs in M3 (`--task`), params `4769/4769`, gap `rank 3` vs `rank₊ ≥ 6` at `s=64`. **Gap dies at ODD `s`** — length load-bearing, and the odd case is a **free no-gap arm**. **But the frame was retired at J3 the same day**, so the gap is now task *metadata*, not the capability claim. |
 | **S3** | Kaggle run on the signed N1–N6 cert; HF; capability table v0 | +6 | not started |
 | **S4** | Probe battery at **TRAINED** projections | +3 | **partly done** — Phase D closed 3/3; **aggregator retention NOT re-run** |
 | **S5** | Merkle journal + tamper must-fire | +1 | **EARNED.** Used for the first time at it.5: **22 unchanged, 1 append with prefix intact, 0 edits** of 23. Using it exposed a defect in the shipped tool (every honest append read as a failure); repaired with `verify_append_only`, 24 tests, `22/23 → 23/23`. |
@@ -134,3 +134,17 @@ unreachable; `delta_image` is closed. **The next action is the corpus step above
    and it was used to strike a colleague's evidence. **Every negative-result scan
    in this repo now needs its own must-fire** — a scan that cannot find the thing
    must be shown to find a planted one.
+
+14. **The blocking item closed and the goal did not move.** `counter_squared` is a
+   real, runnable, gap-certified M3 task — **and its oracle is
+   `x[:, :, CH_FLIP].sum(dim=1) ** 2`, a static expression with no fixed point.**
+   It is the **second** task confirmed to have nothing for a settling arm to
+   compute. **Every task in the corpus is now known to be static.**
+15. **`counter_squared` at `n_train=1536` is the only row where the effect and the
+   bar agree** — `+0.207215`, `5/5` seeds under the bar — **and its interval
+   `[+0.134441, +0.307515]` does not clear `0.2`.** More seeds at 1536 is the
+   priced next step; a 5-seed percentile interval cannot resolve it.
+16. **`rank₊` at `s=64` is a LOWER bound over `k ≤ 10` only.** `rectangle_cover`
+   costs `2^levels` — 11 levels `17.7s`, 13 levels `238.1s`. The `≥ 6` is the max
+   over the splits that were solvable, **not over all splits. The true gap may be
+   larger.**

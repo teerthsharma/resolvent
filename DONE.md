@@ -4,6 +4,148 @@ Round 6 closed with the certificate program CLOSED - three attempts, three death
 Round 5's `TWOSPHERES: BROKEN` and its handover `done5.md` stand. Round 6's
 work-done is `done6.md`. Progress **22**.
 
+### ROUND 7, ITERATION 8 - 2026-08-26 - CAMERON LANDS THE GAP TASK. It is real, it is measured, and it is still not an equilibrium task.
+
+CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**, 4/4 bit-identical.
+
+## `counter_squared` IS IN M3 AND IT RUNS
+
+`python scale/m3_capability.py --task counter_squared` - bar calibrates, both arms
+train, param match `4769/4769`, exit 0. The S2 corpus item that has blocked the
+board since iteration 4 is **closed**.
+
+Encoding: `CH_FLIP` carries a letter at **every** position, `+1 = 'a'`, `-1 = 'b'`,
+`y = (sum CH_FLIP)^2`, payload kept as a live distractor. New surface in
+`scale/negation_scope.py` at `:119`, `:130`, `:143`, `:174`, `:200`, plus
+`scale/m3_capability.py:246 --task`.
+
+## THE FINDING: THE EMBEDDING CAN DESTROY THE GAP, AND THE LENGTH DECIDES
+
+M3 fixes the total length `s`, so the object is **not** the abstract block over
+lengths `0..n` - it is the block at split `k`, prefixes of length `k` against
+suffixes of length `s-k`.
+
+    s = 64, M3's own default
+    k     levels    rank    sv gap      rank_+
+    3      4x62       3     1.233e+13     4
+    6      7x59       3     6.169e+13     5
+   10     11x55       3     6.939e+13     6
+
+**Rank never moves off 3. Gap at `s=64` is 3 against `>= 6`.**
+
+**But the zeros that make the gap sit where `c_u = -c_v`, which needs
+`k = s-k (mod 2)` - that is, `s` EVEN.** At `s = 9, 11, 13` **every entry is
+nonzero at every split**, the rectangle cover collapses to `1`, and
+`rank_+ = rank = 3`. **No gap at any split.**
+
+**M3's default is 64, so the cost here is zero - but the length is now load-bearing
+and it was not before.** Documented at `scale/negation_scope.py:143` and swept in
+the test rather than left as folklore.
+
+**AND THE ODD-`s` CASE IS A GIFT, NOT A DEFECT.** It is a no-gap arm on **the same
+task, the same alphabet and the same code path**, which is exactly what the
+prediction ladder needs to be falsifiable in both directions. **Cheaper than the
+Dyck-1 no-gap arm, which needs a second task and a second calibration.**
+
+## TWO OBSTRUCTIONS THAT WOULD HAVE MISREAD THE TASK SILENTLY
+
+**A. The bar's flipper clause rejects the task, and lowering the threshold was
+refused.** `bar_verdict` clause 4 requires `flipper_dependence > 0.5`, calibrated
+for `y = payload * sign` where the ratio is exactly `2.0`. `counter_squared` is a
+global aggregate whose exact value is `4*E|S_{s-1}|/s`:
+
+    s=32   0.5597997364        PASSES
+    s=40   0.501482750478317   PASSES
+    s=42   0.48954268499073805 FAILS
+    s=64   0.39738701499186757 FAILS   <- M3's default
+    s=512  0.1409785419        FAILS
+
+**The repair is not a lowered threshold.** The task supplies its exact value and the
+clause becomes **two-sided**, which is **strictly stronger** than what shipped. The
+one-sided clause is left untouched when no target is given.
+
+**B. The trained positive control was reading features that cannot determine the
+label.** `calibrate_bar` clause 5 hands the net `(x[:,f,CH_FLIP], x[:,p,CH_PAYLOAD])`.
+For `counter_squared`, `E[c^2 | sigma_f] = 64` - **a constant**. So the control read
+NRMSE `1.0` and **the gate announced "no arm can pass" when what had actually been
+measured was "these two numbers do not determine this label."** A `feature_fn` hook
+fixes it; the task now reads `trained_two_feature 0.350809` at `s=64`.
+
+**The shipped path is verified unchanged**: `calibrate_bar(n=256,s=64,d=24)` against
+the same call routed through `M3_TASKS["negation_scope"]` compares **`IDENTICAL:
+True`**.
+
+## AND SHE INDEPENDENTLY CONFIRMED FOREMAN'S SELF-REVERSAL
+
+Measured on `counter_squared` at `n_train=2048`, seed 0:
+
+    softmax        untrained min 0.000e+00  neg 0.000000  ->  TRAINED min  0.000000e+00  neg 0.000000
+    pivot_signed   untrained min 0.000e+00  neg 0.000000  ->  TRAINED min -1.223462e-01  neg 0.043269
+
+**Non-negativity at init is a property of the small logit spread, not of the
+operator.** The ladder is **not** comparing an arm against itself on this task. **And
+the control fires**: softmax reads exactly `0.0` before and after the same training.
+Two fellows, two tasks, one conclusion.
+
+## EFFECT SIZE, AND THE WARNING THAT COMES WITH IT
+
+| n_train | seeds | delta | 95% paired CI | `pivot_signed < 1.0` |
+|---|---|---|---|---|
+| 512 | 3 | **+0.340171** | [+0.294983, +0.398841] | **0 of 3** |
+| 1024 | 3 | **+0.405934** | [+0.321897, +0.554446] | 2 of 3 |
+| **1536** | **5** | **+0.207215** | [+0.134441, +0.307515] | **5 of 5** |
+| 2048 | 3 | +0.114542 | [+0.056265, +0.167635] | 3 of 3 |
+
+**HER WARNING IS THE MOST VALUABLE LINE IN THE REPORT.** *"A delta between two arms
+that are both worse than predict-the-mean is the W4 death this repo already paid
+for. Effect is LARGEST where no arm passes the bar."* At `n_train=512` the effect is
+`+0.340171` and **zero of three seeds** clear the bar - **that effect is worthless
+and it is the biggest number in the table.**
+
+**`n_train=1536` is the row**: point estimate `+0.207215` clears Chase's `0.2`, and
+`pivot_signed` is under the bar at **5/5** seeds. **CAVEAT, BINDING: the INTERVAL
+does not clear `0.2`** (`ci_lo = +0.134441`) and two of five per-seed deltas are
+individually below it. **Not a pass.**
+
+**REPRICE, and the optimist path is real:** moving `2048 -> 1536` raises the effect
+`0.114542 -> 0.207215` **and** makes a unit cheaper - measured `pivot_signed` wall
+clock `70.4/61.3/47.4/33.1/32.2 s` at 1536 against `138.4/173.0/220.6 s` at 2048.
+**Bigger effect and cheaper units at once.**
+
+## THE COLLISION, AND IT MUST BE RECORDED RATHER THAN SMOOTHED
+
+**Cameron's task landed hours after Dr House retired the frame it was built for.**
+Both are correct and they must be reconciled explicitly:
+
+* **`counter_squared`'s oracle is `x[:, :, CH_FLIP].sum(dim=1) ** 2`.** A sum,
+  squared. **Static. No fixed point. No equilibrium.** It is the second task
+  confirmed to have nothing for a settling arm to compute.
+* So this work **does not answer the goal**, and the gap it certifies is - per the
+  amended contract - **task metadata, not the capability claim.** The Hankel frame
+  was retired at J3 because the arm has a `GELU` and the theorem governs linear
+  value paths; **landing a gap task does not un-retire it.**
+
+**WHAT SURVIVES, AND IT IS NOT SMALL.** A runnable M3 task with a certified rank
+gap; a bar clause made **strictly stronger** rather than looser; a positive control
+repaired that had been silently mislabelling an unmeasurable feature pair as an
+impossible task; a **free no-gap twin at odd `s`** on the same code path; and an
+independent confirmation, on a second task, that the signed arm is genuinely signed
+at trained weights. **The corpus work is sound. The frame it was aimed at is the
+part that died.**
+
+**THE HONEST SUMMARY: the board's blocking item is closed, and closing it did not
+move the goal.**
+
+CHECKLIST: **`counter_squared` LANDED and runnable** - S2's corpus half closed. Gap
+**survives at even `s`, dies at odd `s`**; length now load-bearing, and the odd case
+is a **free no-gap arm** for the ladder. Two obstructions repaired **by
+strengthening**, not loosening. `n_train=1536` gives `+0.207215` with `5/5` under
+the bar but an **interval that does not clear `0.2`**. Signed-arm precondition
+**confirmed independently on a second task**. **And the task has no equilibrium in
+its label, so it does not answer the goal.**
+
+**SCOREBOARD: 23.**
+
 ### ROUND 7, ITERATION 7 - 2026-08-26 - THE HEADLINE CONTRAST IS READ. The settling buys nothing over its twin, and the architecture's whole gain is routing.
 
 CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.
