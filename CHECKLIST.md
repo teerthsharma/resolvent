@@ -919,3 +919,14 @@ Replayed ARM A's own draw stream (published `D_FR causal` reproduced to 6 dp at 
 | **G5 narrowing 1** | *"the settling arm is born"* holds for **G3 + gates 1 and 2**; **gate 3 is SPLIT and K-F UNDECIDED**. The arm is **born, not priced**. |
 | **G5 narrowing 2** | *"Birkhoff certifies the arm"* is **FALSE and must not be written.** Thm 2.9 needs a **linear** map, `T` is not linear, `κ_cert` reads **exactly 1.0** in 30/30. **What certifies it is a factorisation through four cited theorems giving `κ = β`** — weaker, and the honest claim. |
 | **+3 refused** | **No norm-matched control exists within a sequence** — top-k by norm means every other within-sequence set is strictly lower; the matcher closed **zero** of the gap in **512/512**. Structural, no repair. |
+
+**ROUND 6 it.16 - Phase D opens on the trained-projection re-run.**
+
+| item | status |
+|---|---|
+| **trained-projection re-run** | **DISPATCHED** to Cameron. The contract's *"oldest OPEN item in the project"*. Five rounds, **not one figure from a trained model**. |
+| the stake | If the probes read differently through trained projections, **a large part of five rounds describes a regime the model never occupies.** |
+| **the T1 question, now answerable** | `alpha` is **near one-hot at random init** (`log_alpha min -182.7498`). **Nobody has looked at trained.** Spreads => the *"expensive argmax"* worry dissolves. Still one-hot => **T1 fires on evidence** and the claim collapses to routing-only. |
+| `Delta_hat` / `kappa` trained | Random-init `Delta_vertex` **101.3671 .. 311.6091**, `kappa_cert` exactly **1.0** in 30/30. **Trained `Delta_hat` below ~20 makes 1.2's Neumann route affordable** (`N` 254,653 vs `2.3e14`). |
+| logit scale | **The root cause behind four symptoms** - F-lam, `Delta ~ 100` nats, float32 underflow, ARM S's vertex collapse. Random-init mean `|w|` `1.171e+01` vs harness `2.682399e-03`. **Trained has no reason to share it**, and it predicts `Delta_hat`. |
+| decisions made in dispatch | **Trains her own small models** rather than coupling to Chase's UNRUN in-flight quintuple - that would inherit its schedule. **Small is sufficient**, config reported beside every number so it is not read as a scale claim. **Random-init and trained side by side for every statistic** - the delta *is* the measurement. |

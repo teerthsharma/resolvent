@@ -4,37 +4,37 @@
 |---|---|
 | contract | `LOOP_PROMPT.md` (v8.2). Round 5 archived `LOOP_PROMPT_ROUND5_ARCHIVE.md` |
 | promise | **`HILBERT`** — D2 verbatim, or an honest `BROKEN` |
-| iteration | **15 complete, 16 next** |
+| iteration | **16 complete, 17 next** |
 | phase | **D — the artifact (iterations 16–24)** |
 | scoreboard | **4** — Star delta +2, κ<1 measured +2 *(qualified: Birkhoff route dead, structural β earned it)* |
 | RULE 2 clock | **running.** M3 settled-vs-unsettled EXECUTES by **iteration 12** or breach review |
 | register | **caveman, all agents, every iteration.** Artifacts stay normal English |
 | autonomy | user meets the loop at **iteration 30**; no check-ins |
 
-## THE ONE NEXT ACTION (round 6, iteration 16)
+## THE ONE NEXT ACTION (round 6, iteration 17)
 
-**PHASE D OPENS, and the round's oldest open item is the one worth spending it
-on: EVERY NUMBER IN THIS PROJECT IS RANDOM-INIT.**
+**Collect the trained-projection re-run, or build alongside it.**
 
-Contract Phase D names it explicitly — *"Cameron: probe re-run through TRAINED
-projections (the oldest OPEN item in the project — every probe number ever taken
-was random-init; close it)."* Five rounds of measurement, and not one figure comes
-from a trained model. **Every mechanism claim, every separation, every κ, every
-degeneracy is a statement about randomly initialised projections.**
+**When it lands, the reading order is by what each answer overturns:**
+  1. **`alpha` at trained projections.** Spreads => the equilibrium has something
+     to carry and ARM S's central risk lifts. **Still one-hot => T1 fires on
+     evidence**, and the round's claim is routing-only - which is a *result*, not
+     a failure.
+  2. **`Delta_hat` trained.** Below ~20 and contract 1.2's Neumann route becomes
+     affordable; still ~100+ and the implicit gradient stays priced out.
+  3. **The logit scale**, which predicts 2 and explains four prior symptoms.
+  4. **`min(p_c,p_j)`**, which decides whether ARM P's strata survive.
 
-That is worth more than the artifact upload, because **if the probes read
-differently through trained projections, a large part of five rounds is about a
-regime the model never occupies.**
+**Do not wait on Chase.** M3 is UNRUN at the gate; any completion is post-deadline
+and marked as such.
 
-**Do not wait on M3.** It is UNRUN at the gate; any completion is post-deadline and
-marked. Chase's run continues and its result will be recorded when it lands.
-
-**Also live and unrouted:**
-  * **L3 leakage `E|L₃|/E|I|`** — unmeasured, so **degree-2 claims stay
-    unwarranted**. Cheap, and it gates ARM P's whole framing.
-  * **K-F is UNDECIDED** — needs `collect_callgrind` instruction counts or an
-    isolated core; the clock on this box is dispatch-bound, not arithmetic-bound.
-  * **10 standing REDs in `tests/cameron/`**, predating this round, unaudited.
+**Cheap and unrouted, in order:**
+  * **L3 leakage `E|L3|/E|I|`** - unmeasured, and **degree-2 claims stay
+    unwarranted until it is**. It gates ARM P's whole framing.
+  * **K-F** - needs `collect_callgrind` or an isolated core. The clock on this box
+    is dispatch-bound, not arithmetic-bound, and that is measured, not assumed.
+  * **10 standing REDs in `tests/cameron/`**, predating this round, unaudited by
+    anyone.
 
 **Iteration 20 is an `inspector.py` pass.**
 

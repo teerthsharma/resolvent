@@ -4,6 +4,80 @@ Round 5 closed at `TWOSPHERES: BROKEN - ARM A, K1's dual slope, displacement
 clause`; its handoff is `done5.md` and its negative result is `D1.md`. That
 verdict is final and is not reopened.
 
+### ROUND 6, ITERATION 16 - 2026-08-26 - Phase D opens on the oldest open item: nothing in five rounds was measured through a trained model.
+
+CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.
+
+ACTION (one): **dispatched Cameron for the trained-projection re-run.** The
+contract names it as hers and calls it *"the oldest OPEN item in the project"*.
+
+**THE STAKE, STATED PLAINLY.** Five rounds. Every `kappa`, every separation, every
+degeneracy, every retention figure - **all measured through randomly initialised
+projections.** If the probes read differently through trained ones, **a large part
+of five rounds describes a regime the model never occupies.** That is worth more
+than the artifact upload, which is why Phase D opens here rather than on the upload.
+
+## THE SHARPEST QUESTION, AND IT CAN SETTLE T1 ON EVIDENCE
+
+Foreman's ARM S report closed on `alpha` being **near one-hot even after the
+log-domain fix** (`log_alpha min -182.7498`, max `-0.0`). The fixed point is
+unique, reached, and **lopsided** - and **no birth gate asks whether that carries
+anything a single argmax-pivot lookup does not.**
+
+**At random init `alpha` is one-hot. Nobody has ever looked at trained.**
+
+  * **If `alpha` SPREADS when trained**, the *"expensive argmax"* worry dissolves
+    and the equilibrium has something to carry.
+  * **If `alpha` is STILL one-hot when trained**, **T1 fires for real, on
+    evidence**, and the round's honest claim collapses to routing-only.
+
+**Either answer is worth having**, and the dispatch says so: *"me want the one that
+is true, not the one that helps."*
+
+## THE OTHER FOUR, ORDERED BY WHAT THEY COULD OVERTURN
+
+**1. `Delta_hat` and `kappa` through trained projections.** Foreman's open item 8.
+Random-init `Delta_vertex` runs **101.3671 .. 311.6091 nats** and `kappa_cert`
+reads **exactly 1.0** in 30/30. **If trained `Delta_hat` drops below ~20, contract
+1.2's Neumann route becomes affordable** - `N = 254,653` at Delta=20 against
+`2.3e14` at Delta=60. **A live possibility, not a hope**, and item 2 says why.
+
+**2. The logit scale, which predicts item 1.** This is the root cause behind F-lam,
+behind `Delta ~ 100` nats, behind the float32 underflow, and behind ARM S's vertex
+collapse - **one cause, four symptoms.** Random-init mean causal `|w|` is
+`1.171e+01` against the harness's `2.682399e-03`. **Trained projections have no
+reason to share that scale.**
+
+**3. `min(p_c, p_j)` and the 2-dof rank.** Cameron's own ARM P strata depend on
+this distribution, and she established that `min(p_c,p_j) -> 0` **kills every
+readout family**. Trained projections may put the draws somewhere else entirely.
+
+**4. The aggregator retention figures** - `2.9% / 13.3% / 58.9%`. Random-init, and
+matched by **rank not value**, so already upper bounds.
+
+## TWO DECISIONS MADE IN THE DISPATCH
+
+**She trains her own small models rather than using Chase's in-flight
+checkpoints.** His quintuple is producing trained models at `n_train=8192` right
+now and they would be tempting - **but that run missed its deadline and is declared
+UNRUN for round 6, so coupling her measurement to it means inheriting its
+schedule.** She uses `paired_arm.train_and_predict` and `m3_capability.run_arm`
+verbatim, as Chase did rather than reimplementing.
+
+**Small is sufficient, and the file must say so.** The question is *"do these
+statistics MOVE between random and trained"*, not *"what are they at scale"* -
+**`d=24, s=64` at a few hundred steps is a trained projection.** The training
+config is reported beside every number **so nobody reads it as a scale claim.**
+
+**And every statistic is reported random-init and trained SIDE BY SIDE.** A trained
+number alone tells nobody whether anything moved, **and the delta is the entire
+measurement.**
+
+CHECKLIST: Phase D **OPEN**. Trained-projection re-run **DISPATCHED**. Nothing
+claimed for it.
+
+**SCOREBOARD: 4** - unchanged. The action was a dispatch.
+
 ### ROUND 6, ITERATION 15 - 2026-08-26 - EXIT GATE C. The M3 cell is declared UNRUN, and the dominant cause is a decision of mine that I can now put a number on.
 
 CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.
