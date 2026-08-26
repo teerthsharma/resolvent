@@ -561,3 +561,151 @@ Attribution of the notion itself, Berstel & Reutenauer, Notes to Chapter 2,
 p. 42: *"The notions of Hankel matrix and rank of a formal series, which are
 classical in the case of one variable, were introduced by Carlyle and Paz (1971)
 and Fliess (1974a)."*
+
+---
+
+## 4. THE ROUND-8 DELTA — *equilibrium labels as an attention capability bar*
+
+Fetched before any round-8 build, per RULE 7. Eight nurses, four of them on the
+literature, twenty-plus distinct searches. **Absence below is recorded as NOT FOUND,
+never as unoccupied.**
+
+### 4.1 The claim under test
+
+`LOOP_PROMPT.md` §2 states the delta as
+**`equilibrium-labels-as-attention-capability-bar`, NOT GNN regression** — the point
+being that the absorbing-chain solve is used to *measure what an architecture can
+represent*, not to *compute the solution faster*.
+
+### 4.2 THE VERDICT — the delta as stated does NOT survive
+
+Every one of its three parts is separately occupied, and by named work.
+
+**Equilibrium-shaped labels used to measure architecture capability.**
+*The CLRS Algorithmic Reasoning Benchmark*, Veličković, Badia, Budden, Pascanu,
+Banino, Dashevskiy, Hadsell, Blundell, ICML 2022, **arXiv:2205.15659**, carries
+Bellman–Ford, Floyd–Warshall and Kosaraju SCC — all fixed points reached by
+iterating — and frames itself as *"evaluating algorithmic reasoning learnt by neural
+network models"*. Its language-model form is *The CLRS-Text Algorithmic Reasoning
+Language Benchmark*, **arXiv:2406.04229**. **PageRank is NOT FOUND in CLRS-30.**
+
+**The same, for attention specifically rather than message passing.**
+*Understanding Transformer Reasoning Capabilities via Graph Algorithms*, Sanford,
+Fatemi, Hall, Tsitsulin, Kazemi, Halcrow, Perozzi, Mirrokni, NeurIPS 2024, OpenReview
+`AfzbDw6DSp`, states *"logarithmic depth is necessary and sufficient"* for graph
+connectivity and gives a *"representational hierarchy that separates 9 algorithmic
+reasoning problems into classes"*. See also Sanford, Hsu, Telgarsky, *Transformers,
+parallel computation, and logarithmic depth*, ICML 2024, **arXiv:2402.09268**.
+
+**Equilibrium-solving architectures evaluated against those labels.**
+*The Deep Equilibrium Algorithmic Reasoner*, Georgiev, Liò, Buffelli,
+**arXiv:2402.06445**, and *Deep Equilibrium Algorithmic Reasoning*, Georgiev, Wilson,
+Buffelli, Liò, NeurIPS 2024, **arXiv:2410.15059** — the latter *"requires no
+information on the ground-truth number of steps of the algorithm, both during train
+and test time"*, evaluated on roughly ten CLRS-30 tasks.
+
+**The Dirichlet half is occupied too.** *Learning Label Initialization for
+Time-Dependent Harmonic Extension*, Azad, IJCAI 2022, **arXiv:2205.01358** — *"Node
+classification on graphs can be formulated as the Dirichlet problem on graphs"*.
+*Inverse Boundary Value and Optimal Control Problems on Graphs*, Garrousian,
+Nouranizadeh, **arXiv:2206.02911** — *"system identification problems on graphs with
+Dirichlet and Neumann boundary conditions"*. *Diffusion-Jump GNNs*, Begga, Escolano,
+Lozano, Hancock, **arXiv:2306.16976** — *"is formulated as a Dirichlet problem"*, and
+it names *"absorbing random walks"* explicitly. Solver-side: *Learning the Solution
+Operator of Boundary Value Problems using Graph Neural Networks*, Lötzsch, Ohler,
+Otterbach, AI4Science @ ICML 2022, **arXiv:2206.14092**.
+
+**Even the "architecture provably cannot" framing on a linear-algebra target is
+occupied.** *Message-Passing GNNs Fail to Approximate Sparse Triangular
+Factorizations*, Trifonov, Muravleva, Oseledets, TMLR 2026, **arXiv:2502.01397**:
+*"message-passing GNNs are fundamentally incapable of approximating sparse triangular
+factorizations"*. And *Affinity-Aware Graph Networks*, Velingker, Sinop, Ktena,
+Veličković, Gollapudi, NeurIPS 2023, **arXiv:2206.11941**, Theorem C.1: *"it is
+impossible for a GNN to compute single-source effective resistances"* — effective
+resistance being a Dirichlet problem with two boundary nodes, which is exactly the
+oracle proposed here.
+
+**The absorption function itself is a studied regression target**, under the name
+*committor*: Khoo, Lu, Ying, **arXiv:1802.10275**; Li, Lin, Ren, *J. Chem. Phys.*,
+**arXiv:1906.06285**; Contreras Arredondo et al., *Nature Computational Science*, DOI
+`10.1038/s43588-026-00958-2`, **arXiv:2507.17700**, which uses *"a graph-neural-network
+architecture built on geometric vector perceptrons to predict the committor function"*.
+
+### 4.3 What was NOT FOUND, stated as not found
+
+* **`B = N R` with `N = (I − Q)^{-1}` as a supervised regression label for a neural
+  network — NOT FOUND.** The committor papers above regress the same mathematical
+  object from molecular configurations, not from the fundamental matrix of a graph
+  chain.
+* **A GNN expressivity or receptive-field study whose label class is absorption
+  probability — NOT FOUND.**
+* **A benchmark measuring transformer capability against PageRank or linear-system
+  fixed-point ground truth — NOT FOUND.**
+* **The spectral gap, or `t_rel = 1/(1 − λ₂)`, used as a DIFFICULTY DIAL that sets how
+  hard a learning benchmark is — NOT FOUND.** Every retrieved use of the spectral gap
+  is diagnostic (oversquashing: Topping et al. **arXiv:2111.14522**, Cheeger constant
+  `h_G`; Di Giovanni et al. **arXiv:2302.02941**, commute time; Black et al.
+  **arXiv:2302.06835**, total effective resistance; Karhadkar, Banerjee, Montúfar
+  **arXiv:2210.11790**, spectral gap of the normalized Laplacian) or prescriptive for
+  rewiring — never a knob turned to set task difficulty.
+* **Synthetic graphs built with a PRESCRIBED spectral gap to produce a dose-response
+  curve in depth or iteration count — NOT FOUND.** The Long Range Graph Benchmark,
+  Dwivedi et al., NeurIPS 2022 D&B, **arXiv:2206.08164**, establishes its long-range
+  property with *shortest-path length and diameter*; a full-text search of it for
+  "spectral gap", "Cheeger" and "eigenvalue" returned **no matches**.
+* **The phrases "equilibrium labels as a capability bar" and "next-equilibrium
+  prediction", in any machine-learning sense — NOT FOUND.**
+
+### 4.4 The surviving delta is NARROW, and it is CONTESTED
+
+What survives the fetch is not the framing but one mechanism: **a benchmark whose
+difficulty is set by engineering a spectral quantity of the substrate, so that the
+shape of the error curve across a truncation ladder is predicted in advance rather
+than described afterwards.**
+
+Two papers sit directly on that, and neither is a comfortable distance away.
+
+* Fesser, Weber, *Performance Heterogeneity in Graph Neural Networks*,
+  **arXiv:2503.00547**: *"we propose to use 1/λ2∗ as a heuristic for the GNN depth"*,
+  and *"the ideal GCN depth turned out to be the integer closest to 1/λ2∗"*. This
+  predicts a depth from an independently measured spectral quantity, which is the same
+  move, one step short of a curve.
+* Veerabhadraswamy, Emerson, *Spectral Flow Certificates for Depth-Aware Long-Range
+  Propagation in Graph Neural Networks*, **arXiv:2607.21607**:
+  `SFC(G,k) = 1 − (1 − γ(G))^k` with `γ(G) = λ₂(L_norm)`, reporting
+  `R² = 0.910, 0.881, 0.863` at depths `k = 2, 3, 4`. That is a quantitative
+  prediction of accuracy from an independently measured spectral quantity, at several
+  depths — i.e. a dose-response curve in depth predicted by `λ₂`. **This is the closest
+  occupant found and it may occupy the surviving delta outright.** Provenance caveat,
+  recorded as observed and not resolved: its abstract page reports *"Submitted on 16
+  May 2026"* against a July-2026 identifier prefix.
+
+What is left after those two is thin and must be stated as thin: the same construction
+for **attention rather than message passing**, on a substrate whose spectral quantity
+is **engineered rather than surveyed**, against a label that is **itself the
+equilibrium** rather than a downstream accuracy. It is a delta. It is not the delta
+`LOOP_PROMPT.md` §2 claimed, and no round-8 number should be written as though it were.
+
+### 4.5 A second correction, from the same fetch batch
+
+`LOOP_PROMPT.md` §1.2 states that *"Cheeger's inequality bounds `λ₂` by the conductance
+from both sides, so the engineering target is reachable by construction rather than by
+search"*. The primary source is Levin, Peres, Wilmer, *Markov Chains and Mixing Times*,
+2nd ed., **Theorem 13.10**, attributed there to Sinclair & Jerrum (1989) and Lawler &
+Sokal (1988):
+
+> `Φ⋆² / 2 ≤ γ ≤ 2Φ⋆`
+
+with `γ = 1 − λ₂` and `λ₂` the second largest eigenvalue of a **reversible** transition
+matrix, and `Φ⋆` the **minimum** conductance over all cuts with `π(S) ≤ 1/2`. Two things
+follow that the contract sentence does not allow for, and `scale/foreman_lambda2.py`
+measures both:
+
+1. The theorem is about the **ergodic** chain. The quantity a `t*` ladder truncates is
+   the Perron root of the **transient block** of the absorbing chain, which is a
+   different number — measured at `0.9964078857` against `0.9984623637` on
+   `LargestJoin_S2Rips_1024`.
+2. A single named cut gives an **upper** bound on `Φ⋆`, and an upper bound on `Φ⋆`
+   composes only with `γ ≤ 2Φ⋆`. The lower half needs `Φ⋆` itself, a minimum over
+   `2^(n−1)` cuts. So even for the ergodic chain, one cut buys "not too fast" and never
+   "not too slow".

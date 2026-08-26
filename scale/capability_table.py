@@ -67,9 +67,30 @@ if str(ROOT) not in sys.path:
 
 from scale import eprocess as EP                                   # noqa: E402
 from scale.m3_synthetic_settled import contrast                    # noqa: E402
+from scale.m3_quintuple import task_of                             # noqa: E402
 from scale.negation_scope import M3_TASKS                          # noqa: E402
 
 JOURNAL = ROOT / "results" / "m3_quintuple_v2.jsonl"
+
+
+def _weights_present(seeds) -> int:
+    """How many of THIS table's cells have trained tensors on disk.
+
+    Counted rather than asserted, because the sentence "no per-cell weights
+    exist" was true when it was written and stops being true the moment a unit
+    is run by the patched runner -- and this table is published to HuggingFace,
+    where a stale absence claim is a false statement about an artifact rather
+    than a stale comment.
+    """
+    from scale.m3_quintuple import CELLS, weights_path, _key      # noqa: PLC0415
+    n = 0
+    for cell in CELLS:
+        for sd in seeds:
+            p = dict(cell=cell, k=0 if cell in ("softmax", "glance") else 8,
+                     s=64, d=24, steps=150, n_train=8192, n_eval=512,
+                     t_max=21, seed=sd, task="negation_scope")
+            n += weights_path(_key(p)).exists()
+    return n
 OUT_MD = ROOT / "results" / "capability_table_v0.md"
 OUT_JSON = ROOT / "results" / "capability_table_v0.json"
 
@@ -125,6 +146,12 @@ def read_journal(path=JOURNAL) -> dict:
         if not line.strip():
             continue
         r = json.loads(line)
+        # ONE JOURNAL, MANY TASKS since `--task` landed. This table is a
+        # `negation_scope` table (TASK above); an e3 row in the same bucket is a
+        # different corpus and must not enter it. Filtered by the format's own
+        # parser rather than by a second copy of the key grammar here.
+        if task_of(r["key"]) != TASK:
+            continue
         cell, _, tail = r["key"].partition("_")
         rows.setdefault(cell, {})[int(tail.rpartition("_sd")[2])] = r["value"]
     return rows
@@ -231,12 +258,23 @@ def build(journal=JOURNAL, *, seeds=SEEDS, n_boot=N_BOOT,
         arms=arms, contrasts=contrasts, eprocess=ep,
         consequence_fidelity=dict(
             measured=False, owner="Foreman (LOOP_PROMPT.md 1.7c)",
-            reason="scale/m3_quintuple.py journals metrics only and saves no "
-                   "per-cell weights, so no trained settled/twin/argmax/glance "
-                   "weights exist to intervene on. The only trained weights on "
-                   "disk are results/phaseD_weights_*.pt, whose metrics.kind is "
-                   "pivot_unsigned -- a different arm family, from "
-                   "scale/trained_projections.py.",
+            weights_for_this_table=_weights_present(seeds),
+            reason=(
+                "scale/m3_quintuple.py NOW SAVES per-cell weights "
+                "(results/m3_quintuple_v2_weights/, one .pt per unit carrying "
+                "the state_dict plus every constructor argument and the "
+                "mu/sigma standardisation), so the blocker this field used to "
+                "name is gone for units run from that change onward. IT IS NOT "
+                "GONE FOR THIS TABLE. The {} negation_scope units this table "
+                "is built from were journalled BEFORE the change and carry no "
+                "tensors; {} of the {} weight files this table would need are "
+                "on disk. Re-running them to emit weights costs 6685.3 s by "
+                "their own meta.seconds and has not been paid. The only other "
+                "trained weights on disk are results/phaseD_weights_*.pt, "
+                "whose metrics.kind is pivot_unsigned -- a different arm "
+                "family, from scale/trained_projections.py."
+            ).format(len(seeds) * len(rows), _weights_present(seeds),
+                     len(seeds) * len(rows)),
         ),
         limits=LIMITS,
     )

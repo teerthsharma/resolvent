@@ -45,7 +45,8 @@ import pytest
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
-from scale import capability_table as CT                           # noqa: E402
+from scale import capability_table as CT
+from scale.m3_quintuple import task_of                           # noqa: E402
 from scale import eprocess as EP                                   # noqa: E402
 from scale.m3_synthetic_settled import contrast                    # noqa: E402
 
@@ -61,6 +62,13 @@ def _rows(path=JOURNAL):
         if not line.strip():
             continue
         r = json.loads(line)
+        # FOURTH COPY OF THE KEY GRAMMAR, and the task suffix broke it too.
+        # The bucket holds more than one task since `m3_quintuple --task`
+        # landed; this table is a `negation_scope` table and an e3 row is a
+        # different corpus. Filtered through the format's OWN parser, not a
+        # fifth copy of the rule.
+        if task_of(r["key"]) != "negation_scope":
+            continue
         cell = r["key"].split("_")[0]
         seed = int(r["key"].rpartition("_sd")[2])
         out.setdefault(cell, {})[seed] = r["value"]

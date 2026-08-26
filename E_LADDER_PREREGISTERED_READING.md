@@ -65,6 +65,14 @@ match is required to be **bitwise**, and a mismatch is an instrument failure, no
 a disagreement. That cross-file bind is claimed here in advance so it cannot be
 discovered afterwards as a coincidence.
 
+> **THE BIND FIRED, BYTE-EXACT.** `results/m3_quintuple_v2.jsonl` records
+> `settled_k8_s64_d24_st150_ntr2048_nev2048_b21_sd0_taske3_t1` at
+> `eval_nrmse = 0.978314`. `results/etask_k5e_t1.txt`, written by a separate
+> process running a separately authored runner, records
+> `e3_t1 1 settled 4769 1.001474 0.978314 BEATS BAR 402.6` at the same geometry
+> and seed. Two runners, two processes, one number. The `--task` port routes
+> the same corpus the reference runner routes.
+
 ## 4. What was dropped, and the arithmetic that dropped it
 
 Measured unit cost, from `results/m3_quintuple_v2.jsonl`'s own `meta.seconds`

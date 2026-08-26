@@ -483,6 +483,25 @@ def _key(p):
             + ("" if task == SHIPPED_TASK else f"_task{task}"))
 
 
+def task_of(key: str) -> str:
+    """The task a journal key belongs to. ONE parser, owned by the format.
+
+    THE KEY FORMAT HAD THREE INDEPENDENT PARSERS AND THE TASK SUFFIX BROKE TWO
+    OF THEM. `capability_table.read_journal` does
+    `int(tail.rpartition("_sd")[2])` and `eprocess._parse_key` does
+    `int(head.rpartition("_sd")[2])`; both read everything after `_sd` as the
+    seed, so the first `..._sd0_taske3_t1` unit raised
+    `ValueError: invalid literal for int() with base 10: '0_taske3_t1'` and took
+    the whole capability table down with it -- 14 of 16 tests in
+    `tests/chase/test_capability_table.py`.
+
+    A key without a suffix is the shipped task, which is what keeps the 25
+    journalled units and every number published from them byte-identical.
+    """
+    head, sep, tail = key.rpartition("_task")
+    return tail if sep else SHIPPED_TASK
+
+
 def _units(cells, ks, seeds, **cfg):
     out = []
     for cell in cells:

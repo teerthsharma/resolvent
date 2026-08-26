@@ -4,8 +4,8 @@
 |---|---|
 | contract | `LOOP_PROMPT.md` (v10). Round 7 archived `LOOP_PROMPT_ROUND7_ARCHIVE.md` |
 | promise | **`HILBERT`** — output only when completely and unequivocally true |
-| iteration | **0 complete, 1 next** |
-| **scoreboard** | **23** carried |
+| iteration | **1 complete, 2 next** |
+| **scoreboard** | **25** — 23 carried + **X₁₈ +2 EARNED** |
 | **the round exists to move ONE number** | `done7.md` scores the product at **37 %**: engineering **≈ 80 %**, the scientific claim **≈ 5 %**. **The 5 % is because the deciding measurement has been taken ZERO times.** |
 | **RULE 2** | **THE READING COMPLETES BY ITERATION 8.** Not the corpus, not the process — the reading. |
 | register | **caveman, all agents.** Artifacts stay normal English |
@@ -17,8 +17,8 @@
 | item | pts | owner | state |
 |---|---|---|---|
 | **X₁₇** e3-harmonic ladder on E4′ Rips, oracle = absorbing-chain solve, `λ₂` in `0.90–0.95`, both gates + planted controls seen firing | +3 | Cameron | in flight |
-| **X₁₈** per-draw Ville e-process, calibrated both directions, ceiling arithmetic printed pre-run | +2 | Chase | in flight |
-| **THE READING** — settled vs twin across `t* ∈ {1,2,8,32}`, trained weights, 5 seeds, fidelity column **with Identity ablation** | **+15** / **+6** | Chase | **RULE 2: by iteration 8** |
+| **X₁₈** per-draw Ville e-process, calibrated both directions, ceiling arithmetic printed pre-run | +2 | Chase | **BUILT, 6/6 GREEN.** `scale/eprocess_perdraw.py`; `tests/chase/test_eprocess_perdraw.py`. Ceiling printed pre-run: old unit `t=5` ceiling `3.80169140625 < 40.0` **cannot cross**; new unit `t=2048` ceiling `10**359.6349`, `t=10240` ceiling `10**1802.1745`, **both can cross**. `eprocess.max_attainable` OVERFLOWS past `t=1748`, so it is read in log space and left unmodified. Planted 0.20 effect crosses **20/20**; null crosses at or below `ALPHA_FAMILY 0.05` over 400 reps; PASS half carries its own non-degeneracy check. **Estimand caveat in the file:** per-draw conditions on the trained weights. |
+| **THE READING** — settled vs twin across `t* ∈ {1,2,8,32}`, trained weights, 5 seeds, fidelity column **with Identity ablation** | **+15** / **+6** | Chase | **INSTRUMENT BUILT, RUN IN FLIGHT.** `--task` ported and per-cell weights saved (`tests/chase/test_m3_ladder_task.py` **10/10**). Pre-registration `E_LADDER_PREREGISTERED_READING.md` written before the first `e3` number, outcome rows **A–H**, fallback included. Reader `scale/e_ladder.py` prints the curve and **refuses rows A/C/F on a partial ladder**. Measured unit cost on the contended box **375.4 s / 379.3 s** (settled, `n_train=2048`), so one rung is ~77 min and the four-rung ladder ~5 h. Rungs run **endpoints first**: `e3_t1 → e3_t32 → e3_t8 → e3_t2`. **RULE 2: by iteration 8.** |
 | **X₁₉** E4′ registered in `M3_TASKS` | +1 | Cameron | not started |
 | **X₂₀** Kaggle segment + HF upload **with real weights** (author's say-so gate stands) | +4 | Chase | not started |
 

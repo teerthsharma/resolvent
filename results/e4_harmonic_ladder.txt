@@ -1,0 +1,96 @@
+==============================================================================
+E3-HARMONIC LADDER on LargestJoin_S2Rips_4096  (n=4096, target_degree=4.25, seed=0x33960005)
+==============================================================================
+  bridge=(2784, 2292)   merged component=1202 nodes   transient=1200
+  ORACLE = B = N R, N = (I - Q)^-1, solved not iterated.
+  rho(Q)=0.999974225   t_rel=1/(1-rho)=38797.84
+
+GATE (a) TRUNCATION, PART 1 -- the k-step reading against the FIXED POINT
+    k=  0   NRMSE=1.418951
+    k=  1   NRMSE=1.417409
+    k=  2   NRMSE=1.416213
+    k=  4   NRMSE=1.414079
+    k=  8   NRMSE=1.411092
+    k= 16   NRMSE=1.407394
+    k= 32   NRMSE=1.402462
+    k= 64   NRMSE=1.394285
+  THIS TABLE IS NEARLY FLAT AND THAT IS THE READING, NOT A DEFECT IN IT.
+  The fixed point sits 38798 relaxation times away, so NO budget on
+  the ladder approaches it: a 32-step reading is still at NRMSE 1.402462 from
+  it. The consequence is load-bearing and is stated here rather than left to
+  be discovered downstream -- THE FIXED POINT IS NOT A TRAINABLE RUNG. It is
+  the oracle's definition and gate (b)'s FAIL-half witness, and nothing else.
+
+GATE (a) TRUNCATION, PART 2 -- the reading against each rung's OWN label
+  This is the ladder's actual gate: exact at the budget, bounded away below.
+    t*=  1   NRMSE(z_t*, label)=0.000000   NRMSE(z_(t*-1), label)=1.001252
+    t*=  2   NRMSE(z_t*, label)=0.000000   NRMSE(z_(t*-1), label)=0.440380
+    t*=  8   NRMSE(z_t*, label)=0.000000   NRMSE(z_(t*-1), label)=0.083109
+    t*= 32   NRMSE(z_t*, label)=0.000000   NRMSE(z_(t*-1), label)=0.010259
+  The one-step-short column collapses with t* (1.001252 -> 0.010259), so the
+  dose lives between t*=1 and t*=32 and not between 31 and 32.
+  CAVEAT, and it generalises (iteration 11): gate (a) passing does NOT mean
+  the task is not locally decidable. Reaching a named node needs the
+  diameter; DECIDING a label does not. Gate (b) is what binds.
+
+GATE (b) DECODER -- static local features, radius 5, held-out half split
+    bars inherited from scale/rips_gate.py: PASS_BAR=0.5 FAIL_BAR=0.9
+    t1           NRMSE=0.000002  sd=0.012484  mean=0.000625  nonzero=0.0025  READS IT
+    t2           NRMSE=0.393213  sd=0.016030  mean=0.001100  nonzero=0.0067  READS IT
+    t8           NRMSE=0.756967  sd=0.035877  mean=0.003429  nonzero=0.0375  partial
+    t32          NRMSE=0.731839  sd=0.063182  mean=0.007842  nonzero=0.3375  partial
+    fixed_point  NRMSE=0.973819  sd=0.499989  mean=0.503333  nonzero=0.5033  cannot read it
+    ball sizes   NRMSE=0.996772  (fixed point, degree and |B_r| only -- isolates the leak channel)
+    PLANTED deg  NRMSE=0.000000  (must fire: the fit works on these exact rows)
+
+  K-1 PER RUNG, AND TWO RUNGS ARE STRUCK BY IT. K-1 strikes a task whose
+  oracle admits a local fit above the decoder bar, and PASS_BAR=0.5 is that
+  bar. Rung 1 reads 0.000002 and rung 2 reads 0.393213, so BOTH ARE STRUCK AS
+  STANDALONE TASKS. They are kept as the ladder's NULL RUNGS, which is the job
+  the contract already gives them -- section 1.2 predicts flat at t* <= 1 --
+  and rung 1 doubles as gate (b)'s PASS half. No capability claim may rest on
+  either. Rungs 8 and 32 read 0.756967 and 0.731839: above PASS_BAR so not
+  struck, below FAIL_BAR so NOT CLEARED EITHER. On the labels an arm would
+  actually train on, the FAIL half of gate (b) does not fire. It fires only on
+  the fixed point, at 0.973819, which part 1 above shows no arm can reach.
+
+  THE LADDER IS A DOSE AT ITS ENDPOINTS AND NOT STRICTLY MONOTONE INSIDE.
+  The decoder reads rung 1 outright and the fixed point not at all, but the
+  t8 -> t32 step DIPS. The fit is deterministic on a fixed split, so that dip
+  is a property of the labels rather than sampling spread, and it is stated
+  rather than smoothed. It is not K-2: K-2 is about the settled-minus-twin
+  curve, which this module does not measure.
+
+  BOTH HALVES SEEN FIRING. The FAIL half is the fixed point; the PASS half is
+  rung 1, whose label is one step of the same iteration and is therefore
+  genuinely local -- and it carries its own NON-DEGENERACY check above, which
+  is what the fourteenth vacuous control lacked: sd > 0 and 0 < nonzero < 1.
+
+==============================================================================
+THE lambda_2 BAND IS UNREACHABLE ON THIS SUBSTRATE, AND CHEEGER SAYS WHY
+==============================================================================
+  measured t_rel                     = 38797.84
+  Cheeger floor vol(S)/2 from g<=2phi= 1372.50
+  contract band lambda_2 in [0.90,0.95] => t_rel in [10.00, 20.00]
+  A one-edge bridge has phi = 1/vol(S), so g <= 2/vol(S) and t_rel >= vol(S)/2.
+  Landing t_rel <= 20 would need vol(S) <= 40 -- ten nodes at this degree.
+  A ten-node component has diameter 3 and every label on it is a 3-hop
+  function, so the decoder gate would strike it. THE BOTTLENECK THAT MAKES THE
+  LABEL GLOBAL IS THE SAME QUANTITY THAT PUTS t_rel OUT OF THE BAND.
+
+  The kill rate is the only dial that shortens t_rel without touching the
+  graph, and the frontier it traces is the trade-off, measured:
+
+    kill      rho(Q)     t_rel      label sd   label mean   decoder(fixed pt)
+    0.00000  0.999974   38797.84  0.499989   0.503333     0.973819
+    0.00391  0.996068     254.33  0.093155   0.026235     0.552521
+    0.01562  0.984350      63.90  0.061992   0.010368     0.604859
+    0.03125  0.968725      31.97  0.050235   0.006719     0.685597
+    0.06250  0.937476      15.99  0.038445   0.004334     0.732380
+
+  Read the frontier in one line: the only kill rate that lands t_rel in the
+  band collapses the label to sd 0.038445 about a mean of 0.004334, which is a
+  label that is essentially zero on 99% of nodes, and the decoder still is not
+  driven above FAIL_BAR there. At kill=0 the label is a balanced step function
+  (sd 0.499989, mean 0.503333) and the decoder is at 0.973819. THE GATES HOLD
+  AT kill=0 AND THE BAND DOES NOT. That is the reading, not a preference.

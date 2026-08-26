@@ -521,6 +521,17 @@ def pilot_rates(effect: float, *, n_seeds: int = PILOT_SEEDS,
 # ---------------------------------------------------------------------------
 # the live reading -- what makes the process LIVE rather than a plan
 # ---------------------------------------------------------------------------
+def _task_of(key: str) -> str:
+    """Deferred import of the format's own parser, so this module keeps working
+    if `m3_quintuple` is unimportable (it pulls in torch; this file does not)."""
+    try:
+        from scale.m3_quintuple import task_of
+    except Exception:
+        head, sep, tail = key.rpartition("_task")
+        return tail if sep else "negation_scope"
+    return task_of(key)
+
+
 def _parse_key(key: str) -> tuple[str, str, int]:
     """`{cell}_k{k}_{config}_sd{seed}` -> (cell, config-without-k, seed)."""
     head, _, tail = key.rpartition("_sd")
@@ -550,6 +561,12 @@ def read_paired(path, *, ref: str = "twin", arm: str = "settled"):
         if not line.strip():
             continue
         row = json.loads(line)
+        # The bucket now holds more than one task (`m3_quintuple --task`). A
+        # key with a task suffix is a different corpus; pairing across corpora
+        # would be exactly the config mismatch the check below refuses, except
+        # silent. `_parse_key` would raise on the suffix anyway.
+        if _task_of(row["key"]) != "negation_scope":
+            continue
         cell, config, seed = _parse_key(row["key"])
         if cell not in (ref, arm):
             continue

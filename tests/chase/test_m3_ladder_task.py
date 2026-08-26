@@ -323,3 +323,54 @@ def test_the_reader_refuses_a_verdict_on_an_empty_ladder(tmp_path):
     assert all(r["have_settled"] == 0 and r["have_twin"] == 0
                for r in cur["ladder"])
     assert EL.verdict(cur)[0] == "--"
+
+
+# ------------------------------------------- one bucket, more than one task ---
+def test_an_e3_row_in_the_bucket_does_not_reach_the_negation_scope_table():
+    """A second task in the same journal must be INVISIBLE to the shipped table.
+
+    THIS IS A REGRESSION TEST FOR A DEFECT THE TASK SUFFIX CAUSED. Four
+    independent copies of the key grammar existed -- `capability_table.
+    read_journal`, `eprocess._parse_key`, `tests/chase/test_capability_table.
+    py::_rows` and `m3_quintuple._key` itself -- and three of them read
+    everything after `_sd` as the seed. The first journalled
+    `..._sd0_taske3_t1` unit raised `ValueError: invalid literal for int() with
+    base 10: '0_taske3_t1'` and took 14 of the 16 capability-table tests down
+    with it.
+
+    The control is the second half: the SAME builder over the SAME journal with
+    the e3 line removed must produce byte-identical output. Without it this
+    asserts only that the builder does not crash.
+    """
+    from scale import capability_table as CT
+
+    src = (ROOT / "results" / "m3_quintuple_v2.jsonl").read_text(
+        encoding="utf-8").splitlines()
+    ns = [l for l in src if l.strip() and Q.task_of(json.loads(l)["key"])
+          == Q.SHIPPED_TASK]
+    assert ns, "no negation_scope rows to build a table from"
+
+    import tempfile
+    with tempfile.TemporaryDirectory() as td:
+        clean = pathlib.Path(td) / "clean.jsonl"
+        mixed = pathlib.Path(td) / "mixed.jsonl"
+        clean.write_text("\n".join(ns) + "\n", encoding="utf-8")
+        # a PLANTED e3 row, drawn from a real unit rather than invented: take a
+        # journalled negation_scope record and relabel its key to the e3 rung.
+        rec = json.loads(ns[0])
+        rec["key"] = rec["key"] + "_taske3_t8"
+        mixed.write_text("\n".join(ns) + "\n" + json.dumps(rec, sort_keys=True)
+                         + "\n", encoding="utf-8")
+
+        assert Q.task_of(rec["key"]) == "e3_t8"
+        assert Q.task_of(json.loads(ns[0])["key"]) == Q.SHIPPED_TASK
+        a = CT.build(journal=clean)
+        b = CT.build(journal=mixed)
+
+    for t in (a, b):
+        t["provenance"].pop("journal", None)
+        t["provenance"].pop("journal_commit", None)
+    assert json.dumps(a["arms"], sort_keys=True) == \
+        json.dumps(b["arms"], sort_keys=True)
+    assert json.dumps(a["contrasts"], sort_keys=True) == \
+        json.dumps(b["contrasts"], sort_keys=True)

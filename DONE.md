@@ -4,6 +4,141 @@ Round 6 closed with the certificate program CLOSED - three attempts, three death
 Round 5's `TWOSPHERES: BROKEN` and its handover `done5.md` stand. Round 6's
 work-done is `done6.md`. Progress **22**.
 
+### ROUND 8, ITERATION 1 - 2026-08-26 - Both blockers cleared, the evidence process rebuilt per draw, and an early signal that points away from the hypothesis.
+
+CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**, 4/4 bit-identical.
+
+## THE TWO THINGS THAT BLOCKED THE READING ARE GONE
+
+**`--task` is ported** into `scale/m3_quintuple.py` from `scale/m3_capability.py:247`,
+with choices taken from the whole `M3_TASKS` registry, and it routes **all four**
+batches - RED train, RED eval, training train, training eval - rather than one. The
+journal key gains `_task{name}` **only for a non-shipped task**, so the 25
+`negation_scope` units keep byte-exact keys, resume rather than re-run, and **`6685.3`
+seconds of completed work is not thrown away.**
+
+**Per-cell weights now land** in `results/m3_quintuple_v2_weights/`, one `.pt` per unit
+carrying the `state_dict`, every `QuintArm` constructor argument, and `mu`/`sigma`.
+`m3_quintuple.load_unit` rebuilds an arm and reproduces the journalled `eval_nrmse`
+**bitwise**. **That closes `scale/capability_table.py:232` - the exact line that named
+the empty consequence-fidelity column.**
+
+## X18 - THE PER-DRAW EVIDENCE PROCESS. **+2, EARNED.**
+
+The ceiling arithmetic is printed **before** the run, as the contract now requires:
+
+    old unit  t=5       ceiling 3.80169140625      < 40.0    CANNOT cross
+    new unit  t=2048    ceiling 10**359.6349      >= 40.0    CAN cross
+    new unit  t=10240   ceiling 10**1802.1745     >= 40.0    CAN cross
+
+**And he found that `eprocess.max_attainable` OVERFLOWS a double past `t = 1748`**, so
+the ceiling is read in log space and the original function is **left unmodified** -
+the same discipline that repaired `neumann_terms` in round 6 rather than papering over
+it.
+
+Planted `0.20` effect crosses **20/20**; the null crosses at or below
+`ALPHA_FAMILY 0.05` over 400 reps; **the PASS half carries its own non-degeneracy
+check**, which is the rule the fourteenth vacuous control produced.
+
+**AND THE ESTIMAND COST IS STATED RATHER THAN HIDDEN:** a per-draw process **conditions
+on the trained weights**, so it answers a different question from the seed process. It
+is not a free upgrade and the file says so.
+
+## THE PRE-REGISTRATION, AND TWO CORRECTIONS TO THE DISPATCH IT CAME FROM
+
+`E_LADDER_PREREGISTERED_READING.md`, rows **A-H**, written **before the first `e3`
+number**, with the fallback (`twin +0.111396`, CI `[+0.100873, +0.121920]`, sd
+`0.016547`) written in before any number existed.
+
+**CORRECTION 1, AND IT IS MINE.** The dispatch said a curve covering zero at every
+rung fires **K-2E**. It does not: **that is K-3.** K-2E requires failure in *both*
+directions. Both rows are now registered separately. **The dispatch conflated a kill
+with its neighbour and the fellow caught it.**
+
+**CORRECTION 2, AND HE CAUGHT IT IN HIS OWN WORK.** Rows A-G had a **hole**: a settled
+arm that only ever *loses* fell through all of them. **Row H was added at 13:35, before
+his numbers, and the timestamp is disclosed** rather than the row appearing silently.
+A pre-registration with a hole is a pre-registration that can be satisfied by anything
+in the hole.
+
+## THE CROSS-FILE BIND FIRED BYTE-EXACT
+
+Claimed in §3 **before** the run: `m3_quintuple --task e3_t1` at seed 0 gives
+`0.978314`; a separate process running the separately-authored `scale/etask_k5e.py`
+gives `e3_t1 1 settled 4769 1.001474 0.978314 BEATS BAR`. **Same number, two
+independent code paths.**
+
+## A DEFECT HE CAUSED AND FIXED, WITH THE ROOT CAUSE NAMED
+
+The first `..._sd0_taske3_t1` unit killed **14 of 16** capability-table tests:
+`ValueError: invalid literal for int() with base 10: '0_taske3_t1'`.
+
+**Root cause: FOUR copies of the key grammar existed, and three of them read everything
+after `_sd` as the seed.** Fixed **at the format's owner** (`m3_quintuple.task_of`),
+with the three readers filtering. A regression test plants an `e3` row and asserts the
+table is **byte-identical with and without it.**
+
+## REPRICED, WITH EVERY DROP NAMED
+
+The full cross of 75 units is **`23,738` s, about 6.6 hours**. Dropped, each with its
+reason recorded in §4: `n_train` **8192 -> 2048** (a quarter of the cost, and it buys
+the cross-bind); the `softmax` / `glance` / `argmax` cells (softmax is **VOID** on
+`e3` per §1.7d, and the rows come free from `etask_k5e`); seeds **13 -> 5** (§1.8
+fixed-sample, stated resolution `0.044`).
+
+Measured cost is now `375.4` / `379.3` / `626.1` s per settled unit - **one rung about
+77 minutes, the four-rung ladder about 5 hours.**
+
+**Rungs run ENDPOINTS FIRST: `e3_t1 -> e3_t32 -> e3_t8 -> e3_t2`**, so a partial ladder
+still spans the range. **A missing rung reads NOT RUN, never a null**, and
+`scale/e_ladder.py` **refuses rows A/C/F on a partial ladder** rather than reporting
+them.
+
+## THE EARLY SIGNAL, AND IT POINTS AWAY FROM THE HYPOTHESIS
+
+**Three seeds, no interval, reduced `n_train`. NOT a verdict, and he says so first.**
+
+    e3_t1 settled:  0.978314   0.941060   1.095453      not uniformly below the bar
+
+    seed 0, n_train=2048:
+      e3_t1   softmax 0.819665  <  twin 0.923118  <  settled 0.978314
+      e3_t2   softmax 0.952020  BEATS BAR;  twin 1.010072  and  settled 1.012262  AT/ABOVE
+
+**The pivot arms lose to plain softmax on the equilibrium tasks.**
+
+**AND THE RIG DOES NOT EXCUSE IT, WHICH IS THE SHARPEST LINE IN THE REPORT.** §1.7d
+voids `settled - softmax` on `e3` because the shared oracle would **inflate** the pivot
+arms. **They lose anyway.** A caveat that would have flattered them cannot be used to
+explain away a loss in the other direction.
+
+**Direction so far is row H, not row A.**
+
+## NOT DONE, AND CORRECTLY SO
+
+**X20's HuggingFace upload was NOT performed.** The author's explicit say-so gate
+stands, and **a coordinator message is not that say-so** - the fellow declined to treat
+a relayed instruction as author consent, which is the right call. **Real weights for
+`e3` cells now exist**, so a v1 package with real tensors is possible the moment the
+author says so. The Kaggle segment has not started.
+
+## GREEN
+
+`test_m3_ladder_task` **10/10** · `test_eprocess_perdraw` **6/6** ·
+`test_capability_table` **16/16** · `test_eprocess` **31/31**. Full `tests/chase -x`:
+22 passed, 1 failed - `test_ceq_hub_package` **timed out after 180 s on a 13-process
+box**, and that file imports nothing he touched (**checked, not assumed**).
+
+CHECKLIST: **both blockers cleared** - `--task` ported, per-cell weights saved and
+reproducing bitwise. **X18 EARNED (+2)** with ceiling arithmetic printed pre-run and a
+double overflow past `t = 1748` found and worked around rather than patched over.
+Pre-registration written before the first number, **with a hole in it disclosed and a
+kill mis-cited in the dispatch corrected**. Cross-file bind **byte-exact**. Repriced
+`6.6 h -> 5 h` with every drop named. **Early signal points at row H: the pivot arms
+lose to plain softmax on the equilibrium tasks, and the rig caveat does not rescue
+them.**
+
+**SCOREBOARD: 25** — 23 carried + **X18 +2**.
+
 ### ROUND 7, ITERATION 11 - 2026-08-26 - E4 IS STRUCK BY ITS OWN GATE, and the gate that struck it was partly vacuous when it shipped.
 
 CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**, before and after, 4/4
@@ -153,10 +288,13 @@ computes something.**
 curve.** Predicted zero at `t* <= 1`, growing with `t*`. **That curve is
 consequence-awareness; nothing else currently on the table is.**
 
-**What is missing is small and named:** `scale/m3_quintuple.py` has no `--task` flag
-while `scale/m3_capability.py:246` has one; and it **saves no per-cell weights**,
-which is exactly why the consequence-fidelity column is empty for every arm. Chase
-ports one and adds the other; Foreman then fills the column. **The verdict lands.**
+**What was missing is small, was named, and is now BUILT (it.8, Chase).**
+`scale/m3_quintuple.py` now carries `--task` (ported from `scale/m3_capability.py:247`)
+and saves per-cell weights to `results/m3_quintuple_v2_weights/`. The reading is
+RUNNING against them; see `E_LADDER_PREREGISTERED_READING.md` for the outcome table,
+fixed before the first `e3` number existed, and for the arithmetic of what was
+dropped. Foreman can now fill the consequence-fidelity column from real tensors
+instead of retraining.
 
 **THE KILL IS PRE-REGISTERED AND SO IS THE FALLBACK.** If the settled-twin interval
 covers zero at every rung including `t* = 32`, **K-2E fires, settling retires, and

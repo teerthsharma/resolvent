@@ -32,7 +32,7 @@ tags:
 > arms are called `pivot_signed` and `dense_signed` and `build_arm` maps **both**
 > to it. *The name describes a property, not an implementation.*
 >
-> **The Lean core is sound; it does not certify what ships.** 27 theorems,
+> **The Lean core is sound; it does not certify what ships.** 39 theorems,
 > `lake build` exit 0, zero `sorry`, no `sorryAx`. `pow_card_eq_zero` is
 > **confirmed against the shipped tensor** — `A^n = 0` at exactly
 > `0.000000e+00` for s = 16/64/128/512. But `occupancy_is_exact_inverse` is
@@ -365,10 +365,16 @@ the gate is wired correctly; it is not a win condition.
 
 ## Verified core
 
-Lean 4.7.0 + mathlib, `lake build` exit 0, **zero `sorry`**. **27 theorems** across five
+Lean 4.7.0 + mathlib, `lake build` exit 0, **zero `sorry`**. **39 theorems** across six
 modules; the load-bearing one for the operator is `CEQ.Nilpotent.pow_card_eq_zero` — strictly
 lower-triangular ⇒ `A^n = 0` over any `CommRing`, with **no sign hypothesis**, which is what
-licenses dropping non-negativity for free. `tests/w3b/` gates the build, checks for `sorry`
+licenses dropping non-negativity for free. `CEQ.OracleSeparation.oracle_ne_resolvent` is
+the round-8 addition and it plays that nilpotency off against its negation: an operator
+that is entrywise non-negative, has symmetric support and has one positive entry — which
+is what a walk on an undirected graph gives — is never nilpotent, so the absorbing-chain
+oracle proposed for the `t*` ladder is not the arm's own forward. `CEQ.OracleSeparation.truncation_never_exact` is the operational half: the finite
+occupancy sum is not the inverse of `(1 − Q)` at ANY truncation, so every rung of the
+ladder leaves a real residual. `tests/w3b/` gates the build, checks for `sorry`
 with a calibrated detector, and greps the Python for `.tril(-1)` so proof and code cannot
 drift apart silently.
 
