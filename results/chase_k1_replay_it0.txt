@@ -1,0 +1,42 @@
+=== TASK 4 CONTROL (runs before anything else) ===
+  C1 planted sign change    flip=True  g0=+2.849876e+00 g1=-2.849876e+00   FIRES (required)
+  C2 softmax non-negative   flip=False g0=-4.249142e-06 g1=-4.249579e-06   min(I+A+hop2)=0.000000e+00   ZERO (required)
+  C3 lo=1e-30 hi=-1e-30  valuation=True  float(lo*hi<0)=True  lo*hi=-1.0000000000000001e-60  OK
+  C3 lo=1e-200 hi=-1e-200  valuation=True  float(lo*hi<0)=False lo*hi=-0.0        OK
+  CONTROL VERDICT: PASS
+
+ARM A / K1  s=1024 d=16 lam=0.1 ks=[8, 16, 32, 64, 128, 256] threads=2
+DECLARED: 400 draws per cell (100 per unit, 48 units), not the contract's 20000. Every CI is printed.
+
+=== ARM A / K1 REPORT   s=1024 d=16 lam=0.1   DECLARED 400 draws per cell   threads=2 ===
+    k     n                D_FR causal                D_FR filler      flip   ||tau||   gamma_1
+    8   400 0.029711 [0.0268,0.0328] 0.003405 [0.0029,0.0041]   0.01500    5.3238    0.6150
+   16   400 0.024445 [0.0217,0.0273] 0.003419 [0.0029,0.0040]   0.00000    4.3611    0.5757
+   32   400 0.019953 [0.0178,0.0224] 0.003050 [0.0026,0.0037]   0.00000    3.5942    0.5428
+   64   400 0.013500 [0.0121,0.0150] 0.002626 [0.0024,0.0029]   0.00250    2.6005    0.4940
+  128   400 0.010378 [0.0091,0.0118] 0.002456 [0.0022,0.0028]   0.00250    1.9734    0.4394
+  256   400 0.007218 [0.0062,0.0083] 0.002185 [0.0020,0.0024]   0.00000    1.3181    0.3539
+
+=== K1 DUAL SLOPE, bootstrap CI ON THE SLOPE (B=2000) ===
+  flip counts per k: k=8:6/400  k=16:0/400  k=32:0/400  k=64:1/400  k=128:1/400  k=256:0/400
+  flip slope in k  = -0.6960  [-1.0000,+0.0000]  (fit on 3/6 nonzero k; 1725/2000 usable reps)  bar <= -0.4
+  D_FR slope in k  = -0.4137  [-0.4573,-0.3712]  (fit on 6/6 k; 2000/2000 usable reps)  bar >= -0.1
+  flip vs bar -0.40: STRADDLES
+  D_FR vs bar -0.10: NOT MET
+  D_FR CI vs the -0.3 'no leap' line: EXCLUDES -0.3, CI lies BELOW it
+
+=== K2 FILLER TWIN (disjoint CIs required) ===
+  k=8     causal [0.0268,0.0328] vs filler [0.0029,0.0041]  DISJOINT
+  k=16    causal [0.0217,0.0273] vs filler [0.0029,0.0040]  DISJOINT
+  k=32    causal [0.0178,0.0224] vs filler [0.0026,0.0037]  DISJOINT
+  k=64    causal [0.0121,0.0150] vs filler [0.0024,0.0029]  DISJOINT
+  k=128   causal [0.0091,0.0118] vs filler [0.0022,0.0028]  DISJOINT
+  k=256   causal [0.0062,0.0083] vs filler [0.0020,0.0024]  DISJOINT
+
+=== K3 GEOMETRY MUST EARN ITSELF (|d_theta| > |d_TV|) ===
+  k=8     d_theta=+1.1568  d_TV=+1.1369  theta WINS
+  k=16    d_theta=+1.0259  d_TV=+1.0022  theta WINS
+  k=32    d_theta=+0.9897  d_TV=+0.9662  theta WINS
+  k=64    d_theta=+0.9923  d_TV=+0.9613  theta WINS
+  k=128   d_theta=+0.8000  d_TV=+0.7664  theta WINS
+  k=256   d_theta=+0.6570  d_TV=+0.6314  theta WINS

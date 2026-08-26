@@ -1,0 +1,35 @@
+F-GREEN MATCHED RE-RUN (+3/-5). s=64 d=24 steps=150 n_train=8192 n_eval=512 seed=0 threads=2
+Other agents share this box; NO TIMING IS REPORTED.
+
+  train: n=8192 seed=0  flipper@39 payload@62
+  eval : n=512 seed=12345  flipper@39 payload@62
+
+=== KEY-NORM IMBALANCE EACH CONTROL LEAVES (contract 1.5) ===
+  causal pool = shipped top-k pivots. k=8, 64 draws.
+         control   residual                   95% CI
+      pivot_band   0.108689 [  0.101061,  0.116511]
+    pivot_random   0.157792 [  0.148557,  0.167109]
+  A control with a large residual has NOT removed the key-norm
+  confound. The band is the matched control; random is not matched,
+  and is not claimed to be.
+
+=== ARMS ===
+          softmax  n_params=4769  RED0 train=1.003287 eval=1.000340
+                   eval NRMSE=0.877168 CI=[0.830455,0.924226]
+   pivot_unsigned  n_params=4769  RED0 train=1.003285 eval=1.000335
+                   eval NRMSE=0.747528 CI=[0.696849,0.797716]
+       pivot_band  n_params=4769  RED0 train=1.003284 eval=1.000331
+                   eval NRMSE=0.873161 CI=[0.831275,0.919652]
+     pivot_random  n_params=4769  RED0 train=1.003285 eval=1.000336
+                   eval NRMSE=0.896355 CI=[0.844958,0.948488]
+
+=== BIND: the published F-green cell must reproduce in THIS process ===
+          softmax measured 0.877168 vs published 0.877168 [OK]
+   pivot_unsigned measured 0.747528 vs published 0.747528 [OK]
+
+=== THE GATE ===
+   pivot_unsigned vs softmax: 0.747528 [0.696849,0.797716] vs 0.877168 [0.830455,0.924226] -> DISJOINT
+       pivot_band vs softmax: 0.873161 [0.831275,0.919652] vs 0.877168 [0.830455,0.924226] -> OVERLAP
+     pivot_random vs softmax: 0.896355 [0.844958,0.948488] vs 0.877168 [0.830455,0.924226] -> OVERLAP
+  pivot_unsigned vs pivot_band -> DISJOINT
+  pivot_band vs pivot_random   -> OVERLAP

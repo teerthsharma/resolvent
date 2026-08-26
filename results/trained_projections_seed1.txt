@@ -1,0 +1,55 @@
+PHASE D -- RANDOM-INIT vs TRAINED PROJECTIONS, SIDE BY SIDE
+  training config: arm=pivot_unsigned s=64 d=24 d_model=16 steps=150 n_train=8192 n_eval=512 seed=1 threads=2
+  probe config   : examples=24 k=8 beta=0.5 settle_iters=200 dtype=float64
+  A SMALL MODEL. The question is whether these statistics MOVE,
+  not what they equal at scale. Do not read these as scale claims.
+  Other agents share this box; NO TIMING IS REPORTED.
+
+=== BIND: training must have improved the arm ===
+  eval NRMSE 1.021835 (0 steps) -> 0.720210 (150 steps)   CI=[0.679672,0.764539]
+  max |dW| wq=4.372504e+00  wk=4.288283e+00
+  [OK] the trained side is genuinely trained.
+
+=== THE TABLE. Random-init and trained, one code path, same batch ===
+                 statistic     random-init         trained    ratio t/r   CI excludes overlap
+           mean causal |w|      0.00249986        0.512092        204.8                   YES
+   mean Delta_vertex, nats         4.35854         38.0665        8.734                   YES
+     mean per-ex tanh(D/4)        0.782776        0.992143        1.267                   YES
+       mean per-ex 1-kappa        0.217224      0.00785661      0.03617                   YES
+        alpha exp(entropy)         7.66179         3.34857        0.437                   YES
+                 alpha max        0.196316        0.621503        3.166                   YES
+             log alpha min        -2.43518        -14.2232        5.841                   YES
+             log alpha max        -1.65005       -0.588002       0.3564                   YES
+               pivots used               8         7.91667       0.9896                    no
+              min(p_c,p_j)       0.0155994       0.0095758       0.6139                   YES
+             E|I| degree-2     7.99986e-06      5.2706e-06       0.6588                   YES
+            E|L3| degree-3     3.93403e-07     2.31825e-07       0.5893                   YES
+     frac I == 0.0 exactly               0       0.0416667          nan                    no
+       2-dof sigma2/sigma1        0.595962        0.520819       0.8739                   YES
+   fraction reading rank 2               1               1            1                    no
+
+=== THE CERTIFICATE IS A MAX, NOT A MEAN. K-A reads the worst cell ===
+  The two rows above are independent per-example means, so the kappa
+  row is mean(tanh(D_i/4)) and NOT tanh(mean D). Those differ badly
+  once tanh saturates. Birkhoff's hypothesis is a SUPREMUM, so the
+  quantity that certifies anything is the MAX over cells.
+          side    median D       max D  kappa(max D)  1-kappa(max D)   Neumann N
+   random-init      4.3126      6.3849      0.921099    7.890145e-02         199
+       trained     26.2701    172.3926      1.000000    7.352844e-38  INFEASIBLE
+  Neumann N is the truncation contract 1.2 needs for error < 1e-6:
+  N = ceil(log(1e-6 (1-kappa)) / log kappa). The contract's own sanity
+  table reads kappa=0.9 -> N=153, which is the check on this column.
+
+  Intervals are bootstrap over the example draws, B=2000, seed=0.
+  'CI excludes overlap' means the two intervals are disjoint, which
+  is the only form in which a move is claimed here (G6).
+
+  alpha is the T1 quantity. exp(entropy) of 1.0 is one-hot; the
+  ceiling is the pivot count. Foreman measured log_alpha min
+  -182.7498 max -0.0 at random init and nobody had looked at trained.
+
+  LIMIT. One seed, one small model, one arm (pivot_unsigned). This
+  says whether these statistics move under training at this scale.
+  It does not say what they equal at n_train=8192, and it is not a
+  capability claim. The aggregator retention figures 2.9%/13.3%/58.9%
+  are NOT re-run here and remain random-init upper bounds.

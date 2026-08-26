@@ -4,6 +4,151 @@ Round 6 closed with the certificate program CLOSED - three attempts, three death
 Round 5's `TWOSPHERES: BROKEN` and its handover `done5.md` stand. Round 6's
 work-done is `done6.md`. Progress **22**.
 
+### ROUND 7, ITERATION 3 - 2026-08-26 - CHASE LANDS. The deciding cell cannot decide, and it was proved before the first seed ran. Plus: the one non-saturating diameter is not one.
+
+CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**, 4/4 bit-identical.
+
+## PART ONE - CHASE. THE E-PROCESS IS LIVE, AND IT KILLED THE ROUND'S HEADLINE CELL BEFORE IT RAN.
+
+**MUST-FIRE READ FIRST, as the contract orders.** `python scale/eprocess.py
+--n-rep 10000 --horizon 400`, exit 0, `threads=2`, `numpy=1.26.4`.
+
+    stream                                cross settled  cross twin   either  frac E>2   max peak  med t
+    null +-B (max-variance H0)                   0.0325      0.0367   0.0692    0.4142       2162     46
+    null N(0, sd_paired)                         0.0000      0.0000   0.0000    0.0231      4.189      -
+    planted at the resolution floor              1.0000      0.0000   1.0000    1.0000  1.584e+04    174
+    planted 10x the floor                        1.0000      0.0000   1.0000    1.0000  3.156e+38     19
+    null +-B  [lambda PEEKS: broken]             1.0000      1.0000   1.0000    1.0000  2.732e+70      8
+
+**DIRECTION 1 PASS.** Worst empirical null crossing **`0.0367 +- 0.0019`**
+(1 s.e., `n_rep = 10000`) against nominal `alpha = 0.05`; `0.0367 + 2*s.e. =
+0.0405 < 0.05`. **Anytime-valid claims are PERMITTED this round**, and with them
+RULE 2's repair.
+
+**DIRECTION 2 PASS.** Planted effect crosses `1.0000`; wrong direction `0.0000`.
+
+**THE CONTROL WAS SEEN TO FIRE.** Delete predictability - let `lam_i =
+sign(d_i)/2`, chosen *after* seeing `d_i` - and the null crosses **`1.0000`**.
+**The null check has teeth**, which is the property nine struck controls in this
+campaign did not have.
+
+**AND THE NULL HAD REAL OPPORTUNITY.** `frac_above_2 = 0.4142`, `max_peak = 2162`
+- it climbed and fell back rather than never moving. `calibrate` **refuses** a
+horizon below the ceiling, so **no control here can be one that cannot fire.**
+
+## THE CEILING. THIS IS THE RESULT OF THE ITERATION.
+
+`|d| <= B` and `lam <= 1/2` force **every factor `<= 1.5`. No data beats that.**
+
+     t   max mixture E_t   max single-arm 1.5**t   >= 20?
+     5          3.801691                7.593750       no
+    10         18.534076               57.665039       no
+    11         25.991893               86.497559      YES
+    MIN_T_MIXTURE = 11    MIN_T_SINGLE_ARM = 8
+
+**THE PRE-REGISTERED 5-SEED CELL CANNOT CROSS IN EITHER DIRECTION. EVER.
+WHATEVER NUMBERS LAND.** It is arithmetically incapable of deciding, and **this
+was found before the first real seed was drawn** rather than after the run
+disappointed. A 5-seed run would have returned "undecided", and **the honest
+reading of that word is structural, not a data outcome.**
+
+**`B` PROVENANCE, from the gate rather than a fresh guess.** `B = NRMSE_BAR -
+NRMSE_FLOOR = 1.0 - 0.0 = 1.0`, since `nrmse = RMSE/std(y)`
+(`scale/negation_scope.py:96-101`) is a ratio of nonnegatives and equals `1.0` for
+the mean predictor, and `M3_QUINTUPLE_PREREGISTERED_READING.md` credits a seed-mean
+`>= 1.0` with nothing. **`B` did NOT come from the observed spread `0.056889`** -
+that would fit the instrument to the data it is about to read.
+
+**RULE 5 - THE REPLACEMENT ROUTE, AND CHASE SHIPPED BOTH SHAPES.**
+
+**REPRICE**, measured at `n_rep=2000, horizon=600`:
+
+    effect   log-rate/seed  seeds mixture  seeds measured  units (2/seed)
+    0.0500      0.02433432            218             175             436
+    0.1000      0.04844936            110              88             220
+    0.2000      0.09500081             56              45             112
+    0.5000      0.22290664             24              19              48
+    1.0000      0.39782939             14              11              28
+
+The planned run is **10 units**. At the pre-registered `0.05` resolution floor the
+price is **436 units, about 44x**; at the effect actually seen in the smoke cell
+(`+0.0027250`) it is **10754**.
+
+**REROUTE, dispatchable:** the instrument buys decisions cheaply only where the
+effect is `>= ~0.2` NRMSE (45 seeds, 112 units). **The one place theory predicts a
+separation that large is the Dyck-1 gap task - S2, Cameron's corpus. Run the
+e-process there, not on `negation_scope`.** Sharper because **the corpse supplied
+the exact arithmetic**: cost goes as `1/(lam*mu)`, and `negation_scope` measures
+`mu` at or below its own resolution floor.
+
+**RULE 2 IS SATISFIED FIVE ITERATIONS EARLY.** `EP.live()` reads
+`results/m3_quintuple_v2.jsonl` and prints `undecided at evidence E_t = 1.0`; the
+reader is proven end-to-end on real journalled numbers via
+`results/m3_quintuple.jsonl` (`t = 2`, `E_settled = 1.0014993588906083`).
+**Live and readable at every audit, due at iteration 8, delivered at 3.**
+
+**CARRIED OPEN, not claimed:** WSR predictable plug-in would cut `218 -> 124`
+(~1.76x) but does **not** buy variance adaptivity, since the optimal `lam* = 8.715`
+is far outside the `lam <= 1/2` nonnegativity cap. **Truncating `B` is NOT free** -
+clipping does not preserve `H0`, and Chase gives the counterexample:
+`d = -100 w.p. 0.01, +0.5 w.p. 0.99` has `E[d] = -0.505 <= 0` but
+`E[clip(d)] = +0.485 > 0`. And `results/m3_quintuple.txt` records a
+**NONDETERMINISM** on one unit - replay drift in `provisional_seconds` only
+(`110.89` vs `168.36`), **every `eval_nrmse` matching bitwise**. Timing is in
+`meta`, not `value`. Flagged, not chased.
+
+## PART TWO - THE UNREAD `delta_image`, KILLED AS A LEAD
+
+**The idea behind it is real and was already written in the producer's own
+comment**, unread until now: Birkhoff's `Delta` is a supremum over **the whole
+cone**, but the iteration only ever visits `T`'s **image**; measuring on the
+invariant set is the right instinct.
+
+**But the column is not what it looked like.** Wilson quoted three values and said
+plainly he had not verified what the restriction was. **He had not, and the three
+are the low tail of a column that mostly saturates:**
+
+    he quoted    delta_image = 2.5179 / 1.8227 / 3.2026
+    the column   delta_image = 0.000000 .. 133.225686   over 142 rows
+    saturating   kappa_cert_image >= 1-1e-9 in 118/142 rows   (83%)
+    collapsed    delta_image == 0.0 EXACTLY in 6/142 rows
+
+**It is NOT "the only restriction that does not saturate."** It is the only column
+with **any** non-saturating rows, and it saturates in **118 of 142**. One geometry
+spans the whole range: at `s=256, k=8` the spread is **`0.0000 .. 133.1972`**. And
+**`delta_image == 0.0000` is not a small diameter** - it means the sampler found no
+two distinguishable image points. **Vertex collapse, inside a column being read as
+evidence of tightness.**
+
+**SCHEMA DRIFT, recorded separately.** The journal carries
+`delta_naive / delta_hull / delta_image` but **not** `delta_vertex`,
+`delta_image2`, `delta_domain`, `n_draws` or `dtype` - **all of which the current
+producer writes. The journal predates the code that reads it**, which is why the
+second-iterate column is absent from the file entirely.
+
+**WHAT HOLDS EVERYWHERE IN THE SAME FILE:** `bound_respected` **142/142 True**;
+`kappa_emp` max `0.370911`, `kappa_emp_max` max `0.865614` against
+`structural_bound` in `{0.0, 0.25, 0.5, 0.9}`. **`kappa = beta` holds 142/142 and
+remains the only certificate that does.**
+
+**RULE 5 - REROUTE.** The goal was a non-saturating contraction coefficient on the
+trained operator (**+3**). **The estimator died, not the idea.** The route is
+**Dobrushin, `delta(G) = 1 - min_{q,q'} sum_p min(G_qp, G_q'p)`** - a min over
+pairs of a sum over `p`, **computed exactly from the matrix, with no supremum over
+a cone and no sampler.** **Sharper because every diameter this round has died
+either by saturation (`tanh` reads exactly `1.0` past `76.246190`) or by sampling
+(a sampled sup falls short and moves 12% when only the sampler changes, which is
+what killed House's `0.961793`). Dobrushin can do neither** - bounded in `[0,1]` by
+construction, with no sampling step to fall short in.
+
+CHECKLIST: **e-process CALIBRATED both directions and LIVE** - RULE 2 satisfied at
+iteration 3, due at 8. **The 5-seed decision KILLED structurally at
+`MIN_T_MIXTURE = 11`, before the first seed**, repriced at 436 units and rerouted
+to the Dyck-1 gap task. `delta_image` **KILLED as a lead** (118/142 saturating,
+6/142 collapsed), schema drift recorded, rerouted to Dobrushin.
+
+**SCOREBOARD: 23.**
+
 ### ROUND 7, ITERATION 2 - 2026-08-26 - The loop's own navigation was pointing at a dead round.
 
 CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.

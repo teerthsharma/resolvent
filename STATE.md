@@ -4,10 +4,10 @@
 |---|---|
 | contract | `LOOP_PROMPT.md` (v9). Round 6 archived `LOOP_PROMPT_ROUND6_ARCHIVE.md` |
 | promise | **`HILBERT`** — D2 verbatim (needs **S1's +12 branch AND S3**), or an honest `BROKEN` |
-| iteration | **2 complete, 3 next** |
+| iteration | **3 complete, 4 next** |
 | phase | **A — foundations (0–4)** |
 | **scoreboard** | **23** — 22 carried, **S5 +1** (Merkle journal live) |
-| RULE 2 (repaired) | **e-process LIVE and accumulating by iteration 8.** Breach = no live e-process at audit #1. **A deadline can slip; evidence accumulation cannot be deferred.** |
+| RULE 2 (repaired) | **SATISFIED AT ITERATION 3, due at 8.** `EP.live()` reads the journal and prints `undecided at evidence E_t = 1.0`; must-fire passes both directions (worst null `0.0367 ± 0.0019` vs `α = 0.05`) and the broken-λ control **was seen to fire at `1.0000`**. |
 | register | **caveman, all agents.** Artifacts stay normal English |
 | **RULE 5** | **Every kill ships a replacement route** — reroute / reprice / retire. **Now in the skill file, not just here.** |
 | note | The stop-hook's prompt string still says *"CEQ v8.2 ROUND 6"*. **The file is round 7 and the file governs.** Stale label, current contract. |
@@ -16,7 +16,7 @@
 
 | | item | pts | state |
 |---|---|---|---|
-| **S1** | M3 quintuple headline cell, **anytime-valid** | +12 / +6 / −4 | Chase — `scale/eprocess.py` in flight |
+| **S1** | M3 quintuple headline cell, **anytime-valid** | +12 / +6 / −4 | **instrument LANDED and calibrated; the 5-seed CELL is dead** — `MIN_T_MIXTURE = 11`, max `E_5 = 3.801691` vs threshold `20`. **Repriced 436 units; rerouted to the Dyck-1 gap task.** |
 | **S2** | Hankel-gap family; one gap task **inside** M3 | +3 | Cameron — `ceq/hankel.py` in flight |
 | **S3** | Kaggle run on the signed N1–N6 cert; HF; capability table v0 | +6 | not started |
 | **S4** | Probe battery at **TRAINED** projections | +3 | **partly done** — Phase D closed 3/3; **aggregator retention NOT re-run** |
@@ -26,13 +26,14 @@
 
 ## THE ONE NEXT ACTION (round 7, iteration 3)
 
-**Collect the three fellows. All are live and none has landed.**
+**Chase has LANDED. Collect Cameron and Foreman; the S2 reroute now depends on
+Cameron's corpus.**
 
-  1. **CHASE — the e-process must-fire, read before anything else he says.** A null
-     simulation must **NOT** cross 20 in 10,000 replays at `α = 0.05`, **and seen
-     failing to fire IS the calibration.** If the empirical null crossing rate
-     exceeds `0.05`, **the construction is wrong and nothing anytime-valid may be
-     claimed this round** — which would take RULE 2's repair with it.
+  1. **CHASE — DONE at it.3.** Must-fire **passed both directions**; the broken-λ
+     control **was seen to fire**. **And he killed the round's headline cell before
+     it ran:** `MIN_T_MIXTURE = 11`, so **5 seeds cannot cross in either direction,
+     ever.** Repriced (436 units at the floor, ~44×) and **rerouted to the Dyck-1
+     gap task — which makes S2 the critical path, not S1.**
   2. **CAMERON — the worked example, and K-5 rides on it.** If her rank/rank₊
      machinery disagrees with §1.1 (`rank_ℝ = 2` for the difference series; no
      nonnegative factorisation on raw entries; `rank 2–3 vs Ω(n)` after shifting),
@@ -58,11 +59,11 @@
    paired, CIs excluding zero). **The tail grew: `0/512 → 2/512 → 26/512`.**
    `s=256`, `s=1024` **NOT MEASURED**. **`κ = β` is still the only certificate
    that holds everywhere.**
-2. **One non-saturating diameter sits unread in a committed journal.**
-   `results/hilbert.jsonl`: `delta_image = 2.517898719097161 / 1.8227455242048691 /
-   3.2026399097564138`, `kappa_cert_image = 0.5576903857145132 /
-   0.42656198036250703 / 0.6644055723849551` — **the only restriction in the file
-   that does not saturate, and nobody has established what the restriction IS.**
+2. **CLOSED at it.3.** `delta_image` is **not** a non-saturating certificate: the
+   column runs `0.000000 .. 133.225686` and **saturates in 118/142 rows**, with
+   6/142 collapsed to exactly zero by the sampler. **Rerouted to Dobrushin, which
+   has no sampler and cannot saturate.** Schema drift recorded — the journal
+   predates its own producer.
 3. **No within-sequence norm-matched control exists.** Top-k by norm means every
    other within-sequence set is strictly lower; the matcher closed **zero** of the
    gap in **512/512** draws. **Structural, no repair known. No mechanism claim

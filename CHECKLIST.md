@@ -1094,3 +1094,20 @@ replacement goal. **A kill without a route is an incomplete report and goes back
 | tamper coverage | **DRAWN, not hand-picked** — single-line edit asserted at **every one of 16 positions**; single byte (`0.16511→0.16512`); reordering; deletion; **and appending**, because append-only is no defence against an earlier root. |
 | must-fire | **FIRES** — a constant hash is constructed and `leaf_hash` required to separate distinct inputs, without which every tamper test is vacuous. |
 | **self-caught defect** | The genesis assertion first read `assert GENESIS_LABEL in leaf_hash(...)[:0] + GENESIS_LABEL` — **`[:0]` is empty, so it reduces to `X in "" + X`, true for every input.** **Tenth vacuous control in this project, third authored here — and the first caught BEFORE shipping.** Replaced with one that rebuilds the root by hand and fails if the label does not participate. |
+
+**ROUND 7 it.3 - Chase lands; two kills, two routes.**
+
+| item | status |
+|---|---|
+| e-process must-fire, direction 1 | **PASS.** Worst null crossing **`0.0367 ± 0.0019`** (1 s.e., `n_rep=10000`) vs nominal `α=0.05`; `0.0367 + 2·s.e. = 0.0405 < 0.05`. **Anytime-valid claims permitted this round.** |
+| e-process must-fire, direction 2 | **PASS.** Planted effect crosses `1.0000`, wrong direction `0.0000`. |
+| the control was **seen to fire** | Delete predictability (`λ_i = sign(d_i)/2`, chosen after seeing `d_i`) → null crosses **`1.0000`**. **Teeth.** Null had real opportunity: `frac(E>2) = 0.4142`, `max_peak = 2162`. `calibrate` **refuses** a horizon below the ceiling. |
+| **THE CEILING** | `\|d\| ≤ B` and `λ ≤ 1/2` ⇒ every factor `≤ 1.5`. `MIN_T_MIXTURE = 11`, `MIN_T_SINGLE_ARM = 8`; at `t=5` the max possible `E_t` is **`3.801691`** against a threshold of `20`. **The pre-registered 5-seed cell CANNOT cross in either direction, ever, whatever numbers land — and this was found BEFORE the first real seed.** |
+| `B` provenance | `B = NRMSE_BAR − NRMSE_FLOOR = 1.0 − 0.0 = 1.0`, from `scale/negation_scope.py:96-101` and the gate document — **not** from the observed spread `0.056889`, which would fit the instrument to its own data. |
+| **RULE 5 — REPRICE** | Measured: at the `0.05` resolution floor the price is **436 units vs the planned 10 (~44×)**; at the smoke-cell effect `+0.0027250` it is **10,754**. |
+| **RULE 5 — REROUTE** | Cheap decisions need effect `≥ ~0.2` NRMSE (45 seeds, 112 units). **Run the e-process on the Dyck-1 gap task (S2), not `negation_scope`.** Sharper because the corpse gave the arithmetic: cost `~ 1/(λμ)`, and `negation_scope` measures `μ` at or below its own floor. |
+| **RULE 2** | **SATISFIED AT ITERATION 3, DUE AT 8.** `EP.live()` prints `undecided at evidence E_t = 1.0`; reader proven end-to-end on real journalled numbers (`t=2`, `E_settled = 1.0014993588906083`). |
+| carried open | WSR plug-in cuts `218→124` (~1.76×) but buys **no** variance adaptivity (`λ* = 8.715` far outside the `λ ≤ 1/2` cap). **Truncating `B` is not free** — clipping breaks `H0`: `d = −100 w.p. .01, +0.5 w.p. .99` has `E[d] = −0.505` but `E[clip(d)] = +0.485`. One **NONDETERMINISM** on replay: `provisional_seconds` `110.89` vs `168.36`, **every `eval_nrmse` bitwise identical** — timing is in `meta`, not `value`. |
+| `delta_image` as a certificate | **KILLED.** Column runs **`0.000000 .. 133.225686`**, **saturates in 118/142 (83%)**, and reads **exactly `0.0` in 6/142** — sampler found no two distinguishable image points. One geometry spans the range (`s=256,k=8`: `0.0000 .. 133.1972`). |
+| **schema drift** | Journal has `delta_naive/hull/image`, lacks `delta_vertex`, `delta_image2`, `delta_domain`, `n_draws`, `dtype` — **all written by the current producer. The journal predates the code that reads it.** |
+| **RULE 5 — REROUTE** | `κ = β` holds **142/142** in the same file. The idea (measure on the invariant set) survives; the **sampled-max estimator** died. **Route: Dobrushin** — a min over pairs of a sum, **no sup over a cone, no sampler**, bounded in `[0,1]` by construction, so it can die by **neither** saturation nor sampling. |
