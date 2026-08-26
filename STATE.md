@@ -4,51 +4,43 @@
 |---|---|
 | contract | `LOOP_PROMPT.md` (v8.2). Round 5 archived `LOOP_PROMPT_ROUND5_ARCHIVE.md` |
 | promise | **`HILBERT`** — D2 verbatim, or an honest `BROKEN` |
-| iteration | **7 complete, 8 next** |
+| iteration | **8 complete, 9 next** |
 | phase | **B — birth gates and the probe (iterations 5–9)** |
 | scoreboard | **4** — Star delta +2, κ<1 measured +2 *(qualified: Birkhoff route dead, structural β earned it)* |
 | RULE 2 clock | **running.** M3 settled-vs-unsettled EXECUTES by **iteration 12** or breach review |
 | register | **caveman, all agents, every iteration.** Artifacts stay normal English |
 | autonomy | user meets the loop at **iteration 30**; no check-ins |
 
-## THE ONE NEXT ACTION (round 6, iteration 8)
+## THE ONE NEXT ACTION (round 6, iteration 9)
 
-**THE G2 EVENT. Dispatch WILSON. A published number has moved and G2 is a global
-stop.**
+**EXIT GATE B, and collect whoever lands. Four agents are live.**
 
-    re-taken   D_FR slope in k = -0.4137  [-0.4573, -0.3712]
-    published                     -0.4137  [-0.4579, -0.3704]
+**Reading order when they arrive — fixed, and not arrival order:**
 
-Fixed `manual_seed(4242)`, `B=2000`, 6/6 k, 2000/2000 usable reps. **The point
-estimate reproduces exactly and the interval endpoints do not.** The round-5
-verdict is untouched — both intervals lie below `-0.30` — **but G2 does not
-condition on whether the verdict survives.**
+  1. **WILSON on the G2.** His facts settle it. **The question that decides how bad
+     this is: does anything ELSE from the same bootstrap drift?** A stable point
+     estimate with moved endpoints points at the **resampler**, and if so **every
+     bootstrap CI in the record is suspect** — one drifted interval is a defect, a
+     drifting resampler is a class. If he finds instrumentation, it goes to the
+     **Health Inspector** next, not Dr House.
+  2. **FOREMAN — G3 FIRST.** If the hops=0 bitwise bind fails, nothing else in his
+     report counts. Then settled ≠ glance against G7's ≥1%, then the gradcheck
+     **with** its β→1 blow-up control, then decomposed wall clock against K-F.
+  3. **CAMERON — the F-green matched re-run, +3/−5.** On the **tail** stratum,
+     never pooled. Band not moving is a **confirmed prediction**, not a null.
 
-**This is WILSON's, and it is explicitly NOT a Dr House trigger:** a bootstrap
-interval that will not reproduce is an engineering and provenance question, not a
-missing leap. If Wilson finds it is instrumentation rather than fact, it goes to
-the **Health Inspector** next, who is the better engineer.
+**EXIT GATE B requires:** ARM S birth gates GREEN or the arm dead with its
+trigger; ARM P verdict in; K1 expected to have crossed a boundary. **ARM P has not
+started** — Cameron's 2-dof lemma and Jacobian rank check are still not begun, and
+that is what licenses the four-point probe to exist at all.
 
-**What he must settle, in order:**
-  1. **Is the published interval or the re-taken one correct?** Not which is
-     preferred — which is *right*, and what produced the other.
-  2. **What moved it** at a fixed seed: a torch/BLAS version change, thread-count
-     dependence (this repo has a measured history of exactly that), a resampling
-     index change, or an edit to the estimator since publication.
-  3. **Does anything else published from the same bootstrap drift?** One drifted
-     endpoint pair with a stable point estimate suggests the resampler, not the
-     statistic — so the same check belongs on every bootstrap CI in the record.
-  4. **Whether the seven publication sites must be corrected or the re-take is
-     the error.** Correcting a published number requires the G2 procedure, not an
-     edit.
+**RULE 2: three iterations after this one.** The money run is unblocked — the
+harness is correct in both directions — but it must be at **n_train=8192**, print
+**all five seeds**, and carry the **~0.05 NRMSE resolution floor in its
+pre-registration**, because a real gap below that reads NO DIFFERENCE regardless
+of truth.
 
-**Running concurrently, nothing claimed for any of it:** Foreman on ARM S's birth
-gates; Cameron on the F-green matched re-run (**+3/−5, the round's pivot**).
-
-**RULE 2: four iterations after this one.** Chase's harness is calibrated and
-correct in both directions, so the money run is unblocked — but it must be at
-**n_train=8192**, print **all five seeds**, and carry the **~0.05 NRMSE resolution
-floor in its pre-registration**.
+**Iteration 10 is an `inspector.py` pass.**
 
 ## Open REDs
 

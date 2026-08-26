@@ -811,3 +811,15 @@ Replayed ARM A's own draw stream (published `D_FR causal` reproduced to 6 dp at 
 | **G2 EVENT** | **OPEN.** `D_FR` slope CI re-takes as `[-0.4573, -0.3712]` against published `[-0.4579, -0.3704]` — endpoints moved `+0.0006 / -0.0008` at fixed `manual_seed(4242)`, B=2000. Point estimate reproduces exactly. **Round-5 verdict unaffected** (both below −0.30) **but a published number moved.** Published in 7 places. → **WILSON**, not Dr House: provenance, not a leap. |
 | K-H | **NOT EARNED** — machinery calibrated, **zero fresh draws taken**. |
 | `flip(s)` vs `flip(k)` | **UNRESOLVED.** Clause says `s`, code fits `k`. If the round wants `s` the mapping re-anchors, and **the boundary-freezing window closes at the first draw**. |
+
+**ROUND 6 it.8 — the G2 event to Wilson.**
+
+| item | status |
+|---|---|
+| **G2 event** | **DISPATCHED to WILSON.** `D_FR` slope CI re-takes `[-0.4573, -0.3712]` against published `[-0.4579, -0.3704]` at fixed `manual_seed(4242)`, B=2000. **Point estimate exact; endpoints moved `+0.0006` / `-0.0008`.** |
+| routing | **NOT a Dr House trigger** — an interval that will not reproduce is provenance, not a missing leap. If Wilson finds instrumentation, next rung is the **Health Inspector**. |
+| thread-count history handed over | `m3_capability.py`'s published numbers held only because the shell carried `OMP_NUM_THREADS=2`; same log has **20 threads ×14** and **3 threads ×2**. A round-4 sweep of 1/2/4/8/16/20/24 concluded "no thread count reproduces it" and **was wrong — the answer was 3, never tried.** Wilson told to sweep odd values. |
+| **the question that matters most** | **Is this one number or a class?** A stable point estimate with drifted endpoints points at the **resampler**, not the statistic — in which case **every bootstrap CI in the record is suspect.** |
+| constraint | Wilson **may not edit any published document.** Correcting a published number requires the G2 procedure, not an edit. |
+| live agents | **four** — Foreman (ARM S birth gates), Cameron (F-green re-run, +3/−5), Chase (idle, calibrated), Wilson (G2). Nothing claimed for any. |
+| measurement hygiene | **Wall-clock untrustworthy at four concurrent agents.** All told to serialise or mark provisional. |

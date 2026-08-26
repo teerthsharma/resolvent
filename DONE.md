@@ -4,6 +4,73 @@ Round 5 closed at `TWOSPHERES: BROKEN - ARM A, K1's dual slope, displacement
 clause`; its handoff is `done5.md` and its negative result is `D1.md`. That
 verdict is final and is not reopened.
 
+### ROUND 6, ITERATION 8 - 2026-08-26 - The G2 event goes to Wilson. Four agents live.
+
+CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.
+
+ACTION (one): **dispatched WILSON on the G2 event.** This is the chain working as
+written - a nurse-level fact reached Chase, Chase escalated rather than
+adjudicating it himself, and it goes to the verified-facts tier.
+
+**IT IS EXPLICITLY NOT A DR HOUSE TRIGGER.** A bootstrap interval that will not
+reproduce is an **engineering and provenance question, not a missing leap**. The
+contract's non-triggers cover this exactly. If Wilson establishes it is
+instrumentation rather than fact, the next rung is the **Health Inspector**, who
+is the better engineer.
+
+**THE FACT UNDER INVESTIGATION:**
+
+    re-taken   D_FR slope in k = -0.4137  [-0.4573, -0.3712]
+    published  D_FR slope in k = -0.4137  [-0.4579, -0.3704]
+
+Fixed `torch.Generator().manual_seed(4242)`, `B=2000`, 6/6 k, 2000/2000 usable
+reps. **The point estimate reproduces exactly and the endpoints do not**, moving
+`+0.0006` and `-0.0008`. `flip slope -0.6960 [-1.0000, +0.0000]` reproduces
+exactly.
+
+**Round 5's verdict is untouched** - both intervals lie entirely below the `-0.30`
+trigger, so the kill that fired still fires. **G2 does not condition on that.**
+
+**WHAT HE WAS ASKED, AND THE ORDER MATTERS:**
+
+  1. **which interval is correct** - not preferred, *right* - and what produced
+     the other;
+  2. **what moved it at a fixed seed**, with the candidate causes named, and **the
+     repo's own history handed to him on the one that has burned it twice**:
+     `scale/m3_capability.py`'s published numbers were reproducible only because
+     the launching shell happened to carry `OMP_NUM_THREADS=2`, and the same log
+     holds that command at **20 threads in 14 places and 3 threads in 2 places**;
+     and a round-4 thread sweep of 1, 2, 4, 8, 16, 20, 24 concluded *"no thread
+     count reproduces it"* and **was wrong, because the answer was 3 and 3 had
+     never been tried.** He is told to sweep the odd values and not to declare a
+     value unreachable until he has.
+  3. **whether anything ELSE from the same bootstrap drifts** - and this is the
+     part that matters most. **A stable point estimate with drifted endpoints
+     points at the RESAMPLER, not the statistic**, and if that is what it is then
+     **every bootstrap CI in the record is suspect, not just this one.** One
+     drifted interval is a defect; a drifting resampler is a class.
+  4. whether the seven publication sites need correcting, or the re-take is the
+     error - **and he states the fact, he does not make the decision.**
+
+He is barred from editing any published document. **Correcting a published number
+requires the G2 procedure, not an edit.**
+
+**FOUR AGENTS ARE NOW LIVE**, and nothing is claimed for any of them: Foreman
+building ARM S to its birth gates; Cameron on the F-green matched re-run
+(**+3/-5**, the round's pivot); Chase's machinery calibrated and idle pending the
+money run; Wilson on the G2.
+
+**A hygiene note issued with the dispatch and worth recording:** with four agents
+in the tree, **wall-clock numbers are not trustworthy**, and every agent has been
+told to serialise timing runs or mark them provisional. **A contended timing
+presented as a measurement is a defect**, and this round has already spent one
+finding on an undiagnosed transient (`0xC0000409`, non-reproducing).
+
+CHECKLIST: **G2 EVENT dispatched to Wilson.** Phase B running. RULE 2 has four
+iterations after this one.
+
+**SCOREBOARD: 4** - unchanged. Nothing measured; the action was a dispatch.
+
 ### ROUND 6, ITERATION 7 - 2026-08-26 - Phase B opens, ARM S dispatched to be built. Chase lands with the last Phase A report, and it carries a G2 event.
 
 CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.
