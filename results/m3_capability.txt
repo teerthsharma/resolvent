@@ -1362,3 +1362,58 @@ torch 2.5.1+cu121  torch.get_num_threads()=2  device=cpu (no .cuda() anywhere in
   softmax=4769  pivot_unsigned=4769  ratio=0.0000
 
 === WALL CLOCK: 728.035 s ===
+
+=== RUN 2026-08-26 13:10:32 s=64 d=24 steps=150 n_train=2048 n_eval=4096 seed=0 arms=['softmax', 'pivot_signed', 'pivot_unsigned', 'windowed_signed'] task=e3_t2 ===
+torch 2.5.1+cu121  torch.get_num_threads()=2  device=cpu (no .cuda() anywhere in this file)
+
+=== E-TASK e3_t2: t* = 2 (difficulty dial, LOOP_PROMPT.md 1.7) ===
+  Model hop budgets, to read the ladder against: softmax 1, pivot_signed / pivot_unsigned / windowed_signed 2.
+  TRUNCATION LADDER -- NRMSE of a FIXED k-budget reading
+  against the label. The label requires iteration iff this is
+  bounded away from 0 at small k and tightens with k. A k=1
+  reading at ~0 would mean this task is a static expression of
+  x, like the two tasks registered before it.
+    k=   0   NRMSE=1.000023
+    k=   1   NRMSE=0.701860
+    k=   2   NRMSE=0.000000
+    k=   3   NRMSE=0.000000
+
+=== BAR CALIBRATION (must pass before any arm is credited) ===
+      predict_the_mean 1.000000
+          payload_only 1.227224
+                oracle 0.000000
+    flipper_dependence 1.401244
+   trained_two_feature 0.031118
+  BAR CALIBRATED  -- BAR CALIBRATED
+
+=== DATA (same train/eval batches reused across every arm) ===
+  train: n=2048 seed=0  flipper@61 payload@62
+  eval : n=4096 seed=12345 (DIFFERENT seed)  flipper@61 payload@62
+
+=== TRAIN + EVAL per arm ===
+
+  [softmax]  n_params=4769
+    RED  0-step NRMSE  train=1.003632  eval=1.003351  [OK]
+    POST steps=150  train NRMSE=0.768451   eval NRMSE=0.970437
+    eval bootstrap_ci (n_boot=400) = [0.953630, 0.987786]
+
+  [pivot_signed]  n_params=4769
+    RED  0-step NRMSE  train=1.003641  eval=1.003358  [OK]
+    POST steps=150  train NRMSE=0.759792   eval NRMSE=0.946352
+    eval bootstrap_ci (n_boot=400) = [0.930669, 0.962831]
+
+  [pivot_unsigned]  n_params=4769
+    RED  0-step NRMSE  train=1.003631  eval=1.003354  [OK]
+    POST steps=150  train NRMSE=0.773045   eval NRMSE=0.961363
+    eval bootstrap_ci (n_boot=400) = [0.944597, 0.977857]
+
+  [windowed_signed]  n_params=4769
+    RED  0-step NRMSE  train=1.003713  eval=1.003257  [OK]
+    POST steps=150  train NRMSE=0.787107   eval NRMSE=1.051652
+    eval bootstrap_ci (n_boot=400) = [1.033185, 1.070305]
+
+=== PARAM MATCH (arm 1 vs 2/3, must be within 10%) ===
+  softmax=4769  pivot_signed=4769  ratio=0.0000
+  softmax=4769  pivot_unsigned=4769  ratio=0.0000
+
+=== WALL CLOCK: 930.424 s ===

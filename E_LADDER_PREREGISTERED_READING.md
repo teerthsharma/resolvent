@@ -102,6 +102,27 @@ iteration and it is not attempted.
 **What is NOT dropped:** all four rungs. A two-point ladder cannot distinguish
 "growing with `t*`" from "a step at one rung", and growth is the whole claim.
 
+**Rung order, fixed here because the box is contended and the run may not
+finish.** At the moment of writing, `Get-CimInstance Win32_Process` shows ten
+other Python measurement processes on this box, each pinned to 2 threads of 28
+logical processors; four of them (`foreman_consequence`, `foreman_signfloor`)
+have been running 30 minutes. Wall-clock per unit will therefore exceed the
+journalled figures above by an unknown factor. The rungs run in the order
+
+```
+e3_t1   ->   e3_t32   ->   e3_t8   ->   e3_t2
+```
+
+— **the two endpoints first**, because they carry the direction (`t* = 1` is the
+"compatible with zero" prediction, `t* = 32` is the "grows with `t*`" prediction)
+and the two interior rungs only distinguish outcome **A** from outcome **B**. A
+rung that does not complete is reported as **NOT RUN** and its cell is left
+blank. It is never reported as a null, and no verdict row in §6 may be claimed
+on a ladder whose missing rung could have changed it: rows **A**, **C** and **F**
+all quantify over *every* rung and are unavailable until every rung is in. If
+only the endpoints land, the strongest reachable readings are **B**, **D** and
+**E**, all of which are statements about a single rung.
+
 ## 5. Power analysis on the pilot SD, before the data land (§1.8)
 
 Pilot: the five per-seed `settled − twin` differences already journalled on

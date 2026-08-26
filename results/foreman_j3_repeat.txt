@@ -1,3 +1,5 @@
 J3 VALUE-PATH REPEAT  steps=150 n_train=8192 seeds=[0, 1, 2, 3, 4] n_draw=256 threads=2
 kind             nonlinear   seed                 rate                    k                 used   neg_influence_frac        min_influence
 ------------------------------------------------------------------------------------------------------------------------------------------
+pivot_unsigned   True           0             0.004132                    1                  242             0.410156            -3.893360
+pivot_unsigned   False          0             0.000000                    0                  240             0.937500            -0.876022

@@ -5,3 +5,9 @@ ABSOLUTE BAR: NRMSE 1.0 is predict-the-mean. K-5E asks only whether a cell is BE
         task   t*      cell  n_par    0-step      eval      verdict       s
        e3_t1    1   softmax   4769  1.002204  0.890073    BEATS BAR    83.2
        e3_t1    1      twin   4769  1.002255  0.966837    BEATS BAR   122.1
+       e3_t1    1   settled   4769  1.002293  1.061138 AT/ABOVE BAR   188.7
+       e3_t2    2   softmax   4769  1.003282  1.101813 AT/ABOVE BAR    79.2
+       e3_t2    2      twin   4769  1.003317  1.077695 AT/ABOVE BAR   117.1
+       e3_t2    2   settled   4769  1.003326  1.100449 AT/ABOVE BAR   190.3
+       e3_t8    8   softmax   4769  1.007414  1.337387 AT/ABOVE BAR    84.3
+       e3_t8    8      twin   4769  1.007418  1.273078 AT/ABOVE BAR   136.5

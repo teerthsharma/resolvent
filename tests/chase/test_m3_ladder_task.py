@@ -50,6 +50,14 @@ TINY = dict(s=48, d=8, steps=2, n_train=16, n_eval=16, k=4, t_max=3,
             n_neumann=3)
 
 
+@pytest.fixture(autouse=True)
+def _weights_go_to_tmp(tmp_path, monkeypatch):
+    """`results/` is the evidence directory. A test run must not leave 23 kB
+    checkpoints of a 16-example toy in it, where a later reader finds them next
+    to the real ones and cannot tell which is which from the filename alone."""
+    monkeypatch.setattr(Q, "WEIGHTS_DIR", tmp_path / "weights")
+
+
 def _params(cell="twin", seed=0, task="negation_scope", **over):
     p = dict(cell=cell, seed=seed, task=task, **TINY)
     p.update(over)
