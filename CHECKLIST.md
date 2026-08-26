@@ -930,3 +930,17 @@ Replayed ARM A's own draw stream (published `D_FR causal` reproduced to 6 dp at 
 | `Delta_hat` / `kappa` trained | Random-init `Delta_vertex` **101.3671 .. 311.6091**, `kappa_cert` exactly **1.0** in 30/30. **Trained `Delta_hat` below ~20 makes 1.2's Neumann route affordable** (`N` 254,653 vs `2.3e14`). |
 | logit scale | **The root cause behind four symptoms** - F-lam, `Delta ~ 100` nats, float32 underflow, ARM S's vertex collapse. Random-init mean `|w|` `1.171e+01` vs harness `2.682399e-03`. **Trained has no reason to share it**, and it predicts `Delta_hat`. |
 | decisions made in dispatch | **Trains her own small models** rather than coupling to Chase's UNRUN in-flight quintuple - that would inherit its schedule. **Small is sufficient**, config reported beside every number so it is not read as a scale claim. **Random-init and trained side by side for every statistic** - the delta *is* the measurement. |
+
+**ROUND 6 it.17 - the standing REDs go to the Inspector.**
+
+| item | status |
+|---|---|
+| **10 standing REDs** | **DISPATCHED to the HEALTH INSPECTOR.** `test_composition_is_the_uncosted_route` 3, `test_domain` 1, `test_minimum_arch` 6. RED since **2026-08-25T09:40** across five runs, predating round 6. |
+| routing | **The chain decided it, not a preference.** Unaudited failures are engineering and provenance, **not a missing idea**, so they go to the Inspector rather than Dr House. **First exercise of the fork in the Inspector's direction this round.** |
+| why it matters | Health check prints **191/1413 = 13.52%** coverage and states a clean bill covers *"these 191 tests and NOTHING ELSE"*. **Large untested surface, ten known failures inside it.** |
+| **question 1** | **BY DESIGN / ROT / BROKEN TEST for each.** This project **deliberately uses RED tests as records**, so ten failures are not automatically ten defects. Assertion and failure quoted per test; **no guessing from names**. |
+| **question 2** | **Does anything PUBLISHED depend on them?** If a document asserts what a RED test was meant to bind, **the claim is unbound and struck.** |
+| question 3 | When each went RED, against which commit — **and say so if history cannot show it.** it.13 established some producers **entered git after their numbers were published**, so `git log` cannot always answer. |
+| question 4 | **Is 13.52% itself honest?** Verify `1413` is the true collected count. **A wrong coverage figure is worse than none.** |
+| constraints | **May not edit a test to make it pass, nor any published document** — he audits, he does not repair. Six live-agent files off limits. |
+| Cameron | **NOT at fault and it is recorded** — she modified zero pre-existing files, her own two pass, and she declined the audit as outside her scope. **A fellow refusing to adjudicate outside scope is the chain working.** |

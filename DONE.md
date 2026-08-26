@@ -4,6 +4,72 @@ Round 5 closed at `TWOSPHERES: BROKEN - ARM A, K1's dual slope, displacement
 clause`; its handoff is `done5.md` and its negative result is `D1.md`. That
 verdict is final and is not reopened.
 
+### ROUND 6, ITERATION 17 - 2026-08-26 - Ten failing tests nobody has audited, and the chain says who they belong to.
+
+CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.
+
+ACTION (one): **dispatched the HEALTH INSPECTOR on the 10 standing REDs in
+`tests/cameron/`.**
+
+**THE CHAIN DECIDED THE ROUTING, NOT A PREFERENCE.** Unaudited failing tests are
+**engineering and provenance, not a missing idea**, so they go to the Inspector -
+who is the better engineer - rather than to Dr House. **This is the first time this
+round the fork has been exercised in the Inspector's direction, and it is exactly
+what the user's rule describes.**
+
+**WHAT IS BEING AUDITED:**
+
+    tests/cameron/test_composition_is_the_uncosted_route.py   3 RED
+    tests/cameron/test_domain.py                              1 RED
+    tests/cameron/test_minimum_arch.py                        6 RED
+
+Same nodes RED since **2026-08-25T09:40**, across five runs, **predating round 6's
+work entirely.** Cameron found them, checked she had not caused them - she modified
+**zero** pre-existing files and her own two files pass - and then declined them
+correctly: *"somebody's standing findings. Me not audit them. Not mine."* **A fellow
+refusing to adjudicate something outside her scope is the chain working, not a
+gap.**
+
+**WHY TEN FAILURES MATTER MORE HERE THAN THEY USUALLY WOULD.** The health check now
+prints its own coverage: **191 of 1413 tests = 13.52%**, with its output stating a
+clean bill covers *"these 191 tests and about NOTHING ELSE"*. **There is a large
+untested surface and ten known failures sit inside it.**
+
+## WHAT HE WAS ASKED, AND THE FIRST QUESTION IS THE ONE THAT MATTERS
+
+**1. Is each RED BY DESIGN, ROT, or a BROKEN TEST?** **This project deliberately
+uses RED tests as records** - a test encoding a finding the code does not yet
+satisfy is a legitimate artifact here, **not rot**. So the audit cannot assume ten
+failures are ten defects. He must quote the assertion and the failure for each and
+**decide which of the three it is, never guessing from the name.**
+
+**2. Does anything PUBLISHED depend on any of them?** **This is the part that
+matters most.** If a document asserts something one of these tests was meant to
+bind, **and the test is RED, the claim is unbound and he strikes it.**
+
+**3. When did each go RED, against which commit** - and if the history cannot show
+it, **say so rather than reconstruct.** That instruction is there because iteration
+13 established that some producer files in this repo **entered git after their
+numbers were published**, so `git log` is not always able to answer.
+
+**4. Is the 13.52% coverage figure itself honest?** Verify `1413` is the true
+collected count and that the 191 run what they claim. **A coverage figure that is
+itself wrong is worse than none.**
+
+He is barred from editing any test to make it pass and from editing any published
+document - **he audits, he does not repair** - and from six files two live agents
+are working in.
+
+**RUNNING CONCURRENTLY, nothing claimed for any of it:** Cameron on the
+trained-projection re-run; Chase's M3 quintuple still advancing (journal `09:25:46`,
+4341 bytes) and **UNRUN at the gate regardless** - any completion is post-deadline
+and marked.
+
+CHECKLIST: 10 standing REDs **DISPATCHED to the Inspector**. Coverage figure
+**under audit**.
+
+**SCOREBOARD: 4** - unchanged. The action was a dispatch.
+
 ### ROUND 6, ITERATION 16 - 2026-08-26 - Phase D opens on the oldest open item: nothing in five rounds was measured through a trained model.
 
 CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.

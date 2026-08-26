@@ -4,39 +4,41 @@
 |---|---|
 | contract | `LOOP_PROMPT.md` (v8.2). Round 5 archived `LOOP_PROMPT_ROUND5_ARCHIVE.md` |
 | promise | **`HILBERT`** — D2 verbatim, or an honest `BROKEN` |
-| iteration | **16 complete, 17 next** |
+| iteration | **17 complete, 18 next** |
 | phase | **D — the artifact (iterations 16–24)** |
 | scoreboard | **4** — Star delta +2, κ<1 measured +2 *(qualified: Birkhoff route dead, structural β earned it)* |
 | RULE 2 clock | **running.** M3 settled-vs-unsettled EXECUTES by **iteration 12** or breach review |
 | register | **caveman, all agents, every iteration.** Artifacts stay normal English |
 | autonomy | user meets the loop at **iteration 30**; no check-ins |
 
-## THE ONE NEXT ACTION (round 6, iteration 17)
+## THE ONE NEXT ACTION (round 6, iteration 18)
 
-**Collect the trained-projection re-run, or build alongside it.**
+**Collect whoever lands. Three agents live, and each answers a different kind of
+question.**
 
-**When it lands, the reading order is by what each answer overturns:**
-  1. **`alpha` at trained projections.** Spreads => the equilibrium has something
-     to carry and ARM S's central risk lifts. **Still one-hot => T1 fires on
-     evidence**, and the round's claim is routing-only - which is a *result*, not
-     a failure.
-  2. **`Delta_hat` trained.** Below ~20 and contract 1.2's Neumann route becomes
-     affordable; still ~100+ and the implicit gradient stays priced out.
-  3. **The logit scale**, which predicts 2 and explains four prior symptoms.
-  4. **`min(p_c,p_j)`**, which decides whether ARM P's strata survive.
+  1. **CAMERON — the trained-projection re-run.** Read `alpha` first: **spreads =>
+     the equilibrium has something to carry; still one-hot => T1 fires on
+     evidence** and the round's claim is routing-only, which is a *result*. Then
+     `Delta_hat`, then the logit scale that predicts it, then `min(p_c,p_j)`.
+  2. **THE INSPECTOR — the 10 standing REDs.** Read **question 2 first**: does
+     anything published depend on a RED test? **An unbound published claim is
+     struck**, and that outranks the classification of the tests themselves.
+  3. **CHASE — M3.** UNRUN at the gate. Any completion is **post-deadline and
+     marked**; it does not move round 6's scoreboard.
 
-**Do not wait on Chase.** M3 is UNRUN at the gate; any completion is post-deadline
-and marked as such.
+**Build alongside if none has landed — but not another instrument.** RULE 1 has
+been breached most of this round and the corrective is measurement or fetch.
 
-**Cheap and unrouted, in order:**
-  * **L3 leakage `E|L3|/E|I|`** - unmeasured, and **degree-2 claims stay
-    unwarranted until it is**. It gates ARM P's whole framing.
-  * **K-F** - needs `collect_callgrind` or an isolated core. The clock on this box
-    is dispatch-bound, not arithmetic-bound, and that is measured, not assumed.
-  * **10 standing REDs in `tests/cameron/`**, predating this round, unaudited by
-    anyone.
+**Cheap and still unrouted:**
+  * **L3 leakage `E|L3|/E|I|`** — **degree-2 claims stay unwarranted until it is
+    measured**, and it gates ARM P's entire framing.
+  * **K-F** — undecided; needs `collect_callgrind` or an isolated core, because
+    the clock on this box is **dispatch-bound, not arithmetic-bound**, and that is
+    measured rather than assumed.
 
-**Iteration 20 is an `inspector.py` pass.**
+**Iteration 20 is an `inspector.py` pass** — the command, which is a different
+thing from the Inspector agent now auditing. **Both, and do not conflate them
+again.**
 
 ## Open REDs
 
