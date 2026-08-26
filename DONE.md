@@ -4,6 +4,156 @@ Round 6 closed with the certificate program CLOSED - three attempts, three death
 Round 5's `TWOSPHERES: BROKEN` and its handover `done5.md` stand. Round 6's
 work-done is `done6.md`. Progress **22**.
 
+### ROUND 7, ITERATION 9 - 2026-08-26 - The quintuple completes, the one-hot control lands in the direction nobody predicted, and Wilson finds a real graph corpus.
+
+CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.
+[RUN] `pytest tests/loop` -> **254 passed** (243 -> 254), exit 0.
+
+## THE CELL IS COMPLETE. FIVE ARMS, FIVE SEEDS, 25 UNITS.
+
+    cell        k    seeds 0..4 eval NRMSE                              mean        sd
+    argmax      8    1.022910 0.994867 1.011705 1.010804 1.013609    1.010779   0.010115
+    softmax     0    0.877168 0.889523 0.919148 0.890175 0.885603    0.892323   0.015866
+    glance      0    0.877168 0.889523 0.919148 0.890175 0.885603    0.892323   0.015866
+    settled     8    0.753581 0.768802 0.874658 0.816071 0.706317    0.783886   0.064106
+    twin        8    0.767403 0.784397 0.794505 0.798001 0.760328    0.780927   0.016547
+
+    arm       vs         delta      ci_lo      ci_hi     verdict
+    settled   twin    -0.002959  -0.048587  +0.031557   NO DIFFERENCE   <- HEADLINE
+    settled   argmax  +0.226893  +0.175040  +0.275862   SETTLED WINS
+    settled   softmax +0.108437  +0.066232  +0.147110   SETTLED WINS
+    twin      softmax +0.111396  +0.100873  +0.121920   SETTLED WINS
+    argmax    softmax -0.118456  -0.134115  -0.102204   TWIN WINS
+
+## THE ONE-HOT CONTROL FIRED, AND IN THE DIRECTION NOBODY PREDICTED
+
+**`argmax` is WORSE than plain softmax** - `-0.118456`, interval
+`[-0.134115, -0.102204]`, well clear of zero. Collapsing the pivot weights to a
+single one-hot reading **loses** what the architecture gains.
+
+**So the win is not "look up the best pivot."** Reading one pivot is worse than
+reading none. **The MIXTURE is the whole contribution, and the EQUILIBRIUM is none
+of it.** Those are two separate negatives and the second is the round's promise.
+
+**AND `argmax` FAILS ITS OWN BAR.** Mean `1.010779`, **above 1.0**, so it does not
+beat predict-the-mean and is **credited with nothing**. That makes
+`settled vs argmax = +0.226893` **a win over a failure**, which licenses nothing.
+Recorded because the largest positive number in the table is the least meaningful
+one - the same trap Cameron named at iteration 8.
+
+## THE PRECISION FLOOR, PRE-REGISTERED BEFORE THE RUN AND REPEATED VERBATIM
+
+> *"with five seeds a real settled-vs-twin gap below roughly 0.05 NRMSE will read
+> NO DIFFERENCE whether or not it is real."*
+
+Realised paired sd **`0.050147`**. So the run **excludes** a settled advantage above
+**`+0.034516`** and a disadvantage beyond **`-0.045628`** - and **excludes nothing
+smaller.**
+
+**`NO DIFFERENCE` here means "no effect bigger than that". It does not mean "no
+effect", and it must never be quoted as if it did.**
+
+**AND THE SETTLING IS 3.874x NOISIER THAN ITS TWIN** - `sd 0.064106` against
+`0.016547`, same batches, same init, same parameter count. Per-seed deltas alternate
+sign: `+0.013822 +0.015595 -0.080153 -0.018070 +0.054011`. **Settling does not move
+the mean; it widens the distribution.**
+
+## WILSON: THE GRAPH CORPUS IS REAL, AND THERE ARE TWO OF THEM
+
+`google-deepmind/mujoco#3396`, merged `2026-07-20T23:17:17Z`, four files, Apache-2.0,
+all ten commits the author's own with `Signed-off-by`.
+
+**THE MERGED ONE - 2,000 generated undirected multigraphs**, a differential oracle
+for a disjoint-set connected-components routine.
+`test/engine/engine_island_test.cc:223-233`, seed `0x5eed3396u`, `kTrials = 2000`,
+32-bit LCG `state*1664525 + 1013904223`. Nodes `[1,64]`, edge lists `[0,191]`;
+**62,394 nodes and 191,122 edges in total, resolving to 4,937 components.**
+Self-loops, duplicate edges, reversed duplicates and a `-1` static sentinel are all
+**deliberate** cases in the generator.
+
+**WILSON FOUND A DEFECT IN IT AND REPORTED IT WITHOUT A VERDICT ATTACHED, WHICH IS
+HIS JOB.** The branch selector is `next() % 8`, which reads the **low three bits** of
+a power-of-two-modulus LCG - and those bits have period 8. The realised histogram
+over 191,122 draws is
+**`[503, 273, 1479, 547, 63103, 745, 62450, 62022]`**: three cases take 98% of the
+draws and three take under 0.4%. **The corpus is heavily skewed and its own author
+did not intend the skew.**
+
+**THE ONE ACTUALLY NAMED `Corpus()` DID NOT MERGE.** Six geodesic Vietoris-Rips
+graphs on `S^2`, added at commit `5d91d878` and removed at `d9c8bcbc` **inside the
+same PR**; `404` at the merge commit. Its own header says it *"spans the
+connectivity transition of points sampled on S^2"*. SplitMix64, uniform sphere
+sampling by the Archimedes z-band method, Rips radius `2*asin(sqrt(p))` chosen so
+expected degree hits a target, plus a single shortest geodesic bridge edge.
+
+    case                                nodes  target_deg  edges  comps
+    StableSparse_S2Rips_64                 64      2.0        68     15
+    CriticalBridge_S2Rips_256             256      4.1589     503      6
+    SupercriticalDense_S2Rips_256         256     12.0       1521      1
+    GroundedStaticRepeated_S2Rips_256     256     12.0       1582      1
+    StableRepeated_S2Rips_1024           1024      2.0       1019    178
+    CriticalLarge_S2Rips_1024            1024      7         3625      3
+
+**Wilson derived every one of those by re-implementing the generator in Python and
+said so**, rather than reading them off a build he did not run. His corroboration is
+that the C++ `Validate()` requires `pre_bridge_components == expected + 1` for
+bridged cases, and his reproduction gives `7 vs 6` and `4 vs 3` - **both satisfying
+it exactly. He calls that corroboration, not proof.**
+
+**AND HE CAUGHT SOMETHING NOBODY ASKED HIM TO LOOK FOR.** The PR body cites *"10,000
+deterministic generated hypergraphs"* and *"four generated topology families"*.
+**No file in the merged diff, and no file in any of the ten commits, contains that
+harness.** Stated as a fact about the diff, with no accusation attached.
+
+**WHY IT MATTERS HERE, AS A HYPOTHESIS AND NOT A FINDING** - Wilson was instructed to
+make no recommendations and made none. The deleted `Corpus()` is a **connectivity
+transition with a tunable degree parameter and a known critical point**, which is
+the shape E3 needs for its difficulty dial. **It is recoverable from commit
+`5d91d878`, it is the author's own work, and it is Apache-2.0.** Whether it can
+carry an equilibrium LABEL is a fellow's call with a RED test, not Wilson's and not
+this entry's.
+
+## BUILT ALONGSIDE: A SCAN THAT CANNOT SILENTLY FAIL TO FIND WHAT IT SEARCHES FOR
+
+The twelfth vacuous control was mine and it shipped. `scale/journal_scan.py` makes
+that class a **mechanism** rather than a discipline: the caller supplies a witness
+that **must** be found, and a scan whose witness is missing **raises** instead of
+returning an empty list.
+
+**ITS OWN TESTS FOUND TWO BUGS IN IT, WHICH IS THE POINT.** The first draft kept only
+the **last** value per path, so a witness in an earlier record read as missing -
+**a check that cries wolf, which is the same disease one level up.** The second and
+worse: the witness was verified against every path **walked** rather than against the
+paths the **selector keeps**, so a transposed selector (`nrmse_eval` for
+`eval_nrmse`) passed. **A witness that cannot fail on a wrong selector is exactly the
+vacuous control the module exists to abolish.**
+
+**THE it.4 SCAN, REDONE:**
+
+    1. the shape that shipped   ScanWitnessError: witness path 'value.eval_nrmse'
+                                does not satisfy key_endswith='nrmse_eval'
+    2. the correct scan          26 readings >= 1.0, max 1.194555
+    3. an EARNED absence         0 readings >= 99.0, and the empty result is
+                                 evidence because the witness was reached AND kept
+
+`tests/loop/test_journal_scan.py`, **11 tests**: the nesting depth is drawn over
+`1..5` rather than asserted at the depth this repo happens to use, because fixing it
+only for depth 2 reproduces the class at depth 3; booleans are excluded, since
+`isinstance(True, int)` is True in Python and a journal of flags would pollute every
+numeric scan; and a **must-fire** requires the witness check to reject a correct path
+with a wrong value, which no implementation that merely checks path existence can
+pass.
+
+CHECKLIST: **quintuple COMPLETE**, 25 units, five arms. **`argmax` is WORSE than
+softmax** (`-0.118456`) - the mixture is the contribution, the equilibrium is none of
+it - **and it fails its own bar at `1.010779`, so the biggest positive number in the
+table licenses nothing.** Precision floor recorded: the run excludes `+0.034516` /
+`-0.045628` and **nothing smaller**. Wilson: **corpus FOUND**, two of them, one
+merged and one deleted in-PR, with an LCG low-bit skew and a PR-body claim with no
+code behind it. `journal_scan` built, **two bugs caught by its own tests.**
+
+**SCOREBOARD: 23.**
+
 ### ROUND 7, ITERATION 8 - 2026-08-26 - CAMERON LANDS THE GAP TASK. It is real, it is measured, and it is still not an equilibrium task.
 
 CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**, 4/4 bit-identical.

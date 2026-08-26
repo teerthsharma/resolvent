@@ -4,7 +4,7 @@
 |---|---|
 | contract | `LOOP_PROMPT.md` (v9). Round 6 archived `LOOP_PROMPT_ROUND6_ARCHIVE.md` |
 | promise | **`HILBERT`** — D2 verbatim (needs **S1's +12 branch AND S3**), or an honest `BROKEN` |
-| iteration | **8 complete, 9 next** |
+| iteration | **9 complete, 10 next** |
 | phase | **A — foundations (0–4)** |
 | **scoreboard** | **23** — 22 carried, **S5 +1** (Merkle journal live) |
 | RULE 2 (repaired) | **e-process SATISFIED at it.3. The RUN is now EXECUTING** — the `twin` arm had **zero rows** in v2 and was launched at it.6, seeds 0–4, paired to the settled key exactly. `EP.live()` reads the journal and prints `undecided at evidence E_t = 1.0`; must-fire passes both directions (worst null `0.0367 ± 0.0019` vs `α = 0.05`) and the broken-λ control **was seen to fire at `1.0000`**. |
@@ -121,9 +121,10 @@ unreachable; `delta_image` is closed. **The next action is the corpus step above
    check. It fired this round only because Foreman read the contract text
    independently. **Needs a second reader or it is decorative.**
 
-11. **`trained-two-feature` has ZERO ROWS.** It is the fifth arm of the quintuple
-   and the only thing between the read headline contrast and a complete S1 cell.
-   The other four are done at five seeds each in one geometry.
+11. **CLOSED at it.9. The quintuple is COMPLETE** — 25 units, five arms, five seeds.
+   The fifth cell is `argmax`, and it is **WORSE than softmax** (`−0.118456`, CI
+   `[−0.134115, −0.102204]`) **and fails its own bar** at `1.010779`. **The mixture
+   is the whole contribution; reading one pivot is worse than reading none.**
 12. **The settling is not paying for itself.** `settled − twin = −0.002959` with an
    interval covering zero, and the settled arm's seed spread (`sd 0.064106`) is
    **4×** the twin's (`0.016547`). **The whole gain over softmax is routing.** Any
