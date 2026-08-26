@@ -80,7 +80,7 @@ against this project's `ceq/hopcache.py`, `lean/CEQ/Refcount.lean`,
 `scale/pivot_probe.py`.
 
 **IT CORRECTED MY OWN PREMISE, independently of Chase, and it matters:**
-`ceq/bench.py:221-246` (`_causal_tgate_operator`) is the denominator-free
+`ceq/bench.py:257-313` (`_causal_tgate_operator`) is the denominator-free
 operator M2 measures. **`ceq/attention.py:151-189` (`ceq_operator`) — the one
 actually wired into `register()` — is L1-NORMALIZED.** Different objects. Two
 agents reached this from different directions, so it is not a reading error:
@@ -113,6 +113,56 @@ implementation.
 
 **STILL OUT:** the nurse on the 847-test suite that has never run to completion.
 
+### 4b. RECONCILIATION — why both streaming findings hold
+
+Both findings stand; they are statements about two different operators, and the
+tension above was an ambiguity in the words "our operator."
+
+**The operator WIN #2 streamed is denominator-free.** Chase's 16x peak-memory
+reduction at s=2048 (16.00 MiB -> 1.00 MiB, RUN, §1 row 2) is a measurement of
+M2's operator `_causal_tgate_operator`, whose every entry is
+`g_i * tanh((qhat_i . khat_j)/tau)` for j < i — a pointwise function of (i, j)
+with no row sum anywhere (READ, `ceq/bench.py:257-313`; its own docstring:
+"UNNORMALIZED ... WHY NO DENOMINATOR", `ceq/bench.py:260,278-283`). Online
+softmax's running max exists only to feed a row-global denominator; this
+operator has none to feed, so a tile boundary changes no entry and tiling needs
+no rescaling pass (DERIVED from the READ source: pointwise-in-(i,j) implies
+tile-decomposable).
+
+**The operator the module registers is L1-normalized — a different object.**
+`ceq_operator` divides each row by its L1 norm (`ceq/attention.py:188-189`) and
+is what `register()` wires in via `ceq_attention` (call site
+`ceq/attention.py:249`; registration `ceq/attention.py:266-271`). Every output
+entry there depends on a sum over the whole prefix, so a tiled form must carry
+running row mass across tiles — exactly the dependency online softmax's running
+max exists to serve (DERIVED from READ, `ceq/attention.py:151-189`).
+
+**fla's impossibility targets carry-state recurrence, which neither tiling
+needs.** The nurse's STRUCTURALLY IMPOSSIBLE verdict addresses fla's
+chunk-recurrent linear-attention streaming, where each chunk consumes a carry
+matrix produced by the previous chunk (READ; live fetches recorded in §4
+above). A signed multi-hop path sum has no carry to recur through chunks: hop-h
+mass routes through intermediate tokens explicitly, so chunk-recurrent state
+would have to be shown to compose under signed paths — that is the structural
+obstruction the nurse named. WIN #2's tiling forms no carry at all; it needs
+only tile-local entry computation, which `_causal_tgate_operator` satisfies and
+which a chunk-recurrent form never asks about. Different constructions, no
+contradiction (DERIVED).
+
+**One sentence:** streaming is blocked where per-entry output requires
+whole-prefix state (L1-normalized rows, recurrent carries) and free where
+entries are pointwise in (i, j) — M2's operator is the second kind; the
+registered operator and fla's chunks are the first.
+
+**Reconciliation is not closure. Still unmeasured:** (i) the prefix-causal
+pivot-selection gap — `select_pivots` is a global, non-causal top-k
+(`scale/pivot_probe.py:80-91`, READ), so every M2 number remains an upper bound
+for a chunked deployment and no number exists for the gap (OPEN, §5 below);
+(ii) no streaming measurement exists for the REGISTERED `ceq_operator` itself —
+the 16x belongs to `_causal_tgate_operator`, and quoting it for the module
+would repeat exactly the operator swap this section untangles (DERIVED from
+READ, `ceq/bench.py:257-313` vs `ceq/attention.py:151-189`).
+
 ## 5. OPEN — no number yet, so not a finding
 
 - `requirements.txt` written but not validated on a clean environment.
@@ -129,3 +179,13 @@ implementation.
 - **The chunked-prefill gap is unmeasured.** Prefix-causal pivot selection is
   strictly weaker than the global selector M2 uses, so every M2 number is an
   upper bound for a chunked deployment. No number exists for the gap.
+- **Capability table v0 stale, v1 fresh.** `results/capability_table_v0.{json,md}`
+  are frozen evidence stamped `journal_commit 9629616` with three clauses of
+  their own Limits string now false (STATE.md item 39) — cite them as historical
+  only. Current build on disk: `results/capability_table_v1.{json,md}`,
+  regenerated from the journals at HEAD by the pure post-processing generator
+  (`python -m scale.capability_table`; it trains nothing and uploads nothing,
+  `scale/capability_table.py:6-8`) with outputs repointed to v1, because
+  OUT_MD/OUT_JSON hardcode the v0 paths (`scale/capability_table.py:94-95`) and
+  the plain command would clobber committed evidence. v1 provenance stamp:
+  `journal_commit b8a9ace` = `head_commit`. Class RUN.

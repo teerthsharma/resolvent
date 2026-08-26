@@ -52,8 +52,17 @@ coordinate 0 lies on the causal support of every non-empty row, so any two pivot
 rows overlap there. gate_p > 0 because p < i puts p on row i's support. Hence
 alpha stays strictly positive for every iterate and every beta >= 0, with no
 appeal to sampling. The one thing this argument does NOT cover is float
-underflow -- a_p[0] can reach exactly 0 in float32 -- so gram_audit measures it
-instead of assuming it.
+underflow -- a_p[0] can reach exactly 0 in float32 -- and NOTHING measures that
+here: no function or test named `gram_audit` exists in this repository, and an
+earlier revision of this sentence claimed one did (doc rot, recorded as STATE.md
+item 39). No measurement of pivot-coordinate underflow is on record; the nearest
+artefacts are analogies, not a census of a_p[0]: `positivity_audit`
+(scale/foreman_hilbert.py:305-334) counts exact zeros-on-support over the WHOLE
+float32 softmax matrix -- 16861/523776 entries at s=1024 (CHECKLIST.md:775) --
+and the shipped settle sidesteps the question arithmetically by running in the
+log domain (`log_pivot_context`, below), which never forms exp()ed
+probabilities. Foreman owes the direct measurement if the probability-domain
+path (`pivot_context`) is ever shipped.
 
 WHAT IS NOT SETTLED HERE. Every projection in this file is random-init. No
 sentence in it is evidence about a trained model.
