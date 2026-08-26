@@ -712,3 +712,15 @@ Replayed ARM A's own draw stream (published `D_FR causal` reproduced to 6 dp at 
 | **G1 deltas** — Sinkhorn / DEQ / Star / Shapley-interaction | **OWED, IN FLIGHT.** Sinkhorn's convergence proof IS Birkhoff, so the delta must be the *settling-certificate* use, not the contraction. |
 | **RULE 2** M3 run by iteration 12 | **CLOCK RUNNING** from iteration 0. |
 | **RULE 4** caveman register, all agents | **IN FORCE.** Artifacts exempt and stay normal English. |
+
+**ROUND 6 it.1 — the metric primitive [RUN].**
+
+| item | status |
+|---|---|
+| `scale/hilbert.py` — `d_H`, `delta_hat`, `kappa_cert`, `one_minus_kappa`, `neumann_terms` | **GREEN.** 30 tests, RED shown first (`ModuleNotFoundError`, exit 2). Written once because three fellows consume it and three implementations give three bugs. |
+| projective invariance | **GREEN**, ten decades of scale. Must-fire constructs a scale-sensitive metric and shows the property rejects it — **not vacuous**. |
+| overflow at extreme spread | **GREEN** — literal ratio overflows at `e^700`; log form reads `700.0` to `1e-12` rel. |
+| boundary → `+inf` | **GREEN** — zero, negative, and both-zero. `delta_hat` goes infinite from **one zero in 96 entries**, never averaged away. |
+| closed-form gap vs 50-digit `Decimal` | **GREEN** at Δ = 10 … **1400**, where the float route has read exactly 0 since Δ = 100. |
+| **defect, self-caught** | `neumann_terms` computed `math.log(1.0 - gap)` — at Δ=76.5 the gap is `4.889518e-17`, `1.0-gap` rounds to exactly `1.0`, log is `0.0`, **ZeroDivisionError**. The function undid the K-A repair one call after it was made. Fixed to `math.log1p(-gap)`, bound by regression at Δ = 60/76.5/100/200/700. Caught by pairing the closed form against a brute-force loop — two methods that fail differently. |
+| **NEW CONSTRAINT on contract 1.2** | **`κ < 1` is not the same as the implicit gradient being computable.** Neumann terms for `1e-6`: Δ=20 → **254,653**; Δ=60 → **2.3e14**; Δ=76.5 → **1.05e18**; Δ=∞ → **−1, no finite N**. The `+2` for `κ<1` buys a **uniqueness certificate, not a trainable arm**. Foreman's live `Δ̂` now decides whether 1.2 is implementable at all. |

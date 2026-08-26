@@ -4,6 +4,98 @@ Round 5 closed at `TWOSPHERES: BROKEN - ARM A, K1's dual slope, displacement
 clause`; its handoff is `done5.md` and its negative result is `D1.md`. That
 verdict is final and is not reopened.
 
+### ROUND 6, ITERATION 1 - 2026-08-26 - The metric primitive, built alongside. It caught a defect of mine, and a real constraint on contract 1.2.
+
+CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.
+[RUN] `pytest tests/loop` -> **124 passed**, exit 0 (was 107; the 17 new ones are
+below and 13 more came with them).
+
+**Fellows still out. Contract says never block on a measurement, so something was
+built alongside** - and the gap chosen was one **nobody owns**: `d_H` itself.
+Foreman needs it for both kappa estimators, ARM S for settling, Chase for the
+kappa back-fit. **Three fellows building the same formula separately gives three
+independent bugs.** Written once as `scale/hilbert.py`, RED first, with
+`tests/loop/test_hilbert_metric.py`.
+
+**RED [RUN]:** `ModuleNotFoundError: No module named 'scale.hilbert'`, exit 2.
+Then GREEN at **30 passed**.
+
+**WHAT THE TESTS BIND, and why each one is there.**
+
+  * **Projective invariance** - `d_H(alpha*p, p) = 0` at alpha across ten decades.
+    **This is the property a naive implementation gets wrong**: `d_H` is zero for
+    PARALLEL vectors, not only equal ones, because the metric lives on rays
+    through the cone. `T` normalises only at the end, so intermediate vectors are
+    off the simplex, and a scale-sensitive implementation reads a nonzero distance
+    between two representations of the same point. **A must-fire constructs the
+    wrong metric (L-inf of the difference) and shows the property rejects it** -
+    the control is not vacuous.
+  * **Overflow** - the literal `max(p/q)/min(p/q)` overflows at a spread of
+    `e^700`; the difference-of-logs form reads `700.0` to `1e-12` relative. **A
+    spread that size is ordinary for a softmax row whose smallest entry has
+    underflowed relative to its largest.** Same class as round 5's arccos
+    collapse, tested rather than assumed.
+  * **The boundary is the kill** - zero entry, negative entry, and both-zero all
+    read `+inf`. A must-fire shows `delta_hat` over a batch goes infinite from
+    **one zero in 96 entries** rather than averaging it away.
+  * **The closed form** - `1-kappa = 2/(e^(Delta/2)+1)` checked against 50-digit
+    `Decimal` at Delta = 10 through **1400**, where the float route has read
+    exactly 0 since Delta = 100.
+
+---
+
+**THE ADVERSARIAL PASS CAUGHT A DEFECT I HAD JUST WRITTEN, ONE FUNCTION AFTER THE
+REPAIR THAT EXISTS TO PREVENT IT.**
+
+`neumann_terms` computed `math.log(1.0 - gap)`. At Delta = 76.5 the gap is
+**4.889518e-17**, so `1.0 - gap` rounds to **exactly 1.0**, its log is **0.0**,
+and the next line divides by it:
+
+    ZeroDivisionError: float division by zero
+
+**`one_minus_kappa` exists precisely so that the gap is never reconstructed by
+subtracting from 1 - and the very next function reconstructed it by subtracting
+from 1.** Fixed to `math.log1p(-gap)`. Bound by a regression test at
+Delta = 60/76.5/100/200/700.
+
+**It was caught by pairing the closed form against a brute-force increment loop** -
+two methods that fail differently, which is the only kind of second path that
+counts. A rerun of the same expression would have agreed with itself.
+
+---
+
+**AND A REAL CONSTRAINT ON CONTRACT 1.2, which is not a defect and must be carried
+into the round's planning [RUN]:**
+
+    Delta=1.0    1-kappa=7.550813e-01   N=11                    brute 11        agree
+    Delta=5.0    1-kappa=1.517164e-01   N=96                    brute 96        agree
+    Delta=20.0   1-kappa=9.079574e-05   N=254653                brute 254653    agree
+    Delta=60.0   1-kappa=1.871525e-13   N=230413020063947       brute >1e7 capped
+    Delta=76.5   1-kappa=4.889518e-17   N=1050663107642379776   brute >1e7 capped
+    Delta=inf    1-kappa=0.000000e+00   N=-1 (no finite N)      brute none
+
+**`kappa < 1` is NOT the same as the implicit gradient being computable.** At
+Delta = 20 the Neumann truncation already needs **254,653** terms for `1e-6`; by
+Delta = 60 it needs **2.3e14**; at 76.5, **1.05e18**. **Contract 1.2's Neumann
+route is implementable only while `Delta` stays SMALL, and the certificate alone
+does not establish that.** The scoreboard prices `kappa < 1 measured` at **+2**,
+and that +2 buys a uniqueness certificate - **it does not buy a trainable arm.**
+Those are separate facts and the round must not conflate them.
+
+`neumann_terms` returns **-1** at `Delta = inf` rather than truncating silently,
+so a caller has to report the impossibility rather than pick a number.
+
+**This raises the stake on Foreman's live `Delta_hat` measurement**, which is
+already in flight: it now decides not only whether K-A fires but **whether 1.2 is
+implementable at all**. Nothing is claimed for it until he reports.
+
+CHECKLIST: `scale/hilbert.py` GREEN, 30 tests, both must-fires seen firing.
+`tests/loop` **124 passed**. One self-caught defect, bound by regression. One new
+constraint on 1.2 recorded.
+
+**SCOREBOARD: 0** - the primitive is instrument work under RULE 1, not a scored
+item. 1 of 2 iterations so far are instrument work; the cap is 40%.
+
 ### ROUND 6, ITERATION 0 - 2026-08-26 - PHASE A OPENS. Three fellows in parallel, and a kill is repaired before its first datum lands.
 
 **THE ROUND.** CEQ v8.2, the Hilbert round. `LOOP_PROMPT.md` rewritten; round 5
