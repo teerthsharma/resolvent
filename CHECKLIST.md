@@ -737,3 +737,16 @@ Replayed ARM A's own draw stream (published `D_FR causal` reproduced to 6 dp at 
 | repair window | **CLOSED.** Both 1.1 repairs (tanh saturation; sampled-Δ̂ optimism) were made before any datum. **No third repair after Foreman's first `Δ̂`.** |
 | **open, and now urgent** | **Is `T` linear?** Birkhoff is stated for positive **linear** maps; `T`'s `w_p(m)` depends on `m`. If not linear, the column route is unavailable **and the theorem's hypotheses may not be met at all**. Foreman, answering plainly. |
 | RULE 1 | **2 of 3 iterations are instrument work — above the 40% cap.** Next iteration must not be. |
+
+**ROUND 6 it.3 — the Star-Transformer delta [CITED, two paths].**
+
+| item | status |
+|---|---|
+| **G1 Star-Transformer delta** | **CLEAR, +2.** Round 5 refused to claim it having read only the abstract. Read now via ar5iv HTML **and** a local `fitz` text extraction of the PDF; both agree. |
+| relay formation | **Pools ALL satellites, fixed by position.** Eq 7 `st = MultiAtt(st-1, [st-1; Ht])`, introduced as *"summarizes the information of all the satellite nodes"*. Eq 4 `Ct i = [ht-1 i-1; ht-1 i; ht-1 i+1; ei; st-1]` — positional neighbours only. |
+| content selection | **ABSENT.** `top-k` 0, `content-based` 0, `content selec` 0, `salience` 0. The single `select` hit describes standard attention (*"soft select the relevant information"*, Eq 1). |
+| causality | **NOT CAUSAL.** `causal` 0, `autoregressive` 0. Context `[i-1; i; i+1]` reads forward. |
+| the `mask` trap | **15 hits, all the synthetic task "Masked Summation"** — *"the mask value Xi0 in {0,1}, 0 means the column is ignored in summation"*. A task label, not attention masking. **A keyword sweep would have concluded the opposite of the truth.** |
+| ablation scope | **Connection TYPES, not tokens** (§5.5, radial vs ring). `interaction` reads **0** — nothing measures a third token changing help-vs-hurt. |
+| parameter matching | **NOT REPORTED.** Hyper-parameter table gives `H DIM`/`#head`/`head DIM`, no total counts. Whether the reported gains were parameter-matched is **unanswerable from the paper** — recorded as NOT FOUND, never as "they did not match". |
+| RULE 1 | instrument work **2 of 4 = 50%**, over the 40% cap but falling. |

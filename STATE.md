@@ -4,42 +4,44 @@
 |---|---|
 | contract | `LOOP_PROMPT.md` (v8.2). Round 5 archived `LOOP_PROMPT_ROUND5_ARCHIVE.md` |
 | promise | **`HILBERT`** — D2 verbatim, or an honest `BROKEN` |
-| iteration | **2 complete, 3 next** |
+| iteration | **3 complete, 4 next** |
 | phase | **A — gates and fetches (iterations 0–4)** |
-| scoreboard | **0** (floor ~15 with D1 done; ceiling ~45) |
+| scoreboard | **2** — Star delta +2 (floor ~15 with D1 done; ceiling ~45) |
 | RULE 2 clock | **running.** M3 settled-vs-unsettled EXECUTES by **iteration 12** or breach review |
 | register | **caveman, all agents, every iteration.** Artifacts stay normal English |
 | autonomy | user meets the loop at **iteration 30**; no check-ins |
 
-## THE ONE NEXT ACTION (round 6, iteration 3)
+## THE ONE NEXT ACTION (round 6, iteration 4)
 
-**NOT instrument work. RULE 1 is breached at 2 of 3 iterations against a 40% cap,
-and the fellows' returns are the corrective.**
+**EXIT GATE A. Collect Phase A and recompute the scoreboard.**
 
-**Collect Phase A it.0. Reading order is fixed and is NOT arrival order:**
+The gate requires: κ certified, matcher calibrated, deltas filed, K1 SPRT running.
+**One of four is done** — the Star delta is filed and clear (+2). The other three
+are with the fellows.
 
-  1. **FOREMAN, and his answer now decides three things, not one.**
-     * Is `T` **linear in `m`**? Birkhoff is stated for positive **linear** maps
-       and `T`'s `w_p(m)` depends on `m`. **If it is not linear the certificate
-       may not exist in the form 1.1 assumes**, and that is a contract-level
-       answer, not a patch. Wanted plainly even if it kills the arm.
-     * Live `Δ̂` **at the extreme rays**, beside the interior-sampled one, so the
-       gap measured at it.2 is visible at this geometry rather than assumed.
+**Reading order, fixed, NOT arrival order:**
+
+  1. **FOREMAN.** Three answers, and the first is the one that can end the arm:
+     * **Is `T` linear in `m`?** Birkhoff is stated for positive **linear** maps;
+       `T`'s `w_p(m)` depends on `m`. **If it is not linear the certificate may
+       not exist in the form 1.1 assumes.** Wanted plainly even if it kills ARM S.
+       **Triggers neither T1 nor T2** — a hypothesis failure is not a leap gap.
+     * Live `Δ̂` **at the extreme rays**, printed beside the interior-sampled one.
      * Whether the `tanh` float repair guards a real problem — he was asked to
        **refute** it.
-  2. **CAMERON's matcher calibration, both directions**, then the F-green matched
-     re-run (**+3/−5, decides the round's shape**).
-  3. **CHASE's SPRT calibration** below `r₀`, above `r₁`, between; and the M3
-     synthetic dry-run both directions.
+  2. **CAMERON.** Matcher calibration **both directions**, then the F-green
+     matched re-run — **+3/−5, and it decides the round's shape.**
+  3. **CHASE.** SPRT calibration below `r₀`, above `r₁`, between; M3 synthetic
+     dry-run both directions.
 
-**Then the first SCORING work:** whichever of `κ<1 measured` (+2) or the F-green
-re-run (+3/−5) the returns make available. **The scoreboard has been 0 for three
-iterations and RULE 1 exists to stop exactly that.**
+**Remaining G1 deltas still owed by Foreman:** Sinkhorn (its convergence proof IS
+Birkhoff — the delta must be the *settling-certificate* use, not the contraction),
+DEQ (norm-settling without a global-uniqueness certificate), Shapley-interaction
+lineage vs the 4-point probe design.
 
-**Contingency, pre-registered:** F-green dead ⇒ re-plan to D1 + ARM P only, **Dr
-House NOT released** (measurement, not missing innovation). `Δ̂ = +∞` ⇒ **T2**.
-**`T` non-linear ⇒ neither** — that is a hypothesis failure, and the honest move
-is to say the certificate is unavailable rather than to leap past it.
+**Contingency, pre-registered:** F-green dead ⇒ D1 + ARM P only, **House NOT
+released**. `Δ̂ = +∞` ⇒ **T2**. `T` non-linear ⇒ **neither** — say the certificate
+is unavailable rather than leap past it.
 
 ## Open REDs
 

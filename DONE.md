@@ -4,6 +4,108 @@ Round 5 closed at `TWOSPHERES: BROKEN - ARM A, K1's dual slope, displacement
 clause`; its handoff is `done5.md` and its negative result is `D1.md`. That
 verdict is final and is not reopened.
 
+### ROUND 6, ITERATION 3 - 2026-08-26 - The Star-Transformer delta, ESTABLISHED from the paper rather than its abstract. +2.
+
+CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.
+
+**RULE 1 was breached at 2 of 3 iterations against a 40% cap, so this iteration is
+NOT instrument work.** It closes the oldest open G1 item instead, which is also
+the first scoring one available while the fellows are still out.
+
+**ROUND 5 LEFT THIS EXPLICITLY UNRESOLVED**, in its own words: *"The
+Star-Transformer delta remains UNESTABLISHED and must not be claimed. Saying 'it
+never measured X' requires reading the paper, not its abstract."* Round 5 had read
+only the abstract, which gives *"a shared relay node"* and nothing else. **The PDF
+returned binary then and it returned binary again this time** - so the paper was
+read two other ways instead.
+
+**TWO INDEPENDENT PATHS, because one rendering of a document is one chance to be
+wrong:** the ar5iv HTML rendering, and a local text extraction of the PDF via
+`fitz`. They agree on every load-bearing point below.
+
+---
+
+**WHAT THE PAPER ACTUALLY SAYS [CITED, arXiv 1902.09113, Guo, Qiu, Liu, Shao, Xue,
+Zhang; submitted 25 Feb 2019, last revised 24 Apr 2022].**
+
+**1. The relay pools EVERY satellite. It does not select.** Equation 7, verbatim
+from the PDF text:
+
+    st = MultiAtt(st-1, [st-1; Ht])
+
+introduced by *"the relay node st summarizes the information of **all the
+satellite nodes** and its previous state."*
+
+**2. The topology is fixed by POSITION.** Equation 4, verbatim:
+
+    Ct i = [ht-1 i-1; ht-1 i; ht-1 i+1; ei; st-1]
+
+Satellite `i`'s context is its **positional neighbours `i-1` and `i+1`**, its own
+embedding, and the relay. **Nothing anywhere is chosen by content.**
+
+**3. It is not causal**, and the word census settles it. Over the full extracted
+text [RUN]:
+
+    top-k             0        causal            0
+    top k             0        autoregressive    0
+    content-based     0        auto-regressive   0
+    content selec     0        interaction       0
+    salience          0        bidirectional     5
+
+The context `[i-1; i; i+1]` **reads forward**, and the one substantive
+"bidirectional" hit is *"plays the same role to CNNs or bidirectional RNNs"* - the
+other four are bibliography entries (Chiu & Nichols, BERT, Cho, an LSTM-inference
+paper).
+
+**4. THE "mask" COUNT IS A TRAP AND IT WOULD HAVE FOOLED A GREP.** "mask" appears
+**15** times, and **every one is the synthetic task "Masked Summation"** - a
+column-sum task where *"The first dimension indicates the mask value Xi0 in {0,1},
+0 means the column is ignored in summation."* **That is a task label, not
+attention masking, and not causal masking.** A keyword sweep that counted it as
+evidence of masking would have reported the opposite of the truth.
+
+**5. "select" appears ONCE**, and it describes standard attention, not a selection
+mechanism: *"we can use a query vector q to **soft select** the relevant
+information with attention"*, introducing `Att(q,K,V) = softmax(qK^T/sqrt(d))V`
+at Equation 1.
+
+**6. The ablation removes CONNECTION TYPES, not tokens.** Section 5.5: *"we
+perform an ablation study to test the effectiveness of the radial and ring
+connections... (a) remove the radial connections and only keep the ring
+connections."* **Nothing measures a third token changing whether another token
+helps or hurts** - "interaction" reads **0**.
+
+**7. Parameter counts are NOT REPORTED.** The hyper-parameter table gives `H DIM`,
+`#head` and `head DIM` per dataset but **no total parameter counts for either
+model**, so **whether the comparison was parameter-matched cannot be determined
+from the paper.** That is recorded as NOT FOUND, not as "they did not match" -
+the distinction is the whole discipline.
+
+---
+
+**THE DELTA, AND IT IS CLEAR ON ALL FOUR AXES.**
+
+    axis                    Star-Transformer          this round's arm
+    relay / pivot choice    FIXED BY POSITION,        CONTENT-SELECTED top-k
+                            pools ALL satellites      by key norm
+    direction               bidirectional             causal
+    parameter matching      NOT REPORTED              matched, softmax first
+    third-token effect      absent ("interaction" 0)  the whole object
+
+**Round 5 could not say any of this and correctly refused to.** It can be said
+now, and the reason it can is that the paper was read rather than its abstract.
+
+**WHAT IS STILL NOT ESTABLISHED, stated rather than dropped:** whether the
+reported *"significant improvements against the standard Transformer for the
+modestly sized datasets"* were obtained at matched parameters. The paper does not
+report the counts, so the question is **unanswerable from this source** - it is
+not evidence either way, and no claim of ours may lean on it.
+
+CHECKLIST: **G1 Star-Transformer delta CLEAR**, two paths, +2.
+
+**SCOREBOARD: 2** (Star delta +2). Instrument work 2 of 4 iterations = 50%, still
+over RULE 1's 40% cap but falling; the fellows' returns are the corrective.
+
 ### ROUND 6, ITERATION 2 - 2026-08-26 - The settling driver, and the certificate turns out not to be one.
 
 CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.
