@@ -50,14 +50,53 @@ Three changes, each of which is a build rather than an argument:
 length `s` — not `z*_{s-1}`. The oracle already computes the entire vector and then
 discards all but one entry.
 
-**(b) The readout must not be flat.** RULE 9 applies with force here. A root-mean-square
-error over a configuration weights every coordinate independently and identically, which
-is precisely the assumption a shape violates: the coordinates of a fixed point are
-**coupled**, and a prediction that is right in aggregate but wrong in arrangement is not
-a good prediction of a shape. The candidate readouts are the ones that respect that
-coupling — Hilbert projective distance on the positive part, Fisher–Rao or total
-variation where the object is a distribution, and a Procrustes-style or optimal-transport
-cost where only the arrangement matters and scale does not.
+**(b) The readout must not be flat — but only where the target is not flat, and that
+was measured rather than assumed.** A root-mean-square error over a configuration
+weights every coordinate independently and identically, which is the assumption a shape
+violates: the coordinates of a fixed point are **coupled**, and a prediction right in
+aggregate but wrong in arrangement is not a good prediction of a shape. Candidate
+readouts that respect the coupling are Hilbert projective distance on the positive part,
+Fisher–Rao or total variation where the object is a distribution, and a Procrustes or
+optimal-transport cost where only arrangement matters.
+
+**A QUALIFICATION THAT SURVIVED A CHECK, AND IT NARROWS THE RULE CORRECTLY.** The
+objection **does not bite on the chain family**: `equilibrium_oracle` returns
+`z*_{s-1}`, which is exactly `N(0, t*)` on the real line — **the target's own geometry
+is flat, so a root-mean-square error is the right readout there** and every reading
+already taken under it stands.
+
+**It bites on the absorbing-chain corpus**, whose label is a probability. The
+lightweight non-flat readout is one transform and no new scoring code:
+
+```
+    phi(p) = 2 * arcsin( sqrt(p) )
+```
+
+the exact Fisher–Rao geodesic coordinate on the binary simplex, since
+`ds = dp / sqrt(p(1-p))`.
+
+**RULE 8 was applied to it before it was measured.** `phi` is smooth and strictly
+monotone, so near the fixed point it acts as a diagonal scaling and **cannot move the
+leading eigenvalue** — both readouts must therefore share an asymptotic rate. Confirmed
+to `6.319e-07` and `4.610e-04`.
+
+**But the price at the rungs is not zero**, which is what makes the choice
+load-bearing:
+
+| `t` | Euclidean | Fisher–Rao | ratio |
+|---|---|---|---|
+| 8 (`_64`) | 0.1815582640 | 0.2576242379 | **1.418962** |
+| 32 (`_1024`) | 0.0481326124 | 0.0582150553 | **1.209472** |
+
+The cause is measured: `_1024`'s conditional label puts **`0.7666` of its mass within
+one hundredth of a boundary** (`0.3333` below `0.01`, `0.4333` above `0.99`), which is
+exactly where the two metrics diverge.
+
+**So the readout is load-bearing where the round reads and inert where it does not, and
+it must be DECLARED BEFORE the corpus run.** A 42 % swing at a rung, chosen after the
+curve is visible, would be choosing the answer. The assertion in `demo()` requires
+**both** rate agreement below `1e-3` **and** a rung ratio above `1.15`, so a readout
+that changed nothing would fail the test that says it needs declaring.
 
 **(c) The consequence test becomes vector-valued.** The existing fidelity metric asks
 whether `sign(Δŷ)` matches `sign(Δy)` for a scalar. Under the thesis it should ask **how
@@ -123,8 +162,25 @@ must be solved together; bodies in different islands do not interact. **The corp
 the use case are the same object seen twice**, which is why an absorbing-chain label on
 that substrate is the natural test rather than an arbitrary one.
 
+**A SECOND SETTING, AND IT SHARES THE STRUCTURE RATHER THAN MERELY THE SPIRIT.**
+Retrieval-augmented generation, where a model must understand **the consequence of a
+false report**. A retrieved passage is not a token to be attended to on its own merits;
+it is an **intervention on the context**, and the question that matters is what the rest
+of the answer does when that passage is wrong. That is a `do()` operation followed by a
+displacement over the whole output — **the same vector-valued consequence measure of
+§0.2(c), applied to evidence rather than to joints.**
+
+**And the failure mode there is the one a per-row mixture is worst at.** A retrieved
+falsehood does not corrupt one position; it propagates, because downstream claims are
+**conditioned on it** and must be mutually consistent with it. Scoring each output
+position independently against the context cannot represent that propagation, which is
+why a system built on independent-per-row attention can produce an answer that is locally
+plausible at every position and globally wrong. **Detecting that requires reading the
+shape, not the tokens.**
+
 **What this does NOT license.** No claim is made here about robotic performance, about
-control, or about any embodied benchmark — nothing in this repository has been run on
+retrieval accuracy, about
+control, or about any embodied or retrieval benchmark — nothing in this repository has been run on
 one. **This section states why the target shape is what it is, and nothing more.**
 
 ## 0.4 THE ARCHITECTURAL POSITION THAT FOLLOWS

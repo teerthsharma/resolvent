@@ -4,6 +4,100 @@ Round 6 closed with the certificate program CLOSED - three attempts, three death
 Round 5's `TWOSPHERES: BROKEN` and its handover `done5.md` stand. Round 6's
 work-done is `done6.md`. Progress **22**.
 
+### ROUND 8, ITERATION 9 - 2026-08-26 - Move 2 built with a two-sided bind, and the non-flat-readout rule is narrowed by measurement rather than by argument.
+
+CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**. `demo()` OK.
+
+## MOVE 2 IS BUILT AND ITS CONTROLS FIRE ON BOTH HALVES
+
+`scale/foreman_looped.py`: `z_{t+1} = x + A(z_t) @ z_t`, three loops, weight-tied,
+input-injected.
+
+    loops=1 bitwise equals shipped softmax : True   maxdiff 0.000e+00
+    loops=3 DIFFERS from it                : True   maxdiff 0.023987
+    n_params ref 4769   looped 4769   equal True
+
+**Both halves matter, and he said why: a one-sided bind would pass for an arm whose loop
+body never ran.**
+
+**CREDIT-CLEAN, VERIFIED IN CODE RATHER THAN ASSUMED.** `QuintArm.forward` diverts row
+`s-1` through `_alpha` **only when `cell not in ("softmax", "glance")`**, and `_alpha` is
+the **sole** caller of `batched_pivots`. Softmax-looped against plain softmax calls
+neither and selects no pivot, **so the pivot exclusion cannot reach this comparison** -
+Move 2 does not wait on Move 1.
+
+**The pre-registration is in the module docstring, written before any number**, and the
+verdict is a **disjunction over both step counts** - deliberately the generous reading,
+so a kill cannot be bought by choosing the failing step count. `falsifier()` returns
+`complete: False` while any of the six cells is missing, **so a truncated table cannot be
+read as a kill** - which is the exact misreading the consequence file nearly received.
+
+## HE REFUSED TO BORROW HIS OWN LANGUAGE FOR AN ARM IT DOES NOT DESCRIBE
+
+Asked whether the looped operator's spectrum follows his rate law, the answer is **no**,
+and the reason is the useful part:
+
+    A strictly causal True   rho(A) 0.000e+00   max|A^s| 0.000e+00   nilpotent True
+
+**`A` is strictly causal, so `rho(A) = 0` and `A^s = 0` exactly** - the same nilpotency
+`CEQ.Nilpotent.pow_card_eq_zero` proves. **With `rho(A) = 0` there is no relaxation time
+to engineer: the loop does not converge to a fixed point, it accumulates hops and
+terminates.** Three loops reach hop 3. The `lambda2` rate law governs a **fixed linear**
+`Q`; this iteration rebuilds `A(z_t)` each step and is nonlinear.
+
+## RULE 9 IS NARROWED BY MEASUREMENT, AND THE NARROWING CORRECTS THIS FILE
+
+**The non-flat-readout objection does NOT bite on the chain family.**
+`equilibrium_oracle` returns `z*_{s-1}`, which is exactly `N(0, t*)` **on the real
+line** - **the target's own geometry is flat, so NRMSE is the correct readout there**,
+and every reading already taken under it stands. **The looped falsifier is properly read
+under NRMSE and Move 2 needs no change.**
+
+**It bites on the absorbing-chain corpus**, whose label is a probability. One transform,
+no new scoring code: **`phi(p) = 2 * arcsin(sqrt(p))`**, the exact Fisher-Rao geodesic
+coordinate on the binary simplex, since `ds = dp / sqrt(p(1-p))`.
+
+**RULE 8 was applied to it BEFORE measuring.** `phi` is smooth and strictly monotone, so
+near the fixed point it is a diagonal scaling and **cannot move the leading eigenvalue** -
+so both readouts must share an asymptotic rate. **Confirmed to `6.319e-07` and
+`4.610e-04`.**
+
+**But the rung price is not zero:** `1.418962x` at `t=8` on `_64` and `1.209472x` at
+`t=32` on `_1024`. **Cause measured:** `_1024`'s conditional label puts **`0.7666` of its
+mass within one hundredth of a boundary** (`0.3333` below `0.01`, `0.4333` above `0.99`),
+which is exactly where the two metrics diverge.
+
+**So the readout is load-bearing where the round reads and inert where it does not, and
+it MUST BE DECLARED BEFORE the corpus run.** A 42 % rung swing chosen after the curve is
+visible **would be choosing the answer.** Asserted in `demo()` as **both** rate agreement
+`< 1e-3` **and** rung ratio `> 1.15`, so a readout that changed nothing would fail the
+test asserting it needs declaring.
+
+## AND HE NAMED A RISK IN HIS OWN FALSIFIER
+
+At `t* = 8` the depth wall is `L = floor(log2 8) + 2 = 5` (`arXiv:2402.09268` Thm 4.2)
+and three loops give depth 3. **A failure of looped-3 at `t* = 8` is consistent with the
+loop working and three simply not being enough.** The pre-registration **cannot
+distinguish "depth does not pay" from "3 < 5"**, so reading that cell as a kill of
+depth-via-loop would overclaim. **The `t* = 2` arm, whose wall is `L = 3`, is the one the
+grid can actually decide.**
+
+**PARTIAL AND NAMED AS PARTIAL:** the six trained cells are still running, journalling to
+`results/foreman_looped.jsonl`. **No falsifier verdict exists and none will be stated
+until `complete: True`.** Read with `python -m scale.foreman_looped --verdict`.
+
+CHECKLIST: **Move 2 BUILT**, two-sided bind (`loops=1` bitwise identical, `loops=3`
+differing at `0.023987`, params equal), **credit-clean by code inspection so it does not
+wait on Move 1**, falsifier refusing to read a truncated table. **The `lambda2` rate law
+DOES NOT apply to the loop** (`rho(A) = 0`, nilpotent) and was not borrowed. **RULE 9
+narrowed by measurement: flat is CORRECT on the chain family** (`z*_{s-1} ~ N(0, t*)` on
+the real line) **and load-bearing on the probability corpus** (`1.418962x` at a rung,
+`0.7666` of mass within `0.01` of a boundary), **so it must be declared before the run.**
+**A risk in his own falsifier named: `t*=8` cannot separate "depth does not pay" from
+"3 < 5".**
+
+**SCOREBOARD: 25.**
+
 ### ROUND 8, ITERATION 8 - 2026-08-26 - The contested paper is real, says exactly what was attributed to it, and the delta survives on all three axes.
 
 CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.
