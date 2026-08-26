@@ -201,3 +201,16 @@ both sides, so the target is reachable **by construction rather than by search**
 34. **The pilot spread was `2.18×` optimistic** — realised `sd 0.109199` against a piloted
    `0.050146`, so the true five-seed half-width is `≈0.0957`, not `0.043955`. **Every
    sizing decision made on the pilot figure is correspondingly under-powered.**
+
+35. **`looped3` LOSES DECISIVELY AT 150 STEPS AND IT IS NOT A DEPTH VERDICT.**
+   `softmax 0.9704371404137836` CI `[0.9536301088926267, 0.9877856292539604]` against
+   `looped3 1.0188051091704295` CI `[1.0051942033844927, 1.0334716650310674]` —
+   **disjoint, and the looped interval sits entirely above the mean predictor.** But
+   `150` is the budget already measured to undertrain, `looped3` does **3× the operator
+   work per step**, and the `0.0484` gap **sits inside the measured seed spread**
+   (`sd 0.064106` for settled). **Disjoint one-seed bootstrap intervals rule out
+   resampling noise, not seed noise.** `falsifier()` returns `complete: false`.
+36. **THE DISTINCTION THAT IS EASIEST TO LOSE AND MOST EXPENSIVE TO LOSE:** a bootstrap
+   interval computed on a single seed measures **resampling** variability only. It says
+   nothing about **seed** variability, which is the larger quantity here. Any future
+   single-seed reading must state which of the two its interval covers.

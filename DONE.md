@@ -4,6 +4,112 @@ Round 6 closed with the certificate program CLOSED - three attempts, three death
 Round 5's `TWOSPHERES: BROKEN` and its handover `done5.md` stand. Round 6's
 work-done is `done6.md`. Progress **22**.
 
+### ROUND 8, ITERATION 12 - 2026-08-26 - The looped cell lands, softmax wins decisively at 150 steps, and it licenses nothing about depth.
+
+CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**, 4/4 bit-identical.
+[RUN] `lake build CEQ` -> **exit 0**, 39 theorems, zero `sorry`.
+
+## THE PAIRED READING - `e3_t2`, seed 0, byte-identical draws, `n_params 4769` both arms
+
+    arm        eval_nrmse              CI                                        0-step eval
+    softmax    0.9704371404137836      [0.9536301088926267, 0.9877856292539604]  1.0033507309692542
+    looped3    1.0188051091704295      [1.0051942033844927, 1.0334716650310674]  1.0035226167876985
+
+**The intervals are DISJOINT** - `0.9877856292539604 < 1.0051942033844927`. **Softmax
+wins at 150 steps, and `looped3`'s entire interval sits ABOVE `1.0`, which is to say
+worse than the mean predictor.**
+
+**AND HE REPORTED AGAINST HIS OWN PREDICTION.** He had flagged a near-tie as likely and
+pre-committed to calling it `UNDECIDED`:
+
+> *"I predicted undecided; the data says otherwise and I am reporting that, not my
+> prediction."*
+
+**Both harness gates clear** - `1.0033507309692542` and `1.0035226167876985`, at or above
+`1.0`, so neither untrained arm is reading the label.
+
+## AND IT IS STILL NOT A DEPTH VERDICT, FOR TWO REASONS THAT WERE PRE-REGISTERED
+
+    complete: false          depth_via_loop_dies: false
+    steps 150 -> beats_at_t2 false,  under_one_at_t8 null
+    steps 600 -> all null
+
+**1. `150` is the step count already measured to undertrain, and `looped3` does three
+times the operator work per step.** A 150-step deficit **confounds depth with
+undertraining** - which is precisely the confound the two-step-count design existed to
+break. **The 600-step half is unrun.**
+
+**2. One seed, and the arithmetic is decisive against over-reading it.** The gap is
+`1.0188051091704295 - 0.9704371404137836 = 0.0484`, while the quintuple's own measured
+seed spreads are `sd 0.016547` (twin) and `sd 0.064106` (settled). **`0.0484` sits INSIDE
+settled's seed spread.**
+
+**Disjoint one-seed bootstrap intervals rule out RESAMPLING noise, not SEED noise.** That
+distinction is the whole reason the reading is not a verdict, and it is easy to lose.
+
+**So: softmax beats `looped3` decisively at 150 steps, and that fact licenses no claim
+about depth.** `falsifier()` returning `complete: false` is **the instrument working.**
+
+## CLOSING GATES
+
+    run_calib.py --self-test                EXIT 0   (4/4 bit-identical)
+    scale/foreman_lambda2.py --demo         OK
+    loops=1 bitwise equals shipped softmax  True     maxdiff 0.000e+00
+    loops=3 DIFFERS from it                 True     maxdiff 0.023987
+    A strictly causal True  rho(A) 0.000e+00  max|A^s| 0.000e+00  nilpotent True
+    lake build CEQ                          EXIT 0   39 theorems, zero sorry
+
+Real cost of the two cells: `267.8 s + 296.3 s = 564.1 s`.
+
+## WHAT ROUND 8 LEAVES BEHIND
+
+**Six results that outlive the cells:**
+
+1. **The delta does not survive as stated** - `PRIOR_ART.md` §4, **13 explicit
+   `NOT FOUND`**. Occupied by CLRS `arXiv:2205.15659`, Sanford `AfzbDw6DSp`, DEQ-AR
+   `arXiv:2410.15059`, and `arXiv:2206.11941` Thm C.1. **The narrow survivor is contested
+   by `arXiv:2607.21607`** - verified real, formula and all three `R^2` byte-exact, but a
+   **GCN** with zero attention models under test, headline on **engineered** graphs, and
+   a **trained-accuracy** label. **Attention, and the equilibrium as the label, remain
+   unoccupied.**
+2. **`lambda2 = 0.9250000000` measured by an exact construction** - the contract's own
+   conductance dial refuted (`rho(Q)` rises with bridge weight and never enters band),
+   replaced by `rho(alpha P_TT) = alpha * rho(P_TT)`.
+3. **`oracle != resolvent` PROVED**, with **`truncation_never_exact`** beside it: every
+   rung leaves a real residual.
+4. **`f -> 1` derived and confirmed to `1.082467e-15`** - and the author's own
+   `lambda3/lambda2` mechanism **refuted by his own six-placement test**
+   (`corr -0.287101`, `f(160) = 0.99034549` below one). **Both bound in `demo()`.**
+5. **The loop accumulates hops and terminates** - `rho(A) = 0`, `A^s = 0`, nilpotent - so
+   **the `lambda2` rate law does not describe it, and its language was not borrowed.**
+6. **Fisher-Rao: flat is CORRECT on the chain family**, load-bearing only on the
+   probability corpus (`1.418962x` at a rung, `0.7666` of mass within `0.01` of a
+   boundary), **declared before that run rather than after.**
+
+**And two structural results from the other fellows:** the pivot exclusion **hides the
+answer token AND removing it does not help** (`twin_plus 0.938728` against a
+pre-registered `0.871391`, gap closed `-0.1509`); and **the `e3` ladder may have no rung
+that is both creditable and informative**, since `t* = 1` is where softmax is provably
+Bayes-optimal and `t* >= 8` needs depth about 5 against depth-1 arms.
+
+## THE ONE OPEN ITEM THAT BITES NEXT
+
+**Every ladder rung is pre-asymptotic** - `t* in {1,2,8,32}` all sit below the mode times
+`20.5615` and `169.3116`. **Predict the curve with the closed form, not with
+`lambda2^t*`.** The closed form costs one solve and no training; `lambda2^t*` makes
+`t* = 8` and `t* = 32` look wrong **for arithmetic reasons rather than architectural
+ones.**
+
+CHECKLIST: **`looped3` LOSES DECISIVELY at 150 steps** - disjoint intervals, and its
+whole interval **above the mean predictor**. **The author of the prediction reported
+against it.** **But it is NOT a depth verdict**: `150` undertrains an arm doing `3x` the
+work per step, and the `0.0484` gap **sits inside the measured seed spread**, so disjoint
+one-seed bootstrap intervals rule out **resampling** noise and not **seed** noise.
+`falsifier()` correctly returns `complete: false`. **Round 8 closes with six results that
+outlive its cells and no over-claimed verdict.**
+
+**SCOREBOARD: 25.**
+
 ### ROUND 8, ITERATION 11 - 2026-08-26 - MOVE 1 RAN AND DIED, PRE-REGISTERED. The exclusion hides the answer token, and removing it does not help.
 
 CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.

@@ -4,3 +4,4 @@ torch 2.5.1+cu121  threads=2  device=cpu
 ABSOLUTE BAR: NRMSE 1.0 is predict-the-mean. K-5E asks only whether a cell is BELOW it.
         task   t*      cell  n_par    0-step      eval      verdict       s
        e3_t1    1 twin_plus   4769  1.001431  0.938728    BEATS BAR   371.9
+       e3_t1    1 settled_plus   4769  1.001455  0.956787    BEATS BAR   318.6
