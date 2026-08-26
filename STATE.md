@@ -4,7 +4,7 @@
 |---|---|
 | contract | `LOOP_PROMPT.md` (v9). Round 6 archived `LOOP_PROMPT_ROUND6_ARCHIVE.md` |
 | promise | **`HILBERT`** — D2 verbatim (needs **S1's +12 branch AND S3**), or an honest `BROKEN` |
-| iteration | **9 complete, 10 next** |
+| iteration | **10 complete, 11 next** |
 | phase | **A — foundations (0–4)** |
 | **scoreboard** | **23** — 22 carried, **S5 +1** (Merkle journal live) |
 | RULE 2 (repaired) | **e-process SATISFIED at it.3. The RUN is now EXECUTING** — the `twin` arm had **zero rows** in v2 and was launched at it.6, seeds 0–4, paired to the settled key exactly. `EP.live()` reads the journal and prints `undecided at evidence E_t = 1.0`; must-fire passes both directions (worst null `0.0367 ± 0.0019` vs `α = 0.05`) and the broken-λ control **was seen to fire at `1.0000`**. |
@@ -148,3 +148,15 @@ unreachable; `delta_image` is closed. **The next action is the corpus step above
    costs `2^levels` — 11 levels `17.7s`, 13 levels `238.1s`. The `≥ 6` is the max
    over the splits that were solvable, **not over all splits. The true gap may be
    larger.**
+
+17. **THE ONE THING, and everything else is subordinate to it:** the `settled − twin`
+   dose-response across the `t*` ladder at trained weights. **Zero at `t* ≤ 1`,
+   growing with `t*`.** Blocked only by a missing `--task` flag in
+   `scale/m3_quintuple.py` and by that file saving no per-cell weights.
+18. **`e3_*` inherits `e1_anchor`'s rig** — same `equilibrium_oracle`, and E1's label
+   is the signed path sum the resolvent already computes. **Only `settled − twin` is
+   creditable on the ladder.** Caught before the run, not after the number.
+19. **E4 (Rips) is conditionally admitted behind two gates**, and the second is the
+   real one: a static local-degree decoder must **fail at criticality AND pass on the
+   stable and dense cases**. **The component count is banned as a feature** because it
+   leaks the label.

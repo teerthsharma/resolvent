@@ -78,7 +78,7 @@ S_DEFAULT, D_DEFAULT = 64, 24
 #: sampling spread; the floor below is MEASURED (16 seeds per cell, this
 #: machine, torch 2.5.1+cu121, 2 threads) and reported in
 #: `negation_scope.chain_flipper_dependence`'s docstring.
-N_FLOOR = {1: 4096, 2: 4096, 8: 2048, 32: 2048, 63: 512}
+N_FLOOR = {1: 256, 2: 4096, 8: 2048, 32: 2048, 63: 512}
 
 
 def _chain(n, t_star, *, seed=0, s=S_DEFAULT, d=D_DEFAULT):
@@ -152,30 +152,36 @@ def test_a_fixed_k_hop_truncation_cannot_get_the_chain_label(t_star):
     """THE CHECK THE WHOLE FAMILY EXISTS FOR.
 
     The k-hop reading is the Neumann truncation `sum_{m=0..k} (A^m b)_{s-1}`,
-    i.e. the label computed from the last k+1 tokens only. Because the surviving
-    tail is a sum of `t* - k` independent unit-variance terms and the label is a
-    sum of `t* + 1` of them, the truncation's NRMSE is
+    i.e. the label computed from the last k+1 tokens only. The query token
+    carries no driver, so the surviving tail is a sum of `t* - k` independent
+    unit-variance terms and the label is a sum of `t*` of them, and the
+    truncation's NRMSE is
 
-        sqrt((t* - k) / (t* + 1))     for k <= t*,   0 for k >= t*
+        sqrt((t* - k) / t*)     for k <= t*,   0 for k >= t*
 
-    in closed form. Three things are asserted: the measured value matches that
-    form, it is MONOTONE DECREASING in k (the bound tightens), and a 1-hop
-    reading is bounded away from the label -- if it were not, this would be a
-    third static task.
+    in closed form. FOUR things are asserted: the measured value matches that
+    form; the k = 0 rung is EXACTLY the bar, so no part of the label is legible
+    without hops; the ladder is MONOTONE DECREASING in k (the bound tightens);
+    and a 1-hop reading is bounded away from the label -- if it were not, this
+    would be a third static task.
     """
     x, y, f, p = _chain(4096, t_star)
     prev = None
     for k in range(0, t_star + 2):
         got = NS.nrmse(NS.equilibrium_hop_reading(x, k), y)
-        want = math.sqrt(max(0.0, t_star - k) / (t_star + 1))
+        want = math.sqrt(max(0.0, t_star - k) / t_star)
         assert abs(got - want) < 0.03, (t_star, k, got, want)
         if prev is not None:
             assert got <= prev + 1e-9, (t_star, k, got, prev)
         prev = got
+    #: ZERO hops is exactly predict-the-mean. This is the end of the ladder that
+    #: the harness's own 0-step RED gate reads, and it is why the query token
+    #: carries no driver.
+    assert NS.nrmse(NS.equilibrium_hop_reading(x, 0), y) >= 1.0
     #: a 1-hop reading must NOT get the label. The floor is the closed form, so
     #: no threshold is chosen here either.
     one_hop = NS.nrmse(NS.equilibrium_hop_reading(x, 1), y)
-    assert one_hop > 0.9 * math.sqrt((t_star - 1) / (t_star + 1))
+    assert one_hop > 0.9 * math.sqrt((t_star - 1) / t_star)
     assert one_hop > 0.5, (t_star, one_hop)
     #: and the full budget IS exact -- the system is nilpotent, so the series
     #: terminates rather than merely converging.
@@ -278,7 +284,7 @@ def test_the_chain_flipper_dependence_is_its_closed_form(t_star):
                            oracle_fn=NS.equilibrium_oracle,
                            feature_fn=NS.equilibrium_features)
     want = NS.M3_TASKS[_chain_task(t_star)][3](S_DEFAULT)
-    assert abs(want - 2.0 / math.sqrt(t_star + 1)) < 1e-12
+    assert abs(want - 2.0 / math.sqrt(t_star)) < 1e-12
     assert abs(cal["flipper_dependence"] - want) < 0.05, (t_star, cal)
 
 
@@ -316,10 +322,15 @@ def test_a_truncated_reading_fails_the_chain_band():
     """CONTROL, SEEN TO FIRE, on a DRAWN batch. The k=0 reading -- the last
     token's driver alone -- does not contain the head of the chain at all, so
     negating the head moves it by exactly zero and the band rejects it. This is
-    the wrong-task control the flipper clause exists for."""
+    the wrong-task control the flipper clause exists for.
+
+    The rung read is k = 1, not k = 0: with the query token carrying no driver
+    the k = 0 reading is identically zero, and `nrmse` against an all-zero
+    prediction is a division by an all-zero std -- NaN, which is not a control
+    failing, it is a control that cannot be evaluated."""
     cal = NS.calibrate_bar(n=1024, s=S_DEFAULT, d=D_DEFAULT, steps=1,
                            batch_fn=NS.M3_TASKS["e3_t8"][0],
-                           oracle_fn=lambda x, f, p: NS.equilibrium_hop_reading(x, 0),
+                           oracle_fn=lambda x, f, p: NS.equilibrium_hop_reading(x, 1),
                            feature_fn=NS.equilibrium_features)
     assert cal["flipper_dependence"] == 0.0
     ok, why = NS.bar_verdict(cal, flipper_dependence=NS.M3_TASKS["e3_t8"][3](S_DEFAULT))

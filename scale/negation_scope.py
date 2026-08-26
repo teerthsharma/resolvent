@@ -417,19 +417,25 @@ def chain_flipper_dependence(s: int, *, t_star: int | None = None) -> float:
     Measured on this machine (torch 2.5.1+cu121, 2 threads), 16 seeds per cell,
     s=64, d=24, as max |deviation from the exact value|:
 
-        t*      n=512     n=2048    n=4096    n=8192
-         1    0.103428   0.067644  0.039503  0.018844
-         2    0.079004   0.049572  0.038314  0.020496
-         8    0.102940   0.020662  0.010865  0.018129
-        32    0.040720   0.022376  0.014551  0.010011
-        63    0.029237   0.013445  0.007445  0.005243
+        t*    exact       n=256     n=512     n=2048    n=4096    n=8192
+         1  2.000000000  0.000000  0.000000  0.000000  0.000000  0.000000
+         2  1.414213562  0.149327  0.071979  0.050166  0.021904  0.025629
+         8  0.707106781  0.123496  0.085576  0.022130  0.014020  0.016892
+        32  0.353553391  0.043141  0.044478  0.021788  0.015151  0.010677
+        63  0.251976315  0.033327  0.030540  0.013626  0.007196  0.005730
 
-    At the shipped tolerance 0.05 the floor is therefore n >= 4096 for
-    t* in {1, 2}, n >= 2048 for t* = 8, and n >= 512 for t* >= 32. The distance
-    to the NEAREST WRONG RUNG is what the band has to cover and it does: t*=8
-    against t*=32 is 0.318511, t*=32 against t*=63 is 0.098155, both above 0.05
-    at every n at or above the floor. Both ends are measured; neither was chosen
-    to fit.
+    The `t* = 1` row is exact at every n and is not a fluke of seeding: with one
+    driver the label is `+-b_head`, so the moved quantity is `2 |b_head|` and the
+    scale is `|b_head|` PER EXAMPLE and the ratio has no sampling spread at all
+    -- the same exact 2.0 the shipped negation-scope task has, which is what
+    makes `t* = 1` the retrieval-regime control of this ladder rather than a new
+    task. At the shipped tolerance 0.05 the floor for the rest is n >= 4096 for
+    t* = 2 and n >= 2048 for t* in {8, 32}; t* = 63 clears it from n = 256.
+
+    The distance to the NEAREST WRONG RUNG is what the band has to cover and it
+    does: t*=2 against t*=8 is 0.707107, t*=8 against t*=32 is 0.353553, t*=32
+    against t*=63 is 0.101577, all above 0.05 at every n at or above the floor.
+    Both ends are measured; neither was chosen to fit.
     """
     t = (s - 1) if t_star is None else int(t_star)
     return 2.0 / math.sqrt(t)

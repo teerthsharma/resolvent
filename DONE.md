@@ -4,6 +4,165 @@ Round 6 closed with the certificate program CLOSED - three attempts, three death
 Round 5's `TWOSPHERES: BROKEN` and its handover `done5.md` stand. Round 6's
 work-done is `done6.md`. Progress **22**.
 
+### ROUND 7, ITERATION 10 - 2026-08-26 - Dr House answers the distance question, catches a rig before it fires, and a corpus with a real critical point enters the repo.
+
+CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.
+
+## THE ROUND IS REDIRECTED. The author's words: *"i want real working product as asked."*
+
+No more instruments that measure something adjacent, and no more failing tests left
+standing - a nurse tier owns those now. The three fellows build only the thing that
+produces the deciding number.
+
+## THE ANSWER TO "HOW FAR ARE WE"
+
+**Two fellow-iterations to the first honest reading. Four to five to a shipped
+product, if the reading goes our way. Nobody has ever taken the reading.**
+
+His accounting, which is harsher than the scoreboard and correct:
+
+> Seven rounds built a routing trick with world-class error bars. **That is now
+> proven, not suspected.**
+
+`argmax` at `-0.118456`, CI `[-0.134115, -0.102786]`, 0/5 - the mixture is the whole
+gain. `settled - twin = -0.002959`, CI covering zero - the fixed point bought
+nothing. **But that was the correct verdict on tasks with nothing to settle toward.
+The question "is settling worth anything" has never been asked where settling
+computes something.**
+
+## THE ONE THING, and it is now a build rather than a proposal
+
+**The settled-twin dose-response across the `t*` ladder, at trained weights. One
+curve.** Predicted zero at `t* <= 1`, growing with `t*`. **That curve is
+consequence-awareness; nothing else currently on the table is.**
+
+**What is missing is small and named:** `scale/m3_quintuple.py` has no `--task` flag
+while `scale/m3_capability.py:246` has one; and it **saves no per-cell weights**,
+which is exactly why the consequence-fidelity column is empty for every arm. Chase
+ports one and adds the other; Foreman then fills the column. **The verdict lands.**
+
+**THE KILL IS PRE-REGISTERED AND SO IS THE FALLBACK.** If the settled-twin interval
+covers zero at every rung including `t* = 32`, **K-2E fires, settling retires, and
+the twin ships** - as pivot-routed mixture attention, `+0.111396` over softmax, CI
+`[+0.100873, +0.121920]`, sd `0.016547`, **four times tighter than settled. A smaller
+claim, fully earned, and still a product.**
+
+## HE CAUGHT A RIG BEFORE IT FIRED, AND IT WOULD HAVE VOIDED THE LADDER
+
+**`e3_t{1,2,8,32}` bind `equilibrium_oracle` - the SAME oracle as `e1_anchor`.**
+Confirmed at `scale/negation_scope.py:655-662`.
+
+And `e1_anchor` is a **declared rigged demo by design**: its label is the signed path
+sum, which is the object the ceq resolvent already computes, so **an arm built on
+that resolvent is being asked to reproduce its own forward.**
+
+**The ladder inherits that rig at every rung.** So on `e3_*`, `settled - softmax` is
+**not creditable** - only `settled - twin` is. Written into `LOOP_PROMPT.md` §1.7d
+and printed beside every `e3` row from here.
+
+**This is the first time in seven rounds that a rig was caught before the run rather
+than after the number.**
+
+## A CORPUS WITH A REAL CRITICAL POINT, AND IT IS THE AUTHOR'S OWN
+
+`ceq/rips.py` - six geodesic Vietoris-Rips graphs on `S^2`, ported from
+`test/benchmark/island_benchmark_test.cc` at commit `5d91d878` of the author's merged
+`google-deepmind/mujoco#3396`, Apache-2.0. **It was cut upstream for scope, not for a
+defect** - that review wanted the simplest test that establishes correctness, and a
+benchmark corpus is outside it. The author has authorised its use here.
+
+**THE PORT IS CHECKED, NOT TRUSTED.** All six edge counts and all six component
+counts match an independent derivation **made before this port existed**, and both
+bridge cases satisfy the invariant the original asserts:
+
+    case                                  edges  comps   independent   match
+    StableSparse_S2Rips_64                   68     15     68 / 15      True
+    CriticalBridge_S2Rips_256               504      6    504 /  6      True
+    SupercriticalDense_S2Rips_256          1521      1   1521 /  1      True
+    GroundedStaticRepeated_S2Rips_256      1886      1   1886 /  1      True
+    StableRepeated_S2Rips_1024             1205    178   1205 / 178     True
+    CriticalLarge_S2Rips_1024              3626      3   3626 /  3      True
+
+    pre_bridge == components + 1:   7 == 6+1  True     4 == 3+1  True
+    builds in 0.1 s
+
+**Agreement is not guaranteed by the language standard** - the sampler and the radius
+rule call `sqrt`, `asin`, `cos` and `sin`, whose rounding C++ does not pin down - so
+the counts are checked against that independent derivation rather than assumed to
+transfer.
+
+**THE DIAL IS REAL:** `target_degree` drives components `178 -> 1`, and a **single
+bridge edge** carries two cases across the transition.
+
+## E4 IS CONDITIONALLY ADMITTED, WITH THE TWO GATES THAT WOULD STRIKE IT
+
+**Why it may be real:** the label is **global** (are these two nodes in one component
+after the bridge) while the input is **local** (incidence rows); the iteration depth
+is the graph **diameter**, which **diverges at criticality**; and one bridge edge is
+a single `do()` that **flips a global label**. That is causal structure, not a static
+expression.
+
+**Why it may be another adjacency** - and House applied his own diagnosis to his own
+suggestion, which is the part worth keeping: **it is adjacency the moment the label
+leaks into local statistics. The component COUNT leaks, and is therefore BANNED as a
+feature.**
+
+**GATE 1, truncation.** A `k`-hop truncated reading must be **bounded away** from the
+label on the critical cases **and tighten with `k`**. If a 1-hop reading gets the
+label, E4 is a third static task.
+
+**GATE 2, the decoder must-fire, and it is the one that matters.** A static
+local-degree decoder must **FAIL at criticality** *and* **PASS** on
+`StableSparse_S2Rips_64` and `SupercriticalDense_S2Rips_256`. **That contrast IS the
+control** - without the passing half, gate 1 proves nothing, because a decoder that
+fails everywhere fails for the wrong reason.
+
+**If the decoder passes at criticality, E4 is struck, no appeal.**
+
+## THE PRODUCT, SPECIFIED
+
+A settled/twin module at the `n_params = 4769` class, on HuggingFace, **with weights
+included** - v0 shipped none. A table whose consequence-fidelity column is filled for
+**every** arm including softmax, with **Clopper-Pearson exact** intervals. And one
+plot: `settled - twin` against `t*`.
+
+**The number that would make someone believe it:** at the deepest rung, softmax at or
+above NRMSE 1.0 while settled sits below with an interval excluding 1.0; the
+settled-twin interval excluding zero; and softmax's sign-fidelity interval covering
+`0.5` while settled's excludes it.
+
+## TWO CORRECTIONS TO THIS PROJECT'S OWN INTERVALS
+
+Chase found two CI families printed under one label. **Both published pairs turn out
+to be hybrids**, and the fix is the same for both: at five seeds the paired resample
+space is `5**5 = 3125` with 126 distinct values, so **the exact percentile is
+computable, is CHEAPER than `B = 10000` by `3.2x`, and has zero Monte-Carlo error.**
+
+    contrast              delta      exact ci_lo   exact ci_hi
+    settled - twin    -0.002959      -0.042903     +0.031557
+    settled - softmax +0.108437      +0.068181     +0.147110
+    twin - softmax    +0.111396      +0.100873     +0.121920
+    argmax - softmax  -0.118456      -0.134115     -0.102786
+    settled - argmax  +0.226893      +0.175040     +0.276921
+
+**The endpoint `+0.146551` was mine and its provenance was defective**, though not in
+the way it was first reported. It reproduces exactly at `numpy.random.default_rng(0)`
+- so it is not unsourced - **but the pair I published took its lower endpoint from a
+generator that had already been consumed by 10,000 prior draws and its upper endpoint
+from the same continued stream, while the journal's pair took one endpoint from a
+fresh stream and the other matching exact enumeration. Neither pair is internally
+consistent.** Exact enumeration removes the generator from the question entirely.
+
+CHECKLIST: **distance answered - 2 iterations to the reading, 4-5 to product.**
+**THE ONE THING is the `t*` dose-response curve**, and what blocks it is a missing
+`--task` flag and missing weight saving. **A rig CAUGHT BEFORE THE RUN** - `e3_*`
+shares E1's oracle, so only `settled - twin` is creditable there. **Rips ported and
+verified 6/6 against an independent derivation**, conditionally admitted as E4 behind
+two gates. Intervals corrected to **exact enumeration**, which is cheaper and
+error-free.
+
+**SCOREBOARD: 23.**
+
 ### ROUND 7, ITERATION 9 - 2026-08-26 - The quintuple completes, the one-hot control lands in the direction nobody predicted, and Wilson finds a real graph corpus.
 
 CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.

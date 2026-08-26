@@ -184,6 +184,7 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import os
 import pathlib
 import sys
 import time
@@ -473,6 +474,22 @@ def main(argv=None) -> int:
           "the cell is INFORMATIVE -- some arm's CP interval excludes 0.5.")
     hdr = ("%-16s" % "arm") + "".join(" %12s" % c for c in _COLS)
 
+    #: JOURNALLED PER ROW, NOT AT THE END. The first attempt at this cell wrote
+    #: every row in one block after the last seed, and the host process exited
+    #: partway through: 0 bytes survived a run that had already paid for most of
+    #: its arms. A measurement that only exists after the last arm finishes is a
+    #: measurement that a kill can take all of. Each row is flushed and fsync'd
+    #: as it is produced, so an interrupted run leaves exactly the rows it
+    #: actually completed, and a re-launch is a resume rather than a restart.
+    out = pathlib.Path(__file__).resolve().parents[1] / a.out
+    out.parent.mkdir(parents=True, exist_ok=True)
+    jf = out.open("a", encoding="utf-8")
+
+    def journal(r: dict) -> None:
+        jf.write(json.dumps(r) + "\n")
+        jf.flush()
+        os.fsync(jf.fileno())
+
     rows, matches = [], {}
     for seed in a.seeds:
         print("\n--- seed %d ---" % seed)
@@ -482,6 +499,7 @@ def main(argv=None) -> int:
             r, match, live = arm_row(kind, steps=a.steps, n_train=a.n_train,
                                      seed=seed, s=a.s, d=a.d, n_eval=a.n_eval)
             rows.append(r)
+            journal(r)
             matches[(seed, kind)] = match
             print(_fmt(r) + "   [%.0fs]" % r["seconds"])
             print("%-16s   flipper %s   payload %s   null|dyhat| %.6g vs live "
@@ -502,8 +520,10 @@ def main(argv=None) -> int:
                 if kind == "softmax":
                     continue
                 mn = mcnemar_exact(matches[(seed, "softmax")], matches[(seed, kind)])
-                rows.append(dict(arm=kind, vs="softmax", seed=seed, s=a.s, d=a.d,
-                                 test="mcnemar_exact", **mn))
+                mrow = dict(arm=kind, vs="softmax", seed=seed, s=a.s, d=a.d,
+                            test="mcnemar_exact", **mn)
+                rows.append(mrow)
+                journal(mrow)
                 print("    softmax vs %-16s b=%d c=%d n_disc=%d  p=%.6g  %s"
                       % (kind, mn["b"], mn["c"], mn["n_disc"], mn["p"],
                          "REJECT" if mn["p"] < ALPHA else "no reject"))
@@ -521,11 +541,7 @@ def main(argv=None) -> int:
           "(CP interval entirely > 0.5);  below chance %d"
           % (bool(above), len(above), len(cf_rows), len(below)))
 
-    out = pathlib.Path(__file__).resolve().parents[1] / a.out
-    out.parent.mkdir(parents=True, exist_ok=True)
-    with out.open("a", encoding="utf-8") as fh:
-        for r in rows:
-            fh.write(json.dumps(r) + "\n")
+    jf.close()
     print("wrote %d rows to %s" % (len(rows), a.out))
     return 0
 
