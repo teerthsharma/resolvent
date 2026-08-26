@@ -4,6 +4,103 @@ Round 5 closed at `TWOSPHERES: BROKEN - ARM A, K1's dual slope, displacement
 clause`; its handoff is `done5.md` and its negative result is `D1.md`. That
 verdict is final and is not reopened.
 
+### ROUND 6, ITERATION 24 - 2026-08-26 - Contract v9, ceiling 60. And the upstream merge is real, but it is not in the repository its name suggests.
+
+CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.
+
+## CONTRACT DELTA v9 APPLIED. CEILING RAISED 30 -> 60.
+
+Boilerplate carries unchanged - constitution, evidence classes, RED-first, G1-G8,
+X4 arithmetic, the value-comparison law, RULE 4, the escalation chain. **Only the
+scoreboard, the room and the kills are replaced.**
+
+**The v9 scoreboard now governs and NOTHING ON IT IS EARNED YET.** The 4 points
+carried from v8.2 (Star delta +2, `kappa<1` +2 qualified) are **carried, not
+re-scored** - they were earned against a scoreboard that no longer exists.
+
+**Three kills are now pre-registered against work already in flight**, which is the
+right way round:
+  * **House's factorisation fails per-seed tracking** => the leap **dies bound**
+    and **the dial verdict (`kappa = beta`, chosen) stands as final.** Foreman is
+    already running that bind - `scale/foreman_gram.py` appeared this iteration.
+  * **Dobrushin `>= 1 - 1e-3` on trained `G`** => **no measured contraction
+    exists**, and **the certificate ambition is retired IN WRITING.**
+  * **Hankel gap empty on every candidate task** => the **signed / non-negative
+    fork is declared capability-irrelevant and closed.**
+
+**Dr House is IDLE by contract.** His last leap **is the round's subject**, and he
+is released **only on a NEW missing-innovation death** - never to re-litigate the
+one already on the table. **That is the correct reading of his own precedent.**
+
+---
+
+## THE UPSTREAM CHECK, and the answer is not where the question pointed
+
+**[RUN, `ghx.sh` against the GitHub API, every claim below is a live query.]**
+
+**C1/C2 - both repositories exist.**
+
+    teerthsharma/caustic   Hallucination detection and repair for language models,
+                           from the orbit partition of a relation. 0.995 AUROC with
+                           no ground truth, five proved bounds, and a noise
+                           intervention whose level is selected blind.
+    teerthsharma/sigmoid   A world-model inference engine built from topological
+                           coupling operators. Converts any model into a world
+                           model without touching its weights.
+
+A third is downstream of the first: `teerthsharma/branchcut` - *"Five elementary
+results about many-to-one maps, extracted from caustic, and ten screened upstream
+targets for them."*
+
+**C3 - 50 public repositories**, confirmed by direct listing rather than by search,
+because a search index is not ground truth.
+
+**C4 - AND HERE IS THE CORRECTION.** *"my upstream merge into triton kernels"*
+resolves to **`triton-lang/kernels`, NOT `triton-lang/triton`.** The two PRs to
+`triton-lang/triton` itself are **both CLOSED, neither merged**:
+
+    #11147  CLOSED  2026-08-02  [FRONTEND] Generate each loop body once instead of 2^depth times
+    #10768  CLOSED  2026-06-30  [Testing] Add topology-derived sparse attention microbenchmark
+
+**C7/C8/C9 - THE MERGE IS REAL, AND IT IS IN `triton-lang/kernels`:**
+
+    triton-lang/kernels #22  "Add topology-derived sparse attention kernel"
+      merged      : True     at 2026-07-28T00:00:33Z
+      merged_by   : ThomasRaoux
+      merge commit: e16236ab73f0d4334d0752f9ee4fbc6b263431a6
+      base        : triton-lang/kernels main
+      head        : teerthsharma/kernels  teerthsharma/topological-sparse-attention
+      8 commits, 5 files, +804 -1
+
+    added     +303  kernels/topology_sparse_attention.py
+    added     +338  test/test_topology_sparse_attention.py
+    added     +146  benchmarking/topology_sparse_attention.py
+    modified   +10  kernels/__init__.py
+    modified    +7  -1  benchmarking/benchmark_utils.py
+
+**The repository's `pushed_at` equals the merge timestamp exactly**, so the merge
+commit is the tip of `main`.
+
+**Two things worth stating rather than glossing.** The test file is **338 lines
+against 303 of kernel** - more test than implementation, which is the ratio this
+project's own doctrine asks for. And **the distinction between `triton` and
+`kernels` is not pedantry**: reporting *"merged into Triton"* when the `triton`
+PRs are closed and the `kernels` PR is merged would be **a true-sounding sentence
+about the wrong object**, which is the error class this project has recorded ten
+times. **It was checked rather than assumed.**
+
+**Other upstream work found in the same sweep**, states as reported by the API and
+not otherwise verified: `vllm-project/vllm#47942` **OPEN**,
+`facebookresearch/xformers#1370` **OPEN**, `NVIDIA/TensorRT-LLM#10305` **OPEN**,
+`NVIDIA/NeMo-Relay#282` **CLOSED**.
+
+CHECKLIST: contract **v9 APPLIED**, ceiling **60**. Upstream merge **VERIFIED in
+`triton-lang/kernels`, not `triton`**. `caustic` and `sigmoid` both **exist and are
+live**.
+
+**SCOREBOARD: 4 carried.** The v9 scoreboard governs and **nothing on it is earned
+yet.**
+
 ### ROUND 6, ITERATION 23 - 2026-08-26 - The leap goes to a fellow to be bound or killed, with both traps it could fall into named in advance.
 
 CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.

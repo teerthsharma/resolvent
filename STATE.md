@@ -2,49 +2,45 @@
 
 | field | value |
 |---|---|
-| contract | `LOOP_PROMPT.md` (v8.2). Round 5 archived `LOOP_PROMPT_ROUND5_ARCHIVE.md` |
+| contract | `LOOP_PROMPT.md` (**v9 delta** over v8.2). Round 5 archived `LOOP_PROMPT_ROUND5_ARCHIVE.md` |
 | promise | **`HILBERT`** — D2 verbatim, or an honest `BROKEN` |
 | iteration | **21 complete, 22 next** |
 | phase | **D — the artifact (iterations 16–24)** |
-| scoreboard | **4** — Star delta +2, κ<1 measured +2 *(qualified: Birkhoff route dead, structural β earned it)* |
+| scoreboard | **4** carried — Star delta +2, κ<1 +2 *(qualified)*. **v9 scoreboard now governs; nothing on it is earned yet.** |
 | RULE 2 clock | **running.** M3 settled-vs-unsettled EXECUTES by **iteration 12** or breach review |
 | register | **caveman, all agents, every iteration.** Artifacts stay normal English |
 | autonomy | user meets the loop at **iteration 30**; no check-ins |
 
-## THE ONE NEXT ACTION (round 6, iteration 22)
+## THE ONE NEXT ACTION (round 6, iteration 25)
 
-**Collect Cameron's max-`Delta` recomputation, then re-read what the round can
-claim - because the trained geometry changes the answer.**
+**Collect Foreman's bind on House's leap — `scale/foreman_gram.py` is live — then
+open the v9 board.**
 
-**What her result already establishes:**
-  * **T1's premise is false at the trained geometry.** `alpha` effective support is
-    **3.60068 of ~7.9 pivots**, CI-disjoint from init's 7.49383. **An argmax is
-    1.0.** The settled reading is **neither one-hot nor uniform**, so *"an expensive
-    argmax"* is refuted where it matters. **T1 does NOT fire, and Dr House is not
-    released** — the trigger was a premise, and the premise is measured false.
-  * **ARM P has signal.** `I == 0.0` on **1/24** trained draws against **317/400**
-    at the randn probe.
-  * **Every probe number in five rounds sits at the randn end**, `~26x` above the
-    trained logit scale. **That is the single most consequential fact this round
-    has produced**, and it belongs at the front of any write-up.
+**Reading order for the bind, unchanged from it.23 and still the whole point:**
+  1. **BOUND / KILLED / NOT ESTABLISHED**, before any number.
+  2. **Right geometry?** The ratio `0.961793` came from his own 72-cell sweep. A
+     trained-geometry `Δ(G)` compared against it is a **different object**.
+  3. **Extreme-ray diameter?** A mean or a sample is the error that reversed
+     Cameron's conclusion.
+  4. **Did the disjoint-support must-fire fire?** Without it, *"contraction tracks
+     pivot overlap"* is unfalsifiable.
 
-**What is still owed before anything is claimed:** her `kappa` from **max-`Delta`**,
-because the mean was the wrong estimator and she said so first. Until it lands,
-**no `kappa` number from that run may be quoted.**
+**v9 kill, pre-registered and now live:** if the factorisation **fails per-seed
+tracking**, the leap **dies bound** and **`κ = β`, chosen, stands as the round's
+final verdict on the certificate.** That is a real outcome, not a failure of the
+release.
 
-**Also live:** Chase's quintuple (**UNRUN at the gate**; any completion is
-post-deadline and marked) and his `arm_s_batched.py` — **3.0 dispatches per settling
-step, removable at zero FLOP cost.**
-
-**Two audit items now Open and unowned:**
-  * the **flatness half** of `CHECKLIST.md:50`, whose measuring test was **removed**
-    rather than left RED, with a dangling reference at
-    `tests/cameron/test_composition_is_the_uncosted_route.py:158`;
-  * tests **#5/#6 and #9/#10 findings are recorded NOWHERE** in any document.
-
-**A scan gap that cannot be closed by adding a document:** the struck-constant scan
-hunts **numeric constants**, so a prose claim carrying no number — like Strike 2 —
-**is structurally invisible to it.** Recorded, not repaired.
+**Then the v9 board, in order of what is reachable:**
+  * **Dobrushin / Cheeger on trained `G` (+3)** — Foreman, and it pairs naturally
+    with the Gram he is already computing. **Kill: `≥ 1 − 1e-3` retires the
+    certificate ambition in writing.**
+  * **aggregator retention re-run at trained projections** — Cameron. The
+    `2.9% / 13.3% / 58.9%` figures are still random-init **and rank-matched**, so
+    they were upper bounds twice over.
+  * **M3 completion (+12/+6)** — Chase, already running; his pre-registration is
+    written and carries the floor, the seeds and the attribution rule.
+  * **fused settling step ≤ 1.1× (+1)** — the it.18 target, **3.0 dispatches per
+    step removable at zero FLOP cost.**
 
 ## Open REDs
 

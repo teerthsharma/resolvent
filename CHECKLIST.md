@@ -1010,3 +1010,18 @@ Replayed ARM A's own draw stream (published `D_FR causal` reproduced to 6 dp at 
 | **T1's PREMISE — REFUTED** | `alpha` eff support **7.49383 → 3.60068** over ~7.9 pivots, **CI-disjoint**. **Argmax is 1.0; trained is 3.60068** — neither one-hot nor uniform. **`log_alpha min -182.7498` is a `torch.randn` probe artifact**, not the model's regime. Trained `\|w\|` sits **170.5× above harness init, ~26× below the randn probe** — and **every probe number in five rounds was taken at the randn end.** |
 | **it.20 OVERTURNED** | `frac I == 0.0`: **0/24 random, 1/24 trained** vs **317/400** at randn. `E\|L3\|/E\|I\|`: **0.049156 / 0.044307** vs `0.4361`/`0.8813` straddling. **The 79% exact-zero rate is a probe artifact. ARM P HAS SIGNAL.** My "underflow is the binding constraint" is withdrawn. |
 | her own defect, self-flagged | **`kappa` derived from MEAN `Delta`** — wrong estimator; mean ran `4.03087 → 24.506` and `tanh(24.506/4) = 0.99999` against the `0.899555` printed. Recomputing with max-`Delta`. **The it.2 sampled-vs-extreme-ray finding reappearing inside a different measurement.** |
+
+**ROUND 6 it.24 - contract v9, and the upstream verification.**
+
+| item | status |
+|---|---|
+| **contract v9** | **APPLIED.** Scoreboard, room and kills replaced; all other boilerplate carries. **Ceiling 30 -> 60.** |
+| carried points | **4, carried NOT re-scored** - earned against a scoreboard that no longer exists. **Nothing on the v9 board is earned yet.** |
+| v9 kills, pre-registered | House's factorisation failing per-seed tracking ⇒ **leap dies bound, dial verdict final**; Dobrushin `>= 1-1e-3` on trained `G` ⇒ **certificate ambition retired in writing**; Hankel gap empty everywhere ⇒ **signed/non-negative fork closed as capability-irrelevant**. |
+| Dr House | **IDLE by contract.** His last leap **is the round's subject**; release only on a **NEW** missing-innovation death, never to re-litigate the one on the table. |
+| **`teerthsharma/caustic`** | **EXISTS** - *"Hallucination detection and repair for language models, from the orbit partition of a relation. 0.995 AUROC with no ground truth, five proved bounds..."* |
+| **`teerthsharma/sigmoid`** | **EXISTS** - *"A world-model inference engine built from topological coupling operators. Converts any model into a world model without touching its weights."* |
+| **the upstream merge** | **REAL, and in `triton-lang/kernels` - NOT `triton-lang/triton`.** `#22` *"Add topology-derived sparse attention kernel"*, **merged `2026-07-28T00:00:33Z` by ThomasRaoux**, commit `e16236ab73f0d4334d0752f9ee4fbc6b263431a6`, 8 commits, **+804 -1** over 5 files. Repo `pushed_at` equals the merge time, so it is the tip of `main`. |
+| the two `triton-lang/triton` PRs | **BOTH CLOSED, neither merged** — `#11147`, `#10768`. **Reporting "merged into Triton" would be a true-sounding sentence about the wrong object**, the error class recorded ten times here. Checked, not assumed. |
+| test ratio | `test/test_topology_sparse_attention.py` **+338** against `kernels/topology_sparse_attention.py` **+303** — **more test than implementation.** |
+| other upstream, API-reported only | `vllm#47942` OPEN · `xformers#1370` OPEN · `TensorRT-LLM#10305` OPEN · `NeMo-Relay#282` CLOSED. Not otherwise verified. |

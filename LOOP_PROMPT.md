@@ -1,7 +1,7 @@
 # CEQ v8.2 — ROUND 6. THE HILBERT ROUND. Read in full, follow exactly.
 
 Supersedes v7, archived at `LOOP_PROMPT_ROUND5_ARCHIVE.md`. Rounds 1–5 facts
-carry. **30 iterations. Promise word `HILBERT`.**
+carry. **60 iterations (ceiling raised from 30 at iteration 23). Promise word `HILBERT`.**
 
 **GOAL, UNCHANGED.** The next-equilibrium predictor — attention that survives
 equal to self-attention or supersedes it on a calibrated causal-capability bar,
@@ -93,6 +93,50 @@ round halts for breach review.
 **RULE 4 — CAVEMAN.** See the register rule below. It binds every agent.
 
 ---
+
+## CONTRACT DELTA v9 — supersedes section 0's scoreboard and section 2's room
+
+**Boilerplate carries from v8.2/v8.3 unchanged**: the constitution, evidence
+classes, RED-first, G1–G8, X₄ valuation arithmetic, the value-comparison law,
+reproducible-summation journals, RULE 4 (caveman register), and the escalation
+chain. **Only the scoreboard, the room and the kills are replaced.**
+
+**ITERATION CEILING: 60.** Raised from 30 at iteration 23.
+
+### Scoreboard v9
+
+| item | points |
+|---|---|
+| **bind-House** — `Δ(G)` computed, ratio tracks `tanh(Δ̂/4)` **per seed** | **+3** |
+| **Dobrushin / Cheeger certificate** measured on **trained** `G`, non-saturating, with CI | **+3** |
+| **M3 quintuple headline cell** — the post-deadline run completed, or re-run clean | **+12 / +6** |
+| **Hankel-gap task family** built, and one gap-task added to M3 | **+2** |
+| **Merkle journal** live with a **must-fire tamper test** | **+1** |
+| **Kaggle training** opened on the signed certificate (N1–N6) | **+5** |
+| **fused settling step**, clock ≤ **1.1×** | **+1** |
+
+### Room v9
+
+* **FOREMAN — X₁₂ whole.** The Gram; **three certificates**; House's bind; the
+  **expander / BigBird delta by fetch**.
+* **CAMERON — X₁₃.** The Hankel-rank instrument; the gap-task corpus; the
+  **row-stochastic fork experiment**; plus the **aggregator retention re-run at
+  trained projections**.
+* **CHASE — M3 completion and eval; X₁₅ rule enforcement; the Kaggle round opened
+  per the certificate; X₁₆ priced.**
+* **NURSES — X₁₄ Merkle journal + N-suite maintenance.**
+* **DR HOUSE — IDLE. His last leap is the round's subject.** Release **only on a
+  NEW missing-innovation death**, never to re-litigate the one already on the
+  table.
+
+### Kills v9
+
+* **House's factorisation fails per-seed tracking** ⇒ **the leap dies bound**, and
+  the **dial verdict (`κ = β`, chosen) stands as final.**
+* **Dobrushin ≥ `1 − 1e-3` on trained `G`** ⇒ **no measured contraction exists**,
+  and **the certificate ambition is retired in writing.**
+* **Hankel gap empty on every candidate task** ⇒ the **signed / non-negative fork
+  is declared capability-irrelevant and closed.**
 
 ## 1. THE MATHEMATICS — each item with its estimator, its error bar, its kill
 
