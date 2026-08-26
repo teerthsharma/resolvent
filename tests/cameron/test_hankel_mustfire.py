@@ -215,6 +215,21 @@ def test_dedup_does_not_move_any_measured_number():
     for _ in range(16):
         m, k = int(rng.integers(3, 7)), int(rng.integers(3, 7))
         base = rng.integers(0, 4, size=(m, k)).astype(float)
-        rep = base[rng.integers(0, m, size=m + 4), :]
+        # every row of `base` kept, then some of them repeated: a duplicated
+        # matrix, not a resampled one. Sampling with replacement would DROP rows
+        # and change the matrix, which is a different claim entirely.
+        rep = np.vstack([base, base[rng.integers(0, m, size=4), :]])
         assert rank_real(rep).rank == rank_real(dedup(rep)).rank
         assert rank_plus_lower(rep).bound == rank_plus_lower(base).bound
+
+
+def test_the_printed_table_does_not_overclaim_a_certified_no_gap():
+    """The reporting path is where an overclaim would actually reach a reader.
+    A no-gap row may only be labelled `certified` when a nonnegative
+    factorisation was built and verified; otherwise the instrument has bounded
+    rank_+ from below only, and must say so."""
+    from ceq.hankel import task_row
+    assert task_row("counter_shift", 3)["certified"] is True
+    for name in ("dyck1_member", "dyck1_clipped_height", "parity_a",
+                 "counter_squared", "counter"):
+        assert task_row(name, 3)["certified"] is False, name

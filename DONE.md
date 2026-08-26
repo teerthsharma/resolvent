@@ -4,6 +4,208 @@ Round 6 closed with the certificate program CLOSED - three attempts, three death
 Round 5's `TWOSPHERES: BROKEN` and its handover `done5.md` stand. Round 6's
 work-done is `done6.md`. Progress **22**.
 
+### ROUND 7, ITERATION 4 - 2026-08-26 - ALL THREE FELLOWS IN. The contract's own worked example is wrong, three ways, verified three times independently. S6's bar is unreachable by arithmetic.
+
+CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**, 4/4 bit-identical.
+[RUN] `pytest tests/loop/test_fused_settle.py` -> **12 passed**.
+
+## THE ACTION: S6, THE FUSED SETTLING STEP. IT WORKS, AND ITS GATE IS STILL UNREACHABLE.
+
+**THE FUSION IS EXACT, NOT APPROXIMATE, AND THE REASON IS THE METRIC ITSELF.** The
+Hilbert metric is projective - `d_H(c*p, q) = d_H(p, q)` for every `c > 0`, by
+definition rather than by approximation, since a positive scaling shifts every
+log-ratio by `log(c)` and an oscillation subtracts it straight back out. **So the
+per-step normalisation contributes exactly nothing to any residual the driver
+journals.** It exists only to keep the iterate in float range, and it can therefore
+be deferred across a group of steps at **zero cost to the answer**.
+
+Bound by `tests/loop/test_fused_settle.py`, 12 tests: journals identical across 5
+seeds, fixed point agreeing to `d_H < 1e-9` at four group sizes, and **the matmul
+count flat in the group size** - which is what makes "zero FLOP cost" a measurement
+rather than a slogan. Precomputing a matrix power instead would be asymptotically
+**worse** (`s^3 log k` against `k s^2`) and is deliberately not done.
+
+    per settling step, measured as a SLOPE across two step counts
+      unfused   3.000 aten dispatches   (matmul, sum, divide)
+      fused     1.125                   (matmul, plus 2 per group of 16)
+      floor     1.000                   (the matmul; the only one doing arithmetic)
+    -> 1.875 of the 2.000 removable dispatches removed. 93.75%.
+
+    wall clock at 200 steps, s=64, threads=2, best-of-9
+      unfused / glance   13.5701x
+      fused   / glance    5.9035x        -> fusion is 2.298x faster
+
+## BUT S6's GATE CANNOT BE MET, AND THE REASON IS ARITHMETIC RATHER THAN EFFORT
+
+**The settling arm does strictly more work than the glance by construction** - `k`
+matrix-vector products against one. So the ratio has a floor, and the floor was
+never checked against the bar:
+
+    glance                        6 dispatches
+    fused settling, 1 step        7 dispatches   ratio 1.1667
+    fused settling, 2 steps       8              ratio 1.3333
+    fused settling, 4 steps      10              ratio 1.6667
+
+    S6 asks for <= 1.1. The floor is 1.1667, at the smallest settling arm that
+    exists, with the normalisation removed entirely. UNREACHABLE AT ANY STEP
+    COUNT >= 1.
+
+**AND THE BAR'S OWN GEOMETRY IS RECOVERABLE.** The contract quotes `1.6546`. The
+measured median clock ratio at **4 settling steps** is **`1.6218`**, and the
+4-step dispatch ratio is **`1.6667`**. **The bar was set at roughly four settling
+steps** - where fusion already does everything it can do, because a group of 16
+never fires inside 4 steps, and the arm is *still* `1.6667`.
+
+**A HYPOTHESIS OF MINE DIED HERE, AND IT DIED TO MY OWN BETTER MEASUREMENT.** A
+first sweep at best-of-9 read the ratio as **non-monotone** in step count (`2.84`
+at 12 steps against `1.40` at 16), and the reading was called noise-dominated. Ten
+replicates at best-of-25 refute that: the median ratio is **monotone increasing** -
+`1.1840, 1.6218, 2.0042, 2.7396, 4.4069, 7.3991` at 1/4/8/16/32/64 steps. **The
+clock is usable when measured properly and the first sweep was simply
+under-replicated.**
+
+**What survives is narrower and sharper.** Within a single step count the spread is
+`1.85x` to `2.59x`, and at one step the ratio's **minimum reads `0.6969`** - below
+one, **for an arm that provably does strictly more arithmetic than its baseline.**
+A ratio under `1.0` there is impossible, so **the low tail is pure noise, and a
+`1.1x` bar sits inside it.** The gate is unreachable in the exact currency and
+unresolvable in the noisy one.
+
+**RULE 5 - REPRICE.** The goal was: the settling arm's overhead must not block
+shipping. **The bar was set against the wrong baseline** - it asks settling to be
+free, which a `k`-step arm cannot be against a 1-step arm. The honest gate is cost
+per settling step against **its own irreducible content**, which is exactly what
+fusion moved: **`3.0 -> 1.125` against a floor of `1.0`, with 93.75% of the
+removable overhead removed and the journal bit-identical.** That number is exact,
+deterministic and load-independent, and it is the one S6 should have been written
+in.
+
+**AND A VACUOUS CONTROL OF MINE WAS CAUGHT PRE-SHIP, THE SECOND TIME THIS ROUND.**
+The overflow test first asserted `left_cone or converged` at `group=64, tol=1e-12`
+and read **`left_cone=False, converged=True, steps=1`** - the iterate settled
+before it could drift, **so the branch under test never ran and the disjunction was
+carried entirely by the wrong half.** `tol=0.0` with `group=128` makes it fire
+(`left_cone=True, steps=6`). A second guard was added to the FLOP test, whose
+`len(set(counts)) == 1` would have passed on `set([0])` had the counter never
+fired. **Eleventh vacuous control in this campaign; second caught by its own author
+before shipping.**
+
+## THE THREE FELLOWS. AND THE CONTRACT LOSES.
+
+**CAMERON AND FOREMAN INDEPENDENTLY KILLED THE SAME CLAUSE, AND I VERIFIED IT
+MYSELF BEFORE READING EITHER OF THEM.** Contract 1.1 states that shifting the
+counter's Hankel matrix yields `rank_R = 3` while the nonnegative side is forced to
+`Omega(n)`. **Three independent measurements say 2 and 2.**
+
+    n   |W|    rank(H)   rank(H + cJ)   distinct values in H + cJ
+    3    15       2            2                 13
+    4    31       2            2                 17
+    5    63       2            2                 21
+    6   127       2            2                 25
+    7   255       2            2                 29
+
+**THE MECHANISM, from Cameron:** `H_f = a*1^T + 1*a^T` **already holds `1` in its
+column space**, so adding `C * 1 1^T` cannot raise the rank. The generic rule
+`rank(f + C) = rank(f) + 1` **is the step that does not apply to this `f`.**
+
+**AND THE NONNEGATIVE SIDE IS 2 AS WELL, CERTIFIED RATHER THAN ESTIMATED.** Cameron
+gives `rank_+ = 2` **exactly** - lower bound by exact ILP, upper bound by an
+explicit nonnegative two-factor certificate verified **bitwise**
+(`np.array_equal(W @ Hc, H)`), at `n = 2..6`. Foreman reached the same by
+construction with residual `1.776e-15`, and both cite Cohen-Rothblum 1993 Thm 4.1
+(`rank <= 2` nonneg implies `rank_+ = rank`). **The gap is exactly zero.**
+
+**THE NAMED ERROR:** the contract conflated *"the matrix takes `n` distinct
+values"* - which is true, and visible in the table above as 13/17/21/25/29 - with
+*"`rank_+` is `Omega(n)`"*. **A rank-2 nonnegative matrix can take arbitrarily many
+distinct values.** Cameron adds that Hrubes 2012 caps the entire family at
+`rk_+ <= 2 log2 n + 2`, refuting **by name** the `Omega(n)` shape the contract
+asserts. **An `Omega(n)` gap is not merely absent from this task; it is unavailable
+anywhere in the counter family.**
+
+**THE INSTRUMENT IS NOT THE BROKEN SIDE, and Cameron proved that rather than
+asserting it.** It reproduces clauses C1-C4 exactly; the `rank_+ = 2` result is a
+**construction**, not a numerical judgement call; the ILP is calibrated against
+exhaustive search (>= 20 of 32 drawn supports decidable, **all matched**); and it
+independently reproduces `sigma(m)` from de Caen-Gregory-Pullman on six sizes.
+**Her must-fire runs both directions with counts**, and a self-test that swaps in
+the wrong instrument - a Nerode-as-`rank_+` reader, which is precisely the
+contract's error - **reads GAP `[5,7,9,11,13]` against `2` at every `n`. The
+no-gap control is not vacuous.**
+
+**S2's REPLACEMENT, ALREADY BUILT: `counter_squared`, `f(w) = ((#a) - (#b))^2`.**
+Rank frozen at **3**; `rank_+ >= 4 / 5 / 5` at `n = 2/3/4` and `>= 6` at 11 and 13
+levels. Its support is inequality-on-count-levels - the crown graph - **which is
+why the bound climbs while the rank does not. Sharper because the corpse taught the
+mechanism: the shift failed precisely because it kept the matrix ADDITIVE, and
+`f^2` is the smallest object built from the same counter that is not.**
+
+**A CROSS-FELLOW CONFLICT, RESOLVED AGAINST CHASE.** Chase's it.3 reroute sent the
+e-process to **the Dyck-1 gap task**. **Cameron measured Dyck-1 and it has NO GAP** -
+both variants read `rank = rank_+lb = MN = n+1` at `n = 2,3,4`. **Chase's reroute
+target is dead and inherits Cameron's replacement: the e-process goes to
+`counter_squared`.** Dyck-1 is not lost - Cameron rerouted it to be **the no-gap arm
+the prediction ladder needs to be falsifiable in both directions**, so the matched
+pair now exists, built from tasks already measured.
+
+**CAMERON'S SAVE, AND IT PROTECTS THE SCOREBOARD.** Do **not** run the prediction
+ladder on the shifted counter. Signed and nonnegative would **tie**, and a tie there
+reads as **K-3** - *"gap task solved equally by the non-negative arm implies the
+signed program is capability-irrelevant, retired in writing"*. **That would be a
+scoreboard-killing false fire on a task that was never a gap task.**
+
+## FOREMAN vs CHASE ON `B`. FOREMAN'S EVIDENCE IS MISATTRIBUTED; HIS REPAIR IS RIGHT ANYWAY.
+
+Foreman reports the construction has a live break: NRMSE is unbounded above, so
+`B = 1.0` is wrong, and quotes `2.1166 / 1.3165 / 1.007076 / 5.8198` as the repo's
+own record. **Every one of those four literals was traced. None is from the
+measurement geometry.**
+
+    2.1166     CHECKLIST.md:372   n_train=128, recorded under "rank overfitting"
+    1.3165     DONE.md:6723       n_train=512, carried with its CI and marked FAIL
+    1.007076   DONE.md:2000       a seed-MEAN at n_train=2048, a cell that FAILS
+                                  its own bar and was pre-registered OUT
+    5.8198     DONE_ARCHIVE_ROUND1.md:266  round 1, softmax attention, an OOD task
+
+**And a scan of every `results/*.jsonl` for any NRMSE-named field above `1.0`
+returns ZERO.** So the empirical claim - that the run Chase's process will read
+routinely exceeds 1 - **is not supported by the record Foreman cited.**
+
+**HIS REPAIR STANDS REGARDLESS, AND IT IS ADOPTED.** NRMSE genuinely is unbounded
+above, so `B = 1.0` is **an assumption about the data rather than a bound from the
+definition** - and the two fellows agree the credit rule bounds a seed-mean, not an
+individual arm. Foreman's fix clips the **outcome inside the definition**,
+`d_i = min(NRMSE_twin, C) - min(NRMSE_settled, C)` with `B = C`, applied identically
+to both arms **before** differencing. **That is not the post-hoc clipping Chase
+refuted** - Chase's counterexample (`d = -100 w.p. .01, +0.5 w.p. .99` has
+`E[d] = -0.505` but `E[clip(d)] = +0.485`) clips the DIFFERENCE and does break `H0`;
+clipping each arm's outcome first does not. **The two do not conflict, and the
+adopted form removes an assumption at no cost.** Recommended `C = 2.0`.
+
+**One mitigation already in place, contrary to Foreman's stated failure mode.**
+Chase's `update` **raises** on `|d| > B` rather than clamping. So the process does
+not silently publish a voided guarantee; it dies loudly. **The printout does not
+look normal.**
+
+**ALPHA BUDGET, UNRESOLVED AND OWNED BY CHASE.** Two directions at 20 each is
+**`0.10` two-sided, not `0.05`**; `0.05` needs **40** per process. Chase's measured
+either-direction rate `0.0692` against a union bound of `0.10` **agrees with
+Foreman's arithmetic**. Chase chose the framing route (report "settled crossed",
+never "some direction crossed at 0.05"); Foreman wants the threshold route. **Note
+that raising the threshold to 40 pushes `MIN_T_MIXTURE` above 11 and therefore makes
+iteration 3's kill of the 5-seed cell STRONGER, not weaker.** To be pinned before
+the first seed.
+
+CHECKLIST: **S6 fusion BUILT, exact, 12 tests** - `3.0 -> 1.125` dispatches/step,
+journal bit-identical, FLOPs flat, clock `2.298x` faster. **S6's gate REPRICED: the
+`1.1x` bar is unreachable, floor `1.1667`.** Contract 1.1 clauses **C5a and C5b
+KILLED**, three independent verifications. **S2 rerouted to `counter_squared`;
+Chase's Dyck-1 reroute rerouted with it.** Foreman's `B` evidence **struck as
+misattributed**, his **repair adopted**. One more **vacuous control of mine caught
+pre-ship**.
+
+**SCOREBOARD: 23.**
+
 ### ROUND 7, ITERATION 3 - 2026-08-26 - CHASE LANDS. The deciding cell cannot decide, and it was proved before the first seed ran. Plus: the one non-saturating diameter is not one.
 
 CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**, 4/4 bit-identical.

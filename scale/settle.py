@@ -38,7 +38,8 @@ import torch
 
 from scale.hilbert import d_H
 
-__all__ = ["SettleResult", "settle", "column_diameter", "predicted_steps"]
+__all__ = ["SettleResult", "settle", "settle_fused", "column_diameter",
+           "predicted_steps"]
 
 
 @dataclass
@@ -108,3 +109,64 @@ def predicted_steps(r0: float, tol: float, kappa: float) -> int:
     if not (0.0 < kappa < 1.0) or r0 <= tol:
         return -1 if kappa >= 1.0 else 0
     return math.ceil(math.log(r0 / tol) / math.log(1.0 / kappa))
+
+
+def settle_fused(mat: torch.Tensor, m0: torch.Tensor, *, tol: float = 1e-12,
+                 max_steps: int = 1000, group: int = 16) -> SettleResult:
+    """`settle` for a LINEAR map, with the per-step normalisation deferred.
+
+    WHY THIS IS FREE RATHER THAN CHEAP. The Hilbert metric is projective:
+    d_H(c*p, q) = d_H(p, q) for every c > 0, by definition and not by
+    approximation, since a positive scaling shifts every log-ratio by log(c) and
+    an oscillation subtracts it straight back out. The normalisation therefore
+    contributes nothing to any residual this driver journals, and nothing to the
+    settled reading as the arm reads it. It is there only to keep the iterate
+    inside float range.
+
+    So a group of `group` steps may run unnormalised and be rescaled once at the
+    end. The arithmetic is unchanged -- `group` matrix-vector products either way,
+    which is why the FLOP count is flat in `group` and the saving is pure
+    dispatch. Precomputing a matrix power instead would be asymptotically WORSE
+    (s^3 log k against k s^2) and is deliberately not done.
+
+    Measured: the unfused loop issues exactly 3.0 aten calls per step -- one
+    matmul, one sum, one divide -- of which only the matmul does arithmetic.
+
+    THE HAZARD FUSION INTRODUCES, AND WHY THE GUARD IS NOT OPTIONAL. An
+    unnormalised iterate under a map whose spectral radius is far from one drifts
+    geometrically. At some group size it reaches inf or zero, every subsequent
+    residual is non-finite, and a driver that did not check would return a
+    converged-looking result computed from a dead iterate. The rescale point is
+    therefore also the check point, and a drift out of range is reported through
+    `left_cone` exactly as the boundary is in `settle` -- the two are the same
+    diagnosis, an iterate that has left the cone the metric is defined on.
+    """
+    if group < 1:
+        raise ValueError(f"group must be >= 1, got {group}")
+    mat = mat.double()
+    m = m0.reshape(-1).double().clone()
+    res = SettleResult(m=m)
+    for t in range(1, max_steps + 1):
+        nxt = mat @ m
+        r = d_H(nxt, m)
+        res.steps = t
+        if not math.isfinite(r):
+            res.left_cone = True
+            res.m = nxt
+            return res
+        res.residuals.append(r)
+        m, res.m = nxt, nxt
+        if r < tol:
+            res.converged = True
+            return res
+        if t % group == 0:
+            # The one place scale is touched. Also the one place drift is caught:
+            # a sum that is not finite and positive means the iterate left range
+            # between here and the last rescale, and no later residual is real.
+            s = m.sum()
+            if not (torch.isfinite(s) and s > 0):
+                res.left_cone = True
+                return res
+            m = m / s
+            res.m = m
+    return res

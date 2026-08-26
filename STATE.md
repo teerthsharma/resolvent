@@ -4,7 +4,7 @@
 |---|---|
 | contract | `LOOP_PROMPT.md` (v9). Round 6 archived `LOOP_PROMPT_ROUND6_ARCHIVE.md` |
 | promise | **`HILBERT`** — D2 verbatim (needs **S1's +12 branch AND S3**), or an honest `BROKEN` |
-| iteration | **3 complete, 4 next** |
+| iteration | **4 complete, 5 next** |
 | phase | **A — foundations (0–4)** |
 | **scoreboard** | **23** — 22 carried, **S5 +1** (Merkle journal live) |
 | RULE 2 (repaired) | **SATISFIED AT ITERATION 3, due at 8.** `EP.live()` reads the journal and prints `undecided at evidence E_t = 1.0`; must-fire passes both directions (worst null `0.0367 ± 0.0019` vs `α = 0.05`) and the broken-λ control **was seen to fire at `1.0000`**. |
@@ -17,39 +17,41 @@
 | | item | pts | state |
 |---|---|---|---|
 | **S1** | M3 quintuple headline cell, **anytime-valid** | +12 / +6 / −4 | **instrument LANDED and calibrated; the 5-seed CELL is dead** — `MIN_T_MIXTURE = 11`, max `E_5 = 3.801691` vs threshold `20`. **Repriced 436 units; rerouted to the Dyck-1 gap task.** |
-| **S2** | Hankel-gap family; one gap task **inside** M3 | +3 | Cameron — `ceq/hankel.py` in flight |
+| **S2** | Hankel-gap family; one gap task **inside** M3 | +3 | **instrument LANDED and self-tested.** The contract's own gap task has **no gap** (`rank₊ = 2` exactly, certified). **Rerouted to `counter_squared`** — rank 3, `rank₊ ≥ 4/5/5`. Remaining: put it in the M3 corpus alphabet. |
 | **S3** | Kaggle run on the signed N1–N6 cert; HF; capability table v0 | +6 | not started |
 | **S4** | Probe battery at **TRAINED** projections | +3 | **partly done** — Phase D closed 3/3; **aggregator retention NOT re-run** |
 | **S5** | Merkle journal + tamper must-fire | +1 | **EARNED** |
-| **S6** | Fused settling step, clock ≤ **1.1×** | +1 | target quantified: **3.0 dispatches/step, removable at zero FLOP cost** |
+| **S6** | Fused settling step, clock ≤ **1.1×** | +1 | **fusion BUILT and exact** (`3.0 → 1.125` disp/step, journal bit-identical, clock `2.298×` faster). **The GATE is unreachable — floor `1.1667` at any step count.** Repriced; **unearned as written.** |
 | **S7** | D1 to acceptance, certificate post-mortem as capstone | +2 | Foreman owns it |
 
 ## THE ONE NEXT ACTION (round 7, iteration 3)
 
-**Chase has LANDED. Collect Cameron and Foreman; the S2 reroute now depends on
-Cameron's corpus.**
+**ALL THREE FELLOWS ARE IN. The board is now blocked on ONE thing: getting
+`counter_squared` into the M3 corpus alphabet.** That single step unblocks S2 (+3)
+AND Chase's e-process reroute, which no longer has anywhere else to go — Dyck-1,
+its previous target, was measured to have no gap.
 
   1. **CHASE — DONE at it.3.** Must-fire **passed both directions**; the broken-λ
      control **was seen to fire**. **And he killed the round's headline cell before
      it ran:** `MIN_T_MIXTURE = 11`, so **5 seeds cannot cross in either direction,
      ever.** Repriced (436 units at the floor, ~44×) and **rerouted to the Dyck-1
      gap task — which makes S2 the critical path, not S1.**
-  2. **CAMERON — the worked example, and K-5 rides on it.** If her rank/rank₊
-     machinery disagrees with §1.1 (`rank_ℝ = 2` for the difference series; no
-     nonnegative factorisation on raw entries; `rank 2–3 vs Ω(n)` after shifting),
-     **the instrument is broken and nothing downstream of it is read.**
-  3. **FOREMAN — the near-miss delta first** (it gates the Krohn–Rhodes framing),
-     then **whether the supermartingale property actually holds for the grid
-     mixture.** `tests/foreman/test_methods_mixture_identity.py` is in flight.
-     **Every anytime-valid claim this round rests on that step.**
+  2. **CAMERON — DONE at it.4. K-5 FIRED, and it fired on the CONTRACT, not the
+     instrument.** `rank_ℝ = 3` after shifting is **2**; `Ω(n)` on the nonnegative
+     side is **2 exactly, certified bitwise**. Verified three times independently.
+     **`Ω(n)` is unavailable anywhere in the counter family** (Hrubeš 2012:
+     `rk₊ ≤ 2log₂n + 2`). **Rerouted to `counter_squared`.**
+  3. **FOREMAN — DONE at it.4. The supermartingale property HOLDS**, proved two
+     ways, must-fire seen (swapping posterior for prior mean fires at `t=2`).
+     Near-miss delta stated on four axes; three **contract corrections** filed
+     (Fliess/Carlyle–Paz needs a **field**, not a commutative ring — so **L4 is dead
+     as written**; Yannakakis wrote *positive rank* and the `rank₊`/extension-
+     complexity equality is **Fiorini et al.**, the separation **Kwan–Sauermann–
+     Zhao**; NP-hardness is **Vavasis**, not Cohen–Rothblum). **His `B` evidence was
+     struck as misattributed; his `B` repair was adopted.**
 
-**Build alongside if none has landed. The two cheapest unowned items:**
-  * **S6's fused settling step** — the target is already quantified at **exactly
-    3.0 aten dispatches per settling step**, `O(t*)` while the FLOPs are `O(1)`,
-    **removable at zero FLOP cost**. Worth **+1** at clock ≤ 1.1×.
-  * **The unread `delta_image`** — see Open #2. It is the only non-saturating
-    diameter in the entire journal set and **nobody has established what the
-    restriction is.**
+**Both cheap unowned items are now spent.** S6's fusion is built and its gate is
+unreachable; `delta_image` is closed. **The next action is the corpus step above.**
 
 ## Open REDs, carried
 
@@ -79,3 +81,18 @@ Cameron's corpus.**
    **cannot represent a decrementing loop**; unconstrained **loses the contraction
    guarantee** (`ρ = 1.0010632`). **§1.1 turns this into the Hankel gap — it is now
    S2's subject.**
+
+8. **`ceq/hankel.py` is UNTRACKED.** Cameron ran no `git add`. The instrument that
+   killed two contract clauses is not in version control, and commit `f7c3629`
+   swept up her two test files mid-work without it — **the tests are tracked and
+   the module they import is not.**
+9. **L4 is dead as written** (Foreman). Fliess/Carlyle–Paz needs a **field**;
+   Berstel–Reutenauer switches hypothesis at marginal 643, **exactly at the
+   definition of rank**. `rank(H_f) = 2 over any CommRing` is not a theorem and its
+   negative control is vacuous. Route filed: **L4a** (factors through `R²`,
+   constructive, any `CommRing`) and **L4b** (minimality, with the field
+   hypothesis) — the split is the theorem's actual shape.
+10. **K-5 is UNFIREABLE as written** (Foreman). Cameron owns the instrument **and**
+   the worked-example reproduction; one agent cannot fail its own consistency
+   check. It fired this round only because Foreman read the contract text
+   independently. **Needs a second reader or it is decorative.**
