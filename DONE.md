@@ -4,6 +4,92 @@ Round 5 closed at `TWOSPHERES: BROKEN - ARM A, K1's dual slope, displacement
 clause`; its handoff is `done5.md` and its negative result is `D1.md`. That
 verdict is final and is not reopened.
 
+### ROUND 6, ITERATION 9 - 2026-08-26 - The 2-dof lemma holds, and it has a degeneracy the contract does not mention.
+
+CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.
+[RUN] `pytest tests/loop` -> **177 passed** (165 -> 177), exit 0.
+
+**EXIT GATE B's blocker was that ARM P had never started**, and the thing that
+licenses it to exist at all - the 2-dof lemma of contract 1.3 - was **asserted and
+never checked**. Four agents are live and none had reached it, so it was checked
+here.
+
+**WHY IT MATTERS MORE THAN IT SOUNDS. Round 5 died of a scalar identity.** With a
+one-token mask, `A^0[i,j] = A^c[i,j]/(1-p)`, so **every readout is a function of
+the single scalar `p`** - hence `theta = arcsin(sqrt(TV))`, two statistics with one
+degree of freedom, functionally dependent. Contract 1.3 asserts the four-point
+probe escapes this *"by construction"*. **Assertions of that shape are exactly what
+this project keeps being wrong about.**
+
+## THE LEMMA HOLDS. Closed form, then rank.
+
+Readout `f(S)` = the row's weight on a fixed target `t` outside `{c, j}`:
+
+    f(0) = a_t          f({c}) = a_t/(1-p_c)
+    f({j}) = a_t/(1-p_j)    f({c,j}) = a_t/(1-p_c-p_j)
+
+    I(c,j) = a_t [ 1 - 1/(1-p_c) - 1/(1-p_j) + 1/(1-p_c-p_j) ]
+
+**Expanded [RUN, sympy]:**
+
+    I = a_t * p_c * p_j * (6 p_c p_j + 3 p_c + 3 p_j + 2)
+
+    I at p_c = 0  ->  0          I at p_j = 0  ->  0
+
+**Leading order is exactly `2 a_t p_c p_j` - bilinear, and identically zero if
+either token carries no mass.** That is precisely what a degree-2 interaction must
+look like, and it is the structural reason no single scalar can reproduce it.
+
+**Jacobian rank of `(I, TV)` in `(p_c, p_j)` [RUN]:**
+
+    p_c    p_j        I           TV     sigma_1     sigma_2        rank
+    0.10   0.03   0.00036932   0.130   1.414266   6.072255e-03        2
+    0.20   0.15   0.00559955   0.350   1.415624   6.301705e-03        2
+    0.30   0.05   0.00286293   0.350   1.415324   3.295299e-02        2
+    0.02   0.40   0.00185316   0.420   1.416214   6.130941e-02        2
+
+**Rank 2 means `I` is NOT a function of `TV` alone.** The control fires: the
+**one-token** case reads **rank 1 at every `p`** - round 5's death reproduced
+exactly - and a deliberately degree-1 statistic is also caught at rank 1.
+
+## AND A DEGENERACY THAT IS NOT IN THE CONTRACT
+
+    p_c    p_j        sigma_2        rank
+    0.05   0.05   2.027511e-17          1
+
+**On the symmetric locus `p_c = p_j` the rank drops to 1.** `I` is symmetric in
+its two arguments, so its partials are equal on the diagonal, while `TV = p_c+p_j`
+has equal partials everywhere - **the Jacobian rows are parallel.**
+
+**It is EXACT, not merely small** [RUN, symbolic, no differencing]:
+
+    dI/dp_c - dI/dp_j            =  a_t/(p_j-1)^2 - a_t/(p_c-1)^2
+    evaluated on p_c = p_j       =  0
+
+**So the two degrees of freedom are GENERIC, not universal.** Exactly where the two
+masked tokens carry equal mass, **the probe is momentarily as collapsed as round
+5's was everywhere.** A draw protocol that pairs tokens of similar salience - which
+is what a top-k selector produces, since it picks tokens with similar scores -
+**will sit near this locus by construction.** The contract does not say so and now
+it does.
+
+## MY FIRST TOLERANCE WAS WRONG, AND THE FIX IS THE INTERESTING PART
+
+The degeneracy test first asserted `sigma_2 < 1e-12` and **failed at p = 0.10 and
+0.25**. The lemma was right; **the bar was one a finite difference cannot meet**,
+because the surviving asymmetry is pure rounding and it **scales with the magnitude
+of the derivatives, which grow with `p`**. Fixed two ways: the numeric assertion is
+now **relative** (`sigma_2/sigma_1 < 1e-10`), and the degeneracy is **additionally
+asserted symbolically**, where no differencing is involved and no tolerance is
+needed. **A property that is exact should be tested exactly**, and reaching for a
+tighter absolute tolerance instead would have hidden the reason.
+
+CHECKLIST: **2-dof lemma VERIFIED**, ARM P licensed to exist. **Symmetric
+degeneracy is a NEW finding** and binds the draw protocol. 6 tests, both must-fires
+firing.
+
+**SCOREBOARD: 4** - unchanged. The lemma licenses ARM P; it does not score.
+
 ### ROUND 6, ITERATION 8 - 2026-08-26 - The G2 event goes to Wilson. Four agents live.
 
 CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.

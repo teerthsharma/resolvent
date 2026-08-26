@@ -823,3 +823,12 @@ Replayed ARM A's own draw stream (published `D_FR causal` reproduced to 6 dp at 
 | constraint | Wilson **may not edit any published document.** Correcting a published number requires the G2 procedure, not an edit. |
 | live agents | **four** — Foreman (ARM S birth gates), Cameron (F-green re-run, +3/−5), Chase (idle, calibrated), Wilson (G2). Nothing claimed for any. |
 | measurement hygiene | **Wall-clock untrustworthy at four concurrent agents.** All told to serialise or mark provisional. |
+
+**ROUND 6 it.9 — the 2-dof lemma (contract 1.3), checked at last.**
+
+| item | status |
+|---|---|
+| **2-dof lemma** | **VERIFIED, GREEN.** `I = a_t·p_c·p_j·(6p_cp_j + 3p_c + 3p_j + 2)`, leading order **exactly `2a_t·p_c·p_j`** — bilinear, and identically zero if either token carries no mass. Jacobian of `(I, TV)` in `(p_c,p_j)` reads **rank 2** at every off-diagonal point tested. **ARM P is licensed to exist.** |
+| control | **FIRES.** The one-token mask reads **rank 1 at every p** — round 5's death reproduced. A deliberately degree-1 statistic is also caught at rank 1. |
+| **NEW FINDING — symmetric degeneracy** | **On `p_c = p_j` the rank drops to 1** (σ₂ = `2.027511e-17`). **Exact, not small**: symbolically `dI/dp_c − dI/dp_j` vanishes identically on the diagonal. **The two degrees of freedom are GENERIC, not universal.** A top-k selector picks tokens with *similar scores*, so a draw protocol built on it **sits near this locus by construction**. Not in the contract; now recorded. |
+| my own tolerance error | First version asserted `σ₂ < 1e-12` and failed at p = 0.10, 0.25. **The bar was one a finite difference cannot meet** — surviving asymmetry is rounding, scaling with derivative magnitude. Fixed to a **relative** bar plus a **symbolic** assertion needing no tolerance. **A property that is exact should be tested exactly.** |
