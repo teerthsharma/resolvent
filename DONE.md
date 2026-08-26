@@ -4,6 +4,315 @@ Round 6 closed with the certificate program CLOSED - three attempts, three death
 Round 5's `TWOSPHERES: BROKEN` and its handover `done5.md` stand. Round 6's
 work-done is `done6.md`. Progress **22**.
 
+### ROUND 8, ITERATION 7 - 2026-08-26 - THE COMPARISON WAS CONFOUNDED BY CONSTRUCTION. Dr House finds the pivot family cannot see the token the label depends on.
+
+CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.
+
+## THE FINDING, AND IT INVALIDATES THE NUMBERS THE ROUND HAS BEEN READING
+
+**The pivot family structurally cannot put the winning token on the value path.**
+
+`scale/arm_s.py:107` selects `exclude=(s - 1,)` and then returns `piv[piv > 0]`;
+`scale/m3_quintuple.py:129` does the same as `exclude=(0, s - 1)` up front. **So the
+largest legal pivot is `s - 2`.** Every row is `tril(-1)`-strict, so row `s - 2` reads
+only `j <= s - 3`.
+
+**Therefore `v[s-2]` is invisible to every pivot row.** Softmax's own row is `s - 1`,
+which reads `j <= s - 2` - **so softmax sees it directly and the pivot arms cannot.**
+
+**MEASURED, not argued.** `e3_t1`, seed 0, perturbing token `s-2` by `+100`:
+
+    softmax cell reading   moves 101.6983     <- direct value pass-through
+    pivot av               moves   3.263746   <- weight channel only
+    log-gate               moves  14.19184    <- weight channel only
+
+**And the `t* = 1` label is `a[s-1] * b[s-2]` - concentrated on exactly the hidden
+token.** Every label term at every `t*` carries the invisible sign `a[s-2]`.
+
+**SO `0.819665` vs `0.923118` vs `0.978314` IS CONFOUNDED BY CONSTRUCTION. It is not
+evidence about settling, and it must not be reported as though it were.**
+
+**The root cause is a docstring rationale, not a bug.** `pivots_of` excludes the query
+row because *"a pivot reading of the row being settled is not an independent reading of
+it."* **That rule is what deletes softmax from the twin's function class.** It was a
+defensible independence argument that turned into a capability ceiling nobody
+recognised.
+
+## AND TWO FURTHER CAUSES, BOTH SEPARABLE FROM THE FIRST
+
+**THE FIXED POINT ITERATES THE WRONG UNKNOWN.** The settled arm iterates `alpha` in an
+8-simplex - **a reparameterisation inside the twin's own family `{alpha @ av}`. It can
+reallocate; it cannot add.** That is a structural explanation for `settled - twin =
+0.002190` with `3.874x` the variance and no mean.
+
+**THE HOP WALL IS DEPTH, NOT SETTLING.** At `t* = 8` the arm trains to `0.860972` -
+**sitting ON its 2-hop ceiling of `0.866025`** - and evaluates at `1.112208`. **It is
+memorising noise**, because the 2-hop term is a three-way product
+`a[s-1] * a[s-2] * b[s-3]` and depth-1 linear mixing cannot form it.
+
+## THE LITERATURE, AND IT ANSWERS THE QUESTION THAT WAS ASKED
+
+**Softmax is Bayes-optimal on exactly our `t* = 1` task shape.** Single-location
+regression - output is a payload at one latent location times a query-side transform -
+is provably solved by one softmax attention layer, while linear attention provably
+falls short of Bayes risk. Marion, Berthier, Biau and Boyer, ICLR 2025,
+`arXiv:2410.01537`; Duranthon et al., `arXiv:2509.21936`. **`e3_t1` IS a
+single-location task, so attacking softmax there is attacking it at its proven
+optimum.**
+
+**Softmax's one step is already a converged fixed-point step.** Attention is the update
+rule of a modern Hopfield network and *"converges with one update"*, with exponentially
+small retrieval error. Ramsauer et al., ICLR 2021, `arXiv:2008.02217`. **That is the
+direct answer to why a one-step normalised mixture is harder to beat than it looks: the
+one step is not pre-equilibrium, it is AT equilibrium.**
+
+**Iterating the normalisation to a fixed point is known to buy little.** Sinkformer runs
+Sinkhorn iterations to a doubly-stochastic fixed point in 3-5 steps for **small**
+accuracy gains - Sander, Ablin, Blondel and Peyre, AISTATS 2022, `arXiv:2110.11773`.
+**It is the nearest published relative of our settled cell.**
+
+**Deep equilibrium models match rather than beat.** Bai, Kolter and Koltun, NeurIPS
+2019, `arXiv:1909.01377` - *"equal or superior perplexity"* against deep stacks, i.e.
+**parity, at real solver cost.**
+
+**When iteration DOES pay, the iterated object is the representation.** Weight-tied
+looped transformers with input injection match standard transformers on algorithmic
+tasks at **under 10 % of the parameters** - Yang, Lee, Nowak and Papailiopoulos, ICLR
+2024, `arXiv:2311.12424`.
+
+**And k-hop composition needs depth about `log k`.** Sanford, Hsu and Telgarsky, ICML
+2024, `arXiv:2402.09268`, Theorem 4.2: `hop_k` is solvable at `L = floor(log2 k) + 2`
+with width `O(1)`; Corollary 4.3 gives an `Omega(log k)` depth lower bound conditional
+on the 1-vs-2-cycle conjecture. **Our arms are depth 1. `t* = 8` needs about 5. The
+`+0.246` wall IS this.**
+
+**Max-margin dynamics explain the `argmax` result.** Gradient descent on softmax
+attention converges to the max-margin separator of optimal tokens - Tarzanagh et al.,
+`arXiv:2306.13596`. **Hard selection kills the training signal; soft selection keeps
+it**, which is why the one-hot control came in at `-0.118456`, 0/5.
+
+**NOT FOUND, and recorded as such rather than assumed occupied:** no prior work
+iterating a **routed mixture-weight vector** - a simplex over content-selected,
+Gram-coupled pivots - to a fixed point as the attention read; no prior work on the
+signed row-L1 normalisation `rho * w / ||w||_1` as attention; **and no unconditional
+lower bound** that one-layer softmax cannot solve the signed chain at `t* = 2`, since
+Sanford's bound is conditional and concerns pointer-chasing rather than this product
+chain. **None of these three may be overclaimed.**
+
+## TWO MOVES, EACH WITH THE MEASUREMENT THAT KILLS IT
+
+**MOVE 1 - LIFT THE EXCLUSION.** New cells via the `etask_k5e.py` class swap, with
+`exclude=(0,)` so `p = s - 1` becomes legal. Then `av[s-1]` **is** the softmax cell's
+own row, and **softmax becomes an interior point of the twin's function class** - which
+is the minimum condition for the comparison to mean anything.
+*Falsifier:* `e3_t1`, `n_train=2048`, seed 0. If `twin_plus` fails to close **at least
+half** the `0.103` gap to softmax, the exclusion is not binding, the deficit is
+optimisation, and **the move dies.** If it closes and `settled_plus == twin_plus`, then
+**settling retires on clean ground and the `+6` branch fires unconfounded.**
+*Cost:* one fellow-iteration to build and bind; the falsifier is about 25 minutes
+(measured `298.8 s` per twin unit, `402.6 s` per settled unit).
+
+**MOVE 2 - ITERATE THE REPRESENTATION, NOT `alpha`.** A weight-tied looped cell with
+input injection, `x_{t+1} = x + A(x_t) @ x_t`, three loops, **parameters unchanged at
+4769**. Credit-clean on `e3` under §1.7d, because softmax-looped against softmax
+touches no signed resolvent.
+*Falsifier:* `e3_t2` and `e3_t8`, `n_train=2048`, seed 0, at **both** 150 and 600
+steps. If looped-3 neither beats single softmax at `t* = 2` nor gets below `1.0` at
+`t* = 8`, **depth-via-loop dies here**, the twin ships on its earned `+0.111396`, and
+the headline reads *"one-step softmax wins on equilibrium tasks"* in those words.
+*Cost:* one to two fellow-iterations; falsifier about 40 minutes.
+
+## THE CONTRACT IS AMENDED, NARROWLY AND CORRECTLY
+
+House appended §8 to `LOOP_PROMPT.md` and **re-aimed nothing above it**. The in-flight
+pre-registered ladder **completes as registered**; §8 binds only what may be
+**concluded** from it. **No "softmax beats the equilibrium arms" headline ships before
+the Move 1 falsifier runs.**
+
+**HIS OWN SUMMARY, AND IT IS THE FAIREST STATEMENT OF THE POSITION:**
+
+> *"The fixed point as currently built is dead weight - but it was never given a fair
+> fight. It iterated gating weights inside a family the confound had already crippled,
+> on a task where softmax is provably Bayes-optimal, at a depth the label provably
+> exceeds. Two cheap runs decide whether anything of the equilibrium thesis survives;
+> both die in under an hour of box time."*
+
+CHECKLIST: **the comparison is CONFOUNDED BY CONSTRUCTION** - `exclude=(0, s-1)` plus
+`tril(-1)` means no pivot row can read `v[s-2]`, the token the `t*=1` label depends on,
+and softmax reads it directly (`101.6983` against `3.263746`). **Verified in the code at
+`scale/arm_s.py:107` and `scale/m3_quintuple.py:129`.** The settled arm **iterates a
+reparameterisation inside the twin's own family**. The hop wall is **depth**, with
+`arXiv:2402.09268` Thm 4.2 giving `log k`. **Softmax is Bayes-optimal on the `t*=1`
+shape and its one step is already a converged Hopfield update** - which answers the
+question that was asked. **Two moves, both falsifiable in under an hour.**
+
+**SCOREBOARD: 25.**
+
+### ROUND 8, ITERATIONS 5-6 - 2026-08-26 - The method pays twice in one sitting, and the arms fail at a rung where their architecture is provably sufficient.
+
+CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**. `demo()` OK, exit 0.
+
+## RULE 8 RECOVERED A CLAIM ITS OWN AUTHOR HAD WITHDRAWN
+
+Foreman had downgraded the round's headline prediction from **rate equality** to
+**monotonicity only**, because the conditional label's measured decay
+(`0.9298888594`, `0.9476920990`) did not match the engineered `0.9250000000`.
+
+**Applying RULE 8 - name the unknown, solve exactly around it - the residual factors
+in closed form.** Since `u - u_t = Q^t u` and `v - v_t = Q^t v`:
+
+    q_t - q  =  ( u (*) (Q^t s)  -  s (*) (Q^t u) )  /  ( s (*) s_t )
+
+**Verified to `1.082467e-15` on `_64` and `4.583348e-13` on `_1024`** across
+`t in {1, 2, 5, 8, 16, 32}`.
+
+Both tails carry **the same Perron mode**, so the leading term is
+`lambda2^t * w (*) (c(s)u - c(u)s)` over a converging denominator - **therefore
+`f -> 1` exactly.** Measured:
+
+    graph      f(40)        f(80)        f(160)       f(320)
+    _64      1.00528525   1.00098935   1.00002297   1.00000063
+    _1024    1.02453200   1.01570774   1.00612578   1.00158689
+
+**THE DOWNGRADE IS WITHDRAWN. `lambda2` IS the exact asymptotic rate of the
+conditional label.** The claim came back because the unknown was written down instead
+of measured.
+
+**AND THE COST IS THE ACTIONABLE HALF.** Every ladder rung `t* in {1, 2, 8, 32}` sits
+**below** the mode time (`20.5615`, `169.3116`). **The ladder is entirely
+pre-asymptotic, so `lambda2^t*` is the WRONG predictor AT THE RUNGS even though
+`lambda2` is the right rate.** The closed form is the right predictor there and costs
+**one solve, no training**.
+
+**Whoever reads the dose-response curve must predict it with the closed form.** Using
+`lambda2^t*` makes the curve look wrong at `t* = 8` and `t* = 32` **for a reason that
+is arithmetic, not architecture.**
+
+## AND THE SAME METHOD DESTROYED A CLAIM HE HAD JUST MADE
+
+He had attributed the excess to `lambda3/lambda2` - the slower graph carrying the
+larger excess. **That was a two-point fit, and one question turned it into six
+placements on a single graph, holding the graph fixed:**
+
+     sep  targets      lam3/lam2      f(160)
+       4  (10,261)   0.9892423096   1.00738131
+       8  (10,736)   0.9927200890   0.99034549   <-- BELOW ONE
+      12  (10,121)   0.9994338939   1.00096338
+      16  (10,717)   0.9916908751   1.00291277
+      20  (10,234)   0.9903113973   1.00455315
+      24  (13,274)   0.9936504684   1.00396742
+      Pearson corr = -0.287101
+
+**`f(160) = 0.99034549` - the label decays FASTER than `lambda2`. No account of
+late-arriving sub-dominant modes permits that.** Claim **withdrawn, not rescued.**
+
+**The closed form says why, and this reading survives:** the leading amplitude
+`c(s)u - c(u)s` is a property of the two boundary columns - **geometry**. When `u` is
+nearly parallel to `s` the leading mode nearly cancels and sub-dominant modes carry
+the residual. **So the excess is set by BOTH spectrum and geometry, and geometry can
+flip its sign. Only `f -> 1` is derived.** Bound in `demo()`: `min(f) < 1 < max(f)`
+and `|corr| < 0.6`, so an edit that makes `f` one-sided again fails.
+
+**The method paid twice from the same closed form - it recovered a claim wrongly
+downgraded and destroyed one wrongly upgraded.**
+
+## A NEAR-VACUOUS CHECK CAUGHT IN HIS OWN CODE BEFORE IT SHIPPED
+
+`s_t` is exactly zero at any node more than `t` hops from both targets, so the
+unguarded residual carried `inf` and `nan` - **and Python's `max(0.0, nan)` returns
+`0.0`.** Every disagreement would have been silently dropped and **the residual would
+have read `0.0` for ANY formula, including a wrong one.**
+
+Now restricted to live denominators **with the comparison count reported** (`3..16 of
+16`, `2..60 of 60`); `t = 1` reaching only three nodes is physics, not a defect, so the
+bar sits on the count at `t = 32`. **Fourth control seen firing:** the closed form with
+one sign flipped gives residual `2.625602e+00` and `9.684524e+01` against the correct
+form's `1.08e-15` and `4.58e-13` - **fifteen orders of separation.**
+
+## CHEEGER: THE OBSTRUCTION RELOCATES, IT DOES NOT EVADE
+
+Cameron's obstruction was that going in-band via bridge conductance needs
+`vol(S) <= 40`, making every label a 3-hop function. The `alpha`-scaling reroute keeps
+`vol(S)` and caps reach at about `t_rel` instead. Measured `alpha^r` on `_1024`:
+
+    r=3   0.7951152826      r=8   0.5426005994
+    r=13  0.3702801554      r=29  0.1090161839
+
+A radius-3 ball retains **79.5 %** of the walk's weight, so the label is emphatically
+**not** 3-hop - which is why it clears her gate - and **10.9 % of influence survives
+past the graph's own diameter.** But a reach ceiling at about 13 hops **is still a
+ceiling. The obstruction is real; `alpha`-scaling moves it from 3 hops to ~13.**
+
+## CHASE'S `f` - AND IT ALREADY SAYS SOMETHING SHARP
+
+`f(t*, cell) := achieved - ceiling(t*, hops)`, each cell against **its own** budget -
+softmax 1 hop, pivot cells 2. **One shared ceiling would credit softmax with a deficit
+it cannot close.**
+
+**The ceiling was checked rather than assumed**, against `e_hop_reading` on drawn
+batches of 2048: `e3_t2 k=1` formula `0.707107` against drawn `0.719195`; `e3_t8 k=2`
+`0.866025` against `0.873949`; `e3_t32 k=2` `0.968246` against `0.969735`. **Max
+deviation `+0.012088`.**
+
+    task   t*    cell    hops  n   achieved    ceiling      f
+    e3_t1   1  settled     2   5   0.994399   0.000000   +0.994399
+    e3_t1   1     twin     2   3   0.976975   0.000000   +0.976975
+
+**AT `t* = 1` A 2-HOP ARM CAN EXPRESS A 1-HOP LABEL EXACTLY.** `ceiling(1,2) =
+0.000000`, and that is measured, not algebra - `e_hop_reading` at `k=1` on `e3_t1`
+reads `0.000000`.
+
+**SO THE ENTIRE SHORTFALL AT THE SHALLOW RUNG IS `f`, AND THE HOP BUDGET EXPLAINS NONE
+OF IT. There is no budget deficit at `t* = 1` to blame. Whatever binds there is not
+hops.**
+
+That is the sharpest diagnostic the project has produced: **the arms fail at a rung
+where their architecture is provably sufficient.**
+
+**The shape is NOT yet nameable** - one rung of the three needed - and the reader
+prints `SHAPE NOT READABLE` rather than guessing, because two points cannot separate
+flat from growing from a threshold.
+
+## THREE PIECES OF DISCIPLINE WORTH RECORDING
+
+**A stale log that would have corrupted `f`.** `results/m3_capability.txt:1212` records
+`e3_t8 k=2 NRMSE=0.815162`, which **predates `b[:, s-1] = 0.0` in
+`make_equilibrium_batch` and describes a corpus that no longer exists. Anyone reading
+`f` off that log gets it wrong.**
+
+**He did not take a number of mine on faith.** The `1.112208` relayed from here **could
+not be sourced in any log he holds.** The arithmetic checks
+(`1.112208 - 0.866025 = 0.246183`), so it is Cameron's newer reading, and `f` will pick
+it up when `e3_t8` lands. **Correct handling: the number is not wrong, its provenance
+was not in his hands, and he said so instead of using it.**
+
+**The definitions are timestamped as POST-DATA.** `f` and `g` went into
+`E_LADDER_PREREGISTERED_READING.md` §6b **recorded as defined after the first rung's
+numbers**, because *"a quantity defined post-data could have been chosen to flatter
+it."*
+
+**And Foreman's correction now PRINTS.** `scale/e_ladder.py::print_scope` emits beside
+every reading that `e3` binds `equilibrium_oracle` and that the `lambda2`/Cheeger
+prediction lives on the **unregistered** absorbing-chain corpus and **has never been
+tested here** - so a settled loss on this ladder is a statement about `e3`, not about
+the round's prediction.
+
+`g` is **not yet available** - no rung has both cells. Re-armed with
+`--cells settled twin softmax`, creditable contrast first: softmax at `161.1` s
+measured, 20 units, about **54 minutes on a 5-hour ladder, `+18 %`, displacing
+nothing.**
+
+CHECKLIST: **RULE 8 recovered the rate equality** - closed form verified to `1.08e-15`,
+`f -> 1` exactly - **and destroyed the `lambda3/lambda2` account** with a placement
+sweep where `f` goes **below one**. **The ladder is pre-asymptotic at every rung, so
+the curve must be predicted by the closed form and not by `lambda2^t*`.** Cheeger
+**relocates from 3 hops to ~13, it does not evade.** **`f` at `t*=1` shows the arms
+failing where their architecture is provably sufficient** - `ceiling(1,2) = 0.000000`
+measured. A near-vacuous `nan`-swallowing check and a stale corpus log both caught
+before they cost anything.
+
+**SCOREBOARD: 25.**
+
 ### ROUND 8, ITERATION 4 - 2026-08-26 - The merged upstream work is found, and it already contains the rule added to the contract an hour earlier.
 
 CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.

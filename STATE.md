@@ -4,7 +4,7 @@
 |---|---|
 | contract | `LOOP_PROMPT.md` (v10). Round 7 archived `LOOP_PROMPT_ROUND7_ARCHIVE.md` |
 | promise | **`HILBERT`** — output only when completely and unequivocally true |
-| iteration | **4 complete, 5 next** |
+| iteration | **7 complete, 8 next** |
 | **scoreboard** | **25** — 23 carried + **X₁₈ +2 EARNED** |
 | **the round exists to move ONE number** | `done7.md` scores the product at **37 %**: engineering **≈ 80 %**, the scientific claim **≈ 5 %**. **The 5 % is because the deciding measurement has been taken ZERO times.** |
 | **RULE 2** | **THE READING COMPLETES BY ITERATION 8.** Not the corpus, not the process — the reading. |
@@ -91,3 +91,50 @@ both sides, so the target is reachable **by construction rather than by search**
    exactly when an analysis is seed-independent. **This project checks determinism by
    bit-identity, which is binary**, and has already hit a case it cannot describe — a
    replay where every `eval_nrmse` matched bitwise and only a wall-clock field drifted.
+
+13. **THE SHARPEST OPEN FINDING: the arms fail where their architecture is provably
+   sufficient.** At `t* = 1`, `ceiling(1, 2 hops) = 0.000000` — **measured**, not
+   algebra — yet settled reads `0.994399` and twin `0.976975`. **The whole shortfall is
+   `f` and the hop budget explains none of it.** Whatever binds at that rung is not
+   hops, not the task, and not the settling.
+14. **The ladder is PRE-ASYMPTOTIC at every rung** (`t* ∈ {1,2,8,32}` against mode
+   times `20.5615` and `169.3116`). **`λ₂^t*` is the wrong predictor AT THE RUNGS even
+   though `λ₂` is the right asymptotic rate.** The closed form
+   `q_t − q = (u ⊙ Q^t s − s ⊙ Q^t u)/(s ⊙ s_t)` is the right predictor and costs one
+   solve. **Reading the curve with `λ₂^t*` makes it look wrong for arithmetic reasons,
+   not architectural ones.**
+15. **`f → 1` is DERIVED; the approach to 1 is NOT.** The excess is set by both
+   spectrum and geometry, and geometry can flip its sign — `f(160) = 0.99034549` at one
+   placement, **below one**. Only the limit is proved.
+16. **Cheeger relocates rather than evades** — `α`-scaling moves the reach ceiling from
+   3 hops to about 13. `α^3 = 0.7951152826` of the walk's weight is inside a radius-3
+   ball, and `α^29 = 0.1090161839` survives past the diameter. **A ceiling at 13 is
+   still a ceiling.**
+17. **`results/m3_capability.txt:1212` is a STALE TRAP.** It records
+   `e3_t8 k=2 NRMSE=0.815162`, predating `b[:, s-1] = 0.0` in `make_equilibrium_batch`,
+   and describes a corpus that no longer exists. **Reading `f` off that log gives the
+   wrong answer.**
+
+18. **THE COMPARISON IS CONFOUNDED BY CONSTRUCTION — this supersedes every reading of
+   `settled` vs `twin` vs `softmax` on the E-tasks.** `scale/arm_s.py:107` excludes
+   `s-1` then drops `0`; `scale/m3_quintuple.py:129` excludes `(0, s-1)`. Max pivot is
+   `s-2`, and `tril(-1)` makes that row read `j ≤ s-3`. **So no pivot row can put
+   `v[s-2]` on the value path, and the `t*=1` label is `a[s-1]·b[s-2]`.** Measured:
+   perturbing `s-2` moves softmax by **`101.6983`** and the pivot `av` by **`3.263746`**.
+   **The numbers are not evidence about settling.**
+19. **The root cause is a docstring rationale, not a bug.** *"A pivot reading of the row
+   being settled is not an independent reading of it"* — a defensible independence
+   argument that became a capability ceiling nobody recognised. **Lifting it is MOVE 1.**
+20. **The settled arm iterates a reparameterisation inside the twin's own family**
+   (`alpha` on an 8-simplex over `{alpha @ av}`). **It can reallocate, not add** —
+   structural explanation for `0.002190` with `3.874×` the variance.
+21. **The hop wall is DEPTH.** `arXiv:2402.09268` Thm 4.2: `hop_k` needs
+   `L = ⌊log₂ k⌋ + 2`. **Our arms are depth 1; `t*=8` needs ≈5.** At `t*=8` the arm
+   trains to `0.860972`, **on its 2-hop ceiling `0.866025`**, and evaluates `1.112208` —
+   **memorising noise.**
+22. **Softmax is Bayes-optimal on the `t*=1` shape** (`arXiv:2410.01537`) **and its one
+   step is already a converged Hopfield update** (`arXiv:2008.02217`, *"converges with
+   one update"*). **Iterating the normalisation is known to buy little** (Sinkformer,
+   `arXiv:2110.11773`); **DEQ reaches parity, not superiority** (`arXiv:1909.01377`);
+   **when iteration pays, the iterated object is the REPRESENTATION**
+   (`arXiv:2311.12424`).

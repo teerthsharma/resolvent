@@ -230,3 +230,68 @@ leap, because House is a scientist.
 
 Line 1 of `DONE.md` carries the promise. The promise is **`HILBERT`** and it is output
 only when it is completely and unequivocally true.
+
+---
+
+## 8. HOUSE ADDENDUM (round 8): why the module loses to softmax, and the two falsifiers that must run before any further ladder money
+
+Appended by Dr House after the missing-innovation dispatch. Nothing above this
+section is re-aimed; the pre-registered E-ladder reading in flight completes
+exactly as registered. This section binds what may be *concluded* from it and
+what runs next.
+
+### 8.1 The value-path exclusion (measured, not argued)
+
+`batched_pivots` excludes `(0, s-1)` and every attention row in this harness is
+`tril(-1)`-strict, so no pivot row can place `x[s-2]` on the value path: the
+maximum pivot index is `s-2`, and row `s-2` reads `j <= s-3`. Measured
+(`e3_t1`, seed 0, perturbing token `s-2` by `+100`): the softmax cell's row-`s-1`
+reading moves by `101.6983` (direct value pass-through); the pivot family's `av`
+moves by `3.263746` and its log-gate by `14.19184` — weight channels only.
+The `e3` label at `t* = 1` is `a[s-1] * b[s-2]`, concentrated on exactly the
+demoted token, and every label term at every `t*` carries the factor `a[s-2]`.
+**Therefore the `e3_t1`/`e3_t2` softmax-vs-pivot deficits are confounded by
+construction and are not evidence about settling.** No headline sentence of the
+form "softmax beats the equilibrium arms" may ship without the 8.3 falsifier
+having run.
+
+### 8.2 The fixed point iterates the wrong unknown
+
+The settled cell iterates `alpha` inside an 8-simplex — a reparameterisation
+within the twin's own output family `{alpha @ av}`. The solve can reallocate,
+never add; measured `settled − twin = +0.002190` at `t* = 2`, sd ratio `3.874x`,
+mean shift none. Literature agrees from three directions: softmax attention is
+already the one-step-converged update of a fixed-point iteration (Ramsauer et
+al., arXiv:2008.02217); iterating the *normalisation* to its fixed point buys
+small gains (Sinkformer, arXiv:2110.11773); representation-space iteration —
+depth — is where iteration pays (looped transformers, arXiv:2311.12424), and
+`hop_k` composition needs depth `~ floor(log2 k) + 2` (arXiv:2402.09268). The
+hop wall is the same fact seen from below: at `t* = 8` the best arm trains to
+`0.860972` — on the 2-hop ceiling `0.866025` — and evals at `1.112208`, because
+the 2-hop term is a 3-way product no depth-1 linear-mixing readout represents,
+so training memorises noise instead.
+
+### 8.3 The two falsifiers, in order, both cheap
+
+**MOVE 1 — lift the exclusion.** New cells (`twin_plus`, `settled_plus`), by the
+`etask_k5e.py` class-swap pattern: `exclude=(0,)` so `p = s-1` is a legal pivot
+— then `av[s-1]` *is* the softmax cell's own row and softmax becomes an interior
+point of the twin's function class — and/or inclusive-diagonal pivot rows
+(`j <= p`). Falsifier: `e3_t1`, `n_train=2048`, seed 0 (~25 min box). If
+`twin_plus` does not close at least half the `0.103` gap to softmax, the
+exclusion is not the binding term and the deficit is optimisation; if it closes
+and `settled_plus` still equals `twin_plus`, settling retires on clean ground
+and the `+6` fallback branch fires with the confound removed.
+
+**MOVE 2 — iterate the representation, not `alpha`.** A weight-tied looped cell,
+input-injected: `x_{t+1} = x + A(x_t) @ x_t`, 3 loops, parameter count unchanged
+at 4769. On `e3` this is credit-clean under §1.7d: softmax-looped vs softmax
+involves no signed resolvent. Falsifier: `e3_t2` + `e3_t8`, `n_train=2048`,
+seed 0, steps 150 and 600 (~40 min box; the 600 controls the undertraining
+confound `E2_STEPS` already measured). If looped-3 neither beats single softmax
+at `t* = 2` nor goes below `1.0` at `t* = 8`, depth-via-loop dies on this corpus,
+and the honest headline is: one-step softmax wins on equilibrium tasks; the twin
+ships as pivot-routed mixture attention on its earned `+0.111396`.
+
+The signed arm's unrigged depth contest — signed-looped vs softmax-looped —
+belongs on the X17 absorbing-chain corpus only, and only if Move 2 survives.
