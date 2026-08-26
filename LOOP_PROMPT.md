@@ -117,7 +117,38 @@ with ratio `κ(L) = tanh(Δ(L)/4) < 1` whenever `Δ(L) < ∞`.
 
 **ESTIMATORS, both required, both printed:**
 * `κ̂_emp` = median over draw pairs of `d_H(Tp,Tq)/d_H(p,q)`, bootstrap CI B=10,000
-* `Δ̂` = max over sampled pairs of `d_H(Tp,Tq)`, giving `κ̂_cert = tanh(Δ̂/4)`
+* `Δ̂` = the diameter **AT THE EXTREME RAYS**, giving `κ̂_cert = tanh(Δ̂/4)`
+
+**⚠ SECOND PRE-DATUM REPAIR — `Δ̂` WAS DEFINED AS A SAMPLED MAXIMUM AND THAT IS
+NOT A CERTIFICATE. [RUN, this session, `tests/loop/test_settle.py`]** The first
+draft read *"`Δ̂` = max over **sampled pairs**"*. **The supremum is attained at the
+extreme rays of the cone, not in its interior** — for a positive matrix `A`,
+`A e_i` is exactly column `i`, so the diameter is the largest `d_H` between
+COLUMNS, and uniform interior draws never approach it:
+
+    seed 0   columns 2.557159   uniform sampling 1.358710   53.1% of truth
+    seed 1   columns 2.643721   uniform sampling 1.281507   48.5% of truth
+    seed 2   columns 3.411853   uniform sampling 1.329837   39.0% of truth
+
+    kappa from truth     0.564416 / 0.578982 / 0.692614
+    kappa from sampling  0.327189 / 0.309848 / 0.320729
+
+**A sampled `Δ̂` is a LOWER bound on the diameter presented as an UPPER bound on
+`κ` — it errs OPTIMISTIC, halving the apparent contraction ratio.** That is
+round 5's defect class exactly: a gate measuring something adjacent to its
+pre-registration, erring flattering. **And it chains** — `1/(1−κ)` is 1.2's
+Neumann conditioning, so an optimistic `κ` under-budgets `N` and the round would
+have discovered it at Phase D. Binding:
+
+  * **`T` linear in `m` ⇒ take the columns.** Exact, no sampling, no CI needed:
+    `scale/settle.py::column_diameter`.
+  * **`T` NOT linear ⇒ the column trick does not apply, and Birkhoff's hypotheses
+    may not be met either** (it is stated for positive **linear** maps, and `T`'s
+    `w_p(m)` depends on `m`). Foreman must answer this plainly. Meanwhile sample
+    with draws concentrated toward the corners — `rand(n)**40 + 1e-12` recovers
+    the algebraic diameter to `rel=1e-6` where uniform reaches under half.
+  * **Report BOTH** the extreme-ray and interior-sampled `Δ̂`, so the gap stays
+    visible instead of being a choice made on the reader's behalf.
 
 **CONSISTENCY GATE:** `κ̂_emp ≤ κ̂_cert`, with a must-fire in which a doctored
 non-positive `T` violates it.
@@ -405,8 +436,10 @@ chapter · **K-E** leakage > 0.5 → degree-2 claims void at that geometry ·
 out honestly** · **K-G** any statistic of degree ≤ 1 → **struck unbuilt** ·
 **K-H** K1 by SPRT boundary, either side, +1.
 
-**All immutable once their first datum lands.** The 1.1 float repair is made
-**before** any datum, which is the only window in which a kill may be edited.
+**All immutable once their first datum lands.** Both 1.1 repairs — the `tanh`
+float saturation and the sampled-`Δ̂` optimism — are made **before** any datum,
+which is the only window in which a kill may be edited. **No third repair after
+Foreman's first `Δ̂` lands.**
 
 ---
 

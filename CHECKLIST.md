@@ -724,3 +724,16 @@ Replayed ARM A's own draw stream (published `D_FR causal` reproduced to 6 dp at 
 | closed-form gap vs 50-digit `Decimal` | **GREEN** at Δ = 10 … **1400**, where the float route has read exactly 0 since Δ = 100. |
 | **defect, self-caught** | `neumann_terms` computed `math.log(1.0 - gap)` — at Δ=76.5 the gap is `4.889518e-17`, `1.0-gap` rounds to exactly `1.0`, log is `0.0`, **ZeroDivisionError**. The function undid the K-A repair one call after it was made. Fixed to `math.log1p(-gap)`, bound by regression at Δ = 60/76.5/100/200/700. Caught by pairing the closed form against a brute-force loop — two methods that fail differently. |
 | **NEW CONSTRAINT on contract 1.2** | **`κ < 1` is not the same as the implicit gradient being computable.** Neumann terms for `1e-6`: Δ=20 → **254,653**; Δ=60 → **2.3e14**; Δ=76.5 → **1.05e18**; Δ=∞ → **−1, no finite N**. The `+2` for `κ<1` buys a **uniqueness certificate, not a trainable arm**. Foreman's live `Δ̂` now decides whether 1.2 is implementable at all. |
+
+**ROUND 6 it.2 — the settling driver, and a certificate that was not one [RUN].**
+
+| item | status |
+|---|---|
+| `scale/settle.py` — `settle`, `column_diameter`, `predicted_steps` | **GREEN**, 16 tests, RED shown first. Generic over `T`; journals the SUCCESSIVE residual `r_t = d_H(m_{t+1}, m_t)`, which obeys `r_t ≤ κ·r_{t-1}` without needing `m*`. |
+| convergence law | **GREEN**, one-sided — observed ratio never exceeds `κ̂_cert`; observed steps never exceed `t* = ⌈log(r₀/tol)/log(1/κ)⌉`. |
+| must-fire: non-contracting map | **FIRED** — a permutation is an isometry on the cone, reported unconverged at the cap. |
+| must-fire: map leaves the cone | **FIRED** — `left_cone` is set **separately** from `converged=False`; conflating them misattributes K-A. |
+| **contract 1.1 `Δ̂` estimator** | **DEFECTIVE, REPAIRED PRE-DATUM.** Defined as *"max over sampled pairs"*. The supremum is attained at the **extreme rays** — `A e_i` is exactly column `i`. Uniform interior sampling reaches **53.1% / 48.5% / 39.0%** of truth; implied κ **0.327189 / 0.309848 / 0.320729** against truth **0.564416 / 0.578982 / 0.692614**. **A lower bound on Δ presented as an upper bound on κ, erring optimistic.** Round 5's adjacent-gate class; would have been the fifth. Chains into 1.2, where it would have under-budgeted `N` and surfaced at Phase D. |
+| repair window | **CLOSED.** Both 1.1 repairs (tanh saturation; sampled-Δ̂ optimism) were made before any datum. **No third repair after Foreman's first `Δ̂`.** |
+| **open, and now urgent** | **Is `T` linear?** Birkhoff is stated for positive **linear** maps; `T`'s `w_p(m)` depends on `m`. If not linear, the column route is unavailable **and the theorem's hypotheses may not be met at all**. Foreman, answering plainly. |
+| RULE 1 | **2 of 3 iterations are instrument work — above the 40% cap.** Next iteration must not be. |

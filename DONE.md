@@ -4,6 +4,91 @@ Round 5 closed at `TWOSPHERES: BROKEN - ARM A, K1's dual slope, displacement
 clause`; its handoff is `done5.md` and its negative result is `D1.md`. That
 verdict is final and is not reopened.
 
+### ROUND 6, ITERATION 2 - 2026-08-26 - The settling driver, and the certificate turns out not to be one.
+
+CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.
+[RUN] `pytest tests/loop` -> **140 passed** (124 -> 140), exit 0.
+
+Fellows still out. Built alongside: `scale/settle.py`, the driver that iterates
+`T` and journals the Hilbert residual. **Generic over `T`** - Foreman owns the
+exact FORM, nothing owned the loop around it, and writing it generic means fixing
+the form later changes nothing here. RED first [RUN]:
+`ModuleNotFoundError: No module named 'scale.settle'`, exit 2. Then 16 passed.
+
+**The journalled residual is the SUCCESSIVE distance** `r_t = d_H(m_{t+1}, m_t)`,
+not the distance to a limit nobody knows yet. Since `m_{t+1} = T(m_t)` and
+`m_t = T(m_{t-1})`, contraction gives `r_t <= kappa * r_{t-1}` directly, and
+`r_t <= kappa^t r_0` gives the step bound `t* = ceil(log(r_0/tol)/log(1/kappa))`
+without ever needing `m*`. Tested **one-sided**: observing faster contraction than
+certified is fine, observing slower means the theorem or the code is wrong.
+
+**Two must-fires, both seen firing.** A permutation is an isometry on the cone and
+must be reported **unconverged at the cap**, never returned with a tidy
+trajectory. A map that sends the iterate to the boundary sets `left_cone`
+**separately** from `converged=False`, because *"does not contract"* and *"hit the
+boundary"* are different diagnoses and **conflating them misattributes K-A**.
+
+---
+
+**THEN THE CALIBRATION FAILED, AND IT WAS NOT THE TEST THAT WAS WRONG.**
+
+Two of three seeds failed the clause asserting that sampling the supremum over
+random cone pairs gets near the algebraic column value. Measured [RUN, 3 seeds,
+4000 pairs each]:
+
+    seed 0   columns 2.557159   corners 2.557159 IDENTICAL   uniform 1.358710  53.1%
+    seed 1   columns 2.643721   corners 2.643721 IDENTICAL   uniform 1.281507  48.5%
+    seed 2   columns 3.411853   corners 3.411853 IDENTICAL   uniform 1.329837  39.0%
+
+**The supremum is attained at the CORNERS of the cone.** `A e_i` is exactly
+column `i`, so the column formula **is** the diameter rather than an estimate of
+it - and uniform interior draws reach under half.
+
+**CONTRACT 1.1 DEFINED `Delta_hat` AS "max over SAMPLED pairs". THAT IS NOT A
+CERTIFICATE.** The `kappa` it implies:
+
+    from the true diameter   0.564416 / 0.578982 / 0.692614
+    from uniform sampling    0.327189 / 0.309848 / 0.320729
+
+**A sampled `Delta_hat` is a LOWER bound on the diameter presented as an UPPER
+bound on `kappa`, and it errs OPTIMISTIC - roughly halving the apparent
+contraction ratio.** This is **round 5's defect class, exactly**: a gate measuring
+something adjacent to its pre-registration, erring flattering. Round 5 struck four
+of those. **This would have been the fifth**, and it sits in the round's central
+certificate.
+
+**AND IT CHAINS INTO 1.2.** `1/(1-kappa)` is the Neumann conditioning, so an
+optimistic `kappa` under-budgets `N` - and iteration 1 already established that
+`N` is **254,653** at Delta=20 and **2.3e14** at Delta=60. A halved `kappa` would
+have made the implicit gradient look affordable when it is not, and the round
+would have found out at **Phase D**, after the training budget was spent.
+
+**REPAIRED IN THE CONTRACT, pre-datum** - Foreman has not reported a live
+`Delta_hat` yet, so the window is still open, and **it is now closed: no third
+repair after his first number lands.** The repair: take the columns when `T` is
+linear; when it is not, concentrate the draws toward the corners
+(`rand(n)**40 + 1e-12` recovers the algebraic diameter to `rel=1e-6` where uniform
+reaches under half); **report both** so the gap stays visible.
+
+**The must-fire for this finding matters as much as the finding.** *"Uniform
+sampling underestimates"* could have been an artefact of a broken sampler, so the
+near-corner test shows the same sampler **does** reach the truth when pointed at
+the right region. Without it the claim would be unfalsifiable.
+
+**AND IT SHARPENS THE QUESTION ALREADY ON FOREMAN'S PLATE.** The column trick
+needs `T` **linear**. Birkhoff is stated for positive **linear** maps. `T`'s
+weights `w_p(m)` depend on `m`. **If `T` is not linear, the theorem's hypotheses
+may not be met at all and the certificate is not available in the form 1.1
+assumes.** He has been asked to answer that plainly even if the answer kills the
+arm. Nothing is claimed for it.
+
+CHECKLIST: `scale/settle.py` GREEN, 16 tests. `tests/loop` **140 passed**. Second
+pre-datum contract repair, and the repair window is now closed.
+
+**SCOREBOARD: 0.** Instrument work 2 of 3 iterations; RULE 1 caps it at 40% and
+this is above it - **the next iteration must not be instrument work**, and the
+fellows' returns are the natural corrective.
+
 ### ROUND 6, ITERATION 1 - 2026-08-26 - The metric primitive, built alongside. It caught a defect of mine, and a real constraint on contract 1.2.
 
 CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.
