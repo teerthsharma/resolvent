@@ -280,7 +280,8 @@ Task `negation_scope`, geometry `s64_d24_st150_ntr8192_nev512_b21`: sequence len
 `n_train = 8192`, `n_eval = 512`, settle cap `t_max = 21`, `k = 8` pivots, five seeds,
 and `n_params = 4769` on **every** arm — 256 + 256 for `wq`/`wk`, 2048 + 128 + 2048 + 16
 for the MLP at `hidden = 128`, 16 + 1 for the readout. Asserted against the module rather
-than against a file by `tests/chase/test_m3_capability_harness.py:220`. Metric is eval NRMSE, so lower is better and `1.0` is
+than against a file by
+`tests/chase/test_m3_capability_harness.py::test_param_counts_are_equal_across_every_arm`. Metric is eval NRMSE, so lower is better and `1.0` is
 predict-the-mean. Journal `results/m3_quintuple_v2.jsonl` at commit `9629616`;
 pre-registered outcome table in `M3_QUINTUPLE_PREREGISTERED_READING.md`, written before the
 file produced a number.
