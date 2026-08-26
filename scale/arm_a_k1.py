@@ -276,12 +276,29 @@ def units(s, ks, d, draws, chunk, lam, seed0):
 
 
 # ------------------------------------------------------------------- report ---
-def bslope(per_k: dict, gen: torch.Generator, b: int):
+def bslope(per_k: dict, seed: int, b: int):
     """Bootstrap CI on the LOG-LOG SLOPE itself. Resamples DRAWS, refits.
 
     Zero-rate k points are DROPPED by `loglog_slope`, never clamped: clamping a
     zero to 1e-12 turns 'the property is gone' into a finite slope.
+
+    TAKES A SCALAR SEED AND BUILDS ITS OWN GENERATOR. It previously took a
+    `torch.Generator` BY REFERENCE and the two call sites below shared one. The
+    flip bootstrap ran first and consumed 2000 * 2400 = 4,800,000 int64 draws, so
+    the D_FR bootstrap began at that offset rather than at zero. Two consequences,
+    and the second is worse than the first:
+
+      * the published interval stopped reproducing, because it had been taken
+        from a fresh stream at offset zero;
+      * K1's clause requires both slopes "on the SAME draws", and a shared stream
+        hands each half a DIFFERENT resampled index sequence. The defect silently
+        decoupled the two halves of a clause whose whole point is that they be
+        coupled, and that went unnoticed for a whole round.
+
+    Seeding internally from a scalar makes each call position-independent, which
+    is what the nine other bootstrap helpers in this repository already do.
     """
+    gen = torch.Generator().manual_seed(seed)
     ks = sorted(per_k)
     pt, npt = loglog_slope(ks, [sum(per_k[k]) / len(per_k[k]) for k in ks])
     tens = {k: torch.tensor([float(x) for x in per_k[k]]) for k in ks}
@@ -335,14 +352,13 @@ def report(s, ks, d, draws, chunk, lam, seed0, b: int) -> int:
               f"{r['theta_f']:.6f} [{lo_f:.4f},{hi_f:.4f}] "
               f"{r['flip']:>9.5f} {r['tau']:>9.4f} {r['gamma']:>9.4f}")
 
-    g = torch.Generator().manual_seed(4242)
     print(f"\n=== K1 DUAL SLOPE, bootstrap CI ON THE SLOPE (B={b}) ===")
     print("  flip counts per k: " +
           "  ".join(f"k={k}:{rows[k]['nflip']}/{rows[k]['n']}" for k in ks))
     fp, fn, flo, fhi, fu, _ = bslope(
-        {k: [float(x) for x in per[(k, False)]["flip"]] for k in ks}, g, b)
+        {k: [float(x) for x in per[(k, False)]["flip"]] for k in ks}, 4242, b)
     dp, dn, dlo, dhi, du, _ = bslope(
-        {k: per[(k, False)]["theta"] for k in ks}, g, b)
+        {k: per[(k, False)]["theta"] for k in ks}, 4242, b)
     print(f"  flip slope in k  = {fp:+.4f}  [{flo:+.4f},{fhi:+.4f}]  "
           f"(fit on {fn}/{len(ks)} nonzero k; {fu}/{b} usable reps)  bar <= -0.4")
     print(f"  D_FR slope in k  = {dp:+.4f}  [{dlo:+.4f},{dhi:+.4f}]  "

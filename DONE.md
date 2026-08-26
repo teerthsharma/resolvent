@@ -4,6 +4,102 @@ Round 5 closed at `TWOSPHERES: BROKEN - ARM A, K1's dual slope, displacement
 clause`; its handoff is `done5.md` and its negative result is `D1.md`. That
 verdict is final and is not reopened.
 
+### ROUND 6, ITERATION 13 - 2026-08-26 - The G2 inverts: the numbers were right, the code drifted. And RULE 2's breach is called.
+
+CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.
+[RUN] `pytest tests/loop` -> **181 passed** (177 -> 181), exit 0.
+
+---
+
+## THE G2 RESOLVES WITHOUT CORRECTING A SINGLE SITE
+
+The plan was to correct ten publication sites to the re-take. **Before doing that,
+one thing was worth checking: Wilson had shown a FRESH seed-4242 stream reproduces
+the PUBLISHED pair.** So if the repair is *"seed your own generator"*, the
+published number should come back on its own.
+
+**It did. Both intervals, exactly** [RUN, `scale/arm_a_k1.py --mode report`, rc=0]:
+
+    flip slope in k  = -0.6960  [-1.0000,+0.0000]   <- published, unchanged
+    D_FR slope in k  = -0.4137  [-0.4579,-0.3704]   <- published, RESTORED
+
+**THIS INVERTS THE FRAMING OF THE WHOLE EVENT.** It was never *"a published number
+moved"*. It was **"the producer acquired a defect after publication"**. The numbers
+in `D1.md`, `done5.md` and `CHECKLIST.md` were **right all along**, and **ten
+correction edits to two shipped deliverables have been avoided by testing the
+hypothesis before acting on it.**
+
+## AND THE DEFECT WAS WORSE THAN A REPRODUCIBILITY BREAK
+
+`bslope` took a `torch.Generator` **by reference** and its two call sites shared
+one. The flip bootstrap ran first, consumed `2000 * 2400 = 4,800,000` int64 draws,
+and the `D_FR` bootstrap began at that offset. That is the reproducibility half.
+
+**The other half went unnoticed for a whole round. K1's clause reads:**
+
+    flip slope <= -0.4 AND D_FR slope >= -0.1 on the SAME DRAWS
+
+**A shared stream hands each half a DIFFERENT resampled index sequence.** The
+defect **silently decoupled the two halves of a clause whose entire point is that
+they be coupled.** Seeding internally from a scalar makes both halves resample the
+**same** index sequence, which is what the clause literally requires. **The repair
+fixes the clause, not just the number.**
+
+Bound by `tests/loop/test_bootstrap_is_position_independent.py`, 4 tests: the
+signature takes a scalar seed; two calls are position-independent; **the published
+pair reproduces end-to-end through the shipped producer**, unpiped with the exit
+code read from the process; and a must-fire builds a shared-generator helper and
+shows the second call differs, so the position test can genuinely fail.
+
+**MY OWN NEXT-ACTION NOTE WAS WRONG AND IS CORRECTED HERE.** It said to fix
+`wilson_probes.dboot` *"anyway, since it reproduces by luck of call order, not by
+design."* **That would have broken it.** `dboot` chains 30+ calls off one seed and
+its published numbers reproduce **bit-exactly**; reseeding it internally would move
+all 30 stream positions and **change published numbers that currently work.** It is
+**left alone**, with the hazard recorded: it is position-dependent, its position is
+stable, and **inserting a call anywhere in that chain moves every downstream
+number.** A fragile arrangement that works is not improved by breaking it.
+
+Two of my `assert`s fired during the edit and both were right - the first caught me
+removing the seed line **before** the call sites had the literal, the second caught
+a call site still passing the shared generator. **Editing with asserts rather than
+hoping is why this took three attempts instead of shipping a broken producer.**
+
+---
+
+## RULE 2: THE BREACH IS CALLED
+
+**The M3 run has not landed.** Dispatched at it.11, executing through it.12 and
+it.13. My own it.12 note said *"if it has not landed by the end of it.13, the
+breach is called"*, and it is called rather than extended because the result is
+nearly ready. **That is exactly the extension the rule exists to prevent.**
+
+**BREACH REVIEW, and the first finding is against me.**
+
+**Cause 1, mine: I changed the scope at it.11.** The contract specifies a
+**triple**. I made it a **quintuple**, adding the argmax-pivot attribution cell.
+**That was the right call on the merits** - without it a settled win is
+unattributable and +12 cannot be banked honestly - **but it added work to a run
+already inside a two-iteration window, and I did not extend the window or say I
+was spending it.** The breach is partly manufactured by my own decision.
+
+**Cause 2: the run is real and in progress, not stalled.** `scale/m3_quintuple.py`,
+`scale/arm_s_batched.py` and `scale/m3_flops.py` all appeared during it.12 and
+it.13. **Chase is building the batched arm and the FLOP accounting the run needs**,
+which is work the contract's own K-F clause requires.
+
+**RULING.** The round does **not** halt outright - the review is what the rule
+demands, and this is it. **The M3 cell gets iteration 14. If it has not landed by
+the end of it.14, the M3 cell is declared UNRUN for round 6 and `D1` ships without
+it**, with the breach and its causes recorded above. **No third extension.** A
+deadline moved twice is not a deadline.
+
+CHECKLIST: **G2 CLOSED** - producer repaired, **published pair restored**, zero
+sites corrected. K1's *"same draws"* clause **repaired as a side effect**.
+**RULE 2 BREACH CALLED**, cause partly mine, one iteration granted, no more.
+
+**SCOREBOARD: 4** - unchanged.
+
 ### ROUND 6, ITERATION 12 - 2026-08-26 - RULE 2's deadline with the run in flight. Wilson solves the G2. Cameron refutes a closed form of mine. K1's flip clause re-anchors.
 
 CALIBRATION [RUN] `run_calib.py --self-test` -> **exit 0**.
