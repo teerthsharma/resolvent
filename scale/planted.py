@@ -118,28 +118,41 @@ def plant(rel_path: str, old: str, new: str, *, reason: str):
 
 
 def demo() -> None:
-    """Self-check: the plant lands, reverts, and reverts even when the body raises."""
-    rel = "scale/planted.py"
-    # Built at runtime: a literal marker would live in the file this demo plants
-    # into, so `marker not in src` could never hold. Same shape as a checksum
-    # file that hashes itself.
-    marker = "# demo-" + "probe-" + "marker"
-    src = (ROOT / rel).read_text(encoding="utf-8")
-    assert marker not in src, "the probe marker is already in the file"
+    """Self-check: the plant lands, reverts, and reverts even when the body raises.
 
+    Plants into `scale/_plant_probe.txt`, a tracked one-line fixture nothing reads.
+    Two earlier drafts planted into THIS file and both were refused by this module's
+    own guards -- once for uncommitted changes, once because the plant site appeared
+    5 times, since the demo body quotes it. Planting into live code while other work
+    is running is the wrong target regardless of whether the guards allow it.
+    """
+    rel = "scale/_plant_probe.txt"
+    site, replacement = "nothing reads", "NOTHING READS"
     before = (ROOT / rel).read_text(encoding="utf-8")
-    with plant(rel, '"""Plant a defect', '"""Plant a defect' + marker, reason="self-check"):
-        assert marker in (ROOT / rel).read_text(encoding="utf-8"), "the plant did not land"
+
+    with plant(rel, site, replacement, reason="self-check"):
+        assert replacement in (ROOT / rel).read_text(encoding="utf-8"), "the plant did not land"
         assert SENTINEL.exists(), "no sentinel while planted"
     assert (ROOT / rel).read_text(encoding="utf-8") == before, "revert did not restore bytes"
     assert not SENTINEL.exists(), "sentinel outlived the plant"
 
     with contextlib.suppress(ZeroDivisionError):
-        with plant(rel, '"""Plant a defect', '"""Plant a defect' + marker, reason="self-check"):
+        with plant(rel, site, replacement, reason="self-check"):
             raise ZeroDivisionError
     assert (ROOT / rel).read_text(encoding="utf-8") == before, "revert did not survive an exception"
     assert not SENTINEL.exists(), "sentinel outlived a raising plant"
-    print("demo OK: plant lands, reverts on exit, reverts on exception, sentinel cleaned")
+
+    SENTINEL.write_text('{"path": "x", "reason": "stale", "when": "t"}', encoding="utf-8")
+    try:
+        assert_no_stale_plant()
+        raise AssertionError("assert_no_stale_plant did not fire on a stale sentinel")
+    except RuntimeError:
+        pass
+    finally:
+        SENTINEL.unlink(missing_ok=True)
+
+    print("demo OK: lands, reverts on exit, reverts on exception, "
+          "stale sentinel refuses, tree byte-identical")
 
 
 if __name__ == "__main__":
