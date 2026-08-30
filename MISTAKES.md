@@ -941,7 +941,7 @@ What it was waiting to start had already run. `results/r10_it8_waveB.log` holds
 the completed wave at lines 16-26 — `t*=2 n=32768 eval NRMSE=0.874834 [LEARNS]`
 `boot[0.8620,0.8903] 624.5s`, `t*=8 ... 0.972372 [LEARNS] boot[0.9641,0.9814]`
 `607.8s`, `t*=32 ... 1.006066 [NO READING] boot[1.0033,1.0094] 680.0s`, then
-`WAVE B COMPLETE` — and the first `bc: command not found` appears at line 27,
+`WAVE B COMPLETE` — and the first `bc: command not found` appears at line 30,
 after it. The journals corroborate: `results/r10_it8_capacity_softmax_t8.jsonl`
 and `..._t32.jsonl` each carry `n_train=32768` cells at seeds 0 through 7, a
 complete N=8. The gate spent four hours and twenty-two minutes polling for
@@ -1224,8 +1224,12 @@ its own passing verdict.
 
 Adequacy is a further step beyond reachability. TOST power at a true difference
 of zero — the probability of correctly certifying genuinely equivalent arms —
-reads `0.000` at `N = 8`, `0.042` at `N = 24`, `0.431` at `N = 40`, and first
-clears `0.80` at `N = 70`. That is `8.8×` the registered seed count. Priced
+reads `0.000` at `N = 8`, `0.0834` at `N = 24`, `0.431` at `N = 40`, and first
+clears `0.80` at `N = 70`. An earlier draft printed `0.042` at `N = 24`, which is
+the σ-known normal approximation rather than the exact value; the exact figure,
+Monte Carlo at 400k replications, and the module's own `tost()` agree at
+`0.0834 / 0.0833 / 0.0757`. `N = 70` was checked by three routes sharing no code
+and is unchanged. That is `8.8×` the registered seed count. Priced
 against the measured cost curve, THE READING's three points at N=8 cost about
 `8.9 h` per arm; at `N = 70` the same three points cost roughly `78 h` per arm,
 or about ten days for three arms on this host.
@@ -1262,8 +1266,9 @@ with no training performed:
 | windowed_signed | 0.99997039 | 1.03467607 | 1.01216808 | 1/16 |
 
 Softmax's own lower edge clears the gate by `5.6e-4`. The arms sit against the
-threshold, not above it. `windowed_signed` has a marginally wider spread
-(`3.468e-2` against `3.350e-2`) and its lower tail crosses: seed 2 reads
+threshold, not above it. `windowed_signed` has a marginally wider spread — measured as full range,
+`3.4706e-2` against `3.2942e-2`; the figures `3.468e-2` and `3.350e-2` printed in
+an earlier draft are `max − 1.0`, not ranges and its lower tail crosses: seed 2 reads
 `0.9999703932724174`, short of the bar by `2.96e-5`, and an eight-seed run
 aborted at its third seed.
 
@@ -1280,6 +1285,63 @@ training at all — and set the bound at a stated distance from its edge, so tha
 the gate's false-abort rate is a number rather than a surprise. Where the intent
 is "not meaningfully better than the mean", the threshold must carry the word
 *meaningfully* as a quantity.
+
+### M-15. A descriptive statistic reported without its null, and an invariance read as a result
+
+An operator decomposition was measured and reported as the mechanism behind a
+performance finding: the second hop `a @ a` carries `0.7550` of its energy in a
+rank-1 common mode, against `0.4899` for the partially-routed form, and the
+routing was therefore acting as an accidental common-mode filter. The
+decomposition was correct. The number was the null.
+
+Computed against random Gaussian logits at the same measured logit standard
+deviation (`0.0375`), causal-masked and softmaxed, over 20 seeds:
+`cm_full(a@a)` has a null of `0.7550 ± 0.0004` against a measured `0.7549`,
+`z = −0.30`. At the readout row the null is `0.8328 ± 0.0006` against `0.8343`,
+`z = +2.38`. The headline figure is the baseline to four decimal places, because
+`frac(a@a)` is a monotone function of attention sharpness alone and untrained
+attention is nearly uniform, which maximises it by construction.
+
+**The invariance was the clue and was recorded as the result.** Two iterations
+earlier the same quantity was measured across three tasks, found identical to
+four figures — `0.4006 / 0.4006 / 0.4003` and `0.7550 / 0.7549 / 0.7550` — and
+that stability was written up as a finding: "a property of causal softmax at
+`s=64`, not of what the data encodes." Every word of that is true, and it is the
+signature of a null. A quantity that does not move across any condition under
+test, and equals what a random operator produces, is the baseline; reporting its
+constancy as structure inverts what it means.
+
+**The compounding error is the object it was measured on.** Every one of these
+figures came from an **untrained** operator and was used to explain performance
+differences between **trained** arms. Attention sharpness changes under
+training and the statistic is monotone in sharpness, so the measured quantity
+does not describe the operator whose readings were being explained. The trained
+readings themselves are unaffected, but the mechanism offered for them was taken
+from a different object.
+
+**The survival test was run and the statistic does not survive.** Training one
+arm for 150 steps at `t*=8, n=2048`, measuring before and after:
+
+| | logit sd | `cm_full(a@a)` | `cm_row(a@a)` |
+|---|---|---|---|
+| untrained | 0.0367 | 0.7551 | 0.8328 |
+| trained, 150 steps | **2.7645** | **0.4245** | **0.3736** |
+
+Training sharpens the attention logits by `75.4×` and more than halves the
+common-mode fraction, at the readout row from `0.8328` to `0.3736`. So the
+operator whose decomposition was reported is not the operator whose readings were
+being explained, and the gap is not marginal — the reported figure is more than
+twice the trained one.
+
+**Check:** a descriptive statistic offered as a mechanism needs a null before it
+is written down, and the null must be matched on whatever the statistic is
+monotone in — here, attention sharpness, which costs twenty random draws. Where
+a quantity is invariant across every condition varied, treat that as evidence it
+is a constant of the construction and test it against a random instance before
+reporting it. And a statistic measured at initialisation may not be used to
+explain a difference between trained models without first showing it survives
+training — a check that costs one 150-step run and, here, would have stopped the
+entire line of argument at its first measurement.
 
 ## The eleven checks, before any control ships
 

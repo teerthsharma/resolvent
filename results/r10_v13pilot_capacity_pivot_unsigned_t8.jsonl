@@ -7,3 +7,7 @@
 {"t": "header", "task": "e3_t8", "arm": "pivot_unsigned", "s": 64, "d": 24, "n_eval": 4096, "threads": 12, "torch": "2.5.1+cu121", "lr": 0.02, "d_model": 16, "when": "2026-08-31 02:18:39", "seeds": [2, 3, 4, 5, 6, 7], "sign_floor": 0.03125}
 {"t": "ceiling", "t_star": 8, "hop_budget": 1, "nrmse_ceiling": 0.9354143466934853}
 {"t": "bar", "ok": true, "why": "BAR CALIBRATED", "predict_the_mean": 1.0, "payload_only": 1.0640782793345231, "oracle": 0.0, "flipper_dependence": 0.7130855231384859, "trained_two_feature": 0.02247026919782524}
+{"t": "cell", "task": "e3_t8", "t_star": 8, "n_train": 32768, "seed": 2, "threads": 12, "steps": 150, "train_nrmse": 0.9688162809416193, "eval_nrmse": 0.9747428187954238, "boot_lo": 0.9678116959952474, "boot_hi": 0.9827193513819628, "verdict": "LEARNS", "secs": 697.75}
+{"t": "dropped", "task": "e3_t8", "t_star": 8, "n_train": 32768, "steps": [600, 2400, 9600], "why": "unaffordable, see priced DAG"}
+{"t": "cell", "task": "e3_t8", "t_star": 8, "n_train": 32768, "seed": 3, "threads": 12, "steps": 150, "train_nrmse": 0.9672102149301266, "eval_nrmse": 0.9781354085837244, "boot_lo": 0.9715369821946345, "boot_hi": 0.9864379854706563, "verdict": "LEARNS", "secs": 675.53}
+{"t": "cell", "task": "e3_t8", "t_star": 8, "n_train": 32768, "seed": 4, "threads": 12, "steps": 150, "train_nrmse": 0.9697802033388215, "eval_nrmse": 0.9821099075405416, "boot_lo": 0.9755832301917562, "boot_hi": 0.9896181053023054, "verdict": "LEARNS", "secs": 1074.02}

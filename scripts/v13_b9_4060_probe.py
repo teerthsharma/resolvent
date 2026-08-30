@@ -94,7 +94,14 @@ def main() -> int:
                 peak, rate = peak_and_rate(kind, d=a.d, layers=layers, heads=a.heads,
                                            seq=a.seq, bs=a.bs, device=dev,
                                            steps=a.steps, ckpt=ckpt)
-                pred = sz.activation_bytes(cfg, batch=a.bs, arm=kind, checkpointed=ckpt)
+                #: The loop below runs in fp32 -- there is no autocast anywhere in
+                #: `peak_and_rate` -- so the prediction must be read at fp32 too.
+                #: An earlier version left `sizing.activation_bytes` at its
+                #: `bf16_autocast` default and printed a prediction column that
+                #: disagreed with its own measurement by the dtype ratio, which
+                #: made M-12's fp32 figures look wrong when reproduced from here.
+                pred = sz.activation_bytes(cfg, batch=a.bs, arm=kind,
+                                           dtype="fp32", checkpointed=ckpt)
                 if peak is None:
                     print("%-8s %-3d %-6s %12s %12.1f %8s %12s"
                           % (kind, layers, ckpt, "OOM", pred / 2**20, "-", "-"))
