@@ -1,0 +1,21 @@
+AUDIT.md classed rows: 347  (KEEP 307 / ATTIC 40)
+seed=10002  P(>=1 KEEP fails | sheet >=95% right) = 0.4013
+
+KEEP drawn (10) -- every one MUST PASS:
+  tests/chase/test_structural_zero_guard.py
+  scale/s2_probe.py
+  scale/arm_s.py
+  workdone2.md
+  LOOP_PROMPT_ROUND6_ARCHIVE.md
+  tests/cameron/test_r5_aggregator_red.py
+  DONE_ARCHIVE_ROUND1.md
+  tests/loop/test_two_dof_lemma.py
+  tests/cameron/test_cogs_harness.py
+  scale/valuation.py
+
+ATTIC drawn (5) -- every one MUST BE DEAD:
+  tests/cameron/test_hankel_mustfire.py
+  titan-report.md
+  scale/orbit_probe.py
+  tests/chase/test_hf_shipping.py
+  scale/sparse_probe.py
