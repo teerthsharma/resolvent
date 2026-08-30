@@ -879,3 +879,82 @@ instead of no row.`
   disclosure and correct handling.**
 - The twin/settled ratio **does not carry across tasks**: twin is `1.61×` *dearer*
   at `negation_scope`/ntr8192 and `2.1×` cheaper at `e3_t1`/ntr2048.
+
+## Iteration 2 — Mars COMPLETE. The STE cell exists; the question is not yet answered.
+
+Merged. Controller integration check **70/70 green** across `tests/mars/`,
+`tests/chase/test_pivot_exclusion_lift.py`, `tests/neptune/`, and Saturn's C1
+bundle. **Four cell families now coexist**: `CELLS`, `PLUS_CELLS`, `ROW_CELLS`,
+`STE_CELLS`.
+
+`argmaxste`, estimator `hard + (soft - soft.detach())`. Forward is bitwise the
+one-hot (`x - x` is exactly `+0.0`); backward is the softmax Jacobian.
+
+**The parentheses are load-bearing** — `hard + soft - soft.detach()` rounds first
+and is **not** bitwise. Mars made that RED 2 and asserted it by value on a
+4096×8 float64 draw. That is the kind of detail that silently invalidates a bind.
+
+Binds, each with its own RED per `arm_s.py:341-346`: `torch.equal` against
+`argmax` **3/3** at (8,0)/(16,1)/(32,2); RED 1 `twin` vs `argmax` **3/3 not
+equal**; step-0 loss identical at `1.108632`; **gate gradient equals twin's to
+rel `1e-12` while `argmax` stays exactly `0.0`**; `n_params == 4769` for all five
+cells. So the two cells differ in *exactly one thing*: whether selection is
+trained.
+
+Price, analytic only, **zero clock quoted**: `argmaxste` **7,367,294,976** FLOPs,
+equal to `twin`'s, above `argmax`'s `7,365,197,824` by exactly
+`2,097,152 = n·2·k·d_model` — the contract term `argmax`'s gather does not pay.
+
+### Mars's own first statistic failed vacuity rule 6, and he reported it
+
+His slot-drift statistic was confounded: the pivot **set** turns over **256/256 in
+both cells** over 30 steps, because `select_pivots` is top-k over `kk.norm()`.
+Measured `argmax` 200/256 against `argmaxste` **183/256** — **the estimator moved
+fewer**. He discarded it as a claim rather than shipping it.
+
+The clean replacement is parameter divergence from identical init and batch:
+**`3.871934` on `‖θ‖ = 11.981715`, 32.3 %.**
+
+This also **sharpens his own iteration-1 attack**: the choice *among the selected
+candidates* gets no gradient; the candidate set itself does move, through `wk`.
+That is a narrower and more defensible claim than the one he originally filed.
+
+`Ruling: a planet narrowing its own earlier claim on new evidence is exactly the
+behaviour the adversary seat exists to produce, and the ledger records the
+narrowed version as operative. The iteration-1 wording stands corrected, not
+withdrawn - argmax's alpha still carries no grad_fn, and the headline -0.118456
+still confounds two things. What changed is the precise statement of which two.`
+
+### The question remains OPEN, and Mars said so plainly
+
+**No execute seat, no NRMSE taken.** His report carries pre-registered rows **A–E**,
+exhaustive before any data:
+
+- **Row D is live** — a straight-through gradient is biased and can make the cell
+  *worse*, which would license nothing.
+- **Row E is live** — if `argmaxste` reads above `1.0` like `argmax`'s
+  `1.010779`, the contrast is **uncreditable by the repo's own rule regardless of
+  direction**.
+- The 30-step loss pair (`1.035080` vs `1.033804`) is **far inside bootstrap zero
+  and must not be quoted as a direction.**
+
+### Pre-existing, found not repaired
+
+`_bind_batched_against_arm_s` returns **`False` on its DIAGNOSTIC shapes** at
+clean `5201d78` — `n=2, s=128, d=16, k=32, seed=2`, max abs diff `1.387779e-17`.
+Confirmed pre-existing by stashing. **Does not block the run**: `main()` gates on
+the run's own shapes, which bind **BITWISE 2/2** at `s=64, d=24, k=8`.
+
+## Iteration 3 — dispatched
+
+| Planet | Unit | Status |
+|---|---|---|
+| Mercury | **Run the STE reading** on `negation_scope`, against Mars's rows A–E, ceiling printed first | dispatched |
+| Venus | Nine ghost symbols in `test_harmonic_attribution.py`; file her prediction for the C1 run | running |
+
+`Ruling: THE C1 DECIDING MEASUREMENT IS HELD until Venus files. It is priced,
+cleared and ~1.1 h of compute, and I am deliberately not starting it. Her seat
+exists so insight arrives ex ante where it can be scored; running the deciding
+measurement before her filing lands would destroy the only thing that makes the
+filing worth anything. Cost if wrong: roughly one agent-turn of latency on the
+round's most important number.`
