@@ -707,3 +707,312 @@ the scalar ladder, so those predictions are about what the instrument will
 print, not about a capability. No cell was trained this session; every execution
 was a read-only draw, a `hasattr` check, a `git log`, or the bootstrap ceiling
 sweep.
+
+---
+
+# R9 iteration 4 — CEQ v13 restitution round — 2026-08-30
+
+## 7. FILED BEFORE THE RE-AUDIT RUNS — how many standing GREENs survive
+
+**Filed before the re-audit has read a single gate.** X-R11's own test is *"an
+Irene filing after the data timestamp → refused by the journal's ordering
+check"*, so this section is committed on its own, ahead of §8, and nothing in it
+is amended afterwards.
+
+The gates the re-audit applies, as the contract names them: **identity
+manifests**, **geometry stamps**, **baseline validity**, **control
+admissibility**. Survivors are stamped GREEN-RESTITUTED; failures are downgraded
+with the defect class named.
+
+### 7a. The number
+
+> **1 of 5 survives.** Only **F-green** is stamped GREEN-RESTITUTED. The
+> **settled birth gates**, **M4 eviction**, the **E4′ gates** and the
+> **calibrated M3 harness** are all downgraded.
+>
+> **And the second number matters more: if the `N = 5` floor is added as a fifth
+> gate, 0 of 5 survive.** The floor is not among the four the contract names, so
+> on the contract as written it cannot downgrade anything — but F-green is a 5/5
+> claim and 5/5 is the only way an `N = 5` percentile interval excludes zero.
+> Whichever of `1` or `0` the re-audit prints, it is choosing whether the floor
+> is a gate, and that choice should be made visibly rather than by omission.
+
+### 7b. The call, one GREEN at a time, with the defect class named
+
+| GREEN | called | defect class if downgraded | the specific thing |
+|---|---|---|---|
+| **F-green** `+0.111396` | **SURVIVES** | — | see 7c |
+| **settled birth gates** | **DOWNGRADED** | control admissibility | `CHECKLIST.md:860`, the gate author's own sentence: *"**Every gate can pass while the arm is an expensive argmax.**"* Gate 3 is already **SPLIT** (`:856`) — FLOPs pass at `k∈{8,32}`, **fail at `k=128`** (`3.851464` vs `1.667480`). Three gates passed and the capability they gated was retired anyway: `CHECKLIST.md:1230` records K-2E firing, settling retiring, the twin shipping. A gate that passes on an arm later withdrawn was not admissible for the claim it was asked about |
+| **M4 eviction** | **DOWNGRADED** | control admissibility | The headline reading is `0.000000e+00` under eviction against `2.154868e-05` under gating (`CHECKLIST.md:223, 252`). The zero is **structural by construction** — a gate cannot leave the denominator — and `CHECKLIST.md:31` records it *re-labelled* structural rather than repaired. The must-fire that was added moves the **gating** quantity 8/8; it does not move the quantity that reads zero. `FINDINGS.md` §F: *"a task declaring `0.0` must ship a do()-bit movement test"* — the movement test here is on the other arm. `:252` still carries **UNTESTED** |
+| **E4′ gates** | **DOWNGRADED** | identity manifest / geometry stamp | `FINDINGS.md` A3: `E_T_STAR` has **no entry** for `e4prime`, and `scale/e_ladder.py:143` and `scale/etask_k5e.py:117` index it unguarded → `KeyError`, while `scale/m3_capability.py:269` and `scale/m3_quintuple.py:652` guard with `in` and **degrade silently**. A gate whose task cannot be indexed by two of its four consumers and is silently skipped by the other two has no stable identity to hash |
+| **calibrated M3 harness** | **DOWNGRADED** | baseline validity | `FINDINGS.md` A7 / `STATE.md:73-76`: `calibrate_bar` trains its control on **raw** `y` while `run_arm` trains arms on **standardised** `y`. The `e2_consequence` bar reads `2.446646` at `steps=150` against a calibration taken at 600. **Diagnosed and unfixed.** A bar produced by a control trained on a different target than the arms it judges is the definition of an invalid baseline, and it is the one defect on this list whose diagnosis is already written down and still standing |
+
+### 7c. Why F-green is the one that lives, and exactly what would kill it
+
+`twin − softmax = +0.111396`, CI `[+0.100873, +0.121920]`, **5/5 seeds**,
+`sd 0.016547`. It clears all four gates as they are written:
+
+* **Identity** — it reproduces from `results/m3_quintuple_v2.jsonl`, and
+  `tests/cameron/test_published_intervals_have_producers.py` binds it.
+* **Geometry** — stamped: `s=64 d=24 n_train=8192 n_eval=512 steps=150 k=8`,
+  the geometry `M3_QUINTUPLE_PREREGISTERED_READING.md` §2 fixed in advance.
+* **Baseline** — `softmax` is not a rigged oracle here. This is
+  `negation_scope`, not `e3_t*`, so `LOOP_PROMPT.md` §1.7d's rig does not reach
+  it. That is the whole reason this contrast is creditable where the ladder's
+  `settled − softmax` is not.
+* **Control** — `argmax − softmax = −0.118456`, CI `[−0.134115, −0.102786]`,
+  **0/5**. The control fires in the losing direction on the same instances, which
+  is the admissibility standard the other four cannot meet.
+
+**Three things would kill it, and only these three.**
+
+1. **The two-intervals problem, if it reaches the twin.** `CHECKLIST.md:1168`
+   records that the published intervals are the **exact enumeration over all
+   `5^5 = 3125` paired resamples**, while the shipped
+   `ceq/hf_artifact/README.md` prints `[+0.066232, +0.147110]` for
+   `settled − softmax` against the exact `[+0.068181, +0.147110]`. **Two
+   intervals for one claim, one of them shipped.** I predict this downgrades
+   `settled − softmax` and **not** the twin, because the discrepancy is recorded
+   on the settled row only. If the re-audit finds the same split on the twin's
+   interval, F-green falls with it and my number goes to 0 on the contract's own
+   four gates.
+2. **The `N = 5` floor, if it is admitted as a gate.** F-green excludes zero at
+   5/5. My iteration-2 measurement on the shipped `contrast()` — 385/385
+   unanimous cases excluded zero, 4-1 split 20.0–44.5 %, 3-2 split 0–3.7 % —
+   says the interval excludes zero **because the five seeds agree**, and the
+   finest two-sided significance available at `N = 5` is `2·(1/2)^5 = 0.0625`.
+   Jupiter's independent arithmetic agrees: the sign lattice has **zero**
+   two-sided p below `0.05`. That does not make `+0.111396` wrong — `sd 0.016547`
+   against a `+0.111` mean is a `6.7σ` separation and the effect is not in doubt.
+   It makes the **`p < 0.05` claim** unavailable, and the honest restitution is
+   to keep the number and re-state its significance, not to withdraw it.
+3. **A manifest hash computed over `scale/m3_quintuple.py` as it stands now.**
+   The file has taken `--task`, `PLUS_CELLS`, `ROW_CELLS`, `vector_readout` and
+   the `n+` change since `+0.111396` was produced. Under X-R1 as described —
+   *"content hash of (code path, config, tensor shapes, RNG plan); harness
+   refuses a cell whose hash ≠ current manifest"* — a hash taken over the **file**
+   rejects it and a hash taken over the **executed path** does not. I predict the
+   re-audit uses the executed path, because a file hash would downgrade every
+   GREEN in the repository simultaneously and that result carries no information.
+   **If it uses the file hash, the answer is 0 of 5 and the gate is measuring
+   git history rather than validity.**
+
+### 7d. What falsifies this filing — binary, before any gate runs
+
+1. **Any count other than 1** under the four named gates. `2` or more falsifies
+   me by survival; `0` falsifies me on F-green.
+2. **Any of my four downgrades being stamped GREEN-RESTITUTED.** Each is called
+   with a named class and a cited line; a survivor among them means I read the
+   class wrong, and the one I would most expect to be wrong about is **M4**,
+   because a must-fire *was* added and I am ruling it insufficient rather than
+   absent.
+3. **F-green downgraded for a reason not in my list of three.** That is the
+   cleanest miss: it would mean the gates catch something I could not see from
+   the record.
+4. **The re-audit applying the `N = 5` floor without saying so.** Not a
+   falsification of the count but of my model of the round — I predict the floor
+   is *not* applied as a gate, because it is not one of the four, and that its
+   omission goes unremarked.
+
+### 7e. The fall-through row for the re-audit
+
+Rows **Ω** and **Ω2** already exist. The re-audit needs its own, because a
+scoreboard that only moves down is as unfalsifiable as one that only moves up:
+
+> **Ω3** | A GREEN is neither stamped GREEN-RESTITUTED nor downgraded — because
+> the gate that would decide it **cannot be evaluated on the record** (no
+> manifest exists for code that predates manifests, no geometry was stamped
+> because stamping did not exist, the control's admissibility turns on a
+> quantity nobody measured) | **UNDECIDABLE, PRINTED AS SUCH, AND COUNTED
+> SEPARATELY.** Not a survival and not a downgrade. Retrofitting a gate onto a
+> number produced before the gate existed can only ever return "cannot tell"
+> for the honest cases, and folding those into either column is the round's own
+> version of reporting a missing rung as a null. The count the contract asks for
+> is therefore **three numbers, not one**: survived, downgraded, undecidable.
+> **My filing of `1` assigns all five to the first two columns and takes the
+> risk that the third is non-empty** — if the re-audit prints an undecidable
+> column, my number should be scored against survived-plus-undecidable as well
+> as against survived alone, and both scores stated.
+
+## 8. ADJUDICATION — the struck-constant candidates Jupiter's fix exposed
+
+Written after §7 was committed, so nothing here can have informed the filing
+above.
+
+### 8a. The boundary question, ruled
+
+> **Does a struck constant asserted inside a skipped module count as shipping?**
+
+**YES. Execution is not the test, and it never was.**
+
+The precedent decides it and decides it against me. `5.4944e-13` was struck
+because it *"existed only in a code comment and in prose"* (`CHECKLIST.md:665`,
+`MISTAKES.md:242`). A code comment does not execute. Prose does not execute.
+Both were ruled to be shipping. My three constants sit in a **module
+docstring** — the most-read text in the file, and the first thing anyone
+implementing the clause would read. `pytest.skip` stops the tests running; it
+does not stop the docstring being read, and the docstring is where the pilot
+disclosure lives.
+
+The registry's own name settles the criterion: the test is called
+`test_no_struck_constant_ships`, and its `LEAD_DOCS` tuple is commented
+*"Documents a stranger reads as current claims."* The unit is **legibility as a
+current claim**, not reachability by the interpreter.
+
+**So the three are real hits, they are mine, and the strike I filed in iteration
+2 was incomplete.** The defect is not the strike and not the skip — both did
+their jobs, and the eleven REDs are still one declared SKIP. The defect is
+**marker granularity**: I put `[STRUCK ...]` in the `THE PRE-REGISTERED BAR`
+paragraph, and `0.743864` lives in the indented pilot block below it, which is a
+**different blank-line-delimited paragraph**. `_block` cannot see across the
+blank line. My marker even said *"every number in this paragraph"*, which was
+false of the paragraph it was in.
+
+Fixed this session, at the right granularity: a `[STRUCK ...]` marker inside the
+indented block, one inside the innermost pilot-rows block, and one on the
+`Floor frozen at 0.50` paragraph. **Verified by the scanner** —
+`tests/cameron/test_harmonic_attribution.py:123-124` no longer appears in its
+output, while its own must-fire control still fires in both directions
+(`planted assertion, no marker -> 1 hit FIRED`; `same number WITH strike marker
+-> 0 hits, correctly silent`).
+
+### 8b. What the ruling generalises to, and what it does not
+
+**The rule:** *a struck constant is shipping wherever a reader can read it as a
+current claim, regardless of whether the code around it executes.* Docstrings,
+comments, printed strings, `README`s and journals are all in scope. Skipping,
+`xfail`-ing, `if False:`-ing or commenting out the surrounding code changes
+nothing about it.
+
+**It does not generalise to "the skip was wrong."** The skip governs execution
+and it is doing exactly what it was chosen to do. Prose was never in its scope,
+and treating a marker as a substitute for the other is the error I made.
+
+**It does not generalise to "any occurrence is an assertion."** The scanner's
+own banner is right: *"LAYER 2 IS A TEXT SCAN AND TEXT SCANS CRY WOLF — the
+shipped test's own docstring counts SIX instruments that did. Every hit below is
+a CANDIDATE requiring the line to be read, not a finding."* §8c reads all of
+them.
+
+**The narrowness clause, the same discipline as the hard-rule-2 exception:** the
+load-bearing predicate is *"a reader encountering this text alone would take the
+number as current."* A number appearing in a sentence that says it was
+withdrawn, in a strike record, in an append-only journal, or as a scanner's own
+test fixture, fails that predicate and is not shipping. That is why 26 of the 28
+candidates below are not findings.
+
+### 8c. Triage — 28 candidates, 2 real
+
+Jupiter's 27 is now 28: the documents grew, including by my own §4b. **His
+caveat that 27 is an upper bound is correct and understated.**
+
+The separation is mechanical rather than a judgment call. Parsing each flagged
+file with `ast` and asking for **numeric literals** equal to `−1.389`, as
+against text mentions:
+
+| file | numeric `−1.389` literals |
+|---|---|
+| `tests/cameron/test_diagnose_package.py` | **line 32** |
+| `tests/chase/test_hub_package_hardening.py` | **line 498** |
+| `tests/loop/test_no_struck_constant_ships.py` | lines 48, 194, 196 — **the registry itself** and its own planted control |
+| `scale/sparse_probe.py`, `scale/tgate_probe.py`, `scale/lo_probe.py`, `scale/pivot_probe.py`, `scale/dfloor_probe.py`, `scale/aggregator_mechanism.py`, `tests/foreman/test_m2_mechanism_story.py` | **NONE — text only** |
+
+| tier | count | what it is |
+|---|---|---|
+| **1 — REAL, a live assertion** | **2** | `tests/cameron/test_diagnose_package.py:32` and `tests/chase/test_hub_package_hardening.py:498`. §8d |
+| 2 — printed to stdout as a current fact | 1 | `scale/sparse_probe.py:118` — `print("dense slope was -1.389 (Foreman, 1024 draws).")`. A string, not a numeric literal, so it asserts nothing to the interpreter, but it tells a **user** the struck number with provenance attached. Owner: whoever owns the probe. One `(WITHDRAWN)` in the string clears it |
+| 3 — the strike apparatus catching itself | 7 | `MISTAKES.md:242` (the strike record), `PREREGISTRATION_HOLE_AUDIT.md:424` (mine, §4b), `MATHEMATICS.md:934` (a sentence *about* the substring problem), `scale/chase_struck_coverage.py:28` (**the scanner's own must-fire control string**), `tests/loop/test_no_struck_constant_ships.py:21` (the registry's own explanatory comment), `progress.md:1329,1331` (the round journal recording this very adjudication) |
+| 4 — records of a strike, in another seat's report | 4 | `tests/deimos/DEIMOS_REPORT.md:134-135` and `tests/deimos/test_deimos_r9_iteration1.py:375-376` — Deimos quoting my three **as the thing he found missing**. Naming, not asserting |
+| 5 — prose naming `−1.389` as history or as a hypothesis under test | 13 | `ARSENAL.md:41`, `CONTRACT.md:96`, `RESEARCH.md:147,152,154`, `scale/dfloor_probe.py:28`, `scale/lo_probe.py:1,5,27`, `scale/pivot_probe.py:20`, `scale/tgate_probe.py:20`, `tests/cameron/test_diagnose_package.py:12`, `tests/foreman/test_m2_mechanism_story.py:9` |
+| 6 — substring artefact | 1 | `scale/aggregator_mechanism.py:4` — the line reads `1.5304 / 1.3897 / 0.9717`. **`1.3897` contains `1.389`.** Jupiter predicted this class exactly; it is 1 of 28, not 17 |
+
+**So `−1.389`'s 17 (now 19 of 28 lines) are: 2 real, 1 substring artefact, and 16
+prose or apparatus.** The bulk of the alarm is the strike machinery, the round
+journal and the research history correctly *discussing* a withdrawn number.
+Tier 5 is the only tier where reasonable people could differ, and the reason to
+leave it alone is in §8b: every one of those lines sits in a document whose
+subject **is** the withdrawal, or in a probe docstring stating the exponent as
+the thing being decomposed. None of them would make a stranger think `−1.389` is
+current — but several would be *clearer* with a marker, and that is their
+owners' call, not mine.
+
+### 8d. The two real ones — and one of them is a re-introduction trap
+
+**`tests/chase/test_hub_package_hardening.py:496-499` is the urgent one, and it
+is urgent *because of this round*.**
+
+The shipped object was repaired correctly. `ceq.hf.modeling_ceq.COSTS
+["content_conditional_sign_decay"]` now reads
+`'slope': None, 'r2': None, 'exponent_status': 'WITHDRAWN -- the -1.389 / R^2
+0.9938 pair was a floor=1e-6 artifact...'` — confirmed by import this session.
+That is why layer 1 passes and why `test_no_struck_constant_ships` is 14/14.
+
+But `test_the_package_states_its_costs_in_the_file_that_ships` (`:481`) still
+asserts the **pre-repair** dict, `"slope": -1.389, "r2": 0.9938`. Run this
+session: **2 failed** (cpu and cuda). It is one of the 146, and its failure is
+the *correct* state — it is the withdrawal showing up as a red test.
+
+> **The trap: the obvious repair is to make the assertion match the code, and
+> the obvious direction to make it match is backwards.** A restitution round
+> whose law is *"no fix may move a published number"* is precisely the round in
+> which someone will open a failing assertion about the shipped cost table and
+> tidy it. Fixing this test by editing `COSTS` to match the assertion puts
+> `−1.389` back into the shipped package. **The repair is to update the
+> assertion to `'slope': None` with the `exponent_status` string, and it must be
+> made by Chase, who owns the file.** Flagged here rather than fixed: it is a
+> failing test I did not cause, with a real producer and a real history, and
+> §4d's exception does not reach it — that exception's load-bearing clause was
+> *"no definition exists in any ref"*, and `−1.389` was measured.
+
+**`tests/cameron/test_diagnose_package.py:32` is the quieter one and may be
+worse.** `PUBLISHED_SLOPE = -1.389`, `SLOPE_TOL = 0.35`, used live at `:68`:
+
+    assert abs(decay["slope"] - PUBLISHED_SLOPE) < SLOPE_TOL, decay["slope"]
+
+That is a **tolerance band centred on a withdrawn number**: `[−1.739, −1.039]`.
+The registry records two candidate replacements — `−0.958` (R² 0.9990) on
+`floor=0` rates and `−1.221` (R² 0.9662) from the audit. **`−1.221` passes this
+band and `−0.958` fails it.** So a re-measurement that produced the better-fitting
+replacement would be **rejected by a test enforcing the artifact it replaced**,
+and the rejection would read as "the diagnostic regressed". The comment above it
+says *"Pre-registered, in code, before the module existed"*, which is true and is
+exactly what makes it dangerous: it has the form of a pre-registration and the
+content of a withdrawn number. Owner: Cameron.
+
+Neither is fixed here. Both are named with their owner, which is what an
+adjudication seat produces.
+
+### 8e. Two defects in the scanner that this exposed, for its owner
+
+1. **The paragraph is the wrong unit for a sectioned document.** My marker was
+   one blank line away from the numbers it governed and did not reach them. The
+   `_block` rule was introduced to fix a line-at-a-time scan that cried wolf
+   five times, and it over-corrected: a paragraph is smaller than the scope a
+   strike marker is naturally written at. This is not an argument for a ±k line
+   window — that is a tuning knob, and the shipped comment says so. It is an
+   argument for **a file-level or block-level marker**, e.g. a `STRUCK-SCOPE:`
+   line that governs until the next heading.
+2. **The `ast` split in §8c is a stronger test than the text scan for tier 1,
+   and it is cheap.** A numeric-literal pass over `*.py` separates 2 real hits
+   from 7 text-only files with zero judgment calls, and it is immune to the
+   `1.3897` substring class entirely. It does not replace the text scan — prose
+   is where `5.4944e-13` lived — but it would let the text scan's output be
+   ranked instead of flat. Not built here: it is Chase's file and Jupiter just
+   repaired it, and a second hand in it this iteration is how the fix gets
+   undone.
+
+### 8f. Limits for §8
+
+The count `28` is this worktree at `486ae41` plus my own §7, and it will move
+again as documents grow — the metric is unstable by construction and should be
+read as a list, never as a score. Tier 5's thirteen are the judgment calls: each
+was ruled by reading the line and asking §8b's predicate, and a different reader
+could move two or three of them into tier 2. The `ast` pass proves a numeric
+literal is absent, not that a file is innocent — a struck constant assembled at
+runtime, formatted into an f-string, or stored as a string would not appear, and
+`scale/sparse_probe.py:118` is exactly that case caught by the text scan
+instead. The two tier-1 hits were confirmed by import and by running one test
+node; neither was repaired, so neither repair is verified. And the ruling in §8a
+is a reading of the `5.4944e-13` precedent onto my own case, which is the
+weakest kind of authority available — precedent, not measurement — though it is
+the authority the registry itself runs on.
