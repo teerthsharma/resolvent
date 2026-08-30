@@ -1136,3 +1136,117 @@ than one silently chosen.`
 The `3.0×`, `5×`, `1.61×`, `2.1×`, `15.5 h` and `5.9 h` figures in M-8 and P-8 are
 all **READ, not RUN** — if Mercury's or Neptune's timings are wrong, those entries
 inherit the error and would not detect it.
+
+## Iteration 3 — THE STE READING. The project's headline explanation does not survive.
+
+Merged, **72/72 green**. `tests/mercury/` 50, `tests/mars/` 22.
+
+| cell | mean NRMSE |
+|---|---|
+| `argmax` | `1.010779` — **worse than predict-the-mean** |
+| `softmax` | `0.892323` |
+| **`argmaxste`** | **`0.785019`** |
+| `twin` | `0.780927` |
+
+| arm | vs | delta | CI | `n+` |
+|---|---|---|---|---|
+| `argmaxste` | `argmax` | **`+0.225760`** | `[+0.212433, +0.245886]` | **5/5** |
+| `argmaxste` | `softmax` | **`+0.107304`** | `[+0.082879, +0.140870]` | **5/5** |
+| `argmaxste` | `twin` | `−0.004092` | `[−0.029187, +0.023107]` | 2/5 |
+| `argmax` | `softmax` | `−0.118456` | `[−0.134115, −0.102204]` | 0/5 |
+
+Mars's pre-registered rows scored verbatim: **A False, B False, C TRUE, D False,
+E False.**
+
+### THE ANSWER IS THE SELECTION, NOT THE MIXTURE
+
+A one-hot lookup whose **selection is trained** moves from `1.010779` — worse than
+predicting the mean — to `0.785019`, **past softmax**, to **statistically
+indistinguishable from the full mixture**. Training selection moves the cell by
+**190.6 % of the disputed gap**.
+
+The forward function never changed: `argmaxste` is **bitwise identical** to
+`argmax` in the forward. The only difference is that gradient reaches the gate.
+
+`Ruling: the README's "The gain is the mixture, not the equilibrium" DOES NOT
+SURVIVE and must be withdrawn on its mixture half. Mars's iteration-1 attack
+showed the -0.118456 confounded mixture-vs-lookup with trained-vs-untrained
+selection; this reading resolves the confound and the answer is selection. The
+EQUILIBRIUM half is untouched - no settled cell was in this reading - so the
+sentence is not wholly false, it is half-unsupported and the wrong half was the
+one being sold. Cost if wrong: a published claim is withdrawn that a later
+settled-inclusive reading might have restored.`
+
+**Row E was live and is closed by measurement**: `argmaxste` clears
+predict-the-mean by `0.214981`, so the contrast is creditable rather than void.
+And the last row **reproduces the disputed headline to six decimals on the same
+seeds** — a control on the pipeline itself, not just on the cells.
+
+### Mercury's three stated limits, all correct
+
+1. **The `argmaxste − twin` null is a BOUND, not an identity** — bounded at
+   `0.026147` by this run's own CI half-width. *"No difference larger than
+   `0.026147`"*, never *"identical"*.
+2. **`verdict_of` prints `SETTLED WINS` / `TWIN WINS` for any contrast**, because
+   it was written for that one pair. On an `argmaxste`/`softmax` row those strings
+   **name no cell**. He relabelled in his report and quoted none of them. With
+   four cell families now live this function is actively misleading — **queued**.
+3. **No same-session `twin`**, so `argmaxste`'s median `221 s` cannot be ratioed
+   against the journalled `twin` median `508.74 s`. Whether it is genuinely
+   cheaper or the box was fast is **unresolved and unclaimed**.
+
+## Iteration 4 — Saturn CONFIRMED the interval hypothesis exactly
+
+Merged, **19/19 green**. New binder `tests/cameron/test_published_intervals_have_producers.py`, 12 tests.
+
+**Family A is `contrast(n_boot=10000, seed=0)`. Family B is exact enumeration
+over all `3125` paired resamples** (126 distinct means, measured). Reproduced
+**twice** — on the 6-dp printed values (5 of 6 bounds exact, the sixth off by
+`1e-6`, which is input rounding) and on full-precision journal floats (**all six
+exact**).
+
+**No published interval is orphaned. No number is wrong.**
+
+### But the real finding is worse than provenance
+
+Saturn: *"it's P-8 recurring, on the most-quoted result, while P-8 was being
+written."*
+
+It was **already known and written in four places, including the shipping
+artifact** — limits paragraph (e) at `ceq/hf_artifact/README.md:80` states the
+whole thing correctly. **The table three lines above it still prints `95% CI`
+with no estimator, and the JSON behind it already carries
+`n_boot: 10000, boot_seed: 0`.** The provenance exists in the data and is
+**dropped at render time**.
+
+That is P-8 exactly — the caveat present, correctly worded, in a limits
+paragraph, while the headline drops it — occurring on the same page as the entry
+being written about it.
+
+### Saturn corrected the controller's framing of his own finding
+
+My dispatch said the artifact and the root README disagree silently. **Root
+`README.md` was already correctly labelled** (`exact 95 % CI`, preamble naming
+the enumeration) — nothing to do there. Chase's test already bound family A. The
+only genuinely unbound half was **family B, which existed solely as transcribed
+digits in three prose documents** — *"that's how an estimator came to look like a
+discrepancy."*
+
+`Ruling: my "the shipping artifact disagrees with the README" framing was wrong
+and is withdrawn. The README was labelled; the artifact's TABLE was not, though
+its own limits paragraph and its JSON both were. Two text-only changes are owed
+to Mercury, who holds those files: render() should emit the two fields the JSON
+already holds (column header -> "95% CI (percentile bootstrap, B=10000, seed=0)"),
+no recomputation needed; and limits paragraph (e) is itself now stale, carrying
++0.146551 as an open defect where CHECKLIST.md:1240 and README.md:460 both record
+that endpoint corrected to +0.147110.`
+
+**Stated limit:** Saturn reproduced **the procedures, not the run**. If a per-seed
+value in the journal is itself wrong, both families inherit it identically and
+every new assertion still passes. He also read the committed blob rather than the
+working file, which is under active write by Mercury's C1 run.
+
+## C1 status — in flight
+
+`t*=32` softmax weights are landing in the journal now; rung order `t32 → t8 →
+t2 → t1`. No C1 number exists yet and none is claimed.
