@@ -804,5 +804,7 @@ These are root-doc-class rows sitting in the test tree. Counting them as tests o
 
 **Distance.** This sheet moves the North Star by zero and was not meant to: it is a census, and its whole
 output is knowing which of 347 rows can still carry a claim. The one thing it changes about the distance is
-that 40 rows are now known not to be evidence, so the calibrated bar is measured over what is left rather
-than over the whole tree.
+that **33** rows are now known not to be evidence, so the calibrated bar is measured over what is left rather
+than over the whole tree. Iteration 2 moved that number from 40 to 33: seven rows the census had struck are
+ledgered findings about the shipped deliverable and were never dead, so the bar is measured over seven more
+instruments than iteration 1 would have allowed.
