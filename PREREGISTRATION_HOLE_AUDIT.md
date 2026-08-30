@@ -376,3 +376,334 @@ reading of English against English. The four `M2`/`M2PRIME` patch rows are
 marked LIVE on the strength of each file's own statement that its run had not
 happened plus the absence of a matching `results/` artifact; neither is proof
 that no number exists somewhere off-journal.
+
+---
+
+# R9 iteration 2 — 2026-08-30
+
+Two units. First a ruling on a pre-registration whose producer never existed.
+Second a prediction filed against the deciding measurement, before it runs.
+
+## 4. RULING — `tests/cameron/test_harmonic_attribution.py` is STRUCK
+
+### 4a. The nine symbols, re-verified
+
+Deimos reported nine names called on `scale/negation_scope.py` that do not
+exist. Re-verified this session by `hasattr` against the imported module at
+`feat/r9-causal-consequence` @ `5201d78`: **all nine ABSENT** —
+`absorbing_boundary_kernel`, `harmonic_measure`, `harmonic_label_batch`,
+`train_control_arm`, `masking_displacement`, `rank_crosscheck`,
+`dead_control_arm`, `PREREGISTERED_RHO_FLOOR`, `u1_attribution_run`.
+
+Everything the file calls on `scale/e4_harmonic.py` is **PRESENT**:
+`case_graph`, `fixed_point`, `hop_reading`, `absorbing_chain`, `SHIPPED_CASE`,
+`SMALL_CASE`. So are `NS.CH_FLIP`, `NS.CH_PAYLOAD` and `NS.nrmse`. The split is
+exact: **the kernel side of the clause exists and the probe side does not.**
+
+Live run this session: `python -m pytest
+tests/cameron/test_harmonic_attribution.py -q` → **11 failed in 0.44 s**, every
+one an `AttributeError`.
+
+One of the nine names does exist elsewhere, with a different signature and a
+different object: `scale/kirchhoff.py:187 harmonic_measure(adjacency, nodes,
+bridge) -> tuple[np.ndarray, list[int]]`, a two-boundary hitting probability.
+The test calls `NS.harmonic_measure(out)` on a kernel dict and expects an
+`[n_chunks]` row. Name overlap, not a producer.
+
+### 4b. Which of the three cases this is
+
+The coordinator named three, carrying different verdicts: a producer since
+deleted, a figure transcribed from a sibling task, or a claim authored with no
+producer at all. It is the third, and `git log -S` settles it.
+
+| search, across ALL refs | commits |
+|---|---|
+| `git log -S "def absorbing_boundary_kernel"` | **0** |
+| `git log -S "def u1_attribution_run"` | **0** |
+| `git log -S "PREREGISTERED_RHO_FLOOR = "` | **0** |
+| `git log -S "0.743864"` | 3 — `74e5590` (adds the test), `cc07eb0` (Deimos's report), `1edc963` (a journal). All **citations**, no definition |
+| `git log --follow -- tests/cameron/test_harmonic_attribution.py` | 1 — `74e5590`, the file's only commit |
+
+**The search is not vacuous.** Planted positives on the same form: `git log -S
+"def harmonic_measure"` returns `22036de` (the real one, on
+`scale/kirchhoff.py:187`), and `git log -S "def rag_document_ids"` returns
+`74e5590`. A definition that exists is found; these three are not found because
+they were never written.
+
+`74e5590` added the 302-line test **and** 122 lines to `scale/negation_scope.py`
+in the same commit. Those 122 lines are `CH_DOC`, `RAG_T_SIBLINGS`,
+`rag_document_ids` and `make_rag_multihop_batch` — **the RAG multi-hop builder,
+not one of the nine.** The test and its producer-shaped citations were authored
+beside an unrelated addition to the module they name.
+
+Case 3, with no floor. `-0.5173` is already in the STRUCK registry for the
+nearest thing to this — *"the interval exists in no `.py`, `.json`, `.jsonl` or
+`.txt` in the tree, and no producer could be located"* — and `1.471448` was
+fabricated but at least a 1,800-setting sweep could look for it. Here there is
+no state of this repository in which a search could have succeeded.
+
+### 4c. Two findings that turn "write the producers" into the wrong answer
+
+**The floor's stated provenance contradicts the board's.** The docstring at
+`:50-51` says the floor was *"frozen at 0.50: comfortably below the pilot point
+estimate and its CI lower edge, far above the ~0 noise floor of 64 ranked
+chunks, round."* `BOARD.md:271`, describing this same N3 clause, says the bar is
+*"pre-registered `PASS_BAR=0.5 FAIL_BAR=0.9` **inherited unchanged**"*.
+`PASS_BAR = 0.5` is at `scale/rips_gate.py:60` and predates the pilot it is
+claimed to have been frozen from. It is also an **NRMSE** bar — `:57-59` reads
+*"A mean predictor scores exactly 1.0, so `PASS_BAR` is 'the decoder removed
+three quarters of the label variance'"* — so reusing it as a **Spearman rho**
+floor changes the quantity's units, not just its name. Implementing the battery
+would launder an inherited NRMSE bar into a pre-registered rank-correlation
+floor, and the four-clause justification in the docstring is a rationalisation
+of a number that came from a different measurement.
+
+**The kill label is already taken, and answered.** `K-R8d` at `BOARD.md:297` and
+`DONE.md:13922` is the decoder-leak kill — *"K-R8d decoder leak at target n | NO
+| 1024 holds at 1.0001/0.9951; leak correctly only at 64 (0.0055)"*. The
+docstring at `:10-12` redefines K-R8d as an attribution-probe kill. Writing the
+producers would put two different live kills under one label.
+
+The contract mandate is absent too: `LOOP_PROMPT.md` contains no `N3` and no
+`v10.1` (`FINDINGS.md` B6 records "contract v10.1" as journal prose only). What
+N3 discipline actually asserts at `BOARD.md:271` is that the **kernel** is an
+exact Poisson kernel, and that half does have producers —
+`scale/e4_harmonic.py:191` (`np.linalg.solve(I - q, r)`) and
+`scale/foreman_lambda2.py:317` (`absorption_probabilities`, `B = (I-Q)^{-1}R`)
+both exist. Its third citation, `scale/negation_scope.py:783 e4prime_oracle`,
+has drifted — `:783` is an E2 builder docstring (`FINDINGS.md` B7's class). The
+half BOARD.md itself defers as *"reported separately"* is the displacement probe
+and its rank cross-check, and that is exactly the half this file asserts.
+
+### 4d. Why hard rule 2 does not protect these eleven — and what it still protects
+
+Hard rule 2 exists because 146 confirmed failures are the record reproducing and
+`tests/chase/conftest.py:154` marks ~50 of them `xfail(strict=True)`. Four things
+separate these eleven, and all four are checkable:
+
+1. **No definition exists in any ref.** §4b. A test in the 146 records a claim
+   that was measured and then broke. A test whose subject was never written
+   records nothing — there is no measurement for it to reproduce.
+2. **Not one branch under test executes.** 11 failures in `0.44 s`, all at
+   attribute access, before any graph is drawn or any solver is called. That is
+   the vacuity rule's own third clause turned on a test instead of a control.
+3. **They are undeclared.** `tests/cameron/conftest.py` has no `xfail`
+   machinery at all — it is a device fixture plus board logging. The failures
+   that *are* the record are declared as such; these are not.
+4. **The finding is already held elsewhere.**
+   `tests/deimos/test_deimos_r9_iteration1.py:349` asserts all nine names remain
+   absent and fires if any is defined. Marking the battery struck deletes no
+   finding, because the finding is the absence and it keeps its own live test.
+
+**The argument generalises to nothing else.** Its load-bearing clause is "`git
+log -S` returns zero commits containing a definition, across all refs". Any
+failing test whose symbol has ever been defined is untouched by it, and so is
+every strict xfail. Applying this to a test that merely *looks* unimplementable
+would be the error; the search, with its planted positives, is what licenses it
+here.
+
+### 4e. What was done, following `CHECKLIST.md:478,486,665`
+
+The precedent is `5.4944e-13`: *"asserted `[RUN]` with no live producer — it
+existed only in a code comment and in prose"*, struck, entered in the registry,
+and the registry then caught two more unmarked assertions. Same form:
+
+* **Registry.** `0.743864` and its CI edges `0.656532` / `0.816955` added to
+  `STRUCK` in `tests/loop/test_no_struck_constant_ships.py`. Registry 9 → 12
+  constants. Verified live in **both** directions on the registry's own scan
+  logic: the sentence *"The pilot rho is 0.743864 with CI [0.656532,
+  0.816955]"* is caught, and the same text carrying `STRUCK` is not.
+* **Record kept, not deleted.** All 302 original lines stay verbatim under a
+  strike header, and the pilot paragraph carries an inline `[STRUCK ...]`
+  marker.
+* **Skipped, not fixed and not xfailed.** A module-level `pytest.skip` fires on
+  a live `hasattr` check of the nine names, so it cannot rot into a stale
+  comment and it stops firing the moment a producer is written. Deliberately
+  **not** `xfail(strict=True)`: that would file these eleven alongside the ~50
+  that are the record reproducing, which is the one thing this ruling denies.
+* **Re-proposal guard.** Deimos's existing assertion is the guard; no new test
+  was written for a job a live test already does.
+
+Verification, all this session at `5201d78`:
+
+| check | before | after |
+|---|---|---|
+| `tests/cameron/test_harmonic_attribution.py` | 11 failed, 0.44 s | **1 skipped**, 0.46 s, reason carries the citations |
+| `tests/deimos/test_deimos_r9_iteration1.py` | — | **8 passed** |
+| `tests/loop/test_no_struck_constant_ships.py` | — | **14 passed** |
+| `python scale/chase_struck_coverage.py` | exit 0 | **exit 0** |
+
+Noted in passing, not acted on: `chase_struck_coverage.py` reports *"SCANNING 0
+PATHS the shipped check does not cover"* and *"uncovered .md: 0, uncovered .py:
+0"*, while its own docstring says it applies layer 2's logic *"to every markdown
+and python file in the repository that the test does not scan"*. Its coverage is
+currently empty. That is why adding three constants to the registry had no
+collateral anywhere else in the tree — and it is also a hole in a different
+instrument, left for its owner.
+
+## 5. PREDICTION — the deciding measurement, filed before it runs
+
+**Filed 2026-08-30, before Mercury's run produces a number.** Instrument:
+`settledrow` + `twinrow` on Saturn's `c1_propagate` corpus at `s=64, d=24,
+n_train=2048`, 5 seeds, ≈2.2 h. Baselines are `READ` from
+`results/r9_perrow_pilot.md` and `results/e_ladder_reading.txt`.
+
+### 5a. The ceiling, printed before the first number (LOOP_PROMPT 1.3)
+
+The pre-registered resolution `0.027260` is `1.96 · 0.050146 / sqrt(13)` from
+the `negation_scope` pilot sd at `n_train = 8192`. The **realised** paired sd at
+`n_train = 2048` is in the completed ladder's own `sd_paired` column, and it is
+not that number:
+
+| rung | realised `sd_paired` | resolution at `N = 5` | seeds needed for `0.027260` |
+|---|---|---|---|
+| `e3_t1`  | `0.109199` | `0.095717` | **62** |
+| `e3_t2`  | `0.019082` | `0.016726` | 2 |
+| `e3_t8`  | `0.020379` | `0.017863` | 3 |
+| `e3_t32` | `0.025285` | `0.022163` | 4 |
+
+The formula reproduces `E_LADDER_PREREGISTERED_READING.md` section 5's own
+printed `0.043955` from the pilot sd exactly, which is the check that it is the
+same arithmetic.
+
+**So the ceiling is rung-dependent and the single pre-registered figure is wrong
+in both directions.** At three rungs `N = 5` already resolves better than
+`0.027260`. At `t* = 1` the realised sd is `2.178×` the pilot's, `N = 5`
+resolves only `|delta| >= 0.0957`, and reaching `0.027260` would take **62
+seeds**. Any shallow-rung null from this run means *"no effect larger than about
+0.096"*, and that sentence must travel with it.
+
+**A second ceiling, and it is the harder one.** At `N = 5` the paired percentile
+bootstrap cannot deliver a 5 % test. Measured this session by driving the repo's
+own `scale/m3_synthetic_settled.contrast` at `n_boot = 2000` over 1,000 drawn
+5-point samples in three regimes:
+
+| seeds agreeing in sign | CI excludes zero |
+|---|---|
+| **5 of 5 (unanimous)** | **385 / 385 = 100 %** across `mu/sd` = `0.02/0.05`, `0/0.20`, `0.10/0.01` |
+| 4 of 5 | `44.5 %`, `26.3 %`, `20.0 %` — regime-dependent |
+| 3 of 5 or fewer | `0 %` to `3.7 %` |
+
+Unanimity is sufficient with no counterexample in 385 cases; 4–1 is a coin flip;
+3–2 is essentially never. **The verdict at `N = 5` is dominated by sign
+agreement rather than by effect size**, so its finest achievable two-sided
+significance is the sign test's `2 · (1/2)^5 = 0.0625`, above the 0.05 the
+`strict at zero` rule is written for. The completed ladder is consistent: the
+only rung whose CI excluded zero, `e3_t2`, had `n+ = 0` — 5/5 agreeing — and
+`e3_t32` at `n+ = 4` did not.
+
+**The call this seat exists to make: as specified, the run cannot resolve what
+it claims to at `t* = 1`, and at every rung its verdict is a 5-seed sign test
+wearing a bootstrap's clothes.** Two cheap repairs, both before the run: print
+`n+` beside every CI so a unanimity verdict is visible as one, and either drop
+`t* = 1` or price its 62 seeds. Neither costs a unit.
+
+### 5b. The contrast the run measures is not the contrast the lane's claim names
+
+The lane is justified by Neptune's coverage number: the shipped arm writes
+`1.587 %`–`3.125 %` of the label support, the per-row arm `88.11 %`–`99.99 %`
+(`results/r9_perrow_pilot.md` §5). The claim that motivates it (FINDINGS C1–C5)
+is about **leaving the regime where one softmax layer is provably Bayes-optimal**
+(`arXiv:2410.01537`). The run as specified fields `settledrow` and `twinrow` and
+**no softmax cell**. `settledrow − twinrow` is the *settling* contrast, at
+matched parameters and the same pivot set. It cannot say anything about softmax,
+so **the deciding measurement does not measure the claim that justified it.**
+
+The missing cell is also the cheapest one on the board: `softmax` under the
+vector readout has no pivot term at all, and the pilot timed the scalar cell at
+`0.006437 s/step` against `settledrow`'s `4.560600` at the shipped geometry.
+Five seeds of `softmax` at `vector_readout` are a rounding error against a
+`2.2 h` run, and without them `twinrow − softmax` — the contrast the lane's own
+justification names — is unavailable at matched seeds forever after.
+
+### 5c. The prediction, with numbers
+
+> **The write share moves `56×` and the settling contrast does not move at all.
+> `settledrow − twinrow` reads inside `±0.027260` at every rung, with every 95 %
+> CI covering zero, reproducing the scalar ladder's `settled − twin ≈ 0` at
+> `88–100 %` of the label support exactly as it read it at `1.6–3.1 %`.**
+
+Predicted per-rung `delta = mean(NRMSE_twinrow − NRMSE_settledrow)`, positive
+means `settledrow` wins, on `contrast()`'s convention:
+
+| rung | predicted `settledrow − twinrow` | predicted `n+` |
+|---|---|---|
+| `c1_propagate_t1`  | `−0.036 ± 0.096` | 1 or 2 of 5 |
+| `c1_propagate_t2`  | `−0.017 ± 0.017` | 0 or 1 of 5 |
+| `c1_propagate_t8`  | `−0.004 ± 0.018` | 2 or 3 of 5 |
+| `c1_propagate_t32` | `+0.016 ± 0.022` | 3 or 4 of 5 |
+
+The point estimates are the scalar ladder's own four deltas, unchanged. That is
+the prediction: **the per-row readout is a change of where the same alpha rule
+is applied, not of what it can see.** The pivot set is `key.norm(dim=-1)` top-k,
+non-differentiable, with zero gradient through selection (`FINDINGS.md` E) — the
+same eight pivots and the same Gram feed every row, and `settledrow` differs
+from `twinrow` in exactly the way `settled` differs from `twin`: the
+normalisation of a gate over those eight. Applying an unchanged rule at 63 rows
+instead of 1 multiplies the places the difference can appear; it does not give
+the difference anything new to be about.
+
+If this holds, the `1.6 % → 88 %` coverage figure is a **mechanism** statistic,
+and `CHECKLIST.md`'s preamble already rules on that class: *statistics are not
+capabilities.*
+
+### 5d. What falsifies me — binary, on the same instrument
+
+1. Any rung where `|delta(settledrow − twinrow)| >= 0.027260` **and** the CI
+   excludes zero. One cell kills 5c.
+2. `n+ = 5` or `n+ = 0` at any rung where the scalar ladder read `n+` in
+   `{1, 2, 3, 4}`. Sign unanimity appearing where it was absent is the cleanest
+   sign the contrast moved, and by §5a it is also the only way this run
+   excludes zero.
+3. A `softmax` cell being added and `twinrow − softmax` clearing `+0.027260`
+   with a CI excluding zero at any rung. That is the contract's claim landing.
+   I predict against the settling contrast, not against that one — if it lands
+   I am not refuted, but the lane is vindicated on a contrast I said it was not
+   measuring, which is the outcome I most want on record in advance.
+4. Any rung whose realised `sd_paired` under the vector readout is below
+   `0.010`. My ceiling arithmetic in §5a imports the scalar ladder's spread; a
+   spread that tight would make `N = 5` resolve far better than I claimed and
+   the "62 seeds at `t* = 1`" figure would be wrong.
+
+### 5e. The fall-through row for this run
+
+Row **Ω** of `R9_IRENE_PREDICTION.md` §5 already covers "the two lanes are not
+reading the same task". This run needs one more, because it fields two cells and
+no baseline:
+
+> **Ω2** | Every CI covers zero at every rung, **and** no cell outside
+> `{settledrow, twinrow}` was run at the same geometry and seeds | **NOTHING IS
+> LICENSED, IN EITHER DIRECTION, AND THE RUN IS NOT A DECIDING MEASUREMENT.** A
+> null between two cells that share every parameter tensor, the same eight
+> pivots and the same Gram is a statement about the settling and about nothing
+> else. It is not evidence that the vector readout works, that the per-row arm
+> beats softmax, or that the lane left the regime of `arXiv:2410.01537` — those
+> require a cell this run does not field. The coverage figures `1.587 %`–
+> `3.125 %` and `88.11 %`–`99.99 %` are printed beside the null, per row Ω, and
+> the report says in the same sentence that the contrast they motivate was not
+> measured.
+
+## 6. Limits for iteration 2, collected once
+
+The ruling in §4 rests on `git log -S` over the refs present in this worktree at
+`5201d78`; a producer living in a ref never fetched here would not appear, and
+the planted positives show only that the search finds definitions that exist in
+*these* refs. The strike changes 11 REDs to 1 declared SKIP, and the argument in
+§4d is the whole justification — if any of its four clauses is wrong the edit
+should be reverted rather than argued. §4c's provenance conflict is a reading of
+`BOARD.md:271` against a docstring, not a run: nobody can execute either claim,
+which is the point, but it also means neither can be settled by measurement.
+The prediction in §5c imports the scalar `e3` ladder's four deltas as point
+estimates for a **different corpus** (`c1_propagate`, whose label excludes
+`h = 0` and spans `s − t*` positions) under a **different readout**. That is a
+transfer, not a derivation, and falsifier 4 exists because its spread half may
+not transfer either. §5a's per-rung seed requirements inherit the same transfer.
+The bootstrap ceiling in §5a is the one part measured directly on the shipped
+`contrast()` this session, over 1,000 samples in three regimes; it is a property
+of `N = 5` and the percentile method and does transfer, but 385 unanimous cases
+with no counterexample is not a proof that unanimity always excludes zero. Three
+of the four rungs whose deltas §5c reuses were credited **nothing** by row G on
+the scalar ladder, so those predictions are about what the instrument will
+print, not about a capability. No cell was trained this session; every execution
+was a read-only draw, a `hasattr` check, a `git log`, or the bootstrap ceiling
+sweep.

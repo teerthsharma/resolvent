@@ -81,6 +81,23 @@ STRUCK: dict[float, str] = {
         "Measured: 0.880500 at hops=2, 0.882030 at hops=4."
     ),
     1.343174: "M5 tail norm at s=512, same fabrication. Measured: 1.292741.",
+    0.743864: (
+        "U1/N3 pilot Spearman rho between the harmonic-measure rank and the "
+        "masking-displacement rank, disclosed at "
+        "tests/cameron/test_harmonic_attribution.py:47. STRUCK at R9 iteration 2: "
+        "NO PRODUCER HAS EVER EXISTED. The battery calls nine names on "
+        "scale/negation_scope.py -- absorbing_boundary_kernel, harmonic_measure, "
+        "harmonic_label_batch, train_control_arm, masking_displacement, "
+        "rank_crosscheck, dead_control_arm, u1_attribution_run and "
+        "PREREGISTERED_RHO_FLOOR -- and `git log -S` across ALL refs returns zero "
+        "commits containing a definition of any of them. This is not a deleted "
+        "producer and not a figure transcribed from a sibling task: the number "
+        "has no possible source in any state this repository has ever been in. "
+        "The 1.471448 class, with no floor -- 1.471448 at least had a sweep that "
+        "could look for it."
+    ),
+    0.656532: "Lower edge of the U1/N3 pilot bootstrap CI; struck with 0.743864.",
+    0.816955: "Upper edge of the U1/N3 pilot bootstrap CI; struck with 0.743864.",
     5.4944e-13: ("Karcher residual in float64. STRUCK by the health inspection at "
         "round 5 iteration 21: asserted in a [RUN] voice with NO LIVE PRODUCER. "
         "It appeared only in a code comment and in prose. It came from a "
