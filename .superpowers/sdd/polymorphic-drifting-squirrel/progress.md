@@ -589,3 +589,90 @@ for Saturn to fold into `MISTAKES.md`.
   nowhere; needs a ruling on whether to write the producers or strike the clause.
   Deferred deliberately: it is a pre-registration question, so Venus should see it
   before anyone edits.
+
+## Iteration 2 — Saturn COMPLETE. The vector corpus exists.
+
+Merged. `tests/cameron/test_c1_propagate_registration.py` **23/23** (RED first:
+19 failed / 0 passed). Saturn's full run: 143 passed, 0 failed, including 106
+regression tests across six registry and `calibrate_bar` consumers.
+
+**`c1_propagate_t{1,2,8,32}`** — label `[n, s−t*]`,
+`y_p = Σ_{h=1..t*} (Π a_i) b_{p−h}`. Registered in `M3_TASKS` and `E_T_STAR`,
+routed in `e_hop_reading`. **No new channel** — reuses `CH_DRIVE`/`CH_FLIP`,
+`d_model` unchanged, and `t*` rides in `f` (the chain head) so the dial
+round-trips through a signature every consumer already passes.
+
+**Nilpotent regime, chosen deliberately.** The sum terminates, so `t*` is an exact
+hop count rather than a tolerance. That puts **both** the truncation law
+`sqrt((t*−k)/t*)` **and** the flipper dependence `2√t*/(s−t*)` in closed form with
+no fitted constant, and `k = t*+1` is **bitwise exact** — termination is shown,
+not asserted.
+
+### Saturn departed from the controller's literal spec, and was right to
+
+The dispatch said the label is `[n, s]`. Saturn shipped `[n, s−t*]`:
+
+> *"A strictly causal operator raised to `t*` vanishes on the first `t*`
+> coordinates, always — causality and uniform depth cannot both hold on all `s`
+> positions. `[n, s]` would ship `t*` entries of `sd 0`, the fourteenth strike in
+> a new shape."*
+
+`Ruling: ACCEPTED over the plan text. The controller's [n, s] would have shipped
+constant-label positions, which is precisely the vacuity pattern this corpus
+exists to avoid. The spec's binding requirement was a vector label whose every
+position is informative, not a particular width. Cost if wrong: none identified —
+the truncated width is the one consistent with causality.`
+
+### VENUS'S PREDICTION SURVIVES THE NEW CORPUS, AND TIGHTENS
+
+Her §6 demanded recomputation against whatever label shipped. Against C1's
+weighting `w = 1/(s−t*)`, the predicted `settled` margins are
+
+`−0.024827` / `−0.007715` / `+0.004809` / `+0.010545`
+
+**All eight remain below the 13-seed resolution `0.027260`, and two are *smaller*
+than what she filed.** These are `DERIVED` recomputations, not measurements —
+nothing has trained on C1 yet (see below).
+
+C1 removes her §2b and §2c but leaves **§2a untouched**. So the corpus does
+**not** rescue the contract's optimism. What it buys is different and better:
+
+> *"the label is uniform by construction, so a null is the arm"*
+
+`Ruling: this is the round's central result so far and it is worth stating
+plainly. The corpus was built to test the author's ambition and the pre-registered
+counter-prediction still stands against it. But the old nulls were UNINTERPRETABLE
+— confounded by a single-row write, a resolvent oracle, and a task softmax is
+provably optimal on. A null on C1 is interpretable: it is the arm. Venus's
+falsifier 5 collapses from a confound into a one-line test. The round has
+converted an unanswerable question into an answerable one, which is what the
+first nine iterations were for.`
+
+### Saturn flagged the weak clause in his own bundle
+
+The equal-variance clause **does not reject** the prefix scan at `t*=1` — reads
+`0.0638`, inside his own `0.10` tolerance, because 63 of 64 positions are
+uniformly *uninformative* rather than uniformly deep. The zero-hop clause rejects
+at all four rungs. **Two clauses failing differently; either alone would have
+admitted the worst rung.** That is the correct defence and he said so unprompted.
+
+He also found **the shipped flipper band is too loose for this family**: exact
+dependence `0.031746` at `t*=1` and `0.045620` at `t*=2`, both under
+`bar_verdict`'s default `0.05` tolerance, so it would accept a flipper-blind
+label at those rungs. Asserted as a test rather than left to be rediscovered;
+anti-vacuity duty is carried by the movement test, which pins the exact bitwise
+support.
+
+### C1 is registered and calibrates but CANNOT TRAIN YET
+
+`run_arm` raises `RuntimeError: The size of tensor a (64) must match the size of
+tensor b (56)` — **loudly, not silently**. `56 = s − t*` at `s=64, t*=8`. C1 needs
+Neptune's per-row readout to train, and Saturn correctly touched neither
+`m3_quintuple.py` nor any weights.
+
+**The integration of Saturn's corpus with Neptune's arm is the round's moment of
+truth**, and both halves now exist or are in flight.
+
+One shared function changed: `calibrate_bar`'s `payload_only` broadcast, verified
+**bitwise-identical** for scalar labels (`1.366458892213088`,
+`1.050147990558408`).
