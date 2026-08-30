@@ -96,6 +96,54 @@ def test_every_numbered_citation_resolves_and_is_in_range(tracked):
     assert not bad, "\n".join(bad)
 
 
+def test_no_citation_points_at_a_blank_line():
+    """IN RANGE IS NOT THE SAME AS RESOLVING, and the gap is where P-6 hid.
+
+    `test_every_numbered_citation_resolves_and_is_in_range` accepts any line
+    number a file is long enough to contain. A blank line is in range. So when
+    the source a citation quotes MOVES, the citation keeps passing while
+    pointing at nothing -- which is exactly P-6 surviving the checker built to
+    catch P-6.
+
+    Found in R9 by reading D-1's citation rather than trusting the green test:
+    `scale/m3_quintuple.py:311` was blank and the readout it quoted had moved
+    to `:483`; `:617` was blank and the `--task` flag it cited had moved to
+    `:824`. Both had been passing.
+
+    A RANGE is allowed to OPEN on a blank line -- a quoted block often starts
+    at one -- so a range only has to contain some content. A bare `file:line`
+    has no such excuse: it names one line, and that line must say something.
+    """
+    text = DOC.read_text(encoding="utf-8")
+    bad = []
+    for f, lo, hi in _numbered(text):
+        if f in ALLOWED_DEAD:
+            continue
+        q = ROOT / f
+        if not q.exists():
+            continue                      # the resolve test owns that failure
+        lines = q.read_text(encoding="utf-8").splitlines()
+        lo_i, hi_i = int(lo), int(hi or lo)
+        if hi_i > len(lines):
+            continue                      # likewise the range test
+        span = lines[lo_i - 1:hi_i]
+        if not any(l.strip() for l in span):
+            bad.append(f"{f}:{lo}-{hi} is entirely blank")
+        elif hi is None and not lines[lo_i - 1].strip():
+            bad.append(f"{f}:{lo} points at a blank line")
+    assert not bad, chr(10).join(bad)
+
+
+def test_the_blank_line_checker_is_not_vacuous():
+    """The planted negative, same reason the extractor has one. A blank-line
+    detector that never fires would be a second clean bill of health over the
+    same hole."""
+    lines = ["first", "", "third"]
+    assert not lines[1].strip()           # the shape the checker rejects
+    assert lines[0].strip() and lines[2].strip()
+    assert any(l.strip() for l in lines)  # the range-level allowance
+
+
 def test_every_bare_file_reference_is_a_tracked_file(tracked):
     text = DOC.read_text(encoding="utf-8")
     bad = [f for f in sorted(set(BARE.findall(text)))

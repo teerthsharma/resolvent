@@ -303,7 +303,7 @@ describes this file as citing `gram_audit` with the rot never fixed; the claim
 that the file asserts the symbol exists is **wrong as of this commit** — what
 remains true is that no measurement of pivot-coordinate underflow is on record.)
 `scale/capability_table.py`'s `TASK_SOURCE` string says `m3_quintuple.py` *"has
-no `--task` flag"*; `--task` was added at `scale/m3_quintuple.py:617` (FINDINGS
+no `--task` flag"*; `--task` was added at `scale/m3_quintuple.py:824` (FINDINGS
 B8). The same `render()` still emits *"This package carries NO trained
 weights"*, and `write_artifact` (`:443`) would clobber the weight-manifest sync
 from commit `0162bdd` on the next table cut.
@@ -610,8 +610,16 @@ bootstrap.
 
 **This is the largest one in the repository and it subsumes most of the null
 results.** Every label here is a scalar point prediction at position `s-1` —
-`self.readout(h).squeeze(-1)[:, s - 1]`, `scale/m3_quintuple.py:311` (FINDINGS
-C1). One softmax layer is **provably Bayes-optimal on exactly that shape**,
+`return out if self.vector_readout else out[:, s - 1]`,
+`scale/m3_quintuple.py:483` (FINDINGS C1). **Amended R9: the escape this entry
+asks for now EXISTS and is off by default.** `vector_readout`
+(`scale/m3_quintuple.py:368`, documented at `scale/m3_quintuple.py:355-359`)
+drops the `[:, s-1]` index; it defaults to `False`, so every shipped number
+here is still the scalar-readout shape and the argument below is unchanged for
+them. The entry previously cited `:311`, which is a BLANK LINE — the quoted
+source had moved and the checker could not see it, because a blank line is in
+range. That hole is closed in
+`tests/cameron/test_mistakes_citations_resolve.py`. One softmax layer is **provably Bayes-optimal on exactly that shape**,
 where linear attention provably cannot be (`arXiv:2410.01537`, ICLR 2025;
 conceded at `LOOP_PROMPT.md:34-38`) (FINDINGS C2). The repo already knew:
 `STATE.md` items 27-28 record *"every task here asks for a point prediction —
