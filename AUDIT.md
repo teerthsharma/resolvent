@@ -11,6 +11,13 @@ exclusion being got wrong before (MISTAKES.md V-13, a walk that included nested 
 
 ## Counts, with the command that produced each
 
+**Every count below is OF COMMIT `06a180c`, not of whatever is checked out.** `git ls-files`
+reads the working tree, so these commands re-run to different numbers as the tree grows: the
+`tests/*.py` count was 191 here, 193 when the Health Inspector re-ran it mid-round, and 201
+at `HEAD` by R10 P0 it.3. Substitute `git ls-tree -r --name-only 06a180c -- tests/ | grep -c
+'\.py$'` for a number that cannot drift; `scale/p1prime.py` now pins the same commit and
+`python scale/p1prime.py --demo` asserts it still reproduces the 191/46/145 below.
+
 ```
 git ls-files -- 'tests/*.py'  | wc -l   ->  191   test files
 git ls-files -- 'scale/*.py'  | wc -l   ->   99   scale modules
@@ -93,7 +100,9 @@ on `scale/chase_struck_coverage.py`, verified here: `control()` at `:105` calls 
 strings at `:107` and `:109` and **never calls `collect_targets()`**, which is reached only at `:137` and
 walks the repository. The control exercises the matcher and never the reach &mdash; MISTAKES.md V-14 exactly.
 
-Measured application, `python scratchpad/p1prime.py`:
+Measured application, `python scale/p1prime.py` (the script moved out of the session
+scratchpad in `f823b02` and pins commit `06a180c` as of R10 P0 it.3; `--demo` asserts the
+three numbers below are still what the pinned tree produces):
 
 ```
 test .py files                                              191
@@ -421,7 +430,9 @@ absence. The family is therefore exactly one file, not a family of many, and the
 
 ### tests/*.py
 
-Count: **191** &mdash; `git ls-files -- 'tests/*.py'`
+Count: **191** &mdash; `git ls-tree -r --name-only 06a180c -- tests/ | grep -c '\.py$'`, the
+pinned form. The unpinned `git ls-files -- 'tests/*.py'` that produced this number reads 201
+at `HEAD`; the rows below are the 191 that existed at `06a180c`.
 
 | path | claims to test | last-run state FROM THE JOURNAL | class | KEEP/ATTIC | one-line reason |
 |---|---|---|---|---|---|
@@ -433,7 +444,7 @@ Count: **191** &mdash; `git ls-files -- 'tests/*.py'`
 | `tests/cameron/schedule_sweep.py` | Does a NON-GEOMETRIC dilation schedule repair the severance? | NO JOURNAL ENTRY | live | KEEP | helper imported by 1 python module(s) |
 | `tests/cameron/severed_fraction.py` | THE SEVERED FRACTION -- the measurement Cameron named and could not run. | 1/2 readings reproduce at abs=5e-7 | orphan | ATTIC | helper: 0 test functions, 0 python importers, no journal; see KILL 3 |
 | `tests/cameron/test_arc_reality.py` | ARC-AGI as a MEASURING INSTRUMENT, before ARC-AGI as a target. | NO JOURNAL ENTRY | vacuous | ATTIC | PRESUMED vacuous-by-scope (L-SCOPE): builds its own tensor/graph instead of drawing from the production batch path, and 0 of its 0 6-significant-digit readings reproduce from any results/*.jsonl at abs=5e-7. ran ALL-GREEN in the iteration-1 sweep, which is exactly what a vacuous control does and is therefore not evidence either way. PRESUMPTION, NOT VERDICT - iteration-2 spot-check candidate; see KILL 2 |
-| `tests/cameron/test_bar_control_sees_the_arms_preprocessing.py` | A7: the bar's trained control and the arms must see the same label. | NO JOURNAL ENTRY | live | KEEP | 4 tests, input drawn from the scale/ production path |
+| `tests/cameron/test_bar_control_sees_the_arms_preprocessing.py` | A7: the bar's trained control and the arms must see the same label. | NO JOURNAL ENTRY | live | KEEP | 5 tests, input drawn from the scale/ production path. AMENDED r10-it3: measured 5 collected, not 4. Disposition KEEP unchanged. |
 | `tests/cameron/test_c1_propagate_registration.py` | C1 -- the VECTOR consequence corpus, and its admission bundle. | 5/21 readings reproduce at abs=5e-7 | live | KEEP | 8 tests, input drawn from the scale/ production path |
 | `tests/cameron/test_capability_result.py` | The capability number, bound to the run that produced it. | NO JOURNAL ENTRY | live | KEEP | 5 tests, input drawn from the scale/ production path |
 | `tests/cameron/test_cogs_harness.py` | COGS, wired. The blocker in `harness.run("cogs")` was a fixed 256-way head. | NO JOURNAL ENTRY | live | KEEP | 7 tests, input drawn from the scale/ production path |
@@ -458,7 +469,7 @@ Count: **191** &mdash; `git ls-files -- 'tests/*.py'`
 | `tests/cameron/test_parity_is_the_wrong_target.py` | Is val-loss parity on TinyStories bytes the right target at all? | 1/5 readings reproduce at abs=5e-7 | live | KEEP | 4 tests, input drawn from the scale/ production path |
 | `tests/cameron/test_published_intervals_have_producers.py` | Both published interval families reproduce from the journal. | results/m3_quintuple_v2.jsonl (151 rec) | live | KEEP | 6 tests, input drawn from the scale/ production path |
 | `tests/cameron/test_r3_perturbation.py` | R3 -- amplify few, crush many. VERDICT: DELETE. | 1/1 readings reproduce at abs=5e-7 | live | KEEP | 7 tests, input drawn from the scale/ production path |
-| `tests/cameron/test_r4_compression.py` | R4 -- compress by forgetting. VERDICT: DELETE. | 1/13 readings reproduce at abs=5e-7 | live | KEEP | 7 tests, input drawn from the scale/ production path |
+| `tests/cameron/test_r4_compression.py` | R4 -- compress by forgetting. VERDICT: DELETE. | 1/13 readings reproduce at abs=5e-7 | live | KEEP | 14 tests, input drawn from the scale/ production path. AMENDED r10-it3: measured 14 collected (2 red-by-design under T-b route 3, band T), not 7. Disposition KEEP unchanged. |
 | `tests/cameron/test_r5_aggregator_red.py` | CAMERON round 5 -- the RED tests behind the aggregator finding. | results/arm_a.jsonl (3 rec); results/cameron_aggregators.jsonl (8 rec) | live | KEEP | 9 tests, input drawn from the scale/ production path |
 | `tests/cameron/test_r6_agreement.py` | R6 -- local readings, global agreement. VERDICT: DELETE. | NO JOURNAL ENTRY | live | KEEP | MEASURED RED, presumption WITHDRAWN: this file has a demonstrated live rejection region - it is currently rejecting, so it is not passing by construction and cannot be vacuous in the strong sense. Its docstring binds it to a pre-registered falsifier or named control. Re-run, NOT a journal read; see FINDING 3. What a RED does NOT settle is whether the SCOPE is right - that is the spot-check |
 | `tests/cameron/test_r6_matcher_red.py` | CAMERON round 6 it.0 -- the RED tests behind the Hungarian matcher (1.5). | NO JOURNAL ENTRY | live | KEEP | 14 tests, input drawn from the scale/ production path |
@@ -608,7 +619,7 @@ Count: **191** &mdash; `git ls-files -- 'tests/*.py'`
 | `tests/w7/conftest.py` | (no docstring) | NO JOURNAL ENTRY | live | KEEP | pytest machinery, collected implicitly by every sibling module in its directory |
 | `tests/w7/test_w7_nash.py` | W7 -- Nash-equilibrium attention over a set system. | NO JOURNAL ENTRY | live | KEEP | 9 tests, input drawn from the scale/ production path |
 | `tests/w8/conftest.py` | (no docstring) | NO JOURNAL ENTRY | live | KEEP | pytest machinery, collected implicitly by every sibling module in its directory |
-| `tests/w8/test_w8_real_model.py` | W8 -- the surviving parts, against a real checkpoint. | NO JOURNAL ENTRY | live | KEEP | 10 tests, input drawn from the scale/ production path |
+| `tests/w8/test_w8_real_model.py` | W8 -- the surviving parts, against a real checkpoint. | NO JOURNAL ENTRY | live | KEEP | 20 tests, input drawn from the scale/ production path. AMENDED r10-it3: measured 20 collected, all green, not 10. Disposition KEEP unchanged. |
 | `tests/w9/conftest.py` | (no docstring) | NO JOURNAL ENTRY | live | KEEP | pytest machinery, collected implicitly by every sibling module in its directory |
 | `tests/w9/test_w9_hopcache.py` | W9 -- a scoped, topological hop cache, so alpha > 0 can decode. | 4/4 readings reproduce at abs=5e-7 | live | KEEP | builds its own input, BUT 4/4 of its readings reproduce from the journal at abs=5e-7 - its scope is anchored to the production path, so the L-SCOPE presumption does not fire |
 | `tests/watson/conftest.py` | (no docstring) | NO JOURNAL ENTRY | live | KEEP | pytest machinery, collected implicitly by every sibling module in its directory |
@@ -780,7 +791,7 @@ Count: **53** &mdash; `git ls-files -- '*.md' | grep -v /`
 | `done6.md` | done6 — Round 6, CEQ v8.2, the Hilbert round | 13/39 readings reproduce at abs=5e-7 | superseded | KEEP | per-round work log closed by a later round's log; retained as the provenance of its round's readings |
 | `done7.md` | done7.md — CEQ v9, round 7, handoff at iteration 11 | results/m3_quintuple_v2.jsonl (151 rec) | superseded | KEEP | per-round work log closed by a later round's log; retained as the provenance of its round's readings |
 | `titan-report.md` | TITAN report — D-1, D-2, H-1 partial-ladder guards on `scale/e_ladder.py::verdict()` | results/m3_quintuple_v2.jsonl (151 rec) | orphan | ATTIC | PRESUMED orphan: no other tracked file names this document or its stem (measured over 516 tracked text files). PRESUMPTION, NOT VERDICT; see KILL 4 |
-| `workdone2.md` | Work done — round 2, iterations 34–46 | 0/4 readings reproduce at abs=5e-7 (was recorded 1/10) | superseded | KEEP | AMENDED r10-it2, THE ONE KEEP FAILURE OF THE BINOMIAL. The iteration-1 ground was "provenance of published readings" on a cell of 1/10. Re-measured with the extractor CALIBRATED against this sheet's own control (LOOP_PROMPT_ROUND6_ARCHIVE.md re-measures 8/23, exactly its cell): 0 of 4 readings reproduce from any results/*.jsonl at abs=5e-7. Nearest journal values miss by 1.6e-4 to 35.5, i.e. 300x to 7e7x the tolerance -- near-misses, not a parsing artifact. The provenance ground is EMPTY. KEEP stands on a DIFFERENT, measured ground: 7 tracked files name it (DONE.md, done3-6.md, scale/chase_struck_coverage.py, tests/cameron/test_composition_is_the_uncosted_route.py). Kept as a cited round log, NOT as provenance. |
+| `workdone2.md` | Work done — round 2, iterations 34–46 | 1/10 readings reproduce at abs=5e-7 | superseded | KEEP | AMENDED r10-it3, WITHDRAWING THE r10-it2 AMENDMENT. The iteration-2 arm re-measured this row with an extractor counting numbers of >=6 SIGNIFICANT DIGITS, read 0/4 against a cell of 1/10, could not account for the denominator, and amended anyway -- it was the one undisputed KEEP failure of that census. The rule was wrong. The census counts numbers of >=5 DECIMAL PLACES deduplicated (identified by scoring a 32-rule grid against the 64 readings cells outside the it-3 draw: 54/64 exact, vs 32/64 for the runner-up and 9/64 for what it-2 used, `scale/doc_readings.py`). Under the census's own rule this document reads 1/10 -- the original cell, exactly. The provenance ground is NOT empty and the it-2 finding against this row does not survive its own instrument. The it-2 calibration passed on LOOP_PROMPT_ROUND6_ARCHIVE.md because BOTH rules return 23 readings there; a control that cannot discriminate is not a calibration. Ground restored: self-labelled round log retained as the provenance of published readings; the 7 tracked files that name it stand as a second, independent ground. |
 | `workdoneplanetrum.md` | workdoneplanetrum | 12/41 readings reproduce at abs=5e-7 | superseded | KEEP | per-round work log closed by a later round's log; retained as the provenance of its round's readings |
 
 ### round reports misfiled under tests/ (audited as docs, not tests)
