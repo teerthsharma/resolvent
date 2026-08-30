@@ -20,6 +20,7 @@ journalled value and no published verdict moves.
 from __future__ import annotations
 
 import itertools
+import math
 
 import pytest
 
@@ -32,7 +33,9 @@ ARGMAXSTE = [0.801954, 0.777060, 0.746923, 0.802827, 0.796330]
 def _exact(ref, arm):
     d = [r - a for r, a in zip(ref, arm)]
     n = len(d)
-    reps = sorted(sum(c) / n for c in itertools.product(d, repeat=n))
+    # `math.fsum` on a canonically ordered tuple: identical multisets must
+    # produce identical floats, or the count splits atoms that are not distinct.
+    reps = sorted(math.fsum(sorted(c)) / n for c in itertools.product(d, repeat=n))
     return (reps[int(0.025 * len(reps))],
             reps[min(len(reps) - 1, int(0.975 * len(reps)))],
             len(set(reps)))
@@ -43,7 +46,7 @@ def test_contrast_reports_the_exact_pair_and_the_atom_count():
     lo, hi, atoms = _exact(ARGMAX, ARGMAXSTE)
     assert c["exact_lo"] == pytest.approx(lo, abs=1e-12)
     assert c["exact_hi"] == pytest.approx(hi, abs=1e-12)
-    assert c["n_atoms"] == atoms == 128
+    assert c["n_atoms"] == atoms == 126
 
 
 def test_the_exact_pair_reproduces_neptunes_enumeration():
@@ -76,3 +79,28 @@ def test_the_exact_path_is_skipped_when_enumeration_is_too_large():
     c = contrast(ref, arm, n_boot=200, seed=0)
     assert c["exact_lo"] is None and c["exact_hi"] is None
     assert c["n_atoms"] is None
+
+
+def test_the_atom_count_cannot_exceed_its_combinatorial_maximum():
+    """The number of distinct means of a size-n multiset drawn from n values is
+    at most `C(2n-1, n)`. A count above that is floating-point noise splitting
+    atoms, not a finer lattice.
+
+    Naive `sum()` over `itertools.product` does exactly that: different
+    permutations of the SAME multiset sum in different orders and land one ULP
+    apart, which reported 128 atoms here against a true maximum of 126.
+    """
+    c = contrast(ARGMAX, ARGMAXSTE, n_boot=200, seed=0)
+    n = c["n_seeds"]
+    assert c["n_atoms"] <= math.comb(2 * n - 1, n)
+    assert c["n_atoms"] == 126
+
+
+def test_the_naive_summation_really_would_over_count():
+    """Adversarial pass: the guard must be protecting against something real."""
+    d = [r - a for r, a in zip(ARGMAX, ARGMAXSTE)]
+    n = len(d)
+    naive = {sum(x) / n for x in itertools.product(d, repeat=n)}
+    canonical = {math.fsum(sorted(x)) / n for x in itertools.product(d, repeat=n)}
+    assert len(naive) == 128, "the over-count this change exists to fix"
+    assert len(canonical) == 126

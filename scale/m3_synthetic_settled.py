@@ -64,6 +64,7 @@ import argparse
 import contextlib
 import itertools
 import json
+import math
 import pathlib
 import sys
 
@@ -233,7 +234,16 @@ def contrast(twin: list[float], settled: list[float], *, n_boot: int = 10000,
     # no journalled value, no published interval and no verdict moves.
     exact_lo = exact_hi = n_atoms = None
     if n ** n <= _EXACT_MAX_RESAMPLES:
-        allr = sorted(sum(c) / n for c in itertools.product(d, repeat=n))
+        # `math.fsum` on a CANONICALLY ORDERED tuple. Plain `sum()` over
+        # `itertools.product` adds the same multiset in different orders, and
+        # floating-point addition is not associative, so permutations of one
+        # multiset land up to one ULP apart and are counted as distinct atoms.
+        # That reported 128 atoms for `argmaxste - argmax` against a
+        # combinatorial maximum of C(2n-1, n) = 126 -- a count above its own
+        # ceiling, which is the signature of exactly this bug. Two atoms were
+        # split, by 5.551115123125783e-17.
+        allr = sorted(math.fsum(sorted(c)) / n
+                      for c in itertools.product(d, repeat=n))
         exact_lo = allr[int(0.025 * len(allr))]
         exact_hi = allr[min(len(allr) - 1, int(0.975 * len(allr)))]
         n_atoms = len(set(allr))
