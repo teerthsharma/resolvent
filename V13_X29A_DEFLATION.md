@@ -239,7 +239,65 @@ Cell, identical to the K sweep that produced the finding
 mean/std and un-standardised at eval, `n_eval=4096` at `seed=12345`, seeds
 `{0,1,2}`, `threads=8`, `torch.manual_seed(seed)` before each model is built.
 
-SWEEP_TABLE_PLACEHOLDER
+| arm | mean eval NRMSE | sd | seeds | vs softmax | vs `1.000329` raw K=64 | ĥ | wall |
+|---|---|---|---|---|---|---|---|
+| softmax (1 hop, control) | **0.950252** | 0.019256 | 0.971432 / 0.933802 / 0.945523 | — | −0.050077 | 0.194041 | 289 s |
+| raw K=64 | **1.000329** | 0.027601 | 1.013706 / 1.018692 / 0.968588 | +0.050077 | — | −0.001315 | 416 s |
+| deflated renorm (7) K=64 | **0.951400** | 0.004973 | 0.952932 / 0.945841 / 0.955426 | +0.001148 | −0.048929 | 0.189677 | 611 s |
+| deflated tril (6) K=64 | **0.958700** | 0.002995 | 0.961905 / 0.955972 / 0.958222 | +0.008448 | −0.041629 | 0.161790 | 365 s |
+
+The softmax control reads `0.950252` (sd `0.019256`) and raw K=64 reads
+`1.000329` (sd `0.027601`) — **both identical to six decimals, per seed, to the
+rows in `results/r10_v13_kpivot_t2.txt`** that produced the finding. The
+instrument is the same instrument; the deflated rows are the only new arithmetic.
+
+### Verdict
+
+**The prediction holds on the point estimate, for both projectors, and the
+strong form holds only for the renorm form (7).**
+
+* **renorm (7): `0.951400` against the pre-registered `≤ 0.960945`, clearing it
+  by `0.009545`.** All **3/3 seeds** individually fall below the bound
+  (`0.952932`, `0.945841`, `0.955426`). One-sample t against the fixed
+  pre-registered bound: `t = 3.325`, df 2, one-sided `p = 0.0399`.
+* **tril (6): `0.958700`, clearing the bound by `0.002245`** — but only **2/3
+  seeds** fall below it (`0.961905` does not), and the one-sample t gives
+  `t = 1.298`, one-sided `p = 0.1618`. **Inconclusive at 3 seeds.**
+
+On the inconclusive-band criterion the two answers differ by which sd is used,
+and both readings are stated rather than one chosen. Against the raw sweep's
+`K=8` seed sd of `0.010289` the band is `2·sd/√3 = 0.011881` and **both** gaps
+sit inside it, so the script prints INCONCLUSIVE for both. Against each arm's
+own measured seed sd the bands are `0.005742` (renorm) and `0.003459` (tril):
+the renorm gap of `0.009545` sits **outside** its band, the tril gap of
+`0.002245` sits inside its own. The renorm arm's seed spread is a quarter of the
+control's (`0.004973` against `0.019256`), which is itself part of the result.
+
+**The recovery from the NO READING is the unambiguous part.** Raw K=64 sits
+above `1.0` — predict-the-mean — on a mean of three seeds; both deflations bring
+it back under the bar, and the renorm arm separates completely from it at the
+seed level (`min` raw `0.968588` > `max` renorm `0.955426`; Welch `t = 3.022`,
+one-sided `p = 0.0437`; exact permutation `p = 1/20 = 0.05`). Deflating the
+second hop recovers `0.048929` of NRMSE, which is `98%` of the `0.050077` the
+undeflated second hop destroyed.
+
+**What the recovery is not.** The deflated arm is `+0.001148` from the 1-hop
+softmax control, which at these seeds is nothing (Welch `t = −0.100`, two-sided
+`p = 0.9286`). Its `ĥ = t*(1 − NRMSE²) = 0.189677` against softmax's `0.194041`,
+and `floor_2 = √((t*−2)/t*) = 0` at this rung — a working second hop would drive
+the error toward zero and this one does not move it at all. **X29a removes the
+damage the second hop was doing; it does not make the second hop work.** The
+`V13_PREDICTION_HOP2.md` reading that the hop-2 term is inert, rather than
+merely underpowered, survives this repair: deflated, the term is inert instead
+of harmful.
+
+**Which projector.** The trained comparison and the must-fires agree, which is
+the reason both were run: the renorm form (7) rejects DC exactly, clears the
+pre-registered bound on 3/3 seeds, and lands `0.007300` below the tril form. The
+tril form (6) minimises mean-row energy but passes `0.358921` of DC and clears
+the bound on 2/3 seeds. **(7) is the construction; (6) is reported as its
+control.** Mean-row energy fraction is not the operative quantity — DC gain is,
+and the two rank the projectors in opposite orders (§5, §6).
 
 ## 9. Controls that ran with the measurement
 
@@ -258,10 +316,26 @@ SWEEP_TABLE_PLACEHOLDER
 
 ## Limits
 
-* Three seeds. The raw sweep's seed sd at `K=8` was `0.010289`, so a gap smaller
-  than `2·sd/√3 = 0.011880` between two means at this cell is not resolved. Any
-  verdict in §8 within that band is stated as inconclusive, and none of the
-  differences reported here should be read as ordered beyond it.
+* Three seeds. Against the raw sweep's `K=8` seed sd of `0.010289` the
+  resolution band is `2·sd/√3 = 0.011881`, and **both** §8 gaps sit inside it;
+  against each arm's own measured sd only the renorm gap clears. §8 states both
+  readings and does not pick one. The `p = 0.0399` there is a one-sample t at
+  df 2 — three points against a fixed bound, not a well-powered test.
+* Recovery is not capability. `0.951400` is a return to the 1-hop control, not a
+  crossing of `floor_2 = 0`. Nothing here shows the second hop computing
+  anything; it shows it no longer destroying the reading.
+* Depth. The differential content decays fast under composition. Measured at
+  `t*=2, n=16, seed 0, threads=2`, untrained, mean Frobenius norm of the `h`-th
+  power over the batch: `a` holds `2.17 → 2.26 → 2.37 → 2.10 → 1.52 → 0.90`
+  across `h = 1..6`, the tril deflation falls `1.60 → 1.08 → 0.64 → 0.30 →
+  0.11 → 0.035`, and the renorm deflation falls `0.808 → 0.159 → 0.034 →
+  0.0068 → 0.0012 → 0.0002`. The per-hop decay ratios of the tril form
+  (`1.49, 1.68, 2.12, 2.68, 3.21`) reproduce an independent measurement of the
+  same quantity exactly; that measurement's absolute norms are a constant
+  `4.0×` larger across every entry including `‖a^h‖`, which is a norm
+  convention, not a disagreement. Nothing here licenses a claim about hops
+  beyond the second, and the renorm form — the one that passes both must-fires
+  — is the faster-decaying of the two.
 * One cell. `t*=2, s=64, n_train=2048, steps=150`. `t*=2` was chosen because
   `floor_2 = √((t*−2)/t*) = 0`, so a working second hop has room to show; it is
   also the cell most favourable to the construction, and nothing here measures
@@ -280,8 +354,9 @@ SWEEP_TABLE_PLACEHOLDER
   and the all-row gains (`0.505241` renorm, `0.861934` tril) are reported for
   that reason, not as failures of a check.
 * CPU matmul reduction order varies with thread count, so every number here is
-  bound to `threads=8` (the `t*=2`, `n=16` self-check figures) or `threads=4`
-  (the 18-cell energy census in §5). `scale/m3_capability.py` pins 2 threads at
+  bound to `threads=8` (the self-check figures and every trained number),
+  `threads=4` (the 18-cell energy census in §5) or `threads=2` (the depth census
+  above). `scale/m3_capability.py` pins 2 threads at
   import; this script overrides it after import, exactly as
   `scripts/v13_kpivot_sweep.py` does, so the trained numbers are comparable to
   that sweep's and not to the `m3_capability.py` log's.

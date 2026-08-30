@@ -8,23 +8,46 @@ named as external.
 
 Every numbered equation `(K*)` that can be checked at finite precision is
 checked by `scripts/v13_tangent_kit.py`, whose assertion messages carry the
-same numbers. `RUN`, this session: **exit 0, every assertion passed**, WALLCLOCK
-wall clock, numpy 1.26.4, torch 2.5.1+cu121, python 3.11.9, float64, seed 28.
+same numbers. `RUN`, this session: **exit 0, every assertion passed**, 77.7 s wall
+clock, numpy 1.26.4, torch 2.5.1+cu121, python 3.11.9, float64,
+single-threaded, seed 28.
 
-**Both must-fires fire.** The positive control reads `λ̂ = MF1VAL` against
-`ln 2 = 0.693147180559945`, absolute error `MF1ERR`. The negative control reads
-`λ̂ = MF2VAL` against `ln 0.4 = -0.916290731874155`, absolute error `MF2ERR`,
-and its sign is negative — the instrument can return "no chaos here". The
-adjoint gradcheck **passes at `rtol = 1e-4`** and the tolerance was not
-loosened; training through the dynamics is licensed on the field and horizon
-tested, and on nothing wider. No downstream number is voided by this kit.
+**Both must-fires fire.**
 
-The single most important result in this file is not an instrument. It is
-§5: **the X₂₈c consistency triangle is not intrinsically circular, but it is
-not a mutual certification either**, and under the two conditions that actually
-hold in this repo it degenerates into an arithmetic identity with zero
-discriminating power. The conditions and the measurements that establish them
-are in §5.4 and §5.5.
+| gate | measured | closed form | absolute error |
+|---|---|---|---|
+| MF-1 logistic `r = 4` | `λ̂ = 0.693147181171` | `ln 2 = 0.693147180559945` | `6.1140e-10` |
+| MF-2 logistic `r = 3.2` | `λ̂ = −0.916290731874071` | `ln 0.4 = −0.916290731874155` | `8.8818e-14` |
+| MF-3 Hénon `a=1.4 b=0.3` | `λ̂₁ + λ̂₂ = −1.203972804326` | `ln 0.3 = −1.203972804325936` | `2.2204e-16` |
+
+The negative control's sign is negative — the instrument can return "no chaos
+here". The adjoint gradcheck **passes at `rtol = 1e-4`**; the tolerance was not
+loosened and no fallback was taken. Training through the dynamics is licensed on
+the field, dimension and horizon tested, and on nothing wider (§6). **No
+downstream number is voided by this kit.**
+
+Three findings were recorded rather than tuned around, each of which withdraws
+credit the kit would otherwise have been given:
+
+1. **The `r = 4` positive control cannot test the estimator's convergence
+   (§3.2).** An assertion predicting `N^{−1/2}` fired at a measured `−0.9927`.
+   The prediction was wrong, not the instrument: `ln|f'|` on that map is `ln 2`
+   plus an exact coboundary, so the Birkhoff sum telescopes and the error falls
+   as `N^{−1}`. The standard positive control is anomalously easy *because* it
+   is smoothly conjugate to a linear map. The generic `N^{−1/2}` rate had to be
+   measured elsewhere — on Hénon, where it reads `−0.5079` (§3.4).
+2. **The obvious seeding guard is not implementable in float64 (§3.1).** Every
+   float64 `u` is a dyadic rational, hence an exact preimage of the fixed point;
+   a correct exact-preimage test rejects every seed, and the first version hung.
+3. **A finite-difference control run on a quadratic tests nothing (§1.4).** The
+   logistic map has `D³f ≡ 0`, so the truncation half of the step-size model is
+   unfalsifiable there; the model was moved to a bed that can falsify it.
+
+The single most important result in this file is not an instrument. It is §5:
+**the X₂₈c consistency triangle is not intrinsically circular, but it is not a
+mutual certification either**, and under the two conditions that actually hold
+in this repo it degenerates into an arithmetic identity with zero discriminating
+power. The measurements establishing this are in §5.3–§5.6; the verdict is §5.7.
 
 ---
 
@@ -34,8 +57,8 @@ are in §5.4 and §5.5.
 |---|---|---|
 | Benettin QR named as the method behind `λ₁ = +0.42084` on Hénon | `ceq/nonnormal.py:15`, `NOTES.md:163`, `tests/w2/test_w2_nonnormal.py:7` | (K11) cross-check |
 | Tél's `D₁⁽¹⁾ = 1 − κ/λ` and the ordering constraint `λ > κ` | `V13_X27_G1_PRIOR_ART.md` E7 | §5 throughout |
-| Kantz–Grassberger as the origin of that relation, full text still owed | `V13_X27_G1_PRIOR_ART.md` E8, U3 | §5.6 Limits |
-| Non-hyperbolic saddles decay algebraically, not exponentially | `V13_X27_G1_PRIOR_ART.md` E10 | §5.6 Limits |
+| Kantz–Grassberger as the origin of that relation, full text still owed | `V13_X27_G1_PRIOR_ART.md` E8, U3 | §6 Limits |
+| Non-hyperbolic saddles decay algebraically, not exponentially | `V13_X27_G1_PRIOR_ART.md` E10 | §6 Limits |
 | `α = κ/λ` derived and uncited, flagged as collapsing two instruments into one | `V13_X27_G1_PRIOR_ART.md` U4 | §5.4 |
 | The `assert`-based self-check with no framework and no fixtures | `scripts/v13_derivation_check.py` | the whole script |
 
@@ -202,26 +225,44 @@ factor is exactly that diagonal entry. Hence, for a unit time step,
 
 and for a flow, divide by `N·Δt` instead of `N`.
 
-**Convergence rate.** (K7) is an ergodic average of `ln (R_n)_ii`. Where that
-observable has finite variance under the invariant measure, the central limit
-theorem gives
+**Convergence rate, and the trap in it.** Write `ψ := ln (R_n)_ii`. Then
 
 ```
-    (K8)   | λ̂_i(N) − λ_i |  ~  σ_i N^{−1/2}
+    (K8)   λ̂_i(N) − λ_i  =  (1/N) Σ_{n<N} [ ψ(x_n) − λ_i ]
 ```
 
-so the error falls half a decade per decade of iterations. For the logistic map
+and the rate depends on which of two cases `ψ` falls into.
+
+*Generic.* If `ψ − λ` is not a coboundary and the map is mixing with a
+non-degenerate CLT variance `σ²`, the Birkhoff sum is `O(√N)`:
+
+```
+    (K8a)  | λ̂_i(N) − λ_i |  ~  σ_i N^{−1/2}
+```
+
+*Coboundary.* If `ψ = λ + (φ∘f − φ)` for some `φ`, the sum **telescopes**, its
+CLT variance is exactly zero, and only a boundary term survives:
+
+```
+    (K8b)  λ̂_i(N) − λ_i  =  ( φ(x_N) − φ(x_0) ) / N   ~   N^{−1}
+```
+
+The two differ by half a decade of accuracy per decade of iterations, and §3.2
+shows that **the standard positive control is the second case, not the first.**
+
+A single-step variance calculation does not distinguish them — the observable's
+own variance can be large while its CLT variance is zero. For the logistic map
 at `r = 4`, the conjugate coordinate `x = sin²(πu)` of (K9) gives
 `f'(x) = 4 − 8x = 4 cos(2πu)`, so with `θ := 2πu` the observable is
-`ln|f'| = ln 4 + ln|cos θ|` with `θ` uniform, mean `ln 4 − ln 2 = ln 2`, and
+`ln|f'| = ln 4 + ln|cos θ|`, `θ` uniform, mean `ln 4 − ln 2 = ln 2`, and
 
 ```
     Var[ ln|cos θ| ]  =  ∫₀^π (ln|cos θ|)² dθ/π  −  (ln 2)²  =  π²/12
 ```
 
-using `∫₀^{π/2} ln²(cos θ) dθ = (π/2)(ln²2 + π²/12)`. The variance is finite —
-the `log²` singularity at `θ = π/2` is integrable — so (K8) applies, with
-`σ = √(π²/12) = 0.9069`. **This is a prediction, and §3.2 measures it.**
+using `∫₀^{π/2} ln²(cos θ) dθ = (π/2)(ln²2 + π²/12)`, so `σ = 0.9069`. The
+`log²` singularity at `θ = π/2` is integrable, so this variance is finite —
+**and it is nevertheless the wrong number to predict the rate from.** §3.2.
 
 An exact conservation law that (K7) must respect, used as the `d > 1` gate in
 §3.4: since `det(Q R) = det R = ∏_i R_ii` and `Q_n` is orthogonal,
@@ -254,43 +295,99 @@ map has `|du'/du| = 2` at every point, so
     (K9)   λ = ln 2 = 0.6931471805599453      exactly.
 ```
 
-**The seeding pitfall, and how it is avoided.** In the conjugate coordinate the
-preimages of the fixed point `0` are exactly the **dyadic rationals** `k/2^m`.
-`x₀ = 0.5` is `u = 1/4`, which maps to `1` then to `0` and stays there; every
-`x₀ = sin²(πk/2^m)` collapses after `m` steps. The script seeds
-`x₀ = sin²(πu)` with `u ~ U(0.05, 0.95)`, and **rejects any `u` whose first 60
-doubling images come within `2⁻⁴⁰` of an integer**, which removes every seed
-that would land on the fixed point within the run. Independently, the QR step
-counts every non-positive `R` diagonal it sees; an orbit landing exactly on
-`x = 0.5` (where `f' = 0`) would produce one, and the count is reported.
+**The seeding pitfall.** In the conjugate coordinate the preimages of the fixed
+point `0` are exactly the **dyadic rationals** `k/2^m`. `x₀ = 0.5` is `u = 1/4`,
+which maps to `1`, then to `0`, and stays; every `x₀ = sin²(πk/2^m)` collapses
+after `m` steps, and `ln|f'|` at the collapse point is `−∞`.
+
+**Finding: the obvious guard is not implementable in float64.** The first
+version of the seeder rejected any `u` whose doubling images came within
+`2⁻⁴⁰` of an integer. It rejected every seed ever offered and the run hung.
+The reason is exact: **every float64 `u` is itself a dyadic rational**, so
+doubling it 53 times shifts the last mantissa bit out and yields exactly `0.0`.
+An exact-preimage test therefore classifies the entire float64 grid as a
+preimage of the fixed point — which, in exact arithmetic, it is. There is no
+float64 seed that is *not* an exact preimage of `0`, and this is the same fact
+as "float64 orbits are not true orbits" (§6) seen from the seeding end.
+
+**The guard that is implementable** is on the computed orbit, which is the only
+orbit the run has. Two layers, both reported:
+
+1. `x₀ = sin²(πu)`, `u ~ U(0.05, 0.95)`, rejected if the **computed** float64
+   forward orbit reaches `0.0`, `1.0` or `0.5` within 1,000 steps. `RUN`:
+   0 seeds rejected.
+2. For the remaining 210,000 iterations, the QR step counts every
+   non-positive `R` diagonal. An orbit landing on `x = 0.5`, where `f' = 0`,
+   produces one. `RUN`: 0.
 
 **Transient discarded: 10,000 iterations** before any accumulation begins. This
 is `≈ 6,900` Lyapunov times (`1/λ = 1.443` iterations each) and far longer
 than the arcsine density's mixing time; its purpose is to remove dependence on the seeding
 distribution, not to reach an attractor — `r = 4` has no attractor to reach.
 
-`RUN`, seeds `MF1SEEDS` drawn with rng seed 28, `MF1ITER` measured iterations
+`RUN`, seeds `512` drawn with rng seed 28, `200,000` measured iterations
 each:
 
 ```
-    MEASURED   λ̂ = MF1VAL
+    MEASURED   λ̂ = 0.693147181171
     PREDICTED  λ  = 0.693147180559945          (ln 2, closed form)
-    absolute error = MF1ERR
-    ensemble s.d. MF1SD, standard error of the mean MF1SE, error/s.e. = MF1RATIO
+    absolute error = 6.1140e-10
+    ensemble s.d. 6.7696e-06, standard error of the mean 2.9918e-07, error/s.e. = 0.00
 ```
 
-Non-positive `R` diagonals encountered: MF1COLLAPSE. No orbit collapsed onto
-the fixed point.
+The achieved error is roughly `500×` *below* the standard error of the mean,
+which is structure rather than luck: by (K8b) each seed's error is
+`(φ(u_N) − φ(u_0))/N`, and `φ(u_N)` and `φ(u_0)` are identically distributed
+under the invariant measure, so the boundary terms cancel in the ensemble mean
+on top of the `1/N` already gained. Same coboundary structure as §3.2, same
+reason the control is not representative.
 
-### 3.2 The measured convergence rate
+### 3.2 The measured convergence rate, and a recorded assertion failure
 
 `RUN`, from the same run at no extra cost — the running estimate is snapshotted
 at four checkpoints.
 
-CONVTABLE
+| `N` | mean `λ̂` | `|mean − ln 2|` | per-seed RMS error |
+|---|---|---|---|
+| 200 | `0.693589617` | `4.424e-04` | `6.3535e-03` |
+| 2,000 | `0.693144124` | `3.057e-06` | `6.7146e-04` |
+| 20,000 | `0.693149218` | `2.037e-06` | `6.5909e-05` |
+| 200,000 | `0.693147181` | `6.114e-10` | `6.7630e-06` |
 
-**Fitted slope of `log(RMS error)` against `log N`: MF1SLOPE**, against the
-`−1/2` that (K8) predicts. The convergence rate is measured, not assumed.
+**Fitted slope of `log(RMS error)` against `log N`: `−0.9927`.**
+
+**An assertion fired here and was not weakened.** The first version of the
+script predicted (K8a) from the finite single-step variance `π²/12` and
+asserted `−0.62 < slope < −0.38`. The measured slope was `−0.9927` and the
+assertion failed. **The prediction was wrong, not the instrument**, and the
+reason is exact:
+
+```
+    (K9a)  ln|f'(h(u))| = ln 2 + φ(2u mod 1) − φ(u) ,
+           h(u) = sin²(πu) ,      φ(u) := ln|h'(u)| = ln|π sin(2πu)|
+```
+
+`h` is the (K9) conjugacy. **`ln|f'|` on this map is `ln 2` plus an exact
+coboundary**, so the Birkhoff sum telescopes and (K8b), not (K8a), governs:
+
+```
+    λ̂(N) − ln 2 = ( ln|h'(u_N)| − ln|h'(u_0)| ) / N   ~   N^{−1}
+```
+
+`RUN`, the identity checked at 499 points spanning the interval: max deviation
+`9.5923e-14`, which is roundoff. The corrected assertion tests `−1`, and the script
+now asserts the coboundary identity itself, so the `N^{−1}` rate has a stated
+cause rather than an observed coincidence.
+
+**The consequence is the substantive part.** The logistic map at `r = 4` is
+smoothly conjugate to a linear map — which is *why* its exponent is exactly
+`ln 2`, and is the same fact that makes its convergence anomalously fast.
+**The standard positive control for a Lyapunov instrument does not exercise the
+instrument's generic convergence at all.** Reading `|λ̂ − ln 2| = 6.1140e-10` at
+`N = 200,000` and concluding that the instrument resolves exponents to that
+accuracy on a real system would be wrong by orders of magnitude. The generic
+branch (K8a) has to be measured on a map with no smooth linearisation, which is
+§3.4.
 
 ### 3.3 Negative control — logistic `r = 3.2`, closed form
 
@@ -311,16 +408,16 @@ At `r = 3.2`: `4 + 6.4 − 10.24 = 0.16 = 0.4²`, so
 negative by construction** — `r = 3.2` sits inside the period-2 window, which is
 what makes this a control rather than a coincidence.
 
-`RUN`, MF2SEEDS seeds `x₀ ~ U(0.2, 0.8)`, rng seed 29, transient MF2BURN,
-measured MF2ITER:
+`RUN`, 8 seeds `x₀ ~ U(0.2, 0.8)`, rng seed 29, transient 200,000,
+measured 20,000:
 
 ```
-    MEASURED   λ̂ = MF2VAL      (spread across seeds MF2SPREAD)
+    MEASURED   λ̂ = -0.916290731874071      (spread across seeds `2.220e-16`)
     PREDICTED  λ  = -0.916290731874155
-    absolute error = MF2ERR
+    absolute error = 8.8818e-14
 ```
 
-**Negative, and to MF2DIG figures.** A kit that only fires positive is not
+**Negative, and to 13 figures.** A kit that only fires positive is not
 validated; this is the reading that shows the instrument returns "no chaos
 here" when there is none.
 
@@ -341,18 +438,37 @@ so by the conservation law of §2.1,
     (K11)  λ₁ + λ₂ = ln|det J| = ln b = ln 0.3 = −1.2039728043259361
 ```
 
-exactly, at every iteration count. `RUN`, `a = 1.4`, `b = 0.3`, MF3SEEDS seeds,
-rng seed 30, transient MF3BURN, measured MF3ITER:
+exactly, at every iteration count. `RUN`, `a = 1.4`, `b = 0.3`, 64 seeds,
+rng seed 30, transient 10,000, measured 100,000:
 
 ```
-    MEASURED   λ₁ = MF3L1     λ₂ = MF3L2     sum = MF3SUM
+    MEASURED   λ₁ = +0.419022323     λ₂ = -1.622995127     sum = -1.203972804326
     PREDICTED  sum = -1.203972804325936
-    absolute error = MF3ERR
+    absolute error = 2.2204e-16
 ```
 
-`λ₂ < 0`: MF3NEG — a second negative reading, this one along a contracting
+`λ₂ < 0`: True — a second negative reading, this one along a contracting
 direction of a genuinely chaotic map. Cross-check against the `λ₁ = +0.42084`
-figure carried in `ceq/nonnormal.py:15` and `NOTES.md:163`: deviation MF3CROSS.
+figure carried in `ceq/nonnormal.py:15` and `NOTES.md:163`: deviation `0.00182`.
+
+**The generic convergence rate — the measurement §3.2 could not make.** Hénon
+is not smoothly conjugate to a linear map, so `ln R₁₁` is not a coboundary and
+(K8a) governs. The statistic is the **across-seed standard deviation** of
+`λ̂₁`, which requires no known truth to compute:
+
+| `N` | mean `λ̂₁` | across-seed s.d. |
+|---|---|---|
+| 100 | `+0.422106` | `4.0573e-02` |
+| 1,000 | `+0.421050` | `1.2438e-02` |
+| 10,000 | `+0.419285` | `3.5357e-03` |
+| 100,000 | `+0.419022` | `1.2508e-03` |
+
+**Fitted slope: `−0.5079`**, against the `−1/2` of (K8a). The generic branch of
+(K8) is confirmed on the bed that can test it, and the contrast with §3.2 is
+the point: **the same estimator, unchanged, converges at `N^{−1}` on the
+positive control and `N^{−1/2}` here.** Only the second rate is representative
+of what the instrument will do on a bed that is not secretly linear. Error bars
+quoted for this kit must be taken from MF-3's slope, not MF-1's.
 
 ---
 
@@ -456,7 +572,7 @@ that does not move with `Δt` is a bug in the adjoint. `RUN`:
 The per-halving ratios are `15.6` and `15.4` against the `2⁴ = 16` that (K16)
 predicts, until the run hits the finite-difference floor at `1.37e-09` — where
 the *control* stops improving, not the adjoint. Fitted over the points above
-`10×` that floor the slope is I3SLOPE against the predicted `−4`.
+`10×` that floor the slope is `−3.97` against the predicted `−4`.
 
 **Consequence for the pass.** The gradcheck pass at `rtol = 1e-4` is conditional
 on `Δt`. At 8 RK4 steps the residual is `1.29e-06`, three decades worse; the
@@ -558,12 +674,18 @@ conditionally true, not identically true.
 
 **The two conditions on the `d` route**, both load-bearing:
 
-1. **The measure must be the natural (two-sided) measure on the saddle, not the
-   conditionally invariant measure.** On this bed the conditionally invariant
-   measure obtained by conditioning on *forward* survival alone is Lebesgue
-   itself, whose `ln|f'|` average is `½ln3 + ½ln5 = 1.354`, not `λ = 1.290`. A
-   dimension computed from the forward-conditioned ensemble is the dimension of
-   the wrong measure. Conditioning must run both ways.
+1. **The measure must be the natural (two-sided) measure on the saddle, and
+   only the dimension leg needs it.** On this bed the forward-conditioned limit
+   — the conditionally invariant measure — is Lebesgue itself (K17), which is
+   absolutely continuous and has information dimension **1**, not
+   `D₁ = 0.5128`. Feeding it to the identity would demand `κ = 0`. The Lyapunov
+   leg survives this because `λ` depends only on the *symbol* distribution at a
+   single time, and conditioning on one further survival already draws branch
+   `i` with probability exactly `p_i` — which is why route 2 below is unbiased
+   with zero transient. The dimension leg does not survive it, because a
+   dimension depends on the spatial distribution over infinitely many symbols in
+   *both* time directions. Conditioning must run both ways (sprinkler, PIM
+   triple, stagger-and-step), and that is the expensive part of the third leg.
 2. **The `ε`-range must be wide enough for the log-periodic oscillation to
    damp** — see §5.4, where this is what sets the whole triangle's precision.
 
@@ -821,7 +943,12 @@ and by how much has not been measured.** Any transport of §5.2's "all three
 routes exist" verdict to a higher-dimensional bed must re-establish it there.
 
 **Provenance of the wall-clock figures.** One machine, Windows 11, python
-3.11.9, numpy 1.26.4, torch 2.5.1+cu121, CPU float64, single process. The box
+3.11.9, numpy 1.26.4, torch 2.5.1+cu121, CPU float64, single process, all
+BLAS thread pools pinned to 1 (`OMP/OPENBLAS/MKL/NUMEXPR/VECLIB` set before
+the numpy import, `torch.set_num_threads(1)`). Pinning is not an
+optimisation here: the Benettin loop factorises batches of `1x1` and `2x2`
+matrices, on which multithreaded LAPACK spends more time in thread handoff
+than in arithmetic. The box
 was concurrently running several other measurement lanes during this run, so
 the timings are load-contaminated and are not benchmarks. Every *numerical*
 result above is deterministic given the stated seeds and is unaffected.

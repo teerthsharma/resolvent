@@ -52,7 +52,8 @@ SEED = 28
 LOG4_B, LOG4_N, LOG4_BURN = 512, 200_000, 10_000
 LOG4_CHECK = (200, 2_000, 20_000, 200_000)
 LOG32_B, LOG32_N, LOG32_BURN = 8, 20_000, 200_000
-HENON_B, HENON_N, HENON_BURN = 32, 100_000, 10_000
+HENON_B, HENON_N, HENON_BURN = 64, 100_000, 10_000
+HENON_CHECK = (100, 1_000, 10_000, 100_000)
 ADJ_D, ADJ_T, ADJ_STEPS = 4, 1.0, 128
 ADJ_DT_SWEEP = (8, 16, 32, 64, 128)
 TRI_A, TRI_B = 3.0, 5.0
@@ -266,8 +267,13 @@ def check_i1():
 #       diagonal of the triangular product is prod_n (R_n)_ii.
 # (K7)  lambda_i = lim_{N->inf} (1/N) sum_{n=1}^{N} ln (R_n)_ii   (unit step;
 #       divide by N*dt for a flow).
-# (K8)  ln (R_n)_ii is an ergodic average of a finite-variance observable, so
-#       |lambda_hat_i(N) - lambda_i| ~ sigma_i N^(-1/2).
+# (K8)  lambda_hat(N) - lambda = (1/N) sum_n [psi(x_n) - lambda],  psi := ln R_ii.
+#       GENERIC (mixing, non-degenerate CLT variance sigma^2):
+#            |lambda_hat(N) - lambda| ~ sigma N^(-1/2)
+#       COBOUNDARY case, psi = lambda + (phi.f - phi):  the sum telescopes and
+#            lambda_hat(N) - lambda = (phi(x_N) - phi(x_0)) / N ~ N^(-1)
+#       The logistic map at r = 4 is the SECOND case, not the first -- see (K9a).
+#       Measured this session: logistic slope -0.99, Henon slope near -1/2.
 
 
 def benettin(step, jac, x, n_iter, n_burn, checkpoints=()):
@@ -318,26 +324,37 @@ def henon_np(a, b):
     return step, jac
 
 
-def seed_logistic(b, rng):
-    """(K9 pitfall) seed off every exact preimage of the fixed point 0.
+def seed_logistic(b, rng, probe=1000):
+    """(K9 pitfall) reject seeds whose COMPUTED float64 orbit collapses.
 
-    x = sin^2(pi u) conjugates the r=4 map to u -> 2u mod 1, under which the
-    preimages of 0 are exactly the dyadic rationals.  Drawing u away from
-    k/2^m and rejecting u whose first 60 doubling images come within 2^-40 of
-    an integer removes every seed that would land on 0.5 -> 1 -> 0.
+    FINDING, recorded rather than worked around.  In exact arithmetic the
+    preimages of the fixed point 0 are, in the conjugate coordinate u of (K9),
+    exactly the dyadic rationals -- so the obvious guard is to reject u near
+    k/2^m.  That test cannot be implemented in float64 at all: EVERY float64 u
+    is a dyadic rational, so doubling it 53 times yields exactly 0.0 and an
+    exact-preimage test rejects every seed ever offered.  A first version of
+    this function did exactly that and hung.
+
+    The guard that can be implemented is on the computed orbit, which is the
+    only orbit the run has: reject x0 whose float64 forward orbit reaches 0.0,
+    1.0 or 0.5 within `probe` steps.  The remaining iterations are covered at
+    run time by the non-positive-R-diagonal counter in `benettin`, which fires
+    on any later landing at x = 0.5 where f' = 0.
     """
-    out = []
+    out, rejected = [], 0
     while len(out) < b:
-        u = float(rng.uniform(0.05, 0.95))
-        v, ok = u, True
-        for _ in range(60):
-            v = (2.0 * v) % 1.0
-            if min(v, 1.0 - v) < 2.0 ** -40:
+        x = math.sin(math.pi * float(rng.uniform(0.05, 0.95))) ** 2
+        y, ok = x, True
+        for _ in range(probe):
+            if y == 0.0 or y == 1.0 or y == 0.5:
                 ok = False
                 break
+            y = 4.0 * y * (1.0 - y)
         if ok:
-            out.append(math.sin(math.pi * u) ** 2)
-    return np.array(out).reshape(b, 1)
+            out.append(x)
+        else:
+            rejected += 1
+    return np.array(out).reshape(b, 1), rejected
 
 
 def check_i2_positive():
@@ -346,9 +363,12 @@ def check_i2_positive():
     note("       |du'/du| = 2 everywhere, so lambda = ln 2 = "
          f"{LN2:.16f} exactly.")
     rng = np.random.default_rng(SEED)
-    x0 = seed_logistic(LOG4_B, rng)
+    x0, rejected = seed_logistic(LOG4_B, rng)
     note(f"  seeds: {LOG4_B} draws of x0 = sin^2(pi u), u ~ U(0.05,0.95), "
-         f"rng seed {SEED}, dyadic-preimage rejection over 60 doublings")
+         f"rng seed {SEED}; {rejected} rejected by the 1000-step "
+         f"orbit-collapse probe")
+    note("       (an exact dyadic-preimage test is not implementable in "
+         "float64 -- see seed_logistic)")
     note(f"  transient discarded: {LOG4_BURN}   measured iterations: {LOG4_N}")
     step, jac = logistic_np(4.0)
     t0 = time.perf_counter()
@@ -372,12 +392,34 @@ def check_i2_positive():
              f"|mean - ln2| = {abs(float(hist[n][:, 0].mean()) - LN2):.3e}   "
              f"per-seed RMS err = {r:.4e}")
     slope = float(np.polyfit(np.log(ns), np.log(rms), 1)[0])
-    note(f"        fitted slope of log(RMS err) vs log(N): {slope:+.4f}   "
-         f"(K8 predicts -1/2)")
-    assert -0.62 < slope < -0.38, (
-        f"K8 the measured convergence exponent {slope:+.4f} is not the "
-        f"-1/2 the central limit theorem predicts for a finite-variance "
-        f"ergodic average")
+    note(f"        fitted slope of log(RMS err) vs log(N): {slope:+.4f}")
+    note()
+    note("  (K9a) FINDING -- this is N^-1, not the N^-1/2 a CLT would give, and")
+    note("        the reason is that ln|f'| on this map is an exact COBOUNDARY:")
+    note("            ln|f'(h(u))| = ln 2 + phi(2u mod 1) - phi(u),  "
+         "phi(u) := ln|pi sin(2 pi u)|")
+    note("        with h(u) = sin^2(pi u) the (K9) conjugacy.  The Birkhoff sum")
+    note("        telescopes, leaving a boundary term over N.  Checked here:")
+    worst = 0.0
+    for k in range(1, 500):
+        u = k / 500.13
+        xx = math.sin(math.pi * u) ** 2
+        lhs = math.log(abs(4.0 - 8.0 * xx))
+        rhs = (LN2
+               + math.log(abs(math.pi * math.sin(2 * math.pi * (2 * u))))
+               - math.log(abs(math.pi * math.sin(2 * math.pi * u))))
+        worst = max(worst, abs(lhs - rhs))
+    note(f"        max deviation over 499 points = {worst:.4e}  (roundoff)")
+    assert worst < 1e-11, (
+        f"K9a the coboundary identity fails at {worst:.3e}; the N^-1 "
+        f"convergence has some other cause")
+    note("        CONSEQUENCE: the r=4 positive control is anomalously easy and")
+    note("        does NOT exercise the estimator's generic convergence. "
+         "MF-3 does.")
+    assert -1.15 < slope < -0.85, (
+        f"K9a the measured convergence exponent {slope:+.4f} is neither the "
+        f"-1 the coboundary structure predicts nor anything the derivation "
+        f"explains")
 
     mean = float(lam[:, 0].mean())
     sd = float(lam[:, 0].std(ddof=1))
@@ -395,7 +437,7 @@ def check_i2_positive():
         f"control does not fire and every number downstream of this kit is "
         f"void")
     assert mean > 0.0
-    return mean, err, se
+    return mean, err, se, slope
 
 
 def check_i2_negative():
@@ -444,7 +486,8 @@ def check_i2_henon():
     x0 = np.stack((rng.uniform(-0.1, 0.1, HENON_B),
                    rng.uniform(-0.1, 0.1, HENON_B)), axis=1)
     step, jac = henon_np(a, b)
-    lam, _, collapse = benettin(step, jac, x0, HENON_N, HENON_BURN)
+    lam, hist, collapse = benettin(step, jac, x0, HENON_N, HENON_BURN,
+                                  HENON_CHECK)
     assert np.isfinite(lam).all(), "MF-3 a Henon seed escaped to infinity"
     l1 = float(lam[:, 0].mean())
     l2 = float(lam[:, 1].mean())
@@ -466,7 +509,28 @@ def check_i2_henon():
         f"and the d > 1 path of (K5) is wrong")
     assert l1 > 0.0 > l2, (
         f"MF-3 Henon spectrum is not (+,-): {l1:+.6f}, {l2:+.6f}")
-    return l1, l2, err
+
+    # ---- (K8) generic convergence, on a map with no smooth linearisation ----
+    note()
+    note("  (K8) GENERIC convergence rate.  Henon is not smoothly conjugate to a")
+    note("       linear map, so ln R_11 is not a coboundary and the CLT applies.")
+    note("       Across-seed s.d. of lambda_1_hat, which needs no known truth:")
+    ns, sds = [], []
+    for n in HENON_CHECK:
+        sd_n = float(hist[n][:, 0].std(ddof=1))
+        ns.append(n)
+        sds.append(sd_n)
+        note(f"        N = {n:>8d}   mean lambda_1_hat = "
+             f"{float(hist[n][:, 0].mean()):+.6f}   across-seed s.d. = "
+             f"{sd_n:.4e}")
+    hslope = float(np.polyfit(np.log(ns), np.log(sds), 1)[0])
+    note(f"        fitted slope of log(s.d.) vs log(N): {hslope:+.4f}   "
+         f"(K8 generic branch predicts -1/2)")
+    assert -0.65 < hslope < -0.35, (
+        f"K8 the generic convergence exponent on Henon is {hslope:+.4f}, not "
+        f"the -1/2 the central limit theorem predicts; either the estimator is "
+        f"wrong or Henon's ln R_11 is degenerate too")
+    return l1, l2, err, hslope
 
 
 # ==========================================================================
@@ -1005,6 +1069,8 @@ def main():
          f"{mf2[2]:.9f}  |err| = {mf2[1]:.3e}   PASS (negative)")
     note(f"  MF-3 henon           l1+l2 = {mf3[0] + mf3[1]:+.9f}  vs ln 0.3 "
          f"= {math.log(0.3):+.9f}  |err| = {mf3[2]:.3e}   PASS")
+    note(f"       convergence: logistic slope {mf1[3]:+.3f} (coboundary, N^-1), "
+         f"henon slope {mf3[3]:+.3f} (generic, N^-1/2)")
     note(f"  I3   adjoint gradcheck at rtol = 1e-4: "
          f"{'PASS' if i3[0] else 'FAIL'}   max rel dev = {i3[1]:.3e}   "
          f"dt-slope = {i3[2]:+.2f}")

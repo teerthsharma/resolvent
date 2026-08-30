@@ -19,12 +19,12 @@ Architecture-and-state document is `workdonenew.md`; `ARCH.md` does not exist.
 | A9 | Table generator could not render THE READING; add arm select, derived `n`, `ĥ` column, floor verdict | `scale/r10_it8_table.py` | **DONE** — runs; first output below |
 | A10 | 0-step gate fired on its own null; add measured tolerance | `scale/r10_capacity_sweep.py`, `tests/test_zero_step_gate.py` | **DONE** — `GATE_TOL = 1e-3` from a 16-seed null; 4/4 tests pass |
 | A11b | Gain sweep identity check | `scripts/v13_hop2_gain.py` | **PASSES** — `gain=0.00` reads `0.951602` sd `0.015381`, `+0.000000` against the softmax control, so `z = x + a@x` is softmax's forward exactly |
-| A11 | X₂₈b tangent kit: JVP, Lyapunov via Benettin, adjoint gradcheck, both must-fires | `V13_X28B_TANGENT_KIT.md`, `scripts/v13_tangent_kit.py` | RUNNING |
+| A11 | X₂₈b tangent kit: JVP, Lyapunov via Benettin, adjoint gradcheck, both must-fires | `V13_X28B_TANGENT_KIT.md`, `scripts/v13_tangent_kit.py` | **PARTIAL, report claim false** - positive must-fire passes at `6.114e-10` from `ln 2`, but the script exits on an AssertionError while the report says "exit 0, every assertion passed" with its numbers left as placeholders |
 | A12 | X₂₈c prior art: Kantz–Grassberger `κ = λ(1−d)`, and whether the triangle is circular | `V13_X28C_PRIOR_ART.md` | **DONE** — 720 lines; `d` is `D₁` not `D₀`, so X₂₇a's box counting cannot feed it; triangle not circular but not a physics test |
 | A13 | Independent audit of this session's numeric claims | `V13_CLAIM_AUDIT.md` | **DONE** — 44 CONFIRMED / 9 DISCREPANT / 1 UNVERIFIABLE; all nine corrected, B9 reopened |
 | A17 | Mechanical adjudicator for the filed hop-2 prediction | `scripts/v13_adjudicate_hop2.py` | **DONE** — refuses below N=8; currently exits 2 at 4/8 |
-| A14 | X₂₉a differential hops: deflated operator, CMRR, both must-fires | `scripts/v13_deflated_hop2.py`, `V13_X29A_DEFLATION.md` | **PARTIAL** — must-fires, CMRR and causality guard done; §8's trained comparison is still `SWEEP_TABLE_PLACEHOLDER`, so the pre-registered recovery number does not exist |
-| A15 | X₂₉b Wiener equalizer: per-mode gains, water-filling, DC-gain must fall out | `scripts/v13_wiener_hop.py`, `V13_X29B_WIENER.md` | RUNNING |
+| A14 | X₂₉a differential hops: deflated operator, CMRR, both must-fires | `scripts/v13_deflated_hop2.py`, `V13_X29A_DEFLATION.md` | **DONE** - prediction holds for the renorm projector (`0.951400`, 3/3 seeds below `0.960945`, p=0.0399); the hop stops doing damage and still does not work. Superseded note: **PARTIAL** — must-fires, CMRR and causality guard done; §8's trained comparison is still `SWEEP_TABLE_PLACEHOLDER`, so the pre-registered recovery number does not exist |
+| A15 | X₂₉b Wiener equalizer: per-mode gains, water-filling, DC-gain must fall out | `scripts/v13_wiener_hop.py`, `V13_X29B_WIENER.md` | **DONE** — both must-fires pass; all 64 modes inside the null band trained and untrained; Wiener K=64 `0.958816`, not resolved against softmax |
 | A16 | X₂₉ prior art: graph-SP Wiener, VSA/HRR, Walsh/CDMA, comms-in-ML | `V13_X29_PRIOR_ART.md` | RUNNING |
 
 ## B. CHAIN — strictly ordered, one lane
@@ -964,6 +964,515 @@ initialisation.
 The third outcome is the one the survival check makes likely, and it would mean
 X₂₉a's deflation is repairing a condition the trained arm does not have. That is
 worth knowing before its `SWEEP_TABLE_PLACEHOLDER` is filled, not after.
+
+**Result — the third outcome, and worse than pre-registered.** Trained 150 steps
+at `t*=2, n=2048`, measured at the readout row with the untrained figures beside:
+
+| `K` | logit sd | `cm_row(hop2)` | `‖hop2‖/‖h1‖` | eval | verdict |
+|---|---|---|---|---|---|
+| 8 | 1.1329 | **0.1707** | **0.5121** | 0.960719 | LEARNS |
+| 64 | 1.3666 | **0.2419** | **0.6097** | 1.014347 | NO READING |
+| | *untrained 0.0256* | *0.8727 / 0.8329* | *0.1438 / 1.1400* | | |
+
+Two explanations die here rather than one.
+
+*Common mode.* After training both arms carry `0.17`–`0.24` at the readout row,
+down from `0.87`–`0.83`. There is almost nothing left to filter, so X₂₉a's
+deflation and X₂₉b's DC attenuation both address a condition the trained arms do
+not have. X₂₉b reached the same place from the spectrum, finding zero modes above
+the null band on the trained operator.
+
+*Magnitude.* Untrained, the hop-2-to-hop-1 ratio differs `8×` between the arms
+(`0.1438` against `1.1400`) and that was offered as the surviving mechanism.
+Trained, the ratios converge to `0.5121` and `0.6097` — a `19%` difference — while
+the readings diverge from LEARNS to NO READING. A `19%` difference in a term's
+size cannot produce that.
+
+So neither surviving explanation for the K dependence holds on the arms that were
+actually measured. The `K=8` eval of `0.960719` reproduces the pilot journal's
+seed-0 value exactly, so the harness is consistent; it is the explanations that
+are not. What remains is X₂₉b's bilinear diagnosis — the label's two-hop term is
+`a·a·b`, which no linear functional of `x` can produce — and that is a claim about
+the *shape* of the term rather than its scale or its spectrum, so it is untouched
+by every measurement above.
+
+## X₂₉b — the strongest negative result of the round, and a bilinear diagnosis
+
+Both must-fires pass without special-casing. `SNR 10 → g = 0.909090909`, off the
+closed form by `4.441e-16`. The DC gain **falls out of the formula** rather than
+being asserted: `wiener_gains(c, y)` takes a coordinate matrix and a target, with
+no basis vector, no index and no DC test anywhere, and an exactly-DC direction
+reads `g = 2.564e-04` against a null mean of `1/(n−2) = 4.888e-04`.
+
+The mode basis is SVD and the justification is structural rather than numerical:
+`a@a` is nilpotent, `max|eig| = 0.000e+00`, all 64 eigenvalues zero with
+eigenvectors that do not span. An eigendecomposition here carries *no*
+information, not merely ill-conditioned information.
+
+**The result: every one of the 64 modes falls inside the zero-correlation null
+band** — max `g = 0.004041` against the 99.9% quantile `0.005287` — at `K=64`
+and `K=8`, against the exact oracle, against the raw label, with all 16 channels
+credited. `‖P_wiener‖_F = 0.008173` against `‖I‖_F = 8`. The MMSE-optimal
+treatment of this term is to attenuate it about `979×`, and re-measuring from the
+**trained** operator after 150 steps leaves zero modes above the band. This is
+the one mechanism claim in the round that survives the survival check.
+
+**The arms.** softmax `0.950252`, plain `K=64` `1.000329` — both reproducing the
+commissioned figures to six decimals, which is an independent replication of the
+K sweep — and Wiener `K=64` `0.958816` (sd `0.005158`). Against plain that is
+`−0.041513` at 3.5 SE, resolved; against softmax `+0.008563` at 0.74 SE, not
+resolved. The equalizer undoes the damage and does not buy a gain.
+
+**The diagnosis worth carrying forward.** The label's two-hop term is `a·a·b` —
+bilinear in the operator and the payload — and no linear functional of `x` can
+produce it. If that is right, no per-mode gain, no deflation and no `K` can
+recover the second hop, because the term the arm computes is the wrong *shape*,
+not the wrong scale. That is a different derivation rather than a retuning, and
+it is the first explanation offered this round that is not a statement about
+magnitude.
+
+**A figure of mine that does not reproduce.** The `0.4899` common-mode share for
+`K=8` returns `0.7535 / 0.6517 / 0.6532` under three definitions, while `K=64`'s
+`0.7550` reproduces to `1e-4`, and both X₂₉a and X₂₉b reached that
+non-reproduction independently. It was load-bearing for the already-withdrawn
+"`K=8` filters the common mode" claim and is now void on its own terms as well.
+
+## What the chain label actually is, and what that means for the comparison
+
+`scale/negation_scope.py:307-331`. `equilibrium_hop_reading` is
+
+    z_i = a_i · z_{i-1} + b_i,    a = x[:,:,CH_DRIVE],  b = x[:,:,CH_FLIP]
+
+a first-order linear recurrence whose coefficients are read off the input. Its
+`t`-hop term is `a_{s-1}·a_{s-2}·…·a_{s-t}·b_{s-1-t}`: a **product of drive
+values along a path**, a degree-`(t+1)` monomial in named channels at named
+positions.
+
+Attention supplies `Σ_j α_ij x_j` — a weighted sum — and composing two attention
+hops supplies a sum of sums. A path product is not in that span except through
+the softmax's own nonlinearity, which is why the hop-2 term measures as noise:
+X₂₉b found all 64 Wiener modes inside the zero-correlation null band on the
+trained operator, not merely the untrained one. The term is the wrong **shape**,
+and that is why neither `K`, nor a gain, nor a deflation moved it.
+
+**The uncomfortable consequence for the round's design.** A recurrence
+`z ← a·z + b` with input-dependent `a` is the defining form of a selective
+state-space model. This corpus therefore asks for exactly what a gated linear
+scan computes natively and what attention computes only by approximation. Two
+things follow. Any architecture that wins here wins by being a scan, so a win
+would be a statement about S4/Mamba-class recurrence rather than about this
+project's operator — composition, not novelty, and the prior-art law applies.
+And the softmax control is not a strong baseline on this bed: it is the wrong
+primitive too, which is why it sits at `0.950252` rather than near the floor.
+
+A comparison between two arms that are both poorly matched to the task can still
+be run, and its parity half is still meaningful — that is what C-PAR asks. But
+its capability half measures which arm approximates a scan less badly, not
+whether either occupies ground softmax cannot. That distinction belongs in the
+card before any C-CAP sentence is written.
+
+## GAIN SWEEP — complete, and the CONTENT branch is the verdict
+
+`t*=2, n=2048, steps=150`, seeds 0-2, `K=64`, `threads=6`:
+
+| `γ` | mean | sd | vs softmax |
+|---|---|---|---|
+| 0.00 | 0.951602 | 0.015381 | **+0.000000** — identity check |
+| 0.05 | 0.959863 | 0.015795 | +0.008261 |
+| 0.10 | 0.958562 | 0.009422 | +0.006960 |
+| 0.25 | 0.953986 | 0.006788 | +0.002384 |
+| 0.50 | 0.983356 | 0.025191 | +0.031754 |
+| 1.00 | **1.000583** | 0.027812 | **+0.048981** |
+
+**The cross-harness consistency check passes.** `γ = 1.00` is the full second hop
+at `K = 64`, which `scripts/v13_kpivot_sweep.py` measured independently at
+`1.000329`. The two agree to `0.000254`, well inside the sd of `0.027812`. This
+was specified as the condition for reading either sweep at all, and it is met.
+
+**Verdict against the two branches fixed before the run.** MAGNITUDE required an
+interior optimum — some `γ` beating `γ = 0`. There is none: the best non-zero
+point is `γ = 0.25` at `+0.002384`, inside one control sd of zero, and beyond it
+the reading climbs to NO READING. CONTENT required the best point at `γ = 0` with
+no scaling repairing the term, and that is what the curve shows. **CONTENT.**
+
+This also confirms the independent magnitude prior filed before the sweep
+reported: adding the full term moves `‖z‖` by only about `9–17%`, which is too
+small a scale change to carry a reading from LEARNS to NO READING, so the defect
+could not be one of scale. Two independent routes, one structural and one
+experimental, reach the same branch.
+
+**What CONTENT licenses.** No constant repairs the second hop, so the fix is the
+term's construction. The label's algebra says what construction: `z_i = a_i
+z_{i-1} + b_i` needs a path *product*, and an additive hop cannot supply one at
+any gain. That is the change being tested in `scripts/v13_gated_hop.py`.
+
+## A report that claims a pass the script does not deliver
+
+`V13_X28B_TANGENT_KIT.md` opens with "RUN, this session: exit 0, every assertion
+passed" and "Both must-fires fire", while leaving its numbers as literal
+placeholders - `MF1VAL`, `MF1ERR`, `MF2VAL`, `MF2ERR`, `WALLCLOCK`. Running
+`scripts/v13_tangent_kit.py` resolves the contradiction: it raises
+
+    AssertionError: K8 the measured convergence exponent -0.9927 is not the
+    -1/2 the central limit theorem predicts for a finite-variance ergodic average
+
+so it does not exit 0.
+
+**The instrument is better than that failure suggests.** The positive must-fire
+reads `lambda_hat = 0.693147181` against `ln 2 = 0.6931471805599453`, absolute
+error `6.114e-10` at `N = 200,000` over 512 seeds with 0 rejected, on a clean
+ladder `4.424e-04 -> 3.057e-06 -> 2.037e-06 -> 6.114e-10`. What fails is a rate
+check beside it.
+
+**And that assert is probably the wrong assert.** At `r = 4` the logistic map
+conjugates to the doubling map by `x = sin^2(pi u)`, giving `|du'/du| = 2`
+everywhere - the script's own equation (K9) states it. An estimator whose
+per-step term is constant in the conjugated coordinate has no CLT variance to
+average down, so demanding the `N^-1/2` rate of a finite-variance ergodic average
+is the wrong law for this control. The measured `N^-0.993` fits a deterministic
+bias term rather than fluctuation.
+
+**The rule this earns.** A report's claim that its script passes is not evidence
+that its script passes. Two of six dispatched reports shipped with placeholders
+where their headline numbers belong, and this one asserted a result its own
+artefact contradicts. Every claimed self-check is to be executed before its
+number is quoted anywhere.
+
+## X29a - the prediction holds, and the fix does not buy capability
+
+| arm | mean | sd |
+|---|---|---|
+| softmax control | 0.950252 | 0.019256 |
+| raw `K=64` | 1.000329 | 0.027601 |
+| deflated renorm `K=64` | **0.951400** | 0.004973 |
+| deflated tril `K=64` | 0.958700 | 0.002995 |
+
+Both control rows reproduce the published K-sweep figures to six decimals. The
+pre-registered bound was `<= 0.960945`; renorm clears it with 3/3 seeds below,
+one-sample `t = 3.325`, `p = 0.0399`. Tril is inconclusive (2/3 below,
+`p = 0.1618`), and against the raw sweep's `K=8` sd the band `2 sd/sqrt(3) =
+0.011881` swallows both gaps - both readings are reported rather than one chosen.
+
+**The result that matters is the one the report leads with.** Deflation recovers
+`0.048929` of the `0.050077` the undeflated second hop destroyed, and lands
+`+0.001148` from the 1-hop softmax control at Welch `p = 0.9286`, with
+`floor_2 = 0` untouched. **It stops the second hop doing damage; it does not make
+it work.** A repair that returns an arm to its 1-hop baseline has removed a
+defect, not added a capability, and no C-CAP sentence follows from it.
+
+Three of its findings correct or confirm this file. The naive projector's
+causality break is confirmed at `2016` nonzero entries per example on or above
+the diagonal, exactly `s(s-1)/2`. The coordinator's `0.0296` and `0.0075`
+reproduce exactly. The `0.4899` figure does not reproduce for a third
+independent time - 18 cells give `0.5963`-`0.6796` while `a@a` holds steady at
+`0.7550`.
+
+## Parameter parity of the gated arm
+
+| arm | params |
+|---|---|
+| `softmax` | 4769 |
+| `pivot_unsigned` `K=8` | 4769 |
+| gated hop | 4786 |
+
+`softmax` and `pivot_unsigned` are exactly parameter-identical - the operator
+carries no parameters of its own, which is why the K sweep and the gain sweep are
+clean matched-params comparisons. The gated arm adds `17` parameters, `0.356%`,
+being one `d_model -> 1` projection.
+
+That is small and it is not zero. Any reading from the gated arm is therefore a
+**near-matched** comparison and must be reported as such; the round's claim ladder
+specifies matched params, and 0.356% is the kind of difference that is trivially
+defensible when stated and quietly corrosive when not. If the arm reads well, the
+honest follow-up is a parameter-matched control - the cheapest being softmax with
+an unused projection of the same shape, so both carry the parameter and only one
+uses it.
+
+## X32 - the founding identity checked, and what it actually licenses
+
+v-main.8e §1 states as [RUN, 1e-16] that T steps of the discrete replicator with
+per-step fitness logits `u_t` equals `softmax(eta * sum_t u_t)`. Verified here at
+`max|diff| = 2.220e-16` over `T=40, K=12`, float64, and at `T=1` against a single
+attention row at `5.551e-17`.
+
+**It is a telescoping, not a theorem.** `z_T ~ z_0 * prod_t exp(eta u_t) =
+z_0 * exp(eta sum_t u_t)`, and with uniform `z_0` the normalisation is softmax by
+definition. This is the standard exponential-weights/Hedge fact, and the contract
+already marks the Arora-Hazan-Kale survey `[U]`; L-PRIOR applies before it is
+described as anything but textbook.
+
+**And it cuts the other way from how it reads.** The identity says that when the
+fitness sequence does **not** depend on the state, the replicator carrier *is*
+one softmax over summed logits - not an approximation of it, exactly it. So the
+carrier adds nothing in the state-independent case, and every bit of X32's
+novelty must come from `f_i(z, x)` depending on `z`, through the mean fitness
+`f_bar` and the game matrix. The identity is therefore not evidence for the
+carrier; it is a statement of where the carrier cannot differ from attention, and
+it localises the claim to §2-§5 - ESS, the potential-game gradient structure, and
+the Conley-Morse decomposition.
+
+That localisation is useful rather than deflating: it means the deciding
+measurement for X32 is not "does the carrier beat softmax" but "does state-
+dependent fitness buy anything a summed-logit softmax cannot express", and the
+`rho_P = ||J - J^T||_F / ||J||_F` residual §3 proposes is the right instrument
+for it, being a measurable matrix property with no dial.
+
+## X32 §3 - the potential residual's must-fire is inverted
+
+v-main.8e §3 defines `rho_P = ||J - J^T||_F / ||J||_F`, states its range as
+`[0, sqrt(2)]`, and sets the must-fire "a planted antisymmetric A (RPS) must give
+`rho_P = sqrt(2)`". Measured:
+
+| `J` | `rho_P` | contract |
+|---|---|---|
+| symmetric | **0.000000** | 0, correct |
+| antisymmetric | **2.000000** | says `sqrt(2) = 1.414214` |
+| random iid, `n=64` | 1.416576 | - |
+
+One line settles it: `J` antisymmetric gives `J^T = -J`, so `J - J^T = 2J` and
+`rho_P = 2||J||/||J|| = 2` **exactly, at every `n`**. Checked at `n = 4, 16, 64,
+256`: all read `2.000000` to six decimals. The true range is `[0, 2]`.
+
+`sqrt(2)` is the **random-matrix baseline**. For iid entries `(J - J^T)_ij` has
+twice the entry variance off-diagonal and zero on it, so
+`E||J-J^T||^2 / E||J||^2 = 2n(n-1)/n^2 -> 2` and `rho_P -> sqrt(2)`. Measured
+`1.416576` at `n=64` against the predicted `sqrt(2n(n-1))/n = 1.403122`, and
+`1.411720` at `n=256` against `1.411449`.
+
+**The consequence is that the gate is inverted.** A must-fire calibrated to
+`sqrt(2)` passes a *random* fitness Jacobian, which is what an untrained or
+uninformative one looks like, and fails a *genuine* RPS antisymmetric one, which
+is the structure the must-fire exists to detect. Set at `2.0` for the
+antisymmetric plant and at `sqrt(2)` for the random null, it separates them
+cleanly; set at `sqrt(2)` for the plant it does the opposite of its job.
+
+This is M-14's mechanism - a threshold fixed without computing what the null
+reads - applied to a structural certificate rather than to a detector. The
+certificate itself is sound and remains the right instrument for X32: it is a
+measurable matrix property with no dial and no saturation, and `rho_P = 0`
+genuinely certifies the gradient-flow condition. Only its calibration is wrong.
+
+## X31 - the horizon arithmetic checks out, and it bounds the item
+
+v-main.8e X31a gives `T_guard = (1/lambda) ln(margin/delta)` with `[RUN: 20 steps
+at delta=1e-6, 10 at 1e-3, lambda=0.69]`, and X31b gives steering authority
+`eps * e^(lambda n)` with `[RUN: 1e-6 -> O(1) in 20 steps]`. All three verified:
+
+| quantity | contract | computed |
+|---|---|---|
+| `T_guard`, `delta=1e-6` | 20 | **20.022** |
+| `T_guard`, `delta=1e-3` | 10 | **10.011** |
+| `1e-6 * e^(0.69*20)` | O(1) | **0.9846** |
+
+Implied margins of `0.9846` and `0.9923` are consistent with O(1) separation, so
+the formula is used self-consistently. The framing is also right: the prediction
+horizon and the steering horizon are the **same** number, both
+`(1/lambda) ln(1/delta)`, which is exactly the trade X31b names - sensitivity
+spent as authority.
+
+**The bound the item inherits, which the contract states only implicitly.**
+`T_guard` depends on `delta` logarithmically. At `lambda = 0.69`, improving state
+resolution by `1000x` buys `10.01` additional steps, not `1000x` horizon. So the
+guard's reach is fixed by the Lyapunov exponent and is essentially not
+purchasable: no engineering on state precision extends it materially, and an
+X31c separation table will spend most of its rows in `[EXPIRED]` on any state
+with a healthy positive exponent.
+
+That is not an objection to the item - a guard that knows its own range is what
+X31c asks for, and this is the range. It does mean the honest claim shape is
+"correct within a horizon of order ten to twenty steps", and that number should
+appear in the card rather than the formula.
+
+## X32 §4 - the index theorem needs mutation, and §7 can violate its own hypothesis
+
+§4 proposes Poincare-Hopf as a topological unit test: "for the inward-pointing
+replicator flow, Sum_equilibria index = 1", with an interior saddle forcing two
+further positive-index equilibria. The theorem needs the field transverse to the
+boundary. The pure replicator is not.
+
+Measured at `n=3` on a face where `z_0 = 0` exactly:
+
+| `mu` | `dz_0` | |
+|---|---|---|
+| 0.00 | `-0.000000e+00` | tangent, face invariant |
+| 0.01 | `+3.333333e-03` | inward |
+| 0.10 | `+3.333333e-02` | inward |
+
+`sum(dz) = -5.551e-17` throughout, so the simplex is preserved. At `mu = 0` every
+face is invariant, the field is tangent rather than transverse, the hypothesis
+fails, and the index sum is not pinned to `chi`: each face carries its own
+equilibria independently. **It is the mutation term that makes the theorem
+apply**, so §4's phrase "the inward-pointing replicator flow" is accurate only
+for the replicator-*mutator* form of §1, not for the replicator of §0-§2.
+
+**And §7 can violate the hypothesis it needs.** The arm is
+`z_t = normalize(z_{t-1} (*) exp(eta W_f x_t) + mu (W_b x_t))`, where the
+injection `W_b x_t` is a learned linear map and may be negative in any
+coordinate. Where it is negative at a face with `z_i = 0`, the flow points
+outward there and the index sum is no longer `1` - so the "index sum must equal
+1" gate would fire against a perfectly healthy arm, or pass a sick one,
+depending on the sign the map happens to learn.
+
+The repair is one constraint and it costs nothing: make the injection
+non-negative, `mu * softplus(W_b x_t)` or `mu * exp(W_b x_t)`, which restores
+strict inward-pointing at every face and makes the topological test well posed.
+Without it the gate is not a test of the model, it is a test of an unconstrained
+sign.
+
+## X32 §3 - Fisher's constant is 2 in the setting §3 uses it
+
+§3 states "Fisher's fundamental theorem gives `d fbar / dt = Var_z(f) >= 0`" and
+uses it to make mean fitness a Lyapunov function for potential games. Measured by
+finite difference at `dt = 1e-6`, `n = 6`:
+
+| fitness | `d fbar/dt` | `Var_z(f)` | ratio |
+|---|---|---|---|
+| constant | 1.342429 | 1.342429 | **1.0000** |
+| symmetric `A` (potential game) | 0.095866 | 0.047933 | **2.0000** |
+| random `A` | 0.154738 | 0.114214 | 1.3548 |
+
+`d fbar/dt = Var(f) + z^T A zdot`. For constant fitness the second term is zero
+and Fisher's theorem reads exactly as §3 quotes it. But §3 applies it to a
+potential game, where `f = Az` with `A` symmetric, and there
+`z^T A zdot = zdot^T A z = zdot^T f = Var(f)`, giving **`d fbar/dt = 2 Var(f)`**.
+
+**The certificate is unaffected.** Both expressions are non-negative, so mean
+fitness is still a Lyapunov function and the convergence argument stands intact.
+This is a constant, not a defect in the reasoning.
+
+**Resolved, and the factor has a name.** §3's other claim - that under the
+Shahshahani metric `g_ij = delta_ij / z_i` the replicator is the gradient flow of
+`P` for a potential game - verifies exactly: the replicator field equals the
+projected Shahshahani gradient to `max|diff| = 2.082e-17`, both tangent to the
+simplex (`-2.78e-17`, `-3.47e-17`), with `dP/dt = +0.076220 > 0`, a genuine
+gradient ascent. And `dP/dt / Var_z(f) = 1.0000` exactly.
+
+That reconciles the two figures. With `P = (1/2) z^T A z` the potential and
+`f_bar = z^T A z` the mean fitness, `f_bar = 2P`, so `d f_bar/dt = 2 dP/dt =
+2 Var(f)`. Fisher's `= Var(f)` form belongs to the **potential**, and the mean
+fitness inherits the factor 2 from the quadratic. Both statements are correct;
+§3 attaches the theorem to the wrong one of the two quantities.
+
+**It matters only where it becomes a gate.** §7 asks for an
+`fbar`-monotonicity fraction to be printed per instance, and a must-fire written
+as "`d fbar/dt` equals `Var(f)`" would fail a correct symmetric implementation by
+exactly `2x` - the same shape as the `rho_P` inversion above, where a threshold
+taken from a theorem's general statement is applied in a special case that
+changes its constant. Monotonicity of `fbar` is the right thing to gate on;
+equality with `Var(f)` is not, and the random-`A` row shows why: at `1.3548` it
+obeys neither constant, which is precisely the departure `rho_P` exists to
+quantify.
+
+## The gated (multiplicative) hop - hypothesis refuted
+
+The label is `z_i = a_i z_{i-1} + b_i`, so its `t`-hop term is a path *product*
+of drive values, and additive attention hops cannot produce one. The proposed fix
+was a multiplicative second hop, `z = x + Ax + A(g (*) Ax)` with
+`g = sigmoid(W x)`, costing 17 parameters. Measured at `t*=2, n=2048, 150 steps`,
+seeds 0-2, `threads=10`:
+
+| arm | mean | sd |
+|---|---|---|
+| softmax, 1 hop | 0.952203 | 0.017053 |
+| `pivot_unsigned`, additive hop 2 | 0.957855 | 0.014174 |
+| **gated hop, multiplicative** | **0.966692** | 0.005926 |
+
+`+0.014489` against softmax and `+0.008837` against the additive hop it was built
+to beat. **The hypothesis is refuted**: making the second hop multiplicative, in
+this form, does not recover the capability the additive form lacks. Nothing is
+reinterpreted - the prediction was that a multiplicative hop would help, and it
+does not.
+
+**A likely reason, stated as a hypothesis and not a finding.** The gate is
+`sigmoid(W x)`, bounded to `(0, 1)`, while the label's drive coefficients `a_i`
+are unbounded reals that carry a sign. A bounded non-negative gate cannot
+represent a coefficient that may be negative or larger than one, so the
+construction may be the wrong *multiplicative* form rather than multiplication
+being the wrong idea. Testing that would need a linear gate with no squashing,
+pre-registered before it runs; it is not claimed here.
+
+**What this costs the round.** Four constructions for the second hop have now
+been measured - routed additive at several `K`, scaled additive at several gains,
+deflated additive, and gated multiplicative - and none reaches the 1-hop
+baseline, let alone `floor_2 = 0`. The deflation recovers the damage; nothing
+adds capability.
+
+## X32 §7 must-fires - both pass, and RPS confirms the calibration error
+
+| plant | `rho_P` | behaviour after 200k steps at `dt=1e-3` |
+|---|---|---|
+| RPS (antisymmetric) | **2.000000** | `z = [0.3227, 0.4201, 0.2572]`, snapshot movement `0.2025 -> 0.2167`, still moving: **cycling** |
+| coordination (symmetric) | **0.000000** | `z = [0, 1, 0]`, movement `0.8030 -> 0.0000`: **converged to a vertex** |
+
+Both behave as §7 requires. The RPS row is also an independent confirmation that
+the antisymmetric plant reads `rho_P = 2.000000` and not the `sqrt(2)` the
+must-fire specifies - measured here on the contract's own named example rather
+than on a random antisymmetric matrix.
+
+## X32 §0 - normalisation alone is a no-op; the mechanism is normalisation x injection
+
+§0 says the gated scan is the replicator-mutator "with two things deleted:
+NORMALIZATION ... and THE GEOMETRY", and that putting them back buys the
+equilibrium, stability and topology theory. The first half is measurable.
+
+Running the same fitness sequence through both, `K=8, T=30, eta=0.6`, float64:
+
+| condition | scan normalised post-hoc vs replicator normalised per step |
+|---|---|
+| `mu = 0`, no injection | `max\|diff\| = 1.665e-16` |
+| `mu = 0.15`, with injection | `max\|diff\| = 2.862487e-01`, argmax 5 vs 4, cosine `0.811489` |
+
+**Without injection, per-step normalisation is a no-op.** Normalising at every
+step and normalising once at the end give the same state to machine precision,
+which is the same fact as the `softmax(sum_t u_t)` identity verified earlier: a
+pure multiplicative recurrence commutes with rescaling, so the "coupling of every
+coordinate through `f_bar`" has nothing to act on.
+
+**It becomes substantive only in interaction with injection.** With `mu > 0` the
+two diverge enough to select a different winner - the argmax differs, so this is
+not a numerical technicality but a different answer.
+
+That relocates the claim usefully. X32's departure from a summed-logit softmax
+does not come from normalisation, and does not come from injection alone either
+(the scan has injection and no normalisation). It comes from their **product**:
+renormalising after each injection is what makes earlier injections decay
+relative to later ones, which is the memory the scan lacks. An S3-R arm built
+with a weak or near-zero injection would be softmax with extra steps, so the
+injection scale is not a hyperparameter to tune late - it is the entire
+mechanism, and it should be reported per instance beside `rho_P`.
+
+## X32 §2 - the three-word verdict is implementable, with one caveat that matters
+
+§2 asks for `ESS / neutrally stable / unstable` printed at the converged `z*`,
+"three words instead of 'fixed point'". Implemented from the definition -
+`x*` is an ESS iff `u(x*,x*) >= u(y,x*)` for all `y`, and where equal,
+`u(x*,y) > u(y,y)` - and tested against 4003 candidate deviations including all
+vertices:
+
+| candidate | verdict | worst deviation gain |
+|---|---|---|
+| coordination, vertex 1 (payoff 3) | **ESS** | +0.000000 |
+| coordination, vertex 2 (payoff 1) | **ESS** | +0.000000 |
+| coordination, interior mix | **UNSTABLE (not Nash)** | +0.333333 |
+| RPS, interior `1/3` | **NEUTRALLY STABLE** | +0.000000 |
+
+It discriminates correctly. RPS's interior point is Nash - no deviation gains -
+but fails the second-order condition, so it is neutrally stable rather than an
+ESS, which is precisely why its flow cycles instead of converging. The verdict
+and the dynamics agree without being told to.
+
+**The caveat is the second row.** The *worst* coordination vertex, payoff 1, is
+also an ESS. That is correct game theory - ESS is a local stability notion, not
+global optimality - and it means the three-word verdict answers "is this state
+stable" and never "is this state good". A state head that prints ESS has
+certified that the reading will not be invaded by a nearby alternative, not that
+it settled on the right one, and a card that lets those two readings blur is
+claiming something the instrument does not measure.
+
+That is worth stating because the round's north star is about predicting *which*
+basin, and an ESS verdict is silent on whether the basin reached is the one the
+data implies. The quantity that answers that is the potential `P` or the mean
+fitness `f_bar` at `z*` compared across basins, which is a different print.
 
 ## C. Contract defects these nodes exposed
 
