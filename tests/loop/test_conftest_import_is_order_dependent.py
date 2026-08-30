@@ -68,9 +68,20 @@ BARE_CONFTEST_IMPORTERS = [
 
 
 def collect(*rel_paths: str) -> subprocess.CompletedProcess[str]:
-    """Run pytest's collector only. No test body executes, so this is cheap."""
+    """Run pytest's collector only. No test body executes, so this is cheap.
+
+    Paths go through `resolve()`. Measured at it.4, immediately after the move:
+    `SHADOWER` is `tests/w6/test_w6_attention.py`, an ATTIC row, and handing that
+    literal to the subprocess returned "file or directory not found" -- so both
+    premise binds failed with returncode 4 and reported the shadowing defect as
+    unreproducible. `resolve()` already existed here and already looked under
+    `attic/`; it was applied to the files this guard READS and not to the files it
+    COLLECTS. Same fix, second call site. norecursedirs skips `attic/` on directory
+    recursion only, so an explicitly named path still collects.
+    """
+    args = [str(resolve(r) or (ROOT / r)) for r in rel_paths]
     return subprocess.run(
-        [sys.executable, "-m", "pytest", *rel_paths, "--collect-only", "-q"],
+        [sys.executable, "-m", "pytest", *args, "--collect-only", "-q"],
         cwd=ROOT,
         capture_output=True,
         text=True,

@@ -176,7 +176,23 @@ def test_an_atticked_file_is_not_the_last_must_fire_for_a_live_module(rel: str):
     nodes = must_fire_nodes(rel)
     if not nodes:
         return  # nothing to lose; the overwhelming majority of ATTIC rows
-    reason = next((r for p, _c, _d in audit_rows() for r in [p] if p == rel), rel)
+
+    # THE REMEDY NEEDS A CODE PATH. The first draft ended in an unconditional
+    # `assert False` whose message told the reader "name the surviving calibration
+    # and this goes green" -- and nothing in the function could ever take that
+    # branch. SATURN found it after the iteration-4 move: a guard that cannot pass
+    # is exactly as broken as one that cannot fail, and this one was written to
+    # catch instruments with no rejection region.
+    #
+    # The route is what the round's standing rule asks for, so read the row for it.
+    # Three legal shapes, each a word the reason cell must actually contain:
+    # reroute (name the surviving object), reprice (state the cost), retire (state
+    # the measured reason none is needed).
+    reason = _reason_for(rel)
+    routed = [w for w in ("reroute", "reprice", "retire") if w in reason.lower()]
+    if routed:
+        return  # the kill ships a route; that is the whole demand
+
     assert False, (
         f"{rel} is classed ATTIC and carries {len(nodes)} must-fire nodes "
         f"({', '.join(nodes[:3])}...). Its printed reason is presumption P1, "

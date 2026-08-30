@@ -420,7 +420,28 @@ python run_calib.py --self-test        # 4/4 bit-identical calibration, exit 0
 python -m scale.capability_table       # the table above, rebuilt from the journal
 python -m ceq.hf.smoke                 # the shippable package, CPU only
 python -m ceq.diagnose                 # the sign-flip diagnostic, for another operator
+
+# the two instrument gates and both of their planted-failure controls, in ONE process
+python -m pytest -q \
+  tests/cameron/test_identity_manifest.py::test_mutating_one_config_field_makes_the_refusal_fire \
+  tests/jupiter/test_kirchhoff_agreement.py::test_the_two_oracles_agree_on_drawn_erdos_renyi_instances \
+  tests/jupiter/test_kirchhoff_agreement.py::test_the_two_oracles_agree_on_the_drawn_rips_dirichlet_instance \
+  tests/jupiter/test_kirchhoff_agreement.py::test_the_agreement_check_fires_on_a_planted_off_by_one
 ```
+
+That last command is the whole of the cold verification: the identity manifest must
+refuse a mutated config field **and name the field that moved**, the absorbing-chain
+and matrix-tree oracles must agree on drawn Erdős–Rényi instances and on the shipped
+Rips–Dirichlet case, and the agreement check must itself fire on a planted off-by-one —
+an agreement test that has never seen a disagreement measures nothing. The four node ids
+expand to **9 tests, 9 passed, 7.258 s wall** (0.89 s of that inside pytest).
+
+It is deliberately one process. Running the same four node ids as four invocations costs
+**15.142 s** against **7.258 s** combined on the same machine in the same minute — 7.9 s,
+`2.09x`, of pure interpreter startup for no benefit. It is deliberately not a `make`
+target either: `make` is not on `PATH` on the measurement machine, so a `Makefile` here
+would be a verification step that cannot execute, and a tracked runner wrapping four node
+ids is one more thing that can drift away from the node ids it wraps.
 
 `python -m scale.capability_table --artifact ceq/hf_artifact` assembles the Hub package —
 the model card and the modelling code. **It ships no weights**, deliberately: a

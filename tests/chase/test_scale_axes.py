@@ -75,7 +75,15 @@ def parity_point():
 #: passing is the exact failure this file exists to prevent: the first point of
 #: every axis is the 3.3M parity configuration, which is already known to be
 #: under the bar, so one recorded point would make any axis look green.
-EXPECTED = dict(seq=4, depth=4, heads=4, rho=8)
+#:
+#: rho went 8 -> 12 in R10 P0 it.3: the grid in `axes.py::axis_rho` gained 3.0 and
+#: 4.0 at both sizes, because the first four points put BOTH argmins on the
+#: boundary 2.0 and a quantity pinned to the edge cannot be shown to move.
+#: ponytail: this count and the grid literal in `axes.py::axis_rho` are two
+#: literals for one fact, and extending the grid failed this file first. Derive it
+#: from the grid if a third axis ever needs extending; two is not yet worth the
+#: refactor of hoisting every axis's grid out of its function body.
+EXPECTED = dict(seq=4, depth=4, heads=4, rho=12)
 
 
 def _rows(axis):
@@ -191,6 +199,64 @@ def test_the_tuned_rho_is_the_same_at_two_scales(device):
                     r["x"], r["sgate"], r["ratio"]) for r in small),
                 ", ".join("rho={} val {:.4f} ratio {:.4f}".format(
                     r["x"], r["sgate"], r["ratio"]) for r in large)))
+
+
+def _control_drift(rows):
+    """Largest per-seed relative spread across the softmax controls these rows were
+    actually scored against. Zero when every row shares one control."""
+    cols = list(zip(*[r["softmax_all"] for r in rows]))
+    return max((max(c) - min(c)) / min(c) for c in cols)
+
+
+def _decisive_gap(rows):
+    """Relative ratio gap between the argmin and its nearest grid neighbour: the
+    smallest difference the argmin verdict has to resolve to be a verdict."""
+    rows = sorted(rows, key=lambda r: r["x"])
+    i = min(range(len(rows)), key=lambda j: rows[j]["sgate"])
+    near = [rows[j]["ratio"] for j in (i - 1, i + 1) if 0 <= j < len(rows)]
+    return min(abs(n - rows[i]["ratio"]) for n in near) / rows[i]["ratio"]
+
+
+def test_the_rho_control_drift_is_under_the_gap_the_argmin_turns_on(device):
+    """RED first. `axis_rho` trains softmax ONCE per size and reuses those numbers
+    for every rho, and its docstring claims "the control is literally the same
+    numbers across the grid". That holds WITHIN one run. It was measured FALSE
+    ACROSS runs when R10 P0 it.3 extended the grid from four points to six:
+    re-training the large control on the same machine, same commit, same seeds
+    returned `[1.2280092239379883, 1.2532339096069336]` against the
+    `[1.2280092239379883, 1.2517656087875366]` it.2 recorded. Seed 0 bit-identical,
+    seed 1 moved 1.47e-3. The small (4-layer) control is bit-identical on both
+    seeds; only the 16-layer one moves, which is where nondeterministic reductions
+    have four times as many layers to accumulate through.
+
+    So the twelve rho rows are NOT all scored against one control, and equality is
+    the wrong bar -- it would be permanently red and would tell nobody anything.
+    RESOLUTION is the right bar: the control may drift, but not by enough to move
+    where the argmin sits. Measured at it.3, large: drift 1.173e-3 against a
+    decisive gap of 1.121e-2, a margin of 9.6x.
+
+    The planted case at the end is why this is a measurement and not a decoration.
+    A check on drift that has never seen drift large enough to fire measures
+    nothing.
+    """
+    for size in ("small", "large"):
+        rows = [r for r in _rows("rho") if r["size"] == size]
+        drift, gap = _control_drift(rows), _decisive_gap(rows)
+        assert drift < 0.5 * gap, (
+            "{}: the softmax control drifted {:.3e} across the grid, against a "
+            "{:.3e} gap between the argmin at rho={} and its nearest neighbour. "
+            "The control is no longer fine enough to place the argmin; re-record "
+            "the whole size in one run rather than reading this axis."
+            .format(size, drift, gap,
+                    min(rows, key=lambda r: r["sgate"])["x"]))
+
+    # PLANTED: inflate one control by 10x the decisive gap. The bar must fire.
+    rows = [dict(r) for r in _rows("rho") if r["size"] == "large"]
+    gap = _decisive_gap(rows)
+    rows[0]["softmax_all"] = [v * (1 + 10 * gap) for v in rows[0]["softmax_all"]]
+    assert _control_drift(rows) >= 0.5 * gap, (
+        "the drift bar does not fire on a control inflated by 10x the decisive "
+        "gap, so it would not have caught a real one either")
 
 
 # --------------------------------------------- 5. init-time structural invariants

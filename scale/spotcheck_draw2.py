@@ -21,8 +21,18 @@ TWO DEFECTS IN THE ITERATION-2 DRAW, BOTH MEASURED, BOTH FIXED HERE.
    drawn. Reaching 95% on c=12 by uniform sampling needs k = 67 of 307.
    FIX: MARS's stratified allocation. Floor of 1 on every rule stratum holding >= 2
    rows, singletons pooled into one stratum, remainder proportional to stratum size.
-   P(detect a wholly-wrong rule) = 1.0000 for all 46, which no uniform draw buys below
-   the full sheet.
+   P(detect a wholly-wrong rule) = 1.0000 for every rule holding >= 2 rows.
+
+   CORRECTED AT ITERATION 3 BY MARS, WHO WROTE THE OVERCLAIM. This line read "= 1.0000
+   for all 46, which no uniform draw buys below the full sheet" and that was false at
+   the revision it was measured on. The floor runs over STRATA, not rules: singletons
+   pool into ONE stratum, so at 06a180c 28 of the 46 rules got zero draws, and at
+   f823b02 41 of 61 do. What the floor actually buys, measured both ways at 06a180c:
+   rows at zero draws 151 (uniform) -> 28 (stratified), which is the real gain and the
+   reason to keep this draw; rules at zero draws 39 -> 28, which is not 39 -> 0.
+   The advertised guarantee's price is the RULE count, not the stratum count -- see
+   tests/mars/test_spotcheck_floor_covers_every_rule.py, which is RED on the shipped
+   allocation and carries the executable reprice (unpool, budget 61 of 314).
 
 WHAT THE STRATIFIED DRAW DOES NOT BUY, stated because it cuts against the change.
 MARS measured that stratification does NOT dominate. Against a fixed size-12 cluster
@@ -138,8 +148,16 @@ def main(rev: str) -> int:
           if len(strata) > 1 else f"strata: {len(strata)}")
     print(f"allocation (stratum size -> draws): "
           f"{[(len(s), n) for s, n in zip(strata, draws)]}")
-    print(f"\nevery rule sampled: {all(n >= 1 for n in draws)}  "
-          f"=> P(detect a wholly-wrong rule) = 1.0000 for all {len(by_rule)} rules")
+    by_path = {p: rule_key(r) for p, _c, d, r in all_rows if d == "KEEP"}
+    touched = {by_path[p] for p in k}
+    pool = sum(1 for v in by_rule.values() if len(v) == 1)
+    print(f"\nevery STRATUM sampled: {all(n >= 1 for n in draws)}  "
+          f"=> P(detect a wholly-wrong rule) = 1.0000 for the {len(strata) - 1} rules "
+          f"holding >= 2 rows ({sum(len(v) for v in by_rule.values() if len(v) >= 2)} "
+          f"of {sum(len(v) for v in by_rule.values())} KEEP rows)")
+    print(f"rules actually sampled: {len(touched)} of {len(by_rule)}  "
+          f"=> the {pool} singleton rules pool into ONE stratum drawing {draws[-1]}, "
+          f"so each is sampled with p={draws[-1]}/{pool}={draws[-1] / pool:.4f}")
     print(f"\nKEEP drawn ({len(k)}) -- every one MUST PASS:")
     for p in k:
         print(f"  {p}")
@@ -150,7 +168,7 @@ def main(rev: str) -> int:
 
 
 def demo(rev: str) -> None:
-    """Self-check: reproducible, disjoint, inside the sheet, and every rule sampled."""
+    """Self-check: reproducible, disjoint, inside the sheet, and every STRATUM sampled."""
     a1 = build(rev)
     a2 = build(rev)
     assert a1[4] == a2[4] and a1[5] == a2[5], "draw is not reproducible under its own seed"
@@ -164,7 +182,7 @@ def demo(rev: str) -> None:
     assert sum(len(s) for s in strata) == sum(1 for _p, _c, d, _r in all_rows if d == "KEEP"), \
         "strata do not partition KEEP"
     print(f"demo OK @ {rev}: {len(all_rows)} rows, {len(by_rule)} rules, "
-          f"{len(strata)} strata, every rule sampled, draw reproducible")
+          f"{len(strata)} strata, every stratum sampled, draw reproducible")
 
 
 if __name__ == "__main__":

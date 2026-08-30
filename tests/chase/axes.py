@@ -154,6 +154,13 @@ def axis_rho(corpus, device):
     Two seeds rather than three: the question is where the minimum sits, not how
     tight the estimate at one rho is. softmax is trained ONCE per size -- it has
     no rho -- so the control is literally the same numbers across the grid.
+
+    GRID EXTENDED, R10 P0 it.3. The first four points (0.9, 1.2, 1.5, 2.0) ran to
+    completion and could not answer the question: the ratio was monotone
+    DECREASING across the whole grid at both sizes, so both argmins sat on the
+    boundary point 2.0. A quantity pinned to the edge at both ends cannot be shown
+    to move or not move. 3.0 and 4.0 are one and two octaves out; the second new
+    point is what distinguishes "the argmin is bracketed" from "the wall moved".
     """
     seeds = (0, 1)
     for size, cfg in (("small", dict(d=256, layers=4, heads=4, seq=128, batch=32)),
@@ -162,7 +169,7 @@ def axis_rho(corpus, device):
               for s in seeds]
         base = ([v for v, _ in sm], sm[0][1])
         print("rho control {} softmax {}".format(size, base[0]), flush=True)
-        for r in (0.9, 1.2, 1.5, 2.0):
+        for r in (0.9, 1.2, 1.5, 2.0, 3.0, 4.0):
             _point(corpus, device, axis="rho", x=r, size=size, cfg=cfg, rho=r,
                    seeds=seeds, softmax_from=base)
 

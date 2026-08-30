@@ -805,12 +805,12 @@
 "front_door": [
 [
 72,
-"M3",
+"NS",
 "x, _y, f, p = NS.make_batch(N_PROBE, s, d, d_model=M3.D_MODEL, seed=0)"
 ],
 [
 126,
-"M3",
+"NS",
 "x, _y, _f, _p = NS.make_batch(4, S_DEF, D_DEF, d_model=M3.D_MODEL, seed=0)"
 ],
 [
@@ -886,7 +886,7 @@
 "front_door": [
 [
 80,
-"M3",
+"NS",
 "x, _y, f, p = NS.make_batch(16, 64, 24, d_model=M3.D_MODEL, seed=0)"
 ],
 [
@@ -952,7 +952,7 @@
 ],
 [
 37,
-"M3",
+"NS",
 "x, y, f, p = NS.M3_TASKS[\"e3_t1\"][0](N, S, D, d_model=M3.D_MODEL, seed=seed)"
 ],
 [
@@ -1423,7 +1423,7 @@
 "front_door": [
 [
 49,
-"M3",
+"NS",
 "return NS.make_batch(n, S, D_DIST, d_model=M3.D_MODEL, seed=seed)"
 ],
 [
@@ -1555,12 +1555,6 @@
 "front_door": [],
 "n_front": 0,
 "n_tests": 25
-},
-"tests/loop/test_identity_manifest_covers_every_beyond_key_field.py": {
-"aliases": [],
-"front_door": [],
-"n_front": 0,
-"n_tests": 3
 },
 "tests/loop/test_journal_scan.py": {
 "aliases": [
@@ -1970,14 +1964,6 @@
 "n_front": 5,
 "n_tests": 12
 },
-"tests/saturn/test_r10_it2_spotcheck_reds.py": {
-"aliases": [
-"walk_numbers"
-],
-"front_door": [],
-"n_front": 0,
-"n_tests": 6
-},
 "tests/w10/conftest.py": {
 "aliases": [],
 "front_door": [],
@@ -2179,7 +2165,7 @@
 "front_door": [
 [
 5,
-"select_pivots",
+"pivot_hop2",
 "hop2 = torch.stack([pivot_hop2(a[i], select_pivots(k[i], self.k_pivots))"
 ],
 [
@@ -2194,7 +2180,7 @@
 ],
 [
 69,
-"select_pivots",
+"pivot_hop2",
 "[pivot_hop2(a[i], select_pivots(k[i], k_pivots)) for i in range(n)],"
 ]
 ],

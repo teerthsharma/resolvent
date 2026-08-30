@@ -3,7 +3,8 @@ seed=10003  distinct classing rules over KEEP: 61
 strata: 18 (17 multi-row + 1 pooled singleton)
 allocation (stratum size -> draws): [(114, 5), (36, 3), (25, 2), (19, 2), (13, 2), (12, 2), (7, 1), (7, 1), (7, 1), (6, 1), (6, 1), (6, 1), (4, 1), (2, 1), (2, 1), (2, 1), (2, 1), (44, 3)]
 
-every rule sampled: True  => P(detect a wholly-wrong rule) = 1.0000 for all 61 rules
+every STRATUM sampled: True  => P(detect a wholly-wrong rule) = 1.0000 for the 17 rules holding >= 2 rows (270 of 314 KEEP rows)
+rules actually sampled: 20 of 61  => the 44 singleton rules pool into ONE stratum drawing 3, so each is sampled with p=3/44=0.0682
 
 KEEP drawn (30) -- every one MUST PASS:
   LOOP_PROMPT_ROUND3_ARCHIVE.md
