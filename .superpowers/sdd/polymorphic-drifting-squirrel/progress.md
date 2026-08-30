@@ -1053,3 +1053,86 @@ what C1 was built to make sayable.
 .md: 0, uncovered .py: 0"* against its own docstring's claim to scan every
 uncovered file. **Empty coverage** — which is why Venus's registry addition had no
 collateral. A hole in a different instrument, left for its owner.
+
+## Iteration 3 — Saturn COMPLETE. `MISTAKES.md` 31 → 35, and he corrected four of the controller's numbers first.
+
+Merged. Controller check **36/36 green**.
+
+New entries: **P-8** upper bound stated as a price; **M-8** pricing every arm at
+one arm's rate; **M-9** finest achievable p cannot reach its α; **V-13** a search
+whose walk includes nested checkouts. **M-3** absorbed the cost and power faces
+of pilot-transfer. V-13 was **appended rather than inserted** so nothing
+renumbers — the five files citing `V-1/V-8/D-1/D-4/M-2` all still resolve.
+
+### He refused to ship four of the dispatch's own numbers
+
+1. `m3_quintuple.py:293-295` for `need_gram` is **drifted** — the real sites are
+   `:404` / `:444`.
+2. *"Nine worktrees"* — `git worktree list` returns **ten** (the tenth is the
+   primary checkout), and the phantom count has already moved `10 → 9` since
+   Deimos measured it.
+3. **He could not source M-8's third instance as a distinct document.** Mercury
+   *counts* three; Saturn's entry evidences two and **attributes the count to
+   Mercury rather than padding a bullet to reach three.**
+4. Neptune's pilot quote as the controller gave it was a **paraphrase**; the
+   entry uses Neptune's actual words.
+
+`Ruling: refusing to pad M-8 to three sourced instances is the correct call and
+the ledger records it as such. A mistakes file that inflates its own evidence
+count would be its own first entry. The controller supplied the paraphrase and the
+drifted line numbers; that is the same defect FINDINGS section B was demoted for,
+recurring in dispatch prose rather than in a findings table.`
+
+### He added a citation binder for the file that documents citation failures
+
+`tests/cameron/test_mistakes_citations_resolve.py`, 7 tests, scope-adjacent and
+justified: **both failure classes `MISTAKES.md` documents have already happened to
+`MISTAKES.md` itself** — four citations wrong on first write in iteration 1, two
+drifted by the same commit's own edits, and `mercury-report.md:49` broken this
+iteration. **The checker caught that one pre-commit, which is its RED.**
+
+Stated limit: **the binder checks locations, not content.** A cited line that
+still exists but now says something else passes. Closing that needs each entry to
+carry a re-matchable quoted fragment; not built.
+
+### THE HEADLINE INTERVALS DISAGREE, AND IT IS A PATTERN ACROSS ALL THREE CONTRASTS
+
+Saturn found one instance. Controller verification (`READ`, this session) found it
+is systematic — **two entire families of intervals, every upper bound agreeing and
+every lower bound differing**:
+
+| contrast | family A — ships in `ceq/hf_artifact/README.md` + `capability_table_v0/v1` | family B — `CHECKLIST.md` + `DONE.md` + root `README.md` |
+|---|---|---|
+| `settled − twin` | `[-0.048587, +0.031557]` | `[-0.042903, +0.031557]` |
+| `settled − softmax` | `[+0.066232, +0.147110]` | `[+0.068181, +0.147110]` |
+| `argmax − softmax` | `[-0.134115, -0.102204]` | `[-0.134115, -0.102786]` |
+
+**`DONE.md` contains both families** — `:1844` and `:2198` carry family B,
+`:1884` carries family A. So both were journalled, then propagated into different
+documents.
+
+**The likely cause, stated as a hypothesis and not yet confirmed:**
+`CHECKLIST.md:1168` describes its interval as *"exact enumeration over all
+`5**5 = 3125` paired resamples"*, while `m3_synthetic_settled.contrast` runs an
+`n_boot=10000` percentile bootstrap. **Two legitimate procedures, both correct,
+producing systematically different lower tails — and neither document names which
+one produced its number.**
+
+If that is right, this is not a bug in either number. It is a **provenance
+failure on the project's most-quoted result**, and the version that **ships to
+HuggingFace** is not the version the repository's own README quotes.
+
+`Ruling: routed to Saturn, who found it and owns the instrument class. He
+deliberately left both in place - "picking one without finding the producer makes
+the disagreement invisible" - and that was right. The fix is to find the producing
+run for each family, name it beside every published interval, and make the
+artifact and the README agree on which procedure ships. Cost if wrong: the two
+numbers stay side by side with their provenance attached, which is still better
+than one silently chosen.`
+
+### Stated limit on everything Saturn shipped
+
+**He re-measured only the two cheap things** (worktree count, live phantom count).
+The `3.0×`, `5×`, `1.61×`, `2.1×`, `15.5 h` and `5.9 h` figures in M-8 and P-8 are
+all **READ, not RUN** — if Mercury's or Neptune's timings are wrong, those entries
+inherit the error and would not detect it.
