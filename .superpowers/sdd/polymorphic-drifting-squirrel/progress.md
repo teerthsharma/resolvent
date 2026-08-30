@@ -542,3 +542,50 @@ directories, two planets are still live inside them, and a test that breaks
 because of what is nested in the tree is the test's defect to fix, not a reason to
 delete working directories. Cost if wrong: the tree stays larger than it needs to
 and future repo-wide walks must keep excluding .claude.`
+
+## Deimos second pass — the walk is fixed structurally
+
+`tests/deimos/` **8/8 green** in the integrated tree. All eight attacks still fire.
+
+Fix: replaced `root.rglob("*.py")` plus a directory blocklist with
+**`git ls-files -- '*.py'`** — scoped to the tracked repo rather than the
+filesystem subtree, so it is immune to nested worktrees *regardless of how many
+exist*. That is the right shape: a blocklist would have needed extending every
+time a new nesting appeared.
+
+Swept the tree for the same class (`rglob` / `os.walk` / `Path.glob` /
+`glob.glob` / `iterdir`) — **4 other hits, all confirmed safe and left
+untouched**: `tests/chase/test_eprocess.py` (scoped to `results/`),
+`tests/chase/test_hub_package_hardening.py` (non-recursive, non-matching
+pattern), `scale/chase_struck_coverage.py` (already excludes `.claude`),
+`tests/chase/test_capability_table.py` (scoped to a local output dir).
+
+Deimos noted honestly that the 12/10/1/1 phantom-hit counts are the controller's,
+measured in the integrated tree, and **not independently reproduced by him** —
+his worktree contains no nested worktrees. The fix is structural, so it does not
+depend on that count being right.
+
+New mistake type written up in `tests/deimos/DEIMOS_REPORT.md` under "Addendum",
+for Saturn to fold into `MISTAKES.md`.
+
+## Iteration 2 — in flight
+
+| Planet | Unit | Status |
+|---|---|---|
+| Saturn | Vector consequence corpus `c1_propagate` — `[n, s]` label, k-hop reading, closed-form truncation law, do()-bit movement test | running |
+| Neptune | Per-row arm at **pilot geometry** — write the pivot term at every position, new tuple beside `CELLS`, own `m3_flops` term, degenerate-setting bind | running |
+| Mercury | `Eprocess` overflow at draw 10135 of its own 10240 range + point the calibration battery at the class production uses; then the capability table cut | dispatched |
+
+### Still queued, not yet dispatched
+
+- **Straight-through argmax cell** — resolves Mars's GREEN attack, which showed
+  `argmax`'s alpha carries no `grad_fn` (gate gradient `0.0` against `52.32`
+  twin / `55.15` settled), so the headline `-0.118456` confounds mixture-vs-lookup
+  with trained-vs-untrained selection. Blocked: touches `m3_quintuple.py`, held by
+  Neptune.
+- **`ceq/nash.py` re-run with per-example `tau`** — Deimos's attack 2 reopened it.
+  Free file, dispatch when a seat frees.
+- **`tests/cameron/test_harmonic_attribution.py`** — nine cited symbols exist
+  nowhere; needs a ruling on whether to write the producers or strike the clause.
+  Deferred deliberately: it is a pre-registration question, so Venus should see it
+  before anyone edits.
