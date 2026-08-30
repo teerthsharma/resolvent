@@ -120,7 +120,10 @@ def plant(rel_path: str, old: str, new: str, *, reason: str):
 def demo() -> None:
     """Self-check: the plant lands, reverts, and reverts even when the body raises."""
     rel = "scale/planted.py"
-    marker = "# demo-probe-marker"
+    # Built at runtime: a literal marker would live in the file this demo plants
+    # into, so `marker not in src` could never hold. Same shape as a checksum
+    # file that hashes itself.
+    marker = "# demo-" + "probe-" + "marker"
     src = (ROOT / rel).read_text(encoding="utf-8")
     assert marker not in src, "the probe marker is already in the file"
 
