@@ -165,6 +165,52 @@ Otherwise it is a note, not a feature.
 | 39 | VENUS | prediction-scorecard chapter — every filing vs every outcome, both halves scored, the round's forecasting record |
 | 40 | ALL | prognosis — scoreboard, kills' dispositions, the one claim sentence the trained tables permit, next-X list. STOP. |
 
+## Costing law, measured in round 10 iteration 3 — binding on it.19 and it.21
+
+Iteration 19's Chinchilla arithmetic and iteration 21's throughput probe both price
+work in wall-clock. Two measurements from Phase 0 constrain how, and both were paid
+for already.
+
+**A journalled `seconds` field is not a cost measurement.** `tests/chase/scale_axes.jsonl`
+records `heads x=4` and `seq x=128` as bit-identical re-runs of one config —
+`sgate_all` agrees to the last digit — at **786.28 s and 1072.54 s**. MERCURY
+reproduced the spread deliberately: the same three configs, same harness, ~15 minutes
+apart, with the GPU at 99–100% under eleven concurrent processes, drifted **+269%,
++356%, +304%**. The same work measured uncontended in the iteration-2 rho run spread
+**9.6%–11.2%**. Wall-clock on this machine is a property of the workload *times the
+number of seats holding the GPU*. Any estimate anchored on a journalled second
+inherits whatever load happened to be running when it was recorded.
+
+**A flat per-point unit hides every structural term.** Iteration 2's rho-axis estimate
+was `12,391 s / 8 points = 1,548.875 s` exactly — no size term, no arm term, no seed
+term. Measured: **777 s**, 15.95× over, decomposing exactly as markup 2.152× × anchor
+6.413× × structure 2.727× ÷ size 2.360×. The size term was the only one running the
+correct direction, and the model had none.
+
+**The method that replaces both, and it is binding here:**
+
+> Every estimate is a count of 600-step run-equivalents read off the source that will
+> execute them, multiplied by a seconds-per-RE rate re-measured on the machine at the
+> moment of spend — so the count is falsifiable before the run by reading the file,
+> and the rate is falsifiable in ninety seconds by running one.
+
+Two measured rates to anchor against: **20.58 s/RE uncontended**, **48.89 s/RE at four
+concurrent seats**. Quote both, or quote the one that matches the intended dispatch.
+
+**Two structural facts a parameter-count model is blind to**, both measured at equal
+parameter count (3,319,296 at H=4, H=8, H=16): sgate goes 1.000 → 1.392 → 3.076 RE
+while softmax goes 0.818 → 0.834 → 0.940; and with tokens/step pinned, seq 128 → 1024
+takes sgate 1.000 → 5.525 RE against softmax 0.818 → 1.167. On the two axes a 300M run
+multiplies hardest, the operator costs **3.3× (heads) and 4.7× (seq) its own control in
+wall-clock at equal parameters**. `MODEL_CARD.md`'s shipped 1.32× is a seq-128, H-4,
+3.3M number and does not transfer to it.19's budget.
+
+**Idempotency is not free.** `tests/chase/axes.py::axis_rho` retrains both softmax
+controls *outside* `_point`'s idempotency guard, so re-running an axis with an extended
+grid retrains them unconditionally — **43% of any grid extension**. Check the guard's
+scope before quoting a marginal cost; a "just one more point" estimate that omits the
+control retrain is low by 1.8×–4.3×.
+
 ## Standing gates for this phase
 
 - **No upload without explicit say-so** (it.36). The HF package is built, not published.
