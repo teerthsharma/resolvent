@@ -2211,3 +2211,89 @@ Mars closed his own report with the largest open gap in the round: M4 EVICTION,
 THE E4-PRIME GATES AND THE CALIBRATED M3 HARNESS WERE NOT ATTACKED AT ALL. Three
 of five named GREENs enter the re-audit without an adversary, while Venus has
 already filed a prediction that four of five fall. Dispatched.
+
+## Iteration 4 — Mars COMPLETE. All three unattacked GREENs fired. Running total 15 filed, 12 fired.
+
+Merged. `tests/mars/` 36/36.
+
+### M4 EVICTION — the rejection region is EMPTY, not unexercised
+
+Venus ruled its must-fire insufficient and flagged it as the call she most
+expected to be wrong. MARS SAYS SHE UNDERSTATES IT, and shows why NO SUFFICIENT
+MUST-FIRE CAN BE WRITTEN:
+
+`settle_evicted = settle_exact(evicted_operator(x, keep, rho), x[keep])`, and
+`evicted_operator = rho * _causal_softmax(scores(x[keep]))`. BOTH ARGUMENTS ARE
+FUNCTIONS OF `x[keep]` ALONE, while the perturbed token is chosen with
+`exclude=keep`. There is no path from the perturbation to the output.
+
+Measured: the crushed slot overwritten with `1.0`, `1e6`, `1e12`, `inf` and `nan`
+across 8 draws — output BITWISE IDENTICAL 40/40. THE `nan` ARM IS LOAD-BEARING: a
+NaN that does not reach the output proves there is NO PATH, not a small effect.
+Gaussian redraw of the same slot: evicted 0/8, gated 8/8.
+
+VENUS'S COUNT DOES NOT GO TO 2. Her prediction of 4-of-5-fall STRENGTHENS.
+
+### E4-PRIME — the strike hangs on ONE UNREPEATABLE DRAW
+
+Margin to `PASS_BAR` is `0.028955`. Both seeds in `draw_balanced_marginal` are
+HARDCODED (`random.Random(0x33960000 ^ case.seed)`, `RandomState(0)`), so THE
+SPREAD HAS NEVER BEEN MEASURED.
+
+Reproduced verbatim with the seeds exposed: 20 other draw seeds read
+`0.459390 … 0.506250`, sd `0.010802`, and **1 OF 20 REVERSES THE STRIKE**. The
+shipped draw sits **0.78 sd BELOW the mean of the other twenty — on the side that
+licenses the strike.** Split seeds: 0/20 reverse, closest `0.001423` short.
+
+### CALIBRATED M3 BAR — an in-sample control gating held-out arms
+
+Clause 5 trains on `feats` and scores on THE SAME `feats`, while every arm is
+scored at `seed + 12345`. `rips_gate.py:163-168` REFUSES EXACTLY THIS IN ITS OWN
+DOCSTRING — an in-sample reading credits memorisation as decoding.
+
+Measured: in-sample `0.037681` against held-out `0.067680`, bias `+0.029998` —
+80% relative. NO VERDICT MOVES: the clause's threshold is 1.0 and `BAR CALIBRATED`
+holds under both scorings, ASSERTED NOT ARGUED. A method defect the margin
+absorbs.
+
+### Mars corrected the controller's dispatch, and his reframing is sharper
+
+The dispatch said "+3hop clears `FAIL_BAR` by `0.0049`". WRONG — `0.9951` against
+a bar of `0.9` clears by `0.0951`. **`0.0049` is its distance BELOW THE MEAN
+PREDICTOR**, which is the sharper point: ALL FOUR DECODERS REQUIRED TO FAIL SIT
+WITHIN `0.0049` OF A CONSTANT.
+
+### His one unverified attack is DEAD, and the controller checked it
+
+He flagged, honestly, that he had not confirmed which bar the planted-median
+clause enforces, and that `0.5530` "does not on its face clear `PASS_BAR = 0.5`".
+
+Controller check, RUN this session — `tests/cameron/test_e4prime_registration.py:210`:
+
+    assert median_score < 0.70, median_score
+
+The clause enforces `< 0.70`, NOT `>= PASS_BAR`. `0.5530` clears it correctly.
+AND the `0.70` was a DELIBERATE correction: `DONE.md:1683` records the author
+fixing it herself — "a linear decoder cannot represent a step label, so 0.5 was a
+category error on my part."
+
+RULING: that candidate attack is KILLED and the kill is recorded rather than
+dropped. Mars flagged his own uncertainty instead of filing on it, which is why
+checking it cost one grep instead of an iteration. An attack correctly withheld is
+worth as much to the ledger as one that fires.
+
+### What this does to the re-audit, before it runs
+
+Two of the five standing GREENs now have a filed, fired attack that MOVES A
+VERDICT (M4, E4-prime), one has a method defect its margin absorbs (M3 harness),
+and F-green survived Mars's earlier G1 attack at 96/100 with the exact enumeration
+agreeing. Venus's filed 1-of-5 (or 0-of-5 under the N=5 floor) now has an
+adversarial record standing behind three of the four she downgraded.
+
+### Mars's stated limits
+
+- The E4-prime sweep varies draw and split seeds SEPARATELY, NEVER JOINTLY, so 5%
+  is A FLOOR ON 20 SEEDS, not an interval.
+- The E4-prime ladder values are READ from the dispatch, NOT re-run.
+- The M3 bias was measured at `negation_scope`, NOT at `e2_consequence` where he
+  argues it matters — that step is DERIVED.
