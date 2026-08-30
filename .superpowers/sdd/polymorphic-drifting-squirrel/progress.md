@@ -1402,3 +1402,86 @@ survey around the measured result rather than the original ambition is the highe
 value use of the seat. Cost if wrong: the survey misses a consequence-propagation
 approach, which is why that is carried as an explicit second question rather than
 dropped.`
+
+## Iteration 4 — Neptune COMPLETE. The refuted claim is withdrawn, in four places.
+
+Merged, **47/47 green**. Text only — no code touched, none of Mercury's held
+files modified, no wall clock read.
+
+**He re-derived everything from the committed journal rather than trusting the
+controller's relay.** Means reproduce exactly; `argmaxste`'s forward is bitwise
+`argmax`'s (`torch.equal` True, **128 instances**); the gradients differ.
+
+**The refuted inference lived in FOUR places, not two.** `done7.md:96` also
+carried it and **no previous sweep had found it.**
+
+**Treatment differs by document class, correctly:** `CHECKLIST.md` and `done7.md`
+are dated journals, so he **struck through and annotated in place** rather than
+rewriting what was believed at the time. Only `README.md` was rewritten outright.
+
+Both halves stated precisely — **mixture refuted, equilibrium untouched** — and
+the tie written as a bound in the house form.
+
+### Neptune corrected the controller's own framing of the tie
+
+The controller relayed Mercury's `0.026147` as the bound. **That is the half-width
+of an asymmetric interval and it understates the twin side** — a true delta of
+`−0.029` is *not* excluded by it.
+
+`Ruling: the correct statement of the argmaxste-twin tie is the two-endpoint form
+Neptune shipped - it EXCLUDES a twin advantage beyond 0.029187 and an argmaxste
+advantage beyond 0.023107, and EXCLUDES NOTHING SMALLER. Never "identical", and
+never the single half-width. The controller repeated the half-width to the author
+in the previous status; that is corrected here and in the README.`
+
+### A NEW interval-family disagreement, on a contrast measured this round
+
+Neptune's exact enumeration of `argmaxste − argmax` gives `[+0.212539, +0.245992]`
+against Mercury's `[+0.212433, +0.245886]` — **a constant `1.06e-4` shift on both
+endpoints, the signature of a different estimator family, not noise.** The other
+two contrasts agree to six digits, and Neptune's procedure reproduces the
+published exact pair `argmax − softmax [−0.134115, −0.102786]`.
+
+**The two-families defect recurred on a brand-new contrast, in the same round,
+immediately after Saturn built the binder for it.** The README now prints
+Neptune's exact pair; Mercury owns the cell and must reconcile or label his family.
+
+### AND THE BINDER HAS THE GAP IT WAS BUILT TO CLOSE
+
+> *"The three new intervals are unbound. `test_published_intervals_have_producers.py`
+> is parameterised over a fixed list and does not scan documents, so my rows
+> neither break it nor are covered by it — **the exact condition that file exists
+> to end, recurring one contrast along.**"*
+
+**Third instance of one shape this round:**
+
+| # | Instrument | Validated | Never reached |
+|---|---|---|---|
+| 1 | e-process must-fire battery (Deimos) | a class constructed in the test | the class production reads live data with |
+| 2 | struck-constant scanner `control()` (Jupiter) | the matcher, text injected past target selection | the reach — 366 → 0, exit 0 |
+| 3 | published-intervals binder (Neptune on Saturn's file) | a fixed parameterised list | the documents it polices |
+
+**Each passed its own control throughout, and every control was real, planted and
+non-degenerate — vacuity rule 5 satisfied in all three.** The defect sits one
+level up: **the control validates the instrument's mechanism and never its scope.**
+
+`Ruling: routed to MARS as live evidence for the thirteenth class, with the
+explicit note that instance 3 arrived AFTER Saturn drafted the type for instance
+2 - which is itself evidence about whether the type as drafted catches it. Mars
+must re-verify all three himself; Neptune's is READ until he confirms it. The
+question of whether these are one class or two was already his and now has a third
+data point.`
+
+### Hand-offs to Mercury, recorded so they are not lost
+
+- **The estimator drop is `capability_table.py:475` and `:451`** — both emit a
+  bare `95% CI` while the JSON already ships `n_boot` / `boot_seed` **and a
+  per-row `estimator` string**. The missing test is one asserting the **rendered**
+  header names a family.
+- **Limits (e) is stale on three counts, not one.**
+- **`verdict_of`: the fix already exists in-repo as `capability_table._verdict`.**
+  Add optional `arm` / `ref` names to `verdict_of` and `contrast` — **defaults
+  must stay `settled` / `twin`**, because `run_bucket`'s resume audit compares the
+  journalled value dict bitwise and `contrast` writes `verdict` into it, so **any
+  changed default re-runs every completed unit.** That is the reason the obvious
+  fix would have been destructive, and he found it before doing it.
