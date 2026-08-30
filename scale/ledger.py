@@ -118,6 +118,31 @@ def findings(agent: str | None = None) -> list[dict[str, Any]]:
             if e.get("t") == "finding" and (want is None or _agent(e) == want)]
 
 
+def audits(cites: str | None = None, verdict: str | None = None) -> list[dict[str, Any]]:
+    """Adjudications only -- `t:audit` events that actually carry a verdict.
+
+    Measured round 10 iteration 3: 91 `t:audit` events, of which 82 carry a verdict
+    and 9 do not (MERCURY 8, SATURN 1). Those nine are seats logging their own
+    measurements under the Inspector's event type, which has a defined shape --
+    `cites` and `verdict`. Counting raw `t:audit` events as adjudications inflates
+    the total by ~10%.
+
+    This is the mild form of the round's recurring defect: an event TYPE standing in
+    for an event's CONTENT. It costs nothing today because the only reader that
+    matters is the Inspector, who filters. Making the filtered count the default
+    accessor keeps it costing nothing.
+
+    Verdicts in use, same measurement: clean 61, struck 16, clean-but-unchecked 5.
+    """
+    return [
+        e for e in read()
+        if e.get("t") == "audit" and e.get("verdict")
+        and (cites is None or (isinstance(e.get("cites"), str)
+                               and e["cites"].lower() == cites.lower()))
+        and (verdict is None or e.get("verdict") == verdict)
+    ]
+
+
 def is_bound(node_name: str) -> bool:
     """True if some red event names this node. The binding check, spelled once."""
     return any(e.get("name") == node_name for e in tests(status="red"))
