@@ -24,8 +24,19 @@ import torch
 # process's own designed operating range, on exactly the stream a positive
 # result looks like.
 # =============================================================================
-def test_eprocess_value_overflows_deep_inside_its_own_designed_operating_range():
-    """`scale/eprocess.py` keeps the mixture in LOG SPACE per the class
+def test_eprocess_value_no_longer_overflows_inside_its_own_operating_range():
+    """FIXED in R9 iteration 2. Filed as
+    `test_eprocess_value_overflows_deep_inside_its_own_designed_operating_range`;
+    the ledger in `tests/deimos/DEIMOS_REPORT.md` row 1 cites the old name. The
+    finding below is the record of what was found and is left verbatim. The
+    assertions are inverted to hold the repair in place: `Eprocess.value` now
+    saturates to `inf` through `eprocess._exp_or_inf` instead of raising, the
+    decision is taken in log space against `log_peak`, and `calibrate` now
+    instantiates the live class and requires it to agree with the vectorised
+    path it measures. Full regression battery:
+    `tests/mercury/test_r9_eprocess_overflow.py`.
+
+    `scale/eprocess.py` keeps the mixture in LOG SPACE per the class
     docstring (`Eprocess`, `:294-301`): "G8: the decision compares a mixture
     value against a constant, and the underflow that would matter is an arm
     decaying to zero, which in log space decays linearly." That covers
@@ -56,45 +67,52 @@ def test_eprocess_value_overflows_deep_inside_its_own_designed_operating_range()
     """
     from scale import eprocess as EP
 
-    # -- reproduce the crash on the exact stream a strong, plausible arm
-    #    would produce, at the exact shipped pool size (2048 * 5 seeds).
+    # -- the exact stream that used to crash: a strong, plausible arm at the
+    #    shipped pool size (2048 * 5 seeds). It now runs to the end.
     rng = np.random.default_rng(0)
     n = 2048 * 5
     d = np.clip(rng.normal(0.3, 0.3, n), -EP.B, EP.B)
 
     e = EP.Eprocess()
     crossed_at = None
-    with pytest.raises(OverflowError, match="math range error"):
-        for i, di in enumerate(d, 1):
-            v = e.update(float(di))
-            if crossed_at is None and v >= EP.THRESHOLD:
-                crossed_at = i
+    for i, di in enumerate(d, 1):
+        v = e.update(float(di))
+        if crossed_at is None and v >= EP.THRESHOLD:
+            crossed_at = i
 
-    assert crossed_at is not None and crossed_at < 100, (
-        "sanity: the stream must actually cross the decision threshold long "
-        f"before it crashes, got crossed_at={crossed_at}")
+    assert e.t == n, "the process must survive the whole pooled stream"
+    assert crossed_at == 67, (
+        "the decision must land where it always did, not move with the repair; "
+        f"got crossed_at={crossed_at}")
+    assert e.crossed
+    # past draw 10135 the linear value is genuinely unrepresentable; the number
+    # survives in log space rather than being clamped to a smaller, wrong one.
+    assert math.isinf(e.value)
+    assert math.isfinite(e.log_value) and e.log_value > 700.0
 
-    # -- second, independent path: a hand-adversarial stream (d = +B always)
-    #    crashes far sooner (draw 1757), which is the SMALLEST case that must
-    #    fail if the log-space protection were actually complete end to end.
+    # -- second, independent path: the hand-adversarial stream (d = +B always)
+    #    used to crash at draw 1757, sooner than any realistic one. It is the
+    #    smallest case that must survive if the log-space protection is
+    #    complete end to end.
     e2 = EP.Eprocess()
-    with pytest.raises(OverflowError):
-        for _ in range(3000):
-            e2.update(EP.B)
+    for _ in range(3000):
+        e2.update(EP.B)
+    assert e2.t == 3000 and e2.crossed
+    assert math.isfinite(e2.log_peak)
 
-    # -- the calibration battery that is supposed to vouch for this
-    #    construction (`calibrate`/`_run_block`, :383-437) NEVER calls
-    #    `Eprocess`/`Pair` at all -- it independently re-derives the same
-    #    product with `np.cumsum(np.log1p(...))` and compares in LOG SPACE
-    #    (`ls >= log_thr`, :420-421), which is exactly why it never
-    #    exponentiates a large log-evidence and never sees this crash. The
-    #    branch actually used on real data (`Eprocess.update`) never executes
-    #    inside the must-fire battery that is supposed to certify it.
+    # -- the second half of the finding: the must-fire battery certified a
+    #    vectorised re-derivation and never instantiated the class that reads
+    #    live data. `calibrate` now runs `Eprocess` on a subsample of every
+    #    block and refuses the calibration if the two disagree past BIND_TOL.
     import inspect
-    calibrate_src = inspect.getsource(EP.calibrate) + inspect.getsource(EP._run_block)
-    assert "Eprocess" not in calibrate_src and "Pair(" not in calibrate_src, (
-        "if this fires, calibrate() now exercises the real Eprocess class and "
-        "this finding's second half (untested branch) no longer holds")
+    calibrate_src = (inspect.getsource(EP.calibrate)
+                     + inspect.getsource(EP._eprocess_log_path))
+    assert "Eprocess" in calibrate_src, (
+        "the battery must exercise the class production runs; if this fires "
+        "the untested-branch half of the finding is live again")
+    cal = EP.calibrate(EP.PLANTED_LARGE, n_rep=40, horizon=200, seed=3)
+    assert cal["eprocess_bind_replays"] >= 1
+    assert cal["eprocess_bind_gap"] <= EP.BIND_TOL
 
 
 def test_eprocess_calibrate_max_peak_clamp_is_the_same_overflow_class_dormant():

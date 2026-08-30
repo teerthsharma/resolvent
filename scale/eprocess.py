@@ -291,6 +291,26 @@ def _logsumexp(xs) -> float:
     return m + math.log(sum(math.exp(x - m) for x in xs))
 
 
+#: `math.exp` raises above this; `log(sys.float_info.max)`.
+LOG_FLOAT_MAX = math.log(sys.float_info.max)
+
+
+def _exp_or_inf(x: float) -> float:
+    """`exp(x)`, saturating to `inf` instead of raising `OverflowError`.
+
+    THE SATURATION IS THE HONEST READING, not a workaround. A mixture value past
+    the double range is genuinely larger than any float, and the two alternatives
+    are both worse: raising kills a run that has already decided (the process
+    crossed at draw 67 and crashed at draw 10135 of the shipped 10240-draw pool),
+    and clamping reports a smaller, wrong number. Every value that IS
+    representable comes back bit-identical, so no reader that binds one is
+    disturbed. The number itself survives in log space -- see `Eprocess.log_value`
+    and `log10_max_peak` -- which is the same treatment
+    `eprocess_perdraw.log10_max_attainable` already gives the ceiling formula.
+    """
+    return math.exp(x) if x <= LOG_FLOAT_MAX else math.inf
+
+
 class Eprocess:
     """One direction. `update(d)` folds in one paired difference.
 
@@ -305,16 +325,32 @@ class Eprocess:
         self.b, self.grid, self.threshold = b, tuple(grid), threshold
         self.log_arm = [0.0] * len(self.grid)
         self.t = 0
-        self.peak = 1.0
+        self.log_peak = 0.0                       #: log(1.0); the running sup
         self.history: list[float] = []
 
     @property
+    def log_value(self) -> float:
+        """`log E_t`. This is the primitive; `value` is a view on it.
+
+        Never overflows: `_logsumexp` only ever exponentiates `x - max(x) <= 0`.
+        """
+        return _logsumexp(self.log_arm) - math.log(len(self.grid))
+
+    @property
     def value(self) -> float:
-        return math.exp(_logsumexp(self.log_arm) - math.log(len(self.grid)))
+        """`E_t`, saturating to `inf` past the double range. See `_exp_or_inf`."""
+        return _exp_or_inf(self.log_value)
+
+    @property
+    def peak(self) -> float:
+        """`sup_t E_t`, saturating the same way."""
+        return _exp_or_inf(self.log_peak)
 
     @property
     def crossed(self) -> bool:
-        return self.peak >= self.threshold
+        # Compared in LOG space so the decision survives a peak past the double
+        # range. `exp` is strictly increasing, so this is the same comparison.
+        return self.log_peak >= math.log(self.threshold)
 
     def update(self, d: float) -> float:
         if not math.isfinite(d):
@@ -327,8 +363,9 @@ class Eprocess:
         for g, lam in enumerate(self.grid):
             self.log_arm[g] += math.log1p(lam * d / self.b)
         self.t += 1
-        v = self.value
-        self.peak = max(self.peak, v)
+        lv = self.log_value
+        self.log_peak = max(self.log_peak, lv)
+        v = _exp_or_inf(lv)
         self.history.append(v)
         return v
 
@@ -393,6 +430,35 @@ def _run_block(d: np.ndarray, b: float, peek: bool) -> np.ndarray:
             - math.log(len(LAMBDA_GRID)))
 
 
+#: Worst |log E_t| gap measured between `_run_block` and `Eprocess` over four
+#: spec/horizon combinations was 3.553e-15, at horizon 2000. Six orders of
+#: margin: tight enough to catch a real divergence, loose enough that summation
+#: order alone cannot trip it.
+BIND_TOL = 1e-9
+
+#: Replays per calibration bound against the live class. The check is O(replays
+#: * horizon) Python-level updates, so it is a subsample, not the whole block.
+N_BIND = 8
+
+
+def _eprocess_log_path(row, b: float):
+    """`log E_t` for one replay, computed by the SHIPPED `Eprocess` class.
+
+    `calibrate` measures a vectorised re-derivation of the same product, which
+    is why it is fast enough to run 10 000 replays. Nothing made that
+    re-derivation and the class production actually reads the same object: the
+    must-fire battery certified one construction while `live()` and
+    `eprocess_perdraw.run()` ran another. This is the bridge -- the battery now
+    instantiates the live class and requires the two to agree.
+    """
+    e = Eprocess(b=b)
+    out = []
+    for x in row:
+        e.update(float(x))
+        out.append(e.log_value)
+    return out
+
+
 def calibrate(spec: Spec, *, n_rep: int = 10000, horizon: int = 400,
               seed: int = 0, peek: bool = False, block: int = 500) -> dict:
     """Run the process against a stream whose answer is known in advance.
@@ -412,6 +478,7 @@ def calibrate(spec: Spec, *, n_rep: int = 10000, horizon: int = 400,
     max_log = -math.inf
     cross_t: list[int] = []
     done = 0
+    bind_gap, bind_n = None, 0
     while done < n_rep:
         r = min(block, n_rep - done)
         d = _draw(spec, rng, (r, horizon))
@@ -425,6 +492,22 @@ def calibrate(spec: Spec, *, n_rep: int = 10000, horizon: int = 400,
         n_either += int((any_s | any_t).sum())
         n_a2 += int((ls >= math.log(2.0)).any(axis=1).sum())
         max_log = max(max_log, float(ls.max()))
+        if bind_gap is None and not peek:
+            # `peek=True` is the deliberately broken single-arm rule and
+            # `Eprocess` does not implement it, so binding there would compare
+            # two different constructions and always "disagree".
+            bind_n = min(N_BIND, r)
+            bind_gap = max(
+                max(abs(a - b_) for a, b_ in
+                    zip(_eprocess_log_path(d[i], B), ls[i].tolist()))
+                for i in range(bind_n))
+            if not bind_gap <= BIND_TOL:
+                raise ValueError(
+                    f"the shipped Eprocess class does not agree with the "
+                    f"vectorised path this calibration measures: worst "
+                    f"|log E_t| gap {bind_gap!r} over {bind_n} replays exceeds "
+                    f"BIND_TOL {BIND_TOL!r}. The calibration certifies a "
+                    f"construction production does not run; find the cause.")
         if any_s.any():
             cross_t.extend((hit_s[any_s].argmax(axis=1) + 1).tolist())
         done += r
@@ -432,7 +515,9 @@ def calibrate(spec: Spec, *, n_rep: int = 10000, horizon: int = 400,
         spec=spec.name, peek=peek, n_rep=n_rep, horizon=horizon, seed=seed,
         cross_settled=n_s / n_rep, cross_twin=n_t / n_rep,
         cross_either=n_either / n_rep, frac_above_2=n_a2 / n_rep,
-        max_peak=math.exp(min(max_log, 700.0)),
+        max_peak=_exp_or_inf(max_log),
+        log10_max_peak=max_log / math.log(10.0),
+        eprocess_bind_gap=bind_gap, eprocess_bind_replays=bind_n,
         median_cross_t=(sorted(cross_t)[len(cross_t) // 2] if cross_t else None),
     )
 
@@ -605,7 +690,12 @@ def live(path=DEFAULT_JOURNAL, *, ref: str = "twin", arm: str = "settled") -> di
                 f"E_t = {max(pair.settled.peak, pair.twin.peak)!r}")
     return dict(t=pair.settled.t, e_settled=pair.settled.value,
                 e_twin=pair.twin.value, peak_settled=pair.settled.peak,
-                peak_twin=pair.twin.peak, decision=dec, text=text,
+                peak_twin=pair.twin.peak,
+                # `peak_*` saturate to inf past the double range; these carry the
+                # number itself, as `log10_ceiling` already does for the ceiling.
+                log10_peak_settled=pair.settled.log_peak / math.log(10.0),
+                log10_peak_twin=pair.twin.log_peak / math.log(10.0),
+                decision=dec, text=text,
                 per_seed=paired, void=void,
                 ceiling_here=max_attainable(pair.settled.t),
                 can_decide=max_attainable(pair.settled.t) >= THRESHOLD)
