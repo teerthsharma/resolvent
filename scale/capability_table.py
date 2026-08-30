@@ -72,6 +72,30 @@ from scale.negation_scope import M3_TASKS                          # noqa: E402
 
 JOURNAL = ROOT / "results" / "m3_quintuple_v2.jsonl"
 
+#: Trained probe-arm tensors shipped alongside the card, written by
+#: `scripts/export_hf_weights.py`. `render` reads this so the card cannot deny
+#: weights the artifact directory actually contains. The denial was true when v0
+#: was cut and became false at commit 0162bdd; the README on disk was corrected
+#: by hand and the generator was not, so the next `write_artifact` call would
+#: have reverted the correction. Read here rather than asserted, for the reason
+#: `_weights_present` gives below.
+WEIGHTS_MANIFEST = ROOT / "ceq" / "hf_artifact" / "weights" / "MANIFEST.json"
+
+
+def shipped_weights(path=WEIGHTS_MANIFEST) -> list[dict]:
+    """The VERIFIED entries of the weight manifest, or `[]` if there is none.
+
+    Unverified entries are dropped rather than reported: the export policy
+    deletes a checkpoint that fails its reload check, so an unverified entry
+    means the manifest itself is mid-write or damaged, and a card must not
+    advertise a tensor nothing has re-evaluated.
+    """
+    try:
+        m = json.loads(pathlib.Path(path).read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return []
+    return [w for w in m.get("shipped", []) if w.get("verified")]
+
 
 def _weights_present(seeds) -> int:
     """How many of THIS table's cells have trained tensors on disk.
@@ -117,12 +141,20 @@ CONTRASTS = (
      "CONSTRUCTION, not a measured tie"),
 )
 
-#: `scale/m3_quintuple.py` calls `negation_scope.make_batch` directly and has no
-#: `--task` flag, so the task is a property of the producer rather than of the
-#: journal. Recorded here as an inference, and named so a reader can check it.
+#: WHICH TASK THIS TABLE IS ABOUT, and how a reader checks it. This was once an
+#: inference -- `scale/m3_quintuple.py` had no `--task` flag, so the task could
+#: only be read off the producer. That stopped being true when `--task` was
+#: registered on `m3_quintuple._argparser` (`choices=list(NS.M3_TASKS)`,
+#: defaulting to `SHIPPED_TASK`), and the task became a property of each journal
+#: ROW: `m3_quintuple._key` appends `_task<name>` for every non-shipped task and
+#: `m3_quintuple.task_of` parses it back. `read_journal` below filters on that
+#: parser, so an e3 row sharing the bucket cannot enter a negation-scope table.
+#: The name is still pinned here because the table is about one corpus.
 TASK = "negation_scope"
-TASK_SOURCE = ("scale/m3_quintuple.py:441 calls negation_scope.make_batch "
-               "directly; the journal does not store a task name")
+TASK_SOURCE = ("scale/m3_quintuple.py registers --task (m3_quintuple._argparser, "
+               "choices=list(negation_scope.M3_TASKS), default SHIPPED_TASK) and "
+               "stamps the task into the journal key; m3_quintuple.task_of reads "
+               "it back, and a bare key means the shipped task")
 
 
 def _git(*args) -> str:
@@ -291,10 +323,15 @@ LIMITS = (
     "settling arm has nothing to settle toward on either, so the headline "
     "contrast was near-zero by construction and the NO DIFFERENCE verdict is "
     "evidence about these tasks, not about settling in general. "
-    "(b) `counter_squared` HAS ZERO QUINTUPLE ROWS. It is registered in "
-    "M3_TASKS and runs under `scale/m3_capability.py --task counter_squared`, "
-    "but `scale/m3_quintuple.py` has no `--task` flag, so every number here is "
-    "`negation_scope` at one geometry. "
+    "(b) `counter_squared` HAS ZERO QUINTUPLE ROWS, and not for want of a flag. "
+    "It is registered in M3_TASKS and runs under `scale/m3_capability.py --task "
+    "counter_squared`; `scale/m3_quintuple.py` now registers `--task` too, and "
+    "60 of the 100 rows in `results/m3_quintuple_v2.jsonl` carry an e3 task "
+    "suffix written through it (15 each at `e3_t1`, `e3_t2`, `e3_t8`, `e3_t32`, "
+    "against 25 bare `negation_scope` keys). `counter_squared` was simply never "
+    "run under the quintuple. Every number in THIS table is `negation_scope` at "
+    "one geometry because `read_journal` filters on `m3_quintuple.task_of`, not "
+    "because the corpus is all the producer can emit. "
     "(c) FIVE SEEDS CANNOT DECIDE ANYTHING ANYTIME-VALIDLY. "
     "`eprocess.MIN_T_MIXTURE = 13`; `max_attainable(5) = 3.80169140625` against "
     "`THRESHOLD = 40.0`. The intervals here are fixed-sample, read once, and "
@@ -320,7 +357,15 @@ LIMITS = (
 )
 
 
-def render(t: dict) -> str:
+def render(t: dict, manifest=WEIGHTS_MANIFEST) -> str:
+    """The card. `manifest` is the weight manifest THIS card speaks for.
+
+    It is a parameter and not a constant because the card describes the folder
+    it sits in: `write_artifact` passes the manifest of the directory it is
+    writing, so a package built anywhere else advertises its own `weights/` and
+    not this repository's. Defaulting to the canonical artifact keeps
+    `results/capability_table_v0.md` a statement about the shipped package.
+    """
     p = t["provenance"]
     L = []
     L.append("# Capability table v0 -- CEQ signed pivot-routed attention")
@@ -335,11 +380,25 @@ def render(t: dict) -> str:
     L.append("**Softmax is the baseline and is measured first.** A verdict of "
              "NO DIFFERENCE is printed wherever that is what the interval says.")
     L.append("")
-    L.append("**This package carries NO trained weights.** v0 is the card and "
-             "the modelling code; the numbers below come from "
-             "`results/m3_quintuple_v2.jsonl`, which journals metrics and not "
-             "tensors. A trained checkpoint is a separate deliverable and does "
-             "not exist yet.")
+    shipped = shipped_weights(manifest)
+    if not shipped:
+        L.append("**This package carries NO trained weights.** v0 is the card "
+                 "and the modelling code; the numbers below come from "
+                 "`results/m3_quintuple_v2.jsonl`, which journals metrics and "
+                 "not tensors. A trained checkpoint is a separate deliverable "
+                 "and does not exist yet.")
+    else:
+        L.append("**This package ships no language-model weights, and its table "
+                 "cells carry no weights either.** The numbers below come from "
+                 "`results/m3_quintuple_v2.jsonl`, which journals metrics and "
+                 "not tensors. What IS shipped is a separate, verified set of "
+                 "trained probe-arm tensors under `weights/` -- {} {}-parameter "
+                 "`{}` checkpoints at task `{}`, one per seed. See \"Weights "
+                 "shipped with this package\" below; none of them loads into "
+                 "`CEQForCausalLM` and none is named `model.safetensors`."
+                 .format(len(shipped),
+                         "{:,}".format(shipped[0]["n_params"]),
+                         shipped[0]["cell"], shipped[0]["task"]))
     L.append("")
     L.append("## Arms")
     L.append("")
@@ -406,6 +465,45 @@ def render(t: dict) -> str:
     L.append("")
     L.append("Owner: {}. {}".format(cf["owner"], cf["reason"]))
     L.append("")
+    if shipped:
+        L.append("## Weights shipped with this package")
+        L.append("")
+        L.append("`weights/` carries {} safetensors files, one per seed, all "
+                 "`{}` at task `{}`, geometry `{}`:"
+                 .format(len(shipped), shipped[0]["cell"], shipped[0]["task"],
+                         shipped[0]["geometry"].partition("_")[2]
+                         .replace("_sd{}".format(shipped[0]["seed"]), "")
+                         .replace("_task{}".format(shipped[0]["task"]), "")))
+        L.append("")
+        L.append("| seed | file (`weights/`) | eval NRMSE (journal) |")
+        L.append("|---|---|---|")
+        for w in sorted(shipped, key=lambda w: w["seed"]):
+            L.append("| {} | `{}` | {:.10f} |".format(
+                w["seed"], pathlib.Path(w["file"]).name,
+                w["eval_nrmse_journal"]))
+        L.append("")
+        L.append("Seed mean **{:.6f}**. These tensors carry NO capability "
+                 "claim: they are the ship candidate's arm at the one rung "
+                 "where the cells cleared predict-the-mean, exported for "
+                 "inspection and intervention work. Read the rung's own "
+                 "interval before quoting any of them."
+                 .format(statistics.fmean(
+                     w["eval_nrmse_journal"] for w in shipped)))
+        L.append("")
+        L.append("Provenance, per file (`scripts/export_hf_weights.py`, manifest "
+                 "in `weights/MANIFEST.json`): metrics matched by journal key "
+                 "against `results/m3_quintuple_v2.jsonl`, then each tensor set "
+                 "reloaded from disk into a fresh `scale.m3_quintuple.QuintArm` "
+                 "and re-evaluated on the task's own eval batch. Worst "
+                 "|delta NRMSE vs journal| over the {} shipped files is "
+                 "{:.3e}, against an acceptance bar of {:.0e}. A checkpoint that "
+                 "fails is deleted and left out of the manifest rather than "
+                 "shipped with a caveat, so an unverified entry never reaches "
+                 "this table."
+                 .format(len(shipped),
+                         max(w["abs_delta_vs_journal"] for w in shipped),
+                         max(w["tolerance"] for w in shipped)))
+        L.append("")
     L.append("## Limits")
     L.append("")
     L.append(t["limits"])
@@ -421,13 +519,26 @@ def write_artifact(t: dict, out_dir, *, with_model: bool = False) -> str:
     `configuration_ceq.py`, `modeling_ceq.py`. Still no network: the upload is
     `upload_command`'s text and nothing calls it.
 
-    NO WEIGHTS ARE WRITTEN, and that is deliberate. Calling
+    NO LANGUAGE-MODEL WEIGHTS ARE WRITTEN, and that is deliberate. Calling
     `CEQForCausalLM(CEQConfig()).save_pretrained(...)` here produces a
     1,901,686,656-byte `model.safetensors` at random initialisation -- measured,
     not estimated. A random-init tensor file in a folder whose card reports
     trained NRMSE is the shape of claim this table exists to refuse, and it is
-    also two gigabytes of nothing. v0 is the card and the code; the trained
-    checkpoint is S3b's deliverable and does not exist yet.
+    also two gigabytes of nothing.
+
+    THIS FUNCTION OVERWRITES `README.md` IN `out_dir`. That is the whole hazard
+    it used to carry: `render` asserted "This package carries NO trained
+    weights", which was true when v0 was cut and stopped being true at commit
+    `0162bdd`, when `scripts/export_hf_weights.py` shipped five verified `twin`
+    probe checkpoints and `weights/MANIFEST.json` into `ceq/hf_artifact/`. The
+    README there was corrected by hand and this generator was not, so the next
+    call would have silently reverted the correction and republished a false
+    absence claim. `render` now reads `shipped_weights()` and reports what the
+    manifest actually holds, so the overwrite is safe in both directions: no
+    manifest, and the card says no weights; a manifest, and the card names every
+    file in it. `tests/neptune/test_capability_table_truth.py` fails if that
+    stops being so. Probe checkpoints are still NOT a `CEQForCausalLM`
+    checkpoint, which remains S3b's deliverable and does not exist.
     """
     d = pathlib.Path(out_dir)
     d.mkdir(parents=True, exist_ok=True)
@@ -440,7 +551,8 @@ def write_artifact(t: dict, out_dir, *, with_model: bool = False) -> str:
             src = pathlib.Path(mod.__file__)
             (d / src.name).write_text(src.read_text(encoding="utf-8"),
                                       encoding="utf-8")
-    (d / "README.md").write_text(render(t), encoding="utf-8")
+    (d / "README.md").write_text(
+        render(t, manifest=d / "weights" / "MANIFEST.json"), encoding="utf-8")
     (d / "capability_table_v0.json").write_text(
         json.dumps(t, indent=1), encoding="utf-8")
     return str(d)

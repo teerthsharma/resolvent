@@ -51,8 +51,19 @@ instead of it.** A module that contains softmax and adds a settled correction ca
 tie or win; a module that excludes it has to win a fight it was never going to win.
 
 **And where iteration is known to pay, the iterated object is the REPRESENTATION, not
-the mixture weights** (`arXiv:2311.12424`, ICLR 2024) — which is the one live direction
-that has not yet been measured here.
+the mixture weights** (`arXiv:2311.12424`, ICLR 2024). **The instrument for that
+direction is BUILT and its table is PARTIAL** — it is no longer unmeasured, and it is
+not yet readable. `scale/foreman_looped.py` carries the pre-registration and the bind
+battery (`bind_loops_one_is_shipped`, `operator_is_nilpotent`);
+`results/foreman_looped.jsonl` holds **2 of the 6 cells** the pre-registration requires,
+and `falsifier()` returns `complete: False` and refuses a verdict on a truncated table.
+Measured so far, at `e3_t2`, `steps = 150`, seed 0: `looped3 1.0188051091704295` against
+`softmax 0.9704371404137836`, disjoint bootstrap intervals with the looped interval
+entirely above the mean predictor. **That is not a depth verdict.** `150` is the budget
+already measured to undertrain, `looped3` does 3× the operator work per step, and the
+`0.0484` gap sits inside the measured seed spread (`sd 0.064106` for settled) — a
+one-seed bootstrap interval rules out resampling noise, not seed noise. Missing:
+`e3_t8/looped3@150`, and all three cells at `steps = 600`.
 
 **The full derivations, evidence classes and provenance are in `MATHEMATICS.md`.**
 

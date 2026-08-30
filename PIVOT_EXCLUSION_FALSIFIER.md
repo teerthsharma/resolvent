@@ -153,5 +153,39 @@ Whatever costs the pivot cells `0.103453` at `t* = 1` is not pivot access.
 Per §6, no re-reading of the e3 ladder is licensed by this file, and the e3
 numbers stand as they were taken.
 
-**`settled_plus` was still running when this was written.** The §4 table makes
-the verdict independent of it: outcome row 1 is keyed on `twin_plus` alone.
+## `settled_plus` — finished, and it changes nothing
+
+The sentence that stood here said `settled_plus` was still running. It has since
+finished, in the same run as `twin_plus` (`results/etask_k5e_plus.txt`,
+`2026-08-26 15:19:05`, same geometry, same seed):
+
+```
+       e3_t1    1 settled_plus   4769  1.001455  0.956787    BEATS BAR   318.6
+```
+
+| quantity | value |
+|---|---|
+| `softmax` (reference, on disk) | `0.819665` |
+| `twin` (reference, on disk) | `0.923118` |
+| `settled` (reference, on disk) | `0.978314` |
+| **`settled_plus`** | **`0.956787`** |
+| `settled_plus` − `twin` | **`+0.033669`** (worse) |
+| `settled_plus` − `settled` | `−0.021527` (better) |
+| gap to `softmax` | `0.137122`, against `twin`'s `0.103453` |
+
+**The verdict is unchanged, and it was always going to be.** Outcome row 1 of §4
+fires on `twin_plus` alone; rows 2 and 3 are the only rows `settled_plus`
+appears in and **both are conditioned on `twin_plus <= 0.871391`**, which is
+false. So this number was unreadable under the pre-registration before it was
+taken, and it is unreadable now. It is recorded because the document promised
+it, not because it licenses anything.
+
+**The one thing that must not be read out of it.** `settled_plus` is `0.021527`
+better than plain `settled`, and that is the only direction in this table where
+lifting the exclusion helped anything. It is not evidence. It is one seed with
+no interval on the difference, against a measured seed spread of `sd 0.064106`
+for `settled` — three times the effect. Nothing here separates it from noise,
+and no re-reading of the e3 ladder is licensed by this file (§6). Lifting the
+exclusion still leaves `settled_plus` `0.033669` worse than plain `twin`, so the
+conclusion stands in the form §4 fixed it: **whatever costs the pivot cells
+`0.103453` at `t* = 1` is not pivot access.**

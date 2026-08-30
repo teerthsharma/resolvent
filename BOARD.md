@@ -285,7 +285,7 @@ Generated `results/covariate_table_phaseR8_iter0.json` (RUN, `scale/hyperbolic.p
 
 ### 6e. U2/U3a gate batteries preparation (scaffolding only)
 
-- **U2 mujoco contact-graph DSU n≥1024** and **U3 Tonnetz lattice graphs** — scaffolding code exists as stubs (no M3_TASKS admission). **K-U3 not triggered:** no U3 measurement claim made before reading completes (per §U, scaffolding in R8 allowed, admission only after both gates + planted controls pass). Will build batteries next iters but remain measurement-only until R10.
+- **U2 mujoco contact-graph DSU n≥1024** and **U3 Tonnetz lattice graphs** — **PROSE ONLY. NO CODE OF ANY KIND EXISTS FOR EITHER.** The earlier wording here, "scaffolding code exists as stubs", was false when written and is corrected rather than deleted, because the ambition stands and only the status was wrong. Evidence: `git grep -i tonnetz` returns three hits, all prose — this file twice and `DONE.md` once — and **zero `.py` anywhere in the tree**. There is no U2 contact-graph builder either: the nearest artefact, `ceq/rips.py`, is a geodesic Vietoris-Rips corpus on S², its own header states the upstream disjoint-set implementation is **not** ported because the graphs and not the algorithm are the object there, and its two largest cases (`StableRepeated_S2Rips_1024`, `CriticalLarge_S2Rips_1024`) are sphere samples, not contact graphs. **K-U3 not triggered, and trivially so:** there is nothing to admit to `M3_TASKS`. Both remain wanted; neither is started, and the next agent should budget them as builds from zero rather than as batteries over existing stubs.
 
 ### 6f. Kills flagged and replacement routes (RULE 5)
 
@@ -295,7 +295,7 @@ Generated `results/covariate_table_phaseR8_iter0.json` (RUN, `scale/hyperbolic.p
 | K-R8b truncation gate | NO | k=1 >1.0, monotone, exact at k=32 on both specs, so ladder requires iteration. |
 | **K-R8c δ̂ controls** | **NO — controls FIRED** | Tree 0.000000 and cycle 8.000000 (n=32) both hit, brute-force 1e-12, so δ̂ numbers valid. If had failed, all δ̂ VOID. |
 | K-R8d decoder leak at target n | NO | 1024 holds at 1.0001/0.9951; leak correctly only at 64 (0.0055). |
-| K-U3 (U3 before reading) | NO | No U3 admission; scaffolding only. Flag would fire if Tonnetz admitted to M3_TASKS before gates+controls. |
+| K-U3 (U3 before reading) | NO | No U3 admission, and no U3 code — `git grep -i tonnetz` hits prose only, zero `.py`. Flag would fire if Tonnetz were admitted to M3_TASKS before gates+controls. |
 | RULE N1 (+curvature retired) | NO | Using ≤0 curvature Hilbert linear solve; no sphere averaging. |
 
 ### 6g. Limits, collected once (this iter)
