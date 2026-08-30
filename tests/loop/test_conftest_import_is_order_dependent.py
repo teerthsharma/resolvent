@@ -84,10 +84,29 @@ def test_the_importer_collects_when_it_is_alone():
     assert r.returncode == 0, f"{IMPORTER} does not collect even alone:\n{r.stdout[-2000:]}"
 
 
+def shadower_path() -> str:
+    """The shadower at its own path, or where iteration 4's attic move put it.
+
+    `tests/w6/test_w6_attention.py` was one of the 33 rows retired at iteration 4,
+    so immediately after the move this premise bind failed -- correctly, and that is
+    what a premise bind is for: it reported that its own precondition had moved
+    rather than passing on a file that was no longer there.
+
+    The defect it supports is unchanged by the retirement. Any `tests/w6` file whose
+    conftest lacks `run_isolated` shadows `tests/chase`'s when both are collected in
+    one command, retired or not, because pytest inserts the collected file's
+    directory onto `sys.path` either way.
+    """
+    for candidate in (SHADOWER, f"attic/{SHADOWER}"):
+        if (ROOT / candidate).exists():
+            return candidate
+    return SHADOWER
+
+
 def test_the_shadowing_file_collects_when_it_is_alone():
     """Premise bind, other half. Neither file is individually broken."""
-    r = collect(SHADOWER)
-    assert r.returncode == 0, f"{SHADOWER} does not collect even alone:\n{r.stdout[-2000:]}"
+    r = collect(shadower_path())
+    assert r.returncode == 0, f"{shadower_path()} does not collect even alone:\n{r.stdout[-2000:]}"
 
 
 def test_collecting_the_pair_together_does_not_break_the_import():
@@ -96,7 +115,7 @@ def test_collecting_the_pair_together_does_not_break_the_import():
     Red while `conftest` resolves through sys.path; green once the shared symbols
     live in a module whose name is not claimed by 24 other directories.
     """
-    r = collect(IMPORTER, SHADOWER)
+    r = collect(IMPORTER, shadower_path())
     assert r.returncode == 0, (
         "collecting two individually-collectable files together fails.\n"
         "`conftest` bound to the wrong directory:\n" + r.stdout[-2000:]
