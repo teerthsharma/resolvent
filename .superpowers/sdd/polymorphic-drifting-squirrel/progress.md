@@ -784,3 +784,98 @@ explicitly is not. Assigned to Mercury, who holds execute. Cost if wrong: a
 reading at 2048 rather than 8192 has wider intervals, and the pre-registered
 13-seed resolution 0.027260 may not be reachable at 5 seeds - which must be
 printed as a ceiling BEFORE the run, per LOOP_PROMPT 1.3.`
+
+## Iteration 2 — Mercury COMPLETE. The statistics layer no longer dies mid-run.
+
+Merged. Controller integration check **124/124 green** across `tests/mercury/`,
+`tests/deimos/`, `tests/neptune/`, and the three `tests/chase/` suites covering
+the modules touched.
+
+### Unit 1 — the overflow, reproduced before it was fixed
+
+`OverflowError: math range error` at `eprocess.py:313`, **crossed at draw 67,
+crashed at draw 10135 of 10240**; an adversarial `+B` stream crashes at `1757`.
+
+`log_value` / `log_peak` are now the primitives; `value` / `peak` saturate to
+`inf` via `_exp_or_inf`; `crossed` compares in log space. This follows the
+existing `log10_max_attainable` precedent — **every representable value is
+bit-identical and no decision moved.** `max_peak`'s `min(max_log, 700.0)` clamp
+fixed the same way. **No pre-registered constant moved**, and `update` still
+raises on `|d| > B` rather than clamping.
+
+**The load-bearing half:** `calibrate` now runs **the shipped class** over 8
+replays per calibration and refuses at `BIND_TOL = 1e-9`. Worst real gap
+`3.553e-15`, and **the check is shown to read FALSE under a drifted `update`** —
+so the battery finally exercises the object production uses, which was Deimos's
+actual finding.
+
+### Unit 2 — the table cut, with the guard verified first
+
+Neptune's guard was checked **before** the cut and **against the real
+`ceq/hf_artifact`, not a fixture**. Manifest survived, all five checkpoints
+named, neither denial string returned. v1 and the HF artifact cut;
+`results/capability_table_v0.*` byte-identical.
+
+### Mercury caught Neptune's repair shipping NEW wrong numbers
+
+Neptune's repaired `LIMITS` clause shipped **three stale numbers** — *"60 of the
+100 rows … 15 each"* against a journal holding **61 of 86** with `e3_t1` at
+**16**. Two were true at `25b9cb8`; **`100` never was.** Now derived by
+`_task_census` at cut time rather than stored.
+
+**And a second clobber was still armed:** the plain CLI wrote the frozen v0.
+`BOARD.md:182-191` had documented a hand-edit workaround instead of fixing it.
+Mercury added `--version`, defaulting to `v1`.
+
+`Ruling: a repair that hardcodes fresh numbers is the same defect it repaired.
+Mercury's fix - derive the census at cut time, store nothing - is the correct
+shape and generalises. This is the second time this round a planet has caught the
+previous planet's fix rather than the original bug, and both catches were right.`
+
+### TWO INDEPENDENT PRICINGS DISAGREED. Resolved in Neptune's favour.
+
+- **Neptune: `5.9 h`** for ten units — a `RUN` measurement of the shipped
+  implementation (`settledrow` `25.5432 s/step` → `1.06 h`/unit; `twinrow`
+  `2.7116` → `0.113 h`/unit; `5 × (1.06 + 0.113) = 5.87 h`).
+- **Mercury: `15.5 h`, `13.5×`** — a corrected *analytic* projection. He confirmed
+  Neptune's `settled` base rate independently (`311.62` derived against `315.65`
+  journal median, ratio `1.013`) and correctly showed the original gate charged
+  **all ten units at the settled rate** when `m3_quintuple.py:293-295` makes
+  `twin` a single `logsumexp` with `need_gram=False` — no settle loop for the ×64.
+
+`Ruling: Neptune's 5.9 h stands as the operative number. Both planets are right
+about different objects: Mercury corrected the arithmetic of the ORIGINAL 29.6 h
+gate, which priced a hypothetical implementation calling _alpha once per row;
+Neptune replaced that implementation with one sharing the Gram and A_P @ V, then
+measured it. A measurement of the shipped thing outranks a corrected estimate of a
+thing nobody built. Mercury's correction is not wasted - it shows the original was
+wrong two independent ways, implementation AND per-arm rate. Cost if wrong: the
+deciding run takes longer than budgeted, which the bucket budget absorbs.`
+
+`Ruling: MERCURY'S CONCERN 6 IS A MISTAKE TYPE WITH THREE INSTANCES and goes to
+Saturn for MISTAKES.md - "pricing every arm at the dearest arm's rate". Seen at
+STATE.md:21 (over-priced the ladder 3.0x), at r9_systems_gate.md:196 (the 29.6 h
+headline), and in the original ladder estimate. Three independent occurrences make
+it a pattern, not a slip.`
+
+### Carried, and one adjudication owed
+
+- **`impact` / `impact_hetero` remain in `M3_TASKS`** and therefore in the
+  freshly cut capability card's `registry`, despite being retired on three
+  independent kills and despite `MISTAKES.md:215-228`. Mercury correctly declined
+  — deregistering is an adjudication, not a runner's call.
+
+`Ruling: impact and impact_hetero are NOT deregistered, but the published card
+must stop advertising them as admitted tasks. Deregistration would break Saturn's
+CH_HET repair, Mercury's A5/A6 fixes and their tests, all of which are correct
+work on a task that simply has not earned admission. The honest state is: present
+in the registry, marked NOT ADMITTED with the three kills cited. Assigned to
+whoever next holds the card. Cost if wrong: the card carries a row with a caveat
+instead of no row.`
+
+- Mercury converted one of Deimos's bug-asserting tests now that the bug is fixed
+  — docstring verbatim, assertions inverted, old name carried for ledger
+  traceability. He flagged it because it edits another agent's file. **Correct
+  disclosure and correct handling.**
+- The twin/settled ratio **does not carry across tasks**: twin is `1.61×` *dearer*
+  at `negation_scope`/ntr8192 and `2.1×` cheaper at `e3_t1`/ntr2048.
