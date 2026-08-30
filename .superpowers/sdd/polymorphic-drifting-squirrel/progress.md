@@ -486,3 +486,59 @@ as designed — the planet is the review seat — but moon output is now treated
 UNVERIFIED by default and must be re-measured by its planet before entering a
 report. That clause is already in BASE_PROMPT.md. Cost if wrong: planets spend
 time re-checking moon work that was fine.`
+
+## Iteration 1 — Deimos (moon of Mars) COMPLETE. 8 filed, 8 fired, 3 refuted before filing.
+
+Merged. `tests/deimos/` 7/8 in the integrated tree — see the flip below.
+
+| # | Attack | Class |
+|---|---|---|
+| 1 | **`Eprocess.value`'s `math.exp(logsumexp)` overflows inside `eprocess_perdraw`'s own designed operating range** — crashes at draw 10135 of a realistic 10240-draw pooled run. The decision was already made at draw 67. **And the must-fire calibration battery never exercises the `Eprocess` class that actually reads live data** | RUN |
+| 2 | **`nash_operator`'s live path shares one `safe_tau` across the whole batch** — the exact anti-pattern `negation_scope.py:462-466` names and avoids for the identical construction. Measured to roughly halve mean stance magnitude | RUN |
+| 3 | **`qre_stance`'s residual-reporting safety mechanism is dead code** — `return_residual` consumed nowhere outside its own definition, no call site checks `tau > tau*`, and a constructed below-threshold game has multiple real equilibria | RUN |
+| 4 | **`tests/cameron/test_harmonic_attribution.py` cites nine functions/constants on `negation_scope` that do not exist anywhere in the tree** — an entire "pre-registered" contract clause with fabricated-looking pilot numbers and **zero possible producer**. 11/11 fresh `AttributeError` | RUN |
+| 5 | `e4_harmonic.case_graph`'s `lru_cache` shares a mutable adjacency across calls | dormant |
+| 6 | `eprocess.calibrate`'s `max_peak` clamp, same overflow class | dormant |
+
+**Attack 4 explains the 11 pre-existing failures** that Saturn and Mercury both
+reported and left untouched. They are not a broken test — they are a test whose
+producer was never written, carrying pilot numbers nothing could have produced.
+This compounds Jupiter's finding that both Kirchhoff oracles share `case_graph`:
+attack 5 is the mutable-cache half of that same hole.
+
+`Ruling: ceq/nash.py is REOPENED as a live candidate on the strength of attack 2.
+It was measured once at 5.8198 / 4.2107 / 2.6151 OOD NRMSE with every arm above
+predict-the-mean and abandoned, and a batch-shared tau that halves stance
+magnitude is a sufficient candidate cause for that failure. Deimos correctly
+called it A cause on one seed, not THE cause, so this licenses a re-run and not a
+conclusion. This is the napkin note's page-5 game-theory thread, so it is squarely
+in scope. Cost if wrong: one re-run of a module already written.`
+
+### Deimos's own instrument was bitten by the class he was hunting
+
+`test_qre_residual_is_reported_but_never_read_anywhere_in_the_repo` passed 8/8 in
+his isolated worktree and **fails in the integrated tree**. His walk is
+`root.rglob("*.py")` excluding only `.git` and `node_modules` — and the primary
+repo now holds **nine agent worktrees under `.claude/worktrees/`**, each a full
+copy.
+
+Controller measurement: **12 hits — 10 phantom copies of `ceq/nash.py` inside
+`.claude/worktrees/`, 1 real, 1 self.** The finding is untouched; the instrument
+over-finds.
+
+`Ruling: this is a NEW mistake type and it goes in MISTAKES.md — "a repo-wide
+search whose walk includes nested checkouts, reporting phantom hits and inverting
+a true absence claim into a false presence." It is the sign-flipped twin of entry
+12 (the search structurally incapable of finding anything, which reported zero and
+was used to strike a colleague's evidence). Deimos is resumed to fix his walk, to
+sweep for the same defect in other repo-wide walks, and to write the entry;
+Saturn owns MISTAKES.md and folds it in. Other authors' directories are reported,
+not touched. Cost if wrong: one test scopes its walk more tightly than strictly
+needed.`
+
+`Ruling: the nine agent worktrees under .claude/worktrees/ are NOT pruned. Their
+commits are merged and pruning would be tidier, but the harness owns those
+directories, two planets are still live inside them, and a test that breaks
+because of what is nested in the tree is the test's defect to fix, not a reason to
+delete working directories. Cost if wrong: the tree stays larger than it needs to
+and future repo-wide walks must keep excluding .claude.`
