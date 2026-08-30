@@ -453,6 +453,223 @@ def chain_flipper_dependence(s: int, *, t_star: int | None = None) -> float:
     return 2.0 / math.sqrt(t)
 
 
+# ==========================================================================
+# C1 -- THE VECTOR CONSEQUENCE CORPUS
+#
+# WHY IT EXISTS. Every label in this repository is a scalar point prediction at
+# position `s-1` (`scale/m3_quintuple.py:311`), which is exactly the shape where
+# one softmax layer is provably Bayes-optimal (`arXiv:2410.01537`, conceded at
+# `LOOP_PROMPT.md:34-38`). `STATE.md` items 27-28 record that the project's own
+# novelty claim is UNTESTED because no vector-valued label exists here. Eight
+# rounds raced a baseline at its proven optimum (MISTAKES.md D-1). C1's label is
+# `[n, m]` -- one consequence value per position -- which leaves that regime.
+#
+# THE LABEL, and why it is not the prefix scan. The cheapest vector label is the
+# chain family's own intermediate state `z_p` from `equilibrium_oracle`'s loop.
+# `R9_IRENE_PREDICTION.md` §2b measures what that would ship: `a[:, :head+1]` is
+# zero, so `z_p == b_p` BITWISE for every `p <= head`, and `b` IS the input
+# channel `CH_FLIP`. At `t* = 1` that is 63 of 64 positions whose label is an
+# identity copy of a channel the arm already holds -- the exact defect that
+# `b[:, s-1] = 0.0` was introduced to remove, re-opened at every position that
+# was never zeroed. C1 fixes the DEPTH instead of the position:
+#
+#     y_p = sum_{h=1..t*}  ( prod_{i=p-h+1..p} a_i ) * b_{p-h}
+#
+#   * `h = 0` is absent, so `b_p` never enters `y_p`. That is `b[:, s-1] = 0.0`
+#     applied at EVERY position, and applied to the LABEL rather than to the
+#     input -- the drivers keep full variance, so no position's label is `sd 0`.
+#   * The sum TERMINATES at `t*`. The operator is nilpotent, not a contraction,
+#     so `t*` is a hop count and not a tolerance. That is what puts both the
+#     truncation law and the flipper dependence in closed form with no constant
+#     fitted, and it is the same choice `make_equilibrium_batch` documents.
+#   * Every labelled position sums `t*` INDEPENDENT unit-variance terms with
+#     unit-modulus weights, so `Var(y_p) = t*` at every position alike. No
+#     coordinate is privileged, which is what makes the pooled reading a reading
+#     of the task rather than a variance-weighted average of one position.
+#
+# THE BAND. Positions `p < t*` have no full window, and causality forbids fixing
+# that: a strictly causal operator raised to the `t*` power vanishes on the first
+# `t*` coordinates, always. So the label is `[n, s - t*]` -- vector-valued, with
+# NO degenerate position, rather than an `[n, s]` carrying `t*` entries of
+# `sd 0`, which is the fourteenth strike wearing a new shape (MISTAKES.md V-8).
+#
+# NO NEW CHANNEL. The encoding is the chain family's own: CH_DRIVE carries the
+# Rademacher coefficients `a`, CH_FLIP the Gaussian drivers `b`. The channel
+# ladder is full at `d_model = 16` (CH_FLIP 0 .. CH_DOC 15, plus `CH_HET` in
+# `scale/impact.py`), and this family needs exactly the two objects the chain
+# family already owns, so reuse is correct rather than merely cheap. `d_model`
+# is unchanged and every published reading of every other task is untouched.
+# ==========================================================================
+
+#: The rungs, chosen to MIRROR the e3 ladder so the two lanes are comparable at
+#: the same four dials. A name carrying `_sd`, `_task`, `_k` or `_b` breaks the
+#: journal key parsers (`scale/m3_quintuple.py:561-577`); `c1_propagate_t*`
+#: carries none of them, and `tests/cameron/test_c1_propagate_registration.py`
+#: asserts that rather than trusting it.
+C1_T_SIBLINGS = (1, 2, 8, 32)
+C1_RUNG = {f"c1_propagate_t{t}": t for t in C1_T_SIBLINGS}
+
+
+def _shift_one(v: torch.Tensor) -> torch.Tensor:
+    """`out[:, p] = v[:, p-1]`, zero at `p = 0`. The one-hop operator."""
+    return torch.cat([torch.zeros_like(v[:, :1]), v[:, :-1]], dim=1)
+
+
+def propagate_hop_reading(x: torch.Tensor, k: int, *, t_star: int) -> torch.Tensor:
+    """The `k`-BUDGET reading of the C1 label: `sum_{h=1..min(k,t*)} A^h b`.
+
+    ONE FUNCTION SERVES THE LADDER AND THE LABEL -- `propagate_oracle` is this
+    function at `k = t*`. `scale/e4_harmonic.py:191` states the rule: "One
+    function for both, because they are the same object." A separate ladder
+    function can drift from the label it is read against; this one cannot.
+
+    THE CLOSED FORM, with no constant fitted. `A^h b` at position `p` is
+    `+-b_{p-h}`, so the `t*` terms of the label touch `t*` DISTINCT drivers and
+    are independent with unit variance. The label is therefore `N(0, t*)` at
+    every labelled position and the discarded tail is `t* - k` of the same
+    terms, so
+
+        NRMSE(R_k, y) = sqrt((t* - k) / t*)   for k <= t*,   exactly 0 above
+
+    -- 1.0 at `k = 0`, bounded away at every `k < t*`, tightening with `k`, and
+    BITWISE exact at the full budget. The `k = 0` end is the load-bearing one:
+    `R_0` is the empty sum, so it is bitwise zero and `nrmse(0, y)` is the
+    identity `sqrt(1 + mean(y)**2 / var(y)) >= 1.0`. No share of this label is
+    legible without hops, structurally rather than by measurement, which is the
+    property `run_arm`'s RED gate needs and the one a prefix-scan label loses.
+
+    `k` above `t*` is clamped rather than rejected, because the sum terminates:
+    that IS the nilpotency, and `e_ladder_ks` prints `t* + 1` to show it.
+    """
+    a, b = x[:, :, CH_DRIVE], x[:, :, CH_FLIP]
+    out = torch.zeros_like(b)
+    u = b
+    for _ in range(max(0, min(int(k), int(t_star)))):
+        u = a * _shift_one(u)
+        out = out + u
+    return out[:, int(t_star):]
+
+
+def _check_dial(s: int, t_star: int) -> None:
+    """`1 <= t* <= s // 2`, and the upper half is not decoration.
+
+    The lower bound is the label existing at all. The UPPER bound is what makes
+    `propagate_flipper_dependence` exact: negating the driver at `f = s-1-t*`
+    moves the label at positions `f+1 .. f+t*`, and all `t*` of them lie inside
+    the band `[t*, s)` only when `s >= 2 t*`. Above that the perturbation runs
+    off the front of the band, the count of moved positions drops below `t*`,
+    and the closed form would be quietly wrong instead of loudly refused.
+    """
+    if not (1 <= t_star <= s // 2):
+        raise ValueError(
+            f"t_star={t_star} is not admissible at s={s}: C1 requires "
+            f"1 <= t_star <= s//2 = {s // 2} so that the full do()-bit window "
+            f"lies inside the label band")
+
+
+def propagate_oracle(x: torch.Tensor, f: int, p: int) -> torch.Tensor:
+    """The C1 label, `[n, s - t*]`, recomputed ENTIRELY from `x`. Nothing stored.
+
+    `t*` IS READ BACK OUT OF `f`, not stored in a channel and not passed
+    alongside. `make_propagate_batch` returns `f = s - 1 - t*`, the head of the
+    chain, exactly as `make_equilibrium_batch` does -- so the dial round-trips
+    through the signature every consumer already passes. `_e4prime_marks` raises
+    on malformed marks and this does the same: an `f` that does not decode to a
+    dial this family admits is an error, not a silently different task.
+    """
+    t_star = x.shape[1] - 1 - int(f)
+    _check_dial(x.shape[1], t_star)
+    return propagate_hop_reading(x, t_star, t_star=t_star)
+
+
+def propagate_features(x: torch.Tensor, f: int, p: int) -> torch.Tensor:
+    """The oracle features for `calibrate_bar`'s trained positive control.
+
+    THE SAME WIDTH AND THE SAME DIFFICULTY CLASS AS `equilibrium_features`, per
+    position. The label's last recursion step is
+    `y_p = a_p * (b_{p-1} + R_{t*-1}[p-1])`, so the control is handed those two
+    numbers -- the oracle's INPUTS, never its output -- and must learn the
+    multiply. Width 2, so the control's own initialisation draw is identical to
+    the shipped one and to the chain family's.
+
+    Shape is `[n, m, 2]`: `torch.nn.Linear` acts on the trailing axis, so the
+    control maps `[n, m, 2] -> [n, m]` and predicts the vector label per
+    position with no change to `calibrate_bar`'s clause 5.
+    """
+    t_star = x.shape[1] - 1 - int(f)
+    _check_dial(x.shape[1], t_star)
+    a, b = x[:, :, CH_DRIVE], x[:, :, CH_FLIP]
+    acc = b
+    u = b
+    for _ in range(t_star - 1):
+        u = a * _shift_one(u)
+        acc = acc + u
+    w = _shift_one(acc)[:, t_star:]
+    return torch.stack([w, a[:, t_star:]], dim=-1)
+
+
+def make_propagate_batch(n: int, s: int, d: int, *, t_star: int = 8,
+                         d_model: int = 16, seed: int = 0, device=None):
+    """(x, y, f, p) for C1. `y` is `[n, s - t*]` -- the VECTOR label.
+
+    The tensor scaffold, the distractor payload and the range checks are
+    `make_batch`'s, so C1 sits on the same substrate as every other M3 task and
+    `d` still positions the distractor. Only CH_DRIVE and CH_FLIP are
+    overwritten, and no channel is added.
+
+    THE DRIVERS ARE NOT ZEROED ANYWHERE. The chain family buys its zero-hop
+    clause by writing `b[s-1] = 0`; C1 buys the same clause at every position by
+    excluding `h = 0` from the label instead, so the input keeps full variance
+    at every token and no position's label is constant. Those are the same
+    property obtained two ways, and the second one generalises to a vector.
+
+    `f` IS THE HEAD OF THE CHAIN, `s - 1 - t*`, matching
+    `make_equilibrium_batch`. It is also how `t*` round-trips to the oracle.
+    """
+    t = int(t_star)
+    _check_dial(s, t)
+    x, _y, _f, p = make_batch(n, s, d, d_model=d_model, seed=seed, device=device)
+    g = torch.Generator(device="cpu").manual_seed(seed + 777)
+    b = torch.randn(n, s, generator=g).to(x.device)
+    a = (torch.randint(0, 2, (n, s), generator=g).float() * 2 - 1).to(x.device)
+    x[:, :, CH_FLIP] = b.to(x.dtype)
+    x[:, :, CH_DRIVE] = a.to(x.dtype)
+    f = s - 1 - t
+    return x, propagate_oracle(x, f, p), f, p
+
+
+def propagate_flipper_dependence(s: int, *, t_star: int) -> float:
+    """The EXACT value `calibrate_bar`'s flipper clause must read. No fit.
+
+    Negating the driver at `f = s-1-t*` sends `b_f -> -b_f`. Every path weight
+    has modulus 1, so the label moves by exactly `2 |b_f|` at each of the `t*`
+    positions `f+1 .. f+t*` and by exactly zero everywhere else -- `_check_dial`
+    is what guarantees all `t*` of them are inside the band. The clause averages
+    `|delta|` over all `s - t*` labelled positions and divides by `E|y|`, and
+    `y` is `N(0, t*)`, so
+
+        flipper_dependence = (t* / (s - t*)) * 2 E|N(0,1)| / E|N(0,t*)|
+                           = 2 sqrt(t*) / (s - t*).
+
+    IT IS SMALLER THAN THE SHIPPED BAND AT THE SHALLOW RUNGS, and that is a real
+    weakness rather than a rounding detail: `bar_verdict`'s default
+    `flipper_tol = 0.05` was calibrated for `y = payload * sign`, whose ratio is
+    2.0. Here the value is 0.031746 at `t* = 1` and 0.045620 at `t* = 2`, so the
+    default band ACCEPTS a flipper-blind label (exactly 0.0) at both. A vector
+    label divides one driver's influence across the whole band; that is
+    intrinsic, not a defect in this construction. The anti-vacuity duty is
+    therefore carried by the do()-bit MOVEMENT test, which asserts the exact
+    support of the perturbation bitwise, and the tolerance this family needs is
+    0.02 -- measured above the drawn spread (worst 0.013556 over 4 rungs x 8
+    seeds at n=2048) and below the distance to 0.0 at every rung. Both ends are
+    measured. `tests/cameron/test_c1_propagate_registration.py` asserts the
+    weakness so it cannot be rediscovered as news.
+    """
+    t = int(t_star)
+    _check_dial(s, t)
+    return 2.0 * math.sqrt(t) / (s - t)
+
+
 def consequence_game(x: torch.Tensor):
     """(M, bias, tau) for E2's game, read off the tokens.
 
@@ -997,6 +1214,15 @@ def e_hop_reading(task: str, x: torch.Tensor, f: int, p: int, k: int):
     """
     if task == "e2_consequence":
         return consequence_oracle(x, f, p, k=k)
+    #: C1 truncates HOPS like the chain family, but against a VECTOR label, so
+    #: it cannot share the chain's reading: `equilibrium_hop_reading` returns
+    #: `[n]` and C1's label is `[n, s - t*]`. An unrouted task falls through to
+    #: the chain family below and prints another family's ladder against its own
+    #: label -- which is the hole `e4prime` still sits in. The dial comes from
+    #: the REGISTRY rather than from `f`, so a caller passing the wrong `f`
+    #: cannot silently select a different rung's ladder.
+    if task in C1_RUNG:
+        return propagate_hop_reading(x, k, t_star=C1_RUNG[task])
     return equilibrium_hop_reading(x, k)
 
 
@@ -1022,6 +1248,13 @@ E_T_STAR = {
     "e3_t8": lambda s: 8,
     "e3_t32": lambda s: 32,
     **{f"rag_multihop_t{t}": (lambda t: lambda s: t)(t) for t in RAG_T_SIBLINGS},
+    #: C1's dial is an EXACT hop count, like the chain family's and unlike E2's.
+    #: Registered here rather than left out: `impact`, `impact_hetero` and
+    #: `e4prime` have no entry, `scale/e_ladder.py:143` indexes this dict
+    #: unguarded and raises while `scale/m3_capability.py:269` guards with `in`
+    #: and degrades silently, so a missing key gives a different reading
+    #: depending on which caller you used (MISTAKES.md D-4).
+    **{name: (lambda t: lambda s: t)(t) for name, t in C1_RUNG.items()},
 }
 
 
@@ -1071,6 +1304,17 @@ M3_TASKS = {
     #: exact 0.0 of a label no single token decides.
     "e4prime": (make_e4prime_batch, e4prime_oracle, e4prime_features,
                 e4prime_flipper_dependence),
+
+    #: C1, THE VECTOR CONSEQUENCE CORPUS -- the only family here whose label is
+    #: not a scalar at position `s-1`. Four rungs mirroring e3's dials so the
+    #: two lanes are comparable. `t*` rides in `f` (the chain head), so the
+    #: oracle and the feature hook read the same dial the builder planted and no
+    #: entry can pair a builder with another rung's oracle. Admission bundle:
+    #: `tests/cameron/test_c1_propagate_registration.py`.
+    **{f"c1_propagate_t{t}": (functools.partial(make_propagate_batch, t_star=t),
+                              propagate_oracle, propagate_features,
+                              functools.partial(propagate_flipper_dependence, t_star=t))
+       for t in C1_T_SIBLINGS},
 
      #: U1 (contract v10.1 U-layer): the rag-multihop TWINS of the e3 rungs.
      #: Identical tensors by construction (same builder call); the oracle and
@@ -1194,7 +1438,16 @@ def calibrate_bar(n: int = 2048, s: int = 512, d: int = 256, *,
     out["predict_the_mean"] = nrmse(y.mean().expand_as(y), y)
 
     # 2. flipper-blind: sees the payload, cannot see the sign.
-    out["payload_only"] = nrmse(x[:, p, CH_PAYLOAD], y)
+    #: THE PAYLOAD IS PER EXAMPLE AND THE LABEL NEED NOT BE. A vector-valued
+    #: label (C1) is `[n, m]` while the payload is `[n]`, and torch aligns
+    #: trailing axes, so the bare subtraction raises rather than broadcasting.
+    #: The flipper-blind predictor is "the same payload at every position",
+    #: which is the reshape below -- the clause's meaning is unchanged and a
+    #: scalar label takes the same path it always did.
+    payload = x[:, p, CH_PAYLOAD]
+    while payload.ndim < y.ndim:
+        payload = payload.unsqueeze(-1)
+    out["payload_only"] = nrmse(payload.expand_as(y), y)
 
     # 3. the oracle, recomputed. Identically 0.0 when `y` came from `ofn`.
     out["oracle"] = nrmse(ofn(x, f, p), y)
