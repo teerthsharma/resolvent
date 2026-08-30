@@ -1250,3 +1250,91 @@ working file, which is under active write by Mercury's C1 run.
 
 `t*=32` softmax weights are landing in the journal now; rung order `t32 → t8 →
 t2 → t1`. No C1 number exists yet and none is claimed.
+
+## Iteration 3 — Jupiter COMPLETE. M4 splits: the trend clause escapes, the size clause cannot.
+
+Merged, **57/57 green** (`tests/jupiter/` 43, up from 27; `tests/loop/test_no_struck_constant_ships.py` 14/14, unmodified).
+
+### The granularity question, answered exactly
+
+**Page's L at `k=4, N=5` has 51 achievable p-values**, finest `1/24^5 = 1.256e-07`,
+**14 at or below `0.05`**. `α = 0.05` **is reachable**: critical `L = 137`, true
+size **`0.037002877`**; `L = 136` reads `0.052384114`, above α. And the reported
+`p = 0.016724386` is **the exact atom `133170/7962624`** — attainable, not an
+interpolation of a discrete null.
+
+**The escape is quantified rather than asserted.** Page reads `4! = 24` outcomes
+per block against the sign test's `2`, so `24^5 = 7962624` against `2^5 = 32` —
+**`248832×`, or `4.585` bits per block against 1**. The sign lattice has exactly
+**one** one-sided p below `0.05` and **zero** two-sided.
+
+### But M4's other half is structurally incapable
+
+**The size clause is that bootstrap, and its floor is `0.0625 > 0.05`.** It cannot
+make a `0.05`-level statement at five seeds regardless of endpoints. The top rung
+is a **4–1 split** (`n+ = 4/5`) — squarely Venus's 20–44 % regime — and its
+unconstrained CI covers zero at `[-0.004711, +0.033167]`.
+
+Jupiter: *"Venus's floor and my PAVA bias are two independent defects in the same
+clause, pushing the same way."*
+
+`Ruling: RISES stands as pre-registered, RESTATED. It establishes the ORDERING at
+an exact level of 0.037002877, and the clause carrying the MAGNITUDE claim is
+incapable of the level it was written at. This is the same conclusion Jupiter
+reached in iteration 1 - "RISES is an ordering, not a capability" - but it was an
+assertion then and it is a proof now. Any future use of M4 prints the trend
+clause's exact size beside the verdict and states that the size clause cannot
+reach 0.05 at N=5.`
+
+### Jupiter corrected his own iteration-1 report, twice
+
+- It quoted `α = 0.05` as the trend clause's size; **the true size is
+  `0.037002877`**.
+- A shell line said *"12 achievable p-values below α"*; the computed value is
+  **14**.
+- He also **caught and replaced a tautological assertion he had written himself** —
+  `assert all(...) is False or True`. That is vacuity class 3, in his own test,
+  found by him.
+
+### The coverage scanner was scanning nothing — root cause found
+
+**Absolute-path scope error.** Exclusions were tested against `p.parts`, and every
+worktree sits under `.claude/worktrees/`. **366 candidates → 0 survivors; 365
+survive under the relative filter.** It exited `0` — **silent in the passing
+direction**, which is why nobody noticed.
+
+**And the reason its own control never caught it is the sharp part:**
+
+> *"Its own `control()` passed throughout because it injects text past target
+> selection — **a matcher control is not a coverage control**."*
+
+Fixed relative; `main()` now returns `1` on an empty scan; the must-fire **plants
+the constant on disk and requires selection to reach it**. **6 of 8 fail unfixed.**
+
+### A new vacuity type, for Saturn
+
+> *the control that validates the matcher and never the reach*
+
+Vacuity rule 5 asks for a planted positive on identical instances — and **this
+control had one**. The gap is that *"identical instances"* was read as identical
+**text** rather than identical **path through the instrument**. That is a genuinely
+new failure mode and it refines an existing rule rather than adding an unrelated
+one.
+
+### OPEN — 27 candidates exposed, unadjudicated
+
+The scanner fix exposed **27 candidates across 346 paths**. Jupiter holds no
+adjudication seat and correctly left them.
+
+**Venus's expected collateral is real**: `0.743864` / `0.656532` / `0.816955` are
+asserted live at `tests/cameron/test_harmonic_attribution.py:123-124` and mirrored
+in `tests/deimos/`. Caveat he supplies himself: **`−1.389` alone is 17 of the 27**
+and matches inside longer numerals, so **27 is an upper bound**, not a count.
+
+`Ruling: the 27 go to VENUS, not to Saturn or Jupiter. She struck the
+harmonic-attribution clause this round and the three live constants sit inside the
+module she skipped - so the adjudication is precisely hers: does a struck constant
+asserted inside a skipped module count as shipping? That question is the boundary
+of her own strike and nobody else should draw it. Queued for her next turn. Cost
+if wrong: the constants sit one iteration longer in a module that does not
+execute.`
