@@ -155,3 +155,56 @@ def test_an_atticked_file_is_not_the_last_must_fire_for_a_live_module(rel: str):
         "none is needed (retire). Any of the three turns this green. "
         f"(row: {reason})"
     )
+
+
+#: The exact wording of presumption P1, withdrawn at round 10 iteration 1. MARS
+#: measured that it keys on WHO built the input while the repo's own V-14 rule keys
+#: on WHAT PATH the input takes -- and every planted positive is constructed, so P1
+#: has no discriminating power and fires on cures as readily as diseases. It was
+#: replaced by P1', then by P1''.
+WITHDRAWN_P1 = "builds its own tensor/graph instead of drawing from the production batch path"
+
+
+def test_the_withdrawn_wording_is_findable_in_the_sheet_at_all():
+    """Must-fire for the check below. If the phrase never matched, the assertion
+    would pass by vacuity and report a clean sheet it had not read."""
+    text = AUDIT.read_text(encoding="utf-8")
+    assert WITHDRAWN_P1 in text or "P1'" in text, (
+        "neither the withdrawn wording nor its replacement appears in AUDIT.md; "
+        "this check is reading the wrong file or the wrong sheet"
+    )
+
+
+def test_no_attic_row_is_justified_by_a_withdrawn_presumption():
+    """THE DEFECT. A row may be correctly ATTIC and still cite a retracted rule.
+
+    Measured at the pinned revision f823b02: 8 of 33 ATTIC rows print P1 verbatim as
+    their reason. P1 was withdrawn two iterations earlier. The classifications may
+    survive -- the iteration-3 spot-check re-measured 5 ATTIC rows DEAD against their
+    stated conjunctions -- but the conjunctions carry blind legs of their own (the
+    hankel row's included "0 test_claim_*", which MERCURY measured blind in the same
+    iteration), and iteration 4 moves all 33 rows on these printed grounds.
+
+    This is the sheet keyed on "the reason text as written" standing in for "the rule
+    currently in force". Repair is to re-state each row's ground in the rule that
+    actually governs it, not to delete the sentence.
+    """
+    offenders = [p for p, _c, d in audit_rows() if d == "ATTIC"
+                 and WITHDRAWN_P1 in _reason_for(p)]
+    assert not offenders, (
+        f"{len(offenders)} ATTIC rows cite presumption P1, withdrawn at iteration 1, "
+        f"as their reason: {offenders}. Re-state the ground in the governing rule; "
+        "a row moved to attic/ on a retracted justification cannot be reviewed later "
+        "by reading its own row."
+    )
+
+
+def _reason_for(path: str) -> str:
+    """The reason cell for a row, from the shipped sheet."""
+    for line in AUDIT.read_text(encoding="utf-8").splitlines():
+        m = re.match(r"^\|\s*`([^`]+)`\s*\|", line)
+        if m and m.group(1) == path:
+            cells = [c.strip() for c in line.split("|")]
+            if len(cells) >= 7:
+                return cells[6]
+    return ""
