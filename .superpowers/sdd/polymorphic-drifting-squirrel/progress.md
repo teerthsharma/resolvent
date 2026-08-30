@@ -2014,3 +2014,87 @@ verdict() from quantifying on a partial table. Cost if wrong: roughly two hours 
 compute on rungs that void, buying a complete object instead of a selected one.`
 
 Table remains PARTIAL, NOT A READING (2 of 4). `t2` in flight, `t1` queued.
+
+## Mercury — three hand-offs delivered, and TWO corrections to what the controller relayed
+
+Merged. 140/142 sweep green across mercury (73), neptune, mars, capability_table
+and the single-seed table.
+
+DELIVERED: estimator naming (both rendered headers said `95% CI` for GENUINELY
+DIFFERENT procedures — Arms is a bootstrap over EVAL POINTS within one seed,
+Contrasts is PAIRED OVER SEEDS at a different `B`; both now name their family, and
+the Arms `B` is READ FROM THE FUNCTION THAT PRODUCED THE ENDPOINTS rather than
+restated). `verdict_of` collapsed to one implementation with optional names,
+`_verdict` delegating, defaults pinned, settled/twin strings byte-identical.
+Limits (e) rewritten.
+
+### CORRECTION 1 — the `verdict_of` hazard as relayed DOES NOT EXIST
+
+The warning passed from Neptune through the controller was that changing a verdict
+string invalidates journalled units via `run_bucket`'s bitwise resume audit.
+Measured:
+
+- `contrast` has ZERO call sites inside `_unit` in either module. In
+  `m3_synthetic_settled` it runs AFTER `require_complete`, on aggregated values.
+- NO `results/*.jsonl` CONTAINS A `verdict` KEY AT ALL — asserted over every
+  journal as a test.
+
+The CONCLUSION (pin the defaults) is right. The REASON is different: published
+readings QUOTE those strings; journals do not hold them.
+
+RULING: the controller relayed a mechanism it had not verified, and the mechanism
+was wrong. Mercury's point is the one worth keeping — "the difference matters: the
+stated mechanism makes a much larger class of change look dangerous than actually
+is." A wrong hazard is not harmless just because it produced a safe decision; it
+freezes work that was never at risk. Recorded against the controller, not Neptune,
+who flagged a real concern in a file he did not hold.
+
+### CORRECTION 2 — limits (e)'s NUMBERS were all correct. Its FRAMING was not.
+
+All four numeric claims reproduce exactly. The three "stale counts" handed over:
+
+- `CHECKLIST.md:1167` now reads "exact enumeration", so the accusation is FALSE.
+- `STATE.md` contains NEITHER ENDPOINT anywhere.
+- "a SECOND FAMILY" is THE WRONG MECHANISM. Measured: sampled `ci_lo` is atom 7,
+  exact is atom 8; `ci_hi` is atom 117 FOR BOTH; and over seeds 0..99 `ci_lo`
+  takes FOUR values (atoms 7-10, exact merely the most common at 62/100).
+
+SAME FINDING AS `argmaxste`, NOW ON THE HEADLINE CONTRAST.
+
+RULING: the "two estimator families" story is now retired on the headline contrast
+too. Saturn's reproduction was real and correct - family A is the bootstrap at
+seed 0, family B is exact enumeration - but the FRAMING overstated it. There are
+not two families in any deep sense; there is ONE DISCRETE STATISTIC WITH 126
+ATOMS, and the bootstrap lands on a neighbouring atom depending on seed while
+exact enumeration lands on the true one. Every "family" observation this round
+reduces to that. Cost if wrong: a labelling change is applied where a seed change
+was needed, which the exact pair printed beside every interval now makes visible
+either way.
+
+### A general principle worth taking, for Saturn's MISTAKES.md
+
+Mercury dropped the file-specific accusations rather than restating them:
+
+  "a stored claim about another file goes stale every time that file is fixed,
+   which is what happened here twice."
+
+That is a distinct provenance failure mode from anything currently in the file —
+it is not doc rot (the claim was true when written) and not a stale number (the
+numbers were right). It is a claim whose TRUTH IS OWNED BY A FILE IT DOES NOT
+CONTROL. Routed to Saturn.
+
+### The kill did not stop the run, and the lock did its job
+
+The shell wrapper died; its python child (PID 31600, 1.2 GB) survived and still
+holds the journal lock. THE LOCK WOULD HAVE REFUSED A SECOND RUN, which is why
+Mercury did not start one. `t*=2` is at 11/15 UNATTENDED; `t*=1` queued
+separately since the chain wrapper is gone.
+
+### Carried
+
+1. `e_ladder` and `page_trend` also call `contrast` and still take pinned defaults
+   — CORRECT TODAY because both compare settled/twin, WRONG the moment either
+   compares anything else.
+2. Limits (e) is still a STORED string; its surviving numbers are restated, not
+   computed.
+3. C1 remains PARTIAL, NOT A READING (2/4). Both scored rungs void under row G.
