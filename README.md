@@ -1,9 +1,9 @@
 # ceq — pivot-routed attention with an optional fixed-point settle
 
-**A query row's reading is replaced by a mixture over content-selected pivot rows, and
-those mixture weights can be driven to a fixed point; at matched parameters the mixture
-beats causal softmax on every seed, and the fixed point on top of it buys nothing
-measurable.**
+**A query row's reading is replaced by a reading of content-selected pivot rows, and
+those weights can be driven to a fixed point; at matched parameters the routing beats
+causal softmax on every seed, the fixed point on top of it buys nothing measurable, and
+the gain survives collapsing the mixture to a single trained lookup.**
 
 `https://github.com/teerthsharma/resolvent`
 
@@ -23,10 +23,14 @@ length, logit scale and pivot content. Measured on `negation_scope` at a
 parameter-matched `n_params = 4769` across all five arms and five seeds, the settled arm
 and its unsettled twin each beat causal softmax on every seed — `+0.108437` and
 `+0.111396` NRMSE, exact 95 % intervals excluding zero. The settle itself is worth
-nothing: `settled − twin = −0.002959` with an interval covering zero, while a one-hot
-control is *worse* than plain softmax. The gain is the mixture, not the equilibrium. A
-Lean 4 core of 39 theorems across six modules proves that the equilibrium oracle is not
-the arm's own resolvent and that no truncation of it is ever exact.
+nothing: `settled − twin = −0.002959` with an interval covering zero. **The gain is
+trained pivot selection, not the averaging.** A one-hot control whose selection is
+*untrained* lands `−0.118456` below plain softmax; the same one-hot forward with
+gradient reaching the gate — bitwise the same tensor, straight-through — reads
+`+0.107304` *above* softmax and is statistically indistinguishable from the full
+`k`-row mixture. A Lean 4 core of 39 theorems across six modules proves that the
+equilibrium oracle is not the arm's own resolvent and that no truncation of it is ever
+exact.
 
 ## Background
 
@@ -227,7 +231,8 @@ settling rules and not between architectures.
 | `glance` | — | 2 | ARM S at `t_max = 0`; bound **bitwise** to `softmax`, so its row is a structural zero |
 | `settled` | log-domain fixed point, `β = 0.5`, implicit gradient `N = 21` | 2 | the arm under test |
 | `twin` | the normalised gate — setup paid, loop not run | 2 | isolates the settle from the routing |
-| `argmax` | one-hot at `argmax(gate)` | 2 | the attribution control: does the mixture reduce to a lookup? |
+| `argmax` | one-hot at `argmax(gate)` | 2 | the attribution control, and it is **confounded**: it collapses the mixture *and* cuts the gradient to the gate |
+| `argmaxste` | the same one-hot, straight-through | 2 | the deconfounder: forward **bitwise** `argmax`, backward the softmax Jacobian, so it varies selection training alone |
 
 The three settling cells are genuinely distinct objects at this geometry rather than
 numerically identical ones, which is the precondition the project had previously failed
@@ -306,6 +311,9 @@ an interval touching zero does not exclude it.
 | `settled` | `softmax` | **+0.108437** | `[+0.068181, +0.147110]` | 5/5 | settled wins |
 | `twin` | `softmax` | **+0.111396** | `[+0.100873, +0.121920]` | 5/5 | twin wins |
 | `argmax` | `softmax` | **−0.118456** | `[−0.134115, −0.102786]` | 0/5 | softmax wins |
+| `argmaxste` | `softmax` | **+0.107304** | `[+0.082879, +0.140870]` | 5/5 | the lookup wins, once its selection is trained |
+| `argmaxste` | `argmax` | **+0.225760** | `[+0.212539, +0.245992]` | 5/5 | the gradient to the gate, isolated |
+| `argmaxste` | `twin` | **−0.004092** | `[−0.029187, +0.023107]` | 2/5 | **no difference** |
 | `settled` | `argmax` | +0.226893 | `[+0.175040, +0.276921]` | 5/5 | *a win over a failure — see below* |
 | `glance` | `softmax` | +0.000000 | `[+0.000000, +0.000000]` | 0/5 | structural zero, not a measured tie |
 
@@ -365,13 +373,35 @@ the settled arm iterates `α` inside an 8-simplex over `{α @ av}`, which is a
 reparameterisation **inside the twin's own function class**. It can reallocate; it cannot
 add.
 
-**The gain is the mixture, and a lookup is worse than nothing.** Collapsing the pivot
-weights to a single one-hot reading does not merely lose the gain, it lands `−0.118456`
-*below plain softmax*, 0/5 seeds, interval well clear of zero. `argmax` also fails its own
-bar at mean `1.010779` — above `1.0`, so it does not beat predict-the-mean and is credited
-with nothing. That makes `settled − argmax = +0.226893` a win over a failure, which
-licenses nothing; it is recorded here because the largest positive number in the table is
-the least meaningful one.
+**The gain is trained pivot selection, not the averaging — and the control that seemed
+to say otherwise was confounded.** `argmax` lands `−0.118456` *below plain softmax*, 0/5
+seeds, and fails its own bar at mean `1.010779`, above `1.0`, so it does not beat
+predict-the-mean and is credited with nothing. That makes `settled − argmax = +0.226893`
+a win over a failure, which licenses nothing; it is recorded because the largest positive
+number in the table is the least meaningful one.
+
+**But `argmax` varies two things at once**, and the reading above was for a while used to
+license the stronger claim that the averaging over `k` rows *is* the contribution. It
+collapses the mixture to one row **and** severs the gradient path to the gate, because a
+`scatter_` of zeros and ones is constant in `log_gate`. `argmaxste` separates them: the
+same one-hot forward — `hard + (soft - soft.detach())` is elementwise `x - x`, exactly
+`+0.0`, so the tensor is **bitwise** `argmax`'s, verified — with the softmax Jacobian in
+the backward. Nothing else differs.
+
+It reads `0.785019`, `+0.107304` **above** softmax at 5/5 seeds, `+0.225760` above
+`argmax` at 5/5. **So the `−0.118456` was measuring untrained selection, not the loss of
+the mixture.** Against the full mixture, `argmaxste − twin = −0.004092`, interval
+`[−0.029187, +0.023107]`, 2/5 seeds: this run **excludes a twin advantage beyond
+`0.029187` and an `argmaxste` advantage beyond `0.023107`, and excludes nothing
+smaller**. That is a bound, not an identity — "no difference larger than that" is the
+whole of what it says, and "the mixture is unnecessary" is not licensed at any interval
+this run can produce.
+
+**The sharper claim that replaces the old one:** a single trained lookup over `k`
+content-selected pivots matches an eight-row mixture over the same pivots, and both beat
+softmax. What the pivots buy is *which row you read*, not *how many you average*. The
+equilibrium half of the old sentence is untouched by this — `settled − twin ≈ 0` rests on
+its own reading, and no settled cell appears in this comparison.
 
 **The headline cell is undecided by arithmetic fixed before the run, not by the data.** The
 per-draw Ville e-process reads `E_t = 0.9978` in the settled direction and `1.0019` in the
