@@ -96,6 +96,57 @@ Three of the instances above were caught by exactly that question being asked of
 rule that had already passed review: MARS on P1, MERCURY on the prefix classifier,
 MARS on HOUSE's coverage claim.
 
+## What `MISTAKES.md` already names, and the direction it does not
+
+`MISTAKES.md` carries fourteen V-entries, V-1 to V-14, and they are a real taxonomy
+— V-14 opens by distinguishing itself from V-7 (*"the one that survives rule 5 being
+obeyed, which is what makes it a new type rather than another instance of V-7"*).
+Two of them are surface-proxy defects:
+
+- **V-7** — `journal_scan` read top-level keys of records nesting payloads under
+  `value`, reported "zero readings above 1.0" against a true 22 of 68, and the false
+  absence was used to strike a colleague's evidence. Keyed on *what the walk visited*
+  standing in for *what the records contain*.
+- **V-14** — `chase_struck_coverage` shipped a must-fire control, ran it first, and
+  refused to proceed without it — and the scanner reached nothing, because the
+  exclusion list was tested against absolute paths and `.claude` is a component of
+  every worktree path. 366 candidate files became 0. Keyed on *the matcher firing*
+  standing in for *the reach being non-empty*.
+
+**Every V-entry describes an instrument that wrongly PASSES.** The class is vacuity:
+a control with no rejection region, producing a false GREEN. That is the whole
+registry, and the rules it ships are all of the form "pay for an absence with a
+planted positive the search is required to find."
+
+**The surface-proxy defect produces false REDS as well, and in round 10 that was the
+expensive direction.** A rule keyed on a proxy does not merely fail to condemn the
+guilty; it condemns the innocent, and nothing in the V-class rules catches that:
+
+| instance | direction | cost |
+|---|---|---|
+| #1 P1 | false RED | would have attic'd the control binding V-1 itself |
+| #3 P1′ | false RED | classed the prior-art defence vacuous; 12 of 27 condemned rows were live |
+| #5 prefix classifier | false RED | 3 banner files invisible; 2 of the 3 routed "unpriced" failures |
+| #7 exit status | false RED | **7 rows** — `xfail(strict=True)` exits 0, so recorded findings read as passes |
+| #8 hankel conjunction | false RED | would have removed `ceq.hankel`'s only calibration |
+| #9 "0 results artifacts" | false RED | attic'd a producer that was unrun, not dead |
+| #10, #12, #13 | false GREEN | guards that stopped reporting live defects |
+
+Seven of fourteen condemn rather than excuse. The registry's planted-positive rule
+is powerless against those: a planted positive proves the instrument *can* fire, and
+every one of these fired — enthusiastically, on the wrong thing.
+
+**The missing rule, stated in the registry's own voice:**
+
+> A rule that CONDEMNS needs a planted NEGATIVE: an instance that carries the proxy
+> and is innocent of the property. A rule that has never spared anything is not
+> discriminating, it is convicting, and its pass rate is a measurement of the tree
+> rather than of the rule.
+
+That is exactly what HOUSE demanded of T-b route 3 and what SATURN measured before
+committing it — 1,141 of 1,201 refused, 13 of 22 refused on a pre-registered sweep.
+The demand was made ad hoc in a dispatch prompt. It belongs in the registry.
+
 ## Standing consequence for the round
 
 `AUDIT.md`'s 314 KEEP rows are produced by **61 distinct classing rules**, and the
