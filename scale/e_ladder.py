@@ -52,7 +52,11 @@ RUNGS = ("e3_t1", "e3_t2", "e3_t8", "e3_t32")
 #: WEIGHTS rather than the token chain, so it too reads a two-hop
 #: neighbourhood -- settling does not buy a third hop and must not be scored as
 #: though it did.
-HOP_BUDGET = {"softmax": 1, "glance": 1, "settled": 2, "twin": 2, "argmax": 2}
+HOP_BUDGET = {"softmax": 1, "glance": 1, "settled": 2, "twin": 2,
+              "argmax": 2,
+              #: Forward is bitwise `argmax`; only the backward differs,
+              #: so the hop budget is `argmax`'s exactly.
+              "argmaxste": 2}
 
 #: The cells whose journal key carries `k0` rather than the pivot count.
 K0_CELLS = ("softmax", "glance")

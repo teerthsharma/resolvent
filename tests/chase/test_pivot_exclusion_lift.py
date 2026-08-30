@@ -139,17 +139,18 @@ def test_the_plus_cells_exist_and_the_shipped_default_is_untouched():
     assert Q.CELLS == ("softmax", "glance", "settled", "twin", "argmax")
     assert Q.PLUS_CELLS == ("twin_plus", "settled_plus")
     assert Q.ROW_CELLS == ("twinrow", "settledrow")
+    assert Q.STE_CELLS == ("argmaxste",)
     #: Every extra cell family is a NEW TUPLE BESIDE `CELLS`, never a name added
     #: to it, so the tuples must be pairwise disjoint and must exhaust
     #: `ALL_CELLS`. Stated this way the check keeps working as families are
     #: added, which the previous `CELLS | PLUS_CELLS` equality could not.
-    fams = (Q.CELLS, Q.PLUS_CELLS, Q.ROW_CELLS)
+    fams = (Q.CELLS, Q.PLUS_CELLS, Q.ROW_CELLS, Q.STE_CELLS)
     assert set(Q.ALL_CELLS) == set().union(*map(set, fams))
     assert sum(len(f) for f in fams) == len(set(Q.ALL_CELLS)), "families overlap"
     ap = Q._argparser()
     assert ap.parse_args([]).cells == list(Q.CELLS), (
         "a default run would now measure the plus or row cells too")
-    for c in Q.PLUS_CELLS + Q.ROW_CELLS:
+    for c in Q.PLUS_CELLS + Q.ROW_CELLS + Q.STE_CELLS:
         Q.QuintArm("softmax", S, cell=c)          # must construct
     with pytest.raises(ValueError):
         Q.QuintArm("softmax", S, cell="twin_minus")
