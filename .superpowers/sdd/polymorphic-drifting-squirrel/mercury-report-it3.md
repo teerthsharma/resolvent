@@ -394,11 +394,70 @@ That is precisely the configuration row G exists to catch: a beautifully
 resolved comparison of two failures. **No credit flows from `t*=32` in any
 direction.**
 
+## 5B. C1 `t*=8` - COMPLETE, and row G voids this rung too
+
+### Ceiling first
+
+Realised `sd_paired(settledrow - twinrow)` = **`0.000233`**, finer still than
+`t*=32`'s. Seeds needed: **1**. This run has 5. **Adequately powered.**
+
+### The numbers
+
+| cell | mean | |
+|---|---|---|
+| `softmax` | `1.000933` | at/above predict-the-mean |
+| `twinrow` | `1.000774` | at/above predict-the-mean |
+| `settledrow` | `1.001047` | at/above predict-the-mean |
+
+**All three fail predict-the-mean again. Row G voids every contrast.**
+
+| arm | vs | delta | CI (MC) | exact | n+ | status |
+|---|---|---|---|---|---|---|
+| `settledrow` | `twinrow` | `-0.000272` | `[-0.000451, -0.000102]` | `[-0.000459, -0.000102]` | 1/5 | **VOID (row G)** |
+| `twinrow` | `softmax` | `+0.000158` | `[-0.000051, +0.000380]` | `[-0.000051, +0.000380]` | 3/5 | **VOID (row G)** |
+| `settledrow` | `softmax` | `-0.000114` | `[-0.000296, +0.000098]` | `[-0.000296, +0.000103]` | 2/5 | **VOID (row G)** |
+
+Ties in the house two-endpoint form: `twinrow`/`softmax` **excludes a `softmax`
+advantage beyond `0.000051` and a `twinrow` advantage beyond `0.000380`**;
+`settledrow`/`softmax` **excludes a `softmax` advantage beyond `0.000296` and a
+`settledrow` advantage beyond `0.000098`**. Neither excludes anything smaller.
+
+**The lattice effect is live in this rung's own data.** Two of the three exact
+pairs differ from their Monte-Carlo counterparts at one endpoint —
+`settledrow`/`twinrow` at `ci_lo` (`-0.000459` exact against `-0.000451`
+sampled) and `settledrow`/`softmax` at `ci_hi` (`+0.000103` against `+0.000098`)
+— while the other endpoints coincide. That is exactly the adjacent-atom
+selection recorded in section 2.5, now observed on a second corpus, and it is
+why the exact pair is printed beside every interval rather than reasoned about
+afterwards.
+
+### Venus's prediction on `t*=8`
+
+Identical split to `t*=32`:
+
+| half | reads |
+|---|---|
+| `\|delta\| < 0.027260` | **True** — `0.000272`, two orders inside |
+| CI covers zero | **False** — `[-0.000451, -0.000102]` excludes zero, `n+ 1/5` |
+
+### The two completed rungs together
+
+| rung | softmax | twinrow | settledrow | sd_paired | seeds needed |
+|---|---|---|---|---|---|
+| `t*=32` | 1.003157 | 1.002587 | 1.003214 | 0.000664 | 1 |
+| `t*=8` | 1.000933 | 1.000774 | 1.001047 | 0.000233 | 1 |
+
+Both rungs are **superbly resolved and entirely void**. Every cell on both fails
+the absolute bar, and the means sit closer to `1.0` at `t*=8` than at `t*=32`.
+On both, `twinrow` is the best of the three and `settledrow` the worst, and on
+both the `settledrow - twinrow` interval excludes zero on the `twinrow` side —
+but row G means none of that is creditable in either direction.
+
 ### Table status
 
-**1 of 4 rungs complete — PARTIAL, NOT A READING.** `t*=8` is in flight,
-`t*=2` and `t*=1` queued. `verdict()` refuses quantified rows on incomplete
-data, so this cannot be misread as a kill.
+**2 of 4 rungs complete - PARTIAL, NOT A READING.** `t*=2` is in flight,
+`t*=1` queued. `verdict()` refuses quantified rows on incomplete data, so this
+cannot be misread as a kill.
 
 ---
 
@@ -419,6 +478,10 @@ data, so this cannot be misread as a kill.
 | M65 | The `t*=32` rung is adequately powered, and the power is spent on a void contrast | RUN | Realised `sd_paired(settledrow-twinrow)` `0.000664`; seeds needed 1, run has 5 |
 | M66 | **Venus's prediction splits on `t*=32`** | RUN | `\|delta\| = 0.000627 < 0.027260` TRUE; CI `[-0.001151, -0.000155]` does NOT cover zero, `n+ 0/5`. Recorded, not adjudicated -- row G voids the contrast |
 | M67 | The crash resume cost only the two missing units, as priced | RUN | Journal held 13 of 15; `run_bucket` skipped them and ran `settledrow` sd3 and sd4 only |
+| M68 | **All three C1 cells at `t*=8` fail predict-the-mean; row G voids that rung too** | RUN | `softmax` 1.000933, `twinrow` 1.000774, `settledrow` 1.001047 |
+| M69 | `t*=8` is even better resolved than `t*=32`, and equally void | RUN | Realised `sd_paired` `0.000233` against `0.000664`; seeds needed 1 on both |
+| M70 | **The adjacent-atom effect is observed on a second corpus** | RUN | On `t*=8`, `settledrow-twinrow` exact `ci_lo` is `-0.000459` against sampled `-0.000451`, and `settledrow-softmax` exact `ci_hi` is `+0.000103` against sampled `+0.000098`; the other endpoints coincide |
+| M71 | Venus's prediction splits identically on both completed rungs | RUN | `\|delta\|` inside `0.027260` on both; CI covers zero on neither |
 | M63 | **The atom count is 126. This session first reported 128, which was its own bug** | RUN | `C(2n-1, n) = C(9,5) = 126` is the combinatorial ceiling, so 128 was impossible. Plain `sum()` over `itertools.product` split two atoms by one ULP, `5.551115123125783e-17`, because float addition is not associative. `math.fsum` on a canonically ordered tuple returns 126. Percentiles move by at most one ULP and the reconciliation is unaffected |
 | M54 | Row E does not void the contrast | RUN | `argmaxste` `0.785019 < 1.0`, clearing predict-the-mean by `0.214981` |
 | M55 | The disputed headline reproduces exactly as a control | RUN | `argmax - softmax` `-0.118456`, CI `[-0.134115, -0.102204]`, `n+ 0/5` |
