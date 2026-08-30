@@ -103,10 +103,32 @@ def test_collecting_the_pair_together_does_not_break_the_import():
     )
 
 
+def resolve(rel: str) -> pathlib.Path | None:
+    """The file at its own path, or where iteration 4's attic move puts it.
+
+    Three of the five files below are ATTIC on the pinned sheet
+    (`test_multizoom_cost.py`, `test_multizoom_kernel.py`, `test_multizoom_r5.py`).
+    Resolving only `ROOT / rel` makes these cases raise FileNotFoundError the moment
+    the move runs -- an error, not a finding -- while the defect they report is
+    unchanged and merely relocated. A retired file that still does
+    `from conftest import` still breaks a collection that includes it.
+    """
+    for candidate in (ROOT / rel, ROOT / "attic" / rel):
+        if candidate.exists():
+            return candidate
+    return None
+
+
 @pytest.mark.parametrize("path", BARE_CONFTEST_IMPORTERS)
 def test_no_test_file_imports_conftest_as_a_bare_module(path: str):
     """The mechanism, per file, so a partial repair is visible as a partial pass."""
-    src = (ROOT / path).read_text(encoding="utf-8")
+    found = resolve(path)
+    if found is None:
+        pytest.fail(
+            f"{path} resolves to no file, at its own path or under attic/. "
+            "A named offender that exists nowhere is not a repair; say where it went."
+        )
+    src = found.read_text(encoding="utf-8")
     offenders = [
         line.strip()
         for line in src.splitlines()

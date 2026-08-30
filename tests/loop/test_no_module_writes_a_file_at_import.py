@@ -130,11 +130,16 @@ def tracked_modules() -> list[str]:
         ["git", "ls-files", "--", "scale/*.py", "ceq/*.py"],
         cwd=ROOT, capture_output=True, text=True, check=True,
     ).stdout.split()
+    # `attic/` is included because iteration 4's P0.3 move relocates 19 scale/*.py
+    # rows there. A guard that walks only the live tree silently covers 19 fewer
+    # modules the moment the move runs -- the population shrinks and nothing says
+    # so. A retired module still imports, and `scale/vgpe_flops.py` (on that list)
+    # was measured this round producing 29 of 29 of V12_PRICING.md's numbers.
     walked = [
         str(p.relative_to(ROOT)).replace("\\", "/")
-        for d in ("scale", "ceq")
+        for d in ("scale", "ceq", "attic")
         for p in (ROOT / d).rglob("*.py")
-        if "__pycache__" not in p.parts
+        if (ROOT / d).exists() and "__pycache__" not in p.parts
     ]
     return sorted(set(indexed) | set(walked))
 
