@@ -525,6 +525,21 @@ misread as a kill.
 
 ---
 
+## 5D. A correction to this session's own commit prose
+
+Commit `315f949`'s message states that `e_ladder` and `page_trend` "also call
+`contrast` and still take the pinned defaults, which is correct for them today
+and wrong the moment either compares anything else." That overstates the
+exposure. Grepped: `scale/e_ladder.py:160` is the only live `contrast` call
+outside `m3_quintuple` and `capability_table`, it reads
+`contrast(ev_t, ev_s, ...)` on `settled` against `twin`, and the `page_trend`
+hit is prose inside a docstring, not a call. **The pinned defaults are correct
+for every caller that exists**; the risk is entirely prospective and belongs in
+a future-work note rather than a limits paragraph. The commit message stands as
+written since three commits sit on top of it; this is the correction of record.
+
+---
+
 ## 6. Claim ledger
 
 | # | claim | class | check |

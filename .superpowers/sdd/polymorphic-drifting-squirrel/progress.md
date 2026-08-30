@@ -2172,3 +2172,42 @@ a creditable contrast stays creditable and carries a note.`
 - `e_ladder` and `page_trend` still call `contrast` with pinned defaults; correct
   today because both compare settled/twin, wrong the moment either compares
   anything else.
+
+## CORRECTION — `page_trend` does not call `contrast` at all
+
+The previous two ledger entries carried, from Mercury's commit prose and repeated
+by the controller: "`e_ladder` and `page_trend` still call `contrast` with pinned
+defaults; correct today because both compare settled/twin, wrong the moment either
+compares anything else."
+
+Mercury grepped it. `scale/e_ladder.py:160` is THE ONLY live `contrast` caller
+outside the two modules he changed, and it compares `settled` against `twin`, so
+the defaults are right for it. THE `page_trend` HIT IS DOCSTRING PROSE, NOT A CALL.
+
+THE PINNED DEFAULTS ARE CORRECT FOR EVERY CALLER THAT EXISTS. The exposure is
+PURELY PROSPECTIVE — it becomes real only when someone adds a caller comparing
+something other than settled/twin.
+
+He handled the record correctly: three commits sit on top of `315f949` so its
+message stands as written, and section 5D of his report is the correction of
+record. Rewriting a merged commit message to hide a wrong claim would be worse
+than the claim.
+
+RULING: this is the second time this round a caution has been relayed one level
+broader than the evidence supports - the first was the verdict_of resume-audit
+hazard, which did not exist as stated. Both times the CONCLUSION was safe and the
+MECHANISM was wrong, and both times the controller passed the mechanism on without
+grepping it. A safe conclusion reached through a wrong mechanism still costs
+something: it makes a larger class of work look dangerous than is.
+
+## Iteration 4 — Mars dispatched on the gap he named himself
+
+Mercury waits on `t*=1` at 12/15 (`settledrow` seed 3 of 5, roughly 34 minutes).
+The `t*=1` wrapper was stopped the same way `t*=2` was; PID 11140 survived, holds
+the lock, and the journal lock REFUSED A COMPETING RUN FOR THE SECOND TIME. It has
+now done its job twice.
+
+Mars closed his own report with the largest open gap in the round: M4 EVICTION,
+THE E4-PRIME GATES AND THE CALIBRATED M3 HARNESS WERE NOT ATTACKED AT ALL. Three
+of five named GREENs enter the re-audit without an adversary, while Venus has
+already filed a prediction that four of five fall. Dispatched.
