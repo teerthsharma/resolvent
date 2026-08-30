@@ -551,15 +551,33 @@ with it the only signal that the interval is a sign test. A convention followed
 in two places and mandated in none is a convention that the next headline will
 drop.
 
-**Found while writing this entry, and unresolved: the two homes disagree.** The
-same headline carries CI `[+0.066232, +0.147110]` at
-`ceq/hf_artifact/README.md:35` and `[+0.068181, +0.147110]` at
-`CHECKLIST.md:1168` — identical point estimate, identical upper bound, lower
-bounds `0.001949` apart. Neither row names the run that produced it, so there is
-no way to tell which is the transcription error and which is the number. That is
-P-1 attached to the repository's most-quoted result, and it is recorded here
-rather than fixed because picking one without finding the producer would just
-make the disagreement invisible.
+**RESOLVED, and it was not a transcription error.** The disagreement noticed
+here turned out to be systematic across all three headline contrasts — every
+point estimate and every upper bound agreeing, lower bounds differing — and both
+families have live producers. At five seeds the paired resample space is FINITE:
+`5**5 = 3125` tuples with **126 distinct means**, so the exact percentile is
+computable and is a different estimator from a Monte-Carlo draw of the same
+distribution. Reproduced from `results/m3_quintuple_v2.jsonl`:
+
+    contrast            B=10000 seed=0          exact over 3125
+    settled - twin      [-0.048587, +0.031557]  [-0.042903, +0.031557]
+    settled - softmax   [+0.066232, +0.147110]  [+0.068181, +0.147110]
+    argmax  - softmax   [-0.134115, -0.102204]  [-0.134115, -0.102786]
+
+The first column is what `ceq/hf_artifact/README.md` ships; the second is what
+the root `README.md` and `CHECKLIST.md` print. **Neither number is wrong. No
+number is orphaned.** `tests/cameron/test_published_intervals_have_producers.py`
+binds both, and rejects the mis-pairing.
+
+**So it is not P-1 — it is P-8, recurring, and that is the sharper finding.**
+The generator's own limits paragraph (e) already states the whole thing, in the
+file that ships (`ceq/hf_artifact/README.md:80`), naming both families and both
+endpoints. The table three lines above it still prints `95% CI` with no
+estimator, and the JSON behind that table **already carries `n_boot: 10000` and
+`boot_seed: 0`** — the provenance exists and is dropped at render time. A caveat
+that is correct, complete, in the right place and below the row that gets quoted
+is the exact failure P-8 describes, and this is it happening to the
+repository's most-quoted result while P-8 was being written.
 
 The same round produced a second face of it: realised `sd_paired` on the C1
 ladder is `0.019`–`0.109` against a pilot's `0.050`, so `t* = 1` needs **62
