@@ -1703,3 +1703,65 @@ Recovery assessment, all RUN this session:
   scratch.
 - `run_bucket` skips already-journalled units, so the C1 resume costs only the two
   missing settledrow seeds, not the thirteen that landed.
+
+## CORRECTION — the controller assigned the wrong mechanism to a cell. Mercury proved it.
+
+The previous ledger entry ruled that Neptune's `argmaxste − argmax` discrepancy
+was an estimator-family difference and Mars's was lattice granularity — "two
+causes, one symptom, neither supersedes the other". The principle stands. THE
+ASSIGNMENT OF THIS CELL WAS WRONG.
+
+Mercury enumerated all 3,125 resamples for `argmaxste − argmax`. His exact pair
+reproduces Neptune's `[+0.212539, +0.245992]` BIT-FOR-BIT FROM AN INDEPENDENT
+IMPLEMENTATION — so the exact value is confirmed twice, by two people, two ways.
+
+And the gap to his Monte-Carlo pair is `+1.056e-04` at BOTH endpoints, which is
+exactly the constant-shift signature Neptune identified. But:
+
+| | MC seed 0 | exact | on lattice | atoms apart |
+|---|---|---|---|---|
+| `ci_lo` | +0.212433 | +0.212539 | yes | 1 |
+| `ci_hi` | +0.245886 | +0.245992 | yes | 1 |
+
+Over bootstrap seeds 0..99, `ci_lo` takes 2 values and `ci_hi` takes 3 (reaching
+`+0.2465162`) — THE ENDPOINTS MOVE INDEPENDENTLY. A constant shift cannot do
+that. The equal gaps are equal LOCAL ATOM SPACING at the two ends.
+
+RULING: this cell is MARS'S mechanism, not Neptune's. The constant-shift signature
+remains the correct test for a genuine estimator-family difference — it simply is
+not what this cell shows, because a one-atom step at each end can counterfeit it.
+The DISCRIMINATING TEST, which nobody had before and which Mercury supplies, is
+whether the endpoints move INDEPENDENTLY across bootstrap seeds. A family
+difference cannot produce independent endpoint movement; lattice granularity can.
+Cost if wrong: a cell is labelled granularity when it is a family, and the exact
+pair is published either way so no number moves.
+
+Also corrected: the atom count for THIS contrast is 128, not 126. The 126 is
+`settled − softmax`, a DIFFERENT lattice. The controller conflated them; they are
+not in conflict.
+
+### What Mercury shipped, and the care in it
+
+`contrast()` now reports `exact_lo` / `exact_hi` / `n_atoms` so nobody re-derives
+this. ADDITIVE ONLY — `ci_lo` / `ci_hi` untouched, and he GREPPED to confirm
+`contrast` has ZERO call sites inside `_unit`, so the bitwise resume audit cannot
+see the new fields and NO COMPLETED UNIT IS INVALIDATED. That is precisely the
+hazard Neptune flagged on `verdict_of`, avoided by checking rather than assuming.
+
+The `0.026147` symmetric half-width is WITHDRAWN from his report. Every tie row
+now reads: excludes a `twin` advantage beyond `0.029187` and an `argmaxste`
+advantage beyond `0.023107`, and excludes nothing smaller.
+
+### The C1 scorer, as it will print
+
+- two-endpoint form for every tie row
+- exact pair and atom count beneath each interval
+- each rung's realised `sd_paired` and seeds-needed printed BEFORE that rung's numbers
+- row G flagged on any cell at or above 1.0
+- the table stamped PARTIAL, NOT A READING until all four rungs are in
+
+### C1 status
+
+14 of 15 on the `t*=32` rung. `settledrow` sd3 landed, sd4 running, wake armed at
+15/15. Tests: `tests/mercury/` 55/55; controller check across mercury, neptune,
+mars and capability_table 117/117.
