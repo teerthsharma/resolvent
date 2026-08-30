@@ -27,12 +27,18 @@ which is how it came to look like a discrepancy rather than an estimator. This
 file binds that half and nothing else.
 
 WHY IT MATTERS THAT THIS WAS ALREADY KNOWN. The generator's own limits paragraph
-(e) states the whole thing -- in `ceq/hf_artifact/README.md:80`, the file that
-ships. The table three lines above it still prints `95% CI` with no estimator,
-and the JSON behind it already carries `n_boot: 10000, boot_seed: 0`, so the
-provenance exists and is dropped at render time. That is MISTAKES.md P-8
-exactly: a caveat that is present, correctly worded, in the right place, and
-below the number that gets quoted.
+(e) stated the whole thing -- in `ceq/hf_artifact/README.md:85`, the file that
+ships -- while the table above it printed a bare `95% CI` with no estimator and
+the JSON behind it already carried `n_boot: 10000, boot_seed: 0`. The provenance
+existed and was dropped at render time. That is MISTAKES.md P-8 exactly: a
+caveat that is present, correctly worded, in the right place, and below the
+number that gets quoted.
+
+SINCE FIXED, and the description above is kept because it is why this file
+exists. The contrast table now names its estimator in the column header and
+prints the journal records the rows were computed from, so the caveat and the
+number no longer live a render apart. This test binds the arithmetic regardless
+of how the card chooses to render it.
 
 NOTHING HERE IS RUN AGAINST A LIVE FILE. The per-seed values are read from the
 COMMITTED blob of `results/m3_quintuple_v2.jsonl` via `git show`, never from the

@@ -55,6 +55,7 @@ return anything else.
 from __future__ import annotations
 
 import argparse
+import inspect
 import json
 import pathlib
 import itertools
@@ -67,7 +68,8 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from scale import eprocess as EP                                   # noqa: E402
-from scale.m3_synthetic_settled import contrast                    # noqa: E402
+from scale import negation_scope as NS                             # noqa: E402
+from scale.m3_synthetic_settled import contrast, verdict_of        # noqa: E402
 from scale.m3_quintuple import task_of                             # noqa: E402
 from scale.negation_scope import M3_TASKS                          # noqa: E402
 
@@ -219,17 +221,20 @@ def _geometry(path=JOURNAL) -> str:
 
 
 def _verdict(ci_lo: float, ci_hi: float, arm: str, ref: str) -> str:
-    """The verdict, as a pure function of the interval AND the two arm names.
+    """The verdict, named. Delegates so there is ONE implementation.
 
-    Strict at zero: an interval touching zero is not an interval excluding it
-    (G6). `delta = NRMSE_ref - NRMSE_arm`, so a strictly positive interval means
-    the ARM has the lower error.
+    This function was the fix; `m3_synthetic_settled.verdict_of` now carries it
+    and this stays as the local spelling its callers already use. Two copies of
+    a rule that is strict at zero is two places for the strictness to drift.
     """
-    if ci_lo > 0.0:
-        return "{} WINS".format(arm)
-    if ci_hi < 0.0:
-        return "{} WINS".format(ref)
-    return "NO DIFFERENCE"
+    return verdict_of(ci_lo, ci_hi, arm, ref)
+
+
+#: `B` of the per-unit marginal interval, read from the function that produced
+#: the journalled `marg_lo`/`marg_hi` rather than restated here. The Arms column
+#: and the Contrasts column are different estimators and the card must say so.
+_MARGINAL_N_BOOT = inspect.signature(
+    NS.bootstrap_ci).parameters["n_boot"].default
 
 
 def exact_percentile_ci(per_seed_delta) -> tuple:
@@ -396,17 +401,24 @@ LIMITS = (
     "(M3_QUINTUPLE_PREREGISTERED_READING.md:87). "
     "(d) CONSEQUENCE FIDELITY (1.7c) IS AN EMPTY COLUMN. It needs trained "
     "weights per arm and the quintuple journals metrics only. "
-    "(e) THE INTERVALS ARE MONTE-CARLO, AND THE PROSE DELIVERABLES CARRY A "
-    "SECOND FAMILY. At five seeds the paired bootstrap distribution is finite "
-    "(5**5 = 3125 resamples, 126 distinct values), so the exact percentile is "
-    "computable and differs from the B=10000 draw: exact "
-    "`[-0.042903167939657406, +0.03155692900564091]` against Monte-Carlo "
-    "`[-0.04858658448547344, +0.03155692900564091]` for `settled - twin`. "
-    "CHECKLIST.md:1167 and STATE.md:19 print the exact pair under the label "
-    "`B=10000`. One further endpoint, `+0.146551` for `settled - softmax` at "
-    "CHECKLIST.md:1168 and DONE.md:338, is in NEITHER family: it is absent from "
-    "all 3125 exact values and from the 97.5th percentile at every Monte-Carlo "
-    "seed 0..399. It is carried here as an open defect, not adopted. "
+    "(e) EVERY 5-SEED INTERVAL SITS ON A LATTICE, AND THE MONTE-CARLO ENDPOINT "
+    "IS NOT A SINGLE NUMBER. At five seeds the paired bootstrap distribution is "
+    "finite: 5**5 = 3125 resamples over at most C(2n-1,n) = 126 distinct atoms. "
+    "The B=10000 draw therefore does not estimate a continuum, it SELECTS AN "
+    "ATOM, and which atom it selects depends on the bootstrap seed. For "
+    "`settled - twin` the sampled `ci_lo` takes FOUR values over bootstrap "
+    "seeds 0..99 -- atoms 7 through 10, of which the exact percentile "
+    "`-0.042903167939657406` is atom 8 and the most common at 62/100 -- while "
+    "`ci_hi` is atom 117 at every seed and coincides exactly with the exact "
+    "value `+0.03155692900564091`. A sampled pair and an exact pair that differ "
+    "are therefore ONE estimator reaching adjacent atoms, not two estimator "
+    "families, and quoting one seed's outcome as `the` Monte-Carlo value "
+    "reifies a coin flip. `contrast` reports the exact, seed-free pair and the "
+    "atom count beside every interval so the distinction needs no re-derivation. "
+    "One endpoint remains unexplained by either: `+0.146551` for "
+    "`settled - softmax` is absent from all 3125 exact values and from the "
+    "97.5th percentile at every Monte-Carlo seed 0..399. It is carried as an "
+    "open defect, not adopted. "
     "(f) COST IS NOT PRICED. `meta.seconds` in the journal is a contended box "
     "and is labelled PROVISIONAL by its producer; no wall-clock number enters "
     "this table."
@@ -483,8 +495,18 @@ def render(t: dict, manifest=WEIGHTS_MANIFEST) -> str:
     L.append("")
     L.append("## Arms")
     L.append("")
-    L.append("| task | arm | eval NRMSE (mean of {} seeds) | sd | marginal 95% CI, seed {} | params | beats predict-the-mean | consequence fidelity (1.7c) |"
-             .format(p["n_seeds"], p["seeds"][0]))
+    # NAME THE ESTIMATOR IN THE HEADER, not only in the JSON. This column and the
+    # Contrasts column below were both rendered as a bare "95% CI" and they are
+    # NOT the same procedure: this one is a percentile bootstrap over EVAL POINTS
+    # inside a single seed, the other is PAIRED over the five seeds at a
+    # different B. A reader of the rendered card saw "95% CI" twice and had no
+    # way to tell them apart. `B` is read from the function that produced the
+    # journalled endpoints rather than restated, so it cannot drift from it.
+    L.append("| task | arm | eval NRMSE (mean of {} seeds) | sd | "
+             "marginal 95% CI, seed {} (percentile bootstrap over eval points, "
+             "B={}) | params | beats predict-the-mean | "
+             "consequence fidelity (1.7c) |"
+             .format(p["n_seeds"], p["seeds"][0], _MARGINAL_N_BOOT))
     L.append("|---|---|---|---|---|---|---|---|")
     for r in t["arms"]:
         L.append("| `{}` | `{}` | {:.6f} | {:.6f} | [{:.6f}, {:.6f}] | {} | {} | {} |"
@@ -508,36 +530,26 @@ def render(t: dict, manifest=WEIGHTS_MANIFEST) -> str:
              "touching zero does not exclude it.".format(
                  c0["estimator"] if c0 else "n/a"))
     L.append("")
-    L.append("**Every row carries BOTH interval families, each under its own "
-             "name, and the two differ.** At five seeds the paired resample "
-             "space is finite, so the percentile the Monte-Carlo draw "
-             "estimates is also computable outright: the `{}` column is the "
-             "{}. It is not a second measurement and not a correction -- it is "
-             "the same per-seed deltas under a different resampling rule, and "
-             "a headline quoted from one family will not match the other. "
-             "Prose deliverables in this repository adopted the exact family "
-             "(`CHECKLIST.md:1239`); this card prints the Monte-Carlo family "
-             "the run executed and names both, so a reader who finds two "
-             "endpoints for one headline can tell which instrument produced "
-             "each instead of assuming one is a typo."
-             .format("exact 95% CI", c0["estimator_exact"] if c0 else "n/a"))
+    c0 = t["contrasts"][0] if t["contrasts"] else None
     L.append("")
-    L.append("Both families are computed from the same {} journal records in "
-             "`{}`, seeds {} -- for the row below, keys `{}` and `{}` with the "
-             "`_sd<seed>` suffix over those seeds. No number in this section "
-             "is transcribed from another document."
+    L.append("Both the point estimate and the interval are computed from "
+             "the same {} journal records in `{}`, seeds {} -- keys "
+             "`<arm>_k<k>_{}` and `<reference>_k<k>_{}` with the "
+             "`_sd<seed>` suffix over those seeds. No number in this "
+             "section is transcribed from another document."
              .format(len(c0["journal_keys"]) if c0 else 0,
                      pathlib.Path(p["journal"]).name,
                      ", ".join(str(x) for x in p["seeds"]),
-                     "<arm>_k<k>_" + p["geometry"],
-                     "<reference>_k<k>_" + p["geometry"]))
+                     p["geometry"], p["geometry"]))
     L.append("")
-    L.append("| arm | reference | delta | 95% CI (Monte-Carlo) | exact 95% CI | seeds favouring arm | verdict | note |")
-    L.append("|---|---|---|---|---|---|---|---|")
+    L.append("| arm | reference | delta | 95% CI ({}) | seeds favouring arm | "
+             "verdict | note |".format(
+                 t["contrasts"][0]["estimator"] if t["contrasts"]
+                 else "paired percentile bootstrap"))
+    L.append("|---|---|---|---|---|---|---|")
     for r in t["contrasts"]:
-        L.append("| `{}` | `{}` | {:+.6f} | [{:+.6f}, {:+.6f}] | [{:+.6f}, {:+.6f}] | {}/{} | **{}** | {} |"
+        L.append("| `{}` | `{}` | {:+.6f} | [{:+.6f}, {:+.6f}] | {}/{} | **{}** | {} |"
                  .format(r["arm"], r["ref"], r["delta"], r["ci_lo"], r["ci_hi"],
-                         r["ci_exact_lo"], r["ci_exact_hi"],
                          r["seeds_favouring_arm"], r["n_seeds"], r["verdict"],
                          r["note"] or ""))
     L.append("")

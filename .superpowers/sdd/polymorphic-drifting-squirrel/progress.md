@@ -1936,3 +1936,458 @@ by at most 1 ULP, so the `argmaxste − argmax` reconciliation itself STANDS.
 OPEN: Mercury has NOT audited previously journalled contrasts for the same
 splitting. The new bound catches future over-counts; it does not retroactively
 scan the journal. Queued.
+
+## C1 rung t*=8 — ROW G VOIDS IT TOO. Both theory-predicted rungs are void.
+
+Merged. `tests/mercury/` 57/57.
+
+| cell | `t*=32` | `t*=8` |
+|---|---|---|
+| `softmax` | 1.003157 | 1.000933 |
+| `twinrow` | 1.002587 | 1.000774 |
+| `settledrow` | 1.003214 | 1.001047 |
+| realised `sd_paired` | 0.000664 | 0.000233 |
+| seeds needed | 1 | 1 |
+
+EVERY CELL ON BOTH RUNGS FAILS PREDICT-THE-MEAN. Row G voids all six contrasts.
+The ceiling was printed before each rung's numbers, and both rungs are so well
+resolved that ONE seed would have sufficed against `RESOLUTION_13`. That
+resolution is spent entirely on comparing three arms that all fail the absolute
+bar — exactly what row G exists to catch.
+
+On both rungs `twinrow` is best and `settledrow` worst, and on both the
+`settledrow − twinrow` interval excludes zero on the `twinrow` side. MERCURY
+REFUSES TO TREAT THIS AS A DIRECTION while row G stands, and that refusal is
+correct — a contrast between three failures is not evidence about which failure is
+better.
+
+Venus's prediction splits IDENTICALLY on both rungs, both halves recorded, neither
+adjudicated:
+- `|delta| < 0.027260` — TRUE on both (`0.000627`, `0.000272`, two orders inside)
+- CI covers zero — FALSE on both
+
+### The exact-pair printing earned its keep within one turn
+
+Two of the three `t*=8` contrasts have ONE exact endpoint differing from its
+sampled counterpart while the other coincides — `settledrow − twinrow` at `ci_lo`
+(`−0.000459` exact against `−0.000451` sampled) and `settledrow − softmax` at
+`ci_hi` (`+0.000103` against `+0.000098`). Same one-atom selection as
+`argmaxste − argmax`, now on C1 data.
+
+Mercury: "had I not added it last turn, these would have looked like clean
+agreement." The instrument built to explain last turn's discrepancy immediately
+caught two more that nobody would have looked for.
+
+### WHAT THE ROUND'S CENTRAL RESULT IS SHAPING INTO
+
+`Ruling on the reading so far, recorded now so it is not assembled after the fact:
+the C1 corpus at 150 steps and n_train=2048 is UNLEARNABLE BY EVERY ARM, including
+plain softmax, on both rungs where t* sits furthest above the hop budget. This is
+a CORPUS-BUDGET finding, not an arm finding, and it must not be reported as
+"the vector lane failed".
+
+Three facts constrain the reading and they point the same way:
+  1. The corpus is correctly built - gates pass, the truncation law is closed-form
+     with no fitted constant, k = t*+1 is bitwise exact, the do-bit movement test
+     fires. The LABEL is computable.
+  2. Neptune measured the per-row arm writing 88.1-100% of the label's support
+     against the shipped arm's 1.6-3.1%. The arm CAN REACH the label.
+  3. No arm LEARNS it in 150 steps at n_train=2048.
+
+So the experiment did not fail to find a difference. It failed to produce a
+LEARNABLE task at the shipped training budget, and those are different outcomes
+with different repairs. Cost if wrong: the round reports a budget problem where
+there is a task problem, which the t2/t1 rungs and any capacity sweep would
+separate.`
+
+### Mercury's projection, correctly refused as a score
+
+The means move TOWARD 1.0 as `t*` decreases (1.003 → 1.001), so `t*=2` and `t*=1`
+are unlikely to clear the bar either. HE IS NOT SCORING THAT — it is a projection,
+not a measurement, and the rungs are still running.
+
+`Ruling: the t2 and t1 rungs RUN TO COMPLETION despite the projection. Dropping
+the rungs likely to void, after two have voided, is rung-picking - the exact defect
+M4 was built to prevent and the exact shape of the E_LADDER row-H hole Venus
+audited. The table needs all four rungs to be a reading at all; Titan's guards keep
+verdict() from quantifying on a partial table. Cost if wrong: roughly two hours of
+compute on rungs that void, buying a complete object instead of a selected one.`
+
+Table remains PARTIAL, NOT A READING (2 of 4). `t2` in flight, `t1` queued.
+
+## Mercury — three hand-offs delivered, and TWO corrections to what the controller relayed
+
+Merged. 140/142 sweep green across mercury (73), neptune, mars, capability_table
+and the single-seed table.
+
+DELIVERED: estimator naming (both rendered headers said `95% CI` for GENUINELY
+DIFFERENT procedures — Arms is a bootstrap over EVAL POINTS within one seed,
+Contrasts is PAIRED OVER SEEDS at a different `B`; both now name their family, and
+the Arms `B` is READ FROM THE FUNCTION THAT PRODUCED THE ENDPOINTS rather than
+restated). `verdict_of` collapsed to one implementation with optional names,
+`_verdict` delegating, defaults pinned, settled/twin strings byte-identical.
+Limits (e) rewritten.
+
+### CORRECTION 1 — the `verdict_of` hazard as relayed DOES NOT EXIST
+
+The warning passed from Neptune through the controller was that changing a verdict
+string invalidates journalled units via `run_bucket`'s bitwise resume audit.
+Measured:
+
+- `contrast` has ZERO call sites inside `_unit` in either module. In
+  `m3_synthetic_settled` it runs AFTER `require_complete`, on aggregated values.
+- NO `results/*.jsonl` CONTAINS A `verdict` KEY AT ALL — asserted over every
+  journal as a test.
+
+The CONCLUSION (pin the defaults) is right. The REASON is different: published
+readings QUOTE those strings; journals do not hold them.
+
+RULING: the controller relayed a mechanism it had not verified, and the mechanism
+was wrong. Mercury's point is the one worth keeping — "the difference matters: the
+stated mechanism makes a much larger class of change look dangerous than actually
+is." A wrong hazard is not harmless just because it produced a safe decision; it
+freezes work that was never at risk. Recorded against the controller, not Neptune,
+who flagged a real concern in a file he did not hold.
+
+### CORRECTION 2 — limits (e)'s NUMBERS were all correct. Its FRAMING was not.
+
+All four numeric claims reproduce exactly. The three "stale counts" handed over:
+
+- `CHECKLIST.md:1167` now reads "exact enumeration", so the accusation is FALSE.
+- `STATE.md` contains NEITHER ENDPOINT anywhere.
+- "a SECOND FAMILY" is THE WRONG MECHANISM. Measured: sampled `ci_lo` is atom 7,
+  exact is atom 8; `ci_hi` is atom 117 FOR BOTH; and over seeds 0..99 `ci_lo`
+  takes FOUR values (atoms 7-10, exact merely the most common at 62/100).
+
+SAME FINDING AS `argmaxste`, NOW ON THE HEADLINE CONTRAST.
+
+RULING: the "two estimator families" story is now retired on the headline contrast
+too. Saturn's reproduction was real and correct - family A is the bootstrap at
+seed 0, family B is exact enumeration - but the FRAMING overstated it. There are
+not two families in any deep sense; there is ONE DISCRETE STATISTIC WITH 126
+ATOMS, and the bootstrap lands on a neighbouring atom depending on seed while
+exact enumeration lands on the true one. Every "family" observation this round
+reduces to that. Cost if wrong: a labelling change is applied where a seed change
+was needed, which the exact pair printed beside every interval now makes visible
+either way.
+
+### A general principle worth taking, for Saturn's MISTAKES.md
+
+Mercury dropped the file-specific accusations rather than restating them:
+
+  "a stored claim about another file goes stale every time that file is fixed,
+   which is what happened here twice."
+
+That is a distinct provenance failure mode from anything currently in the file —
+it is not doc rot (the claim was true when written) and not a stale number (the
+numbers were right). It is a claim whose TRUTH IS OWNED BY A FILE IT DOES NOT
+CONTROL. Routed to Saturn.
+
+### The kill did not stop the run, and the lock did its job
+
+The shell wrapper died; its python child (PID 31600, 1.2 GB) survived and still
+holds the journal lock. THE LOCK WOULD HAVE REFUSED A SECOND RUN, which is why
+Mercury did not start one. `t*=2` is at 11/15 UNATTENDED; `t*=1` queued
+separately since the chain wrapper is gone.
+
+### Carried
+
+1. `e_ladder` and `page_trend` also call `contrast` and still take pinned defaults
+   — CORRECT TODAY because both compare settled/twin, WRONG the moment either
+   compares anything else.
+2. Limits (e) is still a STORED string; its surviving numbers are restated, not
+   computed.
+3. C1 remains PARTIAL, NOT A READING (2/4). Both scored rungs void under row G.
+
+## C1 rung t*=2 — THE FIRST CREDITABLE CONTRAST IN THE LANE, AND IT GOES AGAINST THE CEQ ARM
+
+Merged. `tests/mercury/` 73/73.
+
+| cell | mean | |
+|---|---|---|
+| `softmax` | 0.996745 | CLEARS the bar |
+| `twinrow` | 0.999082 | CLEARS the bar |
+| `settledrow` | 1.000150 | FAILS — row G voids its rows |
+
+FIRST CREDITABLE CONTRAST ANYWHERE IN THE C1 TABLE:
+`twinrow − softmax = −0.002337`, CI `[−0.002767, −0.001868]`, **n+ 0/5**.
+`twinrow` did not win on a single seed. Both cells clear the absolute bar so row G
+does not void it.
+
+### The verdict fix earned itself on the very first creditable number
+
+Under the hardcoded `verdict_of` this row renders **`TWIN WINS`** — which reads as
+the ceq twin arm winning WHEN SOFTMAX WON. The repair in `315f949` is what makes
+it print `SOFTMAX WINS`. Mercury's own scorer was still calling `contrast` without
+names and PRINTED THE MISLEADING STRING ONCE before he caught it.
+
+That repair landed exactly one turn before the first row that would have entered
+the record backwards. It was queued behind C1 as a tidy-up and turned out to be
+load-bearing.
+
+### Three rungs together
+
+| rung | softmax | twinrow | settledrow | clears bar | creditable |
+|---|---|---|---|---|---|
+| `t*=32` | 1.003157 | 1.002587 | 1.003214 | none | none |
+| `t*=8` | 1.000933 | 1.000774 | 1.001047 | none | none |
+| `t*=2` | 0.996745 | 0.999082 | 1.000150 | softmax, twinrow | softmax beats twinrow |
+
+Every cell improves monotonically as `t*` falls. `settledrow` is the WORST cell on
+all three rungs and fails predict-the-mean on all three, so EVERY `settledrow`
+contrast in the table is void.
+
+Venus's prediction splits IDENTICALLY for the third consecutive rung.
+
+### The shape of the reading, stated plainly
+
+`Ruling: the lane's picture is now coherent and it is not the one it was built to
+show. Where the theory predicts - t*=8 and t*=32, where t* sits furthest above the
+hop budget - NOTHING LEARNS and every contrast is void. Where anything learns -
+t*=2 - the theory predicts no pivot advantage, and softmax beats the pivot arm
+UNANIMOUSLY. Those two facts do not cancel; they say the lane has not yet been
+tested where it claims an advantage, because that region is unlearnable at this
+budget.`
+
+### A controller observation on row G itself, labelled as an observation
+
+`softmax` clears the bar by `0.003255` and `twinrow` by `0.000918`. Row G is a
+BINARY gate at exactly 1.0 — it asks "did anything beat predict-the-mean", not
+"did anything beat it by an amount worth crediting". A contrast between two cells
+that clear 1.0 by under 0.4% is creditable BY THE LETTER of row G.
+
+`Ruling: this is recorded as an OBSERVATION, not a change. Row G is
+pre-registered and moving its threshold after seeing the data is the exact defect
+the frozen RESOLUTION_13 exists to prevent - a threshold refitted to the data it
+judges is not a threshold. The observation is filed for the author and for the
+re-audit, which is the correct place to reconsider a gate's design. Cost if wrong:
+a creditable contrast stays creditable and carries a note.`
+
+### Carried
+
+- The one creditable C1 contrast is `softmax` beating the ceq arm, unanimously.
+  Not adjudicated by Mercury — correctly, it is not his seat.
+- Table remains PARTIAL, NOT A READING (3/4). `t*=1` in flight and is THE
+  UNDERPOWERED RUNG — 62 seeds required, 5 run — and will be labelled as such.
+- `e_ladder` and `page_trend` still call `contrast` with pinned defaults; correct
+  today because both compare settled/twin, wrong the moment either compares
+  anything else.
+
+## CORRECTION — `page_trend` does not call `contrast` at all
+
+The previous two ledger entries carried, from Mercury's commit prose and repeated
+by the controller: "`e_ladder` and `page_trend` still call `contrast` with pinned
+defaults; correct today because both compare settled/twin, wrong the moment either
+compares anything else."
+
+Mercury grepped it. `scale/e_ladder.py:160` is THE ONLY live `contrast` caller
+outside the two modules he changed, and it compares `settled` against `twin`, so
+the defaults are right for it. THE `page_trend` HIT IS DOCSTRING PROSE, NOT A CALL.
+
+THE PINNED DEFAULTS ARE CORRECT FOR EVERY CALLER THAT EXISTS. The exposure is
+PURELY PROSPECTIVE — it becomes real only when someone adds a caller comparing
+something other than settled/twin.
+
+He handled the record correctly: three commits sit on top of `315f949` so its
+message stands as written, and section 5D of his report is the correction of
+record. Rewriting a merged commit message to hide a wrong claim would be worse
+than the claim.
+
+RULING: this is the second time this round a caution has been relayed one level
+broader than the evidence supports - the first was the verdict_of resume-audit
+hazard, which did not exist as stated. Both times the CONCLUSION was safe and the
+MECHANISM was wrong, and both times the controller passed the mechanism on without
+grepping it. A safe conclusion reached through a wrong mechanism still costs
+something: it makes a larger class of work look dangerous than is.
+
+## Iteration 4 — Mars dispatched on the gap he named himself
+
+Mercury waits on `t*=1` at 12/15 (`settledrow` seed 3 of 5, roughly 34 minutes).
+The `t*=1` wrapper was stopped the same way `t*=2` was; PID 11140 survived, holds
+the lock, and the journal lock REFUSED A COMPETING RUN FOR THE SECOND TIME. It has
+now done its job twice.
+
+Mars closed his own report with the largest open gap in the round: M4 EVICTION,
+THE E4-PRIME GATES AND THE CALIBRATED M3 HARNESS WERE NOT ATTACKED AT ALL. Three
+of five named GREENs enter the re-audit without an adversary, while Venus has
+already filed a prediction that four of five fall. Dispatched.
+
+## Iteration 4 — Mars COMPLETE. All three unattacked GREENs fired. Running total 15 filed, 12 fired.
+
+Merged. `tests/mars/` 36/36.
+
+### M4 EVICTION — the rejection region is EMPTY, not unexercised
+
+Venus ruled its must-fire insufficient and flagged it as the call she most
+expected to be wrong. MARS SAYS SHE UNDERSTATES IT, and shows why NO SUFFICIENT
+MUST-FIRE CAN BE WRITTEN:
+
+`settle_evicted = settle_exact(evicted_operator(x, keep, rho), x[keep])`, and
+`evicted_operator = rho * _causal_softmax(scores(x[keep]))`. BOTH ARGUMENTS ARE
+FUNCTIONS OF `x[keep]` ALONE, while the perturbed token is chosen with
+`exclude=keep`. There is no path from the perturbation to the output.
+
+Measured: the crushed slot overwritten with `1.0`, `1e6`, `1e12`, `inf` and `nan`
+across 8 draws — output BITWISE IDENTICAL 40/40. THE `nan` ARM IS LOAD-BEARING: a
+NaN that does not reach the output proves there is NO PATH, not a small effect.
+Gaussian redraw of the same slot: evicted 0/8, gated 8/8.
+
+VENUS'S COUNT DOES NOT GO TO 2. Her prediction of 4-of-5-fall STRENGTHENS.
+
+### E4-PRIME — the strike hangs on ONE UNREPEATABLE DRAW
+
+Margin to `PASS_BAR` is `0.028955`. Both seeds in `draw_balanced_marginal` are
+HARDCODED (`random.Random(0x33960000 ^ case.seed)`, `RandomState(0)`), so THE
+SPREAD HAS NEVER BEEN MEASURED.
+
+Reproduced verbatim with the seeds exposed: 20 other draw seeds read
+`0.459390 … 0.506250`, sd `0.010802`, and **1 OF 20 REVERSES THE STRIKE**. The
+shipped draw sits **0.78 sd BELOW the mean of the other twenty — on the side that
+licenses the strike.** Split seeds: 0/20 reverse, closest `0.001423` short.
+
+### CALIBRATED M3 BAR — an in-sample control gating held-out arms
+
+Clause 5 trains on `feats` and scores on THE SAME `feats`, while every arm is
+scored at `seed + 12345`. `rips_gate.py:163-168` REFUSES EXACTLY THIS IN ITS OWN
+DOCSTRING — an in-sample reading credits memorisation as decoding.
+
+Measured: in-sample `0.037681` against held-out `0.067680`, bias `+0.029998` —
+80% relative. NO VERDICT MOVES: the clause's threshold is 1.0 and `BAR CALIBRATED`
+holds under both scorings, ASSERTED NOT ARGUED. A method defect the margin
+absorbs.
+
+### Mars corrected the controller's dispatch, and his reframing is sharper
+
+The dispatch said "+3hop clears `FAIL_BAR` by `0.0049`". WRONG — `0.9951` against
+a bar of `0.9` clears by `0.0951`. **`0.0049` is its distance BELOW THE MEAN
+PREDICTOR**, which is the sharper point: ALL FOUR DECODERS REQUIRED TO FAIL SIT
+WITHIN `0.0049` OF A CONSTANT.
+
+### His one unverified attack is DEAD, and the controller checked it
+
+He flagged, honestly, that he had not confirmed which bar the planted-median
+clause enforces, and that `0.5530` "does not on its face clear `PASS_BAR = 0.5`".
+
+Controller check, RUN this session — `tests/cameron/test_e4prime_registration.py:210`:
+
+    assert median_score < 0.70, median_score
+
+The clause enforces `< 0.70`, NOT `>= PASS_BAR`. `0.5530` clears it correctly.
+AND the `0.70` was a DELIBERATE correction: `DONE.md:1683` records the author
+fixing it herself — "a linear decoder cannot represent a step label, so 0.5 was a
+category error on my part."
+
+RULING: that candidate attack is KILLED and the kill is recorded rather than
+dropped. Mars flagged his own uncertainty instead of filing on it, which is why
+checking it cost one grep instead of an iteration. An attack correctly withheld is
+worth as much to the ledger as one that fires.
+
+### What this does to the re-audit, before it runs
+
+Two of the five standing GREENs now have a filed, fired attack that MOVES A
+VERDICT (M4, E4-prime), one has a method defect its margin absorbs (M3 harness),
+and F-green survived Mars's earlier G1 attack at 96/100 with the exact enumeration
+agreeing. Venus's filed 1-of-5 (or 0-of-5 under the N=5 floor) now has an
+adversarial record standing behind three of the four she downgraded.
+
+### Mars's stated limits
+
+- The E4-prime sweep varies draw and split seeds SEPARATELY, NEVER JOINTLY, so 5%
+  is A FLOOR ON 20 SEEDS, not an interval.
+- The E4-prime ladder values are READ from the dispatch, NOT re-run.
+- The M3 bias was measured at `negation_scope`, NOT at `e2_consequence` where he
+  argues it matters — that step is DERIVED.
+
+# THE C1 DECIDING MEASUREMENT IS COMPLETE — 4 OF 4 RUNGS
+
+Merged. `tests/mercury/` 73/73.
+
+| rung | softmax | twinrow | settledrow | clears bar | `settledrow − twinrow` |
+|---|---|---|---|---|---|
+| `t*=32` | 1.003157 | 1.002587 | 1.003214 | none | VOID (row G) |
+| `t*=8` | 1.000933 | 1.000774 | 1.001047 | none | VOID (row G) |
+| `t*=2` | 0.996745 | 0.999082 | 1.000150 | softmax, twinrow | VOID (row G) |
+| `t*=1` | **0.991038** | **0.997688** | **0.999064** | **all three** | **−0.001376, n+ 0/5** |
+
+`t*=1` IS THE ONLY RUNG WHERE THE DECIDING CONTRAST IS CREDITABLE, AND SETTLING
+LOSES. `settledrow − twinrow` = `−0.001376`, CI `[−0.002031, −0.000776]`,
+UNANIMOUS 0/5 — the settling arm carries the higher error on every seed.
+`softmax` beats both ceq arms, also unanimously, by roughly 5x the margin.
+
+Mercury renders NO VERDICT — correctly, it is not his seat.
+
+## THE CONTROLLER'S "UNDERPOWERED" RULING WAS WRONG, AND MEASURABLY SO
+
+| lane | realised `sd_paired` | seeds needed |
+|---|---|---|
+| e3 SCALAR `t*=1` | 0.109199 | **62** |
+| e3 SCALAR `t*=2` | 0.019082 | 2 |
+| **C1 VECTOR `t*=1`** | **0.000841** | **1** |
+
+The `0.019` and `0.109` are THE E3 SCALAR LADDER'S OWN SPREADS — `DONE.md:336`
+records `0.109199` for `e3_t1` and it reproduces the 62 exactly. **C1's realised
+spread is 130x smaller. Every C1 rung needs ONE seed.**
+
+Mercury DID NOT APPLY THE LABEL, on measured grounds.
+
+RULING, against myself: I ruled "run t*=1, label it UNDERPOWERED, state the
+62-seed requirement in the same breath". Venus derived the 62, Mercury reproduced
+it independently from first principles, and I upheld it. THREE OF US VERIFIED THE
+ARITHMETIC AND NONE OF US CHECKED WHETHER THE INPUT SPREAD BELONGED TO THE LANE
+BEING POWERED. It did not - it came from a different corpus. The label is
+WITHDRAWN. t*=1 is the BEST-RESOLVED rung in the table, not the weakest.
+
+FIFTH INSTANCE OF THE CROSS-LANE TRANSFER TYPE, and its cost is INVERTED. The
+previous four priced an arm at another arm's rate. This one POWERED A LANE AT
+ANOTHER LANE'S VARIANCE — and it would have caveated away THE BEST-RESOLVED AND
+MOST DECISIVE RUNG IN THE TABLE. Routed to Saturn: the type's existing entry M-8
+covers cost transfer; this is the same mechanism applied to VARIANCE, and it
+argues for widening the entry rather than adding a sixth.
+
+## Venus's prediction: 4/4 both ways, and the reading is precise
+
+MAGNITUDE half TRUE at every rung — `0.000627` / `0.000272` / `0.001068` /
+`0.001376`, all inside `0.027260`.
+COVERS-ZERO half FALSE at every rung.
+
+Mercury's framing, and it is the correct one:
+
+  "The settling contrast DOES move detectably and unanimously — and by one to two
+   orders LESS than the pre-registered resolution. 'Does not move' is FALSE at the
+   resolution achieved; 'moves less than RESOLUTION_13' is TRUE."
+
+RULING: Venus's decision to split her prediction into two independent booleans is
+what makes this readable. A single-lump prediction would have been scored "wrong"
+and the actual finding - a real, unanimous, reproducible effect that is one to two
+orders below the threshold anyone pre-registered as meaningful - would have been
+lost in the grading. That design choice was hers, made before any data existed.
+
+## What the completed table says, stated once and plainly
+
+1. On the three rungs where the contract predicts hardest — `t*` furthest ABOVE
+   the hop budget of 2 — ALL THREE ARMS FAIL PREDICT-THE-MEAN OUTRIGHT. Row G
+   voids every contrast. Nothing learns.
+2. The ONLY creditable deciding contrast is at `t*=1`, where `t*` sits FURTHEST
+   BELOW the hop budget — THE RUNG THE THEORY PREDICTS LEAST ON.
+3. There, SETTLING LOSES to its own unsettled twin, unanimously.
+4. And SOFTMAX BEATS BOTH ceq arms, unanimously, by about 5x that margin.
+5. The measurement is WELL RESOLVED throughout — one seed sufficed at every rung.
+   This is not an underpowered null.
+
+`Ruling on how this is reported: this is a NEGATIVE RESULT ON THE CEQ ARM in the
+region where the corpus is learnable, and NO RESULT AT ALL in the region the
+theory is about. Both halves must travel together. Reporting only the second would
+hide a real loss; reporting only the first would claim the theory was tested where
+it was not. The corpus is correctly built, the arm reaches 88-100% of the label
+support, the instrument resolves to one seed - and the region where t* exceeds the
+hop budget is unlearnable by every arm at 150 steps and n_train=2048. That last
+clause is the round's open question, not its conclusion.`
+
+## Mercury's stated limits
+
+- Margins are small (`0.001376` against means near `0.99`). SMALLNESS DEFENDS
+  NEITHER SIDE — the intervals exclude zero, and they sit far below the resolution
+  the pre-registration asked for.
+- `sd_paired` rests on FIVE paired differences, FOUR degrees of freedom.
+- The wrapper-kill pattern recurred TWICE; the journal lock prevented a double-run
+  BOTH times.

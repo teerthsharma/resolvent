@@ -394,11 +394,264 @@ That is precisely the configuration row G exists to catch: a beautifully
 resolved comparison of two failures. **No credit flows from `t*=32` in any
 direction.**
 
+## 5B. C1 `t*=8` - COMPLETE, and row G voids this rung too
+
+### Ceiling first
+
+Realised `sd_paired(settledrow - twinrow)` = **`0.000233`**, finer still than
+`t*=32`'s. Seeds needed: **1**. This run has 5. **Adequately powered.**
+
+### The numbers
+
+| cell | mean | |
+|---|---|---|
+| `softmax` | `1.000933` | at/above predict-the-mean |
+| `twinrow` | `1.000774` | at/above predict-the-mean |
+| `settledrow` | `1.001047` | at/above predict-the-mean |
+
+**All three fail predict-the-mean again. Row G voids every contrast.**
+
+| arm | vs | delta | CI (MC) | exact | n+ | status |
+|---|---|---|---|---|---|---|
+| `settledrow` | `twinrow` | `-0.000272` | `[-0.000451, -0.000102]` | `[-0.000459, -0.000102]` | 1/5 | **VOID (row G)** |
+| `twinrow` | `softmax` | `+0.000158` | `[-0.000051, +0.000380]` | `[-0.000051, +0.000380]` | 3/5 | **VOID (row G)** |
+| `settledrow` | `softmax` | `-0.000114` | `[-0.000296, +0.000098]` | `[-0.000296, +0.000103]` | 2/5 | **VOID (row G)** |
+
+Ties in the house two-endpoint form: `twinrow`/`softmax` **excludes a `softmax`
+advantage beyond `0.000051` and a `twinrow` advantage beyond `0.000380`**;
+`settledrow`/`softmax` **excludes a `softmax` advantage beyond `0.000296` and a
+`settledrow` advantage beyond `0.000098`**. Neither excludes anything smaller.
+
+**The lattice effect is live in this rung's own data.** Two of the three exact
+pairs differ from their Monte-Carlo counterparts at one endpoint —
+`settledrow`/`twinrow` at `ci_lo` (`-0.000459` exact against `-0.000451`
+sampled) and `settledrow`/`softmax` at `ci_hi` (`+0.000103` against `+0.000098`)
+— while the other endpoints coincide. That is exactly the adjacent-atom
+selection recorded in section 2.5, now observed on a second corpus, and it is
+why the exact pair is printed beside every interval rather than reasoned about
+afterwards.
+
+### Venus's prediction on `t*=8`
+
+Identical split to `t*=32`:
+
+| half | reads |
+|---|---|
+| `\|delta\| < 0.027260` | **True** — `0.000272`, two orders inside |
+| CI covers zero | **False** — `[-0.000451, -0.000102]` excludes zero, `n+ 1/5` |
+
+### The two completed rungs together
+
+| rung | softmax | twinrow | settledrow | sd_paired | seeds needed |
+|---|---|---|---|---|---|
+| `t*=32` | 1.003157 | 1.002587 | 1.003214 | 0.000664 | 1 |
+| `t*=8` | 1.000933 | 1.000774 | 1.001047 | 0.000233 | 1 |
+
+Both rungs are **superbly resolved and entirely void**. Every cell on both fails
+the absolute bar, and the means sit closer to `1.0` at `t*=8` than at `t*=32`.
+On both, `twinrow` is the best of the three and `settledrow` the worst, and on
+both the `settledrow - twinrow` interval excludes zero on the `twinrow` side —
+but row G means none of that is creditable in either direction.
+
+## 5C. C1 `t*=2` - the pattern breaks, and softmax wins the one creditable row
+
+### Ceiling first
+
+Realised `sd_paired(settledrow - twinrow)` = **`0.000271`**. Seeds needed: **1**.
+This run has 5. **Adequately powered.**
+
+### The numbers - two cells clear the bar
+
+| cell | mean | |
+|---|---|---|
+| `softmax` | **`0.996745`** | **clears predict-the-mean** |
+| `twinrow` | **`0.999082`** | **clears predict-the-mean** |
+| `settledrow` | `1.000150` | at/above - row G credits it nothing |
+
+This is the first rung where any cell beats predict-the-mean, so it is the first
+rung carrying a creditable contrast.
+
+| arm | vs | delta | CI | n+ | status |
+|---|---|---|---|---|---|
+| `twinrow` | `softmax` | `-0.002337` | `[-0.002767, -0.001868]` | 0/5 | **SOFTMAX WINS** |
+| `settledrow` | `twinrow` | `-0.001068` | `[-0.001276, -0.000856]` | 0/5 | VOID (row G) |
+| `settledrow` | `softmax` | `-0.003405` | `[-0.003679, -0.002973]` | 0/5 | VOID (row G) |
+
+**`softmax` beats `twinrow` unanimously.** `delta = ref - arm` is `-0.002337`,
+so the reference has the lower error; the interval excludes zero and `n+ 0/5`
+means `twinrow` did not win on a single seed. Both cells clear the absolute bar,
+so row G does not void it. **This is the only creditable contrast anywhere in
+the C1 table so far, and it goes against the ceq arm.**
+
+`settledrow` fails the bar on this rung, so both of its contrasts are void
+regardless of their intervals.
+
+### This row would have been reported backwards an hour ago
+
+Under the hardcoded `verdict_of`, `twinrow` against `softmax` rendered as
+**`TWIN WINS`** - which reads as the ceq twin arm winning, when `softmax` won.
+The named-verdict repair in `315f949` is what makes it print `SOFTMAX WINS`.
+The first creditable number in this lane would have entered the record with its
+direction inverted.
+
+### Venus's prediction on `t*=2`
+
+Third rung, same split:
+
+| half | reads |
+|---|---|
+| `\|delta\| < 0.027260` | **True** - `0.001068` |
+| CI covers zero | **False** - `[-0.001276, -0.000856]`, `n+ 0/5` |
+
+### The three completed rungs
+
+| rung | softmax | twinrow | settledrow | cells clearing the bar | creditable contrast |
+|---|---|---|---|---|---|
+| `t*=32` | 1.003157 | 1.002587 | 1.003214 | none | none |
+| `t*=8` | 1.000933 | 1.000774 | 1.001047 | none | none |
+| `t*=2` | **0.996745** | **0.999082** | 1.000150 | `softmax`, `twinrow` | `softmax` beats `twinrow` |
+
+Every cell improves monotonically as `t*` falls, and the bar is first cleared at
+`t*=2`. On all three rungs `settledrow` is the worst of the three cells and
+`settledrow - twinrow` excludes zero on the `twinrow` side; on the two rungs
+where that contrast is creditable-adjacent it is still void, and on `t*=2` it is
+void because `settledrow` itself fails the bar.
+
+## 5E. C1 `t*=1` - all three cells clear the bar, and settling loses
+
+### The UNDERPOWERED label does not survive measurement
+
+The dispatch labels this rung UNDERPOWERED from a realised `sd_paired` of
+`0.019-0.109`, giving 62 seeds against the 5 run. Measured on this rung:
+
+| lane | contrast | realised `sd_paired` | seeds needed |
+|---|---|---|---|
+| e3 scalar, `t*=1` | `settled - twin` | `0.109199` | **62** |
+| e3 scalar, `t*=2` | `settled - twin` | `0.019082` | 2 |
+| e3 scalar, `t*=8` | `settled - twin` | `0.020379` | 3 |
+| **C1 vector, `t*=1`** | **`settledrow - twinrow`** | **`0.000841`** | **1** |
+| C1 vector, `t*=2` | `settledrow - twinrow` | `0.000271` | 1 |
+| C1 vector, `t*=8` | `settledrow - twinrow` | `0.000233` | 1 |
+| C1 vector, `t*=32` | `settledrow - twinrow` | `0.000664` | 1 |
+
+`0.019` and `0.109` are exactly the e3 SCALAR ladder's own spreads at `t*=2` and
+`t*=1` (`DONE.md:336` records `0.109199` for `e3_t1`), and `0.109199` reproduces
+the 62 exactly. **The C1 vector lane's realised spread is 130x smaller.** Every
+C1 rung needs one seed, not 62.
+
+**This is the fifth instance of the mistake type already going to Saturn** -- a
+quantity measured on one lane carried to another. The previous four priced an
+arm at another arm's rate; this one powers a lane at another lane's variance.
+Its cost here would have been the opposite of the others': it would have
+caveated away the best-resolved and most decisive rung in the table.
+
+The label is therefore **not applied**, and the ground for not applying it is a
+measurement rather than a judgement call. The 62 remains correct for `e3_t1`.
+
+### Ceiling, then the numbers
+
+Realised `sd_paired` `0.000841`; seeds needed **1**; run has 5. **Adequately
+powered by a factor of five.**
+
+| cell | mean | |
+|---|---|---|
+| `softmax` | **`0.991038`** | clears predict-the-mean |
+| `twinrow` | **`0.997688`** | clears predict-the-mean |
+| `settledrow` | **`0.999064`** | **clears predict-the-mean** |
+
+**All three cells clear the absolute bar. Row G voids nothing. Every contrast on
+this rung is creditable** -- the only rung in the table of which that is true.
+
+| arm | vs | delta | CI | exact | n+ | verdict |
+|---|---|---|---|---|---|---|
+| `settledrow` | `twinrow` | `-0.001376` | `[-0.002031, -0.000776]` | `[-0.002052, -0.000776]` | **0/5** | **TWINROW WINS** |
+| `twinrow` | `softmax` | `-0.006650` | `[-0.007265, -0.006096]` | `[-0.007265, -0.006047]` | **0/5** | **SOFTMAX WINS** |
+| `settledrow` | `softmax` | `-0.008026` | `[-0.008157, -0.007917]` | `[-0.008157, -0.007917]` | **0/5** | **SOFTMAX WINS** |
+
+Every interval excludes zero and every one is unanimous at `n+ 0/5`.
+
+### What the deciding contrast reads
+
+`settledrow - twinrow` is the contrast the lane was built for, and `t*=1` is the
+only rung where both its cells clear the bar so that it is creditable at all.
+**It reads `-0.001376`: the settling arm has the HIGHER error, on all five
+seeds, with the interval excluding zero.** Settling loses to its own unsettled
+twin.
+
+`softmax` beats both ceq arms, also unanimously, by a margin roughly five times
+larger than the settling contrast.
+
+**No verdict is rendered here.** The rung is reported; the adjudication is not
+this seat's.
+
+### Venus's prediction, all four rungs
+
+Her filing: *`settledrow - twinrow` reads inside `+-0.027260` at every rung with
+every CI covering zero -- the write share moves 56x and the settling contrast
+does not move.*
+
+| rung | `\|delta\|` | inside `0.027260`? | CI covers zero? |
+|---|---|---|---|
+| `t*=32` | 0.000627 | **True** | **False** |
+| `t*=8` | 0.000272 | **True** | **False** |
+| `t*=2` | 0.001068 | **True** | **False** |
+| `t*=1` | 0.001376 | **True** | **False** |
+
+**The magnitude half holds at every rung and the covers-zero half fails at every
+rung**, 4/4 each way. The precise reading is that the settling contrast DOES
+move detectably -- every interval excludes zero, every one unanimously -- and
+moves by an amount one to two orders below the pre-registered resolution. "Does
+not move" is false at the resolution actually achieved; "moves by less than
+`RESOLUTION_13`" is true. Both halves are recorded because the difference
+between them is the whole content of the filing.
+
+### The complete table
+
+| rung | softmax | twinrow | settledrow | cells clearing bar | `settledrow - twinrow` |
+|---|---|---|---|---|---|
+| `t*=32` | 1.003157 | 1.002587 | 1.003214 | none | void (row G) |
+| `t*=8` | 1.000933 | 1.000774 | 1.001047 | none | void (row G) |
+| `t*=2` | 0.996745 | 0.999082 | 1.000150 | softmax, twinrow | void (row G) |
+| `t*=1` | **0.991038** | **0.997688** | **0.999064** | **all three** | **`-0.001376`, 0/5** |
+
+Every cell improves monotonically as `t*` falls. `settledrow` is the worst of
+the three on all four rungs. The bar is first cleared at `t*=2` and cleared by
+all three cells only at `t*=1`.
+
 ### Table status
 
-**1 of 4 rungs complete — PARTIAL, NOT A READING.** `t*=8` is in flight,
-`t*=2` and `t*=1` queued. `verdict()` refuses quantified rows on incomplete
-data, so this cannot be misread as a kill.
+**4 of 4 rungs complete - the table is COMPLETE.** Three of its four rungs are
+void under row G; the fourth carries three creditable contrasts.
+
+---
+
+## 5D. A correction to this session's own commit prose
+
+Commit `315f949`'s message states that `e_ladder` and `page_trend` "also call
+`contrast` and still take the pinned defaults, which is correct for them today
+and wrong the moment either compares anything else." That overstates the
+exposure. Grepped: `scale/e_ladder.py:160` is the only live `contrast` call
+outside `m3_quintuple` and `capability_table`, it reads
+`contrast(ev_t, ev_s, ...)` on `settled` against `twin`, and the `page_trend`
+hit is prose inside a docstring, not a call. **The pinned defaults are correct
+for every caller that exists**; the risk is entirely prospective and belongs in
+a future-work note rather than a limits paragraph. The commit message stands as
+written since three commits sit on top of it; this is the correction of record.
+
+---
+
+## 5D. A correction to this session's own commit prose
+
+Commit `315f949`'s message states that `e_ladder` and `page_trend` "also call
+`contrast` and still take the pinned defaults, which is correct for them today
+and wrong the moment either compares anything else." That overstates the
+exposure. Grepped: `scale/e_ladder.py:160` is the only live `contrast` call
+outside `m3_quintuple` and `capability_table`, it reads
+`contrast(ev_t, ev_s, ...)` on `settled` against `twin`, and the `page_trend`
+hit is prose inside a docstring, not a call. **The pinned defaults are correct
+for every caller that exists**; the risk is entirely prospective and belongs in
+a future-work note rather than a limits paragraph. The commit message stands as
+written since three commits sit on top of it; this is the correction of record.
 
 ---
 
@@ -419,6 +672,20 @@ data, so this cannot be misread as a kill.
 | M65 | The `t*=32` rung is adequately powered, and the power is spent on a void contrast | RUN | Realised `sd_paired(settledrow-twinrow)` `0.000664`; seeds needed 1, run has 5 |
 | M66 | **Venus's prediction splits on `t*=32`** | RUN | `\|delta\| = 0.000627 < 0.027260` TRUE; CI `[-0.001151, -0.000155]` does NOT cover zero, `n+ 0/5`. Recorded, not adjudicated -- row G voids the contrast |
 | M67 | The crash resume cost only the two missing units, as priced | RUN | Journal held 13 of 15; `run_bucket` skipped them and ran `settledrow` sd3 and sd4 only |
+| M68 | **All three C1 cells at `t*=8` fail predict-the-mean; row G voids that rung too** | RUN | `softmax` 1.000933, `twinrow` 1.000774, `settledrow` 1.001047 |
+| M69 | `t*=8` is even better resolved than `t*=32`, and equally void | RUN | Realised `sd_paired` `0.000233` against `0.000664`; seeds needed 1 on both |
+| M70 | **The adjacent-atom effect is observed on a second corpus** | RUN | On `t*=8`, `settledrow-twinrow` exact `ci_lo` is `-0.000459` against sampled `-0.000451`, and `settledrow-softmax` exact `ci_hi` is `+0.000103` against sampled `+0.000098`; the other endpoints coincide |
+| M71 | Venus's prediction splits identically on both completed rungs | RUN | `\|delta\|` inside `0.027260` on both; CI covers zero on neither |
+| M72 | **`t*=2` is the first rung where any cell beats predict-the-mean** | RUN | `softmax` 0.996745 and `twinrow` 0.999082 clear it; `settledrow` 1.000150 does not |
+| M73 | **The only creditable contrast in the C1 table so far goes against the ceq arm** | RUN | `twinrow` vs `softmax`: `-0.002337`, CI `[-0.002767, -0.001868]`, `n+ 0/5`. Both cells clear the bar so row G does not void it |
+| M74 | **That row would have been reported backwards before the verdict repair** | RUN | With the hardcoded names it renders `TWIN WINS`; with cell names it renders `SOFTMAX WINS`. `softmax` is the winner |
+| M75 | Cell means improve monotonically as `t*` falls | RUN | `settledrow` 1.003214 -> 1.001047 -> 1.000150 across `t*=32, 8, 2` |
+| M76 | **All three cells clear predict-the-mean at `t*=1`; nothing is voided** | RUN | `softmax` 0.991038, `twinrow` 0.997688, `settledrow` 0.999064 |
+| M77 | **The deciding contrast is creditable at `t*=1` and settling LOSES** | RUN | `settledrow - twinrow` `-0.001376`, CI `[-0.002031, -0.000776]`, exact `[-0.002052, -0.000776]`, `n+ 0/5` |
+| M78 | `softmax` beats both ceq arms unanimously at `t*=1` | RUN | vs `twinrow` `-0.006650` CI `[-0.007265, -0.006096]`; vs `settledrow` `-0.008026` CI `[-0.008157, -0.007917]`; both `n+ 0/5` |
+| M79 | **The UNDERPOWERED label on C1 `t*=1` was carried from the e3 scalar lane** | RUN | `0.019082` and `0.109199` are e3's own `t*=2` and `t*=1` spreads (`DONE.md:336`), and `0.109199` reproduces the 62 exactly. C1's realised spread is `0.000841`, 130x smaller; every C1 rung needs 1 seed |
+| M80 | Fifth instance of the cross-lane transfer mistake type | DERIVED from M79 | The previous four priced an arm at another arm's rate; this powers a lane at another lane's variance. Cost here is inverted: it would have caveated away the best-resolved rung |
+| M81 | **Venus's prediction: magnitude half 4/4 TRUE, covers-zero half 4/4 FALSE** | RUN | `\|delta\|` 0.000627 / 0.000272 / 0.001068 / 0.001376, all inside `0.027260`; no interval covers zero on any rung |
 | M63 | **The atom count is 126. This session first reported 128, which was its own bug** | RUN | `C(2n-1, n) = C(9,5) = 126` is the combinatorial ceiling, so 128 was impossible. Plain `sum()` over `itertools.product` split two atoms by one ULP, `5.551115123125783e-17`, because float addition is not associative. `math.fsum` on a canonically ordered tuple returns 126. Percentiles move by at most one ULP and the reconciliation is unaffected |
 | M54 | Row E does not void the contrast | RUN | `argmaxste` `0.785019 < 1.0`, clearing predict-the-mean by `0.214981` |
 | M55 | The disputed headline reproduces exactly as a control | RUN | `argmax - softmax` `-0.118456`, CI `[-0.134115, -0.102204]`, `n+ 0/5` |

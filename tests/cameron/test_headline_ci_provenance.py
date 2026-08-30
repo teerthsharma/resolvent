@@ -12,8 +12,10 @@ because picking one without finding the producer would only have made the
 disagreement invisible.
 
 THE RESOLUTION IS THAT NEITHER WAS A TRANSCRIPTION ERROR. Both reproduce
-bit-exact from the same ten journal records, under two different and both
-legitimate estimators:
+bit-exact from the same ten journal records, under two resampling rules that
+R9 later showed are ONE estimator reaching ADJACENT ATOMS of a 126-atom
+lattice -- sampled `ci_lo` is atom 7, exact is atom 8, and `ci_hi` is atom 117
+for both:
 
     [+0.066232, +0.147110]  paired percentile bootstrap B=10000 seed=0
     [+0.068181, +0.147110]  exact percentile over all 5**5 = 3125 resamples
@@ -113,11 +115,26 @@ def test_checklist_row_names_the_exact_estimator_beside_its_number():
         assert k in row, k
 
 
-def test_shipped_card_carries_both_families_each_under_its_own_name():
+def test_shipped_card_names_its_estimator_and_its_journal_keys():
+    """The card prints ONE interval and says which instrument made it.
+
+    An earlier revision of this file printed both endpoints as adjacent columns,
+    on the reading that they were two estimator families. R9 established the
+    sharper mechanism and this test follows it: the paired resample space at five
+    seeds has at most 126 distinct atoms, the Monte-Carlo draw lands on atom 7 and
+    the exact percentile is atom 8, and `ci_hi` is atom 117 for both. They are ONE
+    estimator reaching adjacent atoms, so rendering them side by side as rivals
+    asserts a distinction that is not there. What the card owes the reader is the
+    estimator's name against the number, and the records it was computed from.
+    """
     md = (ROOT / "ceq" / "hf_artifact" / "README.md").read_text(encoding="utf-8")
     row = [l for l in md.splitlines()
            if l.startswith("| `settled` | `softmax` |")]
     assert len(row) == 1, row
-    assert "+0.066232" in row[0] and "+0.068181" in row[0], row[0]
-    assert "exact 95% CI" in md and "3125" in md
+    assert "+0.066232" in row[0], row[0]
+    assert "+0.068181" not in row[0], ("the retired two-family rendering is back",
+                                       row[0])
+    header = [l for l in md.splitlines() if l.startswith("| arm | reference |")]
+    assert len(header) == 1 and "B=10000 seed=0" in header[0], header
     assert "m3_quintuple_v2.jsonl" in md
+    assert GEOM in md, "the card no longer names the journal keys behind the row"

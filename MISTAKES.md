@@ -620,7 +620,7 @@ binds both, and rejects the mis-pairing.
 
 **So it is not P-1 — it is P-8, recurring, and that is the sharper finding.**
 The generator's own limits paragraph (e) already states the whole thing, in the
-file that ships (`ceq/hf_artifact/README.md:80`), naming both families and both
+file that ships (`ceq/hf_artifact/README.md:85`), naming both families and both
 endpoints. The table three lines above it still prints `95% CI` with no
 estimator, and the JSON behind that table **already carries `n_boot: 10000` and
 `boot_seed: 0`** — the provenance exists and is dropped at render time. A caveat
@@ -629,15 +629,25 @@ is the exact failure P-8 describes, and this is it happening to the
 repository's most-quoted result while P-8 was being written.
 
 **AND THE RENDER-TIME DROP IS NOW CLOSED, which is the half a diagnosis does
-not fix.** `scale/capability_table.py` computes BOTH families and stamps each
-into every contrast row under its own name, carrying the journal keys it read
-rather than reconstructing them from the arm and the geometry. The shipped card
-prints them as adjacent columns, so `+0.066232` and `+0.068181` now stand side
-by side with the estimator that produced each, and the reader who finds two
-endpoints for one headline is told which instrument made which instead of
-inferring a typo. `tests/cameron/test_headline_ci_provenance.py` recomputes both
-families from the journal and pins each published endpoint to the estimator its
-own document claims.
+not fix.** The card's contrast table names its estimator in the column header
+and carries, beside it, the journal records the row was computed from — the
+keys read from the journal rather than reconstructed from the arm and the
+geometry, which would be a second copy of a grammar that has one parser.
+`tests/cameron/test_headline_ci_provenance.py` recomputes both resampling rules
+from the journal and pins each published endpoint to the estimator its own
+document claims.
+
+**One correction to this entry's own first repair.** That repair rendered the
+two endpoints as adjacent columns, on the reading that they were two estimator
+families. They are not. The paired resample space at five seeds has at most
+`C(2n-1, n) = 126` distinct atoms; the Monte-Carlo draw lands on atom 7, the
+exact percentile is atom 8, and `ci_hi` is atom 117 for both. **One estimator
+reaching adjacent atoms, not two families** — so printing them side by side as
+rivals asserted a distinction that does not exist, and the column was withdrawn
+in favour of naming the instrument once and printing the atom count. Recorded
+here because the first fix for a labelling failure was itself a labelling
+failure, in the opposite direction: under-labelling invites a typo reading,
+over-labelling invents a second instrument.
 
 **The general shape, and it is not about bootstraps.** Two correct numbers that
 disagree are indistinguishable from one correct and one wrong number unless each
