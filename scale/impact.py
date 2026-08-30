@@ -47,6 +47,7 @@ __all__ = [
     "CH_A_DEG",
     "CH_RHO",
     "CH_SEED",
+    "CH_HET",
     "build_impact_graph",
     "build_heterogeneous_graph",
     "make_impact_batch",
@@ -69,6 +70,12 @@ CH_A_DEG = 1         # degree (row sum |A|) for local features
 # 2..9 reserved for sparse B encoding if needed (not used for oracle seed path)
 CH_RHO = 13
 CH_SEED = 14         # graph seed stored as float (small seed < 1e6 exactly representable in float32)
+CH_HET = 15          # WHICH PLANT drew this tensor: 0.0 homogeneous, 1.0 two-block heterogeneous.
+#                      Every consumer below rebuilds the graph from x alone, so without this bit
+#                      the oracle cannot know which plant it is reading and silently rebuilds the
+#                      homogeneous one -- which is how `impact_hetero` came to be its own baseline
+#                      (MISTAKES.md V-1). The bit rides in the tensor rather than in the registry
+#                      so that no future entry can pair a builder with the wrong oracle.
 # CH_QA/CH_QB not used; IMPACT is per-example scalar label, not pair
 IMPACT_MIN_NODES = 1024
 IMPACT_CHANNELS = 16
@@ -619,6 +626,7 @@ def make_impact_hetero_batch(n: int, s: int, d: int, *, d_model: int = 16, seed:
         x[idx, 0, CH_SEED] = float(graph_seed)
         x[idx, :, CH_SEED] = float(graph_seed)
         x[idx, :, CH_RHO] = float(rho)
+        x[idx, :, CH_HET] = 1.0
     return x, y, query, 0
 
 
@@ -643,15 +651,29 @@ def make_impact_batch(n: int, s: int, d: int, *, d_model: int = 16, seed: int = 
     return x, y, f, p
 
 
+def _graph_from_x(x: torch.Tensor) -> ImpactGraph:
+    """Rebuild the graph that drew `x`, from `x` alone.
+
+    Reads the node count from the tensor shape, the graph seed from CH_SEED and
+    the plant from CH_HET. Every consumer that used to hardcode
+    `heterogeneous=False` routes through here, so oracle, features and
+    truncation cannot disagree with the builder about which plant they read.
+    """
+    s = x.shape[1]
+    graph_seed = int(round(float(x[0, 0, CH_SEED].item())))
+    heterogeneous = float(x[0, 0, CH_HET].item()) > 0.5
+    return build_impact_graph(s, graph_seed, heterogeneous=heterogeneous)
+
+
 def impact_oracle(x: torch.Tensor, f: int, p: int) -> torch.Tensor:
     """Executable oracle: y = e_q^T (I - rho A)^{-1} B n, recomputed ENTIRELY from x.
 
     q is highest-degree node in largest component [DERIVED from graph]. No answer key stored.
-    Rebuilds graph from CH_SEED channel.
+    Rebuilds the graph from the CH_SEED and CH_HET channels, so it reads the
+    plant its batch was actually drawn from.
     """
     n_batch, s, d_model = x.shape
-    graph_seed = int(round(float(x[0, 0, CH_SEED].item())))
-    graph = build_impact_graph(s, graph_seed, heterogeneous=False)
+    graph = _graph_from_x(x)
     A_norm = torch.from_numpy(graph.A_norm).to(x.device).to(x.dtype).double()
     B = torch.from_numpy(graph.B).to(x.device).to(x.dtype).double()
     rho = float(graph.rho)
@@ -672,8 +694,7 @@ def impact_oracle(x: torch.Tensor, f: int, p: int) -> torch.Tensor:
 def impact_oracle_vec(x: torch.Tensor, f: int, p: int) -> torch.Tensor:
     """Vector-valued oracle: full r = (I - rho A)^{-1} B n, shape [n_batch, s]."""
     n_batch, s, d_model = x.shape
-    graph_seed = int(round(float(x[0, 0, CH_SEED].item())))
-    graph = build_impact_graph(s, graph_seed, heterogeneous=False)
+    graph = _graph_from_x(x)
     A_norm = torch.from_numpy(graph.A_norm).to(x.device).to(x.dtype).double()
     B = torch.from_numpy(graph.B).to(x.device).to(x.dtype).double()
     rho = float(graph.rho)
@@ -697,8 +718,7 @@ def impact_features(x: torch.Tensor, f: int, p: int) -> torch.Tensor:
     Query is recomputed from graph (largest component max degree) [DERIVED].
     """
     n_batch, s, d_model = x.shape
-    graph_seed = int(round(float(x[0, 0, CH_SEED].item())))
-    graph = build_impact_graph(s, graph_seed, heterogeneous=False)
+    graph = _graph_from_x(x)
     query = _impact_query_node(graph)
     deg_q = x[:, query, CH_A_DEG].unsqueeze(-1)
     news_q = x[:, query, CH_NEWS].unsqueeze(-1)
@@ -710,8 +730,7 @@ def impact_features(x: torch.Tensor, f: int, p: int) -> torch.Tensor:
 def impact_planted_features(x: torch.Tensor, f: int, p: int) -> torch.Tensor:
     """Planted control features: uses B and 1-hop propagation awareness [V]."""
     n_batch, s, d_model = x.shape
-    graph_seed = int(round(float(x[0, 0, CH_SEED].item())))
-    graph = build_impact_graph(s, graph_seed, heterogeneous=False)
+    graph = _graph_from_x(x)
     A_norm = torch.from_numpy(graph.A_norm).to(x.device).to(x.dtype)
     B = torch.from_numpy(graph.B).to(x.device).to(x.dtype)
     query = _impact_query_node(graph)
@@ -731,8 +750,7 @@ def impact_planted_features(x: torch.Tensor, f: int, p: int) -> torch.Tensor:
 def impact_truncation(x: torch.Tensor, f: int, p: int, k: int) -> torch.Tensor:
     """k-hop truncation reading: sum_{h=0..k} (rho A)^h B n at query."""
     n_batch, s, d_model = x.shape
-    graph_seed = int(round(float(x[0, 0, CH_SEED].item())))
-    graph = build_impact_graph(s, graph_seed, heterogeneous=False)
+    graph = _graph_from_x(x)
     A_norm = torch.from_numpy(graph.A_norm).to(x.device).to(x.dtype).double()
     B = torch.from_numpy(graph.B).to(x.device).to(x.dtype).double()
     rho = float(graph.rho)
