@@ -275,11 +275,11 @@ def dry_run(*, arm: str = "planted", kind: str = "softmax", s: int = 64,
 
     if bucket:
         acc = run_bucket(NAME, b_units + a_units, _unit, budget_s=budget_s)
-        # `run_bucket` counts `remaining` against EVERY key in the journal, and
-        # the four cases share one journal and one twin block, so a later case
-        # sees more units journalled than it asked for and `remaining` goes
-        # NEGATIVE. Only a positive value means work is left; `require_complete`
-        # is the authority on whether this case's own units are all present.
+        # The four cases share one journal and one twin block, so `remaining`
+        # used to be counted against EVERY key in the journal and went NEGATIVE
+        # for a later case. `run_bucket` now counts only the units it was
+        # handed, so a positive value means work is left; `require_complete` is
+        # still the authority on whether this case's own units are all present.
         if acc["remaining"] > 0:
             return dict(incomplete=acc)
         vals = require_complete(NAME, b_units + a_units)

@@ -638,13 +638,8 @@ def make_impact_batch(n: int, s: int, d: int, *, d_model: int = 16, seed: int = 
     if d_model < IMPACT_CHANNELS:
         raise ValueError(f"d_model={d_model} cannot hold IMPACT channels (>= {IMPACT_CHANNELS})")
     if d < 1 or d >= s:
-        pass
+        raise ValueError(f"d={d} is outside the admissible range [1, s={s})")
     x, y, f, p = _make_impact_batch_unsafe(n, s, d, d_model=d_model, seed=seed, device=device)
-    return x, y, f, p
-
-    # f, p are dummy for signature parity (query index as f)
-    f = query
-    p = 0
     return x, y, f, p
 
 
@@ -804,31 +799,39 @@ def impact_decoder_gate(n: int = 512, s: int = 1024, seed: int = 0, device=None)
     score_local = _fit_eval(X_local, y_np)
     # planted PASS
     X_planted = impact_planted_features(x, f, p).cpu().numpy()
-    score_planted_sum = _fit_eval(X_planted, y_np)  # but planted features are 2-dim, not sum-specific; we split for compatibility
-    # For IMPACT, we also compute planted median-like? Use degree-based control?
-    # Add a second planted: degree-only? But we want low error.
-    # Use the planted features directly
-    score_planted = score_planted_sum
+    score_planted = _fit_eval(X_planted, y_np)
 
     # non-degeneracy checks
     label_sd = float(y_np.std())
-    label_frac = float((y_np > np.median(y_np)).mean()) if label_sd>0 else 0.5
-    planted_sd = float(y_np.std())  # placeholder; actual planted label sd not needed; check X_planted var
+    label_frac = float((y_np > np.median(y_np)).mean()) if label_sd > 0 else 0.5
+    # THE PLANTED SIDE NEEDS ITS OWN NON-DEGENERACY READING. The gate's PASS half
+    # is `score_planted < 0.70`, and a planted regressor that is constant across
+    # the draw makes that number an artifact of the intercept rather than
+    # evidence that the plant is readable. Column 0 of `impact_planted_features`
+    # IS the intercept, so it is excluded; the reported figure is the smallest
+    # spread among the real regressors. The value this replaced was
+    # `float(y_np.std())` -- `label_sd` a second time, which could not fail
+    # independently of the clause it was meant to strengthen.
+    planted_sd = float(X_planted[:, 1:].std(axis=0).min())
     # Both classes nonempty check for y binarized median
     median_label = (y_np > np.median(y_np)).astype(float)
     frac_median = float(median_label.mean())
 
+    nondeg = bool(label_sd > 1e-6 and 0.0 < frac_median < 1.0 and planted_sd > 1e-6)
+
     # Gate 1 PASS: local FAIL >=0.9, planted PASS <0.70, gap >0.30, nondeg [READ scale/rips_gate.py:60]
-    passes = bool(score_local >= 0.9 and score_planted < 0.70 and (score_local - score_planted) > 0.30 and label_sd > 1e-6 and 0.0 < frac_median < 1.0)
+    passes = bool(score_local >= 0.9 and score_planted < 0.70
+                  and (score_local - score_planted) > 0.30 and nondeg)
     return {
         "score_local_r0": float(score_local),
         "score_planted": float(score_planted),
         "label_sd": float(label_sd),
         "label_frac": float(frac_median),
+        "planted_sd": float(planted_sd),
         "n": int(n),
         "s": int(s),
         "seed": int(seed),
-        "pass_nondeg": bool(label_sd > 1e-6 and 0.0 < frac_median < 1.0),
+        "pass_nondeg": nondeg,
         "gap": float(score_local - score_planted),
         "passes": passes,
     }

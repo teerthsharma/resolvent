@@ -146,7 +146,15 @@ def run_bucket(name: str, units: list, compute, *, budget_s: float = 420.0,
     try:
         done = j.done()
         todo = [(k, p) for k, p in units if k not in done]
-        print(f"[{name}] {len(done)}/{len(units)} units already journalled, "
+        # COUNT THE INTERSECTION, NOT THE JOURNAL. `done` is every record in the
+        # file, and since `--task` landed one journal legitimately holds several
+        # tasks, so `len(done)` stopped being a count of THIS run's units: a run
+        # asking for 10 against a journal holding 25 of another task printed
+        # "25/10 ... units already journalled" and counted units from [26/10].
+        # Display and accounting only -- `require_complete` already filters by
+        # `units` and was never wrong.
+        mine = len(units) - len(todo)
+        print(f"[{name}] {mine}/{len(units)} units already journalled, "
               f"{len(todo)} remaining, budget {budget_s:.0f}s")
 
         # --- determinism audit on resume ---------------------------------
@@ -177,12 +185,13 @@ def run_bucket(name: str, units: list, compute, *, budget_s: float = 420.0,
             value = compute(params)
             j.append(key, value, {"seconds": round(time.time() - u0, 2)})
             ran += 1
-            print(f"  [{len(done)+ran}/{len(units)}] {key} -> {value} "
+            print(f"  [{mine+ran}/{len(units)}] {key} -> {value} "
                   f"({time.time()-u0:.0f}s)", flush=True)
 
         final = j.done()
-        acc = dict(name=name, total=len(units), done=len(final),
-                   remaining=len(units) - len(final), ran_this_bucket=ran,
+        n_done = sum(1 for k, _ in units if k in final)
+        acc = dict(name=name, total=len(units), done=n_done,
+                   remaining=len(units) - n_done, ran_this_bucket=ran,
                    verified=checked)
         print(f"[{name}] bucket end: {acc['done']}/{acc['total']} done, "
               f"{acc['remaining']} remaining")
