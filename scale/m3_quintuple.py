@@ -110,7 +110,32 @@ PLUS_CELLS = ("twin_plus", "settled_plus")
 #: `_k`, `_b` and `_sd` substrings are likewise absent. NOT in `CELLS`, which
 #: `tests/chase/test_pivot_exclusion_lift.py` asserts as an exact 5-tuple.
 ROW_CELLS = ("twinrow", "settledrow")
-ALL_CELLS = CELLS + PLUS_CELLS + ROW_CELLS
+
+#: THE STRAIGHT-THROUGH CELL. Forward is BITWISE the `argmax` cell's one-hot;
+#: backward carries the gradient to the soft gate instead of dropping it.
+#:
+#: WHY IT EXISTS. `argmax`'s alpha is `torch.zeros_like(gate).scatter_(...)`,
+#: which carries no `grad_fn` at all: measured `d(alpha)/d(log_gate)` L1 is
+#: exactly 0.0 against 52.3193 for `twin` and 55.1514 for `settled` on the same
+#: batch at the same init. So WHICH pivot `argmax` reads is never trained, and
+#: the published `argmax - softmax = -0.118456` confounds two things at once --
+#: mixture against lookup, and trained selection against untrained selection.
+#: This cell holds the forward fixed and changes only the gradient, which is the
+#: only way to separate them.
+#:
+#: THE ESTIMATOR is `hard + (soft - soft.detach())`. The inner difference is
+#: elementwise `x - x`, exactly `+0.0` for every finite entry, so the forward is
+#: bitwise `hard` -- asserted with `torch.equal` and paired with a RED that must
+#: move bits, per `scale/arm_s.py:341-346`. The parentheses are load-bearing:
+#: `hard + soft - soft.detach()` rounds `hard + soft` first and is NOT bitwise.
+#:
+#: NAMING. No underscore, following `ROW_CELLS`: `capability_table.read_journal`
+#: does `key.partition("_")` and `eprocess._parse_key` splits on `_sd`, so
+#: `argmax_ste` would be read as cell `argmax`. `argmaxste` cannot be, and it
+#: carries none of `_sd`, `_task`, `_k`, `_b`. NOT in `CELLS`, so a default run
+#: measures exactly what it measured before.
+STE_CELLS = ("argmaxste",)
+ALL_CELLS = CELLS + PLUS_CELLS + ROW_CELLS + STE_CELLS
 BETA = 0.5
 
 #: The shipped task. Every reading already in results/m3_quintuple_v2.jsonl was
@@ -429,6 +454,15 @@ class QuintArm(M3.Arm):
         elif self.base_cell == "argmax":
             alpha = torch.zeros_like(log_gate)
             alpha.scatter_(1, log_gate.argmax(dim=-1, keepdim=True), 1.0)
+        elif self.base_cell == "argmaxste":
+            #: Straight-through. `soft - soft.detach()` is elementwise `x - x`,
+            #: exactly `+0.0`, so `alpha` is bitwise the `argmax` branch's
+            #: one-hot while the backward runs the softmax Jacobian.
+            soft = (log_gate
+                    - torch.logsumexp(log_gate, dim=-1, keepdim=True)).exp()
+            hard = torch.zeros_like(log_gate)
+            hard.scatter_(1, log_gate.argmax(dim=-1, keepdim=True), 1.0)
+            alpha = hard + (soft - soft.detach())
         else:
             raise AssertionError(self.cell)
         return (alpha.unsqueeze(1) @ av).squeeze(1)                # [n, d]

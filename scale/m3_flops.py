@@ -169,9 +169,17 @@ def cell_terms(cell, n, s, dm, h, k, t, nn_terms):
         return dict(base=base, select=sel, setup=setup, loop=loop,
                     contract=contract,
                     bwd=bwd_spec(n, s, dm, h, k, t, nn_terms))
-    if cell == "twin":
+    if cell in ("twin", "argmaxste"):
         # ZERO settling steps: alpha = normalised gate. Setup paid, loop not.
         # No fixed point is solved, so no implicit-gradient backward runs.
+        #
+        # `argmaxste` is priced HERE and not with `argmax`, even though its
+        # forward is bitwise `argmax`'s. The straight-through estimator
+        # materialises the same normalised gate `twin` does before it takes the
+        # one-hot, so the softmax is paid; and `alpha @ av` runs as a real
+        # contraction rather than degenerating to a gather, so `contract` is
+        # paid too. The extra one-hot scatter is comparisons and a write, not
+        # counted -- the same treatment `argmax`'s own argmax gets below.
         return dict(base=base, select=sel, setup=setup, loop=0,
                     contract=contract, bwd=0)
     if cell == "argmax":
