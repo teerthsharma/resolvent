@@ -1,5 +1,79 @@
 """U1 / N3 -- HARMONIC-MEASURE ATTRIBUTION AND ITS CROSS-CHECK CONTROL.
 
+***********************************************************************
+STRUCK AT R9 ITERATION 2. THIS CLAUSE HAS NEVER HAD A PRODUCER.
+***********************************************************************
+
+The 302 lines below are kept verbatim as the record and are NOT deleted.
+They are skipped rather than run, because they cannot run: the nine names
+this file calls on `scale/negation_scope.py` -- `absorbing_boundary_kernel`,
+`harmonic_measure`, `harmonic_label_batch`, `train_control_arm`,
+`masking_displacement`, `rank_crosscheck`, `dead_control_arm`,
+`u1_attribution_run` and `PREREGISTERED_RHO_FLOOR` -- do not exist, and
+`git log -S "def absorbing_boundary_kernel"`, `git log -S
+"def u1_attribution_run"` and `git log -S "PREREGISTERED_RHO_FLOOR = "`
+each return ZERO commits across ALL refs. The producer was not deleted and
+was not borrowed from a sibling task. It was never written, in any state
+this repository has ever been in.
+
+Three findings force the strike rather than an implementation:
+
+1.  THE PILOT NUMBERS HAVE NO POSSIBLE SOURCE. `0.743864` and its CI
+    `[0.656532, 0.816955]` at `:47-48` are now in the STRUCK registry
+    (`tests/loop/test_no_struck_constant_ships.py`). They are disclosed
+    below in the exact style `E_LADDER_PREREGISTERED_READING.md` section
+    7b uses for a real pilot, and no run could ever have produced them.
+
+2.  THE FLOOR'S STATED PROVENANCE CONTRADICTS THE BOARD'S. The paragraph
+    below says the floor was "frozen at 0.50" from those pilot rows.
+    `BOARD.md:271`, describing this same N3 clause, says the bar is
+    "`PASS_BAR=0.5 FAIL_BAR=0.9` INHERITED UNCHANGED". `PASS_BAR = 0.5`
+    is at `scale/rips_gate.py:60` and predates the pilot. It is also an
+    NRMSE bar -- `:57-59` reads "a mean predictor scores exactly 1.0, so
+    `PASS_BAR` is 'the decoder removed three quarters of the label
+    variance'" -- so reusing it as a Spearman rho floor changes the units
+    of the quantity, not just its name. Implementing the battery would
+    launder an inherited NRMSE bar into a pre-registered rank-correlation
+    floor.
+
+3.  THE KILL LABEL IS ALREADY TAKEN, AND ANSWERED. `K-R8d` at
+    `BOARD.md:297` and `DONE.md:13922` is the DECODER-LEAK kill --
+    "K-R8d decoder leak at target n | NO | 1024 holds at 1.0001/0.9951;
+    leak correctly only at 64 (0.0055)". The docstring at `:10-12` below
+    redefines K-R8d as an attribution-probe kill. Writing the producers
+    would leave two different live kills under one label.
+
+The contract mandate is also absent: `LOOP_PROMPT.md` contains no `N3`
+and no `v10.1` (`FINDINGS.md` B6 records "contract v10.1" as journal
+prose only). What N3 discipline actually claims at `BOARD.md:271` is that
+the KERNEL half is exact, and that half does have producers --
+`scale/e4_harmonic.py:191 fixed_point` and
+`scale/foreman_lambda2.py:317 absorption_probabilities` both exist and
+both compute `(I - Q)^-1 R`. The half that has no producer is the one
+BOARD.md itself flags as "reported separately": the displacement probe
+and its rank cross-check. That is exactly the half this file asserts.
+
+WHAT IS PRESERVED. `tests/deimos/test_deimos_r9_iteration1.py:349`
+already asserts all nine names remain absent, and it is the guard against
+re-proposal: if anyone defines them, that test fires and demands the
+battery be re-registered from scratch with a floor whose provenance is
+its own. Nothing is deleted here and no finding is retired -- the
+finding IS the absence, and it now has a strike record, a registry entry
+and a live test.
+
+WHY HARD RULE 2 DOES NOT PROTECT THESE ELEVEN. The rule exists because
+146 confirmed failures are the record reproducing, and `tests/chase/
+conftest.py:154` marks ~50 of them `xfail(strict=True)`. These eleven are
+none of that. They carry no xfail marker -- `tests/cameron/conftest.py`
+has no xfail machinery at all. They fail in 0.44 s at attribute access,
+so not one branch under test ever executes, which is the vacuity rule's
+own third clause. And a test that could never have passed in any commit
+is not a finding reproducing; it is a claim with no evidence. That
+argument is specific to "no definition exists in any ref" and generalises
+to nothing else in the suite.
+
+THE CLAUSE AS ORIGINALLY WRITTEN FOLLOWS, UNEDITED.
+
 THE CONTRACT CLAUSE (v10.1 N3). Attribution ground truth for the
 absorbing-chain corpus is the HARMONIC MEASURE: for interior (transient)
 nodes I and boundary nodes B, ``K(v, .) = row v of (I - P_II)^-1 P_IB`` --
@@ -35,7 +109,9 @@ WHAT EACH HALF IS, ON THIS REPO'S OWN OBJECTS.
                 the aggregate; masking displacement per chunk is then
                 |pred(full) - pred(masked)| averaged over eval draws.
 
-THE PRE-REGISTERED BAR. `PREREGISTERED_RHO_FLOOR` was frozen from PILOT data
+THE PRE-REGISTERED BAR. [STRUCK -- every number in this paragraph is in the
+STRUCK registry and none of them is reproducible; see the header above.]
+`PREREGISTERED_RHO_FLOOR` was frozen from PILOT data
 BEFORE the headline run, disclosed here exactly as
 E_LADDER_PREREGISTERED_READING.md section 7b discloses its pilot:
 
@@ -77,6 +153,33 @@ if str(ROOT) not in sys.path:
 
 from scale import e4_harmonic as EH                                 # noqa: E402
 from scale import negation_scope as NS                              # noqa: E402
+
+#: The strike, enforced rather than only documented. The nine names are checked
+#: at collection time so this cannot rot into a stale comment: if a producer is
+#: ever written, the skip stops firing and the battery runs, which is the
+#: behaviour a future implementer wants. It is a SKIP and not an
+#: `xfail(strict=True)` on purpose -- a strict xfail would file these eleven
+#: alongside the ~50 in `tests/chase/conftest.py:154` that ARE the record
+#: reproducing, and the whole finding here is that these are not.
+_MISSING = [n for n in ("absorbing_boundary_kernel", "harmonic_measure",
+                        "harmonic_label_batch", "train_control_arm",
+                        "masking_displacement", "rank_crosscheck",
+                        "dead_control_arm", "u1_attribution_run",
+                        "PREREGISTERED_RHO_FLOOR") if not hasattr(NS, n)]
+if _MISSING:
+    pytest.skip(
+        "U1/N3 STRUCK at R9 iteration 2: no producer has ever existed for "
+        f"{len(_MISSING)} of the 9 names this battery calls on "
+        f"scale/negation_scope.py ({', '.join(_MISSING)}). `git log -S` across "
+        "all refs returns zero commits defining any of them, so these tests "
+        "could not have passed in any state of this repository. The pilot "
+        "numbers are in the STRUCK registry "
+        "(tests/loop/test_no_struck_constant_ships.py) and the absence is "
+        "asserted by tests/deimos/test_deimos_r9_iteration1.py:349. Re-register "
+        "the clause from scratch before implementing it -- the floor's stated "
+        "provenance contradicts BOARD.md:271 and its kill label collides with "
+        "the answered K-R8d at BOARD.md:297.",
+        allow_module_level=True)
 
 #: a cheap drawn graph for the algebraic identities (structural checks do
 #: not need the shipped size -- same reasoning as EH.SMALL_CASE's comment).
