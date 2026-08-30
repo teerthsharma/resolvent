@@ -676,3 +676,111 @@ truth**, and both halves now exist or are in flight.
 One shared function changed: `calibrate_bar`'s `payload_only` broadcast, verified
 **bitwise-identical** for scalar labels (`1.366458892213088`,
 `1.050147990558408`).
+
+## Iteration 2 — Neptune COMPLETE. The arm exists and integrates with the corpus.
+
+Merged. Controller integration check **48/48 green** across `tests/neptune/`,
+Saturn's `test_c1_propagate_registration.py`, and
+`tests/chase/test_pivot_exclusion_lift.py`. Neptune's own run: 116 passed.
+
+### THE NUMBER THAT JUSTIFIES THE LANE
+
+> **the shipped arm writes 1.6–3.1 % of the label's support; the per-row arm
+> writes 88.1–100 %.**
+
+Measured on untrained keys, so the fractions may drift. But that is the whole
+argument in one line: the shipped arm was barely touching the thing it was being
+scored on.
+
+### Neptune corrected his own iteration-1 gate by 5×
+
+His gate priced the per-row lane at **`≈29.6 h`** for ten units, from
+`64 × 1.092959 s` — `_alpha` called once per row. The real arm **shares the Gram
+and `A_P @ V`** and runs one Python loop over `[n·s, k]`. Measured: **`5.9 h`**.
+Superseded in place.
+
+His own diagnosis of the miss is the useful part: *"The gate's own limits
+paragraph predicted this failure and was still not enough — the headline stated
+an upper bound as a price."*
+
+`Ruling: a headline number that is an upper bound must SAY SO IN THE HEADLINE, not
+in a limits paragraph below it. This goes to Saturn for MISTAKES.md as a
+provenance entry: the caveat was present, correctly worded, and still did not stop
+the controller acting on the number — I ruled a 29.6 h pilot-only strategy on it.
+Cost if wrong: nothing; the pilot was worth running regardless.`
+
+### Integration: route 1, and his reason beat mine
+
+The arm emits `[n, s]`; the slice lives in `_unit`'s existing `_A` adapter. I had
+leaned route 1 on taste — *the arm should not need a corpus's difficulty dial*.
+His argument is load-bearing instead: **`ROW_GATE_TERM` prices all `s` rows, so
+route 1 keeps the FLOP accounting exact**, where route 2 would have over-priced by
+`s/(s−t*)` — **2× at `t*=32`**.
+
+The support is **checked, not inferred**: the offset from the label's width is
+cross-checked against `e_t_star` and **raises on disagreement**. Both branches
+tested — and **his first attempt at that test was vacuous** (the fake task carried
+no dial) and **he caught it himself**.
+
+### Two calibration facts that bind every clock in this round
+
+1. **The box is `1.65×` slower than iteration 1 on identical code, geometry and
+   seed** — the same `settled` unit read `2.077496 s/step` then and `3.437200`
+   now. **No cross-iteration clock comparison this round is safe.** Only
+   same-session ratios may be quoted.
+2. **Pilot ratios do not transfer.** `settledrow/settled` is `3.48` at `s=16` but
+   `7.4–11.2` at `s=64`, against a flat FLOP ratio of `1.700`. Neptune: *"It
+   nearly caught me — I had drafted the `s=64` projection from the pilot ratio
+   before measuring it."* The warning now lives inside the term.
+3. **The pilot is not comparable to the shipped ladder in either direction.**
+   `d = 8` is **forced** at `s = 16` — `make_batch` raises unless
+   `1 <= d < s - 1`, so the shipped `d = 24` cannot be drawn. No pilot number may
+   be set beside one from `results/e_ladder_reading.txt`. `k_piv = 8` was
+   preserved deliberately: `batched_pivots` takes `min(k_piv, s-3)`, so `s = 16`
+   is the smallest geometry that leaves the arm unchanged.
+
+### Neptune refused to score Irene where his work cannot
+
+- Her **falsifier 5 fires**.
+- Her **PREDICTION 3 fails** — the RED gate reads `1.002360` at `t*=1`, not below
+  `1.0`.
+- Her **§2b is answered by Saturn's corpus, not his arm**.
+- **PREDICTION 1's eight margins are NOT scored and cannot be from this work** —
+  her §6 requires them recomputed against C1's *actual measured* variance profile
+  first. His words: *"Nobody should record her as refuted on it."*
+
+`Ruling: upheld, and the earlier ledger entry is amended. Saturn's recomputed
+margins (-0.024827 / -0.007715 / +0.004809 / +0.010545) are DERIVED from C1's
+construction, not measured from a trained run. Venus stands UNSCORED on
+PREDICTION 1 until the deciding measurement exists. Recording her as refuted on a
+derivation would be exactly the provenance failure this round has been correcting
+in others.`
+
+### Carried
+
+- `PLUS_CELLS` break `eprocess._parse_key` — pre-existing, unfixed, and now
+  relevant because the row cells join them.
+- Neptune edited one existing test he broke: `test_pivot_exclusion_lift.py`'s
+  `set(ALL_CELLS) == CELLS | PLUS_CELLS`, **which no third cell family could ever
+  satisfy**. Intent preserved and strengthened to disjointness. Licit under the
+  same exception granted to Saturn.
+- The RED gate passes thinly — `0.999138` at `n_eval=64`.
+
+### THE DECIDING MEASUREMENT IS NOW RUNNABLE, AND AFFORDABLE
+
+From Neptune's measured table at `s=64`:
+
+| cell | `n_train` | s/step | one unit |
+|---|---|---|---|
+| `settledrow` | 8192 | `25.543200` | `3831.5 s` = `1.06 h` |
+| `settledrow` | **2048** | `4.560600` | **`684.1 s` = `0.19 h`** |
+| `twinrow` | **2048** | `0.666200` | **`99.9 s`** |
+
+`Ruling: the deciding measurement runs at s=64, d=24, n_train=2048, 5 seeds,
+settledrow + twinrow — approximately 2.2 h, not the 10.6 h the n=8192 geometry
+would cost. n_train=2048 is already the shipped ladder's own regime, so the
+reading stays comparable to results/e_ladder_reading.txt in a way the s=16 pilot
+explicitly is not. Assigned to Mercury, who holds execute. Cost if wrong: a
+reading at 2048 rather than 8192 has wider intervals, and the pre-registered
+13-seed resolution 0.027260 may not be reachable at 5 seeds - which must be
+printed as a ceiling BEFORE the run, per LOOP_PROMPT 1.3.`
