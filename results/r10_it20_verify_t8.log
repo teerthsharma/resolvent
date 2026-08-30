@@ -12,3 +12,10 @@
     (190.8s for n=16384 seed=3)
   t*= 8 n= 16384 seed=4 steps=  150  eval NRMSE=0.984592  [LEARNS]  boot[0.9765,0.9931]  161.5s
     (162.0s for n=16384 seed=4)
+  t*= 8 n= 16384 seed=5 steps=  150  eval NRMSE=0.981499  [LEARNS]  boot[0.9733,0.9905]  152.1s
+    (152.6s for n=16384 seed=5)
+  t*= 8 n= 16384 seed=6 steps=  150  eval NRMSE=0.987857  [LEARNS]  boot[0.9801,0.9962]  146.7s
+    (147.2s for n=16384 seed=6)
+  t*= 8 n= 16384 seed=7 steps=  150  eval NRMSE=0.974909  [LEARNS]  boot[0.9657,0.9826]  147.3s
+    (147.8s for n=16384 seed=7)
+WROTE C:\Users\seal\Desktop\New folder (32)\results\r10_it8_capacity_softmax_t8.jsonl

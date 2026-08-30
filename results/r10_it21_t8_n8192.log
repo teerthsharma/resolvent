@@ -1,0 +1,6 @@
+=== e3_t8 softmax s=64 d=24 n_eval=4096 threads=12 torch 2.5.1+cu121 ===
+  1-hop truncation ceiling at t*=8: NRMSE 0.935414 (softmax hop budget = 1)
+  BAR CALIBRATED -- BAR CALIBRATED
+  t*= 8 n=  8192 seed=0 steps=  150  eval NRMSE=1.025210  [NO READING]  boot[1.0169,1.0339]  97.3s
+  t*= 8 n=  8192 DROPPED steps=[600, 2400, 9600] (unaffordable)
+    (97.6s for n=8192 seed=0)

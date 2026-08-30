@@ -888,7 +888,44 @@ An imported constant carries the authority of having been used before, which is
 the credibility-transfer defect one field over: the number is real, the source is
 real, and neither fact makes it applicable here.
 
-## The ten checks, before any control ships
+### V-18. The guard that only guards its callers
+
+`scale/it11_verdict.py` exists because the it.8 journals carry bit-identical
+duplicate rows, so a reading that counts rows reports `N=2` where one seed was
+run. The module's `by_seed` deduplicates, `verdict()` refuses below `N=8`, and its
+docstring names the defect as instance 16. That repair held for every caller.
+
+**It did not hold for a reader that was not a caller.** An ad-hoc analysis
+written in the same round, by the same author, one iteration after the module
+shipped, regrouped the journal inline with a dictionary keyed on `n_train` and
+read the mean over ROWS. It reported `N=9` at n=2048 and `N=10` at n=32768 where
+eight distinct seeds exist, and put the interpolated crossing at **12,789**
+against the seed-correct **12,780**.
+
+The arithmetic damage was 9 in 12,780, about 0.07%, and that is the point rather
+than the excuse. **The magnitude of the error is set by how duplicated the journal
+happens to be, not by anything the reader controls.** The same bypass over a
+journal with three duplicates of one seed would have moved the answer by a
+multiple of that, silently, and the reading would have looked identical.
+
+**THE TEST.** For every reading that consumes a journal a shared reader already
+covers, ask whether it *calls* that reader or re-implements it. Grep for the
+grouping key -- here `seed` -- across analysis scripts and confirm each hit routes
+through the module rather than around it.
+
+**Why the usual repairs miss this.** A must-fire proves the guard fires when
+called. A planted negative proves it fires on the right thing. Neither says
+anything about a code path that never reaches the guard, and the round's own scope
+clause (`R n D`) scores controls, not readers. An instrument is not a policy: it
+constrains only the paths routed through it, and every inline re-implementation is
+a path that is not.
+
+The shape generalises past this repo. A repaired instrument reads as a repaired
+repository, which is instance 23 in `R10_MECHANISM.md`; this is that instance in
+its narrowest form, where the bypass is a single dictionary comprehension and the
+author is the person who wrote the guard.
+
+## The eleven checks, before any control ships
 
 Condensed from the above; this is the list to run down.
 
@@ -929,6 +966,11 @@ Condensed from the above; this is the list to run down.
    calibrated against a specific generator does not. Say which quantity the source
    measured, not just where the number came from.
 
-And one more that costs more than all ten when it is skipped: **state the
+11. **A reading that bypasses the shared reader is not guarded by it** (V-18).
+   For every analysis that consumes a journal, check it CALLS the module that
+   deduplicates and refuses, rather than regrouping the rows inline. The guard
+   constrains its callers and nothing else.
+
+And one more that costs more than all eleven when it is skipped: **state the
 regime in which your baseline is optimal, and check your task is not in it**
 (D-1).
