@@ -1338,3 +1338,67 @@ asserted inside a skipped module count as shipping? That question is the boundar
 of her own strike and nobody else should draw it. Queued for her next turn. Cost
 if wrong: the constants sit one iteration longer in a module that does not
 execute.`
+
+# ITERATION 4 — CEQ v13, THE RESTITUTION ROUND
+
+Author's amendment, received mid-round. **Not a capability round.** One full loop
+that repairs every defect class on the record, mechanizes its prevention,
+re-audits every standing GREEN through the new gates, and ships the defect
+taxonomy as a D1 chapter.
+
+**LAW OF THE ROUND (G2): no fix may move a published number. A fix produces a
+REPAIR + a RE-READ, never an edit.**
+
+Twelve defect classes **X-R1..X-R12**, each as: defect as measured → mechanized
+fix → RED-first test with the must-fire seen.
+
+## The author's override on the room
+
+> *"everyone except mycroft will fix mistake — mycroft with his moons will scan
+> wikipedia all obscure maths which can help"* and *"mycroft jupiter should wonder
+> how else can we get our intended results what maths are we missing"*
+
+This **overrides** the contract's own ROOM clause, which assigned Mycroft R2's
+power arithmetic, R4's sup/mean sign-offs and R12's validity domains. The author's
+instruction is later and explicit.
+
+`Ruling: Jupiter is removed from defect repair entirely and assigned the maths
+survey with moons. His contract-assigned sub-items (R2 power arithmetic, R4
+sup/mean sign-offs, R12 validity domains) are UNOWNED this iteration and are
+recorded here as such rather than silently reassigned - Saturn already holds six
+classes and loading him with three more would guarantee none are done properly.
+They surface on the next free Mycroft-capable seat. Cost if wrong: three sub-items
+slip one iteration, and the ledger says so.`
+
+## R5's own law is already satisfied, by accident rather than design
+
+X-R5 hardens RULE 4 into tooling and inverts the historical order:
+**"the deciding measurement's slot is FIRST in every phase, instrument work
+scheduled AFTER it (inverting the historical order that killed three rounds)."**
+
+**The C1 deciding measurement started before this amendment arrived and is still
+running** — `t*=32` softmax 5/5, twinrow 5/5, settledrow in flight. Instrument
+work (identity manifests, linters) is being dispatched *after* it. The restitution
+round's schedule passes its own first test, though not by intent.
+
+## Dispatch — four free seats now, two held by live work
+
+| Seat | Role | Unit | Status |
+|---|---|---|---|
+| Jupiter | MYCROFT | **The maths survey** — differentiable top-k, submodularity/matroids, DPPs, optimal transport, combinatorial bandits, ordinal objectives; and consequence-propagation mathematics for the napkin's actual ask. With moons. **Under hardened G1: equations or code fetched, keyword counts inadmissible as verdicts** | dispatched |
+| Saturn | WATSON | **X-R1 identity manifests** — content hash of (code path, config, tensor shapes, RNG plan); harness refuses a cell whose hash ≠ current manifest. Gates everything else | dispatched |
+| Mars | MORIARTY | **The thirteenth class** + one filed attack per standing GREEN before the re-audit reads it | dispatched |
+| Venus | IRENE | **File the re-audit prediction BEFORE it runs** (time-critical); then adjudicate the 27 exposed struck-constant candidates | dispatched |
+| Mercury | LESTRADE | X-R5 the DAG — **held**, running the C1 deciding measurement | queued |
+| Neptune | LINUS | Linter runtime cost gate — **held**, withdrawing the refuted README claim | queued |
+
+`Ruling: Jupiter's maths survey is framed around what the STE reading just
+established rather than around the original napkin question. The gain is trained
+discrete SELECTION, and scale/pivot_probe.py:80-91 shows selection is topk over
+key.norm() - non-differentiable, zero gradient through which rows were chosen. So
+the sharp question is what mathematics makes discrete selection trainable, and STE
+is the crudest member of a large family that demonstrably works here. Framing the
+survey around the measured result rather than the original ambition is the higher-
+value use of the seat. Cost if wrong: the survey misses a consequence-propagation
+approach, which is why that is carried as an explicit second question rather than
+dropped.`
