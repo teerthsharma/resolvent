@@ -57,6 +57,7 @@ from __future__ import annotations
 import argparse
 import json
 import pathlib
+import itertools
 import statistics
 import subprocess
 import sys
@@ -200,7 +201,13 @@ def read_journal(path=JOURNAL) -> dict:
         if task_of(r["key"]) != TASK:
             continue
         cell, _, tail = r["key"].partition("_")
-        rows.setdefault(cell, {})[int(tail.rpartition("_sd")[2])] = r["value"]
+        # The key travels with the value. A contrast row cites the journal
+        # records it was computed from, and reconstructing that key from the
+        # arm and the geometry would be a second copy of the grammar this
+        # function is the sole parser of -- the P-6 shape.
+        v = dict(r["value"])
+        v["_journal_key"] = r["key"]
+        rows.setdefault(cell, {})[int(tail.rpartition("_sd")[2])] = v
     return rows
 
 
@@ -223,6 +230,27 @@ def _verdict(ci_lo: float, ci_hi: float, arm: str, ref: str) -> str:
     if ci_hi < 0.0:
         return "{} WINS".format(ref)
     return "NO DIFFERENCE"
+
+
+def exact_percentile_ci(per_seed_delta) -> tuple:
+    """The EXACT 95% percentile pair over all `n**n` paired resamples.
+
+    At five seeds the paired bootstrap distribution is finite -- `5**5 = 3125`
+    resamples, 126 distinct values -- so the percentile the Monte-Carlo draw
+    estimates is computable outright, `3.2x` cheaper than `B = 10000` and with
+    zero Monte-Carlo error. This is the family the prose deliverables adopted
+    (`CHECKLIST.md:1239`, `DONE.md:1839-1862`); the table prints the
+    Monte-Carlo family that the run executed. Both are stamped into every row
+    so the two homes of a headline can be told apart by name rather than by
+    guessing which one is a typo -- the P-1 that M-9 records.
+
+    Percentile indices are `contrast()`'s, so the only difference between the
+    two families is the resample set, never the rule applied to it.
+    """
+    n = len(per_seed_delta)
+    reps = sorted(sum(c) / n for c in itertools.product(per_seed_delta, repeat=n))
+    return (reps[int(0.025 * len(reps))],
+            reps[min(len(reps) - 1, int(0.975 * len(reps)))])
 
 
 def build(journal=JOURNAL, *, seeds=SEEDS, n_boot=N_BOOT,
@@ -262,11 +290,18 @@ def build(journal=JOURNAL, *, seeds=SEEDS, n_boot=N_BOOT,
         c = contrast([rows[ref][s]["eval_nrmse"] for s in seeds],
                      [rows[arm][s]["eval_nrmse"] for s in seeds],
                      n_boot=n_boot, seed=boot_seed)
+        ex_lo, ex_hi = exact_percentile_ci(c["per_seed_delta"])
         contrasts.append(dict(
             arm=arm, ref=ref, note=note, delta=c["delta"],
             ci_lo=c["ci_lo"], ci_hi=c["ci_hi"], n_boot=n_boot,
             boot_seed=boot_seed, n_seeds=len(seeds), estimator=estimator,
             per_seed_delta=c["per_seed_delta"],
+            ci_exact_lo=ex_lo, ci_exact_hi=ex_hi,
+            estimator_exact="exact percentile over all {}**{} = {} paired "
+                            "resamples".format(len(seeds), len(seeds),
+                                               len(seeds) ** len(seeds)),
+            journal_keys=[rows[a][s_]["_journal_key"]
+                          for a in (arm, ref) for s_ in seeds],
             seeds_favouring_arm=sum(1 for d in c["per_seed_delta"] if d > 0.0),
             verdict=_verdict(c["ci_lo"], c["ci_hi"], arm, ref),
         ))
@@ -467,16 +502,42 @@ def render(t: dict, manifest=WEIGHTS_MANIFEST) -> str:
     L.append("")
     L.append("## Contrasts")
     L.append("")
+    c0 = t["contrasts"][0] if t["contrasts"] else None
     L.append("`delta = NRMSE(reference) - NRMSE(arm)`, so positive means the arm "
              "has the lower error. Estimator: {}. Strict at zero -- an interval "
              "touching zero does not exclude it.".format(
-                 t["contrasts"][0]["estimator"] if t["contrasts"] else "n/a"))
+                 c0["estimator"] if c0 else "n/a"))
     L.append("")
-    L.append("| arm | reference | delta | 95% CI | seeds favouring arm | verdict | note |")
-    L.append("|---|---|---|---|---|---|---|")
+    L.append("**Every row carries BOTH interval families, each under its own "
+             "name, and the two differ.** At five seeds the paired resample "
+             "space is finite, so the percentile the Monte-Carlo draw "
+             "estimates is also computable outright: the `{}` column is the "
+             "{}. It is not a second measurement and not a correction -- it is "
+             "the same per-seed deltas under a different resampling rule, and "
+             "a headline quoted from one family will not match the other. "
+             "Prose deliverables in this repository adopted the exact family "
+             "(`CHECKLIST.md:1239`); this card prints the Monte-Carlo family "
+             "the run executed and names both, so a reader who finds two "
+             "endpoints for one headline can tell which instrument produced "
+             "each instead of assuming one is a typo."
+             .format("exact 95% CI", c0["estimator_exact"] if c0 else "n/a"))
+    L.append("")
+    L.append("Both families are computed from the same {} journal records in "
+             "`{}`, seeds {} -- for the row below, keys `{}` and `{}` with the "
+             "`_sd<seed>` suffix over those seeds. No number in this section "
+             "is transcribed from another document."
+             .format(len(c0["journal_keys"]) if c0 else 0,
+                     pathlib.Path(p["journal"]).name,
+                     ", ".join(str(x) for x in p["seeds"]),
+                     "<arm>_k<k>_" + p["geometry"],
+                     "<reference>_k<k>_" + p["geometry"]))
+    L.append("")
+    L.append("| arm | reference | delta | 95% CI (Monte-Carlo) | exact 95% CI | seeds favouring arm | verdict | note |")
+    L.append("|---|---|---|---|---|---|---|---|")
     for r in t["contrasts"]:
-        L.append("| `{}` | `{}` | {:+.6f} | [{:+.6f}, {:+.6f}] | {}/{} | **{}** | {} |"
+        L.append("| `{}` | `{}` | {:+.6f} | [{:+.6f}, {:+.6f}] | [{:+.6f}, {:+.6f}] | {}/{} | **{}** | {} |"
                  .format(r["arm"], r["ref"], r["delta"], r["ci_lo"], r["ci_hi"],
+                         r["ci_exact_lo"], r["ci_exact_hi"],
                          r["seeds_favouring_arm"], r["n_seeds"], r["verdict"],
                          r["note"] or ""))
     L.append("")

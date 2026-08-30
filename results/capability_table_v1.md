@@ -1,6 +1,6 @@
 # Capability table v0 -- CEQ signed pivot-routed attention
 
-Task `negation_scope` at `s64_d24_st150_ntr8192_nev512_b21`, 5 seeds, `n_params = 4769` on every arm. Journal `m3_quintuple_v2.jsonl` at commit `551d512` (HEAD `2eadc43`). Pre-registered reading: `M3_QUINTUPLE_PREREGISTERED_READING.md`. Produced by `scale/m3_quintuple.py --cells softmax glance settled twin argmax --seeds 0 1 2 3 4 --ks 8`.
+Task `negation_scope` at `s64_d24_st150_ntr8192_nev512_b21`, 5 seeds, `n_params = 4769` on every arm. Journal `m3_quintuple_v2.jsonl` at commit `551d512` (HEAD `8dd9a99`). Pre-registered reading: `M3_QUINTUPLE_PREREGISTERED_READING.md`. Produced by `scale/m3_quintuple.py --cells softmax glance settled twin argmax --seeds 0 1 2 3 4 --ks 8`.
 
 **Softmax is the baseline and is measured first.** A verdict of NO DIFFERENCE is printed wherever that is what the interval says.
 
@@ -28,14 +28,18 @@ Per-seed readings, in seed order:
 
 `delta = NRMSE(reference) - NRMSE(arm)`, so positive means the arm has the lower error. Estimator: paired percentile bootstrap B=10000 seed=0. Strict at zero -- an interval touching zero does not exclude it.
 
-| arm | reference | delta | 95% CI | seeds favouring arm | verdict | note |
-|---|---|---|---|---|---|---|
-| `settled` | `twin` | -0.002959 | [-0.048587, +0.031557] | 3/5 | **NO DIFFERENCE** | HEADLINE |
-| `settled` | `argmax` | +0.226893 | [+0.175040, +0.275862] | 5/5 | **settled WINS** | HEADLINE CAVEAT -- argmax is the attribution control |
-| `settled` | `softmax` | +0.108437 | [+0.066232, +0.147110] | 5/5 | **settled WINS** |  |
-| `twin` | `softmax` | +0.111396 | [+0.100873, +0.121920] | 5/5 | **twin WINS** |  |
-| `argmax` | `softmax` | -0.118456 | [-0.134115, -0.102204] | 0/5 | **softmax WINS** |  |
-| `glance` | `softmax` | +0.000000 | [+0.000000, +0.000000] | 0/5 | **NO DIFFERENCE** | G3 binds glance bitwise to softmax at t_max = 0: this row is zero BY CONSTRUCTION, not a measured tie |
+**Every row carries BOTH interval families, each under its own name, and the two differ.** At five seeds the paired resample space is finite, so the percentile the Monte-Carlo draw estimates is also computable outright: the `exact 95% CI` column is the exact percentile over all 5**5 = 3125 paired resamples. It is not a second measurement and not a correction -- it is the same per-seed deltas under a different resampling rule, and a headline quoted from one family will not match the other. Prose deliverables in this repository adopted the exact family (`CHECKLIST.md:1239`); this card prints the Monte-Carlo family the run executed and names both, so a reader who finds two endpoints for one headline can tell which instrument produced each instead of assuming one is a typo.
+
+Both families are computed from the same 10 journal records in `m3_quintuple_v2.jsonl`, seeds 0, 1, 2, 3, 4 -- for the row below, keys `<arm>_k<k>_s64_d24_st150_ntr8192_nev512_b21` and `<reference>_k<k>_s64_d24_st150_ntr8192_nev512_b21` with the `_sd<seed>` suffix over those seeds. No number in this section is transcribed from another document.
+
+| arm | reference | delta | 95% CI (Monte-Carlo) | exact 95% CI | seeds favouring arm | verdict | note |
+|---|---|---|---|---|---|---|---|
+| `settled` | `twin` | -0.002959 | [-0.048587, +0.031557] | [-0.042903, +0.031557] | 3/5 | **NO DIFFERENCE** | HEADLINE |
+| `settled` | `argmax` | +0.226893 | [+0.175040, +0.275862] | [+0.175040, +0.276921] | 5/5 | **settled WINS** | HEADLINE CAVEAT -- argmax is the attribution control |
+| `settled` | `softmax` | +0.108437 | [+0.066232, +0.147110] | [+0.068181, +0.147110] | 5/5 | **settled WINS** |  |
+| `twin` | `softmax` | +0.111396 | [+0.100873, +0.121920] | [+0.100873, +0.121920] | 5/5 | **twin WINS** |  |
+| `argmax` | `softmax` | -0.118456 | [-0.134115, -0.102204] | [-0.134115, -0.102786] | 0/5 | **softmax WINS** |  |
+| `glance` | `softmax` | +0.000000 | [+0.000000, +0.000000] | [+0.000000, +0.000000] | 0/5 | **NO DIFFERENCE** | G3 binds glance bitwise to softmax at t_max = 0: this row is zero BY CONSTRUCTION, not a measured tie |
 
 ## The headline cell is undecided, and that is structural
 

@@ -540,26 +540,53 @@ nearly *"all five seeds agreed"* — and **the finest achievable two-sided p at
 N = 5 is `0.0625`, not the `0.05` the project quotes.** The design cannot
 produce the significance level it reports, whatever the data say. This covers
 **every 5-seed reading here, including the standing `+0.108437` headline**
-(`CHECKLIST.md:1168`, `ceq/hf_artifact/README.md:35`).
+(`CHECKLIST.md:1168`, `ceq/hf_artifact/README.md:39`).
 
 **Half the repair is already in the tree, which is what makes the rule
 concrete.** Both of those rows already print the seed-agreement count beside the
-interval — `ceq/hf_artifact/README.md:35` reads
+interval — `ceq/hf_artifact/README.md:39` reads
 `+0.108437 | [+0.066232, +0.147110] | 5/5`. The practice exists; what is missing
 is that it is not required, so a number quoted anywhere else loses the `5/5` and
 with it the only signal that the interval is a sign test. A convention followed
 in two places and mandated in none is a convention that the next headline will
 drop.
 
-**Found while writing this entry, and unresolved: the two homes disagree.** The
-same headline carries CI `[+0.066232, +0.147110]` at
-`ceq/hf_artifact/README.md:35` and `[+0.068181, +0.147110]` at
-`CHECKLIST.md:1168` — identical point estimate, identical upper bound, lower
-bounds `0.001949` apart. Neither row names the run that produced it, so there is
-no way to tell which is the transcription error and which is the number. That is
-P-1 attached to the repository's most-quoted result, and it is recorded here
-rather than fixed because picking one without finding the producer would just
-make the disagreement invisible.
+**Found while writing this entry, then run down and RESOLVED — and the answer
+was that neither row was wrong.** The same headline carried CI
+`[+0.066232, +0.147110]` at `ceq/hf_artifact/README.md:39` and
+`[+0.068181, +0.147110]` at `CHECKLIST.md:1168` — identical point estimate,
+identical upper bound, lower bounds `0.001949` apart, and neither row named the
+run behind it. The obvious reading was that one was a transcription error. It
+was not. **Both reproduce bit-exact from the same ten journal records**, under
+two different and both-legitimate estimators: `[+0.066232, +0.147110]` is the
+paired percentile bootstrap at `B = 10000, seed = 0` that the run executed
+(`results/m3_quintuple.txt:54`), and `[+0.068181, +0.147110]` is the EXACT
+percentile over all `5**5 = 3125` paired resamples — the family the prose
+deliverables adopted at `CHECKLIST.md:1239` and tabulated at `DONE.md:1844`.
+At five seeds the resample space is finite, so the percentile the Monte-Carlo
+draw estimates is computable outright; the two are the same per-seed deltas
+under a different resampling rule. Only the LOWER bound moves, which is
+precisely why the pair read as a typo.
+
+**The defect was never the digits — it was that neither row named its
+instrument, and one document cannot be checked against another when both omit
+it.** A reader had no way to distinguish "two estimators" from "one typo", and
+the cheapest available conclusion was the wrong one. The repair is provenance,
+not a choice between the numbers: `scale/capability_table.py` now computes BOTH
+families and stamps each into every row under its own name, so the shipped card
+prints them side by side and carries the journal keys and seeds they were
+computed from; `CHECKLIST.md:1168` names its estimator, its journal and its
+keys beside its number. `tests/cameron/test_headline_ci_provenance.py`
+recomputes both families from `results/m3_quintuple_v2.jsonl` and pins each
+published endpoint to the estimator its own document claims, so a row retyped
+from the other family now fails a test instead of surviving as a contradiction.
+
+**The general shape, and it is not about bootstraps.** Two correct numbers that
+disagree are indistinguishable from one correct and one wrong number, unless
+each carries the procedure that produced it. An unlabelled number is not merely
+undocumented — it is *unfalsifiable*, because there is no claim to check it
+against. This is the same failure as P-1, arriving through arithmetic that was
+right the whole time.
 
 The same round produced a second face of it: realised `sd_paired` on the C1
 ladder is `0.019`–`0.109` against a pilot's `0.050`, so `t* = 1` needs **62
