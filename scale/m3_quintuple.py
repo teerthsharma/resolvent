@@ -91,7 +91,26 @@ CELLS = ("softmax", "glance", "settled", "twin", "argmax")
 #: See PIVOT_EXCLUSION_FALSIFIER.md. NOT in `CELLS`, so a default run measures
 #: exactly what it measured before and no published reading moves.
 PLUS_CELLS = ("twin_plus", "settled_plus")
-ALL_CELLS = CELLS + PLUS_CELLS
+
+#: THE PER-ROW CELLS. Identical to `twin` / `settled` except that the pivot
+#: reading is written at EVERY query row rather than only at row `s-1`.
+#:
+#: WHY THEY EXIST. The shipped arm writes `_alpha` into row `s-1` alone, so
+#: under a vector readout `softmax`, `twin`, `settled` and `argmax` evaluate the
+#: same expression at every other position -- measured bitwise equal at
+#: positions `0..s-2` across 256 drawn instances (results/r9_systems_gate.md).
+#: A vector-valued lane built on the shipped arm would therefore compare four
+#: arms that differ in 1 of `s` output coordinates. These cells remove that
+#: objection by construction; they do NOT remove the separate objection that the
+#: LABEL may be trivial at those positions, which is a corpus question.
+#:
+#: NAMING. No underscore inside the cell name. `capability_table.read_journal`
+#: does `key.partition("_")` and `eprocess._parse_key` splits on `_sd`, so
+#: `twin_row` would be read as cell `twin`; `twinrow` cannot be. The `_task`,
+#: `_k`, `_b` and `_sd` substrings are likewise absent. NOT in `CELLS`, which
+#: `tests/chase/test_pivot_exclusion_lift.py` asserts as an exact 5-tuple.
+ROW_CELLS = ("twinrow", "settledrow")
+ALL_CELLS = CELLS + PLUS_CELLS + ROW_CELLS
 BETA = 0.5
 
 #: The shipped task. Every reading already in results/m3_quintuple_v2.jsonl was
@@ -202,6 +221,49 @@ def batched_log_pivot_context(q, kk, v, piv, *, chunk: int = 512,
     return lg, lgate, av
 
 
+def batched_row_gates(q, kk, piv, *, chunk: int = 512):
+    """`[n, s, k]` log-gate: EVERY query row's log-softmax reading of the pivots.
+
+    `batched_log_pivot_context` forms this for the single query row `s-1`. The
+    pivot rows, the Gram and `A_P @ V` do not depend on the query row and are
+    deliberately NOT recomputed here -- only the gate is. That is what makes a
+    per-row arm cost far less than `s` copies of the single-row arm, and it is
+    why this returns the gate alone rather than a whole context.
+
+    THE FULL LOGIT MATRIX IS FORMED, AND IN THE LOG DOMAIN. The single-row path
+    forms only `k + 1` rows of `q @ kk^T`, which is the O(k s d) instead of
+    O(s^2 d) saving its own comment claims. Every query row is wanted here, so
+    that saving is not available and the cost is the full `[s, s]` product. It
+    is taken in float64 rather than read off the float32 `a` the base path
+    already computed, because the settle runs in logs precisely to avoid the
+    underflow that exp()ed probabilities suffer (scale/arm_s.py, the POSITIVITY
+    paragraph). Reusing `a` would reintroduce it.
+
+    CAUSALITY LEAVES THE EARLY ROWS WITH NO PIVOT AT ALL. `ceq/bench.py` masks
+    with `tril(-1)`, so query row `p` reads `j <= p-1`, while `batched_pivots`
+    selects from `1 .. s-2` globally. Row 0 reads nothing, and row 1 reads only
+    row 0, which is excluded -- so for those rows every gate entry is masked and
+    `log_softmax` over an all-`-inf` row returns `nan`, not `-inf`. Those rows
+    are reported through the returned mask instead of being written into `z`,
+    which is the all-masked-row NaN guard the contract requires rather than a
+    silent `nan` reaching the loss.
+
+    Returns `(log_gate, valid)`: `log_gate [n, s, k]` float64, `valid [n, s]`
+    true where at least one pivot is causally visible to that query row.
+    """
+    n, s, d = q.shape
+    _, nm = bench._causal_mask_pair(s, 0, str(q.device))
+    out = torch.empty(n, s, piv.shape[1], dtype=torch.float64, device=q.device)
+    for lo in range(0, n, chunk):
+        hi = min(lo + chunk, n)
+        w = q[lo:hi].double() @ kk[lo:hi].double().transpose(-2, -1)
+        w = (w / math.sqrt(d)).masked_fill(nm, float("-inf"))
+        lsm = torch.log_softmax(w, dim=-1)                         # [b, s, s]
+        out[lo:hi] = torch.gather(
+            lsm, 2, piv[lo:hi].unsqueeze(1).expand(-1, s, -1))
+    return out, torch.isfinite(out).any(dim=-1)
+
+
 def batched_log_alpha_step(log_alpha, log_gate, log_gram, beta):
     """One application of T, in logs, batched. `arm_s.log_alpha_step` verbatim
     with a leading batch dimension."""
@@ -259,15 +321,26 @@ class QuintArm(M3.Arm):
     """The shipped softmax arm with row s-1's reading replaced by a pivot
     reading. Every cell shares this class; `cell` selects the alpha rule.
 
-    Only row s-1 can reach the output (`readout(mlp(z))[:, s-1]` and the MLP is
-    position-wise), so only that row is replaced. The other rows are left
-    exactly as the shipped forward produced them, which is what makes the
-    softmax and glance cells reproducible against the published reading.
+    Under the shipped scalar readout only row s-1 can reach the output
+    (`readout(mlp(z))[:, s-1]` and the MLP is position-wise), so only that row
+    is replaced. The other rows are left exactly as the shipped forward produced
+    them, which is what makes the softmax and glance cells reproducible against
+    the published reading.
+
+    TWO FLAGS CHANGE THAT, AND THEY ARE INDEPENDENT. `vector_readout` drops the
+    `[:, s-1]` index and returns `[n, s]`. A `ROW_CELLS` cell writes the pivot
+    reading at every query row instead of at row s-1 alone. Neither adds a
+    parameter. Only the two together produce an arm whose output differs from
+    softmax at more than one position: with `vector_readout` alone, all five
+    shipped cells are bitwise equal at positions `0..s-2` -- measured, see
+    `results/r9_systems_gate.md` -- and with a row cell alone the extra rows are
+    computed and then discarded by the index, which is what makes the pair a
+    usable bind on each other.
     """
 
     def __init__(self, kind: str, s: int, *, cell: str = "softmax",
                  k_piv: int = 8, beta: float = BETA, t_max: int = 21,
-                 n_neumann: int = 21):
+                 n_neumann: int = 21, vector_readout: bool = False):
         super().__init__("softmax", s)
         if cell not in ALL_CELLS:
             raise ValueError(cell)
@@ -275,9 +348,70 @@ class QuintArm(M3.Arm):
         #: only in the pivot set, so the contrast between `twin` and
         #: `twin_plus` isolates the exclusion and nothing else.
         self.reserve_query = cell in PLUS_CELLS
-        self.base_cell = cell[:-5] if self.reserve_query else cell
+        #: A `...row` cell runs the SAME alpha rule as its base cell and differs
+        #: only in WHERE the reading is written -- every query row rather than
+        #: row `s-1` alone.
+        self.per_row = cell in ROW_CELLS
+        if self.reserve_query:
+            self.base_cell = cell[:-5]
+        elif self.per_row:
+            self.base_cell = cell[:-3]
+        else:
+            self.base_cell = cell
+        #: BOTH FLAGS ARE PLAIN PYTHON, NOT PARAMETERS OR BUFFERS. Every arm in
+        #: this file sits at n_params = 4769; an extra tensor takes a different
+        #: Adam trajectory and the paired bootstrap stops being paired. This is
+        #: the `beta` / `t_max` / `n_neumann` precedent.
+        self.vector_readout = bool(vector_readout)
         self.cell, self.k_piv, self.beta = cell, k_piv, beta
         self.t_max, self.n_neumann = t_max, n_neumann
+
+    def _alpha_all_rows(self, q, kk, x):
+        """`([n, s, d], [n, s])` -- the pivot reading at EVERY query row.
+
+        The pivot set, the Gram and `A_P @ V` are query-row independent and are
+        formed once by the shipped `batched_log_pivot_context`; only the gate is
+        per-row. The alpha rule is the same expression as `_alpha`, applied to a
+        `[n, s, k]` gate instead of `[n, k]`.
+        """
+        piv = batched_pivots(kk, self.k_piv,
+                             reserve_query=self.reserve_query)
+        need_gram = self.base_cell == "settled"
+        log_gram, _gate_last, av = batched_log_pivot_context(
+            q, kk, x, piv, need_gram=need_gram)
+        gate, valid = batched_row_gates(q, kk, piv)
+        n, s, k = gate.shape
+        #: An all-masked query row gives `nan`, not `-inf`. Both branches of a
+        #: `where` are evaluated, so the `nan` is cleared before it can reach a
+        #: gradient; the row is then zeroed and excluded by `valid` anyway.
+        zero = torch.zeros_like(gate)
+        gate = torch.where(torch.isnan(gate), zero, gate)
+        gate = torch.where(valid.unsqueeze(-1), gate, zero)
+        if self.base_cell == "settled":
+            # ponytail: the Gram is query-row independent, but `BatchedSettled`
+            # takes `[B, k, k]`, so expanding it to `[n*s, k, k]` MATERIALISES a
+            # copy -- 268 MB of float64 at n=8192, s=64, k=8, and autograd holds
+            # it. Measured peak working set 3592 MiB against 2440 MiB for the
+            # scalar settled arm at the same geometry. That fits, so it is left
+            # alone. Upgrade path if it stops fitting: broadcast instead of
+            # expanding, by letting `batched_log_alpha_step` take the Gram as
+            # `[n, 1, k, k]` against alpha `[n, s, k]` -- same arithmetic, no
+            # copy, but it changes `BatchedSettled`'s shape contract and the
+            # published single-row path shares that function.
+            la = BatchedSettled.apply(
+                gate.reshape(n * s, k),
+                log_gram.unsqueeze(1).expand(n, s, k, k).reshape(n * s, k, k),
+                self.beta, self.t_max, self.n_neumann)
+            alpha = la.exp().reshape(n, s, k)
+        elif self.base_cell == "twin":
+            alpha = (gate
+                     - torch.logsumexp(gate, dim=-1, keepdim=True)).exp()
+        elif self.base_cell == "argmax":
+            alpha = torch.zeros_like(gate)
+            alpha.scatter_(2, gate.argmax(dim=-1, keepdim=True), 1.0)
+        else:
+            raise AssertionError(self.cell)
+        return alpha @ av, valid                                  # [n, s, d]
 
     def _alpha(self, q, kk, x):
         piv = batched_pivots(kk, self.k_piv,
@@ -304,11 +438,15 @@ class QuintArm(M3.Arm):
         q, k = self.wq(x), self.wk(x)
         a = bench._softmax_operator(q, k)
         z = x + a @ x
-        if self.base_cell not in ("softmax", "glance"):
+        if self.per_row:
+            rows, valid = self._alpha_all_rows(q, k, x)
+            z = torch.where(valid.unsqueeze(-1), x + rows.to(z.dtype), z)
+        elif self.base_cell not in ("softmax", "glance"):
             z = z.clone()
             z[:, s - 1] = x[:, s - 1] + self._alpha(q, k, x).to(z.dtype)
         h = self.mlp(z)
-        return self.readout(h).squeeze(-1)[:, s - 1]
+        out = self.readout(h).squeeze(-1)
+        return out if self.vector_readout else out[:, s - 1]
 
 
 # ------------------------------------------------- the bind that gates the run
@@ -463,10 +601,41 @@ def _unit(p: dict) -> dict:
     #: TRAINED one is the last, and the count is asserted rather than assumed.
     built = []
 
+    xt, yt, _a, _b = bfn(p["n_train"], s, d, d_model=M3.D_MODEL, seed=seed)
+    xe, ye, _c, _e = bfn(p["n_eval"], s, d, d_model=M3.D_MODEL,
+                         seed=seed + 12345)
+
+    #: THE LABEL'S SUPPORT, MADE EXPLICIT AND CHECKED AGAINST THE TASK.
+    #:
+    #: A vector corpus does not label every position. C1's label is
+    #: `[n, s - t*]` and covers positions `t* .. s-1`, because a strictly causal
+    #: operator raised to `t*` vanishes on the first `t*` coordinates: labelling
+    #: them would ship `t*` entries of `sd 0`, which is the vacuity the
+    #: fourteenth strike was. So the arm emits `[n, s]` -- ITS OUTPUT SHAPE IS
+    #: TASK-INDEPENDENT, and its FLOP accounting stays the accounting of all `s`
+    #: rows -- and this adapter, which already knows the task, slices it.
+    #:
+    #: The offset is derived from the label's width and then CROSS-CHECKED
+    #: against the task's own dial rather than trusted. A slice that merely
+    #: happens to line up reads as working until `t*` changes, so a mismatch
+    #: raises here instead of training on a misaligned target.
+    vector_label = yt.dim() > 1
+    offset = s - yt.shape[1] if vector_label else 0
+    if vector_label:
+        dial = NS.e_t_star(task, s)
+        if dial is None or offset != int(dial):
+            raise ValueError(
+                f"label width {yt.shape[1]} implies offset {offset} at s={s}, "
+                f"but task {task!r} declares t*={dial}; refusing to train on a "
+                "target whose support is not the one the task registered")
+        if ye.shape[1] != yt.shape[1]:
+            raise ValueError("train and eval labels disagree on width")
+
     class _A(QuintArm):
         def __init__(self, kind, s_):
             super().__init__(kind, s_, cell=cell, k_piv=p["k"], beta=BETA,
-                             t_max=p["t_max"], n_neumann=p["n_neumann"])
+                             t_max=p["t_max"], n_neumann=p["n_neumann"],
+                             vector_readout=vector_label)
             built.append(self)
             #: `M3.run_arm` constructs its own 0-step arm internally and cannot
             #: be handed a device (m3_capability.py is CPU-only by contract),
@@ -475,9 +644,13 @@ def _unit(p: dict) -> dict:
             if dev is not None:
                 self.to(dev)
 
-    xt, yt, _a, _b = bfn(p["n_train"], s, d, d_model=M3.D_MODEL, seed=seed)
-    xe, ye, _c, _e = bfn(p["n_eval"], s, d, d_model=M3.D_MODEL,
-                         seed=seed + 12345)
+        def forward(self, x):
+            #: The slice lives HERE and not in `QuintArm`, so the arm's own
+            #: output stays `[n, s]` for every task while this unit-local
+            #: adapter carries the corpus's support.
+            out = super().forward(x)
+            return out[:, offset:] if vector_label else out
+
     if dev is not None:
         xt, yt = xt.to(dev), yt.to(dev)
         xe, ye = xe.to(dev), ye.to(dev)

@@ -82,6 +82,50 @@ LOOP_TERM = (
     "by `f_step` in arm_s.gate3_cost",
     lambda n, s, dm, h, k, t: ROWS_SETTLED * n * t * 2 * k * k)
 
+#: THE PER-ROW TERMS. A `ROW_CELLS` cell writes the pivot reading at every query
+#: row, so the query-row-dependent work is paid `s` times and the query-row-
+#: INDEPENDENT work is not paid again at all. Splitting them is the whole point
+#: of the entry: pricing a row cell by reusing SETUP/LOOP/CONTRACT understates
+#: it, and pricing it as `s` copies of the single-row cell overstates it.
+#:
+#: What is shared and NOT multiplied: the pivot selection, the Gram, and
+#: `A_P @ V` depend on the pivot set alone. `m3_quintuple.batched_row_gates`
+#: recomputes none of them.
+#:
+#: What replaces the setup logit slice: the single-row path forms `k+1` rows of
+#: `q @ kk^T`; every row is wanted here, so the full `[s, s]` product is formed
+#: -- `2*(k+1)*s*d_model` becomes `2*s*s*d_model` for the gate, and the `k`
+#: pivot rows are still formed by the shared call, so only the `+1` query row is
+#: replaced by `s` of them.
+#:
+#: THIS ENTRY IS A FLOOR ON THE ROW CELLS' COST AND NOT A PREDICTION OF IT, AND
+#: THE GAP WIDENS WITH `s`. The FLOP ratio `settledrow / settled` is 1.700 at
+#: every geometry below. The measured wall-clock ratio, same session, one
+#: training step including backward and Adam:
+#:
+#:     s=16 n=512    0.055674 -> 0.193932   ratio  3.48
+#:     s=64 n=2048   0.407800 -> 4.560600   ratio 11.19
+#:     s=64 n=8192   3.437200 -> 25.54320   ratio  7.43
+#:
+#: so the model is optimistic by 2.0x at the pilot geometry and by 4.4x to 6.6x
+#: at the shipped one. The arithmetic is right; the dispatch is not in it. The
+#: settle is a Python loop over `t_max` steps, and the per-row form runs it over
+#: an `[n*s, k]` tensor whose Gram copy is 268 MB at s=64, n=8192.
+#:
+#: **A pilot cost measured at small `s` must not be scaled to full geometry by
+#: this term**; doing so understates the bill by 2x to 3x. The 1.5x spread
+#: between the two `s=64` rows is contention and not `n`: the same `settled`
+#: unit read 2.0775 s/step in an earlier session against 3.4372 s/step here,
+#: 1.65x apart on identical code and geometry, which is why every clock in this
+#: repository is labelled PROVISIONAL and why the ratios above are quoted only
+#: from same-session pairs.
+ROW_GATE_TERM = (
+    "PER-ROW gate (full logit matrix)", "n*2*s^2*d_model",
+    "m3_quintuple.batched_row_gates: the `q @ kk^T` full product in float64, "
+    "replacing the single query row of arm_s.log_pivot_context's `k+1`-row "
+    "slice. The k pivot rows are unchanged and stay in SETUP_TERM",
+    lambda n, s, dm, h, k, t: ROWS_SETTLED * n * 2 * s * s * dm)
+
 CONTRACT_TERM = (
     "alpha @ AV", "n*2*k*d_model",
     "arm_s.arm_s, the `out[-1] = (log_alpha.exp() @ av)` contraction",
@@ -136,6 +180,19 @@ def cell_terms(cell, n, s, dm, h, k, t, nn_terms):
         # zero multiply-adds. argmax itself is comparisons, NOT COUNTED.
         return dict(base=base, select=sel, setup=setup, loop=0, contract=0,
                     bwd=0)
+    if cell in ("twinrow", "settledrow"):
+        # The gate is per query row; the Gram and A_P@V are not. The setup term
+        # keeps its k pivot rows but loses its single query row to ROW_GATE.
+        gate = ROW_GATE_TERM[3](n, s, dm, h, k, t)
+        shared = setup - ROWS_SETTLED * n * 2 * s * dm
+        rows = dict(base=base, select=sel, setup=shared + gate,
+                    loop=loop * s, contract=contract * s,
+                    bwd=bwd_spec(n, s, dm, h, k, t, nn_terms) * s)
+        if cell == "twinrow":
+            # Same relationship twin has to settled: no fixed point is solved,
+            # so no settle loop and no implicit-gradient backward.
+            rows.update(loop=0, bwd=0)
+        return rows
     raise ValueError(cell)
 
 
