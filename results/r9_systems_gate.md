@@ -195,10 +195,31 @@ a 21-term Neumann backward should cost relative to its forward. They agree.
     per unit   ≈ 70.9 × 150 steps = 10,640 s ≈ 2.96 h
     settled+twin × 5 seeds = 10 units ≈ 29.6 h
 
-against the current cost of the same ten units, `311.62 s × 10 = 0.87 h`. **The
-working version of this lane is a 34× increase in the round's compute bill**, on
-a shared CPU box, before a single seed of the `t*` ladder is repeated. That is
-the number to put in front of the author before anyone writes the code.
+against the current cost of the same ten units, `311.62 s × 10 = 0.87 h`.
+
+> ### SUPERSEDED — this projection was wrong by 5×, and the arm now exists
+>
+> **`29.6 h` priced an implementation nobody wrote, and it must not be quoted
+> again.** It assumed the per-row arm calls `_alpha` once per query row, so
+> every term was multiplied by `s`. The arm built in iteration 2
+> (`ROW_CELLS` in `scale/m3_quintuple.py`) does not: the pivot set, the Gram
+> and `A_P @ V` are query-row independent and are formed once, and the settle
+> runs as **one** Python loop of `t_max` iterations over an `[n*s, k]` tensor
+> rather than `s` loops over `[n, k]`. The Python iteration count therefore
+> does not scale with `s` at all, which is where the factor went.
+>
+> Measured at this section's own geometry (`s = 64`, `n_train = 8192`), same
+> session: `settledrow 25.5432 s/step` and `twinrow 2.7116 s/step`, so ten
+> units price at **`5.9 h`, not `29.6 h`** — `5.32 h` plus `0.56 h`. Memory,
+> not time, is what the lane actually spends: peak working set `3592 MiB`
+> against `2440 MiB` for the scalar `settled` arm.
+>
+> The reasoning in §3.1 survives and is reinforced — the FLOP model is still
+> optimistic, by `2.0×` at pilot geometry and `4.4×` to `6.6×` here — but the
+> **magnitude** of §3.2's bill was a derivation from an assumed implementation
+> where a measurement was affordable, and it should have been labelled as the
+> naive upper bound it was rather than as the price of the lane. Full working:
+> `results/r9_perrow_pilot.md`.
 
 ---
 
@@ -281,11 +302,13 @@ a `[n, 64]` output that is bitwise cell-independent in 63 coordinates and hand
 `1/64` of the gradient to the one coordinate that is not.
 
 **The gate passes the per-row variant on cost, at a stated price:** `1.702×` the
-FLOPs of the current `settled`, a realised slowdown worse than that because the
-`×64` falls on the two Python loops that are already 53 % of the clock against
-5.9 % of the FLOPs, and `≈29.6 h` for ten units against `0.87 h` today. If that
-bill is not affordable, the honest move is to say so now rather than to build the
-cheap version and read its zero.
+FLOPs of the current `settled`, and a realised slowdown worse than that because
+the extra work falls on the Python loop that is already 53 % of the clock against
+5.9 % of the FLOPs. **Ten units cost `5.9 h` against `0.87 h` today** — measured
+in iteration 2 on the built arm, superseding the `29.6 h` this section first
+carried; see the SUPERSEDED note in §3.2. If that bill is not affordable, the
+honest move is to say so now rather than to build the cheap version and read its
+zero.
 
 ---
 
@@ -303,7 +326,13 @@ decomposition in §3 is arithmetic on shapes for a function **that does not
 exist** — no per-row `_alpha` was written or run, so the `(k+1) → (k+s)` setup
 claim rests on reading `arm_s.log_pivot_context` and reasoning about what a
 per-row version would form, not on measuring one; an implementation that batches
-the query rows differently could beat it. The `1/64` loss-share figure assumes
+the query rows differently could beat it. **That last caveat fired.** The arm
+built in iteration 2 batches exactly that way and came in `5×` under the price
+this section quoted, which is the SUPERSEDED note in §3.2. The caveat was
+correct, was written in the right place, and was still not enough: a derivation
+carrying a live "an implementation could beat this" clause is an upper bound and
+should have been labelled one in §3.2's own table rather than only in this
+paragraph. The `1/64` loss-share figure assumes
 `reduction='mean'` over the full `[n, s]` tensor, which is what
 `scale/paired_arm.py:74` does today but is not forced — a per-position weighting
 or a loss taken only at `s-1` would change it, and neither was priced here. The
