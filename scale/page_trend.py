@@ -96,6 +96,7 @@ by `report()` so that no reader takes `RISES` without them.
 from __future__ import annotations
 
 import argparse
+import fractions
 import itertools
 import json
 import math
@@ -110,6 +111,8 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
 from scale.e_ladder import RUNGS, read                              # noqa: E402
 
 __all__ = ["ALPHA", "N_BOOT", "BOOT_SEED", "page_l", "page_null",
+           "page_null_exact", "achievable_p_values", "critical_value",
+           "bootstrap_p_floor",
            "page_p_value", "page_p_value_monte_carlo", "isotonic_curve",
            "isotonic_top_ci", "trend", "verdict_of", "report"]
 
@@ -180,6 +183,93 @@ def page_null(k: int, n: int) -> tuple[np.ndarray, np.ndarray]:
     if len(support) != len(dist):                                   # pragma: no cover
         raise AssertionError("convolution support mismatch")
     return support, dist
+
+
+def page_null_exact(k: int, n: int) -> tuple[list[int], list[int], int]:
+    """`(support, integer counts, total)` for `L`. THE SECOND PATH.
+
+    `page_null` convolves float probabilities with `np.convolve`. This multiplies
+    integer polynomials with Python big integers and never sees a float, so
+    rounding cannot be common to both. The two are checked against each other in
+    `tests/jupiter/test_page_trend.py`, and both are checked against literal
+    enumeration of every one of the `(k!)^n` rank assignments at sizes where that
+    is tractable -- a third route that shares no arithmetic with either.
+    """
+    weights = range(1, k + 1)
+    per_block = [sum(j * r for j, r in zip(weights, perm))
+                 for perm in itertools.permutations(range(1, k + 1))]
+    lo, hi = min(per_block), max(per_block)
+    block = [0] * (hi - lo + 1)
+    for v in per_block:
+        block[v - lo] += 1
+    counts = [1]
+    for _ in range(n):
+        out = [0] * (len(counts) + len(block) - 1)
+        for i, a in enumerate(counts):
+            if a:
+                for j, b in enumerate(block):
+                    out[i + j] += a * b
+        counts = out
+    return list(range(lo * n, hi * n + 1)), counts, sum(counts)
+
+
+def achievable_p_values(k: int, n: int) -> list[tuple[int, fractions.Fraction]]:
+    """Every upper-tail p-value the design can produce, as exact rationals.
+
+    `[(L, P(L' >= L))]` descending in `L`. A discrete null admits only these; any
+    other number quoted as a p-value on this design is an interpolation. At
+    `k = 4`, `n = 5` there are 51 of them, the smallest non-zero being
+    `1 / 24^5 = 1.2558674e-07`.
+    """
+    support, counts, total = page_null_exact(k, n)
+    out, cum = [], 0
+    for idx in range(len(counts) - 1, -1, -1):
+        cum += counts[idx]
+        out.append((support[idx], fractions.Fraction(cum, total)))
+    return out
+
+
+def critical_value(k: int, n: int, alpha: float = ALPHA) -> dict:
+    """The attainable level of the trend clause, and its true size.
+
+    A discrete test cannot in general have size exactly `alpha`. The critical
+    value is the smallest `L` whose exact upper-tail p is at or below `alpha`,
+    and `effective_size` is that p -- the test's ACTUAL false-positive rate,
+    always at or below the nominal one. At `k = 4`, `n = 5`, `alpha = 0.05`:
+    `L_crit = 137`, `effective_size = 0.037002877`, and the next coarser rung
+    `L = 136` reads `0.052384114`, above `alpha`. Twelve of the 51 achievable
+    p-values sit at or below `0.05`, so the level is reachable with room.
+    """
+    lattice = achievable_p_values(k, n)
+    below = [(t, p) for t, p in lattice if float(p) <= alpha]
+    if not below:
+        return {"k": k, "n": n, "alpha": alpha, "reachable": False,
+                "L_crit": None, "effective_size": None, "n_below_alpha": 0,
+                "finest_p": float(lattice[0][1]),
+                "n_achievable": len({p for _t, p in lattice})}
+    t_crit, p_crit = below[-1]                     # smallest L still under alpha
+    return {"k": k, "n": n, "alpha": alpha, "reachable": True,
+            "L_crit": t_crit, "effective_size": float(p_crit),
+            "n_below_alpha": len(below),
+            "finest_p": float(lattice[0][1]),
+            "n_achievable": len({p for _t, p in lattice})}
+
+
+def bootstrap_p_floor(n_blocks: int) -> float:
+    """The finest two-sided p a sign-pattern statistic on `n` blocks can produce.
+
+    `2 / 2^n`. It is the granularity floor of the SIZE clause, not of Page's `L`.
+    A paired percentile bootstrap CI over `n` seeds is driven by which seeds agree
+    in sign -- measured on the shipped `contrast()` over 1000 samples, a 5-0
+    unanimity excludes zero 385/385 times, a 4-1 split 20-44% and a 3-2 split
+    0-3.7% -- so "the CI excludes zero" at `n = 5` is very nearly "all five seeds
+    agreed", and the finest two-sided p it can express is `2/32 = 0.0625`,
+    ABOVE 0.05. Page's `L` is not subject to this: it ranks `k` conditions within
+    each block rather than reading one sign, so its outcome space is `(k!)^n`
+    rather than `2^n` -- `24^5 = 7962624` against `2^5 = 32`, a factor of
+    `12^5 = 248832`, or `log2(24) = 4.585` bits per block against 1.
+    """
+    return 2.0 / 2.0 ** n_blocks
 
 
 def page_p_value(observed: float, k: int, n: int) -> float:
@@ -335,7 +425,8 @@ def trend(blocks, *, labels=None, mc_draws: int = 200000) -> dict:
     exact = page_p_value(L, k, n)
     mc = page_p_value_monte_carlo(L, k, n, draws=mc_draws, seed=BOOT_SEED)
     support, dist = page_null(k, n)
-    page = {"L": L, "p": exact, "rank_sums": rank_sums.tolist(),
+    page = {"critical": critical_value(k, n, ALPHA),
+            "L": L, "p": exact, "rank_sums": rank_sums.tolist(),
             "had_ties": had_ties, "k": k, "n": n,
             "null_mean": float(support @ dist),
             "null_min": float(support[0]), "null_max": float(support[-1]),
@@ -374,6 +465,7 @@ def from_ladder(journal=None, **cfg) -> dict:
     # in the difference between two arms that both lose to the mean is an
     # ordering, not a capability. This travels with the verdict rather than
     # being left for a reader to notice.
+    out["n_plus_top"] = rows[RUNGS[-1]]["seeds_favouring_settled"]
     out["uncredited"] = [t for t in RUNGS if not rows[t].get("credited")]
     out["all_credited"] = bool(cur["all_credited"])
     out["cell_means"] = {t: {"settled": rows[t]["settled_mean"],
@@ -409,6 +501,12 @@ def report(journal=None, **cfg) -> str:
       f"{p['null_max']:.0f}], mean {p['null_mean']:.1f}, "
       f"{p['assignments']} rank assignments")
     w(f"    exact p (L >= obs)   {p['p']:.6f}")
+    cv = p["critical"]
+    w(f"    GRANULARITY          {cv['n_achievable']} achievable p-values on the "
+      f"whole support; finest {cv['finest_p']:.3e}")
+    w(f"    alpha={ALPHA:.2f} reachable  {cv['reachable']}  -- critical L = "
+      f"{cv['L_crit']}, TRUE size {cv['effective_size']:.9f}, "
+      f"{cv['n_below_alpha']} achievable p-values at or below alpha")
     w(f"    permutation p        {p['monte_carlo']['p']:.6f}  "
       f"(se {p['monte_carlo']['se']:.6f}, {p['monte_carlo']['draws']} draws, "
       f"seed {p['monte_carlo']['seed']})")
@@ -422,6 +520,18 @@ def report(journal=None, **cfg) -> str:
       f"({iso['n_boot']} draws over {len(cur['seeds'])} seeds, seed "
       f"{iso['seed']}, {iso['distinct_atoms']} distinct resamples)")
     w(f"    excludes zero        {iso['excludes_zero']}")
+    w(f"    seeds favouring settled at the top rung: {cur['n_plus_top']} of "
+      f"{len(cur['seeds'])}")
+    w("")
+    w("    GRANULARITY OF THIS CLAUSE, WHICH IS NOT PAGE'S")
+    w(f"    A percentile CI over {len(cur['seeds'])} blocks is driven by sign "
+      f"agreement, so the finest")
+    w(f"    two-sided p it can express is 2/2^{len(cur['seeds'])} = "
+      f"{bootstrap_p_floor(len(cur['seeds'])):.4f} -- ABOVE alpha={ALPHA:.2f}.")
+    w("    This clause therefore CANNOT be a 0.05-level statement at this seed")
+    w("    count, whatever its interval reads. Page's L is not subject to it:")
+    w(f"    its outcome space is {math.factorial(p['k'])}^{p['n']} = "
+      f"{p['assignments']}, not 2^{p['n']} = {2 ** p['n']}.")
     w("")
     w("    WHAT THE CONSTRAINT IS WORTH -- the same bootstrap WITHOUT isotonic")
     w(f"    unconstrained top    {iso['raw_top']:+.6f}  "

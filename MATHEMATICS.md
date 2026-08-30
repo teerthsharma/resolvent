@@ -683,6 +683,52 @@ conjunction reads `0.040` against a nominal `0.05`, because the trend clause gat
 the miscalibrated one.** Both arms are drawn from the same generator and the verdict
 separates them, so the branch is not vacuous.
 
+**THE GRANULARITY QUESTION, AND THE TWO CLAUSES ANSWER IT DIFFERENTLY.** At five
+seeds a sign-pattern statistic can express no two-sided p finer than
+`2/2^5 = 0.0625`, which is **above** the `0.05` this project quotes; measured on
+the shipped `contrast()` over 1000 samples, a 5-0 unanimity excludes zero
+`385/385` times, a 4-1 split 20-44% and a 3-2 split 0-3.7%, so "the CI excludes
+zero" at `N = 5` is very nearly "all five seeds agreed". That floor is real, and
+it lands on **one** of the two clauses.
+
+**The trend clause clears it.** Page's `L` ranks `k` conditions within each block
+instead of reading one sign, so the outcome space is `(k!)^n = 24^5 = 7 962 624`
+rather than `2^n = 32` — a factor of `12^5 = 248 832`, or `log2 24 = 4.585` bits
+per block against 1, `22.925` bits against `5`. The consequences are exact:
+
+```
+    achievable p-values on the whole support        51
+    finest non-zero achievable p                    1 / 24^5 = 1.2558674e-07
+    achievable p-values at or below alpha = 0.05    14   (L = 137 .. 150)
+    critical value at alpha = 0.05                  L = 137
+    TRUE size of the test at that critical value    0.037002877
+    next coarser rung, L = 136                      0.052384114  (above alpha)
+```
+
+**`alpha = 0.05` is reachable, and `p = 0.016724386` is an exact atom sum of the
+discrete null** — the cumulative count `133 170 / 7 962 624` at `L = 139` — not
+an interpolation onto it. Being discrete the test is conservative: its true size
+is `0.037002877`, not `0.05`. By contrast the sign lattice at `N = 5` has six
+achievable one-sided p-values of which exactly **one** clears `0.05` (unanimity,
+`1/32 = 0.03125`), and **none** of their two-sided partners does.
+
+Three routes to the null, sharing no arithmetic: float probabilities through
+`np.convolve`, integer polynomials through Python big integers, and literal
+enumeration of every one of the `(k!)^n` rank assignments with `L` rebuilt from
+whole tables. The first two agree to `1.388e-17` at `k=4, n=5`; all three agree
+**exactly** at `(3,3)`, `(4,3)` and `(3,4)`, where enumeration is tractable.
+
+**The size clause does not clear it, and cannot.** It IS a paired percentile
+bootstrap over five seeds, so `0.0625` is its floor and no interval it prints is
+a `0.05`-level statement at this seed count. The ladder's top rung is a **4-1
+split** — the regime Venus measured at 20-44% — and its unconstrained interval
+duly covers zero at `[-0.004711, +0.033167]`. Only the one-sided PAVA lift
+carries it across. **The granularity floor and the estimator bias are two
+independent reasons to distrust the same clause, and they push the same way.**
+The pre-registered branch is not refitted after the fact: `RISES` stands as
+written, with the trend clause sound at its own level and the size clause now
+known to be incapable of the level it was written at.
+
 **AND ROW G OUTRANKS ALL OF IT.** `E_LADDER_PREREGISTERED_READING.md` credits a rung
 nothing in either direction when either cell sits at or above predict-the-mean, and
 it fires on **three of the four rungs this statistic is computed on**:
@@ -807,9 +853,60 @@ control runs**. A scramble control calibrated to expect zero residual separation
 vacuous before it runs, and it is **more** vacuous than the amendment's own figure
 implies, not less. That is the fifteenth pattern, killed pre-birth.
 
+
 ---
 
-## 15. LIMITS ADDED BY SECTIONS 11–14
+## 15. A COVERAGE TOOL THAT SCANNED NOTHING
+
+`scale/chase_struck_coverage.py` walks every `.md` and `.py` the shipped
+struck-constant test does not cover, and reports any struck constant asserted
+without a strike marker in its paragraph. It printed
+`SCANNING 0 PATHS THE SHIPPED CHECK DOES NOT COVER`, `uncovered .md: 0,
+uncovered .py: 0`, and **exited 0**. `RUN`.
+
+**The root cause is a scope error in one expression.** The exclusion list
+`(".git", "__pycache__", ".pytest_cache", ".claude", ".benchmarks")` was tested
+against `p.parts` — the components of the **absolute** path. Every agent
+worktree in this project is checked out under `<repo>/.claude/worktrees/<name>/`,
+so `.claude` was a component of the absolute path of **every file in the tree**
+and the filter dropped all of them. Measured on this checkout: `366` candidate
+files, `0` surviving the absolute filter, `365` surviving the same filter applied
+to `p.relative_to(ROOT).parts`.
+
+**Its own must-fire kept passing throughout**, because that control feeds text
+directly to `scan_text` and never exercises target selection. **A matcher control
+is not a coverage control**, and this is the cleanest available example of the
+difference: the assertion that fired was true and the instrument was blind.
+
+**The fix is the scope correction plus a refusal.** `collect_targets` filters on
+the path relative to the scan root, and `main` returns 1 rather than 0 on an
+empty target list — a tool that walks zero paths passes every input and must not
+report success. `tests/jupiter/test_struck_coverage_scans.py` plants a struck
+constant in a file on disk that target selection must reach, requires it to be
+found, requires the same text carrying a strike marker **not** to be found, and
+requires a file with no struck constant to be silent — three arms, because two
+would pass for a scanner that flagged everything. **6 of its 8 tests fail against
+the unfixed scanner; the 8th states the root cause without reference to the
+refactor so a later rewrite cannot make it vacuous.**
+
+**What the fix exposed.** With `346` paths now scanned the tool exits 1 on `27`
+candidates. They split into two classes, and the file's own docstring already
+warns that layer 2 is a text scan and text scans cry wolf. Prose **about** a
+strike whose paragraph carries no marker: the scanner's own docstring quoting
+`1.471448` in its must-fire description, `MISTAKES.md:206` discussing
+`5.4944e-13`, `PREREGISTRATION_HOLE_AUDIT.md:424` running a
+`git log -S "0.743864"` forensic. Live assertions: `−1.389` with `R² 0.9938` in
+a `RESEARCH.md` table row, and the three newly struck U1/N3 constants
+`0.743864`, `0.656532`, `0.816955` asserted in
+`tests/cameron/test_harmonic_attribution.py:123-124` and mirrored in
+`tests/deimos/`. **`−1.389` alone accounts for 17 of the 27** and is a short
+enough string to match inside longer numbers, so the tally is a candidate list
+and not a finding. Adjudicating it is not this section's business; surfacing it
+at all required the scanner to look at a file first.
+
+---
+
+## 16. LIMITS ADDED BY SECTIONS 11–15
 
 §10 predates these sections and does not cover them.
 
@@ -818,15 +915,24 @@ point; `absorbing_chain` and `fixed_point` remain callable directly and are not
 guarded, and the law is defined only for the undamped walk. Its agreement margin is
 measured at three graph sizes on one machine in float64 and no conditioning bound is
 proved. §12's verdict is `RISES` under a branch that was fixed before the statistic
-ran, but its size clause fires on the strength of a one-sided estimator bias, its
+ran, but its size clause fires on the strength of a one-sided estimator bias AND
+cannot express a p finer than `2/2^5 = 0.0625` at five seeds, so it is structurally
+incapable of the `0.05` level it was written at; its
 trend clause survives only 2 of 5 single-seed deletions, and the percentile bootstrap
 behind both has `5⁵ = 3125` distinct atoms at five seeds; the calibration sweep is
 200 tables per arm under Gaussian noise at one scale and does not establish the error
-rate under the ladder's real noise. §13's `C` is fit at four beds with coarse `m`
+rate under the ladder's real noise, and the trend clause's own TRUE size is
+`0.037002877` rather than `0.05`, so power quoted against a nominal `0.05`
+overstates it. §13's `C` is fit at four beds with coarse `m`
 grids — `m_50` for the `n/s = 4` bed is bounded only to `(32, 40]` — under a Gaussian
 measurement ensemble, and `news_mat` in `scale/impact.py` has not been shown to be
 one; the line is a necessary condition, never a sufficient one, and nothing here
-wires `UNDER-SAMPLED` into an IMPACT cell. §14 is arithmetic about independent
+wires `UNDER-SAMPLED` into an IMPACT cell. §15's fix is verified on this checkout and on
+synthetic roots; it is not verified on a checkout whose absolute path contains
+none of the skipped names, where the old and new filters agree and the test
+falls through to an equality branch. The 27 candidates the fix exposed are
+unadjudicated, and `−1.389` is short enough to match inside longer numerals, so
+the count is an upper bound on real hits rather than a finding. §14 is arithmetic about independent
 uniform unit vectors and says nothing about the vectors any trained arm actually
 holds; the order-statistic quadrature treats the `C(k,2)` pairwise products as
 independent, which they are not, and is corroboration for the sampled figure rather
