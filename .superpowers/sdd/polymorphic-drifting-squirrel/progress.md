@@ -389,3 +389,290 @@ git commands per agent.`
   `ceq/hf_artifact/capability_table_v0.json` retain the `--task` denial in stored
   strings. The generator is fixed; regenerating is a **table cut**, which is a
   measurement decision — assigned to Mercury, who holds execute.
+
+## Iteration 1 — Titan and Jupiter COMPLETE. Iteration 1 closed.
+
+### Titan (moon of Saturn) — the verdict guards are in
+
+`tests/cameron/test_verdict_guards_partial_ladders.py` **3/6 RED before, 6/6
+after**; the only other `verdict()` consumer, `tests/chase/test_m3_ladder_task.py`,
+held **14/14** on both sides. Controller integration check: **20/20**.
+
+This upgrades H-1, D-1 and D-2 from READ to **RUN**. Rows F and H can no longer
+claim a theory death on a partial ladder, and row C can no longer print a
+universal it scanned only two rungs for.
+
+`Ruling: house-events.jsonl conflicted on this merge and will conflict on every
+parallel planet merge, because tests/cameron/conftest.py:39 appends one JSON line
+per test to it on every run. Resolved by union and registered
+"house-events*.jsonl merge=union" in .gitattributes so git does it automatically
+from now on. Four pre-existing invalid-escape lines were verified present at HEAD
+before the merge and left untouched. Cost if wrong: a log file keeps duplicate
+rows, which it is already designed to tolerate.`
+
+### Jupiter (MYCROFT) — 2252 lines, `tests/jupiter/` 27/27 green
+
+Delivered `scale/kirchhoff.py`, `scale/page_trend.py`, `scale/rip_line.py`,
+`scale/coherence_floor.py`, and `results/e_ladder_trend.txt`.
+
+#### M4 says RISES — and Jupiter printed the three things that undercut it
+
+Page's `L = 139`, exact `p = 0.016724`, permutation `p = 0.016255`. Isotonic top
+`+0.016035`, CI `[+0.002826, +0.033167]`. Then, against his own result:
+
+- The **same bootstrap without the monotone constraint** reads
+  `[-0.004711, +0.033167]` — **covers zero** — and its lower bound reproduces the
+  shipped `ci_lo` exactly. The isotonic constraint is what manufactures the
+  positive interval.
+- PAVA pooled in **13.07 %** of resamples and lifted the bound `+0.007537`.
+  Pooling can only ever raise a low top.
+- The trend clause survives **2 of 5** seed deletions.
+- **Row G already credits 3 of the 4 rungs nothing** — both cells sit above
+  predict-the-mean at `t2`, `t8`, `t32`.
+
+Jupiter's verdict, and it is the right one: **"RISES is an ordering, not a
+capability."** All three caveats print beside the verdict rather than in a
+footnote.
+
+`Ruling: M4 is ACCEPTED as the adjudicator and its answer on the existing ladder
+is recorded as RISES-as-ordering, NOT as a capability claim. The v11.1 amendment
+specified M4 to replace eyeballing four rungs, and it did — but it would have
+returned a headline the evidence does not support had Jupiter not built the
+unconstrained comparison beside it. Any future use of M4 must print the
+unconstrained CI next to the isotonic one. Cost if wrong: a verdict reads more
+cautious than it needed to.`
+
+Calibration (200 drawn tables per arm): flat truth → size clause alone `0.325`,
+full `RISES` `0.040`; rising truth → `0.810`. **The trend clause gates the
+miscalibrated one** — the conjunction is calibrated even though a clause is not.
+
+#### THE AUTHOR'S OWN CONSTANT IS WRONG, verified two independent ways
+
+The v11.1 amendment states random role coherence `≈ 0.147` at `d = 256, k = 16`.
+
+Measured: **`0.174795`**, Monte-Carlo CI `[0.174460, 0.175131]`, corroborated
+**`0.174499`** by order-statistic quadrature — two paths that fail differently,
+agreeing. The author's figure is **15.8 % low**.
+
+**Cause:** the union bound runs over `C(k,2) = 120` pairs, not over `k`.
+
+The Welch floor is exactly `0` at `k ≤ d`, as stated. **M5's conclusion
+strengthens rather than weakens**: the scramble control's expected residual is
+*larger* than the author believed, so calibrating that control to zero is even
+more clearly vacuous than the amendment argued.
+
+#### M3 Kirchhoff dual oracle — clean, with one honest hole
+
+Agreement gaps `2.220446e-16` / `8.992806e-15` / `9.636736e-14` at 9 / 62 / 1202
+nodes. **The must-fire fires**: a planted off-by-one moves `ω` by `0.175`–`0.316`
+and is caught **6/6**. Law wired into `e4_harmonic.measure()`.
+
+Stated limit: `absorbing_chain` and `fixed_point` remain callable directly,
+bypassing the law, and **both oracles share `case_graph` — so a builder defect
+fools both.** The dual-oracle law catches solver bugs, not builder bugs. That
+distinction is now on the record rather than assumed away.
+
+#### Second moon defect of the round, caught by its planet
+
+Jupiter's M2 moon shipped two beds **both at `n/s = 16`** and reported `C`
+"exactly stable" — which was forced by the design, since `ln(n/s)` is a single
+number there. A vacuous control. Jupiter caught it and added ratio-varying beds:
+`C = 1.44270` at `n/s ∈ {16, 64}`, **`1.80337` at `n/s = 4`**. `C` is per-bed and
+reusing it across beds is a guess.
+
+`Ruling: two of the round's moons (Neptune's, Jupiter's) produced work their
+planet rejected, and in both cases the planet caught it. The topology is working
+as designed — the planet is the review seat — but moon output is now treated as
+UNVERIFIED by default and must be re-measured by its planet before entering a
+report. That clause is already in BASE_PROMPT.md. Cost if wrong: planets spend
+time re-checking moon work that was fine.`
+
+## Iteration 1 — Deimos (moon of Mars) COMPLETE. 8 filed, 8 fired, 3 refuted before filing.
+
+Merged. `tests/deimos/` 7/8 in the integrated tree — see the flip below.
+
+| # | Attack | Class |
+|---|---|---|
+| 1 | **`Eprocess.value`'s `math.exp(logsumexp)` overflows inside `eprocess_perdraw`'s own designed operating range** — crashes at draw 10135 of a realistic 10240-draw pooled run. The decision was already made at draw 67. **And the must-fire calibration battery never exercises the `Eprocess` class that actually reads live data** | RUN |
+| 2 | **`nash_operator`'s live path shares one `safe_tau` across the whole batch** — the exact anti-pattern `negation_scope.py:462-466` names and avoids for the identical construction. Measured to roughly halve mean stance magnitude | RUN |
+| 3 | **`qre_stance`'s residual-reporting safety mechanism is dead code** — `return_residual` consumed nowhere outside its own definition, no call site checks `tau > tau*`, and a constructed below-threshold game has multiple real equilibria | RUN |
+| 4 | **`tests/cameron/test_harmonic_attribution.py` cites nine functions/constants on `negation_scope` that do not exist anywhere in the tree** — an entire "pre-registered" contract clause with fabricated-looking pilot numbers and **zero possible producer**. 11/11 fresh `AttributeError` | RUN |
+| 5 | `e4_harmonic.case_graph`'s `lru_cache` shares a mutable adjacency across calls | dormant |
+| 6 | `eprocess.calibrate`'s `max_peak` clamp, same overflow class | dormant |
+
+**Attack 4 explains the 11 pre-existing failures** that Saturn and Mercury both
+reported and left untouched. They are not a broken test — they are a test whose
+producer was never written, carrying pilot numbers nothing could have produced.
+This compounds Jupiter's finding that both Kirchhoff oracles share `case_graph`:
+attack 5 is the mutable-cache half of that same hole.
+
+`Ruling: ceq/nash.py is REOPENED as a live candidate on the strength of attack 2.
+It was measured once at 5.8198 / 4.2107 / 2.6151 OOD NRMSE with every arm above
+predict-the-mean and abandoned, and a batch-shared tau that halves stance
+magnitude is a sufficient candidate cause for that failure. Deimos correctly
+called it A cause on one seed, not THE cause, so this licenses a re-run and not a
+conclusion. This is the napkin note's page-5 game-theory thread, so it is squarely
+in scope. Cost if wrong: one re-run of a module already written.`
+
+### Deimos's own instrument was bitten by the class he was hunting
+
+`test_qre_residual_is_reported_but_never_read_anywhere_in_the_repo` passed 8/8 in
+his isolated worktree and **fails in the integrated tree**. His walk is
+`root.rglob("*.py")` excluding only `.git` and `node_modules` — and the primary
+repo now holds **nine agent worktrees under `.claude/worktrees/`**, each a full
+copy.
+
+Controller measurement: **12 hits — 10 phantom copies of `ceq/nash.py` inside
+`.claude/worktrees/`, 1 real, 1 self.** The finding is untouched; the instrument
+over-finds.
+
+`Ruling: this is a NEW mistake type and it goes in MISTAKES.md — "a repo-wide
+search whose walk includes nested checkouts, reporting phantom hits and inverting
+a true absence claim into a false presence." It is the sign-flipped twin of entry
+12 (the search structurally incapable of finding anything, which reported zero and
+was used to strike a colleague's evidence). Deimos is resumed to fix his walk, to
+sweep for the same defect in other repo-wide walks, and to write the entry;
+Saturn owns MISTAKES.md and folds it in. Other authors' directories are reported,
+not touched. Cost if wrong: one test scopes its walk more tightly than strictly
+needed.`
+
+`Ruling: the nine agent worktrees under .claude/worktrees/ are NOT pruned. Their
+commits are merged and pruning would be tidier, but the harness owns those
+directories, two planets are still live inside them, and a test that breaks
+because of what is nested in the tree is the test's defect to fix, not a reason to
+delete working directories. Cost if wrong: the tree stays larger than it needs to
+and future repo-wide walks must keep excluding .claude.`
+
+## Deimos second pass — the walk is fixed structurally
+
+`tests/deimos/` **8/8 green** in the integrated tree. All eight attacks still fire.
+
+Fix: replaced `root.rglob("*.py")` plus a directory blocklist with
+**`git ls-files -- '*.py'`** — scoped to the tracked repo rather than the
+filesystem subtree, so it is immune to nested worktrees *regardless of how many
+exist*. That is the right shape: a blocklist would have needed extending every
+time a new nesting appeared.
+
+Swept the tree for the same class (`rglob` / `os.walk` / `Path.glob` /
+`glob.glob` / `iterdir`) — **4 other hits, all confirmed safe and left
+untouched**: `tests/chase/test_eprocess.py` (scoped to `results/`),
+`tests/chase/test_hub_package_hardening.py` (non-recursive, non-matching
+pattern), `scale/chase_struck_coverage.py` (already excludes `.claude`),
+`tests/chase/test_capability_table.py` (scoped to a local output dir).
+
+Deimos noted honestly that the 12/10/1/1 phantom-hit counts are the controller's,
+measured in the integrated tree, and **not independently reproduced by him** —
+his worktree contains no nested worktrees. The fix is structural, so it does not
+depend on that count being right.
+
+New mistake type written up in `tests/deimos/DEIMOS_REPORT.md` under "Addendum",
+for Saturn to fold into `MISTAKES.md`.
+
+## Iteration 2 — in flight
+
+| Planet | Unit | Status |
+|---|---|---|
+| Saturn | Vector consequence corpus `c1_propagate` — `[n, s]` label, k-hop reading, closed-form truncation law, do()-bit movement test | running |
+| Neptune | Per-row arm at **pilot geometry** — write the pivot term at every position, new tuple beside `CELLS`, own `m3_flops` term, degenerate-setting bind | running |
+| Mercury | `Eprocess` overflow at draw 10135 of its own 10240 range + point the calibration battery at the class production uses; then the capability table cut | dispatched |
+
+### Still queued, not yet dispatched
+
+- **Straight-through argmax cell** — resolves Mars's GREEN attack, which showed
+  `argmax`'s alpha carries no `grad_fn` (gate gradient `0.0` against `52.32`
+  twin / `55.15` settled), so the headline `-0.118456` confounds mixture-vs-lookup
+  with trained-vs-untrained selection. Blocked: touches `m3_quintuple.py`, held by
+  Neptune.
+- **`ceq/nash.py` re-run with per-example `tau`** — Deimos's attack 2 reopened it.
+  Free file, dispatch when a seat frees.
+- **`tests/cameron/test_harmonic_attribution.py`** — nine cited symbols exist
+  nowhere; needs a ruling on whether to write the producers or strike the clause.
+  Deferred deliberately: it is a pre-registration question, so Venus should see it
+  before anyone edits.
+
+## Iteration 2 — Saturn COMPLETE. The vector corpus exists.
+
+Merged. `tests/cameron/test_c1_propagate_registration.py` **23/23** (RED first:
+19 failed / 0 passed). Saturn's full run: 143 passed, 0 failed, including 106
+regression tests across six registry and `calibrate_bar` consumers.
+
+**`c1_propagate_t{1,2,8,32}`** — label `[n, s−t*]`,
+`y_p = Σ_{h=1..t*} (Π a_i) b_{p−h}`. Registered in `M3_TASKS` and `E_T_STAR`,
+routed in `e_hop_reading`. **No new channel** — reuses `CH_DRIVE`/`CH_FLIP`,
+`d_model` unchanged, and `t*` rides in `f` (the chain head) so the dial
+round-trips through a signature every consumer already passes.
+
+**Nilpotent regime, chosen deliberately.** The sum terminates, so `t*` is an exact
+hop count rather than a tolerance. That puts **both** the truncation law
+`sqrt((t*−k)/t*)` **and** the flipper dependence `2√t*/(s−t*)` in closed form with
+no fitted constant, and `k = t*+1` is **bitwise exact** — termination is shown,
+not asserted.
+
+### Saturn departed from the controller's literal spec, and was right to
+
+The dispatch said the label is `[n, s]`. Saturn shipped `[n, s−t*]`:
+
+> *"A strictly causal operator raised to `t*` vanishes on the first `t*`
+> coordinates, always — causality and uniform depth cannot both hold on all `s`
+> positions. `[n, s]` would ship `t*` entries of `sd 0`, the fourteenth strike in
+> a new shape."*
+
+`Ruling: ACCEPTED over the plan text. The controller's [n, s] would have shipped
+constant-label positions, which is precisely the vacuity pattern this corpus
+exists to avoid. The spec's binding requirement was a vector label whose every
+position is informative, not a particular width. Cost if wrong: none identified —
+the truncated width is the one consistent with causality.`
+
+### VENUS'S PREDICTION SURVIVES THE NEW CORPUS, AND TIGHTENS
+
+Her §6 demanded recomputation against whatever label shipped. Against C1's
+weighting `w = 1/(s−t*)`, the predicted `settled` margins are
+
+`−0.024827` / `−0.007715` / `+0.004809` / `+0.010545`
+
+**All eight remain below the 13-seed resolution `0.027260`, and two are *smaller*
+than what she filed.** These are `DERIVED` recomputations, not measurements —
+nothing has trained on C1 yet (see below).
+
+C1 removes her §2b and §2c but leaves **§2a untouched**. So the corpus does
+**not** rescue the contract's optimism. What it buys is different and better:
+
+> *"the label is uniform by construction, so a null is the arm"*
+
+`Ruling: this is the round's central result so far and it is worth stating
+plainly. The corpus was built to test the author's ambition and the pre-registered
+counter-prediction still stands against it. But the old nulls were UNINTERPRETABLE
+— confounded by a single-row write, a resolvent oracle, and a task softmax is
+provably optimal on. A null on C1 is interpretable: it is the arm. Venus's
+falsifier 5 collapses from a confound into a one-line test. The round has
+converted an unanswerable question into an answerable one, which is what the
+first nine iterations were for.`
+
+### Saturn flagged the weak clause in his own bundle
+
+The equal-variance clause **does not reject** the prefix scan at `t*=1` — reads
+`0.0638`, inside his own `0.10` tolerance, because 63 of 64 positions are
+uniformly *uninformative* rather than uniformly deep. The zero-hop clause rejects
+at all four rungs. **Two clauses failing differently; either alone would have
+admitted the worst rung.** That is the correct defence and he said so unprompted.
+
+He also found **the shipped flipper band is too loose for this family**: exact
+dependence `0.031746` at `t*=1` and `0.045620` at `t*=2`, both under
+`bar_verdict`'s default `0.05` tolerance, so it would accept a flipper-blind
+label at those rungs. Asserted as a test rather than left to be rediscovered;
+anti-vacuity duty is carried by the movement test, which pins the exact bitwise
+support.
+
+### C1 is registered and calibrates but CANNOT TRAIN YET
+
+`run_arm` raises `RuntimeError: The size of tensor a (64) must match the size of
+tensor b (56)` — **loudly, not silently**. `56 = s − t*` at `s=64, t*=8`. C1 needs
+Neptune's per-row readout to train, and Saturn correctly touched neither
+`m3_quintuple.py` nor any weights.
+
+**The integration of Saturn's corpus with Neptune's arm is the round's moment of
+truth**, and both halves now exist or are in flight.
+
+One shared function changed: `calibrate_bar`'s `payload_only` broadcast, verified
+**bitwise-identical** for scalar labels (`1.366458892213088`,
+`1.050147990558408`).

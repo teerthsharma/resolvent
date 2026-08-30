@@ -536,3 +536,298 @@ published. The depth lower bound of §2 is conditional on the 1-vs-2-cycle conje
 And `results/m3_capability.txt:1212` is a **stale trap**: it records
 `e3_t8 k=2 NRMSE=0.815162` from before `b[s-1] = 0` and describes a corpus that no
 longer exists.
+
+---
+
+## 11. THE SECOND EXACT ORACLE — KIRCHHOFF AGAINST THE ABSORBING CHAIN
+
+§7's label is one computation of the harmonic measure `ω_v = P_v(τ_a < τ_b)`. The
+matrix-tree theorem gives a second, and the two agreeing is now an instrument law
+rather than an unstated hope. `scale/kirchhoff.py`, `RUN`.
+
+**The chain.** `L = D − A` on the merged component, `τ(G)` its spanning-tree count,
+`F(x | y)` the number of spanning 2-forests separating `x` from `y`.
+
+1. **Kirchhoff.** `det(L_g) = τ(G)` for `L_g` the Laplacian with row and column `g`
+   deleted. Every cofactor is the same number.
+2. **All-minors.** `det(L_{xy}) = F(x | y)`.
+3. **Resistance.** Ground at `x`, so `M := (L_x)^{-1}` has `M_xx = M_xy = 0` and, by
+   Cramer, `M_yy = det(L_{xy}) / det(L_x)`. Since
+   `R(x,y) = (e_x − e_y)ᵀ L⁺ (e_x − e_y)` and `M` differs from `L⁺` only along the
+   all-ones direction, which cancels in the difference,
+   **`R(x, y) = F(x | y) / τ(G)`** — effective resistance is a ratio of forest counts.
+4. **Harmonic measure.** Unit current `a → b` gives `v = L⁺(e_a − e_b)`, and
+   polarisation on `(e_x − e_b) − (e_a − e_b) = e_x − e_a` gives
+   `v(x) − v(b) = ( R(x,b) + R(a,b) − R(x,a) ) / 2`. Normalising by
+   `v(a) − v(b) = R(a,b)` yields the harmonic function with boundary values 1 at `a`
+   and 0 at `b`, which is `ω`. **Now ground at `b`**: `R(x,b) = M_xx`,
+   `R(a,b) = M_aa`, `R(x,a) = M_xx + M_aa − 2M_xa`, and the three-term expression
+   collapses to
+
+```
+    ω_x  =  M_xa / M_aa  =  F(x, a | b) / F(a | b)
+```
+
+**with no cancellation of large resistances, and one solve — `L_b z = e_a` — rather
+than an inverse.**
+
+**It is independent of §7's solve, and that is structural rather than asserted.** The
+chain path inverts `I − Q` with `Q = D^{-1}A` restricted to the nodes that are neither
+endpoint. The Kirchhoff path solves a symmetric unnormalised `D − A` on the whole
+component, in which `a` is an ordinary interior column and only `b` is removed. The
+two differ in matrix, normalisation, right-hand side and index map. **`L_T` and
+`I − Q` are diagonally related — `I − Q = D^{-1} L_T` — which is exactly why the
+Kirchhoff route does not form `L_T`.**
+
+**Both ends of the derivation are checked against brute force, not assumed.** Steps 1
+and 2 are compared to enumeration of spanning trees and separating 2-forests over
+every edge subset on drawn 7-node graphs; step 4's forest ratio is compared to the
+grounded solve node by node. `tests/jupiter/test_kirchhoff_agreement.py`, 11 tests.
+
+**The law, and its measured margin.** `max |ω_kirchhoff − ω_chain| < 1e-10`, enforced
+in `e4_harmonic.measure()` before any number is read off an instance. Measured gaps,
+float64, this machine:
+
+```
+    six drawn Erdős–Rényi instances, n = 9              2.220446e-16
+    SMALL_CASE,     62 merged nodes,   60 transient     8.992806e-15
+    SHIPPED_CASE, 1202 merged nodes, 1200 transient     9.636736e-14
+```
+
+**The tolerance sits three orders above the largest clean gap and nine below the
+smallest defect.** A scratch copy of the chain carrying one off-by-one — dividing by
+`len(neighbours) + 1`, the bug you get by counting a node among its own neighbours —
+moves `ω` by between `1.749951e-01` and `3.156170e-01` over the same six drawn
+instances, and the check rejects it on **6 of 6**. The defect is survivable by
+construction: every row stays strictly sub-stochastic, so the solve succeeds and
+returns plausible numbers in `[0,1]`, and nothing downstream would have noticed.
+
+**Scope.** The forest identity is the identity for the **undamped** walk. At
+`kill > 0` the operator is not a random walk on `G` and the law raises rather than
+comparing two different objects and reporting the difference as a defect.
+
+---
+
+## 12. THE LADDER VERDICT AS A NAMED STATISTIC — PAGE'S L AND ISOTONIC REGRESSION
+
+`scale/e_ladder.py:217` decides row A against row B by
+`mono = all(b >= a for a, b in zip(deltas, deltas[1:]))`. **That is a monotonicity
+check on four numbers, and it has no null, so it has no error rate**: four
+independent noisy numbers land in non-decreasing order by chance one time in
+twenty-four. `scale/page_trend.py` supplies the null. `RUN`.
+
+**Page's L.** Rank the `k` conditions within each of the `n` blocks, sum ranks per
+condition into `R_j`, take `L = Σ_j j · R_j`. Under exchangeability within a block
+every one of the `k!` rank assignments is equally likely and blocks are independent,
+so **the null distribution of `L` is the `n`-fold convolution of the `k!`-point
+distribution of `Σ_j j·r_j`** — exact, no table, no normal approximation. At `k = 4`,
+`n = 5` that enumerates `24⁵ = 7 962 624` assignments; the support is `[100, 150]`,
+the mean `125`, and the distribution is symmetric, which is what makes the
+one-sidedness a choice rather than an artefact.
+
+**The pre-registration, exhaustive before the data.**
+
+```
+    RISES := page_p < 0.05  AND  isotonic top rung > 0 with CI excluding zero
+    FLAT  := neither clause fires
+    SPLIT := exactly one clause fires
+```
+
+`SPLIT` exists because "both / neither" leaves a hole, and this repo has already paid
+for one: row H was added to `E_LADDER_PREREGISTERED_READING.md` because rows A–G all
+conditioned on settled winning somewhere. **Neither clause can pick a rung**: `L`
+quantifies over every rung by construction and the size clause reads the last rung,
+fixed by the ladder's definition.
+
+**THE READING, on the complete CPU ladder — five seeds, four rungs.**
+
+```
+    rank sums R_j       8.0   12.0   13.0   17.0
+    L = Σ_j j·R_j       139        support [100,150], null mean 125
+    exact p             0.016724
+    permutation p       0.016255   (se 0.000283, 200 000 draws, seed 0)
+    isotonic fit        −0.036025  −0.017215  −0.004284  +0.016035
+    top rung            +0.016035  CI [+0.002826, +0.033167]
+```
+
+**The pre-registered branch returns `RISES`.** Two independent p-value paths — an
+exact convolution and a permutation draw — agree to `4.7e-4`, inside `1.7` standard
+errors.
+
+**Two things that verdict rests on, both measured, neither softened.**
+
+**The size clause is carried by the constraint, not by the data.** The same bootstrap
+without the monotone constraint gives the top rung at `+0.016035` with CI
+`[−0.004711, +0.033167]`, which **covers zero** — and whose lower bound reproduces
+`results/e_ladder_reading.txt`'s shipped `ci_lo` of `−0.004711` **exactly**, so the
+two bootstraps are the same bootstrap. PAVA pooled the top rung in `13.07%` of
+resamples and lifted the lower bound by `+0.007537`. **Pooling only ever raises a low
+top, never lowers a high one**, so that lift is a property of the estimator under a
+flat truth.
+
+**The trend clause survives 2 of 5 single-seed deletions.** Dropping seed 1 leaves
+`p = 0.003864` and seed 2 leaves `p = 0.021741`; dropping seed 0 or 4 leaves
+`p = 0.050411` and seed 3 leaves `p = 0.072401`.
+
+**But the conjunction is calibrated even though one of its clauses is not, and that
+is the argument for requiring both.** Over 200 drawn tables per arm (`5×4`,
+`sd = 0.03`, seed 11, `n_boot = 300`):
+
+```
+    flat truth      trend 0.065   size 0.325   RISES 0.040
+    rising truth    trend 0.810   size 1.000   RISES 0.810
+```
+
+**The isotonic clause alone fires on a third of flat tables — six times nominal. The
+conjunction reads `0.040` against a nominal `0.05`, because the trend clause gates
+the miscalibrated one.** Both arms are drawn from the same generator and the verdict
+separates them, so the branch is not vacuous.
+
+**AND ROW G OUTRANKS ALL OF IT.** `E_LADDER_PREREGISTERED_READING.md` credits a rung
+nothing in either direction when either cell sits at or above predict-the-mean, and
+it fires on **three of the four rungs this statistic is computed on**:
+
+```
+    rung      settled       twin    credited
+    e3_t1    0.994399   0.958373    yes
+    e3_t2    1.013958   0.996743    no
+    e3_t8    1.096009   1.091725    no
+    e3_t32   1.103711   1.119745    no
+```
+
+**A trend in the difference between two arms that both lose to predict-the-mean is an
+ordering, not a capability.** `RISES` is a statement about the contrast as a number.
+**It is not a claim that settling bought anything at depth**, and `page_trend.report()`
+prints these cell means beside the verdict so that it cannot be read as one. Replacing
+an eyeball with a statistic sharpens the reading of a quantity the ladder's own
+pre-registration had already declined to credit.
+
+---
+
+## 13. THE ATTRIBUTION CLAIM'S SAMPLE-COMPLEXITY LINE
+
+`impact_attribution` regresses the query row `B[query, :]` of length `N` against
+`n_samples` news vectors — the noiseless system `y = A b`
+(`scale/impact.py:1013-1021`, `READ`). Each row of the planted `B` carries
+`SUPPLIERS_PER_NODE + COMPETITORS_PER_NODE = 4` nonzeros
+(`scale/impact.py:88-89, 405-410`, `READ`). **The fixed sparsity is in the ROW, not
+the column** — a column's nonzero count is however many rows chose it and is
+unbounded — so the line below is stated for the row the recovery actually reads.
+
+**The line.** Recovering an `s`-sparse vector in `R^n` from `m` noiseless linear
+measurements is possible at all only in the RIP regime
+
+```
+    m  ≥  C · s · ln(n / s)
+```
+
+**Below it an arm's attribution failure carries no information about the arm**: there
+is provably no procedure separating the planted `B` from an adversarial one
+consistent with the same undersampled measurements. `scale/rip_line.py:verdict`
+returns the exact string `UNDER-SAMPLED` there and `ADMISSIBLE` at or above, so a
+cell prints a regime rather than a loss.
+
+**`C` is measured, and the oracle transitions across the line.** Gaussian `A`, signed
+`s`-sparse `b` with uniform support and Rademacher signs, drawn not built; recovery
+by L1 basis pursuit (`scipy.optimize.linprog`) and, independently, by orthogonal
+matching pursuit. **Every grid reads `0.00` at its bottom and at least `0.96` at its
+top for basis pursuit** — the sweep is non-degenerate at both ends, which is the
+whole requirement.
+
+```
+    n     s    n/s    ln(n/s)     m_50 (BP)   C (BP)     m_50 (OMP)  C (OMP)
+     64    4    16    2.772589       16       1.44270       24       2.16404
+    128    8    16    2.772589       32       1.44270       48       2.16404
+    256    4    64    4.158883       24       1.44270       28       1.68314
+     64   16     4    1.386294       40       1.80337       64       2.88539
+```
+
+**`C` IS NOT BED-INVARIANT, AND THE FIRST TWO BEDS COULD NOT HAVE SHOWN THAT IT WAS.**
+They share `n/s = 16`, so `ln(n/s)` is the same number in both and `m_50` tracking
+`s` **forces** `C` to repeat whatever the truth is. Varying the ratio instead:
+`C = 1.44270` holds at `n/s = 16` and `n/s = 64`, and rises to `1.80337` at
+`n/s = 4` — 25% higher. `s·ln(n/s)` is the asymptotic scaling and its constant creeps
+as `n/s` falls toward 1. **The operational consequence is that `C` must be re-swept
+per bed; reusing `1.44270` elsewhere is a guess.** The two solvers likewise disagree
+by a factor of 1.2 to 1.6 depending on the bed, which is two solvers failing
+differently and a second reason `C` is a per-bed measurement.
+
+**Where the shipped corpus sits.** `impact_attribution` defaults to `n_samples = 256`
+against `N = 1024`, `s = 4` (`scale/impact.py:973`, `READ`), and
+`rip_line(1024, 4, 1.44270) = 32.01`, so the default oversamples the floor by roughly
+`8×`. **The floor is the deliverable, not a claim that today's default sits on it.**
+
+---
+
+## 14. THE COHERENCE FLOOR AND THE CALIBRATED SCRAMBLE CONTROL
+
+Stated as functions of `(d, k)` so the arithmetic survives any change to either.
+
+**The Welch bound.** Any `k` unit vectors in `R^d` obey
+
+```
+    max_{i<j} |⟨u_i, u_j⟩|  ≥  sqrt( (k − d) / (d (k − 1)) )
+```
+
+which is **exactly 0 for `k ≤ d`**, because an orthonormal set of `k ≤ d` vectors
+exists and attains it. Above the dimension it is the real constraint and it is tight:
+at `d = 2`, `k = 3` the bound reads `0.5` and three unit vectors at 120° attain
+`|cos 120°| = 0.5` exactly, agreeing to `1e-12`.
+
+**M1, at `d = 256`, `k = 16`.** `k ≤ d`, so **the floor is exactly 0**, while random
+role vectors carry a max coherence of `0.174795`. **A crosstalk-shaped failure at
+`k = 16` roles in 256 dimensions is therefore a training or design defect, not
+dimension starvation** — the geometry permits perfect separation and nothing in the
+dimension count obstructs it.
+
+**M5, and the author's figure is 15.8% low.** The amendment states the random
+coherence as `sqrt(2 ln k / d) = 0.147176`. That closed form is a union bound over
+`k` events, but the maximum runs over `C(k,2) = 120` **pairs**, not over 16 vectors.
+Four routes, of which two fail differently from the sampling:
+
+```
+    sqrt(2 ln k / d)              0.147176   author's form, union over k
+    sqrt(2 ln(k(k−1)/2) / d)      0.193397   union over C(k,2) pairs — an upper bound
+    Monte Carlo, 20 000 trials    0.174795   95% CI [0.174460, 0.175131]
+    order-statistic quadrature    0.174499   ∫₀¹ (1 − F(x)¹²⁰) dx, F the exact
+                                             |⟨u,v⟩| CDF from (1−t²)^((d−3)/2)
+```
+
+**The quadrature lands inside the Monte Carlo interval and both closed forms land
+outside it.** The union bound is above, as a bound must be; the author's form is
+below, because it counts the wrong number of events. The mean overlap, by contrast,
+is confirmed on both paths: the exact `Γ(d/2) / (√π Γ((d+1)/2)) = 0.049917` matches
+the Monte Carlo `0.049917` (CI `[0.049869, 0.049964]`) and its
+`sqrt(2/(πd)) = 0.049868` limit to `4.9e-5`.
+
+**The consequence, and the error is in the safe direction.** Scrambled roles at
+`d = 256`, `k = 16` carry an expected mean overlap of `0.049917` and an expected
+worst-case overlap of `0.174795`, **both by chance and both computable before the
+control runs**. A scramble control calibrated to expect zero residual separation is
+vacuous before it runs, and it is **more** vacuous than the amendment's own figure
+implies, not less. That is the fifteenth pattern, killed pre-birth.
+
+---
+
+## 15. LIMITS ADDED BY SECTIONS 11–14
+
+§10 predates these sections and does not cover them.
+
+The instrument law of §11 is enforced only where `e4_harmonic.measure()` is the entry
+point; `absorbing_chain` and `fixed_point` remain callable directly and are not
+guarded, and the law is defined only for the undamped walk. Its agreement margin is
+measured at three graph sizes on one machine in float64 and no conditioning bound is
+proved. §12's verdict is `RISES` under a branch that was fixed before the statistic
+ran, but its size clause fires on the strength of a one-sided estimator bias, its
+trend clause survives only 2 of 5 single-seed deletions, and the percentile bootstrap
+behind both has `5⁵ = 3125` distinct atoms at five seeds; the calibration sweep is
+200 tables per arm under Gaussian noise at one scale and does not establish the error
+rate under the ladder's real noise. §13's `C` is fit at four beds with coarse `m`
+grids — `m_50` for the `n/s = 4` bed is bounded only to `(32, 40]` — under a Gaussian
+measurement ensemble, and `news_mat` in `scale/impact.py` has not been shown to be
+one; the line is a necessary condition, never a sufficient one, and nothing here
+wires `UNDER-SAMPLED` into an IMPACT cell. §14 is arithmetic about independent
+uniform unit vectors and says nothing about the vectors any trained arm actually
+holds; the order-statistic quadrature treats the `C(k,2)` pairwise products as
+independent, which they are not, and is corroboration for the sampled figure rather
+than a proof of it.
