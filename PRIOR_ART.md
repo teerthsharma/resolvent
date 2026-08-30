@@ -709,3 +709,305 @@ measures both:
    composes only with `γ ≤ 2Φ⋆`. The lower half needs `Φ⋆` itself, a minimum over
    `2^(n−1)` cuts. So even for the ergodic chain, one cut buys "not too fast" and never
    "not too slow".
+
+---
+
+## 5. THE ROUND-12 DELTA — *path-ordered non-abelian transport as a positional encoding*
+
+Fetched before the theory chapter was written, per RULE 7. Mycroft, round 12.
+**Absence below is recorded as NOT FOUND, never as absence of a search.**
+
+**Marker convention, as set at `ARSENAL.md:10` and `CONTRACT.md:88`:** **[V]** =
+verified by direct fetch of the primary source; **[U]** = reached only through a
+search index or a secondary description and **must be fetched before use**.
+
+**One fetch caveat, stated once and applying to every [V] below.** The retrieval
+path renders the arXiv page and answers a question against it through a
+summarising reader. That is a fetch of the primary source, not of a description
+of the paper, and every quotation below was returned from the page itself. It is
+nevertheless a relay, and any quotation destined for publication should be
+re-read against the compiled PDF. Where a page was fetched and the requested
+string was **not** returned, that is said in the line rather than papered over.
+
+### 5.1 The claim under test
+
+`LOOP_PROMPT`'s round-12 spec asserts a delta on four axes: that RoPE is a
+homomorphism from `(ℤ,+)` and VGPE generalises it to a path-ordered product of
+action-typed generators; that graph and tree positional encodings are OCCUPIED
+but are *spectral node features* rather than *path-ordered non-abelian
+transport*; that the quaternion/complex/hyperbolic lineage is OCCUPIED; and that
+gauge-equivariant networks exist but are *convolution on a lattice*, not a
+*position code for attention*.
+
+### 5.2 THE VERDICT — the delta does NOT survive, and one paper takes both halves
+
+**Yang, Songlin; Shen, Yikang; Wen, Kaiyue; Tan, Shawn; Mishra, Mayank; Ren,
+Liliang; Panda, Rameswar; Kim, Yoon. "PaTH Attention: Position Encoding via
+Accumulating Householder Transformations."** arXiv:2505.16381, v1 2025-05-22,
+v2 2026-02-03. Venue as printed on the listing: NeurIPS 2025. **[V]** — abs page
+and the v2 HTML render both reached.
+
+§2.1, the score:
+
+> `A_ij ∝ exp( k_j^T ( ∏_{s=j+1}^{i} H_s ) q_i )`
+
+and, in the same section:
+
+> "RoPE is thus a special case of the above with a static transition matrix
+> `H_s = R`"
+
+**That is the VGPE mechanism and the VGPE RoPE-recovery identity, in one
+section of one paper.** Abstract, verbatim: *"PaTH, a flexible data-dependent
+position encoding scheme based on accumulated products of Householder(like)
+transformations, where each transformation is data-dependent, i.e., a function
+of the input."* It also states the motivation VGPE states: *"in RoPE the
+key/query transformation between two elements in a sequence is only a function
+of their relative position and otherwise independent of the actual input. This
+limits the expressivity of RoPE-based transformers."*
+
+**Two things the paper does not do, and they are the whole of what is left.**
+The v2 HTML was searched for group-theoretic language and the fetch returned
+*no* mentions of groups, homomorphisms, Lie algebras or orthogonal groups in the
+main text, and no explicit "non-commutative" or "order-dependent" phrasing —
+§3.2 argues for interval specificity instead. And the accumulation runs over a
+contiguous interval `[j+1, i]` of a **linear sequence**, not over a walk in a
+causal DAG with inverse traversal.
+
+**This is the closest occupant found and it occupies the delta as specified.**
+No round-12 sentence may claim path-ordered transport for attention, or the
+RoPE-as-special-case identity, as new.
+
+### 5.3 The rest of the occupation, in order of how much each one takes
+
+**Ostmeier, Sophie; Axelrod, Brian; Varma, Maya; Moseley, Michael E.; Chaudhari,
+Akshay; Langlotz, Curtis. "LieRE: Lie Rotational Positional Encodings."**
+arXiv:2406.10322, v1 2024-06-14, v5 2025-08-16. **[V]** — abs page reached.
+Abstract, verbatim: *"Instead of fixed 2D rotations, LieRE learns dense
+skew-symmetric matrices (Lie algebra elements), which are then differentiable
+mapped to form high-dimensional rotation matrices (Lie group elements)."*
+**Takes: the learned `so(d)` generator, the map into `SO(d)`, and the framing as
+a principled generalisation of RoPE.** Leaves: the generator is keyed by a
+continuous spatial coordinate, not by a discrete action type, and the encoding
+is a single group element per token rather than an ordered product over a path.
+
+**Zhang, Yifan; Chen, Zixiang; Liu, Yifeng; Qin, Zhen; Yuan, Huizhuo; Xu,
+Kangping; Yuan, Yang; Gu, Quanquan; Yao, Andrew Chi-Chih. "Group
+Representational Position Encoding."** arXiv:2512.07805, submitted 2025-12-08.
+**[V]** — abs page reached. Abstract, verbatim: *"a unified framework for
+positional encoding based on group actions"*; *"a position `n ∈ ℤ` (or `t ∈ ℝ`)
+acts as `G(n) = exp(n ω L)` with a rank-2 skew-symmetric generator
+`L ∈ ℝ^{d×d}`, yielding a relative, compositional, norm-preserving map with a
+closed-form matrix exponential. RoPE is recovered exactly when the `d/2` planes
+correspond to canonical coordinate pairs with a log-uniform spectrum."*
+**Takes: the group-action framing, the skew generator, `SO(d)`, and an exact
+RoPE-recovery statement.** Leaves: the acting group is `ℤ` or `ℝ`, i.e. abelian
+and singly generated — the same ceiling VGPE says it is lifting.
+
+**Kogkalidis, Konstantinos; Bernardy, Jean-Philippe; Garg, Vikas. "Algebraic
+Positional Encodings."** arXiv:2312.16045, v1 2023-12-26, v3 2024-10-31. Venue
+as printed: NeurIPS 2024 (spotlight). **[V]** — abs page reached. Abstract,
+verbatim: *"a flexible mapping from the algebraic specification of a domain to
+an interpretation as orthogonal operators. This design preserves the algebraic
+characteristics of the source domain"*; *"can accommodate various structures,
+including sequences, grids and trees, as well as their compositions."*
+**Takes: the algebra-to-orthogonal-operators construction and trees.** The fetch
+returned **no** statement about RoPE being recovered as a special case; that is
+recorded as not returned, not as absent.
+
+**Sargsyan, Karen. "Functorial Neural Architectures from Higher Inductive
+Types."** arXiv:2603.16123, submitted 2026-03-17. **[V] for the abstract.**
+Abstract, verbatim: *"a decoder generalizes compositionally only when it
+respects the algebraic laws of the task, i.e. when it descends from freely
+generated sequences to the quotient determined by those laws"*, and *"we prove
+that softmax self-attention cannot simultaneously satisfy strict monoidal
+composition and descent to any non-trivial compositional quotient."*
+**The free-monoid-and-quotient framing is therefore occupied, and there is a
+claimed impossibility result about attention and strict monoidal composition
+that a VGPE round should read before claiming compositional benefit.**
+
+> **[U] AND NOT CONFIRMED — recorded because the failure matters.** A search
+> index returned a synthesis attributing to this paper an appendix "Abelian
+> Transport-Attention Theorem" defining transport-structured attention over a
+> finitely generated abelian group with a learnable orthogonal matrix per
+> generator, recovering RoPE. **Two fetch attempts (the abs page and the PDF)
+> both returned that none of `transport-structured attention`,
+> `Transport-Attention`, `RoPE`, `rotary`, `abelian`, `orthogonal matrix` or
+> `generator` appear.** The second result is itself suspect — `generator`
+> should appear given the abstract's "generator networks" — so the extraction
+> may be incomplete rather than the claim false. **This is unresolved. If that
+> appendix exists it is a near-total occupant of VGPE's construction minus
+> non-commutativity, and it must be settled by reading the compiled PDF before
+> any priority claim is written.**
+
+**DeBenedetto, Justin; Chiang, David. "Representing Unordered Data Using
+Complex-Weighted Multiset Automata."** arXiv:2001.00610, submitted 2020-01-02,
+ICML 2020. **[V] for the abstract.** Abstract, verbatim: *"we provide a new
+theoretical and intuitive justification for the Transformer model's
+representation of positions using sinusoidal functions."* **The
+positional-encoding-as-weighted-automaton framing is occupied**, at least for
+the sinusoidal case. The specific sentence a search index attributed to it — that
+the Transformer's positional encodings are the forward weights of a weighted
+unary automaton — was **NOT RETURNED** by the fetch and is **[U]**.
+
+### 5.4 RoPE's constants, for the record
+
+**Su, Jianlin; Lu, Yu; Pan, Shengfeng; Murtadha, Ahmed; Wen, Bo; Liu, Yunfeng.
+"RoFormer: Enhanced Transformer with Rotary Position Embedding."**
+arXiv:2104.09864, v1 2021-04-20, v5 2023-11-08. **[V]** — abs page and the
+ar5iv HTML render both reached; no journal reference was shown on the abs page.
+
+* The relative-position requirement, §3.1 eq. (11):
+  `⟨f_q(x_m,m), f_k(x_n,n)⟩ = g(x_m, x_n, m−n)`
+* The frequency set, §3.2.2 eq. (15): `Θ = {θ_i = 10000^{−2(i−1)/d},
+  i ∈ [1,2,…,d/2]}`
+* The composition identity, §3.2.2 eq. (16):
+  `R^d_{Θ,n−m} = (R^d_{Θ,m})^T R^d_{Θ,n}`
+
+Equation and section numbers are as returned from the ar5iv render and should be
+re-checked against the compiled PDF before publication, per the hazard recorded
+at §1.2(b) of this file. **`scale/vgpe.py:149` implements exactly eq. (15)'s
+constant** — `rope_thetas(8)` reads `[1.0, 0.1, 0.01, 0.001] = 10000^{−(i−1)/4}`
+— so the repo's RoPE reference is the paper's, not an approximation of it.
+
+### 5.5 Graph and tree positional encodings — OCCUPIED, and the spec's reading of them holds
+
+**Dwivedi, Vijay Prakash; Bresson, Xavier. "A Generalization of Transformer
+Networks to Graphs."** arXiv:2012.09699, 2020. **[U]** — search index only,
+primary **NOT REACHED**. Attributed there: the positional encoding is the
+Laplacian eigenvectors.
+
+**Dwivedi, Vijay Prakash; Luu, Anh Tuan; Laurent, Thomas; Bengio, Yoshua;
+Bresson, Xavier. "Graph Neural Networks with Learnable Structural and Positional
+Representations."** arXiv:2110.07875, v1 2021-10-15, v2 2022-02-10, ICLR 2022.
+**[V]** — abs page reached. Abstract, verbatim: *"A major issue with arbitrary
+graphs is the absence of canonical positional information of nodes"*; *"Possible
+graph PE are Laplacian eigenvectors."* The fetch returned **no** RWSE or
+sign-ambiguity sentences; recorded as not returned.
+
+**Rampášek, Ladislav; Galkin, Mikhail; Dwivedi, Vijay Prakash; Luu, Anh Tuan;
+Wolf, Guy; Beaini, Dominique. "Recipe for a General, Powerful, Scalable Graph
+Transformer."** arXiv:2205.12454, submitted 2022-05-25, NeurIPS 2022. **[V]** —
+abs page reached. Abstract, verbatim: *"they lack a common foundation about what
+constitutes a good positional or structural encoding, and what differentiates
+them. In this paper, we summarize the different types of encodings with a
+clearer definition and categorize them as being local, global or relative."*
+
+**Airale, Louis; Longa, Antonio; Rigon, Mattia; Passerini, Andrea; Passerone,
+Roberto. "Simple Path Structural Encoding for Graph Transformers."**
+arXiv:2502.09365, submitted 2025-02-13. **[V]** — abs page reached. Abstract,
+verbatim: *"random walk structural encoding (RWSE) has been found to further
+enhance their predictive power by encoding both structural and positional
+information into the edge representation"*, and SPSE *"utilizes simple path
+counts for edge encoding."*
+
+**The spec's characterisation of this lineage is CORRECT and survives the
+fetch.** Even the path-based encodings here are **counts** — scalar edge or node
+features — not group-valued transports along the path. No graph-PE paper reached
+transports a vector by a non-commuting group element per edge type. That
+distinction is real; it is just not the distinction PaTH leaves open, since PaTH
+already does path-ordered orthogonal transport on sequences.
+
+### 5.6 The quaternion / complex / hyperbolic lineage — OCCUPIED
+
+Reached through search indices only. **All [U]; primaries NOT REACHED and
+identifiers are as returned by the index.**
+
+* **RotatE** — relational rotation in complex space; the index-returned framing
+  is that TransE and RotatE handle *commutative* composition but *"struggle with
+  non-commutative cases"*. **[U]**
+* **Zhang, Shuai et al., "Quaternion Knowledge Graph Embeddings"**,
+  arXiv:1904.10281, NeurIPS 2019. **[U]** — attributed: the Hamilton product is
+  non-commutative and this is treated as the desirable property.
+* **HoPE**, hyperbolic rotary positional encoding, arXiv:2509.05218 **[U]**;
+  **GeoPE**, quaternionic sandwich products with `so(3)` phases,
+  arXiv:2512.04963 **[U]**.
+
+**The finding that matters here is not the lineage but its motive.** The
+knowledge-graph side has been building **non-commutative composition of
+relation-typed rotations** since at least 2019, explicitly because relation
+composition does not commute. VGPE's action-typed non-commuting generators are
+that idea moved from a scoring function on triples to a positional code in
+attention. That is a transplant, and it should be described as one.
+
+### 5.7 Gauge-equivariant networks — the spec's delta here SURVIVES, narrowly
+
+* **Cohen, Taco S.; Weiler, Maurice; Kicanaoglu, Berkay; Welling, Max. "Gauge
+  Equivariant Convolutional Networks and the Icosahedral CNN."**
+  arXiv:1902.04615, ICML 2019. **[U]** — search index only.
+* **Favoni, Matteo; Ipp, Andreas; Müller, David I.; Schuh, Daniel. "Lattice
+  gauge equivariant convolutional neural networks."** arXiv:2012.12901; Phys.
+  Rev. Lett. **128**, 032003 (2022). **[U]** — search index only. Attributed
+  there: a convolutional layer that *forms arbitrarily shaped Wilson loops in
+  successive bilinear layers*.
+* **"Gauge Equivariant Transformer"**, He, Dong, Wang, NeurIPS 2021. **[U]** —
+  search index only, primary NOT REACHED. Attributed there: *"GET firstly
+  incorporates attention in gauge equivariance"* with *"a new parallel transport
+  approach"*. **This is the most dangerous unfetched item in this section and it
+  should be fetched before §5.9's surviving delta is relied on.**
+
+**Chang, Edward Y.; Chang, Ethan Y. "Inverse-Free Wilson Loops for Transformers:
+A Practical Diagnostic for Invariance and Order Sensitivity."**
+arXiv:2510.08648, submitted 2025-10-09. **[V]** — abs page reached. Abstract,
+verbatim: *"WILSON combines an inverse-free curvature map over positions and
+layers, computed with JVPs and Hutchinson probes, with activation-level
+commutators that flag reorder risk"*, and it does this *"without changing model
+architecture or training."*
+
+**This is the closest thing found to VGPE's probe, and it is on the other side
+of the line.** WILSON reads curvature and commutators **post hoc, off an
+existing transformer's activations**. VGPE puts a connection into the
+architecture and reads Wilson loops **of the learned connection itself**. The
+spec's "position code for attention, not convolution on a lattice" therefore
+holds against the lattice papers; the sharper statement is that **no source
+reached builds a gauge connection as the positional encoding and then measures
+it with a conjugation-invariant loop observable.**
+
+### 5.8 What was NOT FOUND, stated as not found
+
+* **A positional encoding whose group element is keyed by a discrete ACTION TYPE
+  from a finite alphabet — NOT FOUND.** PaTH keys on the token's content, LieRE
+  and GRAPE key on a continuous coordinate, APE keys on the algebraic
+  specification of the domain. Searches: `"non-abelian" positional encoding
+  transformer Lie group SO(d) attention`; `gauge connection parallel transport
+  positional encoding attention transformer non-abelian`.
+* **Path-ordered transport along a walk in a causal DAG, with inverse traversal
+  on backward edges, as a positional encoding — NOT FOUND.** Every occupant found
+  accumulates over a contiguous interval of a linear sequence.
+* **The Wilson-loop spectrum `{tr ρ(loop)}` used as a conjugation-invariant
+  measurement of a LEARNED positional connection — NOT FOUND.** arXiv:2510.08648
+  is post-hoc diagnostics on a standard transformer; arXiv:2012.12901 forms
+  Wilson loops as convolutional features, not as a probe of a position code.
+* **Hankel rank / weighted-automaton rank used as the capacity measure of a
+  positional encoding — NOT FOUND.** arXiv:2001.00610 gives the automaton
+  *framing* for sinusoidal PE but the fetch returned no rank or capacity claim.
+  Search: `positional encoding "weighted automaton" OR "Hankel" transformer
+  attention rational series capacity`.
+* **A Cayley-transform parametrisation of a positional-encoding generator — NOT
+  FOUND.** Every occupant uses the matrix exponential (LieRE, GRAPE) or
+  Householder reflections (PaTH). This is a parametrisation choice, not a
+  contribution, and the round already knows it costs a `tan(θ/2)` pre-warp
+  (`tests/watson/test_vgpe_binds.py:79`).
+
+### 5.9 What survives, and it is thin
+
+Four things, and none of them is the headline:
+
+1. The generator is keyed by a **discrete action type**, not by token content
+   (PaTH), a continuous coordinate (LieRE, GRAPE), or a domain algebra (APE).
+   This is one axis away from PaTH and is the same idea the knowledge-graph
+   relational-rotation line has held since 2019 (§5.6).
+2. The path is a **walk in a causal DAG with inverse traversal**, not an interval
+   of a sequence. `scale/vgpe.py:216`'s free-group reduction is the mechanism and
+   nothing found has it.
+3. The **Wilson-loop spectrum as a probe of the learned connection** (§5.7).
+   Contingent on the unfetched Gauge Equivariant Transformer.
+4. **Hankel rank as the capacity measure** (§5.8), which is where
+   `THEORY_V12_VGPE.md` puts its weight — and which returns the deflationary
+   answer that the rank is `d` regardless of alphabet.
+
+**The headline claim — path-ordered non-abelian transport as a positional
+encoding for attention, with RoPE as the special case — is taken outright by
+arXiv:2505.16381 §2.1, and no round-12 number may be written as though it were
+not.** The correct framing for the round is that VGPE is a **variant of PaTH
+with typed rather than data-dependent transitions**, measured with an instrument
+(Wilson loops, Hankel rank) that PaTH does not use.
