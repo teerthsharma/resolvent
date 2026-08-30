@@ -331,7 +331,7 @@ def _bind_batched_against_arm_s(shapes=DIAG_SHAPES, verbose: bool = True,
        gate.
 
     2. THE PIVOT RULE, WHICH IS A DECLARED DEVIATION AND NOT AN EQUALITY.
-       `arm_s.pivots_of` (line 97) selects `k` pivots excluding the query row and
+       `arm_s.pivots_of` selects `k` pivots excluding the query row and
        THEN drops index 0, whose row is all-zero under a strictly causal
        operator; on the examples where index 0 was selected it therefore returns
        `k - 1` pivots. A ragged pivot count cannot be batched, so

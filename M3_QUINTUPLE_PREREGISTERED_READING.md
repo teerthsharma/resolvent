@@ -35,8 +35,9 @@ is therefore a quintuple.
 Cells 3, 4 and 5 share every parameter tensor and differ only in how `alpha` is
 obtained, so a contrast between them is not a contrast between architectures.
 
-**Cell 2 is expected to be bitwise identical to cell 1.** `scale/arm_s.py:236`
-returns the glance expression unchanged at `t_max = 0`, and that is the G3 bind.
+**Cell 2 is expected to be bitwise identical to cell 1.** `arm_s.arm_s` returns
+the glance expression unchanged at `t_max = 0` — the `if t_max == 0: return out,
+None` branch, before any pivot is selected — and that is the G3 bind.
 Cell 2 is run anyway, at full cost, because a G3 bind taken at the money run is
 worth more than an invented distinction between two cells that coincide. If cell
 2 is not bitwise cell 1, the G3 bind has broken and the run is void.

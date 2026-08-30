@@ -227,11 +227,42 @@ both sides, so the target is reachable **by construction rather than by search**
    running multiple concurrent GPU suites**, so the likely cause is contention slowing
    softmax's own baseline. **Needs a clean re-measurement on a quiet GPU before the
    ledger is edited.**
-39. **DOC ROT, unfixed and owned elsewhere:** `scale/arm_s.py:55` cites `gram_audit` as
-   measuring float32 underflow of `a_p[0]`; **no such function or test exists**. And
-   `results/capability_table_v0.*` is stale at `journal_commit 9629616` with **three
-   clauses of its own `Limits` string now false.**
+39. **DOC ROT — the `gram_audit` half is FIXED; the measurement gap it named is not, and
+   the generated tables are not.** `scale/arm_s.py` no longer cites `gram_audit`:
+   commit `54148e6` rewrote the paragraph to state that no such function or test exists,
+   that an earlier revision claimed one did, and that the nearest real artefact is
+   `foreman_hilbert.positivity_audit`, which counts exact zeros-on-support over the whole
+   float32 softmax matrix rather than censusing `a_p[0]`. **What remains open is the
+   measurement, not the sentence:** no reading of float32 underflow in the pivot
+   coordinate is on record, and the shipped settle sidesteps the question by running in
+   the log domain (`log_pivot_context`), so the debt falls due only if the
+   probability-domain path `pivot_context` is ever shipped.
+   **Still open, separately:** `results/capability_table_v0.*` is stale at
+   `journal_commit 9629616`, and its `Limits` string — like `capability_table_v1.*` and
+   `ceq/hf_artifact/capability_table_v0.json` — still carries the clause saying
+   `scale/m3_quintuple.py` has no `--task` flag. **The generator was corrected this
+   round and the artifacts were not**, because regenerating them is a table cut and a
+   cut is a measurement decision, not a documentation one. The next cut clears all three
+   files; `tests/neptune/test_capability_table_truth.py` fails if the generator ever
+   reverts.
 40. **One audit hit on the pushed history is a FALSE POSITIVE** — commit `7844d12`'s body
    names the harness directory path inside the paragraph explaining the ignore rule. Not
    an authorship trailer. Left rather than rebased across four commits other agents were
    appending to.
+41. **CITE SYMBOLS, NOT LINES — the convention, now measured rather than asserted.**
+   Commit `916141d` already cited one test by name instead of a line; this round found
+   the general case. Of the line numbers flagged as drifted in `scale/m3_flops.py`,
+   **every one had moved by exactly +9** (`124→133`, `155→164`, `168-172→177-181`,
+   `173→182`, `176→185`, `179→188`, `254→263`) — one insertion upstream silently
+   invalidated nine citations at once. The correction list circulated with the audit was
+   itself wrong on two of them (`155→156`, really `164`; `107→106`, really `116`, the
+   `select_pivots` call rather than the enclosing `def`), so a sweep applied from that
+   list would have replaced stale numbers with different stale numbers. Adjacent
+   citations into `scale/m3_capability.py` had drifted by one and nobody had noticed.
+   **The rule: cite a `def` by its symbol name alone; cite an expression inside a
+   function by the enclosing symbol plus a distinctive quoted fragment — `the
+   "out[-1] = (log_alpha.exp() @ av)" contraction in arm_s.arm_s`. Both forms are
+   greppable and neither drifts.** Keep a bare line number only where there is no
+   enclosing symbol to name. `scale/m3_flops.py`, `scale/m3_quintuple.py` and
+   `M3_QUINTUPLE_PREREGISTERED_READING.md` were converted this round; **the rest of the
+   tree was not swept**, and in-tree line citations elsewhere remain untrustworthy.

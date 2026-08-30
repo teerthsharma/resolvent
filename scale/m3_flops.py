@@ -42,57 +42,64 @@ ROWS_SETTLED = 1
 
 BASE_TERMS = [
     ("wq(x), wk(x)", "4*n*s*d_model^2",
-     "scale/m3_capability.py:142 (nn.Linear(d_model,d_model,bias=False) :107-108)",
+     "m3_capability.Arm.forward, self.wq/self.wk "
+     "(nn.Linear(d_model, d_model, bias=False))",
      lambda n, s, dm, h, k, t: 4 * n * s * dm * dm),
     ("q @ k^T", "2*n*s^2*d_model",
-     "scale/m3_capability.py:131 -> ceq/bench.py:187",
+     "m3_capability.Arm._operator -> bench._softmax_operator (softmax branch; "
+     "the signed branch is bench._causal_sgate_operator at the same shape)",
      lambda n, s, dm, h, k, t: 2 * n * s * s * dm),
     ("a @ x", "2*n*s^2*d_model",
-     "scale/m3_capability.py:144",
+     "m3_capability.Arm.forward, the `a = self._operator(q, k)` operator "
+     "applied to x",
      lambda n, s, dm, h, k, t: 2 * n * s * s * dm),
     ("mlp(z)", "4*n*s*d_model*hidden",
-     "scale/m3_capability.py:164 (nn.Sequential :110, two Linear layers)",
+     "m3_capability.Arm.forward, self.mlp (nn.Sequential, two Linear layers)",
      lambda n, s, dm, h, k, t: 4 * n * s * dm * h),
     ("readout(h)", "2*n*s*d_model",
-     "scale/m3_capability.py:165 (nn.Linear(d_model,1) :112), all s rows built",
+     "m3_capability.Arm.forward, self.readout (nn.Linear(d_model, 1)); all s "
+     "rows are built, and only then is one position indexed out",
      lambda n, s, dm, h, k, t: 2 * n * s * dm),
 ]
 
 SELECT_TERM = (
     "pivot select (key norm)", "n*2*s*d_model",
-    "scale/arm_s.py:107 -> scale/pivot_probe.py:88 (topk itself: comparisons, "
-    "NOT COUNTED)",
+    "arm_s.pivots_of -> pivot_probe.select_pivots (the topk itself is "
+    "comparisons, NOT COUNTED)",
     lambda n, s, dm, h, k, t: ROWS_SETTLED * n * 2 * s * dm)
 
 SETUP_TERM = (
     "SETUP log_pivot_context", "n*( 2*(k+1)*s*d_model + 2*k^2*s + 2*k*s*d_model )",
-    "scale/arm_s.py:124 body :155 (logit slice), :168-172 (Gram logsumexp), "
-    ":173 (A_P@V); same decomposition as the shipped counter scale/arm_s.py:458",
+    "arm_s.log_pivot_context: the `w = q[want] @ kk^T / sqrt(d)` logit slice, "
+    "the chunked `log_gram` logsumexp loop, and the `la_piv.exp() @ v` return; "
+    "same decomposition as the shipped counter `f_setup` in arm_s.gate3_cost",
     lambda n, s, dm, h, k, t: ROWS_SETTLED * n * (
         2 * (k + 1) * s * dm + 2 * k * k * s + 2 * k * s * dm))
 
 LOOP_TERM = (
     "LOOP t_star * log_alpha_step", "n*t_star*2*k^2",
-    "scale/arm_s.py:176 body :179 (logsumexp over [k,k]); per-step cost as "
-    "counted at scale/arm_s.py:459",
+    "arm_s.log_alpha_step: one logsumexp over [k,k]; per-step cost as counted "
+    "by `f_step` in arm_s.gate3_cost",
     lambda n, s, dm, h, k, t: ROWS_SETTLED * n * t * 2 * k * k)
 
 CONTRACT_TERM = (
     "alpha @ AV", "n*2*k*d_model",
-    "scale/arm_s.py:254",
+    "arm_s.arm_s, the `out[-1] = (log_alpha.exp() @ av)` contraction",
     lambda n, s, dm, h, k, t: ROWS_SETTLED * n * 2 * k * dm)
 
 
 def bwd_spec(n, s, dm, h, k, t, nn_terms):
-    """(n_neumann - 1) VJPs, per the loop at scale/arm_s.py:310-311.
+    """(n_neumann - 1) VJPs, per the `for _ in range(ctx.n_neumann - 1)` loop in
+    arm_s.Settled.backward.
 
-    Per-VJP cost 4*k^2 is the shipped figure at scale/arm_s.py:460.
+    Per-VJP cost 4*k^2 is the shipped figure `f_jvp` in arm_s.gate3_cost.
     """
     return ROWS_SETTLED * n * (nn_terms - 1) * 4 * k * k
 
 
 def bwd_shipped(n, s, dm, h, k, t, nn_terms):
-    """What scale/arm_s.py:468 multiplies by: n_neumann, not n_neumann - 1."""
+    """What `flops_backward` in arm_s.gate3_cost multiplies by: n_neumann, not
+    n_neumann - 1."""
     return ROWS_SETTLED * n * nn_terms * 4 * k * k
 
 
@@ -110,8 +117,9 @@ def cell_terms(cell, n, s, dm, h, k, t, nn_terms):
     if cell == "softmax":
         return dict(base=base, select=0, setup=0, loop=0, contract=0, bwd=0)
     if cell == "glance":
-        # scale/arm_s.py:245-247: t_max == 0 returns `a @ v` BEFORE line 249
-        # ever selects a pivot. No setup, no loop, no contract, no backward.
+        # arm_s.arm_s: `if t_max == 0: return out, None` fires BEFORE the
+        # `piv = pivots_of(kk, k_piv)` that follows it, so `a @ v` is the whole
+        # cost. No setup, no loop, no contract, no backward.
         return dict(base=base, select=0, setup=0, loop=0, contract=0, bwd=0)
     if cell == "settled":
         return dict(base=base, select=sel, setup=setup, loop=loop,
@@ -123,8 +131,8 @@ def cell_terms(cell, n, s, dm, h, k, t, nn_terms):
         return dict(base=base, select=sel, setup=setup, loop=0,
                     contract=contract, bwd=0)
     if cell == "argmax":
-        # alpha one-hot at argmax(gate): the `alpha @ AV` contraction of
-        # scale/arm_s.py:254 degenerates to reading one row of AV -- a gather,
+        # alpha one-hot at argmax(gate): the `out[-1] = (log_alpha.exp() @ av)`
+        # contraction in arm_s.arm_s degenerates to reading one row of AV -- a gather,
         # zero multiply-adds. argmax itself is comparisons, NOT COUNTED.
         return dict(base=base, select=sel, setup=setup, loop=0, contract=0,
                     bwd=0)
