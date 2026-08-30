@@ -1072,3 +1072,57 @@ the exact sigmoid amplitude (`0.50 → 0.547752`, `0.25 → 0.281624`,
 and the rerun, one line settles it: measure `matrix_norm(game, ord=2).max()/median`
 on a real batch. Near `1.27` and the bug cannot be the cause. The Gaussian draw is
 a surrogate, so this is a lower bound on the attenuation, not the corpus's value.
+
+### 17.7 The pivot objective's set structure, and where the greedy bound dies
+
+Derived here, not cited. `pivot_probe.pivot_hop2` uses the pivot set as
+`B_P = A[:,P]A[P,:] = Σ_{p∈P} u_p v_pᵀ` with `u_p = A[:,p]`, `v_p = A[p,:]` — a
+sum of rank-1 outer products, **one per pivot, each independent of the rest of
+`P`**. That independence is the whole reason set-function structure exists here.
+With `M_pq := (u_p·u_q)(v_p·v_q)`, captured mass is a quadratic form in the
+indicator,
+
+```
+    f(P) := ‖B_P‖_F²  =  1_Pᵀ M 1_P ,
+    f(S∪{a,b}) − f(S∪{a}) − f(S∪{b}) + f(S)  =  2 M_ab   — constant in S
+```
+
+**Captured mass is SUPERMODULAR on a nonnegative operator.** A softmax attention
+matrix is nonnegative, so every inner product is `≥ 0`, `M_ab ≥ 0`, and the
+second difference is `≥ 0`: *increasing* returns. Greedy has no `1−1/e` on it.
+The intuition that pivot selection is obviously a diminishing-returns problem is
+**wrong on the obvious objective**.
+
+**Reconstruction is monotone submodular, and there the bound is real.**
+`h(P) := ‖A²‖_F² − ‖A² − B_P‖_F²` has second difference `−2M_ab ≤ 0`, and
+monotonicity is derived rather than assumed: with `R = A² − B_S` and `a ∉ S`,
+
+```
+    h(S∪{a}) − h(S) = 2⟨R, u_a v_aᵀ⟩ − ‖u_a v_aᵀ‖²  ≥  ‖u_a v_aᵀ‖²  >  0
+```
+
+since `R ≥ u_a v_aᵀ` elementwise for `A ≥ 0`, `a ∉ S`. Checked over **21 936
+`(S,a)` pairs**: `min(gain − ‖u_a v_aᵀ‖²) = −3.55e−15`, zero to float precision
+and tight, the bound being attained when `S` holds every other pivot. With
+`h(∅)=0` and `h ≥ 0`, Nemhauser–Wolsey–Fisher gives greedy
+**`1 − 1/e = 0.632121`**. (NWF 1978 is classical, cited from standard knowledge
+and **not fetched** — flagged.)
+
+**The signed arm voids it.** `M_ab ≥ 0` needs `A ≥ 0`. On signed operators `M`
+carried a negative entry in `297/300` draws at `n ∈ {4,5,6}` and `300/300` at
+fixed `n = 6`, so neither objective is submodular there.
+
+**A prediction of mine that was wrong, recorded.** I expected `h` to be
+non-monotone, reasoning that `B_P` is a fixed sum rather than a projection so an
+added pivot could raise the residual. It cannot, for `A ≥ 0`: `0` of 21 936
+checked pairs decreased `h`. The derivation above is the corrected version.
+
+Two paths throughout: the closed form `±2M_ab`, and direct evaluation of `f` and
+`h` on all four sets, agreeing on every checked subset. `scale/pivot_selection_theory.py`
+holds both, with `demo()` asserting them.
+
+**What it is worth.** It bounds greedy against the *best* pivot set under a
+reconstruction objective. It says nothing about whether a better pivot set lowers
+NRMSE — that is §17.4's question, and `scale/recall_probe.py` was written to
+answer it and never run. **A provable guarantee on an objective nobody has shown
+to matter is still a guarantee about nothing.**

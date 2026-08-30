@@ -404,8 +404,9 @@ precision, and tight — the bound is attained when `S` holds every other pivot.
 > standard knowledge, **not fetched** — flagged as such).
 
 **And this repo's signed arm voids it.** `M_ab ≥ 0` needs `A ≥ 0`. On signed
-operators `M` had a negative entry in **297 of 300** draws, so neither `f` nor `h`
-is submodular there and the guarantee does not apply. The softmax-family cells
+operators `M` had a negative entry in **297 of 300** draws at `n \in {4,5,6}`, and
+in **300 of 300** at fixed `n = 6` (`scale/pivot_selection_theory.py`), so neither
+`f` nor `h` is submodular there and the guarantee does not apply. The softmax-family cells
 (`softmax`, `glance`, `twin`) keep it; the signed operator does not.
 
 **A prediction of mine that was wrong, recorded.** I expected `h` to be
