@@ -51,6 +51,26 @@ JOURNAL = ROOT / "tests" / "chase" / "scale_axes.jsonl"
 #: vacuous rather than passing. Stated, not silently skipped.
 MIN_POINTS_TO_BRACKET = 3
 
+#: Axes whose QUESTION is the location of a minimum. Only these can be wrong about
+#: an edge; for the others an edge argmin is the correct and expected answer.
+#:
+#: `axis_rho` asks "Does the argmin over rho MOVE between two sizes?" -- an argmin
+#: question, scored by comparing two argmins, and meaningless if either is pinned to
+#: the grid's end.
+#:
+#: `axis_depth` ("d=256 H=4 seq=128 fixed; L = 2,4,8,16"), `axis_seq` and
+#: `axis_heads` ask how the ratio SCALES. A monotone trend is the expected shape and
+#: puts the argmin at an edge by construction. NEPTUNE measured depth degrading
+#: 1.02 -> 1.10 at the parity point, so the depth argmin will sit at L=2 and that is
+#: the finding, not a defect.
+#:
+#: This allowlist was added BEFORE the depth axis ran. Without it, the first depth
+#: sweep would have produced a RED from this guard on a correct measurement -- the
+#: guard condemning the innocent, which is the direction R10_MECHANISM.md records as
+#: the one MISTAKES.md's planted-positive rule cannot catch. The guard was written
+#: about that failure and committed it.
+ARGMIN_AXES = frozenset({"rho"})
+
 
 def points_by_axis_and_size() -> dict[tuple[str, str], list[tuple[float, float]]]:
     """{(axis, size): [(x, ratio), ...] sorted by x} from the committed journal."""
@@ -67,8 +87,27 @@ def points_by_axis_and_size() -> dict[tuple[str, str], list[tuple[float, float]]
 
 
 def cells() -> list[tuple[str, str]]:
+    """Axis/size pairs this guard can rule on: an argmin axis with enough points."""
     return sorted(k for k, v in points_by_axis_and_size().items()
-                  if len(v) >= MIN_POINTS_TO_BRACKET)
+                  if k[0] in ARGMIN_AXES and len(v) >= MIN_POINTS_TO_BRACKET)
+
+
+def test_the_allowlist_names_axes_that_actually_exist():
+    """Premise. An allowlist naming no recorded axis makes every case below vacuous."""
+    recorded = {a for a, _s in points_by_axis_and_size()}
+    assert recorded, "no axes recorded at all"
+    named = ARGMIN_AXES & recorded
+    assert named, (
+        f"ARGMIN_AXES={sorted(ARGMIN_AXES)} names no axis present in the journal "
+        f"{sorted(recorded)}; this guard is inert and should be said to be"
+    )
+
+
+def test_a_trend_axis_is_not_condemned_for_its_edge_argmin():
+    """Must-not-fire. A monotone trend axis must be OUT of scope, or the first depth
+    sweep produces a RED from this guard on a correct measurement."""
+    assert "depth" not in ARGMIN_AXES, "depth is a scaling axis; its argmin is an edge by design"
+    assert "seq" not in ARGMIN_AXES and "heads" not in ARGMIN_AXES
 
 
 def test_the_journal_has_axes_to_check():
