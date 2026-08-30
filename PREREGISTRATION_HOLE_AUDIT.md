@@ -833,3 +833,186 @@ scoreboard that only moves down is as unfalsifiable as one that only moves up:
 > risk that the third is non-empty** — if the re-audit prints an undecidable
 > column, my number should be scored against survived-plus-undecidable as well
 > as against survived alone, and both scores stated.
+
+## 8. ADJUDICATION — the struck-constant candidates Jupiter's fix exposed
+
+Written after §7 was committed, so nothing here can have informed the filing
+above.
+
+### 8a. The boundary question, ruled
+
+> **Does a struck constant asserted inside a skipped module count as shipping?**
+
+**YES. Execution is not the test, and it never was.**
+
+The precedent decides it and decides it against me. `5.4944e-13` was struck
+because it *"existed only in a code comment and in prose"* (`CHECKLIST.md:665`,
+`MISTAKES.md:242`). A code comment does not execute. Prose does not execute.
+Both were ruled to be shipping. My three constants sit in a **module
+docstring** — the most-read text in the file, and the first thing anyone
+implementing the clause would read. `pytest.skip` stops the tests running; it
+does not stop the docstring being read, and the docstring is where the pilot
+disclosure lives.
+
+The registry's own name settles the criterion: the test is called
+`test_no_struck_constant_ships`, and its `LEAD_DOCS` tuple is commented
+*"Documents a stranger reads as current claims."* The unit is **legibility as a
+current claim**, not reachability by the interpreter.
+
+**So the three are real hits, they are mine, and the strike I filed in iteration
+2 was incomplete.** The defect is not the strike and not the skip — both did
+their jobs, and the eleven REDs are still one declared SKIP. The defect is
+**marker granularity**: I put `[STRUCK ...]` in the `THE PRE-REGISTERED BAR`
+paragraph, and `0.743864` lives in the indented pilot block below it, which is a
+**different blank-line-delimited paragraph**. `_block` cannot see across the
+blank line. My marker even said *"every number in this paragraph"*, which was
+false of the paragraph it was in.
+
+Fixed this session, at the right granularity: a `[STRUCK ...]` marker inside the
+indented block, one inside the innermost pilot-rows block, and one on the
+`Floor frozen at 0.50` paragraph. **Verified by the scanner** —
+`tests/cameron/test_harmonic_attribution.py:123-124` no longer appears in its
+output, while its own must-fire control still fires in both directions
+(`planted assertion, no marker -> 1 hit FIRED`; `same number WITH strike marker
+-> 0 hits, correctly silent`).
+
+### 8b. What the ruling generalises to, and what it does not
+
+**The rule:** *a struck constant is shipping wherever a reader can read it as a
+current claim, regardless of whether the code around it executes.* Docstrings,
+comments, printed strings, `README`s and journals are all in scope. Skipping,
+`xfail`-ing, `if False:`-ing or commenting out the surrounding code changes
+nothing about it.
+
+**It does not generalise to "the skip was wrong."** The skip governs execution
+and it is doing exactly what it was chosen to do. Prose was never in its scope,
+and treating a marker as a substitute for the other is the error I made.
+
+**It does not generalise to "any occurrence is an assertion."** The scanner's
+own banner is right: *"LAYER 2 IS A TEXT SCAN AND TEXT SCANS CRY WOLF — the
+shipped test's own docstring counts SIX instruments that did. Every hit below is
+a CANDIDATE requiring the line to be read, not a finding."* §8c reads all of
+them.
+
+**The narrowness clause, the same discipline as the hard-rule-2 exception:** the
+load-bearing predicate is *"a reader encountering this text alone would take the
+number as current."* A number appearing in a sentence that says it was
+withdrawn, in a strike record, in an append-only journal, or as a scanner's own
+test fixture, fails that predicate and is not shipping. That is why 26 of the 28
+candidates below are not findings.
+
+### 8c. Triage — 28 candidates, 2 real
+
+Jupiter's 27 is now 28: the documents grew, including by my own §4b. **His
+caveat that 27 is an upper bound is correct and understated.**
+
+The separation is mechanical rather than a judgment call. Parsing each flagged
+file with `ast` and asking for **numeric literals** equal to `−1.389`, as
+against text mentions:
+
+| file | numeric `−1.389` literals |
+|---|---|
+| `tests/cameron/test_diagnose_package.py` | **line 32** |
+| `tests/chase/test_hub_package_hardening.py` | **line 498** |
+| `tests/loop/test_no_struck_constant_ships.py` | lines 48, 194, 196 — **the registry itself** and its own planted control |
+| `scale/sparse_probe.py`, `scale/tgate_probe.py`, `scale/lo_probe.py`, `scale/pivot_probe.py`, `scale/dfloor_probe.py`, `scale/aggregator_mechanism.py`, `tests/foreman/test_m2_mechanism_story.py` | **NONE — text only** |
+
+| tier | count | what it is |
+|---|---|---|
+| **1 — REAL, a live assertion** | **2** | `tests/cameron/test_diagnose_package.py:32` and `tests/chase/test_hub_package_hardening.py:498`. §8d |
+| 2 — printed to stdout as a current fact | 1 | `scale/sparse_probe.py:118` — `print("dense slope was -1.389 (Foreman, 1024 draws).")`. A string, not a numeric literal, so it asserts nothing to the interpreter, but it tells a **user** the struck number with provenance attached. Owner: whoever owns the probe. One `(WITHDRAWN)` in the string clears it |
+| 3 — the strike apparatus catching itself | 7 | `MISTAKES.md:242` (the strike record), `PREREGISTRATION_HOLE_AUDIT.md:424` (mine, §4b), `MATHEMATICS.md:934` (a sentence *about* the substring problem), `scale/chase_struck_coverage.py:28` (**the scanner's own must-fire control string**), `tests/loop/test_no_struck_constant_ships.py:21` (the registry's own explanatory comment), `progress.md:1329,1331` (the round journal recording this very adjudication) |
+| 4 — records of a strike, in another seat's report | 4 | `tests/deimos/DEIMOS_REPORT.md:134-135` and `tests/deimos/test_deimos_r9_iteration1.py:375-376` — Deimos quoting my three **as the thing he found missing**. Naming, not asserting |
+| 5 — prose naming `−1.389` as history or as a hypothesis under test | 13 | `ARSENAL.md:41`, `CONTRACT.md:96`, `RESEARCH.md:147,152,154`, `scale/dfloor_probe.py:28`, `scale/lo_probe.py:1,5,27`, `scale/pivot_probe.py:20`, `scale/tgate_probe.py:20`, `tests/cameron/test_diagnose_package.py:12`, `tests/foreman/test_m2_mechanism_story.py:9` |
+| 6 — substring artefact | 1 | `scale/aggregator_mechanism.py:4` — the line reads `1.5304 / 1.3897 / 0.9717`. **`1.3897` contains `1.389`.** Jupiter predicted this class exactly; it is 1 of 28, not 17 |
+
+**So `−1.389`'s 17 (now 19 of 28 lines) are: 2 real, 1 substring artefact, and 16
+prose or apparatus.** The bulk of the alarm is the strike machinery, the round
+journal and the research history correctly *discussing* a withdrawn number.
+Tier 5 is the only tier where reasonable people could differ, and the reason to
+leave it alone is in §8b: every one of those lines sits in a document whose
+subject **is** the withdrawal, or in a probe docstring stating the exponent as
+the thing being decomposed. None of them would make a stranger think `−1.389` is
+current — but several would be *clearer* with a marker, and that is their
+owners' call, not mine.
+
+### 8d. The two real ones — and one of them is a re-introduction trap
+
+**`tests/chase/test_hub_package_hardening.py:496-499` is the urgent one, and it
+is urgent *because of this round*.**
+
+The shipped object was repaired correctly. `ceq.hf.modeling_ceq.COSTS
+["content_conditional_sign_decay"]` now reads
+`'slope': None, 'r2': None, 'exponent_status': 'WITHDRAWN -- the -1.389 / R^2
+0.9938 pair was a floor=1e-6 artifact...'` — confirmed by import this session.
+That is why layer 1 passes and why `test_no_struck_constant_ships` is 14/14.
+
+But `test_the_package_states_its_costs_in_the_file_that_ships` (`:481`) still
+asserts the **pre-repair** dict, `"slope": -1.389, "r2": 0.9938`. Run this
+session: **2 failed** (cpu and cuda). It is one of the 146, and its failure is
+the *correct* state — it is the withdrawal showing up as a red test.
+
+> **The trap: the obvious repair is to make the assertion match the code, and
+> the obvious direction to make it match is backwards.** A restitution round
+> whose law is *"no fix may move a published number"* is precisely the round in
+> which someone will open a failing assertion about the shipped cost table and
+> tidy it. Fixing this test by editing `COSTS` to match the assertion puts
+> `−1.389` back into the shipped package. **The repair is to update the
+> assertion to `'slope': None` with the `exponent_status` string, and it must be
+> made by Chase, who owns the file.** Flagged here rather than fixed: it is a
+> failing test I did not cause, with a real producer and a real history, and
+> §4d's exception does not reach it — that exception's load-bearing clause was
+> *"no definition exists in any ref"*, and `−1.389` was measured.
+
+**`tests/cameron/test_diagnose_package.py:32` is the quieter one and may be
+worse.** `PUBLISHED_SLOPE = -1.389`, `SLOPE_TOL = 0.35`, used live at `:68`:
+
+    assert abs(decay["slope"] - PUBLISHED_SLOPE) < SLOPE_TOL, decay["slope"]
+
+That is a **tolerance band centred on a withdrawn number**: `[−1.739, −1.039]`.
+The registry records two candidate replacements — `−0.958` (R² 0.9990) on
+`floor=0` rates and `−1.221` (R² 0.9662) from the audit. **`−1.221` passes this
+band and `−0.958` fails it.** So a re-measurement that produced the better-fitting
+replacement would be **rejected by a test enforcing the artifact it replaced**,
+and the rejection would read as "the diagnostic regressed". The comment above it
+says *"Pre-registered, in code, before the module existed"*, which is true and is
+exactly what makes it dangerous: it has the form of a pre-registration and the
+content of a withdrawn number. Owner: Cameron.
+
+Neither is fixed here. Both are named with their owner, which is what an
+adjudication seat produces.
+
+### 8e. Two defects in the scanner that this exposed, for its owner
+
+1. **The paragraph is the wrong unit for a sectioned document.** My marker was
+   one blank line away from the numbers it governed and did not reach them. The
+   `_block` rule was introduced to fix a line-at-a-time scan that cried wolf
+   five times, and it over-corrected: a paragraph is smaller than the scope a
+   strike marker is naturally written at. This is not an argument for a ±k line
+   window — that is a tuning knob, and the shipped comment says so. It is an
+   argument for **a file-level or block-level marker**, e.g. a `STRUCK-SCOPE:`
+   line that governs until the next heading.
+2. **The `ast` split in §8c is a stronger test than the text scan for tier 1,
+   and it is cheap.** A numeric-literal pass over `*.py` separates 2 real hits
+   from 7 text-only files with zero judgment calls, and it is immune to the
+   `1.3897` substring class entirely. It does not replace the text scan — prose
+   is where `5.4944e-13` lived — but it would let the text scan's output be
+   ranked instead of flat. Not built here: it is Chase's file and Jupiter just
+   repaired it, and a second hand in it this iteration is how the fix gets
+   undone.
+
+### 8f. Limits for §8
+
+The count `28` is this worktree at `486ae41` plus my own §7, and it will move
+again as documents grow — the metric is unstable by construction and should be
+read as a list, never as a score. Tier 5's thirteen are the judgment calls: each
+was ruled by reading the line and asking §8b's predicate, and a different reader
+could move two or three of them into tier 2. The `ast` pass proves a numeric
+literal is absent, not that a file is innocent — a struck constant assembled at
+runtime, formatted into an f-string, or stored as a string would not appear, and
+`scale/sparse_probe.py:118` is exactly that case caught by the text scan
+instead. The two tier-1 hits were confirmed by import and by running one test
+node; neither was repaired, so neither repair is verified. And the ruling in §8a
+is a reading of the `5.4944e-13` precedent onto my own case, which is the
+weakest kind of authority available — precedent, not measurement — though it is
+the authority the registry itself runs on.
