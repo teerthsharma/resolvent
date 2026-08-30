@@ -707,3 +707,129 @@ the scalar ladder, so those predictions are about what the instrument will
 print, not about a capability. No cell was trained this session; every execution
 was a read-only draw, a `hasattr` check, a `git log`, or the bootstrap ceiling
 sweep.
+
+---
+
+# R9 iteration 4 — CEQ v13 restitution round — 2026-08-30
+
+## 7. FILED BEFORE THE RE-AUDIT RUNS — how many standing GREENs survive
+
+**Filed before the re-audit has read a single gate.** X-R11's own test is *"an
+Irene filing after the data timestamp → refused by the journal's ordering
+check"*, so this section is committed on its own, ahead of §8, and nothing in it
+is amended afterwards.
+
+The gates the re-audit applies, as the contract names them: **identity
+manifests**, **geometry stamps**, **baseline validity**, **control
+admissibility**. Survivors are stamped GREEN-RESTITUTED; failures are downgraded
+with the defect class named.
+
+### 7a. The number
+
+> **1 of 5 survives.** Only **F-green** is stamped GREEN-RESTITUTED. The
+> **settled birth gates**, **M4 eviction**, the **E4′ gates** and the
+> **calibrated M3 harness** are all downgraded.
+>
+> **And the second number matters more: if the `N = 5` floor is added as a fifth
+> gate, 0 of 5 survive.** The floor is not among the four the contract names, so
+> on the contract as written it cannot downgrade anything — but F-green is a 5/5
+> claim and 5/5 is the only way an `N = 5` percentile interval excludes zero.
+> Whichever of `1` or `0` the re-audit prints, it is choosing whether the floor
+> is a gate, and that choice should be made visibly rather than by omission.
+
+### 7b. The call, one GREEN at a time, with the defect class named
+
+| GREEN | called | defect class if downgraded | the specific thing |
+|---|---|---|---|
+| **F-green** `+0.111396` | **SURVIVES** | — | see 7c |
+| **settled birth gates** | **DOWNGRADED** | control admissibility | `CHECKLIST.md:860`, the gate author's own sentence: *"**Every gate can pass while the arm is an expensive argmax.**"* Gate 3 is already **SPLIT** (`:856`) — FLOPs pass at `k∈{8,32}`, **fail at `k=128`** (`3.851464` vs `1.667480`). Three gates passed and the capability they gated was retired anyway: `CHECKLIST.md:1230` records K-2E firing, settling retiring, the twin shipping. A gate that passes on an arm later withdrawn was not admissible for the claim it was asked about |
+| **M4 eviction** | **DOWNGRADED** | control admissibility | The headline reading is `0.000000e+00` under eviction against `2.154868e-05` under gating (`CHECKLIST.md:223, 252`). The zero is **structural by construction** — a gate cannot leave the denominator — and `CHECKLIST.md:31` records it *re-labelled* structural rather than repaired. The must-fire that was added moves the **gating** quantity 8/8; it does not move the quantity that reads zero. `FINDINGS.md` §F: *"a task declaring `0.0` must ship a do()-bit movement test"* — the movement test here is on the other arm. `:252` still carries **UNTESTED** |
+| **E4′ gates** | **DOWNGRADED** | identity manifest / geometry stamp | `FINDINGS.md` A3: `E_T_STAR` has **no entry** for `e4prime`, and `scale/e_ladder.py:143` and `scale/etask_k5e.py:117` index it unguarded → `KeyError`, while `scale/m3_capability.py:269` and `scale/m3_quintuple.py:652` guard with `in` and **degrade silently**. A gate whose task cannot be indexed by two of its four consumers and is silently skipped by the other two has no stable identity to hash |
+| **calibrated M3 harness** | **DOWNGRADED** | baseline validity | `FINDINGS.md` A7 / `STATE.md:73-76`: `calibrate_bar` trains its control on **raw** `y` while `run_arm` trains arms on **standardised** `y`. The `e2_consequence` bar reads `2.446646` at `steps=150` against a calibration taken at 600. **Diagnosed and unfixed.** A bar produced by a control trained on a different target than the arms it judges is the definition of an invalid baseline, and it is the one defect on this list whose diagnosis is already written down and still standing |
+
+### 7c. Why F-green is the one that lives, and exactly what would kill it
+
+`twin − softmax = +0.111396`, CI `[+0.100873, +0.121920]`, **5/5 seeds**,
+`sd 0.016547`. It clears all four gates as they are written:
+
+* **Identity** — it reproduces from `results/m3_quintuple_v2.jsonl`, and
+  `tests/cameron/test_published_intervals_have_producers.py` binds it.
+* **Geometry** — stamped: `s=64 d=24 n_train=8192 n_eval=512 steps=150 k=8`,
+  the geometry `M3_QUINTUPLE_PREREGISTERED_READING.md` §2 fixed in advance.
+* **Baseline** — `softmax` is not a rigged oracle here. This is
+  `negation_scope`, not `e3_t*`, so `LOOP_PROMPT.md` §1.7d's rig does not reach
+  it. That is the whole reason this contrast is creditable where the ladder's
+  `settled − softmax` is not.
+* **Control** — `argmax − softmax = −0.118456`, CI `[−0.134115, −0.102786]`,
+  **0/5**. The control fires in the losing direction on the same instances, which
+  is the admissibility standard the other four cannot meet.
+
+**Three things would kill it, and only these three.**
+
+1. **The two-intervals problem, if it reaches the twin.** `CHECKLIST.md:1168`
+   records that the published intervals are the **exact enumeration over all
+   `5^5 = 3125` paired resamples**, while the shipped
+   `ceq/hf_artifact/README.md` prints `[+0.066232, +0.147110]` for
+   `settled − softmax` against the exact `[+0.068181, +0.147110]`. **Two
+   intervals for one claim, one of them shipped.** I predict this downgrades
+   `settled − softmax` and **not** the twin, because the discrepancy is recorded
+   on the settled row only. If the re-audit finds the same split on the twin's
+   interval, F-green falls with it and my number goes to 0 on the contract's own
+   four gates.
+2. **The `N = 5` floor, if it is admitted as a gate.** F-green excludes zero at
+   5/5. My iteration-2 measurement on the shipped `contrast()` — 385/385
+   unanimous cases excluded zero, 4-1 split 20.0–44.5 %, 3-2 split 0–3.7 % —
+   says the interval excludes zero **because the five seeds agree**, and the
+   finest two-sided significance available at `N = 5` is `2·(1/2)^5 = 0.0625`.
+   Jupiter's independent arithmetic agrees: the sign lattice has **zero**
+   two-sided p below `0.05`. That does not make `+0.111396` wrong — `sd 0.016547`
+   against a `+0.111` mean is a `6.7σ` separation and the effect is not in doubt.
+   It makes the **`p < 0.05` claim** unavailable, and the honest restitution is
+   to keep the number and re-state its significance, not to withdraw it.
+3. **A manifest hash computed over `scale/m3_quintuple.py` as it stands now.**
+   The file has taken `--task`, `PLUS_CELLS`, `ROW_CELLS`, `vector_readout` and
+   the `n+` change since `+0.111396` was produced. Under X-R1 as described —
+   *"content hash of (code path, config, tensor shapes, RNG plan); harness
+   refuses a cell whose hash ≠ current manifest"* — a hash taken over the **file**
+   rejects it and a hash taken over the **executed path** does not. I predict the
+   re-audit uses the executed path, because a file hash would downgrade every
+   GREEN in the repository simultaneously and that result carries no information.
+   **If it uses the file hash, the answer is 0 of 5 and the gate is measuring
+   git history rather than validity.**
+
+### 7d. What falsifies this filing — binary, before any gate runs
+
+1. **Any count other than 1** under the four named gates. `2` or more falsifies
+   me by survival; `0` falsifies me on F-green.
+2. **Any of my four downgrades being stamped GREEN-RESTITUTED.** Each is called
+   with a named class and a cited line; a survivor among them means I read the
+   class wrong, and the one I would most expect to be wrong about is **M4**,
+   because a must-fire *was* added and I am ruling it insufficient rather than
+   absent.
+3. **F-green downgraded for a reason not in my list of three.** That is the
+   cleanest miss: it would mean the gates catch something I could not see from
+   the record.
+4. **The re-audit applying the `N = 5` floor without saying so.** Not a
+   falsification of the count but of my model of the round — I predict the floor
+   is *not* applied as a gate, because it is not one of the four, and that its
+   omission goes unremarked.
+
+### 7e. The fall-through row for the re-audit
+
+Rows **Ω** and **Ω2** already exist. The re-audit needs its own, because a
+scoreboard that only moves down is as unfalsifiable as one that only moves up:
+
+> **Ω3** | A GREEN is neither stamped GREEN-RESTITUTED nor downgraded — because
+> the gate that would decide it **cannot be evaluated on the record** (no
+> manifest exists for code that predates manifests, no geometry was stamped
+> because stamping did not exist, the control's admissibility turns on a
+> quantity nobody measured) | **UNDECIDABLE, PRINTED AS SUCH, AND COUNTED
+> SEPARATELY.** Not a survival and not a downgrade. Retrofitting a gate onto a
+> number produced before the gate existed can only ever return "cannot tell"
+> for the honest cases, and folding those into either column is the round's own
+> version of reporting a missing rung as a null. The count the contract asks for
+> is therefore **three numbers, not one**: survived, downgraded, undecidable.
+> **My filing of `1` assigns all five to the first two columns and takes the
+> risk that the third is non-empty** — if the re-audit prints an undecidable
+> column, my number should be scored against survived-plus-undecidable as well
+> as against survived alone, and both scores stated.
