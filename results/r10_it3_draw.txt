@@ -1,0 +1,45 @@
+AUDIT.md pinned at f823b02: 347 classed rows (KEEP 314 / ATTIC 33)
+seed=10003  distinct classing rules over KEEP: 61
+strata: 18 (17 multi-row + 1 pooled singleton)
+allocation (stratum size -> draws): [(114, 5), (36, 3), (25, 2), (19, 2), (13, 2), (12, 2), (7, 1), (7, 1), (7, 1), (6, 1), (6, 1), (6, 1), (4, 1), (2, 1), (2, 1), (2, 1), (2, 1), (44, 3)]
+
+every rule sampled: True  => P(detect a wholly-wrong rule) = 1.0000 for all 61 rules
+
+KEEP drawn (30) -- every one MUST PASS:
+  LOOP_PROMPT_ROUND3_ARCHIVE.md
+  NOTES.md
+  README.md
+  REQUIREMENTS.md
+  done5.md
+  scale/arm_s.py
+  scale/chase_k3_ci.py
+  scale/dfloor_probe.py
+  scale/e4_harmonic.py
+  scale/e_ladder.py
+  scale/equilibrium_probe.py
+  scale/foreman_quantisation.py
+  scale/hyperbolic.py
+  scale/monge.py
+  scale/s2_probe.py
+  tests/cameron/test_bar_control_sees_the_arms_preprocessing.py
+  tests/cameron/test_r4_compression.py
+  tests/cameron/test_r6_twodof_red.py
+  tests/chase/k22.py
+  tests/chase/test_deq_divergence.py
+  tests/deimos/DEIMOS_REPORT.md
+  tests/foreman/_ceq.py
+  tests/foreman/test_capability_and_theorem_share_no_object.py
+  tests/foreman/test_deq_redundancy.py
+  tests/foreman/test_l1_normalizer_obstruction.py
+  tests/foreman/test_r1_settling.py
+  tests/jupiter/__init__.py
+  tests/w7/conftest.py
+  tests/w8/test_w8_real_model.py
+  tests/w9/test_w9_hopcache.py
+
+ATTIC drawn (5) -- every one MUST BE DEAD:
+  scale/frustration_audit.py
+  scale/lastrow_bind.py
+  scale/lo_probe.py
+  tests/loop/test_theorem_hypotheses_hold_at_shipped_settings.py
+  tests/wilson/accum_divergence.py
