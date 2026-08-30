@@ -1485,3 +1485,221 @@ data point.`
   journalled value dict bitwise and `contrast` writes `verdict` into it, so **any
   changed default re-runs every completed unit.** That is the reason the obvious
   fix would have been destructive, and he found it before doing it.
+
+## Iteration 4 — Saturn COMPLETE (X-R1) and Venus COMPLETE (re-audit filing + the 27)
+
+Both merged. Controller checks 55/55 and 14 passed / 1 skipped.
+
+### Saturn — X-R1 identity manifests, G2 asserted rather than argued
+
+`scale/identity_manifest.py` + 13 tests (RED first: ImportError). G2 proven on a
+published cell: `settled_k8_..._sd0_taske3_t1` reads
+`eval_nrmse = 0.9783142763084641` BITWISE UNCHANGED after the manifest is
+computed, matching the committed journal, every parameter tensor `torch.equal` to
+its clone.
+
+The must-fire fires on five config fields — `beta`, `n_neumann`, `d_model`,
+`cell`, `task` — each NAMING THE FIELD THAT MOVED; restore reproduces the hash.
+
+`test_the_key_cannot_separate_two_different_arms` DRAWS the collision rather than
+arguing it: three of the five arguments `load_unit` calls identity-defining
+collapse to ONE journal key, so the second run silently overwrites the first.
+Grounded on the round's real defect — `make_impact_batch` hashes `c926738cd0ec`
+against `make_impact_hetero_batch` `38a4eb4bd887`, and a stored `impact_hetero`
+manifest REFUSES the homogeneous builder.
+
+Two bugs surfaced in his own instrument, both instances of what the file
+documents: the first code-digest test compared three differently-NAMED functions
+— comparing names, not logic, which is X-R3 exactly — and the docstring filter
+dropped the string but not the `None` occupying the same `co_consts` slot, so a
+docstring edit still moved the digest.
+
+His two stated holes, and the first is large:
+
+1. The manifest is UNTESTED against a real `QuintArm` dispatch set — that needs
+   Mercury's held file. Every `code`-component test uses functions Saturn wrote or
+   the two `impact` builders. His words: "If my proposed dispatch set is
+   incomplete — and I have not verified it is — the manifest hashes a subset of
+   the code path and misses changes in what it omits."
+2. The `rng` component measures the tensors, not the plan. `RNG_PLAN` is a
+   declared constant with nothing binding it to what `paired_arm` actually does —
+   change the eval offset without updating it and THE REFUSAL STILL FIRES BUT
+   NAMES THE WRONG CAUSE. That is X-R6's own defect surviving inside X-R1's fix.
+
+V-14 landed (36 entries) and it is genuinely new: `chase_struck_coverage` OBEYED
+vacuity rule 5 — shipped a must-fire, ran it first, refused to proceed without it
+— AND IT PASSED WHILE THE SCANNER REACHED 0 OF 366 FILES, because `control()`
+calls `scan_text` on a literal string and `collect_targets` is never on that path.
+Check 5 sharpened: identical TEXT is not identical PATH.
+
+### Venus — filed first, in a separate commit, so the ordering check can see it
+
+Job 1 committed at `e79012f` BEFORE any adjudication work began. X-R11 discipline
+applied to herself without being asked.
+
+FILED: 1 of 5 GREENs survive — F-green only. Settled birth gates, M4 eviction,
+E4-prime gates and the calibrated M3 harness all downgraded, each with its defect
+class and a cited line.
+
+And a second number beside it: IF THE N=5 FLOOR IS ADMITTED AS A FIFTH GATE, 0 OF
+5 — because F-green is a 5/5 claim and 5/5 is the only way an N=5 percentile
+interval excludes zero. Her point: the floor is not one of the four named gates,
+so printing 1 or 0 is a choice about whether it counts, and she asks for that
+choice to be visible. Row Omega-3 added for the column the scoreboard lacks —
+neither restituted nor downgraded, because the gate cannot be evaluated on a
+number produced before the gate existed.
+
+RULING: Venus has found an ambiguity in the contract's own re-audit specification
+and filed BOTH branches rather than silently picking one. That is the correct
+handling and the scoreboard must print which convention it used. The controller
+does not resolve it here — it is a scoring convention the author set up and should
+see. Cost if wrong: the re-audit reports two numbers instead of one, which is more
+informative than either alone.
+
+The 27 triaged to 28, and only 2 are real. Separated mechanically by an `ast` pass
+for NUMERIC LITERALS against text mentions: 2 live assertions, 1 printed to a
+user, 7 the strike apparatus catching itself (including the scanner's own
+must-fire control string), 4 Deimos recording the strike, 13 prose, 1 substring
+artefact. Of the 19 minus-1.389 lines, 2 are real — Jupiter's "upper bound" caveat
+was right and understated.
+
+She ruled the boundary AGAINST HERSELF. A struck constant in a skipped module DOES
+ship — 5.4944e-13 was struck for existing "only in a code comment and in prose",
+and neither of those executes either; hers sat in a module docstring. The real
+defect was MARKER GRANULARITY: her [STRUCK] sat one blank line above the numbers
+and `_block` is paragraph-scoped. Repaired, must-fire still fires both ways.
+
+### TWO LIVE TRAPS, both confirmed by the controller, both G2 hazards
+
+1. REPAIRING THE OBVIOUS WAY WOULD PUT A STRUCK CONSTANT BACK INTO THE SHIPPED
+   PACKAGE. `tests/chase/test_hub_package_hardening.py:496-499` asserts
+   `"slope": -1.389, "r2": 0.9938` while `ceq/hf/modeling_ceq.py:140` now holds
+   `"slope": None, "r2": None` with `exponent_status: "WITHDRAWN -- the -1.389 /
+   R^2 0.9938 pair was a floor=1e-6 artifact."` THE ASSERTION MUST BE REPAIRED,
+   NOT THE DATA. The hard-rule-2 exception does not reach it — minus-1.389 was
+   measured.
+
+   The comment three lines above the failing assertion reads: "A guard that
+   samples a table does not guard the table." The guard was widened to check the
+   whole table, and the whole-table check now pins a withdrawn number.
+
+2. A TOLERANCE BAND CENTRED ON A WITHDRAWN NUMBER.
+   `tests/cameron/test_diagnose_package.py:32` — `PUBLISHED_SLOPE = -1.389`,
+   `SLOPE_TOL = 0.35`, marked "Pre-registered, in code, before the module
+   existed." Band is [-1.739, -1.039]: the replacement -1.221 passes, -0.958
+   FAILS. A better-fitting re-measurement would be rejected as a regression by a
+   test enforcing the withdrawn artifact.
+
+RULING: both routed to Neptune, who holds the shipping artifact and doc truth and
+is free. Venus named Chase and Cameron as owners, but those are author-directories
+rather than seats, and shipped-package integrity is Linus's gate. Cost if wrong:
+one seat does work another would have done.
+
+Venus's own stated limits: M4 is the call she most expects to be wrong — a
+must-fire WAS added; she rules it insufficient because it moves the sibling
+quantity, not the one reading 0.000000e+00. If the re-audit accepts it her count
+goes to 2. And she DECLINED to fix the scanner's two remaining defects because
+"Jupiter just repaired that file and a second hand this iteration is how a fix
+gets undone."
+
+## Iteration 4 — Mars COMPLETE. A thirteenth class survives, and he corrected the contract's premise.
+
+Merged at `c7a3a80`. `test_mars_control_entry_point.py` + `test_mars_green_attacks.py`
+10/10 in 29.21 s; it2 file re-run unchanged 12/12. Running total: 12 filed, 9 fired.
+
+### Existence correction to the v13 contract itself
+
+`git grep "X-R"` returns ONE unrelated hit (`CHECKLIST.md:556`). NO X-R1..R12
+taxonomy exists in the tree. The real taxonomy is `MISTAKES.md` — 35 entries in
+V/P/M/D families. He tested reducibility against those, not against the contract's
+numbering.
+
+RULING: the v13 contract's X-R numbering is PROSE, describing classes by
+description rather than by an in-tree identifier. That is not a defect in the
+contract — it is a mapping the round has to maintain, and Mars is the first to
+state it. Any future reference to "X-R3" must name the MISTAKES.md entry it means.
+
+### THE THIRTEENTH CLASS
+
+  "the control constructs its own input, so it certifies the instrument's
+   predicate over a domain production never chose."
+
+Two instances, both re-verified BY EXECUTION, neither taken from a report:
+
+- A — imported the `8b40e16^` blob of `chase_struck_coverage.py` and ran it here:
+  `control()` returned TRUE while the shipped filter kept 0 OF 375 files (the
+  relative filter keeps 374) and `main()` returned 0.
+- B — Neptune's binder: AST shows `PUBLISHED` is a literal dict of exactly 3
+  intervals and the file contains NO `read_text` / `rglob` / `iterdir` / `open`.
+  The three documents it names print 45 distinct [lo, hi] pairs (45 is an upper
+  bound; 3 is exact).
+- C — the e-process battery is READ and NOT COUNTED.
+
+Answer to the controller's question: ONE class, and the drafted wording catches
+one of three. "Matcher/reach" is SEARCH vocabulary — instance B has no matcher and
+performs no search. Not reducible to V-6 (the asserted branch ran in all three)
+nor V-7 (a real planted positive existed in all three; V-7 does not say WHERE to
+plant it). V-13 is the mirror image.
+
+He produced a FALSE ALARM with his own catch and kept it in the docstring: his
+first gate asserted the module's own `control()` reach `collect_targets`, and it
+failed on a correctly repaired file because Jupiter's coverage control lives in
+`tests/jupiter/`. The invariant is "the selector is driven by SOME control", not
+where it lives.
+
+### G1 FIRES — contrast() samples 10,000 times from a 126-atom lattice
+
+For `settled − softmax` the 2.5 percent target falls between cumulative mass
+0.024320 and 0.025920 — A COIN FLIP. Over seeds 0..99 its `ci_lo` takes FOUR
+distinct values. And `argmax − softmax` `ci_hi` yields BOTH published family
+values, -0.102204 and -0.102786, 36 SEEDS EACH.
+
+So for that contrast THE TWO FAMILIES ARE NOT SEPARATED BY THE NUMBER. No number
+is wrong and no verdict moves.
+
+F-GREEN ITSELF SURVIVES: `twin − softmax` reads 0.100873 at 96/100 and the exact
+enumeration agrees.
+
+RULING: Mars's mechanism and Neptune's are DIFFERENT and both are real. Neptune
+measured a CONSTANT 1.06e-4 shift on BOTH endpoints - the signature of a different
+estimator family. Mars measured endpoints moving by WHOLE LATTICE STEPS,
+independently, under bootstrap seed variation. Two causes, one symptom. Saturn's
+exact-enumeration-vs-bootstrap explanation stands for the contrasts it reproduced;
+Mars's lattice-granularity explanation covers argmax-softmax, where the two family
+values are simply two atoms the same estimator reaches at different seeds. Neither
+supersedes the other. Cost if wrong: a labelling fix is applied to a contrast that
+needed a seed fix instead.
+
+### G2 attacked, refuted, and KEPT — with an unstated qualification exposed
+
+The settled birth gate's `d_onestep` collapses 7.1e+00 to 2.1e-11 as beta goes to
+0 and stops firing at 1e-6. That is a real rejection region and the gate survives.
+
+UNSTATED QUALIFICATION: it begins near beta = 7e-4, so the gate separates
+"settling happens" from "settling does not" — NOT "settling is material at the
+shipped beta = 0.5". The gate is sound; the sentence around it was broader than
+the gate.
+
+### Mars's own stated limits, and the last one is the largest gap in the round
+
+- The class stands on TWO instances, not three, and falls if either is shown
+  reducible.
+- The reducibility table is DERIVED; a reader taking V-6 broadly can collapse it.
+- M4 EVICTION, THE E4-PRIME GATES AND THE CALIBRATED M3 HARNESS WERE NOT ATTACKED
+  AT ALL. Three of five named GREENs enter the re-audit WITHOUT AN ADVERSARY.
+
+## CRASH — the laptop went down mid-round
+
+Recovery assessment, all RUN this session:
+
+- Branch `feat/r9-causal-consequence` at `c7a3a80`. ALL agent branches merged,
+  zero commits unmerged. Nothing lost to the crash on the merge side.
+- NO LIVE PYTHON. Mercury's C1 deciding measurement was killed mid-run.
+- C1 state at death: `t*=32` has softmax 5/5, twinrow 5/5, SETTLEDROW 3/5.
+  Thirteen of fifteen units for the rung the theory predicts on. Two settledrow
+  seeds remain, roughly 23 minutes.
+- Jupiter's worktree is CLEAN at `486ae41` — his last merged commit. The maths
+  survey produced NOTHING before the crash and is a total loss; re-dispatched from
+  scratch.
+- `run_bucket` skips already-journalled units, so the C1 resume costs only the two
+  missing settledrow seeds, not the thirteen that landed.
