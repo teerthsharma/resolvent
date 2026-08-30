@@ -177,3 +177,26 @@ def test_module_has_no_import_time_write_or_argv_read(rel: str):
         "(see scale/spotcheck_draw.py). Measured: importing scale/replay_census.py "
         "truncated a 37-byte file and wrote 251 bytes of census output into it."
     )
+
+
+def test_no_source_mutation_was_left_planted_in_the_tree():
+    """The plant harness's own guard, actually invoked.
+
+    `scale/planted.py::assert_no_stale_plant` exists because round 10 iteration 3
+    left a deliberate off-by-one in `ceq/hankel.py` for ~2 minutes: the mutation and
+    its revert shared one shell command, the command hit its timeout, and the revert
+    died with it while three agents were measuring against the tree.
+
+    The harness reverts in a `finally` and traps SIGTERM/SIGINT, but nothing in
+    process survives SIGKILL, so it writes a sentinel before mutating and removes it
+    after reverting. That sentinel is only worth having if something LOOKS at it --
+    an unread guard is the vacuous-control shape MISTAKES.md catalogues, and until
+    this test existed `assert_no_stale_plant` had zero callers anywhere in the repo.
+
+    This is the call site. Any pytest run over tests/loop now refuses to be trusted
+    while a mutation is unaccounted for.
+    """
+    import sys
+    sys.path.insert(0, str(ROOT))
+    from scale.planted import assert_no_stale_plant
+    assert_no_stale_plant()

@@ -37,3 +37,8 @@ data/*.txt
 *.egg-info/
 /build/
 /dist/
+
+# scale/planted.py writes this while a source mutation is live and removes it on
+# revert. It must never be committed: a stale sentinel in the repo would make
+# assert_no_stale_plant() raise for every clone, forever.
+results/.planted_mutation.json
