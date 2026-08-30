@@ -958,3 +958,98 @@ exists so insight arrives ex ante where it can be scored; running the deciding
 measurement before her filing lands would destroy the only thing that makes the
 filing worth anything. Cost if wrong: roughly one agent-turn of latency on the
 round's most important number.`
+
+## Iteration 3 — Venus COMPLETE. Holding the run for her paid for itself immediately.
+
+Merged. `tests/cameron/test_harmonic_attribution.py` **11 failed → 1 skipped**;
+`tests/deimos/` 8/8. The `house-events.jsonl` union driver worked — auto-merged,
+no conflict.
+
+### The producerless clause is STRUCK, and the proof is the good part
+
+`git log -S` returns **zero commits across all refs** containing a definition of
+any of the nine producers. The pilot numbers had **no possible source in any
+state this repository has ever been in** — case 3, not deletion, not
+sibling-transcription.
+
+**And she proved her search works before trusting its zero** — vacuity rule 6,
+applied to her own instrument: planted positives `def harmonic_measure` →
+`22036de` at `kirchhoff.py:187` (a different object) and `def rag_document_ids` →
+`74e5590`. A search returning zero that was never shown to find a witness is
+mistake type 12, and she did not commit it.
+
+Two further findings turned *"write the producers"* into the wrong answer:
+- **The floor's provenance is a units change.** `BOARD.md:271` says the bar is
+  `PASS_BAR = 0.5` *inherited unchanged* — but that is an **NRMSE** bar at
+  `rips_gate.py:60`, re-used here as a **Spearman rho** floor.
+- **`K-R8d` is already taken** and answered as the decoder-leak kill
+  (`BOARD.md:297`).
+
+Struck per `CHECKLIST.md:478,486,665`. Three constants into the `STRUCK` registry
+(9→12, must-fire verified **both** directions), **302 lines kept verbatim**, and a
+module-level `pytest.skip` on a live `hasattr` check — deliberately **not**
+`xfail(strict=True)`, which would file these eleven alongside the ~50 that *are*
+the record.
+
+Her hard-rule-2 argument, stated narrowly as required: no definition in any ref,
+zero branches executing (0.44 s, all `AttributeError`), no xfail machinery in
+`tests/cameron/conftest.py`, and the finding already independently held by
+`tests/deimos/...:349`. **"It generalises to nothing whose symbol has ever been
+defined."**
+
+`Ruling: the strike is ACCEPTED and the hard-rule-2 exception is granted on her
+stated grounds. The eleven are not a finding reproducing - they are a claim whose
+evidence never existed. Her narrow framing is what makes the exception safe: it
+cannot be stretched to cover any test whose subject exists.`
+
+### SHE FOUND A FLAW IN THE CONTROLLER'S OWN RUN SPEC — three of them
+
+**1. I omitted `softmax` from the deciding run.** `settledrow − twinrow` is the
+settling contrast and **cannot address the `arXiv:2410.01537` Bayes-optimality
+claim that justifies the entire lane**. `softmax` under `vector_readout` is the
+cheapest cell on the board — `0.006437 s/step` against `settledrow`'s
+`4.560600` — and without it at matched seeds **`twinrow − softmax` is
+unavailable forever after**. Amended: the run is `softmax + twinrow + settledrow`.
+
+**2. At N=5 the verdict is a sign test.** Measured on the shipped `contrast()`
+over 1,000 samples: unanimity excludes zero **385/385**; a 4–1 split 20–44 %; a
+3–2 split 0–3.7 %. So *"the CI excludes zero"* at five seeds is very nearly
+*"all five seeds agreed"*, and **the finest achievable two-sided p is `0.0625`,
+not `0.05`.**
+
+**This is a property of every 5-seed reading in the repository, including the
+standing `+0.108437` headline.** Amended: print `n+` beside every CI.
+
+**3. `t*=1` is underpowered by an order of magnitude.** Realised `sd_paired` is
+**0.019–0.109**, not the pilot's `0.050`; `t*=1` needs **62 seeds**, not 5.
+
+`Ruling: run 5 seeds on all four rungs with softmax added; print the per-rung
+ceiling BEFORE the first number. Do NOT run 62 seeds on t*=1 - ~13.5 h for one
+rung against ~4.4 h for the whole table. Do NOT drop it either: dropping the rung
+that cannot resolve and reporting only the rungs that can is rung-picking, the
+exact defect M4 exists to prevent. Run it, label it UNDERPOWERED with its 62-seed
+requirement in the same breath, and show the whole ladder. Cost if wrong: one rung
+carries a caveat instead of a verdict, which is what it has earned.`
+
+### Her prediction, filed before the data
+
+> `settledrow − twinrow` reads inside `±0.027260` at every rung with every CI
+> covering zero — **the write share moves 56× and the settling contrast does not
+> move.**
+
+Point estimates are the scalar ladder's own four deltas. She flags honestly that
+this **transfers** the `e3` deltas onto `c1_propagate` under a different readout —
+a transfer, not a derivation — and falsifier 4 covers the spread half. Four binary
+falsifiers plus fall-through row **Ω2**.
+
+This is the bet worth watching: Neptune measured write share going from
+**1.6–3.1 %** to **88.1–100 %**. If a **56× change in write share moves nothing**,
+that is a result about the arm rather than about the corpus — which is exactly
+what C1 was built to make sayable.
+
+### Carried, for another owner
+
+`scale/chase_struck_coverage.py` reports **"SCANNING 0 PATHS"** and *"uncovered
+.md: 0, uncovered .py: 0"* against its own docstring's claim to scan every
+uncovered file. **Empty coverage** — which is why Venus's registry addition had no
+collateral. A hole in a different instrument, left for its owner.
