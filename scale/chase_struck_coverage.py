@@ -68,6 +68,40 @@ def scan_text(text: str, rel: str):
     return hits
 
 
+#: Directory names never scanned. Matched against the path RELATIVE TO `ROOT`,
+#: never against the absolute path -- see `collect_targets`.
+SKIP_DIRS = (".git", "__pycache__", ".pytest_cache", ".claude", ".benchmarks")
+
+
+def collect_targets(root: pathlib.Path | None = None):
+    """Every `.md` and `.py` under `root` the shipped check does not cover.
+
+    THE EXCLUSION IS RELATIVE TO `root`, AND THAT IS THE WHOLE BUG THIS FUNCTION
+    EXISTS TO HOLD FIXED. It used to test `SKIP_DIRS` against `p.parts`, the
+    ABSOLUTE path's components. Every agent worktree in this project is checked
+    out under `<repo>/.claude/worktrees/<name>/`, so `.claude` appeared in the
+    absolute parts of every file in the tree and the filter dropped all of them:
+    366 candidate files became 0. The scan then printed
+    `SCANNING 0 PATHS ... uncovered .md: 0, uncovered .py: 0` and exited 0,
+    which reads as "no struck constant is asserted anywhere" and is in fact
+    "nothing was looked at". A coverage tool whose result depends on where the
+    repository happens to sit on disk is not a coverage tool.
+
+    `main` additionally refuses to return 0 on an empty target list, so the
+    failure mode is loud from either direction.
+    """
+    root = ROOT if root is None else root
+    targets = []
+    for p in sorted(root.rglob("*.md")) + sorted(root.rglob("*.py")):
+        rel = p.relative_to(root).as_posix()
+        if any(part in SKIP_DIRS for part in p.relative_to(root).parts):
+            continue
+        if rel in COVERED or p.name in HISTORY:
+            continue
+        targets.append((p, rel))
+    return targets
+
+
 def control() -> bool:
     print("=== MUST-FIRE CONTROL ===")
     bad = scan_text("A paragraph that just says the tail norm is 1.471448 flat out.",
@@ -100,17 +134,13 @@ def main() -> int:
           f"params, MODEL_CARD.md listed twice).")
     print(f"  covered: {sorted(COVERED)}\n")
 
-    targets = []
-    for p in sorted(ROOT.rglob("*.md")) + sorted(ROOT.rglob("*.py")):
-        rel = p.relative_to(ROOT).as_posix()
-        if any(part in (".git", "__pycache__", ".pytest_cache", ".claude",
-                        ".benchmarks") for part in p.parts):
-            continue
-        if rel in COVERED or p.name in HISTORY:
-            continue
-        targets.append((p, rel))
+    targets = collect_targets()
 
     print(f"=== SCANNING {len(targets)} PATHS THE SHIPPED CHECK DOES NOT COVER ===")
+    if not targets:
+        print("  SCANNED NOTHING. A coverage tool that walks zero paths passes")
+        print("  every input and is not evidence of anything. STOP.")
+        return 1
     hits = []
     for p, rel in targets:
         try:

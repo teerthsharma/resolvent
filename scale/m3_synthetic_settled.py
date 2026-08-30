@@ -62,7 +62,9 @@ from __future__ import annotations
 
 import argparse
 import contextlib
+import itertools
 import json
+import math
 import pathlib
 import sys
 
@@ -179,6 +181,12 @@ def verdict_of(ci_lo: float, ci_hi: float) -> str:
     return "NO DIFFERENCE"
 
 
+#: Enumerate the exact bootstrap distribution below this many resamples. n=5
+#: costs 3,125 and n=6 costs 46,656; n=7 would cost 823,543, so the door shuts
+#: before the enumeration costs more than the sampling it annotates.
+_EXACT_MAX_RESAMPLES = 100000
+
+
 def contrast(twin: list[float], settled: list[float], *, n_boot: int = 10000,
              seed: int = 0) -> dict:
     """Paired bootstrap over seeds on NRMSE_twin - NRMSE_settled.
@@ -198,8 +206,50 @@ def contrast(twin: list[float], settled: list[float], *, n_boot: int = 10000,
     reps.sort()
     lo = reps[int(0.025 * len(reps))]
     hi = reps[min(len(reps) - 1, int(0.975 * len(reps)))]
+    # THE VERDICT AT N=5 IS VERY NEARLY A SIGN TEST, so the interval must carry
+    # the count that produced it. Measured on this function over 1,000 samples
+    # in three regimes: a 5-0 seed split excludes zero 385/385 times, a 4-1
+    # split 20-44% of the time, and a 3-2 split 0-3.7%. "The CI excludes zero"
+    # therefore reads as "all five seeds agreed", and the finest two-sided p a
+    # 5-seed sign test can reach is 2/2**5 = 0.0625, not 0.05. A reader given
+    # only the interval cannot tell which regime produced it; `n_pos` is that
+    # missing column, and it is reported here rather than by whichever caller
+    # remembers, because it is a property of every 5-seed reading in this repo.
+    n_pos = sum(1 for x in d if x > 0.0)
+    # THE INTERVAL LANDS ON A LATTICE, SO SAY WHERE. `n_boot` resamples are drawn
+    # from a statistic that has only `n**n` of them: at n=5 that is 3,125
+    # resamples over about 128 distinct atoms, and the 2.5 % and 97.5 %
+    # percentiles are picked from that short list. Monte-Carlo therefore chooses
+    # between ADJACENT atoms according to the bootstrap seed. Measured on
+    # `argmaxste - argmax`: over seeds 0..99 `ci_lo` takes 2 distinct values and
+    # `ci_hi` takes 3, and the seed-0 pair sits exactly one atom below the exact
+    # pair at both ends. The two gaps are both 1.056e-04, which LOOKS like a
+    # constant estimator-family shift and is not one -- the endpoints move
+    # independently under seed change, so the equal gaps are equal local atom
+    # spacing and nothing more. That distinction is invisible without these
+    # fields, and mislabelling a seed difference as a family difference is
+    # exactly the error they exist to prevent.
+    #
+    # Reported ALONGSIDE, never instead of: `ci_lo` and `ci_hi` are untouched, so
+    # no journalled value, no published interval and no verdict moves.
+    exact_lo = exact_hi = n_atoms = None
+    if n ** n <= _EXACT_MAX_RESAMPLES:
+        # `math.fsum` on a CANONICALLY ORDERED tuple. Plain `sum()` over
+        # `itertools.product` adds the same multiset in different orders, and
+        # floating-point addition is not associative, so permutations of one
+        # multiset land up to one ULP apart and are counted as distinct atoms.
+        # That reported 128 atoms for `argmaxste - argmax` against a
+        # combinatorial maximum of C(2n-1, n) = 126 -- a count above its own
+        # ceiling, which is the signature of exactly this bug. Two atoms were
+        # split, by 5.551115123125783e-17.
+        allr = sorted(math.fsum(sorted(c)) / n
+                      for c in itertools.product(d, repeat=n))
+        exact_lo = allr[int(0.025 * len(allr))]
+        exact_hi = allr[min(len(allr) - 1, int(0.975 * len(allr)))]
+        n_atoms = len(set(allr))
     return dict(delta=point, ci_lo=lo, ci_hi=hi, n_seeds=n, n_boot=n_boot,
-                per_seed_delta=d, verdict=verdict_of(lo, hi))
+                n_pos=n_pos, exact_lo=exact_lo, exact_hi=exact_hi,
+                n_atoms=n_atoms, per_seed_delta=d, verdict=verdict_of(lo, hi))
 
 
 # ----------------------------------------------------------------- the run ---

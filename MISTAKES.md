@@ -235,6 +235,55 @@ it — V-7 and V-13 are the same defect at opposite signs, so *both* directions
 need the count, not just the zero.
 
 
+### V-14. The control that validates the matcher and never the reach
+
+The one that survives rule 5 being obeyed, which is what makes it a new type
+rather than another instance of V-7.
+
+`scale/chase_struck_coverage.py` scans the tree for struck constants asserted
+without their strike marker. It **ships a must-fire control**, it runs it before
+anything else, and `main` refuses to proceed if the control does not fire
+(`scale/chase_struck_coverage.py:120-122`). The control plants a struck number in a paragraph and requires one
+hit, then plants the same number carrying a strike marker and requires zero — a
+planted positive AND a non-degenerate negative half, exactly what V-7's rule
+asks for.
+
+It passed throughout while the scanner reached **nothing**. The exclusion list
+was tested against `p.parts`, the ABSOLUTE path, and every worktree in this
+project lives under `<repo>/.claude/worktrees/<name>/`, so `.claude` was a
+component of every file's absolute path and the filter dropped all of them.
+**366 candidate files became 0.** The tool printed `SCANNING 0 PATHS THE SHIPPED
+CHECK DOES NOT COVER` and `uncovered .md: 0, uncovered .py: 0` and exited 0 —
+which reads as "no struck constant is asserted anywhere uncovered" and is in
+fact "no path was looked at".
+
+**The mechanism, and it is one line.** `control()` calls `scan_text(...)` on a
+literal string (`scale/chase_struck_coverage.py:107-110`). `collect_targets()` is never on that path. So the
+control exercised the **matcher** and never the **reach**, and the two halves of
+the instrument fail independently. Rule 5 said "a planted positive on identical
+instances"; the planting was on identical *text* and not on an identical *path
+through the instrument*, and the whole defect lived in the segment the plant
+skipped.
+
+It was caught sideways, and that is worth recording too: adding three constants
+to `STRUCK` (9 → 12) produced no collateral at all, and Venus treated a
+convenient result as suspicious rather than as good news.
+
+**Rule.** A planted positive must enter at the instrument's **front door** and
+traverse every stage the real input traverses — for a scanner, that means
+writing the plant to a file inside the scan root and running the whole pipeline,
+not calling the matcher. State which stages the plant passes through; any stage
+it skips is unmeasured, and a control that skips the selection stage cannot see
+a selector that selects nothing. The paired check is cheap and belongs beside
+it: **assert the target list is non-empty and bounded**, because "how many
+things did I look at" is a different question from "would I recognise one".
+
+Note for the taxonomy chapter: this is a **structure** comparison (did the walk
+reach the right set?) guarded by a **value** comparison (does the matcher
+recognise the right text?). The value comparison was correct and stayed correct.
+That pairing — a value control standing in for a structure claim — is where this
+class of defect keeps coming from.
+
 ## P — Provenance failures
 
 ### P-1. A number with no live producer
@@ -551,42 +600,51 @@ with it the only signal that the interval is a sign test. A convention followed
 in two places and mandated in none is a convention that the next headline will
 drop.
 
-**Found while writing this entry, then run down and RESOLVED — and the answer
-was that neither row was wrong.** The same headline carried CI
-`[+0.066232, +0.147110]` at `ceq/hf_artifact/README.md:39` and
-`[+0.068181, +0.147110]` at `CHECKLIST.md:1168` — identical point estimate,
-identical upper bound, lower bounds `0.001949` apart, and neither row named the
-run behind it. The obvious reading was that one was a transcription error. It
-was not. **Both reproduce bit-exact from the same ten journal records**, under
-two different and both-legitimate estimators: `[+0.066232, +0.147110]` is the
-paired percentile bootstrap at `B = 10000, seed = 0` that the run executed
-(`results/m3_quintuple.txt:54`), and `[+0.068181, +0.147110]` is the EXACT
-percentile over all `5**5 = 3125` paired resamples — the family the prose
-deliverables adopted at `CHECKLIST.md:1239` and tabulated at `DONE.md:1844`.
-At five seeds the resample space is finite, so the percentile the Monte-Carlo
-draw estimates is computable outright; the two are the same per-seed deltas
-under a different resampling rule. Only the LOWER bound moves, which is
-precisely why the pair read as a typo.
+**RESOLVED, and it was not a transcription error.** The disagreement noticed
+here turned out to be systematic across all three headline contrasts — every
+point estimate and every upper bound agreeing, lower bounds differing — and both
+families have live producers. At five seeds the paired resample space is FINITE:
+`5**5 = 3125` tuples with **126 distinct means**, so the exact percentile is
+computable and is a different estimator from a Monte-Carlo draw of the same
+distribution. Reproduced from `results/m3_quintuple_v2.jsonl`:
 
-**The defect was never the digits — it was that neither row named its
-instrument, and one document cannot be checked against another when both omit
-it.** A reader had no way to distinguish "two estimators" from "one typo", and
-the cheapest available conclusion was the wrong one. The repair is provenance,
-not a choice between the numbers: `scale/capability_table.py` now computes BOTH
-families and stamps each into every row under its own name, so the shipped card
-prints them side by side and carries the journal keys and seeds they were
-computed from; `CHECKLIST.md:1168` names its estimator, its journal and its
-keys beside its number. `tests/cameron/test_headline_ci_provenance.py`
-recomputes both families from `results/m3_quintuple_v2.jsonl` and pins each
-published endpoint to the estimator its own document claims, so a row retyped
-from the other family now fails a test instead of surviving as a contradiction.
+    contrast            B=10000 seed=0          exact over 3125
+    settled - twin      [-0.048587, +0.031557]  [-0.042903, +0.031557]
+    settled - softmax   [+0.066232, +0.147110]  [+0.068181, +0.147110]
+    argmax  - softmax   [-0.134115, -0.102204]  [-0.134115, -0.102786]
+
+The first column is what `ceq/hf_artifact/README.md` ships; the second is what
+the root `README.md` and `CHECKLIST.md` print. **Neither number is wrong. No
+number is orphaned.** `tests/cameron/test_published_intervals_have_producers.py`
+binds both, and rejects the mis-pairing.
+
+**So it is not P-1 — it is P-8, recurring, and that is the sharper finding.**
+The generator's own limits paragraph (e) already states the whole thing, in the
+file that ships (`ceq/hf_artifact/README.md:80`), naming both families and both
+endpoints. The table three lines above it still prints `95% CI` with no
+estimator, and the JSON behind that table **already carries `n_boot: 10000` and
+`boot_seed: 0`** — the provenance exists and is dropped at render time. A caveat
+that is correct, complete, in the right place and below the row that gets quoted
+is the exact failure P-8 describes, and this is it happening to the
+repository's most-quoted result while P-8 was being written.
+
+**AND THE RENDER-TIME DROP IS NOW CLOSED, which is the half a diagnosis does
+not fix.** `scale/capability_table.py` computes BOTH families and stamps each
+into every contrast row under its own name, carrying the journal keys it read
+rather than reconstructing them from the arm and the geometry. The shipped card
+prints them as adjacent columns, so `+0.066232` and `+0.068181` now stand side
+by side with the estimator that produced each, and the reader who finds two
+endpoints for one headline is told which instrument made which instead of
+inferring a typo. `tests/cameron/test_headline_ci_provenance.py` recomputes both
+families from the journal and pins each published endpoint to the estimator its
+own document claims.
 
 **The general shape, and it is not about bootstraps.** Two correct numbers that
-disagree are indistinguishable from one correct and one wrong number, unless
-each carries the procedure that produced it. An unlabelled number is not merely
+disagree are indistinguishable from one correct and one wrong number unless each
+carries the procedure that produced it. An unlabelled number is not merely
 undocumented — it is *unfalsifiable*, because there is no claim to check it
-against. This is the same failure as P-1, arriving through arithmetic that was
-right the whole time.
+against. P-8 says the caveat was present but below the number; this adds that a
+caveat one render away from the number is already too far.
 
 The same round produced a second face of it: realised `sd_paired` on the C1
 ladder is `0.019`–`0.109` against a pilot's `0.050`, so `t* = 1` needs **62
@@ -710,8 +768,13 @@ Condensed from the above; this is the list to run down.
 3. **Check the branch under test actually executes** on your fixture (V-6).
 4. **Check the PASS half's label is non-degenerate** (V-8): `sd > 0`,
    `0 < frac < 1`, both classes non-empty, discards counted.
-5. **A reported absence needs a planted positive** (V-7) on identical instances,
-   identical features, identical split.
+5. **A reported absence needs a planted positive** (V-7, V-13, V-14) on
+   identical instances, identical features, identical split — and entering at
+   the instrument's **front door**, so it traverses every stage the real input
+   does. Identical *text* is not identical *path*: a plant handed straight to
+   the matcher cannot see a selector that selected nothing (V-14). Name the
+   stages the plant passes through, and check the count of things examined as
+   well as the count of things found.
 6. **A repair must be shown to change the object it repairs** (V-9). Delete it
    in-process and watch the number move.
 7. **Compute the control's expected value before it runs** (V-10, M-5). Print

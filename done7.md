@@ -93,7 +93,13 @@ then predicted a product of two numbers.**
 3/5 seeds favouring settled. **Not evidence that settling fails — evidence that
 settling has never been tested.**
 
-**3. The gain is the mixture, not the fixed point, and not a lookup.** The one-hot
+**3. ~~The gain is the mixture, not the fixed point, and not a lookup.~~
+SUPERSEDED IN R9: the gain is TRAINED PIVOT SELECTION, and a trained lookup ties the
+mixture.** `argmax` severs the gradient to the gate as well as collapsing the mixture;
+`argmaxste`, bitwise the same forward with a straight-through backward, reads
+`+0.107304` above softmax at 5/5 and `−0.004092` against `twin`, `[−0.029187,
++0.023107]`. The fixed-point clause is unaffected. What R7 correctly recorded, below,
+is that an **untrained** one-hot control is worse than plain softmax: The one-hot
 control is **worse than plain softmax**: `argmax − softmax = −0.118456`, CI
 `[−0.134115, −0.102786]`, 0/5 seeds. Reading one pivot is worse than reading none.
 And `argmax` fails its own bar at `1.010779`, so the largest positive number in the

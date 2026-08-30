@@ -1053,3 +1053,886 @@ what C1 was built to make sayable.
 .md: 0, uncovered .py: 0"* against its own docstring's claim to scan every
 uncovered file. **Empty coverage** — which is why Venus's registry addition had no
 collateral. A hole in a different instrument, left for its owner.
+
+## Iteration 3 — Saturn COMPLETE. `MISTAKES.md` 31 → 35, and he corrected four of the controller's numbers first.
+
+Merged. Controller check **36/36 green**.
+
+New entries: **P-8** upper bound stated as a price; **M-8** pricing every arm at
+one arm's rate; **M-9** finest achievable p cannot reach its α; **V-13** a search
+whose walk includes nested checkouts. **M-3** absorbed the cost and power faces
+of pilot-transfer. V-13 was **appended rather than inserted** so nothing
+renumbers — the five files citing `V-1/V-8/D-1/D-4/M-2` all still resolve.
+
+### He refused to ship four of the dispatch's own numbers
+
+1. `m3_quintuple.py:293-295` for `need_gram` is **drifted** — the real sites are
+   `:404` / `:444`.
+2. *"Nine worktrees"* — `git worktree list` returns **ten** (the tenth is the
+   primary checkout), and the phantom count has already moved `10 → 9` since
+   Deimos measured it.
+3. **He could not source M-8's third instance as a distinct document.** Mercury
+   *counts* three; Saturn's entry evidences two and **attributes the count to
+   Mercury rather than padding a bullet to reach three.**
+4. Neptune's pilot quote as the controller gave it was a **paraphrase**; the
+   entry uses Neptune's actual words.
+
+`Ruling: refusing to pad M-8 to three sourced instances is the correct call and
+the ledger records it as such. A mistakes file that inflates its own evidence
+count would be its own first entry. The controller supplied the paraphrase and the
+drifted line numbers; that is the same defect FINDINGS section B was demoted for,
+recurring in dispatch prose rather than in a findings table.`
+
+### He added a citation binder for the file that documents citation failures
+
+`tests/cameron/test_mistakes_citations_resolve.py`, 7 tests, scope-adjacent and
+justified: **both failure classes `MISTAKES.md` documents have already happened to
+`MISTAKES.md` itself** — four citations wrong on first write in iteration 1, two
+drifted by the same commit's own edits, and `mercury-report.md:49` broken this
+iteration. **The checker caught that one pre-commit, which is its RED.**
+
+Stated limit: **the binder checks locations, not content.** A cited line that
+still exists but now says something else passes. Closing that needs each entry to
+carry a re-matchable quoted fragment; not built.
+
+### THE HEADLINE INTERVALS DISAGREE, AND IT IS A PATTERN ACROSS ALL THREE CONTRASTS
+
+Saturn found one instance. Controller verification (`READ`, this session) found it
+is systematic — **two entire families of intervals, every upper bound agreeing and
+every lower bound differing**:
+
+| contrast | family A — ships in `ceq/hf_artifact/README.md` + `capability_table_v0/v1` | family B — `CHECKLIST.md` + `DONE.md` + root `README.md` |
+|---|---|---|
+| `settled − twin` | `[-0.048587, +0.031557]` | `[-0.042903, +0.031557]` |
+| `settled − softmax` | `[+0.066232, +0.147110]` | `[+0.068181, +0.147110]` |
+| `argmax − softmax` | `[-0.134115, -0.102204]` | `[-0.134115, -0.102786]` |
+
+**`DONE.md` contains both families** — `:1844` and `:2198` carry family B,
+`:1884` carries family A. So both were journalled, then propagated into different
+documents.
+
+**The likely cause, stated as a hypothesis and not yet confirmed:**
+`CHECKLIST.md:1168` describes its interval as *"exact enumeration over all
+`5**5 = 3125` paired resamples"*, while `m3_synthetic_settled.contrast` runs an
+`n_boot=10000` percentile bootstrap. **Two legitimate procedures, both correct,
+producing systematically different lower tails — and neither document names which
+one produced its number.**
+
+If that is right, this is not a bug in either number. It is a **provenance
+failure on the project's most-quoted result**, and the version that **ships to
+HuggingFace** is not the version the repository's own README quotes.
+
+`Ruling: routed to Saturn, who found it and owns the instrument class. He
+deliberately left both in place - "picking one without finding the producer makes
+the disagreement invisible" - and that was right. The fix is to find the producing
+run for each family, name it beside every published interval, and make the
+artifact and the README agree on which procedure ships. Cost if wrong: the two
+numbers stay side by side with their provenance attached, which is still better
+than one silently chosen.`
+
+### Stated limit on everything Saturn shipped
+
+**He re-measured only the two cheap things** (worktree count, live phantom count).
+The `3.0×`, `5×`, `1.61×`, `2.1×`, `15.5 h` and `5.9 h` figures in M-8 and P-8 are
+all **READ, not RUN** — if Mercury's or Neptune's timings are wrong, those entries
+inherit the error and would not detect it.
+
+## Iteration 3 — THE STE READING. The project's headline explanation does not survive.
+
+Merged, **72/72 green**. `tests/mercury/` 50, `tests/mars/` 22.
+
+| cell | mean NRMSE |
+|---|---|
+| `argmax` | `1.010779` — **worse than predict-the-mean** |
+| `softmax` | `0.892323` |
+| **`argmaxste`** | **`0.785019`** |
+| `twin` | `0.780927` |
+
+| arm | vs | delta | CI | `n+` |
+|---|---|---|---|---|
+| `argmaxste` | `argmax` | **`+0.225760`** | `[+0.212433, +0.245886]` | **5/5** |
+| `argmaxste` | `softmax` | **`+0.107304`** | `[+0.082879, +0.140870]` | **5/5** |
+| `argmaxste` | `twin` | `−0.004092` | `[−0.029187, +0.023107]` | 2/5 |
+| `argmax` | `softmax` | `−0.118456` | `[−0.134115, −0.102204]` | 0/5 |
+
+Mars's pre-registered rows scored verbatim: **A False, B False, C TRUE, D False,
+E False.**
+
+### THE ANSWER IS THE SELECTION, NOT THE MIXTURE
+
+A one-hot lookup whose **selection is trained** moves from `1.010779` — worse than
+predicting the mean — to `0.785019`, **past softmax**, to **statistically
+indistinguishable from the full mixture**. Training selection moves the cell by
+**190.6 % of the disputed gap**.
+
+The forward function never changed: `argmaxste` is **bitwise identical** to
+`argmax` in the forward. The only difference is that gradient reaches the gate.
+
+`Ruling: the README's "The gain is the mixture, not the equilibrium" DOES NOT
+SURVIVE and must be withdrawn on its mixture half. Mars's iteration-1 attack
+showed the -0.118456 confounded mixture-vs-lookup with trained-vs-untrained
+selection; this reading resolves the confound and the answer is selection. The
+EQUILIBRIUM half is untouched - no settled cell was in this reading - so the
+sentence is not wholly false, it is half-unsupported and the wrong half was the
+one being sold. Cost if wrong: a published claim is withdrawn that a later
+settled-inclusive reading might have restored.`
+
+**Row E was live and is closed by measurement**: `argmaxste` clears
+predict-the-mean by `0.214981`, so the contrast is creditable rather than void.
+And the last row **reproduces the disputed headline to six decimals on the same
+seeds** — a control on the pipeline itself, not just on the cells.
+
+### Mercury's three stated limits, all correct
+
+1. **The `argmaxste − twin` null is a BOUND, not an identity** — bounded at
+   `0.026147` by this run's own CI half-width. *"No difference larger than
+   `0.026147`"*, never *"identical"*.
+2. **`verdict_of` prints `SETTLED WINS` / `TWIN WINS` for any contrast**, because
+   it was written for that one pair. On an `argmaxste`/`softmax` row those strings
+   **name no cell**. He relabelled in his report and quoted none of them. With
+   four cell families now live this function is actively misleading — **queued**.
+3. **No same-session `twin`**, so `argmaxste`'s median `221 s` cannot be ratioed
+   against the journalled `twin` median `508.74 s`. Whether it is genuinely
+   cheaper or the box was fast is **unresolved and unclaimed**.
+
+## Iteration 4 — Saturn CONFIRMED the interval hypothesis exactly
+
+Merged, **19/19 green**. New binder `tests/cameron/test_published_intervals_have_producers.py`, 12 tests.
+
+**Family A is `contrast(n_boot=10000, seed=0)`. Family B is exact enumeration
+over all `3125` paired resamples** (126 distinct means, measured). Reproduced
+**twice** — on the 6-dp printed values (5 of 6 bounds exact, the sixth off by
+`1e-6`, which is input rounding) and on full-precision journal floats (**all six
+exact**).
+
+**No published interval is orphaned. No number is wrong.**
+
+### But the real finding is worse than provenance
+
+Saturn: *"it's P-8 recurring, on the most-quoted result, while P-8 was being
+written."*
+
+It was **already known and written in four places, including the shipping
+artifact** — limits paragraph (e) at `ceq/hf_artifact/README.md:80` states the
+whole thing correctly. **The table three lines above it still prints `95% CI`
+with no estimator, and the JSON behind it already carries
+`n_boot: 10000, boot_seed: 0`.** The provenance exists in the data and is
+**dropped at render time**.
+
+That is P-8 exactly — the caveat present, correctly worded, in a limits
+paragraph, while the headline drops it — occurring on the same page as the entry
+being written about it.
+
+### Saturn corrected the controller's framing of his own finding
+
+My dispatch said the artifact and the root README disagree silently. **Root
+`README.md` was already correctly labelled** (`exact 95 % CI`, preamble naming
+the enumeration) — nothing to do there. Chase's test already bound family A. The
+only genuinely unbound half was **family B, which existed solely as transcribed
+digits in three prose documents** — *"that's how an estimator came to look like a
+discrepancy."*
+
+`Ruling: my "the shipping artifact disagrees with the README" framing was wrong
+and is withdrawn. The README was labelled; the artifact's TABLE was not, though
+its own limits paragraph and its JSON both were. Two text-only changes are owed
+to Mercury, who holds those files: render() should emit the two fields the JSON
+already holds (column header -> "95% CI (percentile bootstrap, B=10000, seed=0)"),
+no recomputation needed; and limits paragraph (e) is itself now stale, carrying
++0.146551 as an open defect where CHECKLIST.md:1240 and README.md:460 both record
+that endpoint corrected to +0.147110.`
+
+**Stated limit:** Saturn reproduced **the procedures, not the run**. If a per-seed
+value in the journal is itself wrong, both families inherit it identically and
+every new assertion still passes. He also read the committed blob rather than the
+working file, which is under active write by Mercury's C1 run.
+
+## C1 status — in flight
+
+`t*=32` softmax weights are landing in the journal now; rung order `t32 → t8 →
+t2 → t1`. No C1 number exists yet and none is claimed.
+
+## Iteration 3 — Jupiter COMPLETE. M4 splits: the trend clause escapes, the size clause cannot.
+
+Merged, **57/57 green** (`tests/jupiter/` 43, up from 27; `tests/loop/test_no_struck_constant_ships.py` 14/14, unmodified).
+
+### The granularity question, answered exactly
+
+**Page's L at `k=4, N=5` has 51 achievable p-values**, finest `1/24^5 = 1.256e-07`,
+**14 at or below `0.05`**. `α = 0.05` **is reachable**: critical `L = 137`, true
+size **`0.037002877`**; `L = 136` reads `0.052384114`, above α. And the reported
+`p = 0.016724386` is **the exact atom `133170/7962624`** — attainable, not an
+interpolation of a discrete null.
+
+**The escape is quantified rather than asserted.** Page reads `4! = 24` outcomes
+per block against the sign test's `2`, so `24^5 = 7962624` against `2^5 = 32` —
+**`248832×`, or `4.585` bits per block against 1**. The sign lattice has exactly
+**one** one-sided p below `0.05` and **zero** two-sided.
+
+### But M4's other half is structurally incapable
+
+**The size clause is that bootstrap, and its floor is `0.0625 > 0.05`.** It cannot
+make a `0.05`-level statement at five seeds regardless of endpoints. The top rung
+is a **4–1 split** (`n+ = 4/5`) — squarely Venus's 20–44 % regime — and its
+unconstrained CI covers zero at `[-0.004711, +0.033167]`.
+
+Jupiter: *"Venus's floor and my PAVA bias are two independent defects in the same
+clause, pushing the same way."*
+
+`Ruling: RISES stands as pre-registered, RESTATED. It establishes the ORDERING at
+an exact level of 0.037002877, and the clause carrying the MAGNITUDE claim is
+incapable of the level it was written at. This is the same conclusion Jupiter
+reached in iteration 1 - "RISES is an ordering, not a capability" - but it was an
+assertion then and it is a proof now. Any future use of M4 prints the trend
+clause's exact size beside the verdict and states that the size clause cannot
+reach 0.05 at N=5.`
+
+### Jupiter corrected his own iteration-1 report, twice
+
+- It quoted `α = 0.05` as the trend clause's size; **the true size is
+  `0.037002877`**.
+- A shell line said *"12 achievable p-values below α"*; the computed value is
+  **14**.
+- He also **caught and replaced a tautological assertion he had written himself** —
+  `assert all(...) is False or True`. That is vacuity class 3, in his own test,
+  found by him.
+
+### The coverage scanner was scanning nothing — root cause found
+
+**Absolute-path scope error.** Exclusions were tested against `p.parts`, and every
+worktree sits under `.claude/worktrees/`. **366 candidates → 0 survivors; 365
+survive under the relative filter.** It exited `0` — **silent in the passing
+direction**, which is why nobody noticed.
+
+**And the reason its own control never caught it is the sharp part:**
+
+> *"Its own `control()` passed throughout because it injects text past target
+> selection — **a matcher control is not a coverage control**."*
+
+Fixed relative; `main()` now returns `1` on an empty scan; the must-fire **plants
+the constant on disk and requires selection to reach it**. **6 of 8 fail unfixed.**
+
+### A new vacuity type, for Saturn
+
+> *the control that validates the matcher and never the reach*
+
+Vacuity rule 5 asks for a planted positive on identical instances — and **this
+control had one**. The gap is that *"identical instances"* was read as identical
+**text** rather than identical **path through the instrument**. That is a genuinely
+new failure mode and it refines an existing rule rather than adding an unrelated
+one.
+
+### OPEN — 27 candidates exposed, unadjudicated
+
+The scanner fix exposed **27 candidates across 346 paths**. Jupiter holds no
+adjudication seat and correctly left them.
+
+**Venus's expected collateral is real**: `0.743864` / `0.656532` / `0.816955` are
+asserted live at `tests/cameron/test_harmonic_attribution.py:123-124` and mirrored
+in `tests/deimos/`. Caveat he supplies himself: **`−1.389` alone is 17 of the 27**
+and matches inside longer numerals, so **27 is an upper bound**, not a count.
+
+`Ruling: the 27 go to VENUS, not to Saturn or Jupiter. She struck the
+harmonic-attribution clause this round and the three live constants sit inside the
+module she skipped - so the adjudication is precisely hers: does a struck constant
+asserted inside a skipped module count as shipping? That question is the boundary
+of her own strike and nobody else should draw it. Queued for her next turn. Cost
+if wrong: the constants sit one iteration longer in a module that does not
+execute.`
+
+# ITERATION 4 — CEQ v13, THE RESTITUTION ROUND
+
+Author's amendment, received mid-round. **Not a capability round.** One full loop
+that repairs every defect class on the record, mechanizes its prevention,
+re-audits every standing GREEN through the new gates, and ships the defect
+taxonomy as a D1 chapter.
+
+**LAW OF THE ROUND (G2): no fix may move a published number. A fix produces a
+REPAIR + a RE-READ, never an edit.**
+
+Twelve defect classes **X-R1..X-R12**, each as: defect as measured → mechanized
+fix → RED-first test with the must-fire seen.
+
+## The author's override on the room
+
+> *"everyone except mycroft will fix mistake — mycroft with his moons will scan
+> wikipedia all obscure maths which can help"* and *"mycroft jupiter should wonder
+> how else can we get our intended results what maths are we missing"*
+
+This **overrides** the contract's own ROOM clause, which assigned Mycroft R2's
+power arithmetic, R4's sup/mean sign-offs and R12's validity domains. The author's
+instruction is later and explicit.
+
+`Ruling: Jupiter is removed from defect repair entirely and assigned the maths
+survey with moons. His contract-assigned sub-items (R2 power arithmetic, R4
+sup/mean sign-offs, R12 validity domains) are UNOWNED this iteration and are
+recorded here as such rather than silently reassigned - Saturn already holds six
+classes and loading him with three more would guarantee none are done properly.
+They surface on the next free Mycroft-capable seat. Cost if wrong: three sub-items
+slip one iteration, and the ledger says so.`
+
+## R5's own law is already satisfied, by accident rather than design
+
+X-R5 hardens RULE 4 into tooling and inverts the historical order:
+**"the deciding measurement's slot is FIRST in every phase, instrument work
+scheduled AFTER it (inverting the historical order that killed three rounds)."**
+
+**The C1 deciding measurement started before this amendment arrived and is still
+running** — `t*=32` softmax 5/5, twinrow 5/5, settledrow in flight. Instrument
+work (identity manifests, linters) is being dispatched *after* it. The restitution
+round's schedule passes its own first test, though not by intent.
+
+## Dispatch — four free seats now, two held by live work
+
+| Seat | Role | Unit | Status |
+|---|---|---|---|
+| Jupiter | MYCROFT | **The maths survey** — differentiable top-k, submodularity/matroids, DPPs, optimal transport, combinatorial bandits, ordinal objectives; and consequence-propagation mathematics for the napkin's actual ask. With moons. **Under hardened G1: equations or code fetched, keyword counts inadmissible as verdicts** | dispatched |
+| Saturn | WATSON | **X-R1 identity manifests** — content hash of (code path, config, tensor shapes, RNG plan); harness refuses a cell whose hash ≠ current manifest. Gates everything else | dispatched |
+| Mars | MORIARTY | **The thirteenth class** + one filed attack per standing GREEN before the re-audit reads it | dispatched |
+| Venus | IRENE | **File the re-audit prediction BEFORE it runs** (time-critical); then adjudicate the 27 exposed struck-constant candidates | dispatched |
+| Mercury | LESTRADE | X-R5 the DAG — **held**, running the C1 deciding measurement | queued |
+| Neptune | LINUS | Linter runtime cost gate — **held**, withdrawing the refuted README claim | queued |
+
+`Ruling: Jupiter's maths survey is framed around what the STE reading just
+established rather than around the original napkin question. The gain is trained
+discrete SELECTION, and scale/pivot_probe.py:80-91 shows selection is topk over
+key.norm() - non-differentiable, zero gradient through which rows were chosen. So
+the sharp question is what mathematics makes discrete selection trainable, and STE
+is the crudest member of a large family that demonstrably works here. Framing the
+survey around the measured result rather than the original ambition is the higher-
+value use of the seat. Cost if wrong: the survey misses a consequence-propagation
+approach, which is why that is carried as an explicit second question rather than
+dropped.`
+
+## Iteration 4 — Neptune COMPLETE. The refuted claim is withdrawn, in four places.
+
+Merged, **47/47 green**. Text only — no code touched, none of Mercury's held
+files modified, no wall clock read.
+
+**He re-derived everything from the committed journal rather than trusting the
+controller's relay.** Means reproduce exactly; `argmaxste`'s forward is bitwise
+`argmax`'s (`torch.equal` True, **128 instances**); the gradients differ.
+
+**The refuted inference lived in FOUR places, not two.** `done7.md:96` also
+carried it and **no previous sweep had found it.**
+
+**Treatment differs by document class, correctly:** `CHECKLIST.md` and `done7.md`
+are dated journals, so he **struck through and annotated in place** rather than
+rewriting what was believed at the time. Only `README.md` was rewritten outright.
+
+Both halves stated precisely — **mixture refuted, equilibrium untouched** — and
+the tie written as a bound in the house form.
+
+### Neptune corrected the controller's own framing of the tie
+
+The controller relayed Mercury's `0.026147` as the bound. **That is the half-width
+of an asymmetric interval and it understates the twin side** — a true delta of
+`−0.029` is *not* excluded by it.
+
+`Ruling: the correct statement of the argmaxste-twin tie is the two-endpoint form
+Neptune shipped - it EXCLUDES a twin advantage beyond 0.029187 and an argmaxste
+advantage beyond 0.023107, and EXCLUDES NOTHING SMALLER. Never "identical", and
+never the single half-width. The controller repeated the half-width to the author
+in the previous status; that is corrected here and in the README.`
+
+### A NEW interval-family disagreement, on a contrast measured this round
+
+Neptune's exact enumeration of `argmaxste − argmax` gives `[+0.212539, +0.245992]`
+against Mercury's `[+0.212433, +0.245886]` — **a constant `1.06e-4` shift on both
+endpoints, the signature of a different estimator family, not noise.** The other
+two contrasts agree to six digits, and Neptune's procedure reproduces the
+published exact pair `argmax − softmax [−0.134115, −0.102786]`.
+
+**The two-families defect recurred on a brand-new contrast, in the same round,
+immediately after Saturn built the binder for it.** The README now prints
+Neptune's exact pair; Mercury owns the cell and must reconcile or label his family.
+
+### AND THE BINDER HAS THE GAP IT WAS BUILT TO CLOSE
+
+> *"The three new intervals are unbound. `test_published_intervals_have_producers.py`
+> is parameterised over a fixed list and does not scan documents, so my rows
+> neither break it nor are covered by it — **the exact condition that file exists
+> to end, recurring one contrast along.**"*
+
+**Third instance of one shape this round:**
+
+| # | Instrument | Validated | Never reached |
+|---|---|---|---|
+| 1 | e-process must-fire battery (Deimos) | a class constructed in the test | the class production reads live data with |
+| 2 | struck-constant scanner `control()` (Jupiter) | the matcher, text injected past target selection | the reach — 366 → 0, exit 0 |
+| 3 | published-intervals binder (Neptune on Saturn's file) | a fixed parameterised list | the documents it polices |
+
+**Each passed its own control throughout, and every control was real, planted and
+non-degenerate — vacuity rule 5 satisfied in all three.** The defect sits one
+level up: **the control validates the instrument's mechanism and never its scope.**
+
+`Ruling: routed to MARS as live evidence for the thirteenth class, with the
+explicit note that instance 3 arrived AFTER Saturn drafted the type for instance
+2 - which is itself evidence about whether the type as drafted catches it. Mars
+must re-verify all three himself; Neptune's is READ until he confirms it. The
+question of whether these are one class or two was already his and now has a third
+data point.`
+
+### Hand-offs to Mercury, recorded so they are not lost
+
+- **The estimator drop is `capability_table.py:475` and `:451`** — both emit a
+  bare `95% CI` while the JSON already ships `n_boot` / `boot_seed` **and a
+  per-row `estimator` string**. The missing test is one asserting the **rendered**
+  header names a family.
+- **Limits (e) is stale on three counts, not one.**
+- **`verdict_of`: the fix already exists in-repo as `capability_table._verdict`.**
+  Add optional `arm` / `ref` names to `verdict_of` and `contrast` — **defaults
+  must stay `settled` / `twin`**, because `run_bucket`'s resume audit compares the
+  journalled value dict bitwise and `contrast` writes `verdict` into it, so **any
+  changed default re-runs every completed unit.** That is the reason the obvious
+  fix would have been destructive, and he found it before doing it.
+
+## Iteration 4 — Saturn COMPLETE (X-R1) and Venus COMPLETE (re-audit filing + the 27)
+
+Both merged. Controller checks 55/55 and 14 passed / 1 skipped.
+
+### Saturn — X-R1 identity manifests, G2 asserted rather than argued
+
+`scale/identity_manifest.py` + 13 tests (RED first: ImportError). G2 proven on a
+published cell: `settled_k8_..._sd0_taske3_t1` reads
+`eval_nrmse = 0.9783142763084641` BITWISE UNCHANGED after the manifest is
+computed, matching the committed journal, every parameter tensor `torch.equal` to
+its clone.
+
+The must-fire fires on five config fields — `beta`, `n_neumann`, `d_model`,
+`cell`, `task` — each NAMING THE FIELD THAT MOVED; restore reproduces the hash.
+
+`test_the_key_cannot_separate_two_different_arms` DRAWS the collision rather than
+arguing it: three of the five arguments `load_unit` calls identity-defining
+collapse to ONE journal key, so the second run silently overwrites the first.
+Grounded on the round's real defect — `make_impact_batch` hashes `c926738cd0ec`
+against `make_impact_hetero_batch` `38a4eb4bd887`, and a stored `impact_hetero`
+manifest REFUSES the homogeneous builder.
+
+Two bugs surfaced in his own instrument, both instances of what the file
+documents: the first code-digest test compared three differently-NAMED functions
+— comparing names, not logic, which is X-R3 exactly — and the docstring filter
+dropped the string but not the `None` occupying the same `co_consts` slot, so a
+docstring edit still moved the digest.
+
+His two stated holes, and the first is large:
+
+1. The manifest is UNTESTED against a real `QuintArm` dispatch set — that needs
+   Mercury's held file. Every `code`-component test uses functions Saturn wrote or
+   the two `impact` builders. His words: "If my proposed dispatch set is
+   incomplete — and I have not verified it is — the manifest hashes a subset of
+   the code path and misses changes in what it omits."
+2. The `rng` component measures the tensors, not the plan. `RNG_PLAN` is a
+   declared constant with nothing binding it to what `paired_arm` actually does —
+   change the eval offset without updating it and THE REFUSAL STILL FIRES BUT
+   NAMES THE WRONG CAUSE. That is X-R6's own defect surviving inside X-R1's fix.
+
+V-14 landed (36 entries) and it is genuinely new: `chase_struck_coverage` OBEYED
+vacuity rule 5 — shipped a must-fire, ran it first, refused to proceed without it
+— AND IT PASSED WHILE THE SCANNER REACHED 0 OF 366 FILES, because `control()`
+calls `scan_text` on a literal string and `collect_targets` is never on that path.
+Check 5 sharpened: identical TEXT is not identical PATH.
+
+### Venus — filed first, in a separate commit, so the ordering check can see it
+
+Job 1 committed at `e79012f` BEFORE any adjudication work began. X-R11 discipline
+applied to herself without being asked.
+
+FILED: 1 of 5 GREENs survive — F-green only. Settled birth gates, M4 eviction,
+E4-prime gates and the calibrated M3 harness all downgraded, each with its defect
+class and a cited line.
+
+And a second number beside it: IF THE N=5 FLOOR IS ADMITTED AS A FIFTH GATE, 0 OF
+5 — because F-green is a 5/5 claim and 5/5 is the only way an N=5 percentile
+interval excludes zero. Her point: the floor is not one of the four named gates,
+so printing 1 or 0 is a choice about whether it counts, and she asks for that
+choice to be visible. Row Omega-3 added for the column the scoreboard lacks —
+neither restituted nor downgraded, because the gate cannot be evaluated on a
+number produced before the gate existed.
+
+RULING: Venus has found an ambiguity in the contract's own re-audit specification
+and filed BOTH branches rather than silently picking one. That is the correct
+handling and the scoreboard must print which convention it used. The controller
+does not resolve it here — it is a scoring convention the author set up and should
+see. Cost if wrong: the re-audit reports two numbers instead of one, which is more
+informative than either alone.
+
+The 27 triaged to 28, and only 2 are real. Separated mechanically by an `ast` pass
+for NUMERIC LITERALS against text mentions: 2 live assertions, 1 printed to a
+user, 7 the strike apparatus catching itself (including the scanner's own
+must-fire control string), 4 Deimos recording the strike, 13 prose, 1 substring
+artefact. Of the 19 minus-1.389 lines, 2 are real — Jupiter's "upper bound" caveat
+was right and understated.
+
+She ruled the boundary AGAINST HERSELF. A struck constant in a skipped module DOES
+ship — 5.4944e-13 was struck for existing "only in a code comment and in prose",
+and neither of those executes either; hers sat in a module docstring. The real
+defect was MARKER GRANULARITY: her [STRUCK] sat one blank line above the numbers
+and `_block` is paragraph-scoped. Repaired, must-fire still fires both ways.
+
+### TWO LIVE TRAPS, both confirmed by the controller, both G2 hazards
+
+1. REPAIRING THE OBVIOUS WAY WOULD PUT A STRUCK CONSTANT BACK INTO THE SHIPPED
+   PACKAGE. `tests/chase/test_hub_package_hardening.py:496-499` asserts
+   `"slope": -1.389, "r2": 0.9938` while `ceq/hf/modeling_ceq.py:140` now holds
+   `"slope": None, "r2": None` with `exponent_status: "WITHDRAWN -- the -1.389 /
+   R^2 0.9938 pair was a floor=1e-6 artifact."` THE ASSERTION MUST BE REPAIRED,
+   NOT THE DATA. The hard-rule-2 exception does not reach it — minus-1.389 was
+   measured.
+
+   The comment three lines above the failing assertion reads: "A guard that
+   samples a table does not guard the table." The guard was widened to check the
+   whole table, and the whole-table check now pins a withdrawn number.
+
+2. A TOLERANCE BAND CENTRED ON A WITHDRAWN NUMBER.
+   `tests/cameron/test_diagnose_package.py:32` — `PUBLISHED_SLOPE = -1.389`,
+   `SLOPE_TOL = 0.35`, marked "Pre-registered, in code, before the module
+   existed." Band is [-1.739, -1.039]: the replacement -1.221 passes, -0.958
+   FAILS. A better-fitting re-measurement would be rejected as a regression by a
+   test enforcing the withdrawn artifact.
+
+RULING: both routed to Neptune, who holds the shipping artifact and doc truth and
+is free. Venus named Chase and Cameron as owners, but those are author-directories
+rather than seats, and shipped-package integrity is Linus's gate. Cost if wrong:
+one seat does work another would have done.
+
+Venus's own stated limits: M4 is the call she most expects to be wrong — a
+must-fire WAS added; she rules it insufficient because it moves the sibling
+quantity, not the one reading 0.000000e+00. If the re-audit accepts it her count
+goes to 2. And she DECLINED to fix the scanner's two remaining defects because
+"Jupiter just repaired that file and a second hand this iteration is how a fix
+gets undone."
+
+## Iteration 4 — Mars COMPLETE. A thirteenth class survives, and he corrected the contract's premise.
+
+Merged at `c7a3a80`. `test_mars_control_entry_point.py` + `test_mars_green_attacks.py`
+10/10 in 29.21 s; it2 file re-run unchanged 12/12. Running total: 12 filed, 9 fired.
+
+### Existence correction to the v13 contract itself
+
+`git grep "X-R"` returns ONE unrelated hit (`CHECKLIST.md:556`). NO X-R1..R12
+taxonomy exists in the tree. The real taxonomy is `MISTAKES.md` — 35 entries in
+V/P/M/D families. He tested reducibility against those, not against the contract's
+numbering.
+
+RULING: the v13 contract's X-R numbering is PROSE, describing classes by
+description rather than by an in-tree identifier. That is not a defect in the
+contract — it is a mapping the round has to maintain, and Mars is the first to
+state it. Any future reference to "X-R3" must name the MISTAKES.md entry it means.
+
+### THE THIRTEENTH CLASS
+
+  "the control constructs its own input, so it certifies the instrument's
+   predicate over a domain production never chose."
+
+Two instances, both re-verified BY EXECUTION, neither taken from a report:
+
+- A — imported the `8b40e16^` blob of `chase_struck_coverage.py` and ran it here:
+  `control()` returned TRUE while the shipped filter kept 0 OF 375 files (the
+  relative filter keeps 374) and `main()` returned 0.
+- B — Neptune's binder: AST shows `PUBLISHED` is a literal dict of exactly 3
+  intervals and the file contains NO `read_text` / `rglob` / `iterdir` / `open`.
+  The three documents it names print 45 distinct [lo, hi] pairs (45 is an upper
+  bound; 3 is exact).
+- C — the e-process battery is READ and NOT COUNTED.
+
+Answer to the controller's question: ONE class, and the drafted wording catches
+one of three. "Matcher/reach" is SEARCH vocabulary — instance B has no matcher and
+performs no search. Not reducible to V-6 (the asserted branch ran in all three)
+nor V-7 (a real planted positive existed in all three; V-7 does not say WHERE to
+plant it). V-13 is the mirror image.
+
+He produced a FALSE ALARM with his own catch and kept it in the docstring: his
+first gate asserted the module's own `control()` reach `collect_targets`, and it
+failed on a correctly repaired file because Jupiter's coverage control lives in
+`tests/jupiter/`. The invariant is "the selector is driven by SOME control", not
+where it lives.
+
+### G1 FIRES — contrast() samples 10,000 times from a 126-atom lattice
+
+For `settled − softmax` the 2.5 percent target falls between cumulative mass
+0.024320 and 0.025920 — A COIN FLIP. Over seeds 0..99 its `ci_lo` takes FOUR
+distinct values. And `argmax − softmax` `ci_hi` yields BOTH published family
+values, -0.102204 and -0.102786, 36 SEEDS EACH.
+
+So for that contrast THE TWO FAMILIES ARE NOT SEPARATED BY THE NUMBER. No number
+is wrong and no verdict moves.
+
+F-GREEN ITSELF SURVIVES: `twin − softmax` reads 0.100873 at 96/100 and the exact
+enumeration agrees.
+
+RULING: Mars's mechanism and Neptune's are DIFFERENT and both are real. Neptune
+measured a CONSTANT 1.06e-4 shift on BOTH endpoints - the signature of a different
+estimator family. Mars measured endpoints moving by WHOLE LATTICE STEPS,
+independently, under bootstrap seed variation. Two causes, one symptom. Saturn's
+exact-enumeration-vs-bootstrap explanation stands for the contrasts it reproduced;
+Mars's lattice-granularity explanation covers argmax-softmax, where the two family
+values are simply two atoms the same estimator reaches at different seeds. Neither
+supersedes the other. Cost if wrong: a labelling fix is applied to a contrast that
+needed a seed fix instead.
+
+### G2 attacked, refuted, and KEPT — with an unstated qualification exposed
+
+The settled birth gate's `d_onestep` collapses 7.1e+00 to 2.1e-11 as beta goes to
+0 and stops firing at 1e-6. That is a real rejection region and the gate survives.
+
+UNSTATED QUALIFICATION: it begins near beta = 7e-4, so the gate separates
+"settling happens" from "settling does not" — NOT "settling is material at the
+shipped beta = 0.5". The gate is sound; the sentence around it was broader than
+the gate.
+
+### Mars's own stated limits, and the last one is the largest gap in the round
+
+- The class stands on TWO instances, not three, and falls if either is shown
+  reducible.
+- The reducibility table is DERIVED; a reader taking V-6 broadly can collapse it.
+- M4 EVICTION, THE E4-PRIME GATES AND THE CALIBRATED M3 HARNESS WERE NOT ATTACKED
+  AT ALL. Three of five named GREENs enter the re-audit WITHOUT AN ADVERSARY.
+
+## CRASH — the laptop went down mid-round
+
+Recovery assessment, all RUN this session:
+
+- Branch `feat/r9-causal-consequence` at `c7a3a80`. ALL agent branches merged,
+  zero commits unmerged. Nothing lost to the crash on the merge side.
+- NO LIVE PYTHON. Mercury's C1 deciding measurement was killed mid-run.
+- C1 state at death: `t*=32` has softmax 5/5, twinrow 5/5, SETTLEDROW 3/5.
+  Thirteen of fifteen units for the rung the theory predicts on. Two settledrow
+  seeds remain, roughly 23 minutes.
+- Jupiter's worktree is CLEAN at `486ae41` — his last merged commit. The maths
+  survey produced NOTHING before the crash and is a total loss; re-dispatched from
+  scratch.
+- `run_bucket` skips already-journalled units, so the C1 resume costs only the two
+  missing settledrow seeds, not the thirteen that landed.
+
+## CORRECTION — the controller assigned the wrong mechanism to a cell. Mercury proved it.
+
+The previous ledger entry ruled that Neptune's `argmaxste − argmax` discrepancy
+was an estimator-family difference and Mars's was lattice granularity — "two
+causes, one symptom, neither supersedes the other". The principle stands. THE
+ASSIGNMENT OF THIS CELL WAS WRONG.
+
+Mercury enumerated all 3,125 resamples for `argmaxste − argmax`. His exact pair
+reproduces Neptune's `[+0.212539, +0.245992]` BIT-FOR-BIT FROM AN INDEPENDENT
+IMPLEMENTATION — so the exact value is confirmed twice, by two people, two ways.
+
+And the gap to his Monte-Carlo pair is `+1.056e-04` at BOTH endpoints, which is
+exactly the constant-shift signature Neptune identified. But:
+
+| | MC seed 0 | exact | on lattice | atoms apart |
+|---|---|---|---|---|
+| `ci_lo` | +0.212433 | +0.212539 | yes | 1 |
+| `ci_hi` | +0.245886 | +0.245992 | yes | 1 |
+
+Over bootstrap seeds 0..99, `ci_lo` takes 2 values and `ci_hi` takes 3 (reaching
+`+0.2465162`) — THE ENDPOINTS MOVE INDEPENDENTLY. A constant shift cannot do
+that. The equal gaps are equal LOCAL ATOM SPACING at the two ends.
+
+RULING: this cell is MARS'S mechanism, not Neptune's. The constant-shift signature
+remains the correct test for a genuine estimator-family difference — it simply is
+not what this cell shows, because a one-atom step at each end can counterfeit it.
+The DISCRIMINATING TEST, which nobody had before and which Mercury supplies, is
+whether the endpoints move INDEPENDENTLY across bootstrap seeds. A family
+difference cannot produce independent endpoint movement; lattice granularity can.
+Cost if wrong: a cell is labelled granularity when it is a family, and the exact
+pair is published either way so no number moves.
+
+Also corrected: the atom count for THIS contrast is 128, not 126. The 126 is
+`settled − softmax`, a DIFFERENT lattice. The controller conflated them; they are
+not in conflict.
+
+### What Mercury shipped, and the care in it
+
+`contrast()` now reports `exact_lo` / `exact_hi` / `n_atoms` so nobody re-derives
+this. ADDITIVE ONLY — `ci_lo` / `ci_hi` untouched, and he GREPPED to confirm
+`contrast` has ZERO call sites inside `_unit`, so the bitwise resume audit cannot
+see the new fields and NO COMPLETED UNIT IS INVALIDATED. That is precisely the
+hazard Neptune flagged on `verdict_of`, avoided by checking rather than assuming.
+
+The `0.026147` symmetric half-width is WITHDRAWN from his report. Every tie row
+now reads: excludes a `twin` advantage beyond `0.029187` and an `argmaxste`
+advantage beyond `0.023107`, and excludes nothing smaller.
+
+### The C1 scorer, as it will print
+
+- two-endpoint form for every tie row
+- exact pair and atom count beneath each interval
+- each rung's realised `sd_paired` and seeds-needed printed BEFORE that rung's numbers
+- row G flagged on any cell at or above 1.0
+- the table stamped PARTIAL, NOT A READING until all four rungs are in
+
+### C1 status
+
+14 of 15 on the `t*=32` rung. `settledrow` sd3 landed, sd4 running, wake armed at
+15/15. Tests: `tests/mercury/` 55/55; controller check across mercury, neptune,
+mars and capability_table 117/117.
+
+## Iteration 4 — Jupiter COMPLETE. The maths survey, and it corrects the round's own premise.
+
+Merged. `tests/jupiter/` 49/49. Delivered `results/r9_maths_survey.md` (538
+lines), `scale/pivot_selection_theory.py`, `MATHEMATICS.md` sections 17.1-17.7.
+
+NOTHING WAS LOST TO THE CRASH. His scratchpad survived outside the repo — all
+five survey parts and all three verification scripts recovered, every journal
+number re-verified at the new HEAD before committing, all reproducing exactly.
+First commit landed before any new work, per the instruction.
+
+16 candidates surveyed. 5 CARRY A VERDICT HE STANDS BEHIND PERSONALLY — 3 with
+equations he fetched himself (Berthet 2002.08676, Marion 2410.01537, k-DPP via
+DPPy reference docs) and 2 derived from the repo's own objects with two paths
+each. 1 is citation-verified but NOT equation-verified. 10 REMAIN MOON-CLASS,
+UN-RE-VERIFIED, AND ARE LABELLED AS SUCH rather than averaged in. That is hardened
+G1 applied to his own moons.
+
+### THE MAIN RESULT — the controller's framing conflated two stages
+
+- STAGE A: WHICH `k` pivots, `topk(key.norm)`. NEVER TRAINED IN ANY ARM.
+  Byte-identical across every cell measured this round.
+- STAGE B: the mixture over the chosen `k`. This is where `argmaxste`'s STE lives.
+
+RULING: the controller's dispatch framed the round as "trained selection is the
+gain" and pointed Jupiter at differentiable top-k, DPPs and combinatorial bandits
+— all of which are STAGE A machinery. But argmaxste trains STAGE B. What the STE
+reading established is that training the READOUT WEIGHTING AMONG THE k matters; it
+says NOTHING about training WHICH k, because that path is untrained in every arm
+including argmaxste. The corrected statement is: the gain is the trained mixture
+over a fixed selection, not the selection. Cost of the original error: a survey
+aimed one stage away from the measured result, which Jupiter caught and reported
+rather than answering the question as asked.
+
+### A PRICING RULE THAT KILLS MOST OF THE BRIEF'S OWN TERRITORY
+
+At 5 seeds this instrument resolves `0.057946` OR LARGER. The three trained
+stage-B mechanisms differ by `0.004092` / `0.002959` / `0.001133` — 14x, 20x and
+51x BELOW the floor, needing 559 / 2257 / 41266 seeds. The gradient effect is
+`+0.225760` at 5/5.
+
+EVERY STAGE-B RELAXATION IS UNFALSIFIABLE ON THIS INSTRUMENT — not on merit, on
+measurement. That kills a large share of the proposed work before anyone spends a
+run on it.
+
+### The highest-value item is not missing, it is UNRUN
+
+K4's stage-A null was FORCED: `(k/s)(1/k) = 1/s`, `k` cancels, and M2 draws `c`
+from `P`. `scale/recall_probe.py` states that identity, names the non-artefact
+quantity, has ZERO IMPORTERS AND NO RESULTS, and the archive calls it "already
+sitting unrun."
+
+His words: "I nearly recommended re-running an experiment that already existed;
+grepping first turned it into something better."
+
+### A real provable bound, with a real hole
+
+Captured mass is SUPERMODULAR — so greedy has NO `1 − 1/e` guarantee on the
+obvious objective. Reconstruction IS monotone submodular (gain at least
+`‖u_a v_aᵀ‖²`, tight to `−3.55e−15` over 21,936 pairs), so greedy attains
+`0.632121`. THE SIGNED ARM VOIDS IT — `M` is negative in 297 of 300.
+
+### `nash.py`'s shared-tau is real but too small to be the cause
+
+Median attenuation `0.789701`. A `1.27x` shrink CANNOT produce OOD NRMSE
+`2.6151`–`5.8198`. One line settles it before anyone spends a rerun.
+
+RULING: the queued "re-run ceq/nash.py with per-example tau" unit is DOWNGRADED
+from a rerun to a one-line check. Deimos's finding was real and correctly filed as
+A cause on one seed rather than THE cause; Jupiter has now bounded its magnitude
+and it does not reach. Cost if wrong: a cheap check replaces an expensive rerun,
+and if the check surprises, the rerun is still available.
+
+### FINDINGS C2 WAS OVERSTATED THREE WAYS — and it is the round's own premise
+
+The entry read "softmax is PROVABLY Bayes-optimal on exactly that shape." Jupiter
+fetched the equations. It is wrong on three counts:
+
+(a) the paper's predictor is `erf`, NOT softmax;
+(b) optimality is ASYMPTOTIC under `L = o(d)`, and this repo runs `L/d = 4.00` —
+    THE OPPOSITE DIRECTION;
+(c) Prop 3 refutes linear REGRESSION, not linear attention.
+
+What survives: the LABEL SHAPE does match, so THE WORRY IS SOUND — "provably" is
+not.
+
+RULING: FINDINGS C2 is corrected in place. This matters more than a citation fix
+because C2 is the load-bearing premise of the whole round - it is why the vector
+corpus was built and why the single-location regime was called a trap. The
+motivation survives as a WORRY about label shape; the theorem does not. Note also
+that LOOP_PROMPT.md:34-38 concedes the unqualified version and INHERITS the same
+overstatement - that is the author's own document and is left for him. Cost if
+wrong: the round's motivation is stated more weakly than it needed to be, which is
+the safe direction.
+
+### Two of his own errors, recorded
+
+An unguarded `nct` bisection returned a NON-MONOTONE MDE — caught only because MDE
+must fall with `n`. And he predicted `h` non-monotone when it is provably
+monotone. Both corrected in what shipped. Two citations are single-source (the
+`L = o(d)` regime and the k-DPP complexity) because both source PDFs returned
+compressed streams.
+
+## THE DECIDING MEASUREMENT, RUNG t*=32 — ROW G VOIDS IT
+
+Merged. `tests/mercury/` 57/57. Resume cost exactly what was priced: `run_bucket`
+skipped the 13 journalled units and ran only `settledrow` sd3 and sd4.
+
+CEILING PRINTED FIRST, as required. Realised `sd_paired(settledrow − twinrow)` =
+0.000664, seeds needed = 1, run has 5. WELL POWERED — this is not an
+underpowered null.
+
+| cell | mean NRMSE | |
+|---|---|---|
+| `softmax` | 1.003157 | at or above 1.0 |
+| `twinrow` | 1.002587 | at or above 1.0 |
+| `settledrow` | 1.003214 | at or above 1.0 |
+
+ALL THREE CELLS FAIL PREDICT-THE-MEAN. Row G voids all three contrasts.
+
+RULING: the result at t*=32 is NOT "the arm failed". It is "NO arm - including
+plain softmax - can do c1_propagate at t*=32 at 150 steps and n_train=2048". That
+is a statement about the rung's difficulty at this budget, not about the arm, and
+row G exists precisely to stop it being read the other way. The rung where the
+theory predicts hardest spent excellent resolution on a comparison of three
+failures. No credit flows in any direction, and none is claimed.
+
+Venus's prediction SPLITS, both halves recorded, NEITHER ADJUDICATED because row G
+voids the carrier:
+- `|delta| = 0.000627 < 0.027260` — TRUE, two orders inside her bound
+- CI covers zero — FALSE: `[−0.001151, −0.000155]`, `n+ 0/5`. `twinrow` beat
+  `settledrow` on ALL FIVE seeds.
+
+Splitting the prediction into two booleans was her own design and it is why this
+reads as two facts rather than one muddled verdict.
+
+Table stamped PARTIAL, NOT A READING (1 of 4). `t8`, `t2`, `t1` in flight.
+
+## MERCURY RETRACTED A NUMBER AND, MORE IMPORTANTLY, A RATIONALISATION — AND THE CONTROLLER AMPLIFIED IT
+
+The `t*=32` scorer printed 126 atoms where he had committed 128 for
+`argmaxste − argmax`. 128 IS IMPOSSIBLE: the ceiling is `C(2n−1, n) = C(9,5) =
+126`.
+
+Cause: plain `sum()` over `itertools.product` adds the same multiset in different
+orders, and float addition is not associative — two atoms split by ONE ULP
+(`5.551115123125783e-17`). `math.fsum` on a canonically ordered tuple gives
+exactly 126.
+
+His own words, and they are the important part: "Worse than the number: my
+explanation was a rationalisation." He had written that 128 and 126 were
+"different lattices that do not conflict". They are not — 126 is the GENERIC count
+for any five distinct paired deltas, so the agreement was EXPECTED and the
+discrepancy was his bug.
+
+RETRACTION BY THE CONTROLLER: the previous ledger entry recorded "the atom count
+for THIS contrast is 128, not 126. The 126 is settled-softmax, a DIFFERENT
+lattice. The controller conflated them; they are not in conflict." THAT IS
+WITHDRAWN. I did not conflate two lattices — there is one generic count, 126, and
+Mercury's 128 was a float-associativity bug. I accepted his rationalisation,
+wrote it into the ledger as a correction OF MYSELF, and repeated it to the author.
+A correction built on a wrong explanation is worse than the original error because
+it carries the authority of having been checked.
+
+Fixed with the bound as a permanent guard (`n_atoms <= C(2n-1, n)`) plus an
+adversarial test showing naive summation really does return 128. Percentiles move
+by at most 1 ULP, so the `argmaxste − argmax` reconciliation itself STANDS.
+
+OPEN: Mercury has NOT audited previously journalled contrasts for the same
+splitting. The new bound catches future over-counts; it does not retroactively
+scan the journal. Queued.

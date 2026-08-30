@@ -683,6 +683,52 @@ conjunction reads `0.040` against a nominal `0.05`, because the trend clause gat
 the miscalibrated one.** Both arms are drawn from the same generator and the verdict
 separates them, so the branch is not vacuous.
 
+**THE GRANULARITY QUESTION, AND THE TWO CLAUSES ANSWER IT DIFFERENTLY.** At five
+seeds a sign-pattern statistic can express no two-sided p finer than
+`2/2^5 = 0.0625`, which is **above** the `0.05` this project quotes; measured on
+the shipped `contrast()` over 1000 samples, a 5-0 unanimity excludes zero
+`385/385` times, a 4-1 split 20-44% and a 3-2 split 0-3.7%, so "the CI excludes
+zero" at `N = 5` is very nearly "all five seeds agreed". That floor is real, and
+it lands on **one** of the two clauses.
+
+**The trend clause clears it.** Page's `L` ranks `k` conditions within each block
+instead of reading one sign, so the outcome space is `(k!)^n = 24^5 = 7 962 624`
+rather than `2^n = 32` — a factor of `12^5 = 248 832`, or `log2 24 = 4.585` bits
+per block against 1, `22.925` bits against `5`. The consequences are exact:
+
+```
+    achievable p-values on the whole support        51
+    finest non-zero achievable p                    1 / 24^5 = 1.2558674e-07
+    achievable p-values at or below alpha = 0.05    14   (L = 137 .. 150)
+    critical value at alpha = 0.05                  L = 137
+    TRUE size of the test at that critical value    0.037002877
+    next coarser rung, L = 136                      0.052384114  (above alpha)
+```
+
+**`alpha = 0.05` is reachable, and `p = 0.016724386` is an exact atom sum of the
+discrete null** — the cumulative count `133 170 / 7 962 624` at `L = 139` — not
+an interpolation onto it. Being discrete the test is conservative: its true size
+is `0.037002877`, not `0.05`. By contrast the sign lattice at `N = 5` has six
+achievable one-sided p-values of which exactly **one** clears `0.05` (unanimity,
+`1/32 = 0.03125`), and **none** of their two-sided partners does.
+
+Three routes to the null, sharing no arithmetic: float probabilities through
+`np.convolve`, integer polynomials through Python big integers, and literal
+enumeration of every one of the `(k!)^n` rank assignments with `L` rebuilt from
+whole tables. The first two agree to `1.388e-17` at `k=4, n=5`; all three agree
+**exactly** at `(3,3)`, `(4,3)` and `(3,4)`, where enumeration is tractable.
+
+**The size clause does not clear it, and cannot.** It IS a paired percentile
+bootstrap over five seeds, so `0.0625` is its floor and no interval it prints is
+a `0.05`-level statement at this seed count. The ladder's top rung is a **4-1
+split** — the regime Venus measured at 20-44% — and its unconstrained interval
+duly covers zero at `[-0.004711, +0.033167]`. Only the one-sided PAVA lift
+carries it across. **The granularity floor and the estimator bias are two
+independent reasons to distrust the same clause, and they push the same way.**
+The pre-registered branch is not refitted after the fact: `RISES` stands as
+written, with the trend clause sound at its own level and the size clause now
+known to be incapable of the level it was written at.
+
 **AND ROW G OUTRANKS ALL OF IT.** `E_LADDER_PREREGISTERED_READING.md` credits a rung
 nothing in either direction when either cell sits at or above predict-the-mean, and
 it fires on **three of the four rungs this statistic is computed on**:
@@ -807,9 +853,60 @@ control runs**. A scramble control calibrated to expect zero residual separation
 vacuous before it runs, and it is **more** vacuous than the amendment's own figure
 implies, not less. That is the fifteenth pattern, killed pre-birth.
 
+
 ---
 
-## 15. LIMITS ADDED BY SECTIONS 11–14
+## 15. A COVERAGE TOOL THAT SCANNED NOTHING
+
+`scale/chase_struck_coverage.py` walks every `.md` and `.py` the shipped
+struck-constant test does not cover, and reports any struck constant asserted
+without a strike marker in its paragraph. It printed
+`SCANNING 0 PATHS THE SHIPPED CHECK DOES NOT COVER`, `uncovered .md: 0,
+uncovered .py: 0`, and **exited 0**. `RUN`.
+
+**The root cause is a scope error in one expression.** The exclusion list
+`(".git", "__pycache__", ".pytest_cache", ".claude", ".benchmarks")` was tested
+against `p.parts` — the components of the **absolute** path. Every agent
+worktree in this project is checked out under `<repo>/.claude/worktrees/<name>/`,
+so `.claude` was a component of the absolute path of **every file in the tree**
+and the filter dropped all of them. Measured on this checkout: `366` candidate
+files, `0` surviving the absolute filter, `365` surviving the same filter applied
+to `p.relative_to(ROOT).parts`.
+
+**Its own must-fire kept passing throughout**, because that control feeds text
+directly to `scan_text` and never exercises target selection. **A matcher control
+is not a coverage control**, and this is the cleanest available example of the
+difference: the assertion that fired was true and the instrument was blind.
+
+**The fix is the scope correction plus a refusal.** `collect_targets` filters on
+the path relative to the scan root, and `main` returns 1 rather than 0 on an
+empty target list — a tool that walks zero paths passes every input and must not
+report success. `tests/jupiter/test_struck_coverage_scans.py` plants a struck
+constant in a file on disk that target selection must reach, requires it to be
+found, requires the same text carrying a strike marker **not** to be found, and
+requires a file with no struck constant to be silent — three arms, because two
+would pass for a scanner that flagged everything. **6 of its 8 tests fail against
+the unfixed scanner; the 8th states the root cause without reference to the
+refactor so a later rewrite cannot make it vacuous.**
+
+**What the fix exposed.** With `346` paths now scanned the tool exits 1 on `27`
+candidates. They split into two classes, and the file's own docstring already
+warns that layer 2 is a text scan and text scans cry wolf. Prose **about** a
+strike whose paragraph carries no marker: the scanner's own docstring quoting
+`1.471448` in its must-fire description, `MISTAKES.md:206` discussing
+`5.4944e-13`, `PREREGISTRATION_HOLE_AUDIT.md:424` running a
+`git log -S "0.743864"` forensic. Live assertions: `−1.389` with `R² 0.9938` in
+a `RESEARCH.md` table row, and the three newly struck U1/N3 constants
+`0.743864`, `0.656532`, `0.816955` asserted in
+`tests/cameron/test_harmonic_attribution.py:123-124` and mirrored in
+`tests/deimos/`. **`−1.389` alone accounts for 17 of the 27** and is a short
+enough string to match inside longer numbers, so the tally is a candidate list
+and not a finding. Adjudicating it is not this section's business; surfacing it
+at all required the scanner to look at a file first.
+
+---
+
+## 16. LIMITS ADDED BY SECTIONS 11–15
 
 §10 predates these sections and does not cover them.
 
@@ -818,16 +915,214 @@ point; `absorbing_chain` and `fixed_point` remain callable directly and are not
 guarded, and the law is defined only for the undamped walk. Its agreement margin is
 measured at three graph sizes on one machine in float64 and no conditioning bound is
 proved. §12's verdict is `RISES` under a branch that was fixed before the statistic
-ran, but its size clause fires on the strength of a one-sided estimator bias, its
+ran, but its size clause fires on the strength of a one-sided estimator bias AND
+cannot express a p finer than `2/2^5 = 0.0625` at five seeds, so it is structurally
+incapable of the `0.05` level it was written at; its
 trend clause survives only 2 of 5 single-seed deletions, and the percentile bootstrap
 behind both has `5⁵ = 3125` distinct atoms at five seeds; the calibration sweep is
 200 tables per arm under Gaussian noise at one scale and does not establish the error
-rate under the ladder's real noise. §13's `C` is fit at four beds with coarse `m`
+rate under the ladder's real noise, and the trend clause's own TRUE size is
+`0.037002877` rather than `0.05`, so power quoted against a nominal `0.05`
+overstates it. §13's `C` is fit at four beds with coarse `m`
 grids — `m_50` for the `n/s = 4` bed is bounded only to `(32, 40]` — under a Gaussian
 measurement ensemble, and `news_mat` in `scale/impact.py` has not been shown to be
 one; the line is a necessary condition, never a sufficient one, and nothing here
-wires `UNDER-SAMPLED` into an IMPACT cell. §14 is arithmetic about independent
+wires `UNDER-SAMPLED` into an IMPACT cell. §15's fix is verified on this checkout and on
+synthetic roots; it is not verified on a checkout whose absolute path contains
+none of the skipped names, where the old and new filters agree and the test
+falls through to an equality branch. The 27 candidates the fix exposed are
+unadjudicated, and `−1.389` is short enough to match inside longer numerals, so
+the count is an upper bound on real hits rather than a finding. §14 is arithmetic about independent
 uniform unit vectors and says nothing about the vectors any trained arm actually
 holds; the order-statistic quadrature treats the `C(k,2)` pairwise products as
 independent, which they are not, and is corroboration for the sampled figure rather
 than a proof of it.
+
+---
+
+## 17. WHAT THE STE RESULT ACTUALLY SHOWS, AND WHAT IT PRICES OUT
+
+The full candidate catalogue is `results/r9_maths_survey.md`. This section records
+only the derivations it rests on. **No wall-clock measurement was taken for it.**
+
+### 17.1 Two discrete stages, and only one of them is trained
+
+| | discrete object | site | trained |
+|---|---|---|---|
+| **Stage A** | which `k` rows are pivots | `m3_quintuple.py:169` → `pivot_probe.py:80`, `topk(key.norm(dim=-1), k)` | **never, in any arm** |
+| **Stage B** | mixture weights `α` over the chosen `k` | `m3_quintuple.py:440` | yes |
+
+`argmaxste` estimates **stage B**. Its forward is bitwise `argmax`'s:
+`soft − soft.detach()` is elementwise exactly `+0.0`, and `soft ∈ [0,1]` admits no
+inf/nan path — checked over 200 drawn gates in float64. **Stage A is byte-identical
+across `argmax`, `softmax`, `argmaxste`, `settled` and `twin`.** Nothing measured
+this round bears on stage A.
+
+### 17.2 The gradient is the effect; the mechanism is not
+
+Recomputed from `results/m3_quintuple_v2.jsonl` at `ntr8192_nev512`, 5 seeds, via
+`m3_synthetic_settled.contrast`. Positive = second cell lower.
+
+```
+    argmax    -> argmaxste   +0.225760  CI [+0.212433, +0.245886]  5/5
+    softmax   -> argmaxste   +0.107304  CI [+0.082879, +0.140870]  5/5
+    argmaxste -> twin        +0.004092  CI [-0.023107, +0.029187]  3/5
+    settled   -> twin        +0.002959  CI [-0.031557, +0.048587]  2/5
+    argmaxste -> settled     +0.001133  CI [-0.069616, +0.057312]  3/5
+```
+
+**Three structurally different stage-B mechanisms — a Neumann-settled fixed point,
+a straight-through one-hot, and a full softmax mixture — lie within `0.004092` of
+each other with every CI covering zero.** The only contrast excluding zero at 5/5
+is the presence of a gradient.
+
+### 17.3 The pricing rule: what this instrument can and cannot falsify
+
+Minimum detectable effect, paired, `α=0.05` two-sided, power `0.80`. Two paths: the
+normal approximation, and an exact noncentral-`t` solve. (`scipy.stats.nct` returns
+`nan` at large noncentrality; an unguarded bisection converges upward and returns a
+non-monotone answer — the guard is load-bearing.)
+
+```
+    paired sd   n=5 normal   n=5 exact   n=10      n=20
+    0.022345    0.027996     0.037584    0.022256  0.014758
+    0.034451    0.043164     0.057946    0.034313  0.022753
+    0.050146    0.062828     0.084345    0.049945  0.033119
+    0.082152    0.102929     0.138179    0.081824  0.054257
+```
+
+Seeds required, and their cost at `settledrow`'s `4.560600 s/step`
+(`scale/m3_flops.py:107`, wall clock, one step including backward and Adam,
+`s=64 n=2048`) × 150 steps = `684.09 s`:
+
+```
+    contrast                seeds (normal / exact t)   runs    lower-bound clock
+    argmax vs argmaxste          0.1 /      3             6         1.1 h
+    argmaxste vs twin          556.3 /    559         1 118         8.85 days
+    settled vs twin           2254.1 /   2257         4 514        35.74 days
+    argmaxste vs settled     41263.5 /  41266        82 532       653.46 days
+```
+
+**The seed counts are exact. The day counts are PROVISIONAL**: `m3_flops.py:117-120`
+records the same `settled` unit reading `2.0775` against `3.4372 s/step` in two
+sessions on identical code, `1.65×` apart, which is why every clock in this
+repository carries that label. They are also lower bounds — the compared cells ran
+at `ntr8192`, four times the batch the rate was measured at.
+
+> **PRICING RULE.** At 5 seeds this instrument resolves `0.057946` or larger. The
+> stage-B mechanism differences are `14×`, `20×` and `51×` below that floor; the
+> gradient effect is `3.9×` above it. **Any candidate whose contribution is a
+> better relaxation of stage B is unfalsifiable here**, and an unfalsifiable
+> improvement is inadmissible under this project's own evidence rule.
+
+### 17.4 Why the one stage-A ablation on record could not have said anything
+
+`DONE_ARCHIVE_ROUND1.md:4707` records K4: `randpivot_signed`, `k=8` content-blind
+pivots, slope `+0.081`, CP intervals overlapping the content-selected arm, and the
+pre-registered consequence that content selection is *"not load-bearing for M2"*.
+
+That null was **forced**. `scale/recall_probe.py:3-7` states the identity: for any
+content-blind schedule of size `k`,
+
+```
+    P(c reachable) × (share | reachable)  =  (k/s) × (1/k)  =  1/s
+```
+
+bit-for-bit the dense rate, **independent of `k`**. M2 draws `c` *from* `P`, so it
+measures the second factor and conditions the first away. Verified on two paths
+that fail differently — the symbolic factorisation, and a 200 000-draw Monte Carlo
+over 12 `(s,k)` pairs (at `s=1024, k=8`: symbolic `0.00097656`, sampled
+`0.00099187`). A content-blind schedule reproduces the dense rate exactly, so K4
+was structurally incapable of reading anything else.
+
+`recall_probe.py:9-11` names the quantity that is not an artefact: whether
+`P(c selected)` stays `Θ(1)` as `s` grows under **content-conditional** selection.
+**That file is imported by zero Python files, has no `results/` artifact, and
+`DONE_ARCHIVE_ROUND1.md:5833` calls it "already sitting unrun".** Stage A's search
+space is `C(62,8) = 3 381 098 545` sets, of which `topk` explores exactly one.
+
+### 17.5 A correction to §C of `FINDINGS.md`
+
+`arXiv:2410.01537` (Marion, Berthier, Biau, Boyer, ICLR 2025) is cited there as
+*"softmax is provably Bayes-optimal"* against *"linear attention"*. Equations
+fetched from `ar5iv.labs.arxiv.org/html/2410.01537`: the predictor is
+`T_λ^{k,v}(𝕏) = erf(λ𝕏k)ᵀ𝕏v` — **`erf`, not softmax**; Corollary 2 gives
+**asymptotic** optimality under *"`d→∞` and `L=o(d)`"*; and Proposition 3 refutes
+**linear regression**, `ℛ(β⋆) → ε²+γ²`, not linear attention. The label shape does
+match (`Y = X_{J₀}ᵀv⋆ + ξ`, scalar, latent informative position), so the worry is
+sound — but this repo runs `L = s = 64` against `D_MODEL = 16`
+(`m3_capability.py:79`; the `d24` in journal keys is `make_batch`'s flipper offset,
+`negation_scope.py:84-86`). `L/d = 4.00`, the opposite of `L = o(d)`. **"Provably"
+is not earned at this geometry.** Single-source: the ICLR proceedings PDF returned
+compressed streams and the second path failed.
+
+### 17.6 The `nash.py` shared-`tau` defect is real and too small to be the cause
+
+`ceq/nash.py:64` returns `margin * float(matrix_norm(m, ord=2).max()) / 4.0` — one
+Python float for the batch, from the worst-conditioned instance, applied at `:146`.
+Since `stance = 2σ(z/τ) − 1 ≈ z/(2τ)` for small `z/τ`, an instance run at `τ_batch`
+is attenuated by `τ_i/τ_batch`. On games built exactly as `nash.py:138-144` builds
+them, Gaussian `q,k`: median shrink `0.877526` at `n=64`, `0.851143` at `256`,
+**`0.789701` at `2048`** (min `0.690213`). Two paths — the small-signal ratio and
+the exact sigmoid amplitude (`0.50 → 0.547752`, `0.25 → 0.281624`,
+`0.10 → 0.113593`).
+
+**A `1.27×` attenuation cannot produce the recorded OOD NRMSE of `2.6151` to
+`5.8198`**, which is 2.6× to 5.8× worse than predicting the mean. Before the fix
+and the rerun, one line settles it: measure `matrix_norm(game, ord=2).max()/median`
+on a real batch. Near `1.27` and the bug cannot be the cause. The Gaussian draw is
+a surrogate, so this is a lower bound on the attenuation, not the corpus's value.
+
+### 17.7 The pivot objective's set structure, and where the greedy bound dies
+
+Derived here, not cited. `pivot_probe.pivot_hop2` uses the pivot set as
+`B_P = A[:,P]A[P,:] = Σ_{p∈P} u_p v_pᵀ` with `u_p = A[:,p]`, `v_p = A[p,:]` — a
+sum of rank-1 outer products, **one per pivot, each independent of the rest of
+`P`**. That independence is the whole reason set-function structure exists here.
+With `M_pq := (u_p·u_q)(v_p·v_q)`, captured mass is a quadratic form in the
+indicator,
+
+```
+    f(P) := ‖B_P‖_F²  =  1_Pᵀ M 1_P ,
+    f(S∪{a,b}) − f(S∪{a}) − f(S∪{b}) + f(S)  =  2 M_ab   — constant in S
+```
+
+**Captured mass is SUPERMODULAR on a nonnegative operator.** A softmax attention
+matrix is nonnegative, so every inner product is `≥ 0`, `M_ab ≥ 0`, and the
+second difference is `≥ 0`: *increasing* returns. Greedy has no `1−1/e` on it.
+The intuition that pivot selection is obviously a diminishing-returns problem is
+**wrong on the obvious objective**.
+
+**Reconstruction is monotone submodular, and there the bound is real.**
+`h(P) := ‖A²‖_F² − ‖A² − B_P‖_F²` has second difference `−2M_ab ≤ 0`, and
+monotonicity is derived rather than assumed: with `R = A² − B_S` and `a ∉ S`,
+
+```
+    h(S∪{a}) − h(S) = 2⟨R, u_a v_aᵀ⟩ − ‖u_a v_aᵀ‖²  ≥  ‖u_a v_aᵀ‖²  >  0
+```
+
+since `R ≥ u_a v_aᵀ` elementwise for `A ≥ 0`, `a ∉ S`. Checked over **21 936
+`(S,a)` pairs**: `min(gain − ‖u_a v_aᵀ‖²) = −3.55e−15`, zero to float precision
+and tight, the bound being attained when `S` holds every other pivot. With
+`h(∅)=0` and `h ≥ 0`, Nemhauser–Wolsey–Fisher gives greedy
+**`1 − 1/e = 0.632121`**. (NWF 1978 is classical, cited from standard knowledge
+and **not fetched** — flagged.)
+
+**The signed arm voids it.** `M_ab ≥ 0` needs `A ≥ 0`. On signed operators `M`
+carried a negative entry in `297/300` draws at `n ∈ {4,5,6}` and `300/300` at
+fixed `n = 6`, so neither objective is submodular there.
+
+**A prediction of mine that was wrong, recorded.** I expected `h` to be
+non-monotone, reasoning that `B_P` is a fixed sum rather than a projection so an
+added pivot could raise the residual. It cannot, for `A ≥ 0`: `0` of 21 936
+checked pairs decreased `h`. The derivation above is the corrected version.
+
+Two paths throughout: the closed form `±2M_ab`, and direct evaluation of `f` and
+`h` on all four sets, agreeing on every checked subset. `scale/pivot_selection_theory.py`
+holds both, with `demo()` asserting them.
+
+**What it is worth.** It bounds greedy against the *best* pivot set under a
+reconstruction objective. It says nothing about whether a better pivot set lowers
+NRMSE — that is §17.4's question, and `scale/recall_probe.py` was written to
+answer it and never run. **A provable guarantee on an objective nobody has shown
+to matter is still a guarantee about nothing.**

@@ -109,21 +109,27 @@ WHAT EACH HALF IS, ON THIS REPO'S OWN OBJECTS.
                 the aggregate; masking displacement per chunk is then
                 |pred(full) - pred(masked)| averaged over eval draws.
 
-THE PRE-REGISTERED BAR. [STRUCK -- every number in this paragraph is in the
-STRUCK registry and none of them is reproducible; see the header above.]
+THE PRE-REGISTERED BAR. [STRUCK -- the numbers quoted below are in the STRUCK
+registry and none of them is reproducible; see the header above.]
 `PREREGISTERED_RHO_FLOOR` was frozen from PILOT data
 BEFORE the headline run, disclosed here exactly as
 E_LADDER_PREREGISTERED_READING.md section 7b discloses its pilot:
 
+    [STRUCK -- no producer ever existed; registry entry in
+    tests/loop/test_no_struck_constant_ships.py. This marker is repeated inside
+    this indented block on purpose: the scanner's unit is the blank-line
+    PARAGRAPH, not the section, so a marker in the paragraph above does not
+    reach these lines.]
     Pilot rows, produced before the floor was frozen (seed 0, shipped case
     LargestJoin_S2Rips_4096/deg 4.25/seed 0x33960005, 64 declared chunks,
     query node 283, n_train=2048, steps=150, lr=0.02, n_eval draws=256,
     bootstrap B=200):
 
+        [STRUCK, withdrawn, not reproducible -- see the registry.]
         spearman(omega_rank, mean_displacement_rank) = 0.743864
         bootstrap CI [0.656532, 0.816955]
 
-    Floor frozen at 0.50: comfortably below the pilot point estimate and its
+    [STRUCK.] Floor frozen at 0.50: comfortably below the pilot point estimate and its
     CI lower edge, far above the ~0 noise floor of 64 ranked chunks, round.
     The headline run uses a DIFFERENT seed (7) and MORE draws (1024); if it
     lands below the floor, K-R8d fires at the PROBE, not at the kernel.
