@@ -19,6 +19,7 @@ than `s-1` in the R9 arm".
 """
 from __future__ import annotations
 
+import pytest
 import torch
 
 from scale import eprocess as EP
@@ -153,6 +154,71 @@ def test_flops_price_the_row_cells_above_their_single_row_cell():
         hi = sum(F.cell_terms(row, n, s, dm, h, K, t, nn).values())
         lo = sum(F.cell_terms(base, n, s, dm, h, K, t, nn).values())
         assert hi > lo, (row, hi, lo)
+
+
+C1 = "c1_propagate_t2"
+_UNIT = dict(k=8, seed=0, s=S, d=D, steps=0, n_train=128, n_eval=128,
+             t_max=21, n_neumann=21)
+
+
+def test_a_c1_vector_unit_runs_end_to_end_at_the_shipped_parameter_count():
+    """Saturn's `[n, s - t*]` label against this arm, through `_unit`."""
+    for cell in ("softmax", "twinrow"):
+        v = MQ._unit(dict(_UNIT, cell=cell, k=0 if cell == "softmax" else K,
+                          task=C1))
+        assert v["n_params"] == 4769
+        assert v["eval_nrmse"] == v["eval_nrmse"], "nan eval_nrmse"
+        assert v["nrmse0_eval"] == v["nrmse0_eval"], "nan nrmse0_eval"
+
+
+def test_the_label_support_guard_raises_when_the_width_and_the_dial_disagree():
+    """Both branches, or the guard is decoration.
+
+    A slice that merely happens to line up reads as working until `t*` changes,
+    so the offset implied by the label's width is checked against the task's
+    declared dial. The honest task must pass the same guard that the doctored
+    one trips, otherwise the check is testing nothing.
+    """
+    real = NS.M3_TASKS[C1][0]
+
+    def narrow(n, s, d, **kw):
+        x, y, f, p = real(n, s, d, **kw)
+        return x, y[:, 1:], f, p
+
+    NS.M3_TASKS["c1_neptune_liar"] = (narrow,) + tuple(NS.M3_TASKS[C1][1:])
+    NS.E_T_STAR["c1_neptune_liar"] = lambda s: 2
+    try:
+        with pytest.raises(ValueError, match="declares"):
+            MQ._unit(dict(_UNIT, cell="softmax", k=0, task="c1_neptune_liar"))
+        MQ._unit(dict(_UNIT, cell="softmax", k=0, task=C1))   # must NOT raise
+    finally:
+        NS.M3_TASKS.pop("c1_neptune_liar", None)
+        NS.E_T_STAR.pop("c1_neptune_liar", None)
+
+
+def test_the_per_row_arm_covers_most_of_the_label_support():
+    """The dilution residue, measured rather than assumed.
+
+    The shipped arm can write exactly ONE position of the label's support, so
+    its share is `1 / (s - t*)`. The per-row arm writes every position with a
+    causally visible pivot. Both numbers belong beside any margin this lane
+    ever reports, which is the obligation `R9_IRENE_PREDICTION.md` row omega
+    creates.
+    """
+    s = 64
+    torch.manual_seed(0)
+    m = MQ.QuintArm("softmax", s, cell="twinrow", k_piv=K)
+    for t, floor in ((2, 0.85), (8, 0.90), (32, 0.99)):
+        x, y, _f, _p = NS.M3_TASKS["c1_propagate_t%d" % t][0](
+            256, s, 24, d_model=DM, seed=0)
+        assert y.shape[1] == s - t
+        with torch.no_grad():
+            q, k = m.wq(x), m.wk(x)
+            _, valid = MQ.batched_row_gates(q, k, MQ.batched_pivots(k, K))
+        frac = float(valid[:, t:].float().mean())
+        assert frac >= floor, (t, frac)
+        # and it must beat the single-row arm's share, which is the whole point
+        assert frac > 1.0 / (s - t)
 
 
 def test_an_unregistered_cell_still_dies_at_accounting_time():

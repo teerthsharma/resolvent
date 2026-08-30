@@ -172,23 +172,98 @@ causality. Irene's §2a — *"at every position `p ≠ s-1`, `settled`, `twin`,
 arm, is re-measured true here, and **is false of the row cells.** The `sqrt(w)`
 scaling in her §2c therefore does not apply to this arm.
 
-**And that does not settle her prediction, because her stronger half is
-untouched.** Her §2b is an argument about the **label**, not the arm: under the
-prefix-scan reading, `s - t* - 1` positions have `a_p = 0` so `z_p = b_p`
-exactly, a channel of the input readable at zero hops by every arm identically.
-A per-row arm changes nothing about that. **The dilution survives the arm fix
-for a different reason than the one falsifier 5 retires**, and the remedy is a
-corpus change — zeroing `b_p` wherever `a_p = 0` — which is Saturn's landing and
-was deliberately not touched here.
+**The arm does not settle her stronger half; the corpus does.** Her §2b is an
+argument about the **label**, not the arm: under the prefix-scan reading she
+chose, `s - t* - 1` positions would have `a_p = 0` so `z_p = b_p` exactly, an
+input channel readable at zero hops by every arm identically. A per-row arm
+changes nothing about that. But her §6 anticipated exactly this and bound her to
+the formula rather than the eight numbers: *"if R9 defines the vector label some
+other way ... §2c's variance shares are wrong."* It does. Saturn's C1 buys the
+zero-hop clause by excluding `h = 0` from the label instead of zeroing drivers,
+so no position is a free copy and no position's label is constant — see §5.
 
 Per her §6 this file scores as *"neither right nor wrong"* on PREDICTION 1's
-mechanism half and says so, as she required. Her PREDICTION 3 (the RED gate
-trips on the 0-step pooled NRMSE) is **untested here** and remains live: it is a
-statement about the label, and no label was built.
+mechanism half and says so, as she required. **PREDICTION 3 is scored in §5 and
+fails** — her falsifier 4 fires, thinly. PREDICTION 1's eight margin numbers are
+**not** scored here and cannot be: they are computed against her prefix-scan
+label with `sqrt(w)` weights that C1's label does not have, and no margin of any
+kind was measured in this pilot. Recomputing them against C1's actual variance
+profile, per her §6, is owed before that prediction is called either way.
 
 ---
 
-## 5. Registration status
+## 5. Integration with Saturn's C1 corpus — route 1, and why
+
+C1's label is `[n, s - t*]`, covering positions `t* .. s-1`: a strictly causal
+operator raised to `t*` vanishes on the first `t*` coordinates, so labelling
+them would ship `t*` entries of `sd 0`. `negation_scope.propagate_features`
+slices `[:, t_star:]`, which fixes the support as the **last** `s - t*`
+positions. `run_arm` raised `size of tensor a (64) must match tensor b (56)`.
+
+**Route 1 was taken: the arm emits `[n, s]` and the slice happens outside it.**
+
+* `QuintArm.forward` under `vector_readout` returns `[n, s]` for every task. Its
+  output shape does not depend on a corpus's difficulty dial.
+* **The FLOP accounting stays exactly right.** `ROW_GATE_TERM` and the `×s`
+  multipliers price all `s` rows, and under route 1 all `s` rows are computed.
+  Route 2 would have computed only `s - t*` of them and left the term
+  over-pricing by `s / (s - t*)` — `2×` at `t* = 32`. That is the reason to
+  prefer route 1 beyond taste: it is the one that keeps the cost model honest.
+* The slice lives in `_unit`'s existing `_A` adapter, which already selects the
+  task, so no shared training loop was touched — `m3_capability.run_arm` and
+  `paired_arm.train_and_predict` are unchanged.
+
+**The support is checked, not inferred.** The offset is derived from the label's
+width and then cross-checked against the task's own dial via
+`negation_scope.e_t_star`; a disagreement raises rather than trains. Both
+branches are exercised: a doctored task declaring `t* = 2` while emitting width
+`s - 3` raises `label width 13 implies offset 3 at s=16, but task declares
+t*=2`, and the honest task passes the same guard.
+
+End-to-end at `s=16, d=8, n=256`, through `_unit`, all cells at `n_params 4769`:
+
+| task | `nrmse0_train` | `nrmse0_eval` | RED gate `>= 1.0` |
+|---|---|---|---|
+| `c1_propagate_t1` | `1.004224` | `1.002360` | **passes** |
+| `c1_propagate_t2` | `1.004672` | `1.001435` | **passes** |
+| `c1_propagate_t8` | `1.003886` | `1.006475` | **passes** |
+
+**This is where Irene's PREDICTION 3 is scored, and it fails.** She predicted
+the 0-step pooled NRMSE would read below `1.0` at `t* = 1` and the vector lane
+would abort `INSTRUMENT BROKEN`, because a vector label re-opens the zero-hop
+legibility hole at `s - t* - 1` positions. It does not, on this corpus: Saturn
+bought the zero-hop clause by excluding `h = 0` from the label rather than by
+zeroing drivers, so no position's label is a free copy and no position's label
+is constant. Her §2b — the argument I said survived falsifier 5 — is answered by
+the corpus, not by the arm. **Her falsifier 4 fires.**
+
+Read that reading narrowly. It is `n_eval = 256` at one seed and one geometry,
+and the margin is thin: the same configuration at `n_eval = 64` read
+`nrmse0_eval 0.999138`, below the bar. The gate is passed, not passed
+comfortably, and it should be re-read at the shipped `n_eval` before anything is
+built on it.
+
+### How much of the label the arm can actually write
+
+The shipped arm writes exactly one position of the support, so its share is
+`1 / (s - t*)`. The per-row arm writes every position with a causally visible
+pivot. Measured at `s = 64`, 512 drawn instances per rung:
+
+| rung | label width | **shipped arm's share** | **per-row writable fraction** | positions never writable |
+|---|---|---|---|---|
+| `c1_propagate_t1` | 63 | `1.587 %` | **`88.11 %`** | 1 (row 1, pivotless) |
+| `c1_propagate_t2` | 62 | `1.613 %` | **`89.53 %`** | 0 |
+| `c1_propagate_t8` | 56 | `1.786 %` | **`95.22 %`** | 0 |
+| `c1_propagate_t32` | 32 | `3.125 %` | **`99.99 %`** | 0 |
+
+The shortfall from `100 %` is causality, not a defect: row `p` needs a selected
+pivot at `<= p-1`, the pivots are content-selected from `1 .. s-2`, and early
+rows can miss. It shrinks as `t*` grows because the support starts later. **Both
+columns belong beside any margin this lane ever reports** — that is the
+obligation row Ω of `R9_IRENE_PREDICTION.md` creates, and the shipped arm's
+column is the reason the lane needed a new arm at all.
+
+## 6. Registration status
 
 * `ROW_CELLS = ("twinrow", "settledrow")`, a **new tuple beside** `CELLS`.
   `CELLS` is untouched and still the exact 5-tuple
@@ -211,7 +286,7 @@ statement about the label, and no label was built.
 
 ---
 
-## 6. What this pilot does NOT establish
+## 7. What this pilot does NOT establish
 
 No capability claim of any kind is made or implied: no vector-valued label
 exists in this repository, so nothing here says the per-row arm is better than

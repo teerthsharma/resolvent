@@ -601,10 +601,41 @@ def _unit(p: dict) -> dict:
     #: TRAINED one is the last, and the count is asserted rather than assumed.
     built = []
 
+    xt, yt, _a, _b = bfn(p["n_train"], s, d, d_model=M3.D_MODEL, seed=seed)
+    xe, ye, _c, _e = bfn(p["n_eval"], s, d, d_model=M3.D_MODEL,
+                         seed=seed + 12345)
+
+    #: THE LABEL'S SUPPORT, MADE EXPLICIT AND CHECKED AGAINST THE TASK.
+    #:
+    #: A vector corpus does not label every position. C1's label is
+    #: `[n, s - t*]` and covers positions `t* .. s-1`, because a strictly causal
+    #: operator raised to `t*` vanishes on the first `t*` coordinates: labelling
+    #: them would ship `t*` entries of `sd 0`, which is the vacuity the
+    #: fourteenth strike was. So the arm emits `[n, s]` -- ITS OUTPUT SHAPE IS
+    #: TASK-INDEPENDENT, and its FLOP accounting stays the accounting of all `s`
+    #: rows -- and this adapter, which already knows the task, slices it.
+    #:
+    #: The offset is derived from the label's width and then CROSS-CHECKED
+    #: against the task's own dial rather than trusted. A slice that merely
+    #: happens to line up reads as working until `t*` changes, so a mismatch
+    #: raises here instead of training on a misaligned target.
+    vector_label = yt.dim() > 1
+    offset = s - yt.shape[1] if vector_label else 0
+    if vector_label:
+        dial = NS.e_t_star(task, s)
+        if dial is None or offset != int(dial):
+            raise ValueError(
+                f"label width {yt.shape[1]} implies offset {offset} at s={s}, "
+                f"but task {task!r} declares t*={dial}; refusing to train on a "
+                "target whose support is not the one the task registered")
+        if ye.shape[1] != yt.shape[1]:
+            raise ValueError("train and eval labels disagree on width")
+
     class _A(QuintArm):
         def __init__(self, kind, s_):
             super().__init__(kind, s_, cell=cell, k_piv=p["k"], beta=BETA,
-                             t_max=p["t_max"], n_neumann=p["n_neumann"])
+                             t_max=p["t_max"], n_neumann=p["n_neumann"],
+                             vector_readout=vector_label)
             built.append(self)
             #: `M3.run_arm` constructs its own 0-step arm internally and cannot
             #: be handed a device (m3_capability.py is CPU-only by contract),
@@ -613,9 +644,13 @@ def _unit(p: dict) -> dict:
             if dev is not None:
                 self.to(dev)
 
-    xt, yt, _a, _b = bfn(p["n_train"], s, d, d_model=M3.D_MODEL, seed=seed)
-    xe, ye, _c, _e = bfn(p["n_eval"], s, d, d_model=M3.D_MODEL,
-                         seed=seed + 12345)
+        def forward(self, x):
+            #: The slice lives HERE and not in `QuintArm`, so the arm's own
+            #: output stays `[n, s]` for every task while this unit-local
+            #: adapter carries the corpus's support.
+            out = super().forward(x)
+            return out[:, offset:] if vector_label else out
+
     if dev is not None:
         xt, yt = xt.to(dev), yt.to(dev)
         xe, ye = xe.to(dev), ye.to(dev)
