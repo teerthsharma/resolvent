@@ -47,8 +47,8 @@ that globs `results/*.jsonl`, which is all of them.
 
 | class | rows |
 |---|---|
-| live | 292 |
-| vacuous | 15 |
+| live | 299 |
+| vacuous | 8 |
 | orphan | 25 |
 | superseded | 14 |
 | struck | 1 |
@@ -56,8 +56,8 @@ that globs `results/*.jsonl`, which is all of them.
 
 | disposition | rows |
 |---|---|
-| KEEP | 307 |
-| ATTIC | 40 |
+| KEEP | 314 |
+| ATTIC | 33 |
 
 **Presumed rows: 36.** A presumption is not a verdict. Every one is marked in its reason cell and is a
 spot-check candidate for iteration 2. **NO JOURNAL ENTRY: 198 of 347** &mdash; a real state, not a blank.
@@ -241,6 +241,79 @@ census run surfaced them:
 Whether these are recorded refutations already priced in an earlier round, or regressions on this branch, is
 not a census question and is not answered here. They are handed over as measured state.
 
+## Iteration 2 &mdash; the spot-check, and what it moved
+
+The draw was taken out of the census author's hands: `scale/spotcheck_draw.py`, SEED=10002, output
+`results/r10_it2_draw.txt`, fixed and committed before any row was measured. **The draw reproduces
+against `AUDIT.md@06a180c`** &mdash; the sheet as it stood before the amendments below &mdash; and not
+against this file as it now reads, because the amendments moved KEEP 307/ATTIC 40 to 314/33. That is
+the correct relation and it is recorded rather than papered over: a draw must reproduce against the
+urn it was drawn from. `git show 06a180c:AUDIT.md` restores that urn.
+
+The protocol defining what "passes" and "is dead" mean per row type was written and committed at
+`06a180c`, `results/r10_it2_protocol.md`, **before** any drawn row was run. Three root docs landed in
+the KEEP sample and "must pass" is undefined for a document until it is defined.
+
+**Verdict: 1 KEEP failure of 10. Under the pre-registered binomial (P(>=1 fails | sheet >=95% right)
+= 0.4013), one failure AMENDS the row and the census STANDS.** The failure is `workdone2.md`.
+
+### What the spot-check found, all four test-bound in `tests/saturn/test_r10_it2_spotcheck_reds.py`
+
+1. **The "no python importer" cell is an absence claim from a search that could not find what it was
+   looking for.** 18 rows assert it; **12 (67%) are wrong**, missing **135 front-door importer edges**
+   &mdash; `scale/pivot_probe.py` has 52 and `scale/negation_scope.py` 45, both recorded as having
+   none. This is MISTAKES.md V-7 again, and it is the same defect as FINDING 1 one level up.
+   **It cost zero dispositions**: all 12 are live/KEEP already, carried by their journal leg, and the
+   KILL 3 orphan class survives its re-measure intact &mdash; **0 of 19 scale orphans have a
+   front-door importer**. A large defect that changed no verdict is still a defect, and it is the one
+   most likely to change a verdict on the next sheet that lacks the second leg.
+
+2. **Seven of the twelve files named on `tests/chase/conftest.py`'s KNOWN_RED ledger were classed
+   ATTIC.** The ledger resolves each key against collected node ids and applies `xfail(strict=True)`
+   at every collection: that is a live reader holding a live reference, and each entry carries a
+   measured finding about the shipped deliverable. The census read them as *"ran ALL-GREEN in the
+   iteration-1 sweep"*. A file whose every test is a strict xfail reports exit 0 and zero failures.
+   **`tests/chase/test_hf_shipping.py`, the drawn ATTIC row, ran 5 xfailed and 0 passed** &mdash;
+   ALL-GREEN was read off an exit status that cannot tell a passing test from a recorded finding.
+   All seven are amended to live/KEEP.
+
+   **This is the fourth presumption in this census to fail by keying on a surface feature rather than
+   on the instrument's role** &mdash; P1 (who built the input), P3 (a literal path string), P1' (where
+   the input enters), and now the vacuity sweep (an exit status). The pattern was predicted at
+   FINDING 2 and it recurred, which makes it the census's most reliable finding about itself.
+
+3. **`workdone2.md`'s retention ground is empty.** Its cell read *1/10 readings reproduce at
+   abs=5e-7*; re-measured it is **0 of 4**. The extractor is calibrated against this sheet's own
+   control &mdash; `LOOP_PROMPT_ROUND6_ARCHIVE.md` re-measures **8/23, exactly its cell** &mdash; so
+   the disagreement is the sheet's, not the instrument's. The nearest journal values miss by 1.6e-4 to
+   35.5, between 300x and 7e7x the tolerance: near-misses, not a parsing artifact. **KEEP stands on a
+   different, measured ground** (7 tracked files name it), and the row is amended to say so. It is
+   kept as a cited round log, not as provenance.
+
+4. **Three files in `tests/chase` declare "RED on purpose" and are absent from the KNOWN_RED ledger**
+   &mdash; `test_structural_zero_guard.py` (the drawn row), `test_checklist_kills_are_evaluable.py`,
+   `test_m2_verdict_nan.py`. `tests/chase` is the one directory carrying a ledger, so inside it an
+   intentional red belongs there; `tests/foreman` reds are unledgered by design because foreman has no
+   ledger. These three surface as hard CI failures indistinguishable from regressions.
+   **Not fixed here.** Adding ledger entries changes what CI treats as an expected failure, which is
+   CHASE's seat and not the census author's. Routed, left RED as the deliverable.
+
+### The five ATTIC rows, re-measured rather than re-asserted
+
+`tests/cameron/test_hankel_mustfire.py` (16 passed; no front-door call, no `test_claim_*`, no external
+mechanism &mdash; conjunction holds), `titan-report.md` (0 tracked files name it or its stem under the
+protocol's exclusions), `scale/orbit_probe.py` (0 importers, 0 `results/` writes at any extension, 0
+prose citations), `scale/sparse_probe.py` (0 importers, 0 `results/` writes; prose citations amended
+4 -> 3 under the exclusions) are **DEAD, confirmed**. `tests/chase/test_hf_shipping.py` is **NOT
+dead** &mdash; finding 2 above.
+
+### Power
+
+Whether a uniform draw of 10 is powered against CONCENTRATED error is MARS's parallel calculation and
+is **not claimed here**. Finding 2 is exactly a concentrated error &mdash; 7 rows in one directory,
+one class, one presumption &mdash; and the uniform draw caught it only because `test_hf_shipping.py`
+happened to be drawn. That is luck, not power.
+
 ## The kills, and the route that replaces each
 
 Every ATTIC of something that was doing real work is a kill and ships a replacement route.
@@ -405,13 +478,13 @@ Count: **191** &mdash; `git ls-files -- 'tests/*.py'`
 | `tests/chase/test_ceq_hub_package.py` | The Hub package: can somebody actually load and run this checkpoint. | NO JOURNAL ENTRY | live | KEEP | MEASURED RED, presumption WITHDRAWN: this file has a demonstrated live rejection region - it is currently rejecting, so it is not passing by construction and cannot be vacuous in the strong sense. Its docstring binds it to a pre-registered falsifier or named control. Re-run, NOT a journal read; see FINDING 3. What a RED does NOT settle is whether the SCOPE is right - that is the spot-check |
 | `tests/chase/test_checklist_kills_are_evaluable.py` | CHECKLIST kill clauses that cannot fire. RED ON PURPOSE. | NO JOURNAL ENTRY | live | KEEP | 6 tests, input drawn from the scale/ production path |
 | `tests/chase/test_colab_chain.py` | The Colab -> Hugging Face chain, end to end, without spending a GPU-hour. | NO JOURNAL ENTRY | live | KEEP | 11 tests, input drawn from the scale/ production path |
-| `tests/chase/test_deq_divergence.py` | THEORY.md §8 risk 1 and the DEQ family's documented weakness, bound to a run. | NO JOURNAL ENTRY | vacuous | ATTIC | PRESUMED vacuous-by-scope (L-SCOPE): builds its own tensor/graph instead of drawing from the production batch path, and 0 of its 1 6-significant-digit readings reproduce from any results/*.jsonl at abs=5e-7. ran ALL-GREEN in the iteration-1 sweep, which is exactly what a vacuous control does and is therefore not evidence either way. PRESUMPTION, NOT VERDICT - iteration-2 spot-check candidate; see KILL 2 |
+| `tests/chase/test_deq_divergence.py` | THEORY.md §8 risk 1 and the DEQ family's documented weakness, bound to a run. | NO JOURNAL ENTRY | live | KEEP | AMENDED r10-it2 (was vacuous/ATTIC): named 6 time(s) on `tests/chase/conftest.py`'s KNOWN_RED ledger, which resolves the key against collected node ids and applies xfail(strict=True) at EVERY collection. That is a live reader holding a live reference, and each entry carries a measured finding about the shipped deliverable. The iteration-1 cell read "ran ALL-GREEN"; a file whose every test is a strict xfail reports exit 0 and zero failures, so ALL-GREEN was read off an exit status that cannot tell a pass from a recorded finding. RED-BY-DESIGN, not vacuous. |
 | `tests/chase/test_eprocess.py` | Binds on the anytime-valid e-process for the M3 settled-vs-twin contrast. | results/m3_quintuple.jsonl (19 rec) | live | KEEP | 31 tests, input drawn from the scale/ production path |
 | `tests/chase/test_eprocess_perdraw.py` | X18 must-fire: the per-draw Ville process, calibrated in BOTH directions. | results/m3_quintuple_v2.jsonl (151 rec); results/m3_quintuple_v2_cuda.jsonl (23 rec) | live | KEEP | 6 tests, input drawn from the scale/ production path |
-| `tests/chase/test_floor_objective.py` | THEORY.md §5: caustic Theorem 1 as a TRAINING objective rather than a diagnostic. | NO JOURNAL ENTRY | vacuous | ATTIC | PRESUMED vacuous-by-scope (L-SCOPE): builds its own tensor/graph instead of drawing from the production batch path, and 0 of its 0 6-significant-digit readings reproduce from any results/*.jsonl at abs=5e-7. ran ALL-GREEN in the iteration-1 sweep, which is exactly what a vacuous control does and is therefore not evidence either way. PRESUMPTION, NOT VERDICT - iteration-2 spot-check candidate; see KILL 2 |
-| `tests/chase/test_hf_shipping.py` | What breaks when the target deliverable -- a ~1B model or module on the Hugging Face | NO JOURNAL ENTRY | vacuous | ATTIC | PRESUMED vacuous-by-scope (L-SCOPE): builds its own tensor/graph instead of drawing from the production batch path, and 0 of its 0 6-significant-digit readings reproduce from any results/*.jsonl at abs=5e-7. ran ALL-GREEN in the iteration-1 sweep, which is exactly what a vacuous control does and is therefore not evidence either way. PRESUMPTION, NOT VERDICT - iteration-2 spot-check candidate; see KILL 2 |
+| `tests/chase/test_floor_objective.py` | THEORY.md §5: caustic Theorem 1 as a TRAINING objective rather than a diagnostic. | NO JOURNAL ENTRY | live | KEEP | AMENDED r10-it2 (was vacuous/ATTIC): named 6 time(s) on `tests/chase/conftest.py`'s KNOWN_RED ledger, which resolves the key against collected node ids and applies xfail(strict=True) at EVERY collection. That is a live reader holding a live reference, and each entry carries a measured finding about the shipped deliverable. The iteration-1 cell read "ran ALL-GREEN"; a file whose every test is a strict xfail reports exit 0 and zero failures, so ALL-GREEN was read off an exit status that cannot tell a pass from a recorded finding. RED-BY-DESIGN, not vacuous. |
+| `tests/chase/test_hf_shipping.py` | What breaks when the target deliverable -- a ~1B model or module on the Hugging Face | NO JOURNAL ENTRY | live | KEEP | AMENDED r10-it2 (was vacuous/ATTIC): named 5 time(s) on `tests/chase/conftest.py`'s KNOWN_RED ledger, which resolves the key against collected node ids and applies xfail(strict=True) at EVERY collection. That is a live reader holding a live reference, and each entry carries a measured finding about the shipped deliverable. The iteration-1 cell read "ran ALL-GREEN"; a file whose every test is a strict xfail reports exit 0 and zero failures, so ALL-GREEN was read off an exit status that cannot tell a pass from a recorded finding. RED-BY-DESIGN, not vacuous. |
 | `tests/chase/test_hub_package_hardening.py` | Round 4: make `ceq/hf/` publishable, and make every claim in it survive a | NO JOURNAL ENTRY | live | KEEP | 26 tests, input drawn from the scale/ production path |
-| `tests/chase/test_kernel_contracts.py` | tda-tdd kernel correctness contracts applied to the ACTUAL merged kernel. | NO JOURNAL ENTRY | vacuous | ATTIC | PRESUMED vacuous-by-scope (L-SCOPE): builds its own tensor/graph instead of drawing from the production batch path, and 0 of its 0 6-significant-digit readings reproduce from any results/*.jsonl at abs=5e-7. NOT RUN in the iteration-1 sweep (does not collect as a set). PRESUMPTION, NOT VERDICT - iteration-2 spot-check candidate; see KILL 2 |
+| `tests/chase/test_kernel_contracts.py` | tda-tdd kernel correctness contracts applied to the ACTUAL merged kernel. | NO JOURNAL ENTRY | live | KEEP | AMENDED r10-it2 (was vacuous/ATTIC): named 9 time(s) on `tests/chase/conftest.py`'s KNOWN_RED ledger, which resolves the key against collected node ids and applies xfail(strict=True) at EVERY collection. That is a live reader holding a live reference, and each entry carries a measured finding about the shipped deliverable. The iteration-1 cell read "ran ALL-GREEN"; a file whose every test is a strict xfail reports exit 0 and zero failures, so ALL-GREEN was read off an exit status that cannot tell a pass from a recorded finding. RED-BY-DESIGN, not vacuous. |
 | `tests/chase/test_lean_refcount_binding.py` | Bind `lean/CEQ/Refcount.lean` -- the only live provenance claim -- to a test. | NO JOURNAL ENTRY | live | KEEP | 10 tests, input drawn from the scale/ production path |
 | `tests/chase/test_m2_instrument_binds.py` | Three binds M2 has to survive before it can be marked GREEN. ALL RED. | results/m2.jsonl (40 rec) | live | KEEP | 5 tests, input drawn from the scale/ production path |
 | `tests/chase/test_m2_not_in_P_is_structural_zero.py` | Is the M2 `pivot_signed` / `not_in_P` arm a MEASUREMENT or an IDENTITY? | NO JOURNAL ENTRY | live | KEEP | 1 tests, input drawn from the scale/ production path |
@@ -427,14 +500,14 @@ Count: **191** &mdash; `git ls-files -- 'tests/*.py'`
 | `tests/chase/test_multizoom_r5.py` | R5's falsifiers. These decide whether R5 lives or is deleted. | NO JOURNAL ENTRY | vacuous | ATTIC | PRESUMED vacuous-by-scope (L-SCOPE): builds its own tensor/graph instead of drawing from the production batch path, and 0 of its 0 6-significant-digit readings reproduce from any results/*.jsonl at abs=5e-7. NOT RUN in the iteration-1 sweep (does not collect as a set). PRESUMPTION, NOT VERDICT - iteration-2 spot-check candidate; see KILL 2 |
 | `tests/chase/test_pivot_exclusion_lift.py` | The pivot-exclusion lift: does `av` actually contain softmax's own row? | NO JOURNAL ENTRY | live | KEEP | 6 tests, input drawn from the scale/ production path |
 | `tests/chase/test_resume_checkpoint.py` | PROOF that `train()` is resumable, cpu-only and tiny. | NO JOURNAL ENTRY | live | KEEP | 3 tests, input drawn from the scale/ production path |
-| `tests/chase/test_rollback_flex_attention.py` | The conservative option for §8 risk 6, tested rather than asserted. | NO JOURNAL ENTRY | vacuous | ATTIC | PRESUMED vacuous-by-scope (L-SCOPE): builds its own tensor/graph instead of drawing from the production batch path, and 0 of its 0 6-significant-digit readings reproduce from any results/*.jsonl at abs=5e-7. NOT RUN in the iteration-1 sweep (does not collect as a set). PRESUMPTION, NOT VERDICT - iteration-2 spot-check candidate; see KILL 2 |
+| `tests/chase/test_rollback_flex_attention.py` | The conservative option for §8 risk 6, tested rather than asserted. | NO JOURNAL ENTRY | live | KEEP | AMENDED r10-it2 (was vacuous/ATTIC): named 1 time(s) on `tests/chase/conftest.py`'s KNOWN_RED ledger, which resolves the key against collected node ids and applies xfail(strict=True) at EVERY collection. That is a live reader holding a live reference, and each entry carries a measured finding about the shipped deliverable. The iteration-1 cell read "ran ALL-GREEN"; a file whose every test is a strict xfail reports exit 0 and zero failures, so ALL-GREEN was read off an exit status that cannot tell a pass from a recorded finding. RED-BY-DESIGN, not vacuous. |
 | `tests/chase/test_scale_axes.py` | Does the 1.0334 parity ratio survive to 300M, or is it a 3.3M artifact? | NO JOURNAL ENTRY | live | KEEP | MEASURED RED, presumption WITHDRAWN: this file has a demonstrated live rejection region - it is currently rejecting, so it is not passing by construction and cannot be vacuous in the strong sense. Its docstring binds it to a pre-registered falsifier or named control. Re-run, NOT a journal read; see FINDING 3. What a RED does NOT settle is whether the SCOPE is right - that is the spot-check |
 | `tests/chase/test_scale_hazards.py` | Failure modes that do not appear at 3.3M and do appear at 300M. | 1/2 readings reproduce at abs=5e-7 | live | KEEP | builds its own input, BUT 1/2 of its readings reproduce from the journal at abs=5e-7 - its scope is anchored to the production path, so the L-SCOPE presumption does not fire |
 | `tests/chase/test_scale_sizing.py` | Does a 0.5B model with this attention fit a Colab GPU, and what does it cost? | NO JOURNAL ENTRY | live | KEEP | 21 tests, input drawn from the scale/ production path |
-| `tests/chase/test_schedule_rebuild.py` | THEORY.md's single new component, attacked directly. | NO JOURNAL ENTRY | vacuous | ATTIC | PRESUMED vacuous-by-scope (L-SCOPE): builds its own tensor/graph instead of drawing from the production batch path, and 0 of its 0 6-significant-digit readings reproduce from any results/*.jsonl at abs=5e-7. ran ALL-GREEN in the iteration-1 sweep, which is exactly what a vacuous control does and is therefore not evidence either way. PRESUMPTION, NOT VERDICT - iteration-2 spot-check candidate; see KILL 2 |
+| `tests/chase/test_schedule_rebuild.py` | THEORY.md's single new component, attacked directly. | NO JOURNAL ENTRY | live | KEEP | AMENDED r10-it2 (was vacuous/ATTIC): named 5 time(s) on `tests/chase/conftest.py`'s KNOWN_RED ledger, which resolves the key against collected node ids and applies xfail(strict=True) at EVERY collection. That is a live reader holding a live reference, and each entry carries a measured finding about the shipped deliverable. The iteration-1 cell read "ran ALL-GREEN"; a file whose every test is a strict xfail reports exit 0 and zero failures, so ALL-GREEN was read off an exit status that cannot tell a pass from a recorded finding. RED-BY-DESIGN, not vacuous. |
 | `tests/chase/test_signed_operator_trainability.py` | What breaks in TRAINING that did not break in inference. | NO JOURNAL ENTRY | live | KEEP | 15 tests, input drawn from the scale/ production path |
 | `tests/chase/test_sprt_k1.py` | CHASE round 6 it.0 - the SPRT that is meant to close K1's sign-flip clause. | NO JOURNAL ENTRY | live | KEEP | 18 tests, input drawn from the scale/ production path |
-| `tests/chase/test_stochastic_P.py` | THEORY.md §1 constraint 2 ("Make P a transition kernel: row-stochastic, non-negative") | NO JOURNAL ENTRY | vacuous | ATTIC | PRESUMED vacuous-by-scope (L-SCOPE): builds its own tensor/graph instead of drawing from the production batch path, and 0 of its 0 6-significant-digit readings reproduce from any results/*.jsonl at abs=5e-7. ran ALL-GREEN in the iteration-1 sweep, which is exactly what a vacuous control does and is therefore not evidence either way. PRESUMPTION, NOT VERDICT - iteration-2 spot-check candidate; see KILL 2 |
+| `tests/chase/test_stochastic_P.py` | THEORY.md §1 constraint 2 ("Make P a transition kernel: row-stochastic, non-negative") | NO JOURNAL ENTRY | live | KEEP | AMENDED r10-it2 (was vacuous/ATTIC): named 4 time(s) on `tests/chase/conftest.py`'s KNOWN_RED ledger, which resolves the key against collected node ids and applies xfail(strict=True) at EVERY collection. That is a live reader holding a live reference, and each entry carries a measured finding about the shipped deliverable. The iteration-1 cell read "ran ALL-GREEN"; a file whose every test is a strict xfail reports exit 0 and zero failures, so ALL-GREEN was read off an exit status that cannot tell a pass from a recorded finding. RED-BY-DESIGN, not vacuous. |
 | `tests/chase/test_structural_zero_guard.py` | Demonstrates `structural_zero.assert_perturbation_moves_output` firing RED | NO JOURNAL ENTRY | live | KEEP | 4 tests, input drawn from the scale/ production path |
 | `tests/chase/theory_ref.py` | Minimal faithful transcription of THEORY.md, so that tests have something to be RED against. | NO JOURNAL ENTRY | live | KEEP | helper imported by 4 python module(s) |
 | `tests/deimos/test_deimos_r9_iteration1.py` | DEIMOS / MORIARTY's moon, R9 iteration 1 -- the three surfaces Mars left | NO JOURNAL ENTRY | live | KEEP | 8 tests, input drawn from the scale/ production path |
@@ -567,12 +640,12 @@ Count: **99** &mdash; `git ls-files -- 'scale/*.py'`
 | `scale/chase_k3_ci.py` | CHASE — K3 with the error bar the criterion never had. | results/arm_a.jsonl (3 rec) | live | KEEP | producer of results/arm_a.jsonl |
 | `scale/chase_slope_ci.py` | CHASE — the D_FR slope's interval, which the record reads a verdict out of without. | results/arm_a.jsonl (3 rec) | live | KEEP | producer of results/arm_a.jsonl |
 | `scale/chase_struck_coverage.py` | CHASE — what the struck-constant absence check does NOT look at. | NO JOURNAL ENTRY | live | KEEP | imported by 1 python module(s) |
-| `scale/coherence_floor.py` | How far apart k random unit vectors in R^d actually sit, against three closed | 2/11 readings reproduce at abs=5e-7 | live | KEEP | no python importer, but 2/11 of its readings reproduce from results/*.jsonl at abs=5e-7 |
+| `scale/coherence_floor.py` | How far apart k random unit vectors in R^d actually sit, against three closed | 2/11 readings reproduce at abs=5e-7 | live | KEEP | AMENDED r10-it2: the iteration-1 cell read "no python importer"; re-measured with a front-door grep there are 1 (tests/jupiter/test_coherence_and_rip.py). Disposition unchanged. no python importer, but 2/11 of its readings reproduce from results/*.jsonl at abs=5e-7 |
 | `scale/dfloor_probe.py` | Dr House's falsifier: a CONSEQUENCE-scored selector, not a resemblance one. | 2/2 readings reproduce at abs=5e-7 | live | KEEP | no python importer, but 2/2 of its readings reproduce from results/*.jsonl at abs=5e-7 |
 | `scale/dfloor_probe2.py` | DeltaFloor falsifier, rebuilt. The first version's slope was an artifact. | NO JOURNAL ENTRY | orphan | ATTIC | PRESUMED orphan: 0 python importers and 0 results artifacts. Named in prose by 4 tracked file(s) (ARSENAL.md, CONTRACT.md), so a document rests on a producer nothing runs. PRESUMPTION, NOT VERDICT; see KILL 3 |
 | `scale/difference_set_arm.py` | ARM A — the difference-set schedule, with its birth gates. | NO JOURNAL ENTRY | live | KEEP | imported by 2 python module(s) |
 | `scale/dispatch_count.py` | Count aten dispatches, so the cost gate stops resting on an inference. | NO JOURNAL ENTRY | live | KEEP | imported by 2 python module(s) |
-| `scale/e4_harmonic.py` | The e3-harmonic ladder on the E4' Rips graphs, and the band it cannot reach. | 4/16 readings reproduce at abs=5e-7 | live | KEEP | no python importer, but 4/16 of its readings reproduce from results/*.jsonl at abs=5e-7 |
+| `scale/e4_harmonic.py` | The e3-harmonic ladder on the E4' Rips graphs, and the band it cannot reach. | 4/16 readings reproduce at abs=5e-7 | live | KEEP | AMENDED r10-it2: the iteration-1 cell read "no python importer"; re-measured with a front-door grep there are 6 (scale/e4_harmonic_reroute.py, scale/kirchhoff.py, tests/cameron/test_e4_harmonic.py and 3 more). Disposition unchanged. no python importer, but 4/16 of its readings reproduce from results/*.jsonl at abs=5e-7 |
 | `scale/e4_harmonic_reroute.py` | The RULE 5 reroute for X17, measured rather than proposed. | 1/8 readings reproduce at abs=5e-7 | live | KEEP | no python importer, but 1/8 of its readings reproduce from results/*.jsonl at abs=5e-7 |
 | `scale/e_ladder.py` | LADDER E — the settled-twin dose-response across the `t*` rungs. One curve. | results/m3_quintuple_v2.jsonl (151 rec); results/m3_quintuple_v2_cuda.jsonl (23 rec) | live | KEEP | producer of results/m3_quintuple_v2.jsonl |
 | `scale/eprocess.py` | The anytime-valid e-process for the M3 settled-vs-twin contrast. | results/m3_quintuple.jsonl (19 rec); results/m3_quintuple_v2.jsonl (151 rec) +1 | live | KEEP | producer of results/m3_quintuple.jsonl, results/m3_quintuple_v2.jsonl |
@@ -584,7 +657,7 @@ Count: **99** &mdash; `git ls-files -- 'scale/*.py'`
 | `scale/foreman_curvature.py` | FOREMAN probe 2 -- does the SPHERE do any work, or only the square root? | results/arm_a.jsonl (3 rec); results/foreman_theta_tv.jsonl (27 rec) | live | KEEP | producer of results/foreman_theta_tv.jsonl |
 | `scale/foreman_gram.py` | Round 6 iteration 22 -- binding Dr House's leap, or killing it. | results/gram.jsonl (18 rec) | live | KEEP | producer of results/gram.jsonl |
 | `scale/foreman_hilbert.py` | Round 6, iteration 0, Foreman. The Hilbert metric: positivity, and the size | results/hilbert.jsonl (142 rec) | live | KEEP | producer of results/hilbert.jsonl |
-| `scale/foreman_lambda2.py` | Engineer and MEASURE the relaxation dial of the E4' absorbing chain. | 10/33 readings reproduce at abs=5e-7 | live | KEEP | no python importer, but 10/33 of its readings reproduce from results/*.jsonl at abs=5e-7 |
+| `scale/foreman_lambda2.py` | Engineer and MEASURE the relaxation dial of the E4' absorbing chain. | 10/33 readings reproduce at abs=5e-7 | live | KEEP | AMENDED r10-it2: the iteration-1 cell read "no python importer"; re-measured with a front-door grep there are 1 (tests/foreman/test_oracle_separation_binding.py). Disposition unchanged. no python importer, but 10/33 of its readings reproduce from results/*.jsonl at abs=5e-7 |
 | `scale/foreman_looped.py` | MOVE 2 -- iterate the REPRESENTATION, not the mixture weights. | results/foreman_looped.jsonl (4 rec) | live | KEEP | producer of results/foreman_looped.jsonl |
 | `scale/foreman_quantisation.py` | FOREMAN probe 3 -- theta is not measured, it is QUANTISED by float32 arccos. | results/arm_a.jsonl (3 rec); results/foreman_theta_tv.jsonl (27 rec) | live | KEEP | producer of results/foreman_theta_tv.jsonl |
 | `scale/foreman_signfloor.py` | The sign floor: where `sgate` stops being signed, as a certificate not a reading. | results/foreman_signfloor.jsonl (30 rec) | live | KEEP | producer of results/foreman_signfloor.jsonl |
@@ -592,7 +665,7 @@ Count: **99** &mdash; `git ls-files -- 'scale/*.py'`
 | `scale/frustration_audit.py` | Zaslavsky frustration: is a signed arm SIGNED, or signed in name only? | NO JOURNAL ENTRY | orphan | ATTIC | PRESUMED orphan: 0 python importers and 0 results artifacts. Named in prose by 2 tracked file(s) (DONE.md, tests/cameron/test_the_signed_arm_is_signed_on_this_task.py), so a document rests on a producer nothing runs. PRESUMPTION, NOT VERDICT; see KILL 3 |
 | `scale/g7_event_change.py` | G7 — does the arm change the EVENT, or only the STATISTIC? Both arms, pre-build. | 1/1 readings reproduce at abs=5e-7 | live | KEEP | no python importer, but 1/1 of its readings reproduce from results/*.jsonl at abs=5e-7 |
 | `scale/gate3_audit.py` | Is gate 3's off-schedule cell a MEASUREMENT, or is it zero by construction? | 1/5 readings reproduce at abs=5e-7 | live | KEEP | no python importer, but 1/5 of its readings reproduce from results/*.jsonl at abs=5e-7 |
-| `scale/hilbert.py` | The Hilbert projective metric and the Birkhoff contraction constants. | 2/4 readings reproduce at abs=5e-7 | live | KEEP | no python importer, but 2/4 of its readings reproduce from results/*.jsonl at abs=5e-7 |
+| `scale/hilbert.py` | The Hilbert projective metric and the Birkhoff contraction constants. | 2/4 readings reproduce at abs=5e-7 | live | KEEP | AMENDED r10-it2: the iteration-1 cell read "no python importer"; re-measured with a front-door grep there are 7 (scale/arm_s.py, scale/foreman_gram.py, scale/foreman_hilbert.py and 4 more). Disposition unchanged. no python importer, but 2/4 of its readings reproduce from results/*.jsonl at abs=5e-7 |
 | `scale/hyperbolic.py` | Gromov delta-hyperbolicity for corpus graphs. Contract v10.1 section N2. | NO JOURNAL ENTRY | live | KEEP | imported by 1 python module(s) |
 | `scale/identity_manifest.py` | X-R1: the identity manifest -- a content hash of what was actually measured. | NO JOURNAL ENTRY | live | KEEP | pre-seeded KEEP (proven this branch): refusal fires on five config fields naming the moved field; published cell settled_k8_..._t1 reproduces 0.9783142763084641 |
 | `scale/impact.py` | IMPACT — planted news→asset propagation, T-FAMILY 2. | 3/3 readings reproduce at abs=5e-7 | live | KEEP | pre-seeded ATTIC applies to the TASK, not this file. impact / impact_hetero are CORPUS CANDIDATES retired on three measured grounds (linear-probe train 4.93e-08 vs eval 1.478 across a severed split; trivially linear within a graph; 8192 MiB needed on an 8188 MiB card). THE REPAIRED CODE STAYS - no journal says the code is dead. See KILL 1 |
@@ -606,19 +679,19 @@ Count: **99** &mdash; `git ls-files -- 'scale/*.py'`
 | `scale/m3_capability.py` | M3 capability arms — trainable ARMS on the calibrated M3 instrument. | NO JOURNAL ENTRY | live | KEEP | imported by 25 python module(s) |
 | `scale/m3_flops.py` | Analytic FLOP accounting for the five M3 cells. | results/arm_s.jsonl (82 rec) | live | KEEP | imported by 3 python module(s) |
 | `scale/m3_quintuple.py` | M3, the deciding measurement: five cells, batched, bucketed. | results/m3_quintuple_v2.jsonl (151 rec); results/m3_quintuple_v2_cuda.jsonl (23 rec) via Journal(NAME="m3_quintuple_v2") -> scale/bucket.py:45 | live | KEEP | producer of results/m3_quintuple_v2.jsonl, results/m3_quintuple_v2_cuda.jsonl - path CONSTRUCTED via Journal(NAME="m3_quintuple_v2") -> scale/bucket.py:45, invisible to a literal scan |
-| `scale/m3_synthetic_settled.py` | M3 harness dry-run on SYNTHETIC arms whose verdict is known in advance. | 3/8 readings reproduce at abs=5e-7 | live | KEEP | no python importer, but 3/8 of its readings reproduce from results/*.jsonl at abs=5e-7 |
+| `scale/m3_synthetic_settled.py` | M3 harness dry-run on SYNTHETIC arms whose verdict is known in advance. | 3/8 readings reproduce at abs=5e-7 | live | KEEP | AMENDED r10-it2: the iteration-1 cell read "no python importer"; re-measured with a front-door grep there are 11 (scale/capability_table.py, scale/e_ladder.py, scale/m3_quintuple.py and 8 more). Disposition unchanged. no python importer, but 3/8 of its readings reproduce from results/*.jsonl at abs=5e-7 |
 | `scale/maskcache_applied_bind.py` | POST-APPLICATION bind for the `_causal_mask_pair` memoisation in ceq/bench.py. | NO JOURNAL ENTRY | orphan | ATTIC | PRESUMED orphan: 0 python importers, 0 results artifacts, 0 prose citations in any tracked file. PRESUMPTION, NOT VERDICT; see KILL 3 |
 | `scale/maskcache_bind.py` | CANDIDATE 3, after candidates 1 and 2 both FAILED the bitwise bind. | NO JOURNAL ENTRY | orphan | ATTIC | PRESUMED orphan: 0 python importers and 0 results artifacts. Named in prose by 1 tracked file(s) (scale/maskcache_applied_bind.py), so a document rests on a producer nothing runs. PRESUMPTION, NOT VERDICT; see KILL 3 |
-| `scale/matcher.py` | The key-norm matcher that every causal-vs-filler contrast in this project owes. | 5/10 readings reproduce at abs=5e-7 | live | KEEP | no python importer, but 5/10 of its readings reproduce from results/*.jsonl at abs=5e-7 |
+| `scale/matcher.py` | The key-norm matcher that every causal-vs-filler contrast in this project owes. | 5/10 readings reproduce at abs=5e-7 | live | KEEP | AMENDED r10-it2: the iteration-1 cell read "no python importer"; re-measured with a front-door grep there are 2 (scale/fgreen_matched.py, tests/cameron/test_r6_matcher_red.py). Disposition unchanged. no python importer, but 5/10 of its readings reproduce from results/*.jsonl at abs=5e-7 |
 | `scale/max_row_mechanism.py` | Cameron's mechanism claim for the aggregator win, bound to a RED test. | results/max_row.jsonl (6 rec) | live | KEEP | producer of results/max_row.jsonl |
 | `scale/mech_attack.py` | Mechanistic attack probe on the M2 pivot mechanism. | NO JOURNAL ENTRY | live | KEEP | imported by 2 python module(s) |
 | `scale/merkle.py` | A Merkle journal, so "the record was not edited" becomes checkable. | NO JOURNAL ENTRY | live | KEEP | imported by 2 python module(s) |
 | `scale/monge.py` | Exact rectangular assignment for a Monge cost on a line, as an oracle. | NO JOURNAL ENTRY | live | KEEP | imported by 2 python module(s) |
-| `scale/negation_scope.py` | M3 — long-range sign capability, with an ABSOLUTE bar. | 9/54 readings reproduce at abs=5e-7 | live | KEEP | no python importer, but 9/54 of its readings reproduce from results/*.jsonl at abs=5e-7 |
+| `scale/negation_scope.py` | M3 — long-range sign capability, with an ABSOLUTE bar. | 9/54 readings reproduce at abs=5e-7 | live | KEEP | AMENDED r10-it2: the iteration-1 cell read "no python importer"; re-measured with a front-door grep there are 45 (scale/capability_table.py, scale/e_ladder.py, scale/eprocess_perdraw.py and 42 more). Disposition unchanged. no python importer, but 9/54 of its readings reproduce from results/*.jsonl at abs=5e-7 |
 | `scale/orbit_probe.py` | caustic Theorem 2, pointed at attention rows. | NO JOURNAL ENTRY | orphan | ATTIC | PRESUMED orphan: 0 python importers, 0 results artifacts, 0 prose citations in any tracked file. PRESUMPTION, NOT VERDICT; see KILL 3 |
 | `scale/page_trend.py` | LADDER E's "the curve rises" verdict, as a named statistic instead of an eye. | results/m3_quintuple_v2.jsonl (151 rec) | live | KEEP | pre-seeded KEEP (proven this branch): 51 achievable p-values at k=4 N=5, critical L=137, exact size 0.037002877 |
 | `scale/paired_arm.py` | Per-example eval predictions for one arm, so sign-vs-routing gets the RIGHT test. | NO JOURNAL ENTRY | live | KEEP | imported by 5 python module(s) |
-| `scale/pivot_probe.py` | M2 — context-stable signed influence at GLOBAL reach, via pivot routing. | 2/3 readings reproduce at abs=5e-7 | live | KEEP | no python importer, but 2/3 of its readings reproduce from results/*.jsonl at abs=5e-7 |
+| `scale/pivot_probe.py` | M2 — context-stable signed influence at GLOBAL reach, via pivot routing. | 2/3 readings reproduce at abs=5e-7 | live | KEEP | AMENDED r10-it2: the iteration-1 cell read "no python importer"; re-measured with a front-door grep there are 52 (scale/aggregator_matched_filler.py, scale/aggregator_mechanism.py, scale/arm_a_k1.py and 49 more). Disposition unchanged. no python importer, but 2/3 of its readings reproduce from results/*.jsonl at abs=5e-7 |
 | `scale/pivot_selection_theory.py` | Two facts about pivot selection that this repository's numbers rest on. | NO JOURNAL ENTRY | live | KEEP | imported by 1 python module(s) |
 | `scale/r2_units.py` | R2 -- sign-determinacy of the k x k pivot block, and its replacement. | results/r2.jsonl (36 rec) via Journal(NAME="r2") -> scale/bucket.py:45 | live | KEEP | producer of results/r2.jsonl - path CONSTRUCTED via Journal(NAME="r2") -> scale/bucket.py:45, invisible to a literal scan |
 | `scale/r4b_units.py` | R4b — hierarchical (Dyson) coupling wired into the REAL operator. | NO JOURNAL ENTRY | orphan | ATTIC | PRESUMED orphan: 0 python importers, 0 results artifacts, 0 prose citations in any tracked file. PRESUMPTION, NOT VERDICT; see KILL 3 |
@@ -636,15 +709,15 @@ Count: **99** &mdash; `git ls-files -- 'scale/*.py'`
 | `scale/sgate_softmax_probe.py` | TWO QUESTIONS ABOUT `_causal_sgate_operator`, MEASURED. | NO JOURNAL ENTRY | orphan | ATTIC | PRESUMED orphan: 0 python importers, 0 results artifacts, 0 prose citations in any tracked file. PRESUMPTION, NOT VERDICT; see KILL 3 |
 | `scale/sign_dependence_probe.py` | IS A_8 = 2.187500 A VALID CERTIFICATE? Test the sign-independence assumption. | NO JOURNAL ENTRY | orphan | ATTIC | PRESUMED orphan: 0 python importers and 0 results artifacts. Named in prose by 1 tracked file(s) (DONE.md), so a document rests on a producer nothing runs. PRESUMPTION, NOT VERDICT; see KILL 3 |
 | `scale/sparse_probe.py` | Does a bounded-reachability schedule arrest the 1/s decay? | NO JOURNAL ENTRY | orphan | ATTIC | PRESUMED orphan: 0 python importers and 0 results artifacts. Named in prose by 4 tracked file(s) (.superpowers/sdd/polymorphic-drifting-squirrel/venus-report-it3.md, DONE_ARCHIVE_ROUND1.md), so a document rests on a producer nothing runs. PRESUMPTION, NOT VERDICT; see KILL 3 |
-| `scale/sprt.py` | Wald's sequential probability ratio test, and the K1 slope-to-rate mapping. | 1/1 readings reproduce at abs=5e-7 | live | KEEP | no python importer, but 1/1 of its readings reproduce from results/*.jsonl at abs=5e-7 |
+| `scale/sprt.py` | Wald's sequential probability ratio test, and the K1 slope-to-rate mapping. | 1/1 readings reproduce at abs=5e-7 | live | KEEP | AMENDED r10-it2: the iteration-1 cell read "no python importer"; re-measured with a front-door grep there are 1 (tests/chase/test_sprt_k1.py). Disposition unchanged. no python importer, but 1/1 of its readings reproduce from results/*.jsonl at abs=5e-7 |
 | `scale/step_profile.py` | WHERE DOES ONE FULL-BATCH TRAINING STEP OF `run_arm` ACTUALLY GO? | NO JOURNAL ENTRY | orphan | ATTIC | PRESUMED orphan: 0 python importers and 0 results artifacts. Named in prose by 1 tracked file(s) (scale/sgate_softmax_probe.py), so a document rests on a producer nothing runs. PRESUMPTION, NOT VERDICT; see KILL 3 |
 | `scale/tau_trajectory.py` | X6, second half -- the //tau//_F TRAJECTORY, which is what the clause names. | results/equilibrium.jsonl (9 rec); results/tau_trajectory.jsonl (10 rec) | live | KEEP | producer of results/tau_trajectory.jsonl |
 | `scale/tgate_probe.py` | Ladder step 1: does the denominator-free operator hold its property in context? | 1/3 readings reproduce at abs=5e-7 | live | KEEP | no python importer, but 1/3 of its readings reproduce from results/*.jsonl at abs=5e-7 |
 | `scale/torque_probe.py` | ARM A — the torque probe. Pure measurement. Nothing is built until this survives. | NO JOURNAL ENTRY | live | KEEP | imported by 22 python module(s) |
 | `scale/trained_projections.py` | Phase D: every probe number in this project was taken at random init. This is the delta. | NO JOURNAL ENTRY | live | KEEP | imported by 2 python module(s) |
-| `scale/twodof.py` | The 2-dof lemma, and the two loci where it fails (contract 1.3). | 7/7 readings reproduce at abs=5e-7 | live | KEEP | no python importer, but 7/7 of its readings reproduce from results/*.jsonl at abs=5e-7 |
-| `scale/valuation.py` | X4 — the sign-flip statistic on VALUATIONS, not floats. The floor is DELETED. | 1/2 readings reproduce at abs=5e-7 | live | KEEP | no python importer, but 1/2 of its readings reproduce from results/*.jsonl at abs=5e-7 |
-| `scale/vgpe.py` | VGPE -- verb-gauge positional encoding, and the K1 gate that decides it. | 4/8 readings reproduce at abs=5e-7 | live | KEEP | no python importer, but 4/8 of its readings reproduce from results/*.jsonl at abs=5e-7 |
+| `scale/twodof.py` | The 2-dof lemma, and the two loci where it fails (contract 1.3). | 7/7 readings reproduce at abs=5e-7 | live | KEEP | AMENDED r10-it2: the iteration-1 cell read "no python importer"; re-measured with a front-door grep there are 2 (scale/trained_projections.py, tests/cameron/test_r6_twodof_red.py). Disposition unchanged. no python importer, but 7/7 of its readings reproduce from results/*.jsonl at abs=5e-7 |
+| `scale/valuation.py` | X4 — the sign-flip statistic on VALUATIONS, not floats. The floor is DELETED. | 1/2 readings reproduce at abs=5e-7 | live | KEEP | AMENDED r10-it2: the iteration-1 cell read "no python importer"; re-measured with a front-door grep there are 6 (scale/arm_a_k1.py, scale/arm_a_rebuild.py, scale/arm_a_run.py and 3 more). Disposition unchanged. no python importer, but 1/2 of its readings reproduce from results/*.jsonl at abs=5e-7 |
+| `scale/vgpe.py` | VGPE -- verb-gauge positional encoding, and the K1 gate that decides it. | 4/8 readings reproduce at abs=5e-7 | live | KEEP | AMENDED r10-it2: the iteration-1 cell read "no python importer"; re-measured with a front-door grep there are 1 (tests/watson/test_vgpe_binds.py). Disposition unchanged. no python importer, but 4/8 of its readings reproduce from results/*.jsonl at abs=5e-7 |
 | `scale/vgpe_flops.py` | Analytic FLOP accounting for the five V12 gauge-positional-encoding arms. | results/arm_s.jsonl (82 rec) | orphan | ATTIC | PRESUMED orphan: 0 python importers and 0 results artifacts. Named in prose by 1 tracked file(s) (V12_PRICING.md), so a document rests on a producer nothing runs. PRESUMPTION, NOT VERDICT; see KILL 3 |
 | `scale/wilson_g2_ci_probe.py` | WILSON -- G2 event: the D_FR slope bootstrap interval that moved. | results/arm_a_k1.jsonl (48 rec) | live | KEEP | producer of results/arm_a_k1.jsonl |
 | `scale/wilson_probes.py` | WILSON -- verification probes for the fellows' claims. Pure measurement. | NO JOURNAL ENTRY | live | KEEP | imported by 1 python module(s) |
@@ -675,7 +748,7 @@ Count: **53** &mdash; `git ls-files -- '*.md' | grep -v /`
 | `LOOP_PROMPT_ROUND4_ARCHIVE.md` | CEQ v6′ — ROUND 4 LOOP PROMPT. The chosen-sign round. Read in full, follow exactly. | 7/14 readings reproduce at abs=5e-7 | superseded | KEEP | self-labelled round archive; its successor names it as superseded. Retained: it is the provenance of published readings |
 | `LOOP_PROMPT_ROUND5_ARCHIVE.md` | CEQ v7 — ROUND 5. THE TWO-SPHERES ROUND. Read in full, follow exactly. | 12/26 readings reproduce at abs=5e-7 | superseded | KEEP | self-labelled round archive; its successor names it as superseded. Retained: it is the provenance of published readings |
 | `LOOP_PROMPT_ROUND6_ARCHIVE.md` | CEQ v8.2 — ROUND 6. THE HILBERT ROUND. Read in full, follow exactly. | 8/23 readings reproduce at abs=5e-7 | superseded | KEEP | self-labelled round archive; its successor names it as superseded. Retained: it is the provenance of published readings |
-| `LOOP_PROMPT_ROUND7_ARCHIVE.md` | CEQ v9 — ROUND 7. THE CAPABILITY ROUND. Read in full, follow exactly. | 1/3 readings reproduce at abs=5e-7 | superseded | KEEP | self-labelled round archive; its successor names it as superseded. Retained: it is the provenance of published readings |
+| `LOOP_PROMPT_ROUND7_ARCHIVE.md` | CEQ v9 — ROUND 7. THE CAPABILITY ROUND. Read in full, follow exactly. | 0/2 readings reproduce at abs=5e-7 (was recorded 1/3) | superseded | KEEP | AMENDED r10-it2, NOT a drawn row — found by generalising the workdone2.md check to every row invoking the provenance ground. Re-measured with the extractor calibrated on this sheet's own control: 0 of 2 readings reproduce from any results/*.jsonl at abs=5e-7. The provenance ground is EMPTY, the same defect as `workdone2.md`. KEEP stands on a different, measured ground: named by 1 tracked file (STATE.md). Kept as a cited round archive, NOT as provenance. |
 | `M2PRIME_PREREGISTERED_READING.md` | M2′ R2 — what each outcome will mean, written BEFORE the run | NO JOURNAL ENTRY | live | KEEP | named by 4 tracked file(s) |
 | `M2_PREREGISTERED_READING.md` | M2 — what each outcome will mean, written BEFORE the control finished | 10/12 readings reproduce at abs=5e-7 | live | KEEP | named by 7 tracked file(s) |
 | `M2_TRAINED_PREREGISTERED_READING.md` | A trained measurement — what each outcome will mean, written BEFORE any run | 1/9 readings reproduce at abs=5e-7 | live | KEEP | named by 8 tracked file(s) |
@@ -707,7 +780,7 @@ Count: **53** &mdash; `git ls-files -- '*.md' | grep -v /`
 | `done6.md` | done6 — Round 6, CEQ v8.2, the Hilbert round | 13/39 readings reproduce at abs=5e-7 | superseded | KEEP | per-round work log closed by a later round's log; retained as the provenance of its round's readings |
 | `done7.md` | done7.md — CEQ v9, round 7, handoff at iteration 11 | results/m3_quintuple_v2.jsonl (151 rec) | superseded | KEEP | per-round work log closed by a later round's log; retained as the provenance of its round's readings |
 | `titan-report.md` | TITAN report — D-1, D-2, H-1 partial-ladder guards on `scale/e_ladder.py::verdict()` | results/m3_quintuple_v2.jsonl (151 rec) | orphan | ATTIC | PRESUMED orphan: no other tracked file names this document or its stem (measured over 516 tracked text files). PRESUMPTION, NOT VERDICT; see KILL 4 |
-| `workdone2.md` | Work done — round 2, iterations 34–46 | 1/10 readings reproduce at abs=5e-7 | superseded | KEEP | per-round work log closed by a later round's log; retained as the provenance of its round's readings |
+| `workdone2.md` | Work done — round 2, iterations 34–46 | 0/4 readings reproduce at abs=5e-7 (was recorded 1/10) | superseded | KEEP | AMENDED r10-it2, THE ONE KEEP FAILURE OF THE BINOMIAL. The iteration-1 ground was "provenance of published readings" on a cell of 1/10. Re-measured with the extractor CALIBRATED against this sheet's own control (LOOP_PROMPT_ROUND6_ARCHIVE.md re-measures 8/23, exactly its cell): 0 of 4 readings reproduce from any results/*.jsonl at abs=5e-7. Nearest journal values miss by 1.6e-4 to 35.5, i.e. 300x to 7e7x the tolerance -- near-misses, not a parsing artifact. The provenance ground is EMPTY. KEEP stands on a DIFFERENT, measured ground: 7 tracked files name it (DONE.md, done3-6.md, scale/chase_struck_coverage.py, tests/cameron/test_composition_is_the_uncosted_route.py). Kept as a cited round log, NOT as provenance. |
 | `workdoneplanetrum.md` | workdoneplanetrum | 12/41 readings reproduce at abs=5e-7 | superseded | KEEP | per-round work log closed by a later round's log; retained as the provenance of its round's readings |
 
 ### round reports misfiled under tests/ (audited as docs, not tests)
