@@ -2098,3 +2098,77 @@ separately since the chain wrapper is gone.
 2. Limits (e) is still a STORED string; its surviving numbers are restated, not
    computed.
 3. C1 remains PARTIAL, NOT A READING (2/4). Both scored rungs void under row G.
+
+## C1 rung t*=2 — THE FIRST CREDITABLE CONTRAST IN THE LANE, AND IT GOES AGAINST THE CEQ ARM
+
+Merged. `tests/mercury/` 73/73.
+
+| cell | mean | |
+|---|---|---|
+| `softmax` | 0.996745 | CLEARS the bar |
+| `twinrow` | 0.999082 | CLEARS the bar |
+| `settledrow` | 1.000150 | FAILS — row G voids its rows |
+
+FIRST CREDITABLE CONTRAST ANYWHERE IN THE C1 TABLE:
+`twinrow − softmax = −0.002337`, CI `[−0.002767, −0.001868]`, **n+ 0/5**.
+`twinrow` did not win on a single seed. Both cells clear the absolute bar so row G
+does not void it.
+
+### The verdict fix earned itself on the very first creditable number
+
+Under the hardcoded `verdict_of` this row renders **`TWIN WINS`** — which reads as
+the ceq twin arm winning WHEN SOFTMAX WON. The repair in `315f949` is what makes
+it print `SOFTMAX WINS`. Mercury's own scorer was still calling `contrast` without
+names and PRINTED THE MISLEADING STRING ONCE before he caught it.
+
+That repair landed exactly one turn before the first row that would have entered
+the record backwards. It was queued behind C1 as a tidy-up and turned out to be
+load-bearing.
+
+### Three rungs together
+
+| rung | softmax | twinrow | settledrow | clears bar | creditable |
+|---|---|---|---|---|---|
+| `t*=32` | 1.003157 | 1.002587 | 1.003214 | none | none |
+| `t*=8` | 1.000933 | 1.000774 | 1.001047 | none | none |
+| `t*=2` | 0.996745 | 0.999082 | 1.000150 | softmax, twinrow | softmax beats twinrow |
+
+Every cell improves monotonically as `t*` falls. `settledrow` is the WORST cell on
+all three rungs and fails predict-the-mean on all three, so EVERY `settledrow`
+contrast in the table is void.
+
+Venus's prediction splits IDENTICALLY for the third consecutive rung.
+
+### The shape of the reading, stated plainly
+
+`Ruling: the lane's picture is now coherent and it is not the one it was built to
+show. Where the theory predicts - t*=8 and t*=32, where t* sits furthest above the
+hop budget - NOTHING LEARNS and every contrast is void. Where anything learns -
+t*=2 - the theory predicts no pivot advantage, and softmax beats the pivot arm
+UNANIMOUSLY. Those two facts do not cancel; they say the lane has not yet been
+tested where it claims an advantage, because that region is unlearnable at this
+budget.`
+
+### A controller observation on row G itself, labelled as an observation
+
+`softmax` clears the bar by `0.003255` and `twinrow` by `0.000918`. Row G is a
+BINARY gate at exactly 1.0 — it asks "did anything beat predict-the-mean", not
+"did anything beat it by an amount worth crediting". A contrast between two cells
+that clear 1.0 by under 0.4% is creditable BY THE LETTER of row G.
+
+`Ruling: this is recorded as an OBSERVATION, not a change. Row G is
+pre-registered and moving its threshold after seeing the data is the exact defect
+the frozen RESOLUTION_13 exists to prevent - a threshold refitted to the data it
+judges is not a threshold. The observation is filed for the author and for the
+re-audit, which is the correct place to reconsider a gate's design. Cost if wrong:
+a creditable contrast stays creditable and carries a note.`
+
+### Carried
+
+- The one creditable C1 contrast is `softmax` beating the ceq arm, unanimously.
+  Not adjudicated by Mercury — correctly, it is not his seat.
+- Table remains PARTIAL, NOT A READING (3/4). `t*=1` in flight and is THE
+  UNDERPOWERED RUNG — 62 seeds required, 5 run — and will be labelled as such.
+- `e_ladder` and `page_trend` still call `contrast` with pinned defaults; correct
+  today because both compare settled/twin, wrong the moment either compares
+  anything else.
