@@ -389,3 +389,100 @@ git commands per agent.`
   `ceq/hf_artifact/capability_table_v0.json` retain the `--task` denial in stored
   strings. The generator is fixed; regenerating is a **table cut**, which is a
   measurement decision — assigned to Mercury, who holds execute.
+
+## Iteration 1 — Titan and Jupiter COMPLETE. Iteration 1 closed.
+
+### Titan (moon of Saturn) — the verdict guards are in
+
+`tests/cameron/test_verdict_guards_partial_ladders.py` **3/6 RED before, 6/6
+after**; the only other `verdict()` consumer, `tests/chase/test_m3_ladder_task.py`,
+held **14/14** on both sides. Controller integration check: **20/20**.
+
+This upgrades H-1, D-1 and D-2 from READ to **RUN**. Rows F and H can no longer
+claim a theory death on a partial ladder, and row C can no longer print a
+universal it scanned only two rungs for.
+
+`Ruling: house-events.jsonl conflicted on this merge and will conflict on every
+parallel planet merge, because tests/cameron/conftest.py:39 appends one JSON line
+per test to it on every run. Resolved by union and registered
+"house-events*.jsonl merge=union" in .gitattributes so git does it automatically
+from now on. Four pre-existing invalid-escape lines were verified present at HEAD
+before the merge and left untouched. Cost if wrong: a log file keeps duplicate
+rows, which it is already designed to tolerate.`
+
+### Jupiter (MYCROFT) — 2252 lines, `tests/jupiter/` 27/27 green
+
+Delivered `scale/kirchhoff.py`, `scale/page_trend.py`, `scale/rip_line.py`,
+`scale/coherence_floor.py`, and `results/e_ladder_trend.txt`.
+
+#### M4 says RISES — and Jupiter printed the three things that undercut it
+
+Page's `L = 139`, exact `p = 0.016724`, permutation `p = 0.016255`. Isotonic top
+`+0.016035`, CI `[+0.002826, +0.033167]`. Then, against his own result:
+
+- The **same bootstrap without the monotone constraint** reads
+  `[-0.004711, +0.033167]` — **covers zero** — and its lower bound reproduces the
+  shipped `ci_lo` exactly. The isotonic constraint is what manufactures the
+  positive interval.
+- PAVA pooled in **13.07 %** of resamples and lifted the bound `+0.007537`.
+  Pooling can only ever raise a low top.
+- The trend clause survives **2 of 5** seed deletions.
+- **Row G already credits 3 of the 4 rungs nothing** — both cells sit above
+  predict-the-mean at `t2`, `t8`, `t32`.
+
+Jupiter's verdict, and it is the right one: **"RISES is an ordering, not a
+capability."** All three caveats print beside the verdict rather than in a
+footnote.
+
+`Ruling: M4 is ACCEPTED as the adjudicator and its answer on the existing ladder
+is recorded as RISES-as-ordering, NOT as a capability claim. The v11.1 amendment
+specified M4 to replace eyeballing four rungs, and it did — but it would have
+returned a headline the evidence does not support had Jupiter not built the
+unconstrained comparison beside it. Any future use of M4 must print the
+unconstrained CI next to the isotonic one. Cost if wrong: a verdict reads more
+cautious than it needed to.`
+
+Calibration (200 drawn tables per arm): flat truth → size clause alone `0.325`,
+full `RISES` `0.040`; rising truth → `0.810`. **The trend clause gates the
+miscalibrated one** — the conjunction is calibrated even though a clause is not.
+
+#### THE AUTHOR'S OWN CONSTANT IS WRONG, verified two independent ways
+
+The v11.1 amendment states random role coherence `≈ 0.147` at `d = 256, k = 16`.
+
+Measured: **`0.174795`**, Monte-Carlo CI `[0.174460, 0.175131]`, corroborated
+**`0.174499`** by order-statistic quadrature — two paths that fail differently,
+agreeing. The author's figure is **15.8 % low**.
+
+**Cause:** the union bound runs over `C(k,2) = 120` pairs, not over `k`.
+
+The Welch floor is exactly `0` at `k ≤ d`, as stated. **M5's conclusion
+strengthens rather than weakens**: the scramble control's expected residual is
+*larger* than the author believed, so calibrating that control to zero is even
+more clearly vacuous than the amendment argued.
+
+#### M3 Kirchhoff dual oracle — clean, with one honest hole
+
+Agreement gaps `2.220446e-16` / `8.992806e-15` / `9.636736e-14` at 9 / 62 / 1202
+nodes. **The must-fire fires**: a planted off-by-one moves `ω` by `0.175`–`0.316`
+and is caught **6/6**. Law wired into `e4_harmonic.measure()`.
+
+Stated limit: `absorbing_chain` and `fixed_point` remain callable directly,
+bypassing the law, and **both oracles share `case_graph` — so a builder defect
+fools both.** The dual-oracle law catches solver bugs, not builder bugs. That
+distinction is now on the record rather than assumed away.
+
+#### Second moon defect of the round, caught by its planet
+
+Jupiter's M2 moon shipped two beds **both at `n/s = 16`** and reported `C`
+"exactly stable" — which was forced by the design, since `ln(n/s)` is a single
+number there. A vacuous control. Jupiter caught it and added ratio-varying beds:
+`C = 1.44270` at `n/s ∈ {16, 64}`, **`1.80337` at `n/s = 4`**. `C` is per-bed and
+reusing it across beds is a guess.
+
+`Ruling: two of the round's moons (Neptune's, Jupiter's) produced work their
+planet rejected, and in both cases the planet caught it. The topology is working
+as designed — the planet is the review seat — but moon output is now treated as
+UNVERIFIED by default and must be re-measured by its planet before entering a
+report. That clause is already in BASE_PROMPT.md. Cost if wrong: planets spend
+time re-checking moon work that was fine.`
