@@ -1936,3 +1936,81 @@ by at most 1 ULP, so the `argmaxste − argmax` reconciliation itself STANDS.
 OPEN: Mercury has NOT audited previously journalled contrasts for the same
 splitting. The new bound catches future over-counts; it does not retroactively
 scan the journal. Queued.
+
+## C1 rung t*=8 — ROW G VOIDS IT TOO. Both theory-predicted rungs are void.
+
+Merged. `tests/mercury/` 57/57.
+
+| cell | `t*=32` | `t*=8` |
+|---|---|---|
+| `softmax` | 1.003157 | 1.000933 |
+| `twinrow` | 1.002587 | 1.000774 |
+| `settledrow` | 1.003214 | 1.001047 |
+| realised `sd_paired` | 0.000664 | 0.000233 |
+| seeds needed | 1 | 1 |
+
+EVERY CELL ON BOTH RUNGS FAILS PREDICT-THE-MEAN. Row G voids all six contrasts.
+The ceiling was printed before each rung's numbers, and both rungs are so well
+resolved that ONE seed would have sufficed against `RESOLUTION_13`. That
+resolution is spent entirely on comparing three arms that all fail the absolute
+bar — exactly what row G exists to catch.
+
+On both rungs `twinrow` is best and `settledrow` worst, and on both the
+`settledrow − twinrow` interval excludes zero on the `twinrow` side. MERCURY
+REFUSES TO TREAT THIS AS A DIRECTION while row G stands, and that refusal is
+correct — a contrast between three failures is not evidence about which failure is
+better.
+
+Venus's prediction splits IDENTICALLY on both rungs, both halves recorded, neither
+adjudicated:
+- `|delta| < 0.027260` — TRUE on both (`0.000627`, `0.000272`, two orders inside)
+- CI covers zero — FALSE on both
+
+### The exact-pair printing earned its keep within one turn
+
+Two of the three `t*=8` contrasts have ONE exact endpoint differing from its
+sampled counterpart while the other coincides — `settledrow − twinrow` at `ci_lo`
+(`−0.000459` exact against `−0.000451` sampled) and `settledrow − softmax` at
+`ci_hi` (`+0.000103` against `+0.000098`). Same one-atom selection as
+`argmaxste − argmax`, now on C1 data.
+
+Mercury: "had I not added it last turn, these would have looked like clean
+agreement." The instrument built to explain last turn's discrepancy immediately
+caught two more that nobody would have looked for.
+
+### WHAT THE ROUND'S CENTRAL RESULT IS SHAPING INTO
+
+`Ruling on the reading so far, recorded now so it is not assembled after the fact:
+the C1 corpus at 150 steps and n_train=2048 is UNLEARNABLE BY EVERY ARM, including
+plain softmax, on both rungs where t* sits furthest above the hop budget. This is
+a CORPUS-BUDGET finding, not an arm finding, and it must not be reported as
+"the vector lane failed".
+
+Three facts constrain the reading and they point the same way:
+  1. The corpus is correctly built - gates pass, the truncation law is closed-form
+     with no fitted constant, k = t*+1 is bitwise exact, the do-bit movement test
+     fires. The LABEL is computable.
+  2. Neptune measured the per-row arm writing 88.1-100% of the label's support
+     against the shipped arm's 1.6-3.1%. The arm CAN REACH the label.
+  3. No arm LEARNS it in 150 steps at n_train=2048.
+
+So the experiment did not fail to find a difference. It failed to produce a
+LEARNABLE task at the shipped training budget, and those are different outcomes
+with different repairs. Cost if wrong: the round reports a budget problem where
+there is a task problem, which the t2/t1 rungs and any capacity sweep would
+separate.`
+
+### Mercury's projection, correctly refused as a score
+
+The means move TOWARD 1.0 as `t*` decreases (1.003 → 1.001), so `t*=2` and `t*=1`
+are unlikely to clear the bar either. HE IS NOT SCORING THAT — it is a projection,
+not a measurement, and the rungs are still running.
+
+`Ruling: the t2 and t1 rungs RUN TO COMPLETION despite the projection. Dropping
+the rungs likely to void, after two have voided, is rung-picking - the exact defect
+M4 was built to prevent and the exact shape of the E_LADDER row-H hole Venus
+audited. The table needs all four rungs to be a reading at all; Titan's guards keep
+verdict() from quantifying on a partial table. Cost if wrong: roughly two hours of
+compute on rungs that void, buying a complete object instead of a selected one.`
+
+Table remains PARTIAL, NOT A READING (2 of 4). `t2` in flight, `t1` queued.
