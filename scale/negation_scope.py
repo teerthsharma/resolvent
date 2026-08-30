@@ -1078,7 +1078,18 @@ M3_TASKS = {
                 __import__("scale.impact", fromlist=["impact_oracle"]).impact_oracle,
                 __import__("scale.impact", fromlist=["impact_features"]).impact_features,
                 __import__("scale.impact", fromlist=["impact_flipper_dependence"]).impact_flipper_dependence),
-     "impact_hetero": (__import__("scale.impact", fromlist=["make_impact_batch"]).make_impact_batch,
+     #: A1 REPAIR. This entry bound `make_impact_batch` -- the SAME builder as
+     #: `impact` -- so both keys returned a byte-identical 4-tuple and a
+     #: heterogeneous-plant arm drew the homogeneous corpus. It was its own
+     #: baseline by construction (MISTAKES.md V-1, and the LIVE one -- the
+     #: struck count is fourteen, `STATE.md:53`, and two separate later items
+     #: were each already labelled "the fifteenth", so no number is claimed
+     #: here). The oracle and feature hooks are shared with
+     #: `impact` on purpose: they rebuild the plant from the tensor's CH_HET
+     #: bit rather than from the registry, so no entry can pair a builder with
+     #: the wrong oracle. Bound by
+     #: `tests/cameron/test_impact_hetero_is_not_its_own_baseline.py`.
+     "impact_hetero": (__import__("scale.impact", fromlist=["make_impact_hetero_batch"]).make_impact_hetero_batch,
                        __import__("scale.impact", fromlist=["impact_oracle"]).impact_oracle,
                        __import__("scale.impact", fromlist=["impact_features"]).impact_features,
                        __import__("scale.impact", fromlist=["impact_flipper_dependence"]).impact_flipper_dependence),
@@ -1115,7 +1126,7 @@ def bootstrap_ci(pred, y, *, n_boot: int = 400, seed: int = 0, alpha=0.05):
 def calibrate_bar(n: int = 2048, s: int = 512, d: int = 256, *,
                   oracle_fn=None, batch_fn=None, feature_fn=None,
                   steps: int = 150, lr: float = 0.02,
-                  seed: int = 0) -> dict:
+                  seed: int = 0, standardise: bool = True) -> dict:
     """Five reference points pin the scale AND prove the task and budget are real.
 
     THE THREE ORIGINAL CHECKS WERE NOT ALL MEASUREMENTS. Two were algebraic
@@ -1144,6 +1155,14 @@ def calibrate_bar(n: int = 2048, s: int = 512, d: int = 256, *,
        it "this arm failed" and "this harness cannot produce a pass" are the same
        printout -- and in this repository no arm has ever passed, while the
        `oracle` entry is an identity rather than a trained model.
+
+       IT TRAINS ON THE LABEL THE ARMS TRAIN ON, which it did not always do.
+       `run_arm` standardises `y` and un-standardises its prediction before
+       scoring; this clause optimised against the raw label and scored there.
+       Both were compared to the same bar of 1.0, so on a label whose scale is
+       far from the initialisation's the control was solving a strictly harder
+       problem than the arms and its failure was read as the task's. See the
+       note above the training loop.
     """
     ofn = oracle_fn or oracle
     #: A SECOND task needs a second tensor builder, not just a second label:
@@ -1187,14 +1206,42 @@ def calibrate_bar(n: int = 2048, s: int = 512, d: int = 256, *,
         if isinstance(layer, torch.nn.Linear):
             torch.nn.init.normal_(layer.weight, 0.0, 0.5, generator=g)
             torch.nn.init.zeros_(layer.bias)
+    #: THE CONTROL TRAINS ON THE LABEL THE ARMS TRAIN ON. `run_arm`
+    #: (`scale/m3_capability.py:196`) optimises against `(y - mu) / sigma` and
+    #: un-standardises before it scores (`:187`); this clause used to optimise
+    #: against RAW `y` and score there too. Both readings were then compared to
+    #: the same bar of 1.0, so the control was solving a harder version of the
+    #: arms' problem whenever the label's scale was far from the initialisation's.
+    #: Adam's step is bounded by `lr` almost regardless of the gradient, so the
+    #: distance from `normal_(w, 0, 0.5)` to the label's scale is spent out of
+    #: the step budget: at `e2_consequence`'s sd 0.061984 the control read
+    #: `trained_two_feature = 2.446645` at the shipped 150 steps and the bar
+    #: printed BROKEN -- which reads as "no arm can pass this task" while what
+    #: was measured is "the control was handed the label in the wrong units".
+    #: `e2_consequence` has never been trained (FINDINGS A7, STATE.md:73-76).
+    #:
+    #: `standardise=False` runs the pre-repair path unchanged. It exists so the
+    #: strike record stays MEASURABLE in-process rather than only describable in
+    #: a document -- see
+    #: `tests/cameron/test_bar_control_sees_the_arms_preprocessing.py` and
+    #: `tests/cameron/test_m3_etasks.py::test_the_consequence_bar_is_broken_at_the_shipped_step_budget`.
+    #: Nothing in the shipped path passes it.
+    mu = float(y.mean()) if standardise else 0.0
+    sigma = float(y.std(unbiased=False)) if standardise else 1.0
+    if sigma == 0.0:
+        sigma = 1.0
+    target = (y - mu) / sigma
     opt = torch.optim.Adam(net.parameters(), lr=lr)
     for _ in range(steps):
         opt.zero_grad()
-        loss = ((net(feats).squeeze(-1) - y) ** 2).mean()
+        loss = ((net(feats).squeeze(-1) - target) ** 2).mean()
         loss.backward()
         opt.step()
     with torch.no_grad():
-        out["trained_two_feature"] = nrmse(net(feats).squeeze(-1), y)
+        #: Scored on the RAW label, exactly as `run_arm`'s `raw_pred` scores.
+        #: NRMSE is scale-free, so this makes the clause read the same number
+        #: for `y` and for `c*y` -- the property the arms' readings already had.
+        out["trained_two_feature"] = nrmse(net(feats).squeeze(-1) * sigma + mu, y)
     return out
 
 

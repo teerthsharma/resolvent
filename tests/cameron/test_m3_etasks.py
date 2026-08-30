@@ -367,23 +367,53 @@ def test_an_unshocked_equilibrium_fails_the_consequence_band():
 
 
 def test_the_consequence_bar_is_broken_at_the_shipped_step_budget():
-    """CONTROL, SEEN TO FIRE, and a MEASURED precondition on the run.
+    """THE STRIKE RECORD, KEPT MEASURABLE, and the repair beside it.
 
-    Clause 5 trains its positive control on the RAW label while `run_arm` trains
-    every arm on the STANDARDISED one, so a small-scale label makes the control
-    strictly harder than the arms' own task. The consequence label's std is
-    about 0.062, and at the shipped 150-step budget the control cannot reach the
-    bar. It reaches it at 600. Both readings are asserted so the clause is seen
-    to fail as well as to pass, and so the step budget this task needs is a
-    measured number rather than a preference.
+    AS WRITTEN, this test asserted that the bar reads BROKEN at 150 steps and
+    CALIBRATED at 600, and named the cause in its own docstring: clause 5
+    trained its positive control on the RAW label while `run_arm` trains every
+    arm on the STANDARDISED one, so a small-scale label handed the control a
+    strictly harder problem than the arms' own. The consequence label's sd is
+    0.061984 and the control read `trained_two_feature = 2.446645` at the
+    shipped budget. Diagnosed, recorded at `STATE.md:73-76`, and left in place
+    -- so `e2_consequence`, the one rung the theory actually predicts on, was
+    never trained.
+
+    IT IS FIXED. `calibrate_bar` now standardises the control's target the way
+    `run_arm` does and un-standardises before scoring. The old path is still
+    reachable as `standardise=False`, so this test keeps asserting the broken
+    reading -- a defect that can only be described and not re-measured stops
+    being a finding and becomes a story. Both readings are taken at the SAME
+    150 steps, on the same batch, so the delta is the preprocessing and nothing
+    else.
+
+    The 600-step reading stays asserted: `E2_STEPS` was chosen to work around
+    this defect and the number it licenses is still on record.
     """
     kw = dict(n=2048, s=S_DEFAULT, d=D_DEFAULT, lr=0.02,
               batch_fn=NS.make_consequence_batch,
               oracle_fn=NS.consequence_oracle,
               feature_fn=NS.consequence_features)
-    broken = NS.calibrate_bar(steps=150, **kw)
+
+    # THE DEFECT, still firing on the path that carried it.
+    broken = NS.calibrate_bar(steps=150, standardise=False, **kw)
     ok150, why150 = NS.bar_verdict(broken, flipper_dependence=2.0)
     assert not ok150 and "trained_two_feature" in why150, why150
-    good = NS.calibrate_bar(steps=NS.E2_STEPS, **kw)
+    assert broken["trained_two_feature"] > 2.0, broken["trained_two_feature"]
+
+    # THE REPAIR, at the same budget on the same batch.
+    fixed = NS.calibrate_bar(steps=150, **kw)
+    ok_fixed, why_fixed = NS.bar_verdict(fixed, flipper_dependence=2.0)
+    assert ok_fixed, (why_fixed, fixed)
+    assert fixed["trained_two_feature"] < broken["trained_two_feature"], (
+        fixed["trained_two_feature"], broken["trained_two_feature"])
+
+    # The clauses that do not train must not have moved.
+    for clause in ("predict_the_mean", "payload_only", "oracle",
+                   "flipper_dependence"):
+        assert broken[clause] == fixed[clause], clause
+
+    # The 600-step reading the workaround licensed, unchanged in kind.
+    good = NS.calibrate_bar(steps=NS.E2_STEPS, standardise=False, **kw)
     ok600, why600 = NS.bar_verdict(good, flipper_dependence=2.0)
     assert ok600, (why600, good)
