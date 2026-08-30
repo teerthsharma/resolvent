@@ -235,6 +235,55 @@ it — V-7 and V-13 are the same defect at opposite signs, so *both* directions
 need the count, not just the zero.
 
 
+### V-14. The control that validates the matcher and never the reach
+
+The one that survives rule 5 being obeyed, which is what makes it a new type
+rather than another instance of V-7.
+
+`scale/chase_struck_coverage.py` scans the tree for struck constants asserted
+without their strike marker. It **ships a must-fire control**, it runs it before
+anything else, and `main` refuses to proceed if the control does not fire
+(`scale/chase_struck_coverage.py:120-122`). The control plants a struck number in a paragraph and requires one
+hit, then plants the same number carrying a strike marker and requires zero — a
+planted positive AND a non-degenerate negative half, exactly what V-7's rule
+asks for.
+
+It passed throughout while the scanner reached **nothing**. The exclusion list
+was tested against `p.parts`, the ABSOLUTE path, and every worktree in this
+project lives under `<repo>/.claude/worktrees/<name>/`, so `.claude` was a
+component of every file's absolute path and the filter dropped all of them.
+**366 candidate files became 0.** The tool printed `SCANNING 0 PATHS THE SHIPPED
+CHECK DOES NOT COVER` and `uncovered .md: 0, uncovered .py: 0` and exited 0 —
+which reads as "no struck constant is asserted anywhere uncovered" and is in
+fact "no path was looked at".
+
+**The mechanism, and it is one line.** `control()` calls `scan_text(...)` on a
+literal string (`scale/chase_struck_coverage.py:107-110`). `collect_targets()` is never on that path. So the
+control exercised the **matcher** and never the **reach**, and the two halves of
+the instrument fail independently. Rule 5 said "a planted positive on identical
+instances"; the planting was on identical *text* and not on an identical *path
+through the instrument*, and the whole defect lived in the segment the plant
+skipped.
+
+It was caught sideways, and that is worth recording too: adding three constants
+to `STRUCK` (9 → 12) produced no collateral at all, and Venus treated a
+convenient result as suspicious rather than as good news.
+
+**Rule.** A planted positive must enter at the instrument's **front door** and
+traverse every stage the real input traverses — for a scanner, that means
+writing the plant to a file inside the scan root and running the whole pipeline,
+not calling the matcher. State which stages the plant passes through; any stage
+it skips is unmeasured, and a control that skips the selection stage cannot see
+a selector that selects nothing. The paired check is cheap and belongs beside
+it: **assert the target list is non-empty and bounded**, because "how many
+things did I look at" is a different question from "would I recognise one".
+
+Note for the taxonomy chapter: this is a **structure** comparison (did the walk
+reach the right set?) guarded by a **value** comparison (does the matcher
+recognise the right text?). The value comparison was correct and stayed correct.
+That pairing — a value control standing in for a structure claim — is where this
+class of defect keeps coming from.
+
 ## P — Provenance failures
 
 ### P-1. A number with no live producer
@@ -693,8 +742,13 @@ Condensed from the above; this is the list to run down.
 3. **Check the branch under test actually executes** on your fixture (V-6).
 4. **Check the PASS half's label is non-degenerate** (V-8): `sd > 0`,
    `0 < frac < 1`, both classes non-empty, discards counted.
-5. **A reported absence needs a planted positive** (V-7) on identical instances,
-   identical features, identical split.
+5. **A reported absence needs a planted positive** (V-7, V-13, V-14) on
+   identical instances, identical features, identical split — and entering at
+   the instrument's **front door**, so it traverses every stage the real input
+   does. Identical *text* is not identical *path*: a plant handed straight to
+   the matcher cannot see a selector that selected nothing (V-14). Name the
+   stages the plant passes through, and check the count of things examined as
+   well as the count of things found.
 6. **A repair must be shown to change the object it repairs** (V-9). Delete it
    in-process and watch the number move.
 7. **Compute the control's expected value before it runs** (V-10, M-5). Print
