@@ -144,7 +144,7 @@ earlier draft of this report quoted a single half-width of `0.026147`; that
 number understates the `twin` side, under which a true delta of `-0.029` is NOT
 excluded, and it is withdrawn.
 
-The interval itself sits on a **128-atom lattice**. Its exact, seed-free form is
+The interval itself sits on a **126-atom lattice**. Its exact, seed-free form is
 `[-0.029187, +0.023107]` at B=10000 seed 0; see section 2.5 for why that
 matters here.
 
@@ -179,7 +179,7 @@ of the one that produced it. Against that lattice:
 | `ci_lo` | `+0.212433` | `+0.212539` | yes | 1 |
 | `ci_hi` | `+0.245886` | `+0.245992` | yes | 1 |
 
-Both Monte-Carlo endpoints sit **exactly on** the 128-atom lattice, each exactly
+Both Monte-Carlo endpoints sit **exactly on** the 126-atom lattice, each exactly
 **one atom** below its exact counterpart. Sweeping bootstrap seeds 0..99 settles
 it: `ci_lo` takes **2** distinct values and `ci_hi` takes **3**, reaching
 `+0.2465162` — so **the endpoints move independently**. A constant shift cannot
@@ -194,8 +194,25 @@ shows. `contrast()` now returns `exact_lo`, `exact_hi` and `n_atoms` so the
 distinction is visible without re-deriving it, and `ci_lo`/`ci_hi` are untouched
 so nothing already published moves.
 
-The atom count here is **128**. The 126 on record is `settled - softmax`, a
-different contrast with its own lattice; the two figures do not conflict.
+**The atom count here is 126, and an earlier draft of this report said 128.**
+That was an error in this session's own code and is worth recording as one. The
+number of distinct means of a size-`n` multiset drawn from `n` values is at most
+`C(2n-1, n) = C(9,5) = 126`, so 128 was above its own ceiling. The cause: plain
+`sum()` over `itertools.product` adds the same multiset in different orders, and
+floating-point addition is not associative, so two multisets were split into
+four values `5.551115123125783e-17` apart -- one ULP. Counting with
+`math.fsum` on a canonically ordered tuple gives exactly 126, matching both the
+combinatorial bound and the count independently on record for
+`settled - softmax`.
+
+The two contrasts agreeing at 126 is not a coincidence to explain away: 126 is
+the generic count for any five distinct paired deltas, and both contrasts have
+five distinct deltas. The earlier claim that the two figures were "different
+lattices that do not conflict" was a rationalisation of a bug.
+
+The percentile endpoints are unaffected -- they are order statistics over the
+same 3,125 resamples and move by at most one ULP -- so the reconciliation above
+stands unchanged.
 
 ### 2.4 Clock, same-session only
 
@@ -317,6 +334,74 @@ would have destroyed the only same-session clock either run has.
 
 ---
 
+## 5A. C1 `t*=32` — COMPLETE, and row G voids the whole rung
+
+The crash killed the run at 13 of 15 units. `run_bucket` skipped the journalled
+13 and the resume cost only the two missing `settledrow` seeds, exactly as
+priced. `t*=32` is the rung where `t*` sits furthest above the arm's hop budget
+of 2, so it is where the contract predicts hardest.
+
+### Ceiling first, before this rung's numbers
+
+Realised `sd_paired(settledrow - twinrow)` = **`0.000664`**. Seeds needed for a
+95 % half-width below `RESOLUTION_13`: **1**. This run has 5, so the rung is
+**adequately powered** — by a wide margin.
+
+### The numbers
+
+| cell | mean | |
+|---|---|---|
+| `softmax` | `1.003157` | at/above predict-the-mean |
+| `twinrow` | `1.002587` | at/above predict-the-mean |
+| `settledrow` | `1.003214` | at/above predict-the-mean |
+
+**All three cells fail predict-the-mean.** Row G therefore voids every contrast
+on this rung: a cell at or above `1.0` is credited nothing in either direction,
+and a contrast between three failures licenses nothing.
+
+| arm | vs | delta | CI | n+ | status |
+|---|---|---|---|---|---|
+| `settledrow` | `twinrow` | `-0.000627` | `[-0.001151, -0.000155]` | 0/5 | **VOID (row G)** |
+| `twinrow` | `softmax` | `+0.000570` | `[+0.000088, +0.001052]` | 4/5 | **VOID (row G)** |
+| `settledrow` | `softmax` | `-0.000057` | `[-0.000930, +0.000546]` | 3/5 | **VOID (row G)** |
+
+Exact pairs, seed-free, over **126** atoms, are identical to the Monte-Carlo
+pairs at every endpoint on this rung. The `settledrow`/`softmax` tie in the
+house two-endpoint form: it **excludes a `softmax` advantage beyond `0.000930`
+and a `settledrow` advantage beyond `0.000546`, and excludes nothing smaller.**
+
+### Venus's prediction, scored on this rung
+
+Her filing: *`settledrow - twinrow` reads inside `+-0.027260` at every rung with
+every CI covering zero.* On `t*=32` it splits:
+
+| half | reads |
+|---|---|
+| `\|delta\| < 0.027260` | **True** — `0.000627`, two orders inside |
+| CI covers zero | **False** — `[-0.001151, -0.000155]` excludes zero, `n+ 0/5` |
+
+`twinrow` beat `settledrow` on **all five seeds**. The magnitude half of her
+prediction holds emphatically; the covers-zero half fails on this rung. **Both
+halves are recorded, and neither is a verdict** — row G voids the contrast that
+would have carried one, so this scores her prediction's arithmetic without
+licensing any claim about settling.
+
+### What this rung actually says
+
+The resolution is superb (`sd_paired 0.000664`, one seed would have sufficed)
+and it is spent on a contrast between three arms that all fail the absolute bar.
+That is precisely the configuration row G exists to catch: a beautifully
+resolved comparison of two failures. **No credit flows from `t*=32` in any
+direction.**
+
+### Table status
+
+**1 of 4 rungs complete — PARTIAL, NOT A READING.** `t*=8` is in flight,
+`t*=2` and `t*=1` queued. `verdict()` refuses quantified rows on incomplete
+data, so this cannot be misread as a kill.
+
+---
+
 ## 6. Claim ledger
 
 | # | claim | class | check |
@@ -329,8 +414,12 @@ would have destroyed the only same-session clock either run has.
 | M51 | `argmaxste` beats `softmax` at `n+ 5/5` | RUN | `+0.107304`, CI `[+0.082879, +0.140870]` |
 | M52 | `argmaxste` beats `argmax` at `n+ 5/5` | RUN | `+0.225760`, CI `[+0.212433, +0.245886]` |
 | M53 | `argmaxste` vs `twin` excludes a `twin` advantage beyond `0.029187` and an `argmaxste` advantage beyond `0.023107` | RUN | `-0.004092`, CI `[-0.029187, +0.023107]`, `n+ 2/5`. Two-endpoint form; the symmetric half-width `0.026147` understates the `twin` side and is withdrawn |
-| M62 | **The two `argmaxste - argmax` pairs are one estimator reaching two adjacent atoms, NOT two estimator families** | RUN | Exact enumeration reproduces `[+0.212539, +0.245992]` from an independent implementation. Both Monte-Carlo endpoints sit ON the 128-atom lattice, each exactly one atom below its exact counterpart, and under seeds 0..99 they move independently: `ci_lo` takes 2 values, `ci_hi` takes 3 (`+0.2465162` appears). The equal `+1.056e-04` gaps are equal local atom spacing |
-| M63 | The atom count for this contrast is 128, not 126 | RUN | `len(set(...))` over all `5**5 = 3125` resamples. The 126 on record is `settled - softmax`, a different contrast with its own lattice; the two do not conflict |
+| M62 | **The two `argmaxste - argmax` pairs are one estimator reaching two adjacent atoms, NOT two estimator families** | RUN | Exact enumeration reproduces `[+0.212539, +0.245992]` from an independent implementation. Both Monte-Carlo endpoints sit ON the 126-atom lattice, each exactly one atom below its exact counterpart, and under seeds 0..99 they move independently: `ci_lo` takes 2 values, `ci_hi` takes 3 (`+0.2465162` appears). The equal `+1.056e-04` gaps are equal local atom spacing |
+| M64 | **All three C1 cells at `t*=32` fail predict-the-mean; row G voids the rung** | RUN | `softmax` 1.003157, `twinrow` 1.002587, `settledrow` 1.003214, all >= 1.0 |
+| M65 | The `t*=32` rung is adequately powered, and the power is spent on a void contrast | RUN | Realised `sd_paired(settledrow-twinrow)` `0.000664`; seeds needed 1, run has 5 |
+| M66 | **Venus's prediction splits on `t*=32`** | RUN | `\|delta\| = 0.000627 < 0.027260` TRUE; CI `[-0.001151, -0.000155]` does NOT cover zero, `n+ 0/5`. Recorded, not adjudicated -- row G voids the contrast |
+| M67 | The crash resume cost only the two missing units, as priced | RUN | Journal held 13 of 15; `run_bucket` skipped them and ran `settledrow` sd3 and sd4 only |
+| M63 | **The atom count is 126. This session first reported 128, which was its own bug** | RUN | `C(2n-1, n) = C(9,5) = 126` is the combinatorial ceiling, so 128 was impossible. Plain `sum()` over `itertools.product` split two atoms by one ULP, `5.551115123125783e-17`, because float addition is not associative. `math.fsum` on a canonically ordered tuple returns 126. Percentiles move by at most one ULP and the reconciliation is unaffected |
 | M54 | Row E does not void the contrast | RUN | `argmaxste` `0.785019 < 1.0`, clearing predict-the-mean by `0.214981` |
 | M55 | The disputed headline reproduces exactly as a control | RUN | `argmax - softmax` `-0.118456`, CI `[-0.134115, -0.102204]`, `n+ 0/5` |
 | M56 | All four C1 `_A` offsets agree with `e_t_star` | RUN | `1/63, 2/62, 8/56, 32/32` at `s=64`; all four rungs carry `E_T_STAR` entries |
