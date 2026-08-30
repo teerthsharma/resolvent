@@ -970,9 +970,17 @@ def main() -> int:
             kr = (ref, k if ref not in ("softmax", "glance") else 0)
             if ka not in by or kr not in by:
                 continue
+            # NAME THE CELLS IN THE VERDICT. `verdict_of` was written for the
+            # settled/twin pair, so every contrast between any other pair
+            # rendered as `SETTLED WINS` or `TWIN WINS` whatever cells were in
+            # it -- an `argmaxste` against `softmax` row read `SETTLED WINS`
+            # while containing neither. For a settled/twin row these arguments
+            # reproduce the published strings exactly, so no standing reading
+            # moves.
             c = contrast([by[kr][sd]["eval_nrmse"] for sd in a.seeds],
                          [by[ka][sd]["eval_nrmse"] for sd in a.seeds],
-                         n_boot=10000, seed=0)
+                         n_boot=10000, seed=0,
+                         arm_name=arm.upper(), ref_name=ref.upper())
             # LOOP_PROMPT.md 1.7d: on a task labelled by the resolvent's own
             # object, credit flows through `settled - twin` and nothing else.
             # The other rows are printed -- suppressing them is how a reader

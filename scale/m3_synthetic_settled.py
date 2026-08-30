@@ -171,13 +171,30 @@ def shrink_toward(pred: torch.Tensor, y: torch.Tensor,
     return y + (1.0 - delta) * (pred - y)
 
 
-def verdict_of(ci_lo: float, ci_hi: float) -> str:
-    """The verdict, as a pure function of the interval. Strict at zero: an
-    interval touching zero is not an interval excluding it (G6)."""
+def verdict_of(ci_lo: float, ci_hi: float,
+               arm: str = "SETTLED", ref: str = "TWIN") -> str:
+    """The verdict, as a pure function of the interval and the two cell names.
+
+    Strict at zero: an interval touching zero is not an interval excluding it
+    (G6). `delta = NRMSE_ref - NRMSE_arm`, so a strictly positive interval means
+    the ARM has the lower error.
+
+    THE NAMES ARE PARAMETERS BECAUSE THIS FUNCTION WAS WRITTEN FOR ONE PAIR AND
+    THE TREE NOW HAS FOUR CELL FAMILIES. Hardcoding `SETTLED`/`TWIN` meant an
+    `argmaxste` against `softmax` contrast rendered as `SETTLED WINS` while
+    containing neither cell.
+
+    THE DEFAULTS ARE PINNED and reproduce the old strings byte for byte, because
+    published readings quote `SETTLED WINS` and `TWIN WINS`; a changed default
+    would silently rewrite every card and report that carries one. (No journal is
+    at risk: `contrast` is never called inside `_unit`, and no `results/*.jsonl`
+    stores a `verdict` key, so `run_bucket`'s bitwise resume audit cannot see
+    this. The published prose is the reason to pin them, not the journals.)
+    """
     if ci_lo > 0.0:
-        return "SETTLED WINS"
+        return "{} WINS".format(arm)
     if ci_hi < 0.0:
-        return "TWIN WINS"
+        return "{} WINS".format(ref)
     return "NO DIFFERENCE"
 
 
@@ -188,7 +205,8 @@ _EXACT_MAX_RESAMPLES = 100000
 
 
 def contrast(twin: list[float], settled: list[float], *, n_boot: int = 10000,
-             seed: int = 0) -> dict:
+             seed: int = 0, arm_name: str = "SETTLED",
+             ref_name: str = "TWIN") -> dict:
     """Paired bootstrap over seeds on NRMSE_twin - NRMSE_settled.
 
     Positive delta means the settled arm has the LOWER error, i.e. it wins.
@@ -249,7 +267,8 @@ def contrast(twin: list[float], settled: list[float], *, n_boot: int = 10000,
         n_atoms = len(set(allr))
     return dict(delta=point, ci_lo=lo, ci_hi=hi, n_seeds=n, n_boot=n_boot,
                 n_pos=n_pos, exact_lo=exact_lo, exact_hi=exact_hi,
-                n_atoms=n_atoms, per_seed_delta=d, verdict=verdict_of(lo, hi))
+                n_atoms=n_atoms, per_seed_delta=d,
+                verdict=verdict_of(lo, hi, arm_name, ref_name))
 
 
 # ----------------------------------------------------------------- the run ---
