@@ -41,6 +41,7 @@ import math
 import numpy as np
 
 from ceq.rips import components, sample_sphere
+from scale import kirchhoff
 from scale.rips_gate import FAIL_BAR, PASS_BAR, ball, fit_eval, nrmse
 
 __all__ = ["SHIPPED_CASE", "SMALL_CASE", "LADDER_T", "DECODER_RADIUS", "KILL_RATE",
@@ -280,8 +281,24 @@ def _bridge_side(adjacency, nodes, bridge) -> list[int]:
 
 def measure(node_count: int, target_degree: float, seed: int,
             kill: float = KILL_RATE) -> dict:
-    """Every number both gates need, from one build of one case."""
+    """Every number both gates need, from one build of one case.
+
+    THE INSTRUMENT LAW RUNS FIRST. Before any number is read off this instance,
+    the harmonic measure is computed a SECOND time by `scale/kirchhoff.py` --
+    the matrix-tree route, a symmetric Laplacian solve sharing no matrix, no
+    normalisation, no right-hand side and no index map with the absorbing-chain
+    solve below -- and the two are required to agree to `1e-10`. A disagreement
+    means one of two independent codepaths has a defect, and it is caught here
+    rather than after it has poisoned a reading. The measured gap travels out in
+    the returned dict as `kirchhoff_gap` so a later run can see it drift.
+
+    The law is defined for the UNDAMPED walk only. `kill > 0` is a different
+    operator whose harmonic measure is not a spanning-forest ratio of this
+    graph, so the cross-check is skipped there and `kirchhoff_gap` reads None.
+    """
     adjacency, nodes, bridge = case_graph(node_count, target_degree, seed)
+    gap = (kirchhoff.assert_oracles_agree(adjacency, nodes, bridge)
+           if kill == 0.0 else None)
     q, r, transient = absorbing_chain(adjacency, nodes, bridge, kill=kill)
     rho, t_rel = spectral(q)
     x_all, x_ball = local_features(adjacency, transient, bridge)
@@ -296,6 +313,7 @@ def measure(node_count: int, target_degree: float, seed: int,
 
     return {
         "case": (node_count, target_degree, seed, kill),
+        "kirchhoff_gap": gap,
         "merged": len(nodes), "transient": len(transient), "bridge": bridge,
         "rho": rho, "t_rel": t_rel,
         "cheeger_t_rel_floor": cheeger_t_rel_floor(adjacency, nodes, bridge),
