@@ -83,10 +83,42 @@ def attic_py_rows() -> list[str]:
     return [p for p, _c, d in audit_rows() if d == "ATTIC" and p.endswith(".py")]
 
 
+#: Where iteration 4's P0.3 move puts a retired row. The sheet keeps naming the row
+#: by its ORIGINAL path, so a guard that resolves only that path stops seeing the
+#: file the instant the move it guards is executed.
+ATTIC_PREFIX = "attic"
+
+
+def resolve(rel: str) -> pathlib.Path | None:
+    """The file at its sheet path, or where the attic move would have put it."""
+    for candidate in (ROOT / rel, ROOT / ATTIC_PREFIX / rel):
+        if candidate.exists():
+            return candidate
+    return None
+
+
 def must_fire_nodes(rel: str) -> list[str]:
-    path = ROOT / rel
-    if not path.exists():
-        return []
+    """Must-fire nodes in a row's file, wherever the file currently lives.
+
+    The first draft returned `[]` for a path that does not resolve. Measured before
+    iteration 4 ran: after the attic move, `tests/cameron/test_hankel_mustfire.py`
+    becomes `attic/tests/cameron/test_hankel_mustfire.py`, `must_fire_nodes` returns
+    `[]`, and this guard PASSES -- silently, on every moved row, at exactly the
+    moment the kill it objects to is carried out.
+
+    That is a control with no rejection region against the only event it exists to
+    catch: MISTAKES.md's V-class, committed inside a guard written against the
+    opposite failure. `resolve()` looks in both places, and a row whose file is in
+    neither now RAISES rather than reporting nothing, because a sheet row naming a
+    file that exists nowhere is itself a defect and must not read as clean.
+    """
+    path = resolve(rel)
+    if path is None:
+        raise FileNotFoundError(
+            f"AUDIT.md row {rel!r} resolves to no file, at its own path or under "
+            f"{ATTIC_PREFIX}/. A row naming a file that exists nowhere cannot be "
+            "checked and must not be reported as having nothing to lose."
+        )
     return MUST_FIRE_NODE.findall(path.read_text(encoding="utf-8"))
 
 
