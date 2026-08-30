@@ -118,6 +118,21 @@ def _weights_present(seeds) -> int:
 OUT_MD = ROOT / "results" / "capability_table_v0.md"
 OUT_JSON = ROOT / "results" / "capability_table_v0.json"
 
+#: The build a plain cut writes. NOT v0: BOARD.md records v0 as frozen evidence
+#: stamped `journal_commit 9629616`, cited as historical, and v1 as the current
+#: build -- and it records the workaround, "OUT_MD/OUT_JSON hardcode the v0
+#: paths and the plain command would clobber committed evidence", which left the
+#: rule in a document and the landmine in the tool. Selecting the version is now
+#: the tool's job, so cutting the table no longer means editing two constants by
+#: hand first. v0 stays writable; it takes saying `--version v0`.
+DEFAULT_VERSION = "v1"
+
+
+def out_paths(version: str) -> tuple:
+    """(markdown, json) for a table version. One place that spells the names."""
+    return (ROOT / "results" / f"capability_table_{version}.md",
+            ROOT / "results" / f"capability_table_{version}.json")
+
 SEEDS = (0, 1, 2, 3, 4)
 N_BOOT = 10000
 BOOT_SEED = 0
@@ -271,11 +286,17 @@ def build(journal=JOURNAL, *, seeds=SEEDS, n_boot=N_BOOT,
             .format(live["text"], live["t"], ceiling, EP.THRESHOLD,
                     EP.MIN_T_MIXTURE))
 
+    # Name the repository, not the machine. The absolute form recorded one
+    # user's home directory, and cutting from a git worktree made it name a
+    # temporary directory that is deleted with the worktree -- provenance no
+    # other reader can resolve. A journal outside the tree has no repo-relative
+    # name, so it is reported as given.
+    rel_journal = (journal.relative_to(ROOT).as_posix()
+                   if journal.is_relative_to(ROOT) else str(journal))
     return dict(
         provenance=dict(
-            journal=str(journal), journal_commit=_git(
-                "log", "-1", "--format=%h", "--", str(journal.relative_to(ROOT))
-                if journal.is_relative_to(ROOT) else str(journal)),
+            journal=rel_journal,
+            journal_commit=_git("log", "-1", "--format=%h", "--", rel_journal),
             head_commit=_git("log", "-1", "--format=%h"),
             n_seeds=len(seeds), seeds=list(seeds), n_boot=n_boot,
             boot_seed=boot_seed, task=TASK, task_source=TASK_SOURCE,
@@ -308,7 +329,7 @@ def build(journal=JOURNAL, *, seeds=SEEDS, n_boot=N_BOOT,
             ).format(len(seeds) * len(rows), _weights_present(seeds),
                      len(seeds) * len(rows)),
         ),
-        limits=LIMITS,
+        limits=LIMITS.format(*_task_census(journal)),
     )
 
 
@@ -326,9 +347,9 @@ LIMITS = (
     "(b) `counter_squared` HAS ZERO QUINTUPLE ROWS, and not for want of a flag. "
     "It is registered in M3_TASKS and runs under `scale/m3_capability.py --task "
     "counter_squared`; `scale/m3_quintuple.py` now registers `--task` too, and "
-    "60 of the 100 rows in `results/m3_quintuple_v2.jsonl` carry an e3 task "
-    "suffix written through it (15 each at `e3_t1`, `e3_t2`, `e3_t8`, `e3_t32`, "
-    "against 25 bare `negation_scope` keys). `counter_squared` was simply never "
+    "{} of the {} rows in `results/m3_quintuple_v2.jsonl` carry an e3 task "
+    "suffix written through it ({}), against {} bare `negation_scope` keys. "
+    "`counter_squared` was simply never "
     "run under the quintuple. Every number in THIS table is `negation_scope` at "
     "one geometry because `read_journal` filters on `m3_quintuple.task_of`, not "
     "because the corpus is all the producer can emit. "
@@ -355,6 +376,31 @@ LIMITS = (
     "and is labelled PROVISIONAL by its producer; no wall-clock number enters "
     "this table."
 )
+
+
+def _task_census(journal) -> tuple:
+    """(n_e3, n_rows, breakdown, n_bare) counted from the journal, not stated.
+
+    THESE NUMBERS ARE COUNTED BECAUSE THE LAST THREE WERE STORED. `LIMITS`
+    clause (b) shipped "60 of the 100 rows ... 15 each": 60 and 15 were true of
+    an 85-row journal and went stale the moment one more unit landed, and 100
+    was never right at all. A count asserted about a file that grows is a
+    stale claim with a delay fuse, which is the same defect this clause was
+    rewritten to repair.
+    """
+    counts: dict = {}
+    n_rows = 0
+    with open(journal, encoding="utf-8") as fh:
+        for line in fh:
+            if not line.strip():
+                continue
+            n_rows += 1
+            k = json.loads(line)["key"]
+            t = task_of(k)
+            counts[t] = counts.get(t, 0) + 1
+    e3 = {k: v for k, v in counts.items() if k.startswith("e3_")}
+    breakdown = ", ".join(f"{k} {e3[k]}" for k in sorted(e3))
+    return sum(e3.values()), n_rows, breakdown, counts.get(TASK, 0)
 
 
 def render(t: dict, manifest=WEIGHTS_MANIFEST) -> str:
@@ -576,8 +622,11 @@ def upload_command(out_dir, repo_id: str = "<OWNER>/<REPO>") -> str:
     )
 
 
-def main(argv=None) -> int:
+def _argparser() -> argparse.ArgumentParser:
     ap = argparse.ArgumentParser(prog="python -m scale.capability_table")
+    ap.add_argument("--version", default=DEFAULT_VERSION,
+                    help="which capability_table_<version>.{md,json} to write; "
+                         "v0 is frozen evidence and must be named explicitly")
     ap.add_argument("--journal", default=str(JOURNAL))
     ap.add_argument("--artifact", default=None,
                     help="directory to write the HF-shaped package into")
@@ -585,15 +634,20 @@ def main(argv=None) -> int:
     ap.add_argument("--card-only", action="store_true",
                     help="skip the three model files ceq/hf/train.py::push "
                          "requires; the folder is then a card, not a package")
-    a = ap.parse_args(argv)
+    return ap
+
+
+def main(argv=None) -> int:
+    a = _argparser().parse_args(argv)
+    out_md, out_json = out_paths(a.version)
 
     t = build(a.journal)
     md = render(t)
-    OUT_MD.write_text(md, encoding="utf-8")
-    OUT_JSON.write_text(json.dumps(t, indent=1), encoding="utf-8")
+    out_md.write_text(md, encoding="utf-8")
+    out_json.write_text(json.dumps(t, indent=1), encoding="utf-8")
     print(md)
-    print("\nwrote {}".format(OUT_MD))
-    print("wrote {}".format(OUT_JSON))
+    print("\nwrote {}".format(out_md))
+    print("wrote {}".format(out_json))
     if a.artifact:
         d = write_artifact(t, a.artifact, with_model=not a.card_only)
         print("wrote artifact {}".format(d))
