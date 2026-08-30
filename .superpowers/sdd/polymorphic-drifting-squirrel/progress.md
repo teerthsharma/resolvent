@@ -1765,3 +1765,105 @@ advantage beyond `0.023107`, and excludes nothing smaller.
 14 of 15 on the `t*=32` rung. `settledrow` sd3 landed, sd4 running, wake armed at
 15/15. Tests: `tests/mercury/` 55/55; controller check across mercury, neptune,
 mars and capability_table 117/117.
+
+## Iteration 4 — Jupiter COMPLETE. The maths survey, and it corrects the round's own premise.
+
+Merged. `tests/jupiter/` 49/49. Delivered `results/r9_maths_survey.md` (538
+lines), `scale/pivot_selection_theory.py`, `MATHEMATICS.md` sections 17.1-17.7.
+
+NOTHING WAS LOST TO THE CRASH. His scratchpad survived outside the repo — all
+five survey parts and all three verification scripts recovered, every journal
+number re-verified at the new HEAD before committing, all reproducing exactly.
+First commit landed before any new work, per the instruction.
+
+16 candidates surveyed. 5 CARRY A VERDICT HE STANDS BEHIND PERSONALLY — 3 with
+equations he fetched himself (Berthet 2002.08676, Marion 2410.01537, k-DPP via
+DPPy reference docs) and 2 derived from the repo's own objects with two paths
+each. 1 is citation-verified but NOT equation-verified. 10 REMAIN MOON-CLASS,
+UN-RE-VERIFIED, AND ARE LABELLED AS SUCH rather than averaged in. That is hardened
+G1 applied to his own moons.
+
+### THE MAIN RESULT — the controller's framing conflated two stages
+
+- STAGE A: WHICH `k` pivots, `topk(key.norm)`. NEVER TRAINED IN ANY ARM.
+  Byte-identical across every cell measured this round.
+- STAGE B: the mixture over the chosen `k`. This is where `argmaxste`'s STE lives.
+
+RULING: the controller's dispatch framed the round as "trained selection is the
+gain" and pointed Jupiter at differentiable top-k, DPPs and combinatorial bandits
+— all of which are STAGE A machinery. But argmaxste trains STAGE B. What the STE
+reading established is that training the READOUT WEIGHTING AMONG THE k matters; it
+says NOTHING about training WHICH k, because that path is untrained in every arm
+including argmaxste. The corrected statement is: the gain is the trained mixture
+over a fixed selection, not the selection. Cost of the original error: a survey
+aimed one stage away from the measured result, which Jupiter caught and reported
+rather than answering the question as asked.
+
+### A PRICING RULE THAT KILLS MOST OF THE BRIEF'S OWN TERRITORY
+
+At 5 seeds this instrument resolves `0.057946` OR LARGER. The three trained
+stage-B mechanisms differ by `0.004092` / `0.002959` / `0.001133` — 14x, 20x and
+51x BELOW the floor, needing 559 / 2257 / 41266 seeds. The gradient effect is
+`+0.225760` at 5/5.
+
+EVERY STAGE-B RELAXATION IS UNFALSIFIABLE ON THIS INSTRUMENT — not on merit, on
+measurement. That kills a large share of the proposed work before anyone spends a
+run on it.
+
+### The highest-value item is not missing, it is UNRUN
+
+K4's stage-A null was FORCED: `(k/s)(1/k) = 1/s`, `k` cancels, and M2 draws `c`
+from `P`. `scale/recall_probe.py` states that identity, names the non-artefact
+quantity, has ZERO IMPORTERS AND NO RESULTS, and the archive calls it "already
+sitting unrun."
+
+His words: "I nearly recommended re-running an experiment that already existed;
+grepping first turned it into something better."
+
+### A real provable bound, with a real hole
+
+Captured mass is SUPERMODULAR — so greedy has NO `1 − 1/e` guarantee on the
+obvious objective. Reconstruction IS monotone submodular (gain at least
+`‖u_a v_aᵀ‖²`, tight to `−3.55e−15` over 21,936 pairs), so greedy attains
+`0.632121`. THE SIGNED ARM VOIDS IT — `M` is negative in 297 of 300.
+
+### `nash.py`'s shared-tau is real but too small to be the cause
+
+Median attenuation `0.789701`. A `1.27x` shrink CANNOT produce OOD NRMSE
+`2.6151`–`5.8198`. One line settles it before anyone spends a rerun.
+
+RULING: the queued "re-run ceq/nash.py with per-example tau" unit is DOWNGRADED
+from a rerun to a one-line check. Deimos's finding was real and correctly filed as
+A cause on one seed rather than THE cause; Jupiter has now bounded its magnitude
+and it does not reach. Cost if wrong: a cheap check replaces an expensive rerun,
+and if the check surprises, the rerun is still available.
+
+### FINDINGS C2 WAS OVERSTATED THREE WAYS — and it is the round's own premise
+
+The entry read "softmax is PROVABLY Bayes-optimal on exactly that shape." Jupiter
+fetched the equations. It is wrong on three counts:
+
+(a) the paper's predictor is `erf`, NOT softmax;
+(b) optimality is ASYMPTOTIC under `L = o(d)`, and this repo runs `L/d = 4.00` —
+    THE OPPOSITE DIRECTION;
+(c) Prop 3 refutes linear REGRESSION, not linear attention.
+
+What survives: the LABEL SHAPE does match, so THE WORRY IS SOUND — "provably" is
+not.
+
+RULING: FINDINGS C2 is corrected in place. This matters more than a citation fix
+because C2 is the load-bearing premise of the whole round - it is why the vector
+corpus was built and why the single-location regime was called a trap. The
+motivation survives as a WORRY about label shape; the theorem does not. Note also
+that LOOP_PROMPT.md:34-38 concedes the unqualified version and INHERITS the same
+overstatement - that is the author's own document and is left for him. Cost if
+wrong: the round's motivation is stated more weakly than it needed to be, which is
+the safe direction.
+
+### Two of his own errors, recorded
+
+An unguarded `nct` bisection returned a NON-MONOTONE MDE — caught only because MDE
+must fall with `n`. And he predicted `h` non-monotone when it is provably
+monotone. Both corrected in what shipped. Two citations are single-source (the
+`L = o(d)` regime and the k-DPP complexity) because both source PDFs returned
+compressed streams.
