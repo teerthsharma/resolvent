@@ -136,9 +136,17 @@ argmaxste - twin      = -0.004092    CI [-0.029187, +0.023107], covers zero
 ```
 
 A one-hot lookup whose selection is trained lands **statistically
-indistinguishable from the full mixture** - bounded by this run's own CI
-half-width of `0.026147`, so the honest statement is "no difference larger than
-`0.026147`", never "identical".
+indistinguishable from the full mixture**. Stated in the house two-endpoint
+form, because a symmetric half-width understates the wider side of an asymmetric
+interval: the reading **excludes a `twin` advantage beyond `0.029187` and an
+`argmaxste` advantage beyond `0.023107`, and excludes nothing smaller.** An
+earlier draft of this report quoted a single half-width of `0.026147`; that
+number understates the `twin` side, under which a true delta of `-0.029` is NOT
+excluded, and it is withdrawn.
+
+The interval itself sits on a **128-atom lattice**. Its exact, seed-free form is
+`[-0.029187, +0.023107]` at B=10000 seed 0; see section 2.5 for why that
+matters here.
 
 ### 2.3 What this answers, and what it does not
 
@@ -155,6 +163,39 @@ the mixture is not what the `-0.118456` was measuring.
 It says nothing about the equilibrium half of that sentence - `settled` was not
 in this reading. It licenses dropping the mixture claim, not asserting its
 converse, and the C1 lane in section 5 is what addresses the other half.
+
+### 2.5 The two published `argmaxste - argmax` pairs are one estimator
+
+The exact pair on record is `[+0.212539, +0.245992]`; this session's
+Monte-Carlo pair is `[+0.212433, +0.245886]`. The gap is `+1.056e-04` at **both**
+endpoints, which is the signature of a constant estimator-family shift.
+
+**It is not one.** Enumerating all `5**5 = 3125` resamples reproduces
+`[+0.212539, +0.245992]` exactly, from an implementation written independently
+of the one that produced it. Against that lattice:
+
+| | Monte-Carlo, seed 0 | exact | on the lattice? | atoms apart |
+|---|---|---|---|---|
+| `ci_lo` | `+0.212433` | `+0.212539` | yes | 1 |
+| `ci_hi` | `+0.245886` | `+0.245992` | yes | 1 |
+
+Both Monte-Carlo endpoints sit **exactly on** the 128-atom lattice, each exactly
+**one atom** below its exact counterpart. Sweeping bootstrap seeds 0..99 settles
+it: `ci_lo` takes **2** distinct values and `ci_hi` takes **3**, reaching
+`+0.2465162` — so **the endpoints move independently**. A constant shift cannot
+do that. The equal gaps are equal local atom spacing at the two ends and nothing
+more.
+
+So for this cell the mechanism is **adjacent-atom selection under seed
+variation**, not two estimator families, and the two published pairs are one
+estimator reaching two neighbouring atoms. The constant-shift signature remains
+the right test for a genuine family difference; it simply is not what this cell
+shows. `contrast()` now returns `exact_lo`, `exact_hi` and `n_atoms` so the
+distinction is visible without re-deriving it, and `ci_lo`/`ci_hi` are untouched
+so nothing already published moves.
+
+The atom count here is **128**. The 126 on record is `settled - softmax`, a
+different contrast with its own lattice; the two figures do not conflict.
 
 ### 2.4 Clock, same-session only
 
@@ -287,7 +328,9 @@ would have destroyed the only same-session clock either run has.
 | M50 | **Row C fires; rows A, B, D, E do not** | RUN | Scored verbatim against `tests/mars/MARS_REPORT_IT2.md` section 6 |
 | M51 | `argmaxste` beats `softmax` at `n+ 5/5` | RUN | `+0.107304`, CI `[+0.082879, +0.140870]` |
 | M52 | `argmaxste` beats `argmax` at `n+ 5/5` | RUN | `+0.225760`, CI `[+0.212433, +0.245886]` |
-| M53 | `argmaxste` is indistinguishable from `twin`, bounded at `0.026147` | RUN | `-0.004092`, CI `[-0.029187, +0.023107]`, `n+ 2/5`. The bound is the CI half-width |
+| M53 | `argmaxste` vs `twin` excludes a `twin` advantage beyond `0.029187` and an `argmaxste` advantage beyond `0.023107` | RUN | `-0.004092`, CI `[-0.029187, +0.023107]`, `n+ 2/5`. Two-endpoint form; the symmetric half-width `0.026147` understates the `twin` side and is withdrawn |
+| M62 | **The two `argmaxste - argmax` pairs are one estimator reaching two adjacent atoms, NOT two estimator families** | RUN | Exact enumeration reproduces `[+0.212539, +0.245992]` from an independent implementation. Both Monte-Carlo endpoints sit ON the 128-atom lattice, each exactly one atom below its exact counterpart, and under seeds 0..99 they move independently: `ci_lo` takes 2 values, `ci_hi` takes 3 (`+0.2465162` appears). The equal `+1.056e-04` gaps are equal local atom spacing |
+| M63 | The atom count for this contrast is 128, not 126 | RUN | `len(set(...))` over all `5**5 = 3125` resamples. The 126 on record is `settled - softmax`, a different contrast with its own lattice; the two do not conflict |
 | M54 | Row E does not void the contrast | RUN | `argmaxste` `0.785019 < 1.0`, clearing predict-the-mean by `0.214981` |
 | M55 | The disputed headline reproduces exactly as a control | RUN | `argmax - softmax` `-0.118456`, CI `[-0.134115, -0.102204]`, `n+ 0/5` |
 | M56 | All four C1 `_A` offsets agree with `e_t_star` | RUN | `1/63, 2/62, 8/56, 32/32` at `s=64`; all four rungs carry `E_T_STAR` entries |
@@ -314,9 +357,11 @@ the result.
 The STE reading is `negation_scope` at one geometry and five seeds; it contains
 no `settled` cell, so it licenses dropping the mixture half of *"the gain is the
 mixture, not the equilibrium"* and says nothing about the equilibrium half. The
-`argmaxste - twin` null is bounded at `0.026147` by this run's own CI
-half-width, so "indistinguishable" means "no difference larger than that" and
-must never be read as "identical". Whether a trained one-hot selection also
+`argmaxste - twin` null excludes a `twin` advantage beyond `0.029187` and an
+`argmaxste` advantage beyond `0.023107` and excludes nothing smaller, so
+"indistinguishable" is a statement about what is ruled out, never about
+identity; a true delta of `-0.029` is NOT ruled out. Whether a trained one-hot
+selection also
 matches the mixture at other tasks, other geometries or other `k` is untested -
 one rung of one corpus is what was measured. The five unit clocks are
 same-session; the journalled `twin` median at the same geometry is not, so no

@@ -62,6 +62,7 @@ from __future__ import annotations
 
 import argparse
 import contextlib
+import itertools
 import json
 import pathlib
 import sys
@@ -179,6 +180,12 @@ def verdict_of(ci_lo: float, ci_hi: float) -> str:
     return "NO DIFFERENCE"
 
 
+#: Enumerate the exact bootstrap distribution below this many resamples. n=5
+#: costs 3,125 and n=6 costs 46,656; n=7 would cost 823,543, so the door shuts
+#: before the enumeration costs more than the sampling it annotates.
+_EXACT_MAX_RESAMPLES = 100000
+
+
 def contrast(twin: list[float], settled: list[float], *, n_boot: int = 10000,
              seed: int = 0) -> dict:
     """Paired bootstrap over seeds on NRMSE_twin - NRMSE_settled.
@@ -208,8 +215,31 @@ def contrast(twin: list[float], settled: list[float], *, n_boot: int = 10000,
     # missing column, and it is reported here rather than by whichever caller
     # remembers, because it is a property of every 5-seed reading in this repo.
     n_pos = sum(1 for x in d if x > 0.0)
+    # THE INTERVAL LANDS ON A LATTICE, SO SAY WHERE. `n_boot` resamples are drawn
+    # from a statistic that has only `n**n` of them: at n=5 that is 3,125
+    # resamples over about 128 distinct atoms, and the 2.5 % and 97.5 %
+    # percentiles are picked from that short list. Monte-Carlo therefore chooses
+    # between ADJACENT atoms according to the bootstrap seed. Measured on
+    # `argmaxste - argmax`: over seeds 0..99 `ci_lo` takes 2 distinct values and
+    # `ci_hi` takes 3, and the seed-0 pair sits exactly one atom below the exact
+    # pair at both ends. The two gaps are both 1.056e-04, which LOOKS like a
+    # constant estimator-family shift and is not one -- the endpoints move
+    # independently under seed change, so the equal gaps are equal local atom
+    # spacing and nothing more. That distinction is invisible without these
+    # fields, and mislabelling a seed difference as a family difference is
+    # exactly the error they exist to prevent.
+    #
+    # Reported ALONGSIDE, never instead of: `ci_lo` and `ci_hi` are untouched, so
+    # no journalled value, no published interval and no verdict moves.
+    exact_lo = exact_hi = n_atoms = None
+    if n ** n <= _EXACT_MAX_RESAMPLES:
+        allr = sorted(sum(c) / n for c in itertools.product(d, repeat=n))
+        exact_lo = allr[int(0.025 * len(allr))]
+        exact_hi = allr[min(len(allr) - 1, int(0.975 * len(allr)))]
+        n_atoms = len(set(allr))
     return dict(delta=point, ci_lo=lo, ci_hi=hi, n_seeds=n, n_boot=n_boot,
-                n_pos=n_pos, per_seed_delta=d, verdict=verdict_of(lo, hi))
+                n_pos=n_pos, exact_lo=exact_lo, exact_hi=exact_hi,
+                n_atoms=n_atoms, per_seed_delta=d, verdict=verdict_of(lo, hi))
 
 
 # ----------------------------------------------------------------- the run ---

@@ -985,6 +985,15 @@ def main() -> int:
                   f"{c['n_pos']}/{c['n_seeds']:<3} "
                   f"{'VOID' if void else c['verdict']:>15}  "
                   f"{RIG_NOTE if void else note}")
+            if c["n_atoms"] is not None:
+                # The lattice the interval sits on. The Monte-Carlo endpoints
+                # above are drawn from `n_atoms` distinct values, so a seed
+                # change can move them by whole atoms; the exact pair needs no
+                # seed. Printed so a seed difference is never read as a family
+                # difference.
+                print(f"             exact [{c['exact_lo']:+.6f}, "
+                      f"{c['exact_hi']:+.6f}] over {c['n_atoms']} atoms "
+                      f"({c['n_seeds']}**{c['n_seeds']} resamples, no seed)")
             if c["verdict"] == "NO DIFFERENCE" and not void:
                 print("             ^ pre-registered floor: with five seeds a "
                       "real gap below ~0.05 NRMSE reads NO DIFFERENCE whether "
