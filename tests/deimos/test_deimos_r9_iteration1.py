@@ -242,20 +242,29 @@ def test_qre_residual_is_reported_but_never_read_anywhere_in_the_repo():
     dead code.
     """
     import pathlib
+    import subprocess
 
+    # SCOPED TO THE GIT-TRACKED SET, not a filesystem walk. A previous version
+    # of this test used `root.rglob("*.py")`, which -- inside the primary repo
+    # checkout, where every agent's worktree lives nested under
+    # `.claude/worktrees/*` -- silently walked into every sibling worktree's
+    # own copy of `ceq/nash.py` and over-counted (12 hits: 10 phantom copies
+    # under `.claude/worktrees/`, this file quoting the name once, and the one
+    # real file). "Does this symbol appear in this repository" means the
+    # repository -- the git-tracked set -- not whatever nested checkouts
+    # happen to sit on disk beneath it. See DEIMOS_REPORT.md, "A search that
+    # over-finds is the same failure as one that under-finds, sign flipped."
     root = pathlib.Path(__file__).resolve().parents[2]
-    self_path = pathlib.Path(__file__).resolve()
+    self_rel = pathlib.Path(__file__).resolve().relative_to(root)
+    tracked = subprocess.run(["git", "ls-files", "--", "*.py"], cwd=root,
+                             capture_output=True, text=True, check=True
+                             ).stdout.splitlines()
     hits = []
-    for py in root.rglob("*.py"):
-        if py == self_path:
+    for name in tracked:
+        rel = pathlib.Path(name)
+        if rel == self_rel:
             continue                                  # this file quotes the name
-        rel = py.relative_to(root)
-        if rel.parts[0] in (".git", "node_modules"):
-            continue
-        try:
-            text = py.read_text(encoding="utf-8")
-        except (UnicodeDecodeError, OSError):
-            continue
+        text = (root / rel).read_text(encoding="utf-8")
         if "return_residual" in text:
             hits.append(rel)
 
