@@ -291,3 +291,101 @@ building the corpus.`
   (missing `absorbing_boundary_kernel`) and 5 in
   `tests/foreman/test_journal_thread_binding.py` — both confirmed present at
   `74e5590`, untouched by either planet.
+
+## Iteration 1 — Neptune (LINUS) COMPLETE. The systems gate FAILS the lane as planned.
+
+Merged. `tests/neptune/test_capability_table_truth.py` 7/7 (3 RED first) and
+`tests/chase/test_capability_table.py` 16/16.
+
+### Gate finding 1 — the plan's unit 6, as originally written, was worthless
+
+Measured across **256 drawn instances**: the vector readout is **bitwise
+identical** between `softmax` and each of `twin` / `settled` / `argmax` at
+positions `0 .. s-2`. Sixty-three of sixty-four coordinates carry **no cell
+information**.
+
+- The settled row's share of the loss falls to `1/s = 1/64 = 1.5625 %`.
+- **98.4375 % of the gradient would flow through a term bitwise identical across
+  all five cells.**
+- Diluting the measured `settled − twin = −0.002959` by `1/64` puts the point
+  estimate near `−4.6e-05`, which no bootstrap at five seeds can resolve.
+  `capability_table.LIMITS` clause (c) already records that a real gap below
+  ~`0.05` NRMSE reads NO DIFFERENCE here.
+- Neptune's own verdict: *"It is free precisely because it computes nothing
+  new"*, and a control whose output is 98.4 % constant across the arms it must
+  separate **is vacuous by the repository's own rule 4**.
+
+**Three independent routes reached this: Venus predicted it from the code, the
+controller confirmed it by reading `m3_quintuple.py:308`, Neptune measured it on
+256 instances.** The amended plan (write the pivot term at every position) is
+the only version worth building, and this is now RUN-class rather than a ruling
+on a hunch.
+
+### Gate finding 2 — the honest version costs 34×
+
+| | current | per-row | ratio |
+|---|---|---|---|
+| total FLOPs, `n = 8192` | `7.4313e+09` | `1.2650e+10` | **`1.702×`** |
+| non-base share of the arm | `5.856 %` | `44.695 %` | |
+| ten units (settled+twin × 5 seeds) | **`0.87 h`** | **`≈ 29.6 h`** | **`34×`** |
+
+Measured two ways. Path A (RUN): one `_alpha` call forward+backward costs
+`2.077496 − 0.984537 = 1.092959 s/step`; sixty-four of them is `69.95 s/step`.
+Neptune also warns **the FLOP model under-predicts this arm by 2× and the gap
+grows**, so realised slowdown will be worse than `1.702×`, not better.
+
+Memory is **not** the constraint: `+3.94 MiB` (softmax) / `+9.42 MiB` (settled)
+at `n=8192`, `≤ 0.39 %`.
+
+`Ruling: the round does NOT commit 29.6 h. It pilots. Neptune asked for an author
+decision; the author is away under a standing autopilot instruction, and a pilot
+is neither irreversible nor outside the worktree, so this is mine to settle. The
+per-row arm gets built and measured at REDUCED geometry first — smaller n_train
+and smaller s, since the dilution is 1/s and the per-row cost is s alpha calls,
+so shrinking s pays twice. Two units of signal before ten units of commitment is
+exactly the discipline E_LADDER_PREREGISTERED_READING.md section 5 already
+encodes, and that document also records its own pilot was 2.18x optimistic
+(realised sd 0.109199 against piloted 0.050146) — so the pilot's optimism must be
+stated when it is used to size anything. Cost if wrong: two pilot units of
+compute, ~1.5 h, and the full bill still has to be authorised on the author's
+return.`
+
+### Neptune found three MORE errors in the controller's FINDINGS section B
+
+- **B4 was already fixed** by commit `54148e6`. `scale/arm_s.py` was never the
+  stale file; `STATE.md:230`, which still called it unfixed, was.
+- **B7's correction list has two bad numbers**: `155→156` is really `164`;
+  `107→106` is really `116`.
+- The stated reason for CUDA lane separation names a gate that runs
+  `m3_capability.Arm`, **not** `QuintArm`. The conclusion survives; the mechanism
+  does not.
+
+`Ruling: FINDINGS section B is now DEMOTED to unreliable as a whole. It has been
+falsified in six places across four planets (B5 by Mars, A3/A6 by Mercury, B4 by
+Saturn and again by Neptune, B7 twice by Neptune). It was assembled from Explore
+agent output that the controller did not line-verify. No planet may cite section
+B without re-reading the cited line first, and that instruction is going into
+BASE_PROMPT.md. Cost if wrong: agents spend a few extra reads confirming entries
+that were fine.`
+
+### A moon went rogue, and the topology has a failure mode
+
+Neptune's moon read a **pre-fast-forward tree**, classified its own planet's
+correction as a **suspicious peer message**, disregarded it, and edited two files
+from stale readings. Neptune rejected the moon's entire result and re-measured by
+hand.
+
+`Ruling: BASE_PROMPT.md gains a mandatory first action — verify HEAD and
+fast-forward before reading anything — plus a moon clause: state the required
+HEAD in the moon's own prompt, hand it file CONTENTS rather than paths to
+re-read, and re-verify what it returns. Three of six planets (Mars, Saturn,
+Neptune) were cut 8 commits behind at ac47049, so this was systematic, not bad
+luck, and it is the controller's dispatch defect. Cost if wrong: a few redundant
+git commands per agent.`
+
+### Carried open
+
+- **The generated tables still lie.** `capability_table_v0.*`, `v1.*` and
+  `ceq/hf_artifact/capability_table_v0.json` retain the `--task` denial in stored
+  strings. The generator is fixed; regenerating is a **table cut**, which is a
+  measurement decision — assigned to Mercury, who holds execute.

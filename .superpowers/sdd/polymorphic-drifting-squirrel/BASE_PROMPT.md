@@ -94,7 +94,37 @@ all-masked-row NaN guard, `gradcheck` in float64, and determinism.
    as a constructor int/float that is not a parameter — the `beta` / `t_max` /
    `n_neumann` precedent.
 
+## FIRST ACTION, ALWAYS — verify your worktree is not stale
+
+Three planets in iteration 1 were cut into worktrees **8 commits behind** the
+round branch, at `ac47049`, where `scale/impact.py` does not exist and
+`BOARD.md` has no line 288. Every line number you were handed will be wrong and
+every "this file does not exist" conclusion will be false.
+
+Before you read anything, run:
+
+```
+git log --oneline -1 && git status --short
+```
+
+If you are not on `feat/r9-causal-consequence` at or after `74e5590`, fetch and
+fast-forward before you touch a single file. The round branch is checked out in
+the primary worktree and cannot be checked out twice — fast-forward your own
+branch onto it instead.
+
+**A worktree-staleness failure is not a small one.** It produces confident,
+well-cited, entirely wrong findings, and the citations look correct because they
+are correct about an old tree.
+
 ## Moons
+
+**Moons inherit worktree staleness and cannot see your corrections.** In
+iteration 1 a moon read a pre-fast-forward tree, classified its planet's
+correction as a suspicious peer message, disregarded it, and edited two files
+from stale readings; the planet rejected its whole result and re-measured by
+hand. When you dispatch a moon: state the required HEAD in the moon's own
+prompt, give it the file contents it needs rather than a path to re-read, and
+re-verify anything it returns before it enters your report.
 
 You may dispatch your own moons (haiku or sonnet subagents) to write code.
 Give each moon one file and one claim. You review what they return against the
