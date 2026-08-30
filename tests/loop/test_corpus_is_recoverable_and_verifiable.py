@@ -103,6 +103,53 @@ def test_present_corpus_matches_its_recorded_hash(name: str):
     )
 
 
+def test_some_countable_unit_of_the_corpus_equals_the_readme_figure():
+    """The README cannot be repaired by picking a different unit. Measured.
+
+    The obvious rescue for "a 20,000-line head" against a 211,766-line file is that
+    "line" was written where "story" was meant -- TinyStories entries are
+    multi-paragraph, and 211,766/20,000 = 10.6 lines per story is plausible. It does
+    not survive measurement. Nothing in the file counts to 20,000:
+
+        lines                          211,766
+        blank-line-separated blocks    105,095
+        double-blank-separated blocks       16
+        <|endoftext|> markers                0
+
+    So the corpus carries no story boundary in its own bytes, and no re-reading of
+    the README's unit makes its figure true. Whoever fetched it applied a slice --
+    almost certainly `dataset['train'][:20000]` over HuggingFace records -- and wrote
+    the result out in a form that does not preserve the record boundary. That slice
+    is recoverable only from the producer, never from the artifact.
+
+    THE CONSEQUENCE, and it is why this test exists rather than a note. Since the
+    derivation cannot be checked against the file, `data/CHECKSUMS.sha256` is not
+    hygiene -- it is the ONLY thing that can tell a correct re-fetch from a wrong
+    one. Every published number that touched this corpus rests on that hash and on
+    nothing else.
+    """
+    if not CORPUS.exists():
+        pytest.skip("tinystories_20k.txt not fetched here")
+    stated = re.search(r"([\d,]+)-line head", README.read_text(encoding="utf-8"))
+    if not stated:
+        pytest.skip("data/README.md no longer states a figure to check units against")
+    claimed = int(stated.group(1).replace(",", ""))
+    raw = CORPUS.read_text(encoding="utf-8", errors="replace")
+    units = {
+        "lines": len(raw.split("\n")),
+        "blank-separated blocks": len([b for b in raw.split("\n\n") if b.strip()]),
+        "double-blank blocks": len([b for b in raw.split("\n\n\n") if b.strip()]),
+        "endoftext markers": raw.count("<|endoftext|>"),
+    }
+    assert claimed in units.values(), (
+        f"data/README.md states {claimed:,} but no countable unit of the corpus "
+        f"equals it: {units}. The figure cannot be rescued by reading 'line' as "
+        "'story' -- the file preserves no record boundary. The upstream slice is "
+        "recoverable only from whoever ran it, and until then data/CHECKSUMS.sha256 "
+        "is the only check a re-fetch has."
+    )
+
+
 def test_the_readme_derivation_matches_the_corpus_it_describes():
     """THE DEFECT. The only tracked recipe for this file describes a different file."""
     if not CORPUS.exists():

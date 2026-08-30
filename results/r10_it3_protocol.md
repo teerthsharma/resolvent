@@ -260,9 +260,20 @@ one, and a fourth failure is not argued out of being one.**
 
 1. **Stratification does not dominate.** MARS measured that against a size-12 cluster placed
    adversarially inside the largest stratum (n=114, 36% of KEEP), uniform at matched budget 30
-   detects with 0.7157 and stratified with 0.4951. The floor buys total rule COVERAGE —
-   P(detect a wholly-wrong rule) = 1.0000 for all 61 — and that is the axis the round's measured
-   history says fails. It does not buy the best power against an adversarial cluster.
+   detects with 0.7157 and stratified with 0.4951. The floor buys row coverage, and it does not
+   buy the best power against an adversarial cluster.
+
+   **AMENDED AFTER COMMIT, and it corrects a claim in the brief this protocol was written
+   against.** This caveat first read "P(detect a wholly-wrong rule) = 1.0000 for all 61",
+   repeating the header of `results/r10_it3_draw.txt`. MARS withdrew that line as his own
+   overclaim while this iteration was running, and the withdrawal is measured: the floor runs over
+   STRATA, not rules. The 44 singleton rules pool into ONE stratum drawing 3, so each singleton
+   rule is sampled with p = 3/44 = 0.0682, not 1.0. The guarantee covers **the 17 rules holding
+   >= 2 rows, which is 270 of 314 KEEP rows**; the draw actually touches **20 of 61 rules**.
+   The amendment changes no measurement rule and no threshold in this protocol — it corrects what
+   the draw is claimed to buy. The 35 drawn rows are byte-identical before and after MARS's edit,
+   re-verified by re-running `scale/spotcheck_draw2.py` against the committed output, so the
+   sample this protocol governs did not move.
 2. **The urn is pinned, the tree is not.** The draw reads `AUDIT.md` at `f823b02`. Amendments made
    during this iteration cannot move the sample, which is the iteration-2 defect this fixes. But
    the FILES being measured are read from the working tree at HEAD, so a row's verdict is a
