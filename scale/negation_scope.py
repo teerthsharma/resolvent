@@ -1025,6 +1025,21 @@ E_T_STAR = {
 }
 
 
+def e_t_star(task: str, s: int):
+    """The difficulty dial for `task`, or None where the task declares none.
+
+    THE ABSENCE IS THE POINT. `impact`, `impact_hetero` and `e4prime` are
+    registered in `M3_TASKS` and carry no derived `t*`: IMPACT's label is a full
+    resolvent over a graph whose diameter is a property of the draw, not a hop
+    count fixed by the task name. Readers indexed `E_T_STAR` directly and raised
+    `KeyError('impact')` on all three. Returning None rather than inventing a
+    dial keeps a wrong difficulty number out of the tables -- a wrong dial is
+    worse than an absent one, and the reading is pre-registered against the dial.
+    """
+    fn = E_T_STAR.get(task)
+    return None if fn is None else fn(s)
+
+
 #: name -> (batch_fn, oracle_fn, feature_fn, expected flipper_dependence or None).
 #: The registration surface. `None` for the last field means "use the shipped
 #: one-sided clause"; a callable means the task supplies its own EXACT value and

@@ -114,7 +114,10 @@ def main() -> int:
         emit(f"{'task':>12} {'t*':>4} {'cell':>9} {'n_par':>6} "
              f"{'0-step':>9} {'eval':>9} {'verdict':>12} {'s':>7}")
         for task in a.tasks:
-            t_star = NS.E_T_STAR[task](a.s)
+            # None for a registered task with no derived dial; the column
+            # prints "-" rather than raising KeyError or inventing a number.
+            dial = NS.e_t_star(task, a.s)
+            t_star = "-" if dial is None else dial
             for cell in a.cells:
                 for seed in a.seeds:
                     r = run_cell(cell, task, s=a.s, d=a.d, steps=a.steps,
