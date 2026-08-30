@@ -1867,3 +1867,72 @@ must fall with `n`. And he predicted `h` non-monotone when it is provably
 monotone. Both corrected in what shipped. Two citations are single-source (the
 `L = o(d)` regime and the k-DPP complexity) because both source PDFs returned
 compressed streams.
+
+## THE DECIDING MEASUREMENT, RUNG t*=32 — ROW G VOIDS IT
+
+Merged. `tests/mercury/` 57/57. Resume cost exactly what was priced: `run_bucket`
+skipped the 13 journalled units and ran only `settledrow` sd3 and sd4.
+
+CEILING PRINTED FIRST, as required. Realised `sd_paired(settledrow − twinrow)` =
+0.000664, seeds needed = 1, run has 5. WELL POWERED — this is not an
+underpowered null.
+
+| cell | mean NRMSE | |
+|---|---|---|
+| `softmax` | 1.003157 | at or above 1.0 |
+| `twinrow` | 1.002587 | at or above 1.0 |
+| `settledrow` | 1.003214 | at or above 1.0 |
+
+ALL THREE CELLS FAIL PREDICT-THE-MEAN. Row G voids all three contrasts.
+
+RULING: the result at t*=32 is NOT "the arm failed". It is "NO arm - including
+plain softmax - can do c1_propagate at t*=32 at 150 steps and n_train=2048". That
+is a statement about the rung's difficulty at this budget, not about the arm, and
+row G exists precisely to stop it being read the other way. The rung where the
+theory predicts hardest spent excellent resolution on a comparison of three
+failures. No credit flows in any direction, and none is claimed.
+
+Venus's prediction SPLITS, both halves recorded, NEITHER ADJUDICATED because row G
+voids the carrier:
+- `|delta| = 0.000627 < 0.027260` — TRUE, two orders inside her bound
+- CI covers zero — FALSE: `[−0.001151, −0.000155]`, `n+ 0/5`. `twinrow` beat
+  `settledrow` on ALL FIVE seeds.
+
+Splitting the prediction into two booleans was her own design and it is why this
+reads as two facts rather than one muddled verdict.
+
+Table stamped PARTIAL, NOT A READING (1 of 4). `t8`, `t2`, `t1` in flight.
+
+## MERCURY RETRACTED A NUMBER AND, MORE IMPORTANTLY, A RATIONALISATION — AND THE CONTROLLER AMPLIFIED IT
+
+The `t*=32` scorer printed 126 atoms where he had committed 128 for
+`argmaxste − argmax`. 128 IS IMPOSSIBLE: the ceiling is `C(2n−1, n) = C(9,5) =
+126`.
+
+Cause: plain `sum()` over `itertools.product` adds the same multiset in different
+orders, and float addition is not associative — two atoms split by ONE ULP
+(`5.551115123125783e-17`). `math.fsum` on a canonically ordered tuple gives
+exactly 126.
+
+His own words, and they are the important part: "Worse than the number: my
+explanation was a rationalisation." He had written that 128 and 126 were
+"different lattices that do not conflict". They are not — 126 is the GENERIC count
+for any five distinct paired deltas, so the agreement was EXPECTED and the
+discrepancy was his bug.
+
+RETRACTION BY THE CONTROLLER: the previous ledger entry recorded "the atom count
+for THIS contrast is 128, not 126. The 126 is settled-softmax, a DIFFERENT
+lattice. The controller conflated them; they are not in conflict." THAT IS
+WITHDRAWN. I did not conflate two lattices — there is one generic count, 126, and
+Mercury's 128 was a float-associativity bug. I accepted his rationalisation,
+wrote it into the ledger as a correction OF MYSELF, and repeated it to the author.
+A correction built on a wrong explanation is worse than the original error because
+it carries the authority of having been checked.
+
+Fixed with the bound as a permanent guard (`n_atoms <= C(2n-1, n)`) plus an
+adversarial test showing naive summation really does return 128. Percentiles move
+by at most 1 ULP, so the `argmaxste − argmax` reconciliation itself STANDS.
+
+OPEN: Mercury has NOT audited previously journalled contrasts for the same
+splitting. The new bound catches future over-counts; it does not retroactively
+scan the journal. Queued.
