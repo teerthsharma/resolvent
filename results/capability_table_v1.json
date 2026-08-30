@@ -1,8 +1,8 @@
 {
  "provenance": {
-  "journal": "C:\\Users\\seal\\Desktop\\New folder (32)\\results\\m3_quintuple_v2.jsonl",
-  "journal_commit": "b8a9ace",
-  "head_commit": "b8a9ace",
+  "journal": "results/m3_quintuple_v2.jsonl",
+  "journal_commit": "551d512",
+  "head_commit": "2eadc43",
   "n_seeds": 5,
   "seeds": [
    0,
@@ -14,7 +14,7 @@
   "n_boot": 10000,
   "boot_seed": 0,
   "task": "negation_scope",
-  "task_source": "scale/m3_quintuple.py:441 calls negation_scope.make_batch directly; the journal does not store a task name",
+  "task_source": "scale/m3_quintuple.py registers --task (m3_quintuple._argparser, choices=list(negation_scope.M3_TASKS), default SHIPPED_TASK) and stamps the task into the journal key; m3_quintuple.task_of reads it back, and a bare key means the shipped task",
   "geometry": "s64_d24_st150_ntr8192_nev512_b21",
   "n_params": 4769,
   "built_by": "scale/capability_table.py",
@@ -26,7 +26,14 @@
    "e3_t2",
    "e3_t32",
    "e3_t8",
-   "negation_scope"
+   "e4prime",
+   "impact",
+   "impact_hetero",
+   "negation_scope",
+   "rag_multihop_t1",
+   "rag_multihop_t2",
+   "rag_multihop_t32",
+   "rag_multihop_t8"
   ],
   "producer": "scale/m3_quintuple.py --cells softmax glance settled twin argmax --seeds 0 1 2 3 4 --ks 8",
   "run_log": "results/m3_quintuple.txt",
@@ -263,6 +270,8 @@
   "e_twin": 1.0019156582048507,
   "peak_settled": 1.0040499225957493,
   "peak_twin": 1.0094313134253716,
+  "log10_peak_settled": 0.0017553070010738684,
+  "log10_peak_twin": 0.0040767727940570235,
   "decision": null,
   "text": "undecided at evidence E_t = 0.9978465225545524 (settled direction), 1.0019156582048507 (twin direction), t = 5 -- STRUCTURAL, not a data outcome: max_attainable(5) = 3.80169140625 < THRESHOLD = 40.0, and MIN_T_MIXTURE = 13, so five seeds cannot cross in either direction whatever the data say.",
   "per_seed": [
@@ -305,5 +314,5 @@
   "weights_for_this_table": 0,
   "reason": "scale/m3_quintuple.py NOW SAVES per-cell weights (results/m3_quintuple_v2_weights/, one .pt per unit carrying the state_dict plus every constructor argument and the mu/sigma standardisation), so the blocker this field used to name is gone for units run from that change onward. IT IS NOT GONE FOR THIS TABLE. The 25 negation_scope units this table is built from were journalled BEFORE the change and carry no tensors; 0 of the 25 weight files this table would need are on disk. Re-running them to emit weights costs 6685.3 s by their own meta.seconds and has not been paid. The only other trained weights on disk are results/phaseD_weights_*.pt, whose metrics.kind is pivot_unsigned -- a different arm family, from scale/trained_projections.py."
  },
- "limits": "What this table does not cover, collected here rather than scattered through the rows. (a) EVERY TASK IN THE CORPUS IS STATIC. Both registered oracles are closed-form functions of the input with no fixed point: `negation_scope.oracle` is `x[:, p, CH_PAYLOAD] * x[:, f, CH_FLIP]` (scale/negation_scope.py:68) and `counter_squared_oracle` is `x[:, :, CH_FLIP].sum(dim=1) ** 2` (scale/negation_scope.py:127). A settling arm has nothing to settle toward on either, so the headline contrast was near-zero by construction and the NO DIFFERENCE verdict is evidence about these tasks, not about settling in general. (b) `counter_squared` HAS ZERO QUINTUPLE ROWS. It is registered in M3_TASKS and runs under `scale/m3_capability.py --task counter_squared`, but `scale/m3_quintuple.py` has no `--task` flag, so every number here is `negation_scope` at one geometry. (c) FIVE SEEDS CANNOT DECIDE ANYTHING ANYTIME-VALIDLY. `eprocess.MIN_T_MIXTURE = 13`; `max_attainable(5) = 3.80169140625` against `THRESHOLD = 40.0`. The intervals here are fixed-sample, read once, and carry no anytime validity. A real gap below roughly 0.05 NRMSE reads NO DIFFERENCE at five seeds whether or not it is real (M3_QUINTUPLE_PREREGISTERED_READING.md:87). (d) CONSEQUENCE FIDELITY (1.7c) IS AN EMPTY COLUMN. It needs trained weights per arm and the quintuple journals metrics only. (e) THE INTERVALS ARE MONTE-CARLO, AND THE PROSE DELIVERABLES CARRY A SECOND FAMILY. At five seeds the paired bootstrap distribution is finite (5**5 = 3125 resamples, 126 distinct values), so the exact percentile is computable and differs from the B=10000 draw: exact `[-0.042903167939657406, +0.03155692900564091]` against Monte-Carlo `[-0.04858658448547344, +0.03155692900564091]` for `settled - twin`. CHECKLIST.md:1167 and STATE.md:19 print the exact pair under the label `B=10000`. One further endpoint, `+0.146551` for `settled - softmax` at CHECKLIST.md:1168 and DONE.md:338, is in NEITHER family: it is absent from all 3125 exact values and from the 97.5th percentile at every Monte-Carlo seed 0..399. It is carried here as an open defect, not adopted. (f) COST IS NOT PRICED. `meta.seconds` in the journal is a contended box and is labelled PROVISIONAL by its producer; no wall-clock number enters this table."
+ "limits": "What this table does not cover, collected here rather than scattered through the rows. (a) EVERY TASK IN THE CORPUS IS STATIC. Both registered oracles are closed-form functions of the input with no fixed point: `negation_scope.oracle` is `x[:, p, CH_PAYLOAD] * x[:, f, CH_FLIP]` (scale/negation_scope.py:68) and `counter_squared_oracle` is `x[:, :, CH_FLIP].sum(dim=1) ** 2` (scale/negation_scope.py:127). A settling arm has nothing to settle toward on either, so the headline contrast was near-zero by construction and the NO DIFFERENCE verdict is evidence about these tasks, not about settling in general. (b) `counter_squared` HAS ZERO QUINTUPLE ROWS, and not for want of a flag. It is registered in M3_TASKS and runs under `scale/m3_capability.py --task counter_squared`; `scale/m3_quintuple.py` now registers `--task` too, and 61 of the 86 rows in `results/m3_quintuple_v2.jsonl` carry an e3 task suffix written through it (e3_t1 16, e3_t2 15, e3_t32 15, e3_t8 15), against 25 bare `negation_scope` keys. `counter_squared` was simply never run under the quintuple. Every number in THIS table is `negation_scope` at one geometry because `read_journal` filters on `m3_quintuple.task_of`, not because the corpus is all the producer can emit. (c) FIVE SEEDS CANNOT DECIDE ANYTHING ANYTIME-VALIDLY. `eprocess.MIN_T_MIXTURE = 13`; `max_attainable(5) = 3.80169140625` against `THRESHOLD = 40.0`. The intervals here are fixed-sample, read once, and carry no anytime validity. A real gap below roughly 0.05 NRMSE reads NO DIFFERENCE at five seeds whether or not it is real (M3_QUINTUPLE_PREREGISTERED_READING.md:87). (d) CONSEQUENCE FIDELITY (1.7c) IS AN EMPTY COLUMN. It needs trained weights per arm and the quintuple journals metrics only. (e) THE INTERVALS ARE MONTE-CARLO, AND THE PROSE DELIVERABLES CARRY A SECOND FAMILY. At five seeds the paired bootstrap distribution is finite (5**5 = 3125 resamples, 126 distinct values), so the exact percentile is computable and differs from the B=10000 draw: exact `[-0.042903167939657406, +0.03155692900564091]` against Monte-Carlo `[-0.04858658448547344, +0.03155692900564091]` for `settled - twin`. CHECKLIST.md:1167 and STATE.md:19 print the exact pair under the label `B=10000`. One further endpoint, `+0.146551` for `settled - softmax` at CHECKLIST.md:1168 and DONE.md:338, is in NEITHER family: it is absent from all 3125 exact values and from the 97.5th percentile at every Monte-Carlo seed 0..399. It is carried here as an open defect, not adopted. (f) COST IS NOT PRICED. `meta.seconds` in the journal is a contended box and is labelled PROVISIONAL by its producer; no wall-clock number enters this table."
 }

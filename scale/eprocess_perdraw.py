@@ -154,6 +154,11 @@ def run(task: str, seeds, cfg: dict, *, ref="twin", arm="settled") -> dict:
     return dict(task=task, t=pair.settled.t, seeds_used=used, missing=missing,
                 e_arm=pair.settled.value, e_ref=pair.twin.value,
                 peak_arm=pair.settled.peak, peak_ref=pair.twin.peak,
+                # `peak_*` saturate to inf past the double range -- this process
+                # exists to push `t` into the thousands, which is exactly where
+                # that happens. The number survives here, beside log10_ceiling.
+                log10_peak_arm=pair.settled.log_peak / math.log(10.0),
+                log10_peak_ref=pair.twin.log_peak / math.log(10.0),
                 decision=dec, void=void,
                 log10_ceiling=log10_max_attainable(pair.settled.t),
                 can_decide=(log10_max_attainable(pair.settled.t)
