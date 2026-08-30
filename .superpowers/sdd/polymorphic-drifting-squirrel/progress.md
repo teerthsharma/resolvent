@@ -2297,3 +2297,97 @@ adversarial record standing behind three of the four she downgraded.
 - The E4-prime ladder values are READ from the dispatch, NOT re-run.
 - The M3 bias was measured at `negation_scope`, NOT at `e2_consequence` where he
   argues it matters — that step is DERIVED.
+
+# THE C1 DECIDING MEASUREMENT IS COMPLETE — 4 OF 4 RUNGS
+
+Merged. `tests/mercury/` 73/73.
+
+| rung | softmax | twinrow | settledrow | clears bar | `settledrow − twinrow` |
+|---|---|---|---|---|---|
+| `t*=32` | 1.003157 | 1.002587 | 1.003214 | none | VOID (row G) |
+| `t*=8` | 1.000933 | 1.000774 | 1.001047 | none | VOID (row G) |
+| `t*=2` | 0.996745 | 0.999082 | 1.000150 | softmax, twinrow | VOID (row G) |
+| `t*=1` | **0.991038** | **0.997688** | **0.999064** | **all three** | **−0.001376, n+ 0/5** |
+
+`t*=1` IS THE ONLY RUNG WHERE THE DECIDING CONTRAST IS CREDITABLE, AND SETTLING
+LOSES. `settledrow − twinrow` = `−0.001376`, CI `[−0.002031, −0.000776]`,
+UNANIMOUS 0/5 — the settling arm carries the higher error on every seed.
+`softmax` beats both ceq arms, also unanimously, by roughly 5x the margin.
+
+Mercury renders NO VERDICT — correctly, it is not his seat.
+
+## THE CONTROLLER'S "UNDERPOWERED" RULING WAS WRONG, AND MEASURABLY SO
+
+| lane | realised `sd_paired` | seeds needed |
+|---|---|---|
+| e3 SCALAR `t*=1` | 0.109199 | **62** |
+| e3 SCALAR `t*=2` | 0.019082 | 2 |
+| **C1 VECTOR `t*=1`** | **0.000841** | **1** |
+
+The `0.019` and `0.109` are THE E3 SCALAR LADDER'S OWN SPREADS — `DONE.md:336`
+records `0.109199` for `e3_t1` and it reproduces the 62 exactly. **C1's realised
+spread is 130x smaller. Every C1 rung needs ONE seed.**
+
+Mercury DID NOT APPLY THE LABEL, on measured grounds.
+
+RULING, against myself: I ruled "run t*=1, label it UNDERPOWERED, state the
+62-seed requirement in the same breath". Venus derived the 62, Mercury reproduced
+it independently from first principles, and I upheld it. THREE OF US VERIFIED THE
+ARITHMETIC AND NONE OF US CHECKED WHETHER THE INPUT SPREAD BELONGED TO THE LANE
+BEING POWERED. It did not - it came from a different corpus. The label is
+WITHDRAWN. t*=1 is the BEST-RESOLVED rung in the table, not the weakest.
+
+FIFTH INSTANCE OF THE CROSS-LANE TRANSFER TYPE, and its cost is INVERTED. The
+previous four priced an arm at another arm's rate. This one POWERED A LANE AT
+ANOTHER LANE'S VARIANCE — and it would have caveated away THE BEST-RESOLVED AND
+MOST DECISIVE RUNG IN THE TABLE. Routed to Saturn: the type's existing entry M-8
+covers cost transfer; this is the same mechanism applied to VARIANCE, and it
+argues for widening the entry rather than adding a sixth.
+
+## Venus's prediction: 4/4 both ways, and the reading is precise
+
+MAGNITUDE half TRUE at every rung — `0.000627` / `0.000272` / `0.001068` /
+`0.001376`, all inside `0.027260`.
+COVERS-ZERO half FALSE at every rung.
+
+Mercury's framing, and it is the correct one:
+
+  "The settling contrast DOES move detectably and unanimously — and by one to two
+   orders LESS than the pre-registered resolution. 'Does not move' is FALSE at the
+   resolution achieved; 'moves less than RESOLUTION_13' is TRUE."
+
+RULING: Venus's decision to split her prediction into two independent booleans is
+what makes this readable. A single-lump prediction would have been scored "wrong"
+and the actual finding - a real, unanimous, reproducible effect that is one to two
+orders below the threshold anyone pre-registered as meaningful - would have been
+lost in the grading. That design choice was hers, made before any data existed.
+
+## What the completed table says, stated once and plainly
+
+1. On the three rungs where the contract predicts hardest — `t*` furthest ABOVE
+   the hop budget of 2 — ALL THREE ARMS FAIL PREDICT-THE-MEAN OUTRIGHT. Row G
+   voids every contrast. Nothing learns.
+2. The ONLY creditable deciding contrast is at `t*=1`, where `t*` sits FURTHEST
+   BELOW the hop budget — THE RUNG THE THEORY PREDICTS LEAST ON.
+3. There, SETTLING LOSES to its own unsettled twin, unanimously.
+4. And SOFTMAX BEATS BOTH ceq arms, unanimously, by about 5x that margin.
+5. The measurement is WELL RESOLVED throughout — one seed sufficed at every rung.
+   This is not an underpowered null.
+
+`Ruling on how this is reported: this is a NEGATIVE RESULT ON THE CEQ ARM in the
+region where the corpus is learnable, and NO RESULT AT ALL in the region the
+theory is about. Both halves must travel together. Reporting only the second would
+hide a real loss; reporting only the first would claim the theory was tested where
+it was not. The corpus is correctly built, the arm reaches 88-100% of the label
+support, the instrument resolves to one seed - and the region where t* exceeds the
+hop budget is unlearnable by every arm at 150 steps and n_train=2048. That last
+clause is the round's open question, not its conclusion.`
+
+## Mercury's stated limits
+
+- Margins are small (`0.001376` against means near `0.99`). SMALLNESS DEFENDS
+  NEITHER SIDE — the intervals exclude zero, and they sit far below the resolution
+  the pre-registration asked for.
+- `sd_paired` rests on FIVE paired differences, FOUR degrees of freedom.
+- The wrapper-kill pattern recurred TWICE; the journal lock prevented a double-run
+  BOTH times.
