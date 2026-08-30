@@ -37,7 +37,15 @@ happens to be present", so the first case where the two come apart is silent.
 | 11 | argmin-equality test | argmin over a **truncated grid** | the location of the minimum | MERCURY it.3 | the axis reported its own boundary as an answer |
 | 12 | HOUSE's draw header | the **stratum** count | the **rule** count | MARS it.3 | advertised 1.0000 coverage; delivered 20 of 61 |
 | 13 | HOUSE's ledger check | a literal-string **grep** | the parsed **event** | Inspector it.3 | reported 0 of 16 reds present |
-| 14 | agent-name filter | one **capitalisation** | the agent | HOUSE it.3 | `Cameron` 108 vs `cameron` 8,940 — an 88× miss |
+| 14 | agent-name filter | one **capitalisation** | the agent | HOUSE it.3 | `Cameron` 108 against `cameron` 9,054 — a filter on the capitalised form sees 1.2% |
+
+> The `cameron` figure above is a **live count** and grows every time any seat logs.
+> Measured 8,940 when the instance was found and 9,054 twenty minutes later; the
+> ratio is the stable part, not the numerator. Quoting a live count in the catalogue
+> of this very defect is instance 14 committed inside its own row — a number keyed on
+> "what the file says now" standing in for "what was measured". Left visible rather
+> than pinned, because the correction is the shortest available statement of the
+> shape.
 
 ## What the catalogue is actually for
 
