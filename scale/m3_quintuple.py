@@ -957,8 +957,12 @@ def main() -> int:
                   f"beat predict-the-mean and is credited with nothing.")
 
     print("\n=== CONTRASTS, paired bootstrap over seeds, B=10000 (G6) ===")
+    # `n+` is the seed-agreement count. At N=5 a CI excluding zero is very
+    # nearly "all five seeds agreed" (5-0 excludes 385/385; 3-2 excludes 0-3.7%),
+    # and the finest two-sided p a 5-seed sign test reaches is 0.0625, not 0.05.
+    # Reading an interval without it hides which regime produced the verdict.
     print(f"{'arm':>10} {'vs':>10} {'k':>4} {'delta':>10} {'ci_lo':>10} "
-          f"{'ci_hi':>10} {'verdict':>15}  note")
+          f"{'ci_hi':>10} {'n+':>5} {'verdict':>15}  note")
     out = {}
     for arm, ref, note in CONTRASTS:
         for k in a.ks:
@@ -978,6 +982,7 @@ def main() -> int:
             out[f"{arm}_vs_{ref}_k{k}"] = "VOID" if void else c["verdict"]
             print(f"{arm:>10} {ref:>10} {k:>4} {c['delta']:>+10.6f} "
                   f"{c['ci_lo']:>+10.6f} {c['ci_hi']:>+10.6f} "
+                  f"{c['n_pos']}/{c['n_seeds']:<3} "
                   f"{'VOID' if void else c['verdict']:>15}  "
                   f"{RIG_NOTE if void else note}")
             if c["verdict"] == "NO DIFFERENCE" and not void:
