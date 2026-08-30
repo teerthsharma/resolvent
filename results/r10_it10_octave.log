@@ -1,0 +1,7 @@
+waiting: 2 sweep procs, seeds 4-7 done=False (15 min)
+waiting: 2 sweep procs, seeds 4-7 done=False (30 min)
+waiting: 0 sweep procs, seeds 4-7 done=False (45 min)
+waiting: 0 sweep procs, seeds 4-7 done=False (60 min)
+box clear and seeds 4-7 complete after 66 min
+it10-octave t*=32 n=65536 (RSS EXTRAPOLATED, not measured): HOST DOES NOT FIT -- needs 9859 MiB (7888 x 1.25 contention margin), only 8808 MiB available. 8808 MiB available of 16091 host RAM (7283 in use). A CPU-only job cannot be saved by a free card: this is the resource it actually spends. Three n=32768 capacity seats want 12.8 GiB of host between them and no per-job gate sees the other two.
+REFUSED at second zero. The octave is unaffordable on this box while anything else holds memory; it is not attempted. Re-run when the host has 9856 MiB free, or reduce the rung.

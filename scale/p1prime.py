@@ -26,7 +26,6 @@ OUT = R / "results"
 # the census somewhere else -- `python scale/p1prime.py HEAD` measures the drift --
 # but the shipped number is the one at PIN.
 PIN = "06a180c"
-REV = next((a for a in sys.argv[1:] if not a.startswith("-")), PIN)
 
 
 def _git(*args, text=True):
@@ -61,78 +60,97 @@ def blobs(rev, paths):
     return out
 
 
-tests = tree_files(REV)
-SRC = blobs(REV, tests)
 
-# A PRODUCTION BUILDER is a callable that manufactures the object production reads.
-# Measured by name against the scale/ package's own exported builder vocabulary.
-BUILDER = re.compile(
-    r"\b(M3_TASKS|TASKS|make_\w*batch|make_batch|build_\w+|draw_\w+|\w+_oracle|oracle"
-    r"|units\(\)|make_\w+|\w+_batch|read_journal|journalled\(\)|Journal\(|load_\w+"
-    r"|run_arm|build_arm|select_pivots|contrast\(|SHIPPED_CASE|shipped_\w+)\b")
+def main(argv: list[str] | None = None) -> int:
+    """The census run. Under a `__main__` guard because this module READS ARGV.
 
-rows = {}
-for t in tests:
-    src = SRC[t]
-    # which scale modules are imported, and under what local alias
-    aliases = set()
-    for m in re.finditer(r"^\s*from\s+scale(?:\.(\w+))?\s+import\s+([^\n#]+)", src, re.M):
-        for piece in m.group(2).replace("(", "").replace(")", "").split(","):
-            piece = piece.strip()
-            if not piece:
+    Before this guard, `REV = next((a for a in sys.argv[1:] ...), PIN)` sat at
+    module level, so importing this file bound the revision under test to
+    whatever happened to be on the command line -- under pytest, a test path --
+    and then ran a full git census against it. The writes at the end were
+    already gated behind `REV == PIN`, added after `python scale/p1prime.py
+    HEAD` silently overwrote both shipped files with HEAD's numbers. That gate
+    stays; this one stops the census running at all on import.
+    """
+    args = sys.argv[1:] if argv is None else argv
+    REV = next((a for a in args if not a.startswith("-")), PIN)
+    tests = tree_files(REV)
+    SRC = blobs(REV, tests)
+
+    # A PRODUCTION BUILDER is a callable that manufactures the object production reads.
+    # Measured by name against the scale/ package's own exported builder vocabulary.
+    BUILDER = re.compile(
+        r"\b(M3_TASKS|TASKS|make_\w*batch|make_batch|build_\w+|draw_\w+|\w+_oracle|oracle"
+        r"|units\(\)|make_\w+|\w+_batch|read_journal|journalled\(\)|Journal\(|load_\w+"
+        r"|run_arm|build_arm|select_pivots|contrast\(|SHIPPED_CASE|shipped_\w+)\b")
+
+    rows = {}
+    for t in tests:
+        src = SRC[t]
+        # which scale modules are imported, and under what local alias
+        aliases = set()
+        for m in re.finditer(r"^\s*from\s+scale(?:\.(\w+))?\s+import\s+([^\n#]+)", src, re.M):
+            for piece in m.group(2).replace("(", "").replace(")", "").split(","):
+                piece = piece.strip()
+                if not piece:
+                    continue
+                name = piece.split(" as ")[-1].strip() if " as " in piece else piece
+                aliases.add(name)
+        for m in re.finditer(r"^\s*import\s+scale\.(\w+)(?:\s+as\s+(\w+))?", src, re.M):
+            aliases.add(m.group(2) or m.group(1))
+
+        # front-door calls: a BUILDER token reached through one of those aliases,
+        # or a bare imported builder name that came from scale
+        front = []
+        for i, line in enumerate(src.splitlines(), 1):
+            if line.lstrip().startswith("#"):
                 continue
-            name = piece.split(" as ")[-1].strip() if " as " in piece else piece
-            aliases.add(name)
-    for m in re.finditer(r"^\s*import\s+scale\.(\w+)(?:\s+as\s+(\w+))?", src, re.M):
-        aliases.add(m.group(2) or m.group(1))
+            for a in aliases:
+                if re.search(r"\b%s\s*[.\[(]" % re.escape(a), line) and BUILDER.search(line):
+                    front.append((i, a, line.strip()[:90]))
+                    break
+            else:
+                if aliases and BUILDER.search(line) and any(re.search(r"\b%s\b" % re.escape(a), line) for a in aliases):
+                    front.append((i, "direct", line.strip()[:90]))
+        rows[t] = {
+            "aliases": sorted(aliases),
+            "front_door": front[:4],
+            "n_front": len(front),
+            "n_tests": len(re.findall(r"^\s*def test_", src, re.M)),
+        }
 
-    # front-door calls: a BUILDER token reached through one of those aliases,
-    # or a bare imported builder name that came from scale
-    front = []
-    for i, line in enumerate(src.splitlines(), 1):
-        if line.lstrip().startswith("#"):
-            continue
-        for a in aliases:
-            if re.search(r"\b%s\s*[.\[(]" % re.escape(a), line) and BUILDER.search(line):
-                front.append((i, a, line.strip()[:90]))
-                break
-        else:
-            if aliases and BUILDER.search(line) and any(re.search(r"\b%s\b" % re.escape(a), line) for a in aliases):
-                front.append((i, "direct", line.strip()[:90]))
-    rows[t] = {
-        "aliases": sorted(aliases),
-        "front_door": front[:4],
-        "n_front": len(front),
-        "n_tests": len(re.findall(r"^\s*def test_", src, re.M)),
-    }
+    callers = sorted(t for t, v in rows.items() if v["n_front"] > 0)
+    print("rev:", REV, "" if REV == PIN else "(NOT the pin -- this number is not the shipped one)")
+    print("test .py files:", len(tests))
+    print("files calling a production builder (front door):", len(callers))
+    print("files with NO front-door call:", len(tests) - len(callers))
 
-callers = sorted(t for t, v in rows.items() if v["n_front"] > 0)
-print("rev:", REV, "" if REV == PIN else "(NOT the pin -- this number is not the shipped one)")
-print("test .py files:", len(tests))
-print("files calling a production builder (front door):", len(callers))
-print("files with NO front-door call:", len(tests) - len(callers))
+    # ONLY THE PIN WRITES. Caught by `git diff` in it.3: an exploratory
+    # `python scale/p1prime.py HEAD` had already overwritten both shipped files with
+    # HEAD's 201/47/154, which is the drift defect wearing a different hat -- the
+    # provenance for a shipped number was silently replaced by a number that is not
+    # shipped. A run at any other rev now prints and writes nothing.
+    if REV == PIN:
+        json.dump(rows, open(OUT / "p1prime_rows.json", "w"), indent=0)
+        (OUT / "p1prime_front_door.txt").write_text(chr(10).join(callers) + chr(10),
+                                                    encoding="utf-8")
+        print("list written:", OUT / "p1prime_front_door.txt")
+    else:
+        print("nothing written: only the pin", PIN, "may overwrite", OUT.name)
 
-# ONLY THE PIN WRITES. Caught by `git diff` in it.3: an exploratory
-# `python scale/p1prime.py HEAD` had already overwritten both shipped files with
-# HEAD's 201/47/154, which is the drift defect wearing a different hat -- the
-# provenance for a shipped number was silently replaced by a number that is not
-# shipped. A run at any other rev now prints and writes nothing.
-if REV == PIN:
-    json.dump(rows, open(OUT / "p1prime_rows.json", "w"), indent=0)
-    (OUT / "p1prime_front_door.txt").write_text(chr(10).join(callers) + chr(10),
-                                                encoding="utf-8")
-    print("list written:", OUT / "p1prime_front_door.txt")
-else:
-    print("nothing written: only the pin", PIN, "may overwrite", OUT.name)
+    #: What AUDIT.md ships, at PIN. The assert below is the whole point of the pin.
+    SHIPPED = (191, 46, 145)
 
-#: What AUDIT.md ships, at PIN. The assert below is the whole point of the pin.
-SHIPPED = (191, 46, 145)
+    if "--demo" in args:
+        assert REV == PIN, "run the self-check on the pin, not on %s" % REV
+        got = (len(tests), len(callers), len(tests) - len(callers))
+        assert got == SHIPPED, "pinned census moved: %s, AUDIT.md ships %s" % (got, SHIPPED)
+        assert tree_files(PIN) == tests, "the pinned file list is not stable"
+        live = len(tree_files("HEAD"))
+        print("demo OK: pin reproduces AUDIT.md %s; HEAD holds %d test files (drift %+d)"
+              % (SHIPPED, live, live - SHIPPED[0]))
+    return 0
 
-if "--demo" in sys.argv:
-    assert REV == PIN, "run the self-check on the pin, not on %s" % REV
-    got = (len(tests), len(callers), len(tests) - len(callers))
-    assert got == SHIPPED, "pinned census moved: %s, AUDIT.md ships %s" % (got, SHIPPED)
-    assert tree_files(PIN) == tests, "the pinned file list is not stable"
-    live = len(tree_files("HEAD"))
-    print("demo OK: pin reproduces AUDIT.md %s; HEAD holds %d test files (drift %+d)"
-          % (SHIPPED, live, live - SHIPPED[0]))
+
+if __name__ == "__main__":
+    sys.exit(main())

@@ -218,3 +218,33 @@ control retrain is low by 1.8×–4.3×.
   the room measures the local card insufficient against C-C. Not pre-authorized.
 - **L-TIME**: every timing quoted from a previous run is labelled INHERITED unless
   independently re-measured in the iteration that quotes it.
+
+---
+
+## Measured input for it.38, from v-main.3M round 10
+
+Item 38 calls for a *"journals replay check at pinned thread count"*. Round 10
+measured what that pinning is worth, so it.38 inherits the number rather than
+re-deriving it.
+
+**The harness is deterministic given `(seed, threads)` and NOT across thread
+counts.** Three cross-thread pairs, same `(t*, n, steps, seed)`, threads 6 vs 8:
+
+| block | drift |
+|---|---|
+| t\*=2 | **2.345e-03** |
+| t\*=8 | 4.911e-04 |
+| t\*=32 | 7.311e-06 |
+
+Use the max. Three consequences for any replay:
+
+1. **A replay at a different thread count cannot reproduce bitwise**, and must not
+   be scored as though it could. L-VALUE's 5e-7 tolerance is **4,690×** tighter
+   than the measured drift.
+2. **Pin per ROW, not per run.** Round 10's own grid was swept at mixed counts
+   (8, 6, 6, 12, 12) and only the per-cell `threads` field made that visible.
+3. **Where a verdict's margin is smaller than the drift, the verdict is
+   thread-count-dependent and must say so.** Worked case: `t*=32` at n=49152
+   clears the bar by 7.00e-05 against a possible 2.345e-03 shift — 33× larger. The
+   *crossing* survives because both compared cells ran at threads=12 and the offset
+   cancels; the *absolute* reading does not.

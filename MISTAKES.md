@@ -767,7 +767,128 @@ declaration.
 
 ---
 
-## The seven checks, before any control ships
+### V-14a. The scope test that condemns every refusal guard
+
+Round 10 mechanized V-14's question as a set census: for each control, compute the
+reachable set `R(control)` against the production domain `D`, and fire iff
+`R n D = empty`. Over 31 controls it fired **19 times and 17 were not defects**.
+
+**A refusal guard is exercised on inputs production cannot emit BECAUSE THAT IS
+WHAT A REFUSAL GUARD IS FOR.** Planting a violation to prove a check can fire
+requires an input the production path would never produce; that is the plant
+working, not a scope failure.
+
+**`R n D = empty` is necessary, not sufficient.** The clause has to be conditioned
+on the control's ROLE, filed before scoring:
+
+- **certifying** -- asserts a property OF PRODUCTION. Must enter through the
+  production path. An empty intersection here is the defect V-14 describes.
+- **excluding** -- proves an instrument REFUSES something. Constructed inputs are
+  correct; its job is to reach a branch, not to describe production.
+- **illustrating** -- neither certifies nor excludes; scored as neither.
+
+**THE REPAIR CARRIES ITS OWN HOLE, AND IT MUST BE STATED WITH IT.** Role is
+*declared, not measurable*. A mislabelled role gets a wrong verdict silently, and
+nothing in the census can detect the mislabelling. The taxonomy converts an
+over-firing rule into a correct rule that depends on an unverifiable input.
+
+**IT ALSO RESOLVES A CONFLICT BETWEEN TWO RULES IN THIS FILE.** V-16's repair --
+and round 10's instance 21 -- says *bind a must-fire to a CONSTRUCTED input* so it
+cannot expire when live data changes. V-14 says a control whose reachable set
+misses production certifies nothing. **A must-fire bound to a constructed input is,
+by construction, a control whose `R` may miss `D`.** Both rules are right and they
+apply to different roles: the first to *excluding* controls, the second to
+*certifying* ones. Without the taxonomy they contradict, and a reader obeying both
+is stuck.
+
+### V-15. The condemning rule with no planted negative
+
+Rule 5 requires a planted **positive** for a reported absence: an instance that
+carries the property, to prove the instrument can find it. That check is
+powerless against a rule that CONDEMNS, because a condemning rule's failure mode
+is firing on the innocent, and every planted positive it fires on is a success.
+
+Round 10 catalogued nineteen instances of one mechanism — a rule keying on a
+proxy instead of the property it names (`R10_MECHANISM.md`). **Seven of the first
+fourteen condemn rather than excuse**, and a planted positive cannot catch any of
+them: they fired enthusiastically, on the wrong thing.
+
+The missing check is the mirror of rule 5. **A rule that condemns needs a planted
+NEGATIVE: an instance that carries the proxy and is innocent of the property.**
+If the rule fires on it, the rule is keyed on the proxy.
+
+Worked example from the same round. `axis_rho` was scored by comparing two
+argmins, and the guard written against it would have fired a RED on `depth` — a
+trend axis whose argmin sits at a grid edge *by construction*, and therefore
+innocent. The allowlist that prevented it was added before `depth` ran, on
+reasoning rather than on a planted negative. Had the order been reversed, a
+correct measurement would have been condemned by a guard written to catch
+condemnation.
+
+### V-16. The instrument that cannot measure, reporting a pass
+
+An instrument has three outcomes, not two: the property holds, the property
+fails, and **it could not tell**. Collapsing the third into either of the first
+two is a defect, and collapsing it into "pass" is the one that ships.
+
+    return int(out) if out.isdigit() else 0     # unreadable -> "nothing is running"
+
+Measured, round 10 iteration 11. A process-count probe mapped every unreadable
+result — empty output under memory pressure, a timeout, a transient failure — to
+`0`, and `0` licensed the next job to allocate. An absence of evidence was
+returned as evidence of absence, in the field a scheduler used to decide whether
+to spend 7.9 GiB. It fired: a second seat launched while the first was live.
+
+**A retry loop does not fix this.** Three consecutive unreadable answers are three
+consecutive zeros; adding attempts to a fail-open predicate keeps it fail-open.
+The two repairs are independent — unknown must be a distinct value that counts as
+*not passing*, and where the reading must persist, it must persist as a *measured*
+value.
+
+The check is a **planted unreadable**: feed the instrument an input it cannot
+measure and confirm it says so. `scale/vram_gate.py` gets this right by
+construction, returning UNKNOWN rather than GREEN when `nvidia-smi` or `psutil`
+is missing — and the fail-open version above was written in the checker that
+decides whether to *call* that gate. Knowing the rule and writing it down is not
+the same as applying it one layer up.
+
+### V-17. The threshold imported out of its units
+
+"Import a threshold that already exists rather than picking one that flatters your
+result" is a good rule and this repo enforces it -- `scale/r10_dual_oracle.py`
+imports `kirchhoff.AGREEMENT_TOL` by **object identity**, so a local re-pick fails
+the self-check. The rule has an unstated precondition, and round 10 paid for it.
+
+Two imports, both principled, one sound:
+
+**Sound.** `rips_gate.FAIL_BAR = 0.9`, defined as "the decoder is doing
+essentially nothing" and already used in that role at `impact.py:1121`, imported
+for a within-split probe clause. Same quantity, same role, same units.
+
+**Not sound.** `delta = 0.5`, taken from the chain task's
+`flipper_dependence > 0.5` clause and applied to a harmonic corpus. Measured:
+`fd_max x |B|` is near-constant at **3.741** across twelve rungs, because one
+boundary node's influence is `~1/|B|`. So `fd >= 0.5` requires `|B| <= 7.5` while
+the corpus runs `|B| = 4..80`. **Ten of twelve rungs fail by construction.** The
+source threshold is worse than inapplicable: the chain's own closed form
+`2/sqrt(t*)` drops below 0.5 at `t* > 16`, so that clause fails on the chain
+itself at `t*=32`.
+
+**THE TEST, and it is one question.** Ask what value the quantity takes under a
+null or trivial predictor.
+
+- **Anchored** -- NRMSE is RMSE over `std(y)`, so the mean predictor reads exactly
+  1.0 for any task at any scale. A threshold in NRMSE means the same thing
+  everywhere and travels.
+- **Not anchored** -- `flipper_dependence` is `|label move| / |label scale|`, whose
+  achievable range is set by the generator's parameters. A threshold in those units
+  is meaningless away from the construction that produced it.
+
+An imported constant carries the authority of having been used before, which is
+the credibility-transfer defect one field over: the number is real, the source is
+real, and neither fact makes it applicable here.
+
+## The ten checks, before any control ships
 
 Condensed from the above; this is the list to run down.
 
@@ -792,6 +913,22 @@ Condensed from the above; this is the list to run down.
    the same check is the design's finest achievable p against the α you intend
    to quote (M-9). A test that cannot reach its own α has already failed.
 
-And one more that costs more than all seven when it is skipped: **state the
+8. **A rule that CONDEMNS needs a planted negative** (V-15) — an instance
+   carrying the proxy and innocent of the property. Rule 5's planted positive
+   proves an instrument *can* fire; only a planted negative proves it fires on
+   the right thing. Ask which direction your rule errs in, and plant against that
+   direction.
+9. **An instrument that cannot measure must say so** (V-16). Give it a planted
+   *unreadable* — a missing tool, an empty response, a timeout — and confirm it
+   reports UNKNOWN rather than a pass. Check that the unknown value is not the
+   same value as the passing one, and that retrying does not launder it.
+
+10. **A threshold travels only if its quantity is anchored** (V-17). Before
+   importing one, ask what value the quantity takes under a null or trivial
+   predictor. A construction-independent constant (NRMSE's 1.0) travels; a ratio
+   calibrated against a specific generator does not. Say which quantity the source
+   measured, not just where the number came from.
+
+And one more that costs more than all ten when it is skipped: **state the
 regime in which your baseline is optimal, and check your task is not in it**
 (D-1).

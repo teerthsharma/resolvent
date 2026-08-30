@@ -35,7 +35,7 @@ THE FOUR PROPERTIES EVERY E-TASK MUST HAVE, each one a test below.
 
 4. THE BAR CALIBRATES, through `calibrate_bar`'s `oracle_fn` / `batch_fn` /
    `feature_fn` hooks, with an EXACT closed-form `flipper_dependence` for every
-   task in the family -- `2 / sqrt(t* + 1)` for the chain, exactly `2.0` for the
+   task in the family -- `2 / sqrt(t*)` for the chain, exactly `2.0` for the
    consequence contrast.
 
 CONTROLS, EVERY ONE OF THEM DRAWN RATHER THAN HAND-BUILT, AND EVERY ONE CHECKED
@@ -273,11 +273,24 @@ def test_the_chain_flipper_dependence_is_its_closed_form(t_star):
     """Negating the driver at the head of the chain moves the label by exactly
     `2 |b_head|`, because the path weight from the head to the query is a
     product of Rademacher coefficients and has modulus 1. The label is
-    `N(0, t*+1)` exactly, so
+    `N(0, t*)` exactly, so
 
-        flipper_dependence = 2 E|N(0,1)| / E|N(0, t*+1)| = 2 / sqrt(t* + 1)
+        flipper_dependence = 2 E|N(0,1)| / E|N(0, t*)| = 2 / sqrt(t*)
 
-    with no constant fitted and no threshold chosen."""
+    with no constant fitted and no threshold chosen.
+
+    THIS DOCSTRING DERIVED THE t*+1 FORM WHILE THE ASSERTION BELOW USED t*, until
+    R10 it.16. The assertion was right and the derivation was wrong: the
+    operator's nilpotency index is `t*+1`, but `b[s-1] = 0` kills the `m=0` term,
+    so the label sums `t*` drivers. Measured at it.13 over K=200 draws per block:
+    mean Var(y) = 2.002719 / 7.984942 / 32.069818, excluding `t*+1` by 9.8
+    half-widths at `t*=32`.
+
+    The disagreement was load-bearing in one direction only. Nothing here would
+    have changed had the assertion been believed; had the DERIVATION been believed
+    and the code moved to `t*+1`, `flipper_dependence` goes from 1.4142 to 1.1547,
+    which is 0.2465 from the shipped 1.4012436552 against `flipper_tol = 0.05`,
+    and the `t*=2` block aborts on its own calibration bar."""
     n = N_FLOOR[t_star]
     cal = NS.calibrate_bar(n=n, s=S_DEFAULT, d=D_DEFAULT, steps=1,
                            batch_fn=NS.M3_TASKS[_chain_task(t_star)][0],

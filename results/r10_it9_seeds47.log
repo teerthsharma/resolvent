@@ -1,0 +1,32 @@
+seeds 1-3 idle for 60s after 1 min; starting seeds 4-7
+=== t*=8 seeds 4 5 6 7 at n=32768 ===
+=== e3_t8 softmax s=64 d=24 n_eval=4096 threads=12 torch 2.5.1+cu121 ===
+  1-hop truncation ceiling at t*=8: NRMSE 0.935414 (softmax hop budget = 1)
+  BAR CALIBRATED -- BAR CALIBRATED
+  t*= 8 n= 32768 seed=4 steps=  150  eval NRMSE=0.978695  [LEARNS]  boot[0.9726,0.9855]  545.3s
+  t*= 8 n= 32768 DROPPED steps=[600, 2400, 9600] (unaffordable)
+    (547.1s for n=32768 seed=4)
+  t*= 8 n= 32768 seed=5 steps=  150  eval NRMSE=0.977786  [LEARNS]  boot[0.9709,0.9852]  581.8s
+    (583.6s for n=32768 seed=5)
+  t*= 8 n= 32768 seed=6 steps=  150  eval NRMSE=0.972677  [LEARNS]  boot[0.9658,0.9813]  570.2s
+    (572.2s for n=32768 seed=6)
+  t*= 8 n= 32768 seed=7 steps=  150  eval NRMSE=0.973294  [LEARNS]  boot[0.9648,0.9804]  441.8s
+    (443.3s for n=32768 seed=7)
+WROTE C:\Users\seal\Desktop\New folder (32)\results\r10_it8_capacity_softmax_t8.jsonl
+
+=== t*=32 seeds 4 5 6 7 at n=32768 ===
+=== e3_t32 softmax s=64 d=24 n_eval=4096 threads=12 torch 2.5.1+cu121 ===
+  1-hop truncation ceiling at t*=32: NRMSE 0.984251 (softmax hop budget = 1)
+  BAR CALIBRATED -- BAR CALIBRATED
+  t*=32 n= 32768 seed=4 steps=  150  eval NRMSE=1.003313  [NO READING]  boot[0.9988,1.0075]  333.1s
+  t*=32 n= 32768 DROPPED steps=[600, 2400, 9600] (unaffordable)
+    (334.2s for n=32768 seed=4)
+  t*=32 n= 32768 seed=5 steps=  150  eval NRMSE=1.008121  [NO READING]  boot[1.0045,1.0123]  321.9s
+    (322.9s for n=32768 seed=5)
+  t*=32 n= 32768 seed=6 steps=  150  eval NRMSE=1.006066  [NO READING]  boot[1.0026,1.0102]  361.0s
+    (362.0s for n=32768 seed=6)
+  t*=32 n= 32768 seed=7 steps=  150  eval NRMSE=1.003698  [NO READING]  boot[0.9991,1.0082]  344.4s
+    (345.4s for n=32768 seed=7)
+WROTE C:\Users\seal\Desktop\New folder (32)\results\r10_it8_capacity_softmax_t32.jsonl
+
+seeds 4-7 complete for both blocks

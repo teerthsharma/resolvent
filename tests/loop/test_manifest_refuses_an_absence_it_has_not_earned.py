@@ -135,15 +135,33 @@ def test_the_published_cell_carries_every_declared_identity_field():
     """THE DEFECT, on the one cell the contract pre-seeds as this module's proof."""
     if not PUBLISHED_UNIT.exists():
         pytest.skip("published cell not fetched here")
-    missing = absent_fields(load(PUBLISHED_UNIT))
-    assert not missing, (
-        f"the published cell omits declared CONFIG_FIELDS {missing}. "
-        "`manifest()` drops them silently at "
-        "`cfg = {k: record[k] for k in CONFIG_FIELDS if k in record}`, so the cell's "
-        "identity was computed over "
-        f"{len(IM.CONFIG_FIELDS) - len(missing)} of {len(IM.CONFIG_FIELDS)} fields "
-        "and no reader is told. Either record the coverage in the manifest, or "
-        "refuse a record missing a declared field."
+    record = load(PUBLISHED_UNIT)
+    missing = absent_fields(record)
+    # THE DEFECT IS AN UNDECLARED ABSENCE, NOT AN ABSENCE. This assertion was
+    # `assert not missing`, and its own message offered two remedies -- "record
+    # the coverage in the manifest, or refuse a record missing a declared field".
+    # The first could never turn it green: the check reads the RECORD, and
+    # recording coverage in the manifest does not add a field to a stored .pt.
+    # A remedy with no code path to green is the defect SATURN found in the attic
+    # guard, committed here in a guard about unearned absences.
+    #
+    # The substance was always "identity computed over 15 of 16 fields AND NO
+    # READER IS TOLD". So the check is on the telling. `manifest()` now returns
+    # `absent`, outside the hash inputs so no published hash moves, and the
+    # remedy the message names is reachable. Rewriting the shipped .pt records to
+    # carry `device` is NOT an option -- they are published artifacts under L-G2.
+    declared = IM.manifest(record, callables=(), params={}).get("absent")
+    assert declared is not None, (
+        "`manifest()` does not report which declared fields the record lacked, so "
+        f"a cell whose identity was computed over {len(IM.CONFIG_FIELDS) - len(missing)} "
+        f"of {len(IM.CONFIG_FIELDS)} fields is indistinguishable from one computed "
+        "over all of them. Add an `absent` key, outside the hash inputs."
+    )
+    assert sorted(declared) == sorted(missing), (
+        f"the manifest declares absent={sorted(declared)} but the record actually "
+        f"lacks {sorted(missing)}. A coverage report that does not match the "
+        "coverage is worse than none: it converts an unearned absence into a "
+        "documented one."
     )
 
 

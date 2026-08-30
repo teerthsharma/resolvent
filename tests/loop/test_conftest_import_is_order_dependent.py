@@ -30,20 +30,33 @@ while the defect is present and green only when `conftest` stops being a shared
 global name. It is deliberately the CHEAPEST reproduction: two files, collect
 only, no test bodies executed.
 
-THE ROUTE, for whoever repairs it. Two options, both small:
+THE ROUTE, for whoever repairs it. Two options, PRICED AGAINST THE SCAN rather
+than against the stale five-file list this once carried:
   (a) give the shared symbols a module of their own -- `tests/chase/_chase_env.py`
-      holding `DEVICES`, `HAS_CUDA`, `requires_triton`, `run_isolated`, imported
-      by `conftest.py` for fixture use and by the five files directly. One new
-      file, six edited import lines, and `conftest` stops being importable by
-      name at all.
+      holding `_has_cuda`, `HAS_CUDA`, `DEVICES`, `has_triton`, `HAS_TRITON`,
+      `requires_cuda`, `requires_triton` and `run_isolated`, imported by
+      `conftest.py` for fixture use and by the offenders directly. The name cannot
+      be shadowed because only `tests/chase/` defines it, whereas `conftest` is
+      claimed by 26 directories. Measured cost: 1 new module extracted from a
+      291-line `conftest.py` whose fixtures are interleaved with these helpers,
+      plus 11 import sites across 10 files (7 live, 3 under `attic/`), of which
+      6 are function-local.
   (b) add `__init__.py` to the 24 directories that lack one, making the test tree
       a package so `conftest` is never a top-level module. 24 new empty files,
       zero source edits, but it changes rootdir semantics for every test.
-(a) is the smaller blast radius and the one this file's failure points at.
+
+(a) remains the smaller blast radius. NOT ATTEMPTED HERE, deliberately: extracting
+interleaved helpers out of a conftest is a change whose only real verification is a
+full-suite run on a quiet tree, and this guard was repaired while a training job and
+two agents held the machine. Attempting it here would have meant either a slow
+verification or an unverified edit to the collection machinery every chase test
+depends on. The finding is bound and correctly sized; the repair is priced and
+deferred, which is a different thing from being forgotten.
 """
 from __future__ import annotations
 
 import pathlib
+import re
 import subprocess
 import sys
 
@@ -57,14 +70,36 @@ ROOT = pathlib.Path(__file__).resolve().parents[2]
 IMPORTER = "tests/chase/test_kernel_contracts.py"
 SHADOWER = "tests/w6/test_w6_attention.py"
 
-# Every file that reaches conftest as a plain module rather than through pytest.
-BARE_CONFTEST_IMPORTERS = [
-    "tests/chase/test_kernel_contracts.py",
-    "tests/chase/test_multizoom_cost.py",
-    "tests/chase/test_multizoom_kernel.py",
-    "tests/chase/test_multizoom_r5.py",
-    "tests/chase/test_rollback_flex_attention.py",
-]
+def bare_conftest_importers() -> list[str]:
+    """Every tracked test file that reaches `conftest` as a plain module.
+
+    SCANNED, NOT LISTED. This was a hardcoded list of five paths, and by the time
+    it was re-read the tree had moved past it in both directions: three of the
+    five (`test_multizoom_{cost,kernel,r5}.py`) had been retired to `attic/` at
+    iteration 4, and FIVE live offenders were never in the list at all --
+    `test_ceq_hub_package.py`, `test_hf_shipping.py`,
+    `test_hub_package_hardening.py`, `test_schedule_rebuild.py`,
+    `test_stochastic_P.py`. So the guard condemned five files while five more went
+    unreported, which is MISTAKES.md V-14: a control that validates against a
+    fixed roster instead of the actual reach.
+
+    Function-local imports count. `from conftest import X` inside a test body
+    resolves through `sys.path` at call time exactly as a module-level one does,
+    so deferring it changes when the collision happens, not whether it can.
+    """
+    roots = [ROOT / "tests", ROOT / "attic" / "tests"]
+    found = []
+    for root in roots:
+        if not root.exists():
+            continue
+        for f in sorted(root.rglob("test_*.py")):
+            text = f.read_text(encoding="utf-8", errors="replace")
+            if re.search(r"^\s*(from conftest import|import conftest)", text, re.M):
+                found.append(str(f.relative_to(ROOT)).replace("\\", "/"))
+    return found
+
+
+BARE_CONFTEST_IMPORTERS = bare_conftest_importers()
 
 
 def collect(*rel_paths: str) -> subprocess.CompletedProcess[str]:
@@ -159,10 +194,16 @@ def test_no_test_file_imports_conftest_as_a_bare_module(path: str):
             "A named offender that exists nowhere is not a repair; say where it went."
         )
     src = found.read_text(encoding="utf-8")
+    # `.lstrip()` before matching. Without it this assertion saw only UNINDENTED
+    # imports while `bare_conftest_importers()` scans with `^\s*`, so five of the
+    # ten parametrised files were collected and could never fail -- the selector
+    # and the check disagreeing about what counts, which makes half the cases
+    # vacuous. A function-local `from conftest import X` resolves through
+    # `sys.path` at call time exactly as a module-level one does.
     offenders = [
         line.strip()
         for line in src.splitlines()
-        if line.startswith(("from conftest import", "import conftest"))
+        if line.lstrip().startswith(("from conftest import", "import conftest"))
     ]
     assert not offenders, (
         f"{path} reaches conftest as a top-level module: {offenders}. "

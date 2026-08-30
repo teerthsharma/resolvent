@@ -280,3 +280,20 @@ What it changed is that 40 rows are now known not to be evidence, 12 rows that w
 about to be filed as dead weight are back — including the prior-art defence of the
 whole contribution — and three failures against named must-beat controls are now
 visible instead of buried in a sweep nobody had run.
+
+---
+
+## Note added at it.20: two paths in this record have moved
+
+`scale/window_sweep.py` and `scale/sign_dependence_probe.py` were retired to
+`attic/` by iteration 4's P0.3 move (commit `228a048`, "Follow the shadower
+through the attic move"). Both files still exist, at `attic/scale/...`.
+
+**The paths are left as written.** They were correct when this record was made,
+and rewriting them would make the record claim knowledge of a move that had not
+happened yet. A reader following either path should look under `attic/` — which is
+what `tests/loop/`'s guards do, via a `resolve()` that checks the original location
+and the attic before reporting a file missing.
+
+Verified at it.20 by scanning all thirteen R10 records for file references: 87
+checked, 85 resolve directly, and these two resolve under `attic/`.

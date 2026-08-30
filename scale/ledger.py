@@ -100,6 +100,43 @@ def _agent(event: dict[str, Any]) -> str | None:
     return raw.lower() if isinstance(raw, str) else None
 
 
+def _iteration(event: dict[str, Any]) -> int | None:
+    """The event's iteration as an INT, across both spellings in the file.
+
+    Measured round 10 iteration 14: 10 events carry `iteration` as an int (1, 2,
+    8, 9) and 55 carry it as the string form `"r10.it9"`. A reader filtering
+    `e["iteration"] == 9` sees the first ten and none of the fifty-five; a reader
+    matching `"r10.it9"` sees the reverse. That is the `state`/`status` split this
+    module was written for and the `Cameron`/`cameron` split it measures, in a
+    third field -- and this time the string form was introduced by HOUSE, who had
+    read both of those findings before writing it.
+
+    Returns None when no iteration is recorded or the string carries no digits,
+    so an unparseable tag is distinguishable from an absent one by the caller
+    passing an explicit `iteration=`; it never silently matches.
+    """
+    raw = event.get("iteration")
+    if isinstance(raw, int):
+        return raw
+    if isinstance(raw, str):
+        # `rpartition` returns the WHOLE string in slot [2] when the separator is
+        # absent, so harvesting digits unconditionally read "phase-0" as iteration
+        # 0 -- a string carrying no iteration marker silently matching a real
+        # iteration. Caught by this module's own must-fire on first run. Require
+        # the marker to have been found before reading anything after it.
+        head, marker, rest = raw.rpartition("it")
+        if not marker:
+            return None
+        digits = "".join(c for c in rest if c.isdigit())
+        return int(digits) if digits else None
+    return None
+
+
+def at_iteration(n: int) -> list[dict[str, Any]]:
+    """Every event recorded at iteration `n`, whichever spelling it used."""
+    return [e for e in read() if _iteration(e) == n]
+
+
 def tests(agent: str | None = None, status: str | None = None) -> list[dict[str, Any]]:
     """Test events, optionally filtered by normalised agent and normalised status."""
     want_status = status.lower() if status else None
@@ -175,6 +212,16 @@ def demo() -> None:
     assert _agent({}) is None, "an agentless event must match no agent filter"
     folded = len(tests(agent="cameron", status="red"))
     assert folded >= 880, f"agent folding lost events: {folded}"
+
+    # The iteration-field type split, measured: an int filter sees ten events and
+    # a string filter sees fifty-five, and neither sees the other set.
+    assert _iteration({"iteration": 9}) == 9, "the reader cannot fold the int form"
+    assert _iteration({"iteration": "r10.it9"}) == 9, "the reader cannot fold the string form"
+    assert _iteration({"iteration": "r10.it14"}) == 14, "multi-digit iterations are lost"
+    assert _iteration({}) is None and _iteration({"iteration": "phase-0"}) is None, (
+        "an absent or digit-free iteration must be None, never a silent match")
+    folded = len(at_iteration(9))
+    assert folded >= 2, f"iteration folding found only {folded} events at it.9"
 
     bad = unparseable()
     print(f"demo OK: {len(events):,} events, {len(reds)} red, "

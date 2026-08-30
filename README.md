@@ -186,8 +186,10 @@ The construction is deliberately nilpotent rather than contractive: the sub-diag
 zeroed at and before `head = s − 1 − t*`, so `A` is nilpotent of index `t* + 1` on the read
 coordinate and the resolvent *terminates* instead of converging. A contraction would make
 `t*` a tolerance, and it has to be a hop count. Coefficients are Rademacher and drivers
-Gaussian, so the label is exactly `N(0, t*+1)` — which is what puts the truncation error in
-closed form with no constant fitted. Generator `make_equilibrium_batch` and oracle
+Gaussian, so the label is exactly `N(0, t*)` — which is what puts the truncation error in
+closed form with no constant fitted. (The operator's nilpotency index is `t*+1`, but
+`b[s-1] = 0` kills the `m=0` term, so the label sums `t*` drivers. Measured at R10 it.13:
+mean Var(y) = 2.002719 / 7.984942 / 32.069818 at `t*` = 2 / 8 / 32.) Generator `make_equilibrium_batch` and oracle
 `equilibrium_oracle` in `scale/negation_scope.py`; the closed form is executable as
 `ceiling(t_star, hops)` in `scale/e_ladder.py`; the check that the whole family exists for
 is `tests/cameron/test_m3_etasks.py::test_a_fixed_k_hop_truncation_cannot_get_the_chain_label`,

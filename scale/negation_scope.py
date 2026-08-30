@@ -364,8 +364,32 @@ def make_equilibrium_batch(n: int, s: int, d: int, *, t_star: int | None = None,
 
     THE COEFFICIENTS ARE RADEMACHER, NOT GAUSSIAN, AND THE DRIVERS ARE GAUSSIAN.
     `|a_i| = 1` exactly inside the band, so every path weight has modulus 1 and
-    the label is `N(0, t_star + 1)` EXACTLY -- which is what puts the truncation
-    error and the flipper dependence in closed form with no constant fitted. The
+    the label is `N(0, t*)` EXACTLY -- which is what puts the truncation error
+    and the flipper dependence in closed form with no constant fitted.
+
+    THIS SENTENCE NAMED THE VARIANCE AS `t_star + 1` UNTIL R10 it.13, AND IT WAS
+    THE ONLY SITE THAT DID. (Written that way deliberately: quoting the old text
+    in full `N(0, ...)` form would make this paragraph read as a second, live
+    assertion of the wrong law to any scanner, and the guard named below fired on
+    exactly that when this correction was first drafted.) The nilpotency index above is `t_star + 1`, and the variance
+    was read off that index -- but `b[s-1] = 0`, added to pass the 0-step RED
+    gate, kills the `m = 0` term, so the label is a sum of `t*` drivers and not
+    `t*+1`. Five other sites in this file (`:419`, `:421`, `:528`, `:649`,
+    `:651`) already said `t*`, as does every executable line, so this was one
+    stale sentence against the rest of the file.
+
+    MEASURED, not argued: SATURN's it.13 binding, K=200 draws per block, gives
+    mean Var(y) = 2.002719 / 7.984942 / 32.069818 at `t*` = 2 / 8 / 32. At
+    `t*=32` the CI covers `t*` and excludes `t*+1` by 9.8 half-widths.
+
+    CORRECTING IT WAS NOT COSMETIC, AND THE DIRECTION MATTERS. Every reference
+    line the round's grid is scored against -- the 1-hop ceiling
+    `sqrt((t*-1)/t*)` and the calibration band `2/sqrt(t*)` -- follows from
+    `Var(y) = t*`. Had this sentence been "repaired" the other way, by moving the
+    CODE to `t*+1`, `flipper_dependence` would go from `2/sqrt(2) = 1.4142` to
+    `2/sqrt(3) = 1.1547`, which is 0.2465 from the shipped 1.4012436552 against
+    `flipper_tol = 0.05`, and the `t*=2` block would abort on its calibration bar.
+    Guarded by `tests/loop/test_the_variance_law_is_stated_once.py`. The
     operator is therefore NILPOTENT rather than a norm contraction, and that is
     deliberate: a contraction would make `t*` a tolerance, and E3 needs it to be
     a hop count. Making the drivers Rademacher too would collapse the label to a

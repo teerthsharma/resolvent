@@ -1,0 +1,10 @@
+--- wave B t*=2
+  t*= 2 n= 32768 seed=0 steps=  150  eval NRMSE=0.874834  [LEARNS]  boot[0.8620,0.8903]  617.7s
+WROTE C:\Users\seal\Desktop\New folder (32)\results\r10_it8_capacity_softmax_t2.jsonl
+--- wave B t*=8
+  t*= 8 n= 32768 seed=0 steps=  150  eval NRMSE=0.972372  [LEARNS]  boot[0.9641,0.9814]  602.9s
+WROTE C:\Users\seal\Desktop\New folder (32)\results\r10_it8_capacity_softmax_t8.jsonl
+--- wave B t*=32
+  t*=32 n= 32768 seed=0 steps=  150  eval NRMSE=1.006066  [NO READING]  boot[1.0033,1.0094]  681.5s
+WROTE C:\Users\seal\Desktop\New folder (32)\results\r10_it8_capacity_softmax_t32.jsonl
+WAVE B COMPLETE

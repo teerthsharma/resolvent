@@ -1,0 +1,21 @@
+=== e3_t32 softmax s=64 d=24 n_eval=4096 threads=12 torch 2.5.1+cu121 ===
+  1-hop truncation ceiling at t*=32: NRMSE 0.984251 (softmax hop budget = 1)
+  BAR CALIBRATED -- BAR CALIBRATED
+  t*=32 n= 49152 seed=0 steps=  150  eval NRMSE=0.999940  [LEARNS]  boot[0.9957,1.0049]  523.1s
+  t*=32 n= 49152 DROPPED steps=[600, 2400, 9600] (unaffordable)
+    (525.5s for n=49152 seed=0)
+  t*=32 n= 49152 seed=1 steps=  150  eval NRMSE=0.995362  [LEARNS]  boot[0.9913,0.9997]  510.9s
+    (512.4s for n=49152 seed=1)
+  t*=32 n= 49152 seed=2 steps=  150  eval NRMSE=0.998811  [LEARNS]  boot[0.9954,1.0034]  516.5s
+    (518.1s for n=49152 seed=2)
+  t*=32 n= 49152 seed=3 steps=  150  eval NRMSE=1.000584  [NO READING]  boot[0.9965,1.0050]  532.1s
+    (533.6s for n=49152 seed=3)
+  t*=32 n= 49152 seed=4 steps=  150  eval NRMSE=1.000205  [NO READING]  boot[0.9954,1.0050]  506.0s
+    (507.7s for n=49152 seed=4)
+  t*=32 n= 49152 seed=5 steps=  150  eval NRMSE=0.998849  [LEARNS]  boot[0.9952,1.0028]  510.7s
+    (512.1s for n=49152 seed=5)
+  t*=32 n= 49152 seed=6 steps=  150  eval NRMSE=1.000233  [NO READING]  boot[0.9970,1.0040]  501.6s
+    (503.2s for n=49152 seed=6)
+  t*=32 n= 49152 seed=7 steps=  150  eval NRMSE=0.996743  [LEARNS]  boot[0.9931,1.0013]  508.0s
+    (509.6s for n=49152 seed=7)
+WROTE C:\Users\seal\Desktop\New folder (32)\results\r10_it8_capacity_softmax_t32.jsonl

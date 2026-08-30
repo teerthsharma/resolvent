@@ -124,6 +124,14 @@ def test_the_manifest_is_deterministic_and_not_a_constant(record):
     ("d_model", 32),              # absent from the key
     ("cell", "twin"),             # tgate-under-sgate's-name, the headline case
     ("task", "e3_t2"),            # a different corpus under the same arm
+    # Added at R10 it.14, bound by
+    # tests/loop/test_identity_manifest_covers_every_beyond_key_field.py, which
+    # was RED because `CONFIG_FIELDS` declares these two as collision-bearing --
+    # "a field two different arms can collide on, which is the whole defect" --
+    # and no case here mutated either. The guard may well have worked; it was
+    # untested, and an untested guard is the vacuity this campaign catalogues.
+    ("kind", "pivot_signed"),     # a different ARM under one cell name
+    ("torch_version", "9.9.9+cpu"),   # the same arithmetic under a different object
 ])
 def test_mutating_one_config_field_makes_the_refusal_fire(record, field, new):
     """RED-first, must-fire seen: mutate one field, the refusal must fire and

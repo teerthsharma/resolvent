@@ -138,6 +138,16 @@ def manifest(record: dict, *, callables, params, rng_plan: dict | None = None) -
     `hash` that a table cell stores.
     """
     cfg = {k: record[k] for k in CONFIG_FIELDS if k in record}
+    #: WHICH DECLARED FIELDS THIS RECORD DID NOT CARRY. The comprehension above
+    #: drops a missing field silently, so a cell whose identity was computed over
+    #: 15 of 16 declared fields was indistinguishable from one computed over all
+    #: 16 -- an absence the manifest had not earned. Measured: every shipped
+    #: weight record omits `device`. Reported, not raised: refusing would
+    #: invalidate every stored manifest, and the fields that ARE present still
+    #: identify the cell. `absent` is deliberately OUTSIDE the hash inputs below
+    #: (which combine only config/code/shapes/rng), so adding it cannot move a
+    #: published hash.
+    absent = [k for k in CONFIG_FIELDS if k not in record]
     plan = RNG_PLAN if rng_plan is None else rng_plan
 
     shapes = [(k, tuple(v.shape)) for k, v in params.items()]
@@ -152,7 +162,7 @@ def manifest(record: dict, *, callables, params, rng_plan: dict | None = None) -
     shape = _sha(_canon(shapes))
     rng = _sha(_canon(plan), values.encode())
     return {"config": config, "code": code, "shapes": shape, "rng": rng,
-            "values": cfg, "plan": plan,
+            "values": cfg, "absent": absent, "plan": plan,
             "hash": _sha(config.encode(), code.encode(), shape.encode(),
                          rng.encode())}
 

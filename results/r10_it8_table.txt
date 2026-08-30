@@ -1,0 +1,35 @@
+=== R10 P1a -- SOFTMAX CAPACITY, e3 chain family, s=64 d=24 n_eval=4096, 8 threads ===
+bar: NRMSE < 1.0 (predict-the-mean). NO READING = did not clear it.
+--  = cell not run (priced and named in results/r10_it8_priced_dag.txt)
+
+--- t* = 2   (softmax hop budget 1; best possible NRMSE for a 1-hop model = 0.707107) ---
+steps                  n_train=2048              n_train=8192             n_train=32768
+150              0.9523 LEARNS n=8         0.8880 LEARNS n=1         0.8748 LEARNS n=1
+600          1.3337 NO READING n=1     1.0117 NO READING n=1              -- (dropped)
+2400         1.6105 NO READING n=1              -- (dropped)              -- (dropped)
+9600         1.6871 NO READING n=1              -- (dropped)              -- (dropped)
+
+--- t* = 8   (softmax hop budget 1; best possible NRMSE for a 1-hop model = 0.935414) ---
+steps                  n_train=2048              n_train=8192             n_train=32768
+150          1.1241 NO READING n=8     1.0251 NO READING n=1         0.9724 LEARNS n=1
+600          1.4970 NO READING n=1     1.1260 NO READING n=1              -- (dropped)
+2400         1.9205 NO READING n=1              -- (dropped)              -- (dropped)
+9600         2.2541 NO READING n=1              -- (dropped)              -- (dropped)
+
+--- t* = 32   (softmax hop budget 1; best possible NRMSE for a 1-hop model = 0.984251) ---
+steps                  n_train=2048              n_train=8192             n_train=32768
+150          1.1537 NO READING n=8     1.0272 NO READING n=1     1.0061 NO READING n=1
+600          1.3471 NO READING n=1     1.1143 NO READING n=1              -- (dropped)
+2400         1.9939 NO READING n=1              -- (dropped)              -- (dropped)
+9600         2.2384 NO READING n=1              -- (dropped)              -- (dropped)
+
+=== SEED CIs (bootstrap over seeds, B=10^4) ===
+  t*=2   steps=150   n=2048    seeds=8  mean=0.952349  sd=0.010101  CI95=[0.946161,0.959054]  excludes 1.0: YES  sign floor 2*2^-8=0.0078
+  t*=8   steps=150   n=2048    seeds=8  mean=1.124057  sd=0.012204  CI95=[1.116245,1.131436]  excludes 1.0: NO  sign floor 2*2^-8=0.0078
+  t*=32  steps=150   n=2048    seeds=8  mean=1.153720  sd=0.041984  CI95=[1.130700,1.183720]  excludes 1.0: NO  sign floor 2*2^-8=0.0078
+
+=== VERDICT ===
+  region LEARNABLE iff at least one cell reads NRMSE < 1.0: LEARNABLE
+  t*=2   LEARNABLE -- best 0.874834 at steps=150 n=32768 (1 seed(s)); 1-hop ceiling 0.707107
+  t*=8   LEARNABLE -- best 0.972372 at steps=150 n=32768 (1 seed(s)); 1-hop ceiling 0.935414
+  t*=32  NO READING in every cell run -- the region is UNTESTED here, not refuted.

@@ -102,7 +102,16 @@ def test_the_reader_finds_the_parametrized_cases_at_all():
     for a scan that could not descend to where its values lived."""
     got = mustfire_fields()
     assert got, "read zero parametrized fields; the reader is broken, not the coverage"
-    assert got == {"beta", "n_neumann", "d_model", "cell", "task"}, (
+    # PINNED PREMISE, updated at R10 it.14. It read
+    # {"beta", "n_neumann", "d_model", "cell", "task"} until `kind` and
+    # `torch_version` were added to the mutation list -- the very repair the
+    # `test_a_collision_bearing_field_has_a_must_fire` cases below were RED to
+    # demand. This assertion fired on that repair, which is the behaviour wanted:
+    # a guard whose premise silently absorbs a change to the thing it measures is
+    # a guard that cannot tell a repair from a regression. Both cases pass, so the
+    # refusal genuinely fires for these two fields and names the one that moved.
+    assert got == {"beta", "n_neumann", "d_model", "cell", "task",
+                   "kind", "torch_version"}, (
         f"the must-fire list changed to {sorted(got)}; update this file's premise "
         "before trusting its verdict"
     )
