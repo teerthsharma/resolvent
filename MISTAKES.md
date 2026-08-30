@@ -199,6 +199,42 @@ time, in the builder, not in the reading.
 
 ---
 
+### V-13. A search whose walk includes nested checkouts
+
+The sign-flip of V-7, found by the same discipline that V-7's rule installed.
+`tests/deimos/test_deimos_r9_iteration1.py` asked "does `return_residual` appear
+anywhere outside its own definition" with `root.rglob("*.py")`, excluding only
+`.git` and `node_modules`. This repository keeps every agent's worktree nested
+under `.claude/worktrees/`, each a **full copy of the tree** — nine of them as
+this is written (`git worktree list` shows ten entries, the tenth being the
+primary checkout). The walk therefore descended into every sibling worktree's own
+`ceq/nash.py`. Deimos measured **12 hits — 10 phantom copies, 1 the test file
+quoting the symbol, 1 the real file.** Re-counting today gives nine phantom
+copies, not ten, which is the second half of the defect: **the wrong number is
+not even stable**, because it tracks how many agents happen to hold a worktree
+at the moment the search runs.
+
+The finding being made is an *absence* claim — "nothing reads this residual" —
+so an over-finding search inverts it into a false *presence*. The search
+returned twelve files against a tracked truth of one, and **ten of the twelve
+were copies of the very file being asked about**, so the evidence that looked
+like "this symbol is used all over the tree" was the definition counted eleven
+times. Deimos's own line for it, now in the fixed test: *"A search that
+over-finds is the same failure as one that under-finds, sign flipped."*
+
+The repaired test scopes to `git ls-files -- '*.py'` and skips itself
+(`tests/deimos/test_deimos_r9_iteration1.py:265-291`), and asserts the hit list
+equals exactly `[ceq/nash.py]` — so a future reader that starts consuming the
+residual fails the test rather than quietly making the finding stale.
+
+**Rule.** Scope a repo-wide search to the **tracked set** (`git ls-files`), never
+to a directory blocklist. A blocklist has to be extended every time a new nesting
+appears on disk and is silently wrong until someone notices; the tracked set
+never needs extending. And state the search's expected hit count before running
+it — V-7 and V-13 are the same defect at opposite signs, so *both* directions
+need the count, not just the zero.
+
+
 ## P — Provenance failures
 
 ### P-1. A number with no live producer
@@ -299,6 +335,44 @@ before they are used in a second.
 
 ---
 
+### P-8. A headline that states an upper bound as a price
+
+`results/r9_systems_gate.md:196` priced the per-row lane at **`≈ 29.6 h`** for
+ten units. The estimate assumed the arm calls `_alpha` once per query row, so
+every term carried a factor of `s`. The arm that was actually built shares the
+pivot set, the Gram and `A_P @ V` across rows and runs **one** Python loop over
+an `[n·s, k]` tensor instead of `s` loops over `[n, k]`, so the iteration count
+does not scale with `s` at all. Measured at the gate's own geometry: **`5.9 h`**
+— a **5×** miss, superseded in place in the same file.
+
+**What makes this an entry rather than an arithmetic slip is that the caveat was
+already there.** The gate's own limits paragraph carried the clause that
+predicted the failure, in the right section and correctly worded —
+`results/r9_systems_gate.md:328`: *"an implementation that batches the query
+rows differently could beat it."* The same paragraph now records what happened
+next (`:332-334`): *"The caveat was correct, was written in the right place, and
+was still not enough: a derivation carrying a live 'an implementation could beat
+this' clause is an upper bound and should have been labelled one in §3.2's own
+table rather than only in this paragraph."* The controller read the headline and
+ruled a pilot-only strategy on it. **A caveat below a number does not travel
+with the number; the number travels alone.**
+
+Two different corrections of this one headline are on record and they are not
+the same correction. Neptune's `5.9 h` is a **measurement of the arm that got
+built**. Mercury's `15.5 h` (`results/r9_pricing.md`, and see M-8) is the **same
+estimate re-priced at correct per-arm rates**, with the implementation
+assumption left standing. Both are right about different questions, and quoting
+either as "the corrected price" without saying which question it answers repeats
+the original defect one level up.
+
+**Rule.** A bound carries its direction **in the headline**, not in a limits
+paragraph beneath it: write `≤ 29.6 h (naive upper bound, assumes per-row
+_alpha)`, never `≈ 29.6 h`. If the headline number and the caveat get separated
+— and they always do, because a headline is what gets quoted — the caveat was
+decoration. When a measurement is affordable, a derivation from an assumed
+implementation is not a price at all.
+
+
 ## M — Measurement failures
 
 ### M-1. Train and eval saw different preprocessing
@@ -343,10 +417,31 @@ already written down correctly; copy it.
 The pilot was **2.18× optimistic**: realised `sd 0.109199` against a piloted
 `0.050146` (`STATE.md:201`, `DONE.md:339`).
 
-**Rule.** A power calculation from a pilot carries the pilot's own uncertainty.
-Report the realised sd against the piloted one every time, and treat a ratio
-above ~1.5 as invalidating the sample size the pilot licensed — not as a
-footnote.
+**It is not confined to variance, and it recurs.** The same failure in the cost
+domain: `settledrow/settled` measures **`3.48` at `s = 16`** but **`7.43`–
+`11.19` at `s = 64`**, against a flat FLOP ratio of `1.700` — so scaling a pilot
+by the FLOP model understates the bill by `2×`–`3×`
+(`.superpowers/sdd/polymorphic-drifting-squirrel/neptune-report-it2.md:110-118`).
+The reason it belongs here rather than in a footnote is that it very nearly
+shipped: *"It nearly caught me: the `s=64` projection was drafted from the pilot
+ratio before being measured."*
+
+**And the repair is in the code, not in the report that noticed it** — which is
+the part worth copying. `scale/m3_flops.py:115-116`, inside the FLOP term
+itself: *"A pilot cost measured at small `s` must not be scaled to full geometry
+by this term; doing so understates the bill by 2x to 3x."* The next person to
+scale a pilot reads it at the point of use rather than having to have read a
+round's reports.
+
+In the power domain, the C1 ladder's realised `sd_paired` of `0.019`–`0.109`
+against a pilot's `0.050` is what makes `t* = 1` a 62-seed rung (M-9).
+
+**Rule.** A pilot bounds nothing it did not measure. A ratio measured at one
+geometry, one `n` or one arm does not transfer to another — report the realised
+value against the piloted one every time, treat a ratio above ~1.5 as
+invalidating the sample size or the budget the pilot licensed, and put the
+warning in the code that does the scaling rather than in the report that
+noticed it.
 
 ### M-4. A single-seed bootstrap interval read as seed variability
 
@@ -396,6 +491,91 @@ adding one before, and the timestamp is the only thing that distinguishes them �
 so disclose it.
 
 ---
+
+### M-8. Pricing every arm at one arm's rate
+
+Two independently sourced instances, in one round, in two different documents:
+
+* `STATE.md:21` prices a rung at roughly 77 min, which is about **twelve
+  `settled` cells** — but a rung is 5 `settled` + 5 `twin` + 5 `softmax`. The
+  four-rung ladder measures **`6,047 s = 1.68 h` against its `~5 h`**:
+  over-priced **`3.0×`** (`results/r9_pricing.md:175`, and M22 at
+  `.superpowers/sdd/polymorphic-drifting-squirrel/mercury-report.md:49`).
+* `results/r9_systems_gate.md:196` prices ten units as ten `settled` cells —
+  the `29.6 h` of P-8. Re-priced at per-arm rates it is **`15.5 h`**, and the
+  headline ratio moves from `34×` to `13.5×`.
+
+Mercury records this as the **third** instance of the type in a single round
+(`.superpowers/sdd/polymorphic-drifting-squirrel/mercury-report-it2.md:216`).
+The two above are the ones with a document and a number attached here; the third
+is the subject of his own §4.4 and is not separately cited in this entry, so
+treat "three" as his count and "two" as what this file evidences.
+
+The cells are not interchangeable and the code says so:
+`need_gram = self.base_cell == "settled"` (`scale/m3_quintuple.py:404`, `:444`),
+so `twin` skips the Gram entirely and has no settle loop.
+
+**And the ratio does not transfer across tasks, or even keep its sign.** Mercury
+measured `twin` at **`1.61×` dearer** than `settled` on `negation_scope` at
+`ntr8192` (medians `508.74 s` vs `315.65 s`; `1.23×` on minima), and **`2.1×`
+cheaper** at `e3_t1`/`ntr2048`. So "charge everything at the dearest arm's rate"
+is not even a safe over-estimate — which arm is dearest depends on the task, and
+the correction to the `29.6 h` figure runs the *other* way on its baseline for
+exactly that reason.
+
+**Rule.** Price each arm at its own measured rate. Never carry a cross-arm cost
+ratio across a task, a geometry or an `n`, and never assume the substitution is
+conservative — a ratio that inverts makes the "safe" direction wrong. If only
+one arm has been timed, the estimate covers that one arm and says so.
+
+### M-9. A verdict whose finest achievable p cannot reach the α it quotes
+
+M-5 in the inference domain, and it is general to every reading in this
+repository rather than to one instrument. At **N = 5 seeds the verdict is a sign
+test.** Measured on the shipped `contrast()` over 1,000 samples
+(`.superpowers/sdd/polymorphic-drifting-squirrel/progress.md:1013-1021`):
+unanimity excludes zero **385/385**; a 4–1 split excludes it 20–44 % of the
+time; a 3–2 split 0–3.7 %. So *"the CI excludes zero"* at five seeds is very
+nearly *"all five seeds agreed"* — and **the finest achievable two-sided p at
+N = 5 is `0.0625`, not the `0.05` the project quotes.** The design cannot
+produce the significance level it reports, whatever the data say. This covers
+**every 5-seed reading here, including the standing `+0.108437` headline**
+(`CHECKLIST.md:1168`, `ceq/hf_artifact/README.md:35`).
+
+**Half the repair is already in the tree, which is what makes the rule
+concrete.** Both of those rows already print the seed-agreement count beside the
+interval — `ceq/hf_artifact/README.md:35` reads
+`+0.108437 | [+0.066232, +0.147110] | 5/5`. The practice exists; what is missing
+is that it is not required, so a number quoted anywhere else loses the `5/5` and
+with it the only signal that the interval is a sign test. A convention followed
+in two places and mandated in none is a convention that the next headline will
+drop.
+
+**Found while writing this entry, and unresolved: the two homes disagree.** The
+same headline carries CI `[+0.066232, +0.147110]` at
+`ceq/hf_artifact/README.md:35` and `[+0.068181, +0.147110]` at
+`CHECKLIST.md:1168` — identical point estimate, identical upper bound, lower
+bounds `0.001949` apart. Neither row names the run that produced it, so there is
+no way to tell which is the transcription error and which is the number. That is
+P-1 attached to the repository's most-quoted result, and it is recorded here
+rather than fixed because picking one without finding the producer would just
+make the disagreement invisible.
+
+The same round produced a second face of it: realised `sd_paired` on the C1
+ladder is `0.019`–`0.109` against a pilot's `0.050`, so `t* = 1` needs **62
+seeds, not 5** — underpowered by an order of magnitude at one rung while the
+others resolve. The response on record is the right one and is worth copying:
+run the rung, label it UNDERPOWERED with its seed requirement in the same
+breath, and show the whole ladder — because dropping the rung that cannot
+resolve and reporting only the rungs that can is rung-picking.
+
+**Rule.** Compute the design's **finest achievable p** and compare it to the α
+being claimed **before the run**, exactly as M-5 requires the statistic's
+ceiling to be printed before the first number. And print `n+`, the seed-agreement
+count, beside every interval — at small N it is what the interval is actually
+reporting, and a reader who can see `5/5` cannot mistake a sign test for a
+bootstrap.
+
 
 ## D — Design-level failures
 
@@ -500,7 +680,9 @@ Condensed from the above; this is the list to run down.
 6. **A repair must be shown to change the object it repairs** (V-9). Delete it
    in-process and watch the number move.
 7. **Compute the control's expected value before it runs** (V-10, M-5). Print
-   the ceiling arithmetic before the first number.
+   the ceiling arithmetic before the first number — and in the inference domain
+   the same check is the design's finest achievable p against the α you intend
+   to quote (M-9). A test that cannot reach its own α has already failed.
 
 And one more that costs more than all seven when it is skipped: **state the
 regime in which your baseline is optimal, and check your task is not in it**
