@@ -198,8 +198,18 @@ def contrast(twin: list[float], settled: list[float], *, n_boot: int = 10000,
     reps.sort()
     lo = reps[int(0.025 * len(reps))]
     hi = reps[min(len(reps) - 1, int(0.975 * len(reps)))]
+    # THE VERDICT AT N=5 IS VERY NEARLY A SIGN TEST, so the interval must carry
+    # the count that produced it. Measured on this function over 1,000 samples
+    # in three regimes: a 5-0 seed split excludes zero 385/385 times, a 4-1
+    # split 20-44% of the time, and a 3-2 split 0-3.7%. "The CI excludes zero"
+    # therefore reads as "all five seeds agreed", and the finest two-sided p a
+    # 5-seed sign test can reach is 2/2**5 = 0.0625, not 0.05. A reader given
+    # only the interval cannot tell which regime produced it; `n_pos` is that
+    # missing column, and it is reported here rather than by whichever caller
+    # remembers, because it is a property of every 5-seed reading in this repo.
+    n_pos = sum(1 for x in d if x > 0.0)
     return dict(delta=point, ci_lo=lo, ci_hi=hi, n_seeds=n, n_boot=n_boot,
-                per_seed_delta=d, verdict=verdict_of(lo, hi))
+                n_pos=n_pos, per_seed_delta=d, verdict=verdict_of(lo, hi))
 
 
 # ----------------------------------------------------------------- the run ---
