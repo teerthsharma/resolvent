@@ -1,0 +1,2204 @@
+{
+"tests/cameron/conftest.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 0
+},
+"tests/cameron/dilated.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 0
+},
+"tests/cameron/interventional.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 0
+},
+"tests/cameron/ladder.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 0
+},
+"tests/cameron/perron.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 0
+},
+"tests/cameron/schedule_sweep.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 0
+},
+"tests/cameron/severed_fraction.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 0
+},
+"tests/cameron/test_arc_reality.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 6
+},
+"tests/cameron/test_bar_control_sees_the_arms_preprocessing.py": {
+"aliases": [
+"NS"
+],
+"front_door": [
+[
+71,
+"NS",
+"batch_fn=NS.make_consequence_batch,"
+],
+[
+72,
+"NS",
+"oracle_fn=NS.consequence_oracle,"
+],
+[
+97,
+"NS",
+"kw[\"oracle_fn\"] = _scaled(NS.consequence_oracle, c)"
+]
+],
+"n_front": 3,
+"n_tests": 4
+},
+"tests/cameron/test_c1_propagate_registration.py": {
+"aliases": [
+"NS"
+],
+"front_door": [
+[
+123,
+"NS",
+"return NS.make_propagate_batch(n, S_HOUSE, D_HOUSE, t_star=t_star,"
+],
+[
+190,
+"NS",
+"assert torch.equal(NS.propagate_oracle(x, f, p),"
+],
+[
+234,
+"NS",
+"delta = NS.propagate_oracle(xf, f, p) - y"
+],
+[
+287,
+"NS",
+"assert name in NS.M3_TASKS, name"
+]
+],
+"n_front": 7,
+"n_tests": 8
+},
+"tests/cameron/test_capability_result.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 5
+},
+"tests/cameron/test_cogs_harness.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 7
+},
+"tests/cameron/test_composition_is_the_uncosted_route.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 8
+},
+"tests/cameron/test_diagnose_package.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 6
+},
+"tests/cameron/test_domain.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 5
+},
+"tests/cameron/test_e4_harmonic.py": {
+"aliases": [
+"EH",
+"FAIL_BAR",
+"PASS_BAR",
+"nrmse"
+],
+"front_door": [
+[
+86,
+"EH",
+"return EH.measure(*EH.SHIPPED_CASE[1:])"
+]
+],
+"n_front": 1,
+"n_tests": 10
+},
+"tests/cameron/test_e4_rips_gate.py": {
+"aliases": [
+"FAIL_BAR",
+"PASS_BAR",
+"adjacency",
+"draw_balanced_marginal"
+],
+"front_door": [
+[
+42,
+"direct",
+"from scale.rips_gate import (FAIL_BAR, PASS_BAR, adjacency, draw_balanced_marginal,"
+],
+[
+129,
+"draw_balanced_marginal",
+"drawn, (n_pos, n_neg) = draw_balanced_marginal(case)"
+],
+[
+143,
+"draw_balanced_marginal",
+"drawn, _ = draw_balanced_marginal(cases[\"StableSparse_S2Rips_64\"])"
+],
+[
+167,
+"draw_balanced_marginal",
+"drawn, _ = draw_balanced_marginal(case)"
+]
+],
+"n_front": 4,
+"n_tests": 8
+},
+"tests/cameron/test_e4prime_registration.py": {
+"aliases": [
+"FAIL_BAR",
+"NS",
+"adjacency",
+"ball"
+],
+"front_door": [
+[
+96,
+"NS",
+"x, y, f, p = NS.make_e4prime_batch(N_BATCH, _SPEC[1], D_HOUSE)"
+],
+[
+108,
+"NS",
+"assert \"e4prime\" in NS.M3_TASKS, \"e4prime missing from M3_TASKS\""
+],
+[
+110,
+"NS",
+"entry = NS.M3_TASKS[\"e4prime\"]"
+],
+[
+124,
+"NS",
+"assert torch.equal(y, NS.e4prime_oracle(x, f, p))"
+]
+],
+"n_front": 7,
+"n_tests": 6
+},
+"tests/cameron/test_hankel_mustfire.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 10
+},
+"tests/cameron/test_hankel_worked_example.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 9
+},
+"tests/cameron/test_harmonic_attribution.py": {
+"aliases": [
+"EH",
+"NS"
+],
+"front_door": [
+[
+195,
+"EH",
+"SHIPPED_CASE = EH.SHIPPED_CASE"
+],
+[
+257,
+"NS",
+"x, y = NS.harmonic_label_batch(omega, 256, seed=0)"
+],
+[
+274,
+"NS",
+"xtr, ytr = NS.harmonic_label_batch(omega, 2048, seed=0)"
+],
+[
+287,
+"NS",
+"xtr, ytr = NS.harmonic_label_batch(omega, 2048, seed=0)"
+]
+],
+"n_front": 6,
+"n_tests": 11
+},
+"tests/cameron/test_harness.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 11
+},
+"tests/cameron/test_headline_ci_provenance.py": {
+"aliases": [
+"contrast",
+"exact_percentile_ci"
+],
+"front_door": [
+[
+83,
+"contrast",
+"r = contrast(softmax, settled, n_boot=10000, seed=0)"
+]
+],
+"n_front": 1,
+"n_tests": 6
+},
+"tests/cameron/test_identity_manifest.py": {
+"aliases": [
+"IM",
+"NS",
+"Q"
+],
+"front_door": [
+[
+258,
+"NS",
+"homo = NS.M3_TASKS[\"impact\"][0]"
+],
+[
+259,
+"NS",
+"het = NS.M3_TASKS[\"impact_hetero\"][0]"
+]
+],
+"n_front": 2,
+"n_tests": 9
+},
+"tests/cameron/test_impact_hetero_is_not_its_own_baseline.py": {
+"aliases": [
+"IMP",
+"NS"
+],
+"front_door": [
+[
+62,
+"NS",
+"assert name in NS.M3_TASKS, f\"{name} is not registered\""
+],
+[
+63,
+"NS",
+"return NS.M3_TASKS[name]"
+],
+[
+90,
+"IMP",
+"assert het_fn is IMP.make_impact_hetero_batch, ("
+]
+],
+"n_front": 3,
+"n_tests": 6
+},
+"tests/cameron/test_m3_counter_squared.py": {
+"aliases": [
+"M3",
+"NS",
+"batched_pivot_hop2",
+"batched_select_pivots"
+],
+"front_door": [
+[
+99,
+"NS",
+"x, y, f, p = NS.make_counter_batch(64, S_DEFAULT, D_DEFAULT, seed=0)"
+],
+[
+100,
+"NS",
+"xr, yr, fr, pr = NS.make_batch(64, S_DEFAULT, D_DEFAULT, seed=0)"
+],
+[
+113,
+"NS",
+"x, y, _f, _p = NS.make_counter_batch(256, 24, 8, seed=7)"
+],
+[
+125,
+"NS",
+"x, y, f, p = NS.make_counter_batch(32, 24, 8, seed=1)"
+]
+],
+"n_front": 25,
+"n_tests": 20
+},
+"tests/cameron/test_m3_etasks.py": {
+"aliases": [
+"NS"
+],
+"front_door": [
+[
+85,
+"NS",
+"return NS.make_equilibrium_batch(n, s, d, t_star=t_star, seed=seed)"
+],
+[
+95,
+"NS",
+"assert name in NS.M3_TASKS, name"
+],
+[
+96,
+"NS",
+"entry = NS.M3_TASKS[name]"
+],
+[
+106,
+"NS",
+"x, y, f, p = NS.M3_TASKS[\"negation_scope\"][0](64, S_DEFAULT, D_DEFAULT,"
+]
+],
+"n_front": 36,
+"n_tests": 18
+},
+"tests/cameron/test_minimum_arch.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 5
+},
+"tests/cameron/test_mistakes_citations_resolve.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 7
+},
+"tests/cameron/test_negation_is_the_axis.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 5
+},
+"tests/cameron/test_parity_is_the_wrong_target.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 4
+},
+"tests/cameron/test_published_intervals_have_producers.py": {
+"aliases": [
+"contrast"
+],
+"front_door": [
+[
+122,
+"contrast",
+"r = contrast(per_seed[x], per_seed[y], n_boot=10000, seed=0)"
+],
+[
+158,
+"contrast",
+"mc = contrast(per_seed[x], per_seed[y], n_boot=10000, seed=0)"
+],
+[
+175,
+"contrast",
+"r = contrast(per_seed[x], per_seed[y], n_boot=10000, seed=0)"
+]
+],
+"n_front": 3,
+"n_tests": 6
+},
+"tests/cameron/test_r3_perturbation.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 7
+},
+"tests/cameron/test_r4_compression.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 7
+},
+"tests/cameron/test_r5_aggregator_red.py": {
+"aliases": [
+"arm_a_run",
+"cap",
+"cohen_d",
+"rows_with_and_without",
+"select_pivots",
+"theta_rows"
+],
+"front_door": [
+[
+29,
+"direct",
+"from scale.pivot_probe import select_pivots                        # noqa: E402"
+],
+[
+57,
+"select_pivots",
+"piv = select_pivots(kk, min(K, S - 2), exclude=(i, j))"
+]
+],
+"n_front": 2,
+"n_tests": 9
+},
+"tests/cameron/test_r6_agreement.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 6
+},
+"tests/cameron/test_r6_matcher_red.py": {
+"aliases": [
+"matcher"
+],
+"front_door": [],
+"n_front": 0,
+"n_tests": 14
+},
+"tests/cameron/test_r6_trained_red.py": {
+"aliases": [
+"TP"
+],
+"front_door": [],
+"n_front": 0,
+"n_tests": 6
+},
+"tests/cameron/test_r6_twodof_red.py": {
+"aliases": [
+"twodof"
+],
+"front_door": [],
+"n_front": 0,
+"n_tests": 9
+},
+"tests/cameron/test_s2_ablation.py": {
+"aliases": [
+"run_arm",
+"s2_probe",
+"select_pivots"
+],
+"front_door": [
+[
+29,
+"direct",
+"from scale.pivot_probe import run_arm, select_pivots"
+],
+[
+47,
+"select_pivots",
+"keynorm = sorted(int(x) for x in select_pivots(key_a, 8, exclude=(63, 16)))"
+],
+[
+70,
+"run_arm",
+"r = run_arm(\"pivot_unsigned\", 32, n_draws=32, k=8, placement=\"in_P\", seed=0)"
+],
+[
+96,
+"run_arm",
+"sgn = run_arm(\"pivot_signed\", 32, n_draws=32, k=8, placement=\"in_P\", seed=0)"
+]
+],
+"n_front": 13,
+"n_tests": 9
+},
+"tests/cameron/test_schedule.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 10
+},
+"tests/cameron/test_schedule_ablation.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 8
+},
+"tests/cameron/test_the_signed_arm_is_signed_on_this_task.py": {
+"aliases": [
+"batched_select_pivots",
+"m3",
+"make_batch"
+],
+"front_door": [
+[
+35,
+"direct",
+"0.10. On THIS task's inputs -- `make_batch` scales x by 0.1, so the logits"
+],
+[
+59,
+"direct",
+"from scale.negation_scope import make_batch                      # noqa: E402"
+],
+[
+90,
+"make_batch",
+"x, _y, _f, _p = make_batch(N, S, D, d_model=DMODEL, seed=SEED)"
+]
+],
+"n_front": 3,
+"n_tests": 3
+},
+"tests/cameron/test_u1_rag_registration.py": {
+"aliases": [
+"NS"
+],
+"front_door": [
+[
+55,
+"NS",
+"assert rag_name in NS.M3_TASKS, rag_name"
+],
+[
+56,
+"NS",
+"entry = NS.M3_TASKS[rag_name]"
+],
+[
+61,
+"NS",
+"assert oracle_fn is NS.equilibrium_oracle"
+],
+[
+64,
+"NS",
+"e3_entry = NS.M3_TASKS[e3_name]"
+]
+],
+"n_front": 19,
+"n_tests": 7
+},
+"tests/cameron/test_verdict_guards_partial_ladders.py": {
+"aliases": [
+"EL"
+],
+"front_door": [],
+"n_front": 0,
+"n_tests": 6
+},
+"tests/chase/axes.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 0
+},
+"tests/chase/conftest.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 0
+},
+"tests/chase/k22.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 0
+},
+"tests/chase/structural_zero.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 0
+},
+"tests/chase/test_capability_table.py": {
+"aliases": [
+"CT",
+"EP",
+"contrast",
+"task_of"
+],
+"front_door": [],
+"n_front": 0,
+"n_tests": 15
+},
+"tests/chase/test_ceq_hub_package.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 14
+},
+"tests/chase/test_checklist_kills_are_evaluable.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 6
+},
+"tests/chase/test_colab_chain.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 11
+},
+"tests/chase/test_deq_divergence.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 5
+},
+"tests/chase/test_eprocess.py": {
+"aliases": [
+"EP"
+],
+"front_door": [],
+"n_front": 0,
+"n_tests": 31
+},
+"tests/chase/test_eprocess_perdraw.py": {
+"aliases": [
+"EP",
+"NS",
+"PD",
+"WEIGHTS_DIR",
+"load_unit"
+],
+"front_door": [
+[
+118,
+"direct",
+"from scale.m3_quintuple import WEIGHTS_DIR, load_unit"
+],
+[
+125,
+"load_unit",
+"model, rec = load_unit(have[0])"
+],
+[
+126,
+"NS",
+"bfn = NS.M3_TASKS[rec[\"task\"]][0]"
+]
+],
+"n_front": 3,
+"n_tests": 6
+},
+"tests/chase/test_floor_objective.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 6
+},
+"tests/chase/test_hf_shipping.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 5
+},
+"tests/chase/test_hub_package_hardening.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 26
+},
+"tests/chase/test_kernel_contracts.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 11
+},
+"tests/chase/test_lean_refcount_binding.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 10
+},
+"tests/chase/test_m2_instrument_binds.py": {
+"aliases": [
+"build_arm",
+"pivot_hop2",
+"select_pivots"
+],
+"front_door": [
+[
+8,
+"direct",
+"`select_pivots` excludes i and j, so at s=8 only 6 indices remain and P is"
+],
+[
+41,
+"direct",
+"from scale.pivot_probe import build_arm, pivot_hop2, select_pivots"
+],
+[
+53,
+"select_pivots",
+"pivots = select_pivots(x0 @ wk, 8, exclude=(i, j))"
+],
+[
+61,
+"build_arm",
+"_, h_pivot = build_arm(\"pivot_signed\", qq, kk, gvec, bet, pivots, tau=TAU)"
+]
+],
+"n_front": 11,
+"n_tests": 5
+},
+"tests/chase/test_m2_not_in_P_is_structural_zero.py": {
+"aliases": [
+"build_arm",
+"run_arm",
+"select_pivots"
+],
+"front_door": [
+[
+23,
+"direct",
+"from scale.pivot_probe import build_arm, run_arm, select_pivots"
+],
+[
+29,
+"direct",
+"\"\"\"Mirror of `run_arm`'s draw loop, keeping the per-branch raw numbers."
+],
+[
+32,
+"direct",
+"construction (via the shared `build_arm`), so the `c` values drawn here are"
+],
+[
+33,
+"direct",
+"the `c` values `run_arm` draws."
+]
+],
+"n_front": 10,
+"n_tests": 1
+},
+"tests/chase/test_m2_verdict_nan.py": {
+"aliases": [
+"_verdict",
+"loglog_slope"
+],
+"front_door": [],
+"n_front": 0,
+"n_tests": 4
+},
+"tests/chase/test_m3_capability_harness.py": {
+"aliases": [
+"M3",
+"NS"
+],
+"front_door": [
+[
+72,
+"M3",
+"x, _y, f, p = NS.make_batch(N_PROBE, s, d, d_model=M3.D_MODEL, seed=0)"
+],
+[
+126,
+"M3",
+"x, _y, _f, _p = NS.make_batch(4, S_DEF, D_DEF, d_model=M3.D_MODEL, seed=0)"
+],
+[
+164,
+"NS",
+"monkeypatch.setattr(NS, \"oracle\", lambda x, f, p: x[:, p, NS.CH_PAYLOAD])"
+],
+[
+174,
+"NS",
+"monkeypatch.setattr(NS, \"oracle\", lambda x, f, p: x[:, p, NS.CH_PAYLOAD].abs())"
+]
+],
+"n_front": 9,
+"n_tests": 11
+},
+"tests/chase/test_m3_ladder_task.py": {
+"aliases": [
+"CT",
+"EL",
+"M3",
+"NS",
+"Q"
+],
+"front_door": [
+[
+83,
+"NS",
+"assert set(act.choices) == set(NS.M3_TASKS), ("
+],
+[
+85,
+"NS",
+"f\"{sorted(NS.M3_TASKS)}\")"
+],
+[
+134,
+"NS",
+"real_e3 = NS.M3_TASKS[\"e3_t2\"][0]"
+],
+[
+135,
+"NS",
+"real_ns = NS.M3_TASKS[\"negation_scope\"][0]"
+]
+],
+"n_front": 11,
+"n_tests": 14
+},
+"tests/chase/test_m3_quintuple_gradient.py": {
+"aliases": [
+"Q"
+],
+"front_door": [],
+"n_front": 0,
+"n_tests": 5
+},
+"tests/chase/test_m3_quintuple_single_seed_table.py": {
+"aliases": [
+"B",
+"Q"
+],
+"front_door": [],
+"n_front": 0,
+"n_tests": 2
+},
+"tests/chase/test_m3_synthetic_settled.py": {
+"aliases": [
+"M3",
+"NS",
+"SS"
+],
+"front_door": [
+[
+80,
+"M3",
+"x, _y, f, p = NS.make_batch(16, 64, 24, d_model=M3.D_MODEL, seed=0)"
+],
+[
+137,
+"SS",
+"c = SS.contrast(twin, settled, n_boot=10000, seed=0)"
+],
+[
+154,
+"SS",
+"c = SS.contrast(twin, settled, n_boot=10000, seed=0)"
+],
+[
+163,
+"SS",
+"c = SS.contrast(twin, settled, n_boot=10000, seed=0)"
+]
+],
+"n_front": 5,
+"n_tests": 13
+},
+"tests/chase/test_module_prose_is_bound.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 7
+},
+"tests/chase/test_multizoom_cost.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 5
+},
+"tests/chase/test_multizoom_kernel.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 20
+},
+"tests/chase/test_multizoom_r5.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 7
+},
+"tests/chase/test_pivot_exclusion_lift.py": {
+"aliases": [
+"M3",
+"NS",
+"Q",
+"select_pivots"
+],
+"front_door": [
+[
+11,
+"direct",
+"Merely permitting `s-1` (`exclude=(0,)`) changes nothing: `select_pivots` is a"
+],
+[
+31,
+"direct",
+"from scale.pivot_probe import select_pivots                       # noqa: E402"
+],
+[
+37,
+"M3",
+"x, y, f, p = NS.M3_TASKS[\"e3_t1\"][0](N, S, D, d_model=M3.D_MODEL, seed=seed)"
+],
+[
+62,
+"select_pivots",
+"permitted = torch.stack([select_pivots(kk[i], min(K, S - 2), exclude=(0,))"
+]
+],
+"n_front": 4,
+"n_tests": 6
+},
+"tests/chase/test_resume_checkpoint.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 3
+},
+"tests/chase/test_rollback_flex_attention.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 2
+},
+"tests/chase/test_scale_axes.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 7
+},
+"tests/chase/test_scale_hazards.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 6
+},
+"tests/chase/test_scale_sizing.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 21
+},
+"tests/chase/test_schedule_rebuild.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 5
+},
+"tests/chase/test_signed_operator_trainability.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 15
+},
+"tests/chase/test_sprt_k1.py": {
+"aliases": [
+"S"
+],
+"front_door": [],
+"n_front": 0,
+"n_tests": 18
+},
+"tests/chase/test_stochastic_P.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 5
+},
+"tests/chase/test_structural_zero_guard.py": {
+"aliases": [
+"build_arm",
+"select_pivots"
+],
+"front_door": [
+[
+6,
+"direct",
+"(`scale.pivot_probe.build_arm`/`select_pivots`, `ceq.eviction`); nothing here"
+],
+[
+26,
+"direct",
+"from scale.pivot_probe import build_arm, select_pivots"
+],
+[
+49,
+"select_pivots",
+"pivots = select_pivots(x0 @ wk, K, exclude=(i, j))"
+],
+[
+63,
+"build_arm",
+"a, hop2 = build_arm(\"pivot_signed\", qq, kk, gvec, bet, pivots,"
+]
+],
+"n_front": 4,
+"n_tests": 4
+},
+"tests/chase/theory_ref.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 0
+},
+"tests/deimos/test_deimos_r9_iteration1.py": {
+"aliases": [
+"EH",
+"EP",
+"NS"
+],
+"front_door": [],
+"n_front": 0,
+"n_tests": 8
+},
+"tests/foreman/_ceq.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 0
+},
+"tests/foreman/_device.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 0
+},
+"tests/foreman/_lib.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 0
+},
+"tests/foreman/conftest.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 0
+},
+"tests/foreman/test_absolute_floor_is_an_arm_filter.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 5
+},
+"tests/foreman/test_capability_and_theorem_share_no_object.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 7
+},
+"tests/foreman/test_consequence_fidelity.py": {
+"aliases": [
+"CH_FLIP",
+"CH_NOISE",
+"CH_PAYLOAD",
+"clopper_pearson",
+"consequence_fidelity",
+"draw_do",
+"m3",
+"make_batch",
+"nrmse",
+"oracle"
+],
+"front_door": [
+[
+4,
+"direct",
+"oracle effect is known in closed form, the fraction of interventions on which"
+],
+[
+5,
+"direct",
+"`sign(model dy_hat) == sign(oracle dy)`, with an EXACT binomial interval, plus"
+],
+[
+11,
+"direct",
+"* the closed-form effect could disagree with the oracle -- then the metric is"
+],
+[
+14,
+"direct",
+"oracle itself is plugged in as the model and must read 1.0, and its negation"
+]
+],
+"n_front": 17,
+"n_tests": 7
+},
+"tests/foreman/test_deq_redundancy.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 5
+},
+"tests/foreman/test_gromov_delta.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 9
+},
+"tests/foreman/test_journal_thread_binding.py": {
+"aliases": [
+"compute",
+"units"
+],
+"front_door": [],
+"n_front": 0,
+"n_tests": 4
+},
+"tests/foreman/test_l1_normalizer_obstruction.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 6
+},
+"tests/foreman/test_lorenz_occupancy.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 6
+},
+"tests/foreman/test_lowpass_coupling.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 6
+},
+"tests/foreman/test_m2_mechanism_story.py": {
+"aliases": [
+"clopper_pearson",
+"loglog_slope",
+"mech_attack"
+],
+"front_door": [
+[
+3,
+"mech_attack",
+"scale/mech_attack.py's draws() replay of run_arm's exact RNG stream."
+],
+[
+212,
+"direct",
+"those wo_sum-scaled values, matching run_arm/mech_attack's own flip"
+]
+],
+"n_front": 2,
+"n_tests": 4
+},
+"tests/foreman/test_m2prime_routes_are_independent.py": {
+"aliases": [
+"build_arm",
+"rd",
+"s2_probe",
+"select_pivots"
+],
+"front_door": [
+[
+31,
+"direct",
+"from scale.pivot_probe import build_arm, select_pivots"
+],
+[
+88,
+"select_pivots",
+"piv = select_pivots(x0 @ wk, K, exclude=(i, j))"
+],
+[
+90,
+"build_arm",
+"a0, h0 = build_arm(\"pivot_signed\", x0 @ wq, x0 @ wk, gv, bt, piv)"
+],
+[
+96,
+"build_arm",
+"a1, h1 = build_arm(\"pivot_signed\", x @ wq, x @ wk, gv, bt, piv)"
+]
+],
+"n_front": 4,
+"n_tests": 7
+},
+"tests/foreman/test_methods_mixture_identity.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 4
+},
+"tests/foreman/test_operator_is_a_triangular_solve.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 6
+},
+"tests/foreman/test_oracle_separation_binding.py": {
+"aliases": [
+"TARGET",
+"build_chain",
+"killing_rate"
+],
+"front_door": [
+[
+113,
+"direct",
+"from scale.foreman_lambda2 import TARGET, build_chain, killing_rate"
+],
+[
+118,
+"build_chain",
+"base = build_chain(case, spec, 1.0)"
+],
+[
+119,
+"killing_rate",
+"chain = build_chain(case, spec, 1.0, alpha=killing_rate(base, TARGET))"
+]
+],
+"n_front": 3,
+"n_tests": 6
+},
+"tests/foreman/test_paraformer_ratio_across_context.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 6
+},
+"tests/foreman/test_pivot_plateau_scales_with_k.py": {
+"aliases": [
+"run_arm"
+],
+"front_door": [
+[
+15,
+"direct",
+"from scale.pivot_probe import run_arm"
+],
+[
+19,
+"run_arm",
+"r8 = run_arm(\"pivot_signed\", 128, n_draws=1024, k=8,"
+],
+[
+21,
+"run_arm",
+"r32 = run_arm(\"pivot_signed\", 128, n_draws=1024, k=32,"
+],
+[
+34,
+"run_arm",
+"r2 = run_arm(\"pivot_signed\", 128, n_draws=1024, k=2,"
+]
+],
+"n_front": 5,
+"n_tests": 2
+},
+"tests/foreman/test_pivot_selector_is_content_bearing.py": {
+"aliases": [
+"clopper_pearson",
+"draws",
+"run_arm",
+"select_pivots"
+],
+"front_door": [
+[
+5,
+"direct",
+"even sees the score select_pivots uses (key.norm). TEST 2 asks whether that"
+],
+[
+26,
+"direct",
+"from scale.pivot_probe import select_pivots, clopper_pearson, run_arm"
+],
+[
+106,
+"direct",
+"run_arm's flip rate exactly (run_arm is untouched and always uses"
+],
+[
+107,
+"direct",
+"select_pivots directly), which is the same equality mech_attack.main()'s"
+]
+],
+"n_front": 11,
+"n_tests": 3
+},
+"tests/foreman/test_ppnp_parity.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 5
+},
+"tests/foreman/test_r1_settling.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 10
+},
+"tests/foreman/test_r2_maxplus_reduction.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 13
+},
+"tests/foreman/test_r2_signed_consequence_fit.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 4
+},
+"tests/foreman/test_resolvent_certificate.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 6
+},
+"tests/foreman/test_sgate_scaling_defect.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 12
+},
+"tests/foreman/test_sheaf_kernel_parity.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 4
+},
+"tests/foreman/test_sign_floor.py": {
+"aliases": [
+"train_arm",
+"trained_report",
+"value_path_flip_rate"
+],
+"front_door": [],
+"n_front": 0,
+"n_tests": 9
+},
+"tests/foreman/test_signedness_is_not_new.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 4
+},
+"tests/foreman/test_topology_washout.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 9
+},
+"tests/foreman/test_window_width_is_the_missing_control.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 3
+},
+"tests/gpu/__init__.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 0
+},
+"tests/gpu/test_cuda_parity.py": {
+"aliases": [
+"M3",
+"NS",
+"PA",
+"Q"
+],
+"front_door": [
+[
+49,
+"M3",
+"return NS.make_batch(n, S, D_DIST, d_model=M3.D_MODEL, seed=seed)"
+],
+[
+127,
+"NS",
+"seed=0, batch_fn=NS.make_batch, device=torch.device(\"cuda\"))"
+]
+],
+"n_front": 2,
+"n_tests": 5
+},
+"tests/jupiter/__init__.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 0
+},
+"tests/jupiter/test_coherence_and_rip.py": {
+"aliases": [
+"CF",
+"RL"
+],
+"front_door": [],
+"n_front": 0,
+"n_tests": 7
+},
+"tests/jupiter/test_kirchhoff_agreement.py": {
+"aliases": [
+"K",
+"SHIPPED_CASE",
+"SMALL_CASE",
+"absorbing_chain"
+],
+"front_door": [
+[
+21,
+"direct",
+"from scale.e4_harmonic import (SHIPPED_CASE, SMALL_CASE, absorbing_chain,"
+],
+[
+112,
+"direct",
+"@pytest.mark.parametrize(\"case\", [SMALL_CASE, SHIPPED_CASE])"
+]
+],
+"n_front": 2,
+"n_tests": 10
+},
+"tests/jupiter/test_page_lattice.py": {
+"aliases": [
+"ALPHA",
+"achievable_p_values",
+"bootstrap_p_floor"
+],
+"front_door": [],
+"n_front": 0,
+"n_tests": 8
+},
+"tests/jupiter/test_page_trend.py": {
+"aliases": [
+"ALPHA",
+"from_ladder",
+"isotonic_curve",
+"isotonic_top_ci"
+],
+"front_door": [],
+"n_front": 0,
+"n_tests": 9
+},
+"tests/jupiter/test_pivot_selection_theory.py": {
+"aliases": [
+"T"
+],
+"front_door": [],
+"n_front": 0,
+"n_tests": 6
+},
+"tests/jupiter/test_struck_coverage_scans.py": {
+"aliases": [
+"C"
+],
+"front_door": [],
+"n_front": 0,
+"n_tests": 8
+},
+"tests/loop/test_arms_distinct.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 8
+},
+"tests/loop/test_bootstrap_is_position_independent.py": {
+"aliases": [
+"bslope"
+],
+"front_door": [],
+"n_front": 0,
+"n_tests": 4
+},
+"tests/loop/test_dispatch_count.py": {
+"aliases": [
+"DispatchCounter",
+"count_dispatches"
+],
+"front_door": [],
+"n_front": 0,
+"n_tests": 5
+},
+"tests/loop/test_fused_settle.py": {
+"aliases": [
+"count_dispatches",
+"d_H",
+"settle",
+"settle_fused"
+],
+"front_door": [],
+"n_front": 0,
+"n_tests": 5
+},
+"tests/loop/test_hilbert_metric.py": {
+"aliases": [
+"d_H",
+"d_H_logits",
+"delta_hat",
+"kappa_cert",
+"n_parts",
+"neumann_terms"
+],
+"front_door": [],
+"n_front": 0,
+"n_tests": 25
+},
+"tests/loop/test_identity_manifest_covers_every_beyond_key_field.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 3
+},
+"tests/loop/test_journal_scan.py": {
+"aliases": [
+"ScanWitnessError",
+"scan_journals",
+"walk_numbers"
+],
+"front_door": [],
+"n_front": 0,
+"n_tests": 7
+},
+"tests/loop/test_l3_leakage.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 5
+},
+"tests/loop/test_m3_harness_operator_is_shipped.py": {
+"aliases": [
+"M3"
+],
+"front_door": [],
+"n_front": 0,
+"n_tests": 4
+},
+"tests/loop/test_m4_eviction_is_calibrated.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 3
+},
+"tests/loop/test_measured_operator_is_shipped.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 5
+},
+"tests/loop/test_merkle_append.py": {
+"aliases": [
+"GENESIS_LABEL",
+"journal_root",
+"merkle_root"
+],
+"front_door": [],
+"n_front": 0,
+"n_tests": 9
+},
+"tests/loop/test_merkle_journal.py": {
+"aliases": [
+"journal_root",
+"leaf_hash",
+"merkle_root",
+"verify_journal"
+],
+"front_door": [],
+"n_front": 0,
+"n_tests": 11
+},
+"tests/loop/test_monge_oracle.py": {
+"aliases": [
+"monge_assign",
+"monge_cost"
+],
+"front_door": [],
+"n_front": 0,
+"n_tests": 9
+},
+"tests/loop/test_no_struck_constant_ships.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 4
+},
+"tests/loop/test_pivot_arms_distinct.py": {
+"aliases": [
+"pp"
+],
+"front_door": [
+[
+51,
+"pp",
+"pivots = pp.select_pivots(kk, k)"
+],
+[
+58,
+"pp",
+"out[kind] = pp.build_arm(kind, qq, kk, gvec, bet, pivots, gen=gi,"
+],
+[
+182,
+"pp",
+"pp.build_arm(\"an_arm_nobody_wired_up\", qq, kk, gvec, bet,"
+]
+],
+"n_front": 3,
+"n_tests": 5
+},
+"tests/loop/test_settle.py": {
+"aliases": [
+"column_diameter",
+"d_H",
+"kappa_cert",
+"settle"
+],
+"front_door": [],
+"n_front": 0,
+"n_tests": 10
+},
+"tests/loop/test_theorem_hypotheses_hold_at_shipped_settings.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 4
+},
+"tests/loop/test_two_dof_lemma.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 7
+},
+"tests/mars/test_mars_argmax_ste.py": {
+"aliases": [
+"EL",
+"FL",
+"NS",
+"Q"
+],
+"front_door": [
+[
+37,
+"NS",
+"return NS.make_batch(n, S, D, d_model=D_MODEL, seed=seed)[0]"
+],
+[
+148,
+"NS",
+"x, y, _f, _p = NS.make_batch(256, S, D, d_model=D_MODEL, seed=0)"
+]
+],
+"n_front": 2,
+"n_tests": 8
+},
+"tests/mars/test_mars_control_entry_point.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 4
+},
+"tests/mars/test_mars_green_attacks.py": {
+"aliases": [
+"A",
+"contrast"
+],
+"front_door": [
+[
+39,
+"contrast",
+"`contrast(a, b)` reports `mean(a) - mean(b)` and resamples the FIVE paired"
+],
+[
+83,
+"contrast",
+"r = contrast(PER_SEED[b], PER_SEED[a], seed=s)"
+]
+],
+"n_front": 2,
+"n_tests": 3
+},
+"tests/mars/test_mars_green_attacks_it4.py": {
+"aliases": [
+"NS",
+"PASS_BAR",
+"adjacency",
+"fit_eval",
+"local_features"
+],
+"front_door": [
+[
+220,
+"NS",
+"x, y, f, p = NS.make_batch(n, s, d, seed=seed)"
+]
+],
+"n_front": 1,
+"n_tests": 4
+},
+"tests/mars/test_mars_r9_iteration1.py": {
+"aliases": [
+"CH_A_DEG",
+"CH_NEWS",
+"_fit_eval",
+"_impact_query_node",
+"mq",
+"ns"
+],
+"front_door": [
+[
+201,
+"ns",
+"x, _y, _f, _p = ns.make_batch(64, 64, 24, d_model=16, seed=0)"
+]
+],
+"n_front": 1,
+"n_tests": 8
+},
+"tests/mercury/test_r9_eprocess_overflow.py": {
+"aliases": [
+"EP"
+],
+"front_door": [],
+"n_front": 0,
+"n_tests": 14
+},
+"tests/mercury/test_r9_estimator_named.py": {
+"aliases": [
+"CT",
+"NS"
+],
+"front_door": [],
+"n_front": 0,
+"n_tests": 5
+},
+"tests/mercury/test_r9_exact_interval.py": {
+"aliases": [
+"contrast"
+],
+"front_door": [
+[
+45,
+"contrast",
+"c = contrast(ARGMAX, ARGMAXSTE, n_boot=10000, seed=0)"
+],
+[
+54,
+"contrast",
+"c = contrast(ARGMAX, ARGMAXSTE, n_boot=10000, seed=0)"
+],
+[
+60,
+"contrast",
+"a = contrast(ARGMAX, ARGMAXSTE, n_boot=2000, seed=0)"
+],
+[
+61,
+"contrast",
+"b = contrast(ARGMAX, ARGMAXSTE, n_boot=2000, seed=17)"
+]
+],
+"n_front": 8,
+"n_tests": 7
+},
+"tests/mercury/test_r9_limits_e.py": {
+"aliases": [
+"CT"
+],
+"front_door": [],
+"n_front": 0,
+"n_tests": 5
+},
+"tests/mercury/test_r9_mechanical_fixes.py": {
+"aliases": [
+"IMPACT",
+"K5E",
+"NS",
+"bucket"
+],
+"front_door": [
+[
+58,
+"bucket",
+"j = bucket.Journal(name)"
+],
+[
+79,
+"bucket",
+"j = bucket.Journal(name)"
+],
+[
+95,
+"bucket",
+"j = bucket.Journal(name)"
+],
+[
+121,
+"NS",
+"for task in NS.M3_TASKS:"
+]
+],
+"n_front": 8,
+"n_tests": 14
+},
+"tests/mercury/test_r9_seed_agreement.py": {
+"aliases": [
+"contrast"
+],
+"front_door": [
+[
+25,
+"contrast",
+"return contrast(list(ref), list(arm), n_boot=2000, seed=0)"
+]
+],
+"n_front": 1,
+"n_tests": 6
+},
+"tests/mercury/test_r9_table_cut.py": {
+"aliases": [
+"CT",
+"task_of"
+],
+"front_door": [
+[
+128,
+"CT",
+"for w in CT.shipped_weights(copy / \"weights\" / \"MANIFEST.json\"):"
+]
+],
+"n_front": 1,
+"n_tests": 13
+},
+"tests/mercury/test_r9_verdict_names.py": {
+"aliases": [
+"CT",
+"contrast",
+"verdict_of"
+],
+"front_door": [
+[
+63,
+"contrast",
+"assert contrast(ref, arm, n_boot=500)[\"verdict\"] == \"SETTLED WINS\""
+],
+[
+64,
+"contrast",
+"named = contrast(ref, arm, n_boot=500, arm_name=\"TWINROW\","
+]
+],
+"n_front": 2,
+"n_tests": 6
+},
+"tests/neptune/conftest.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 0
+},
+"tests/neptune/test_capability_table_truth.py": {
+"aliases": [
+"CT",
+"M3Q"
+],
+"front_door": [
+[
+71,
+"direct",
+"monkeypatch.setattr(CT, \"shipped_weights\", lambda *a, **kw: [])"
+],
+[
+78,
+"CT",
+"assert CT.shipped_weights(tmp_path / \"absent.json\") == []"
+],
+[
+81,
+"CT",
+"assert CT.shipped_weights(bad) == []"
+],
+[
+85,
+"CT",
+"assert CT.shipped_weights(unver) == []"
+]
+],
+"n_front": 4,
+"n_tests": 7
+},
+"tests/neptune/test_per_row_arm.py": {
+"aliases": [
+"EP",
+"F",
+"MQ",
+"NS"
+],
+"front_door": [
+[
+35,
+"NS",
+"x, _y, _f, _p = NS.make_batch(n, s, D, d_model=DM, seed=0)"
+],
+[
+182,
+"NS",
+"real = NS.M3_TASKS[C1][0]"
+],
+[
+188,
+"NS",
+"NS.M3_TASKS[\"c1_neptune_liar\"] = (narrow,) + tuple(NS.M3_TASKS[C1][1:])"
+],
+[
+195,
+"NS",
+"NS.M3_TASKS.pop(\"c1_neptune_liar\", None)"
+]
+],
+"n_front": 5,
+"n_tests": 12
+},
+"tests/saturn/test_r10_it2_spotcheck_reds.py": {
+"aliases": [
+"walk_numbers"
+],
+"front_door": [],
+"n_front": 0,
+"n_tests": 6
+},
+"tests/w10/conftest.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 0
+},
+"tests/w10/test_w10_from_scratch.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 5
+},
+"tests/w11/conftest.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 0
+},
+"tests/w11/test_w11_claims_resolve.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 11
+},
+"tests/w13/conftest.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 0
+},
+"tests/w13/test_w13_h1_selectivity.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 4
+},
+"tests/w14/conftest.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 0
+},
+"tests/w14/test_w14_identity_double_count.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 4
+},
+"tests/w15/conftest.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 0
+},
+"tests/w15/test_w15_rho_is_the_self_other_ratio.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 3
+},
+"tests/w2/conftest.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 0
+},
+"tests/w2/test_w2_nonnormal.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 8
+},
+"tests/w3/conftest.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 0
+},
+"tests/w3/test_w3_eviction.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 5
+},
+"tests/w3b/test_w3b_lean_nilpotent.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 6
+},
+"tests/w4/conftest.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 0
+},
+"tests/w4/test_w4_intervention.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 13
+},
+"tests/w6/conftest.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 0
+},
+"tests/w6/test_w6_attention.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 13
+},
+"tests/w7/conftest.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 0
+},
+"tests/w7/test_w7_nash.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 9
+},
+"tests/w8/conftest.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 0
+},
+"tests/w8/test_w8_real_model.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 10
+},
+"tests/w9/conftest.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 0
+},
+"tests/w9/test_w9_hopcache.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 10
+},
+"tests/watson/conftest.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 0
+},
+"tests/watson/test_vgpe_binds.py": {
+"aliases": [
+"vgpe"
+],
+"front_door": [],
+"n_front": 0,
+"n_tests": 11
+},
+"tests/wilson/accum_divergence.py": {
+"aliases": [
+"Arm",
+"D_MODEL",
+"LR",
+"make_batch",
+"nrmse"
+],
+"front_door": [
+[
+40,
+"direct",
+"from scale.negation_scope import make_batch, nrmse        # noqa: E402"
+],
+[
+74,
+"make_batch",
+"x, y, _f, _p = make_batch(n, s, d, d_model=D_MODEL, seed=seed)"
+]
+],
+"n_front": 2,
+"n_tests": 0
+},
+"tests/wilson/hop2_vec.py": {
+"aliases": [],
+"front_door": [],
+"n_front": 0,
+"n_tests": 0
+},
+"tests/wilson/test_hop2_vec.py": {
+"aliases": [
+"pivot_hop2",
+"select_pivots"
+],
+"front_door": [
+[
+5,
+"select_pivots",
+"hop2 = torch.stack([pivot_hop2(a[i], select_pivots(k[i], self.k_pivots))"
+],
+[
+8,
+"direct",
+"`pivot_hop2` and `select_pivots` are IMPORTED from `scale/pivot_probe.py`, never"
+],
+[
+38,
+"direct",
+"from scale.pivot_probe import select_pivots, pivot_hop2"
+],
+[
+69,
+"select_pivots",
+"[pivot_hop2(a[i], select_pivots(k[i], k_pivots)) for i in range(n)],"
+]
+],
+"n_front": 5,
+"n_tests": 6
+}
+}
