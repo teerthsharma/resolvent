@@ -1,0 +1,3 @@
+plant-probe: a tracked one-line fixture that nothing reads.
+scale/planted.py mutates this file in its self-check, so the check
+never touches live code while other work is running.
