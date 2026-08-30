@@ -423,15 +423,66 @@ still a guarantee about nothing.**
 
 ---
 
-## 10. DETERMINANTAL POINT PROCESSES
+## 10. DETERMINANTAL POINT PROCESSES — A SAMPLER, NOT A TRAINABLE SELECTOR
 
-Dispatched to a moon whose report **did not return before this survey was
-written**. Nothing about DPPs is claimed here. What can be said without it, from
-the structure above: a `k`-DPP needs an eigendecomposition of an `s×s` kernel per
-example — `O(s³) = 262 144` scalar ops at `s=64`, per example, per step — and the
-natural kernel would be the pivot Gram `m3_quintuple.py` already forms for the
-`settled` cell. That is a lead, not a verdict, and it is **gated behind §3 like
-every other stage-A candidate.**
+Equations fetched from the **DPPy reference implementation's documentation**
+(`dppy.readthedocs.io/en/latest/finite_dpps/exact_sampling.html`). The Kulesza &
+Taskar monograph PDF (`arXiv:1207.6083`) returned compressed streams and could
+not be read, so this verdict rests on the reference implementation's stated
+formulas rather than on the monograph — admissible under G1 as *code, fetched*,
+and flagged as a single source.
+
+**What it computes.**
+
+```
+    L-ensemble   P[X = S]  =  det(L_S) / det(I + L)
+    k-DPP        P[X = S]  =  det(L_S) / e_k(L) · 1_{|S| = k}
+```
+
+with `e_k` the elementary symmetric polynomial in the eigenvalues `λ₁…λ_N`. Cost,
+quoted: eigendecomposition of `L` is `O(N³)`; each subsequent sample is
+`O(N k²)`.
+
+**Parameter gate: PASSES.** The kernel would be the existing key Gram — this arm
+already forms a pivot Gram for the `settled` cell
+(`m3_quintuple.py:208, 228, 404`, `need_gram=True`). No new weights.
+
+**Cost: the worst of any stage-A candidate surveyed.** `N = s = 64`, so `O(N³) =
+262 144` scalar operations **per example, per step**, before sampling. At
+`n_train = 2048` that is `≈ 5.4e8` extra operations per step for the
+eigendecompositions alone. Worse, it is a *batched eigendecomposition*, which is
+precisely the dispatch-bound shape `scale/m3_flops.py:102-120` measured: the
+`settledrow / settled` FLOP ratio is `1.700` while the wall-clock ratio is
+`11.19×` at `s=64, n=2048`, because *"the arithmetic is right; the dispatch is
+not in it."* A FLOP estimate here would understate the bill the same way.
+
+**The decisive objection, which is structural rather than about cost.** A DPP is
+differentiable in its kernel *for the log-likelihood of an OBSERVED subset* —
+`∂ log P[S] / ∂L` presupposes an `S` you were given. **This task has no observed
+pivot set.** The pivot choice is a latent decision serving a downstream
+regression, so there is no likelihood to differentiate. Using a k-DPP as a
+*trainable selector* therefore needs either a score-function/REINFORCE estimator
+around the sampling step — high variance, and variance is exactly what §2 shows
+this instrument cannot afford — or a continuous relaxation, at which point the
+differentiable top-k family of §7 does the same job more cheaply and with a
+lower-variance gradient.
+
+> **Verdict: a k-DPP is a principled way to DRAW a diverse pivot set and not a
+> way to LEARN one here.** It ranks strictly behind SIMPLE and Sander for this
+> use, on the gradient rather than on the diversity.
+
+**Where it would still earn its place.** As a *fixed, untrained* alternative
+selector inside the §3 ablation: `topk(key.norm)` versus a random set versus a
+k-DPP draw off the existing Gram. That is a cheap third arm on an experiment that
+has to run anyway, and it separates "diversity in the pivot set matters" from
+"content-conditioning matters" — two hypotheses that `randpivot_signed` conflates.
+
+**Falsifier.** Swap `batched_pivots` for a k-DPP draw from the key Gram, change
+nothing else, 5 seeds. If NRMSE moves by less than the `0.057946` detection floor
+of §2, pivot-set diversity is not load-bearing on this task and the whole DPP
+thread closes.
+
+**Gated behind §3 like every other stage-A candidate.**
 
 ---
 
@@ -467,6 +518,13 @@ only ranking that matters here.
   parameter gate outright; the parameter-free repairs collapse to the Laplacian
   `kirchhoff.py` already builds.
 - **LapSum with learned `α`** — literally `+1 nn.Parameter`. Fixed-`α` only.
+- **k-DPP as a trainable selector** — its gradient is the log-likelihood of an
+  *observed* subset, and this task has no observed pivot set. It draws a diverse
+  set; it does not learn one. `O(N³)` batched eigendecomposition per example on
+  top, in exactly the dispatch-bound shape that cost `settledrow` `11.19×`
+  against a `1.700` FLOP ratio. **Keep it only as a fixed third arm in §3's
+  ablation**, where it separates "diversity matters" from "content-conditioning
+  matters" — two hypotheses `randpivot_signed` conflates.
 - **Submodularity on the captured-mass objective** — supermodular. The intuition
   that "pivot selection is obviously a diminishing-returns problem" is **wrong on
   the obvious objective**, and right only on the reconstruction form.
