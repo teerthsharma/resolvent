@@ -238,7 +238,7 @@ def verdict(cur: dict) -> tuple[str, str]:
         return r is not None and r["ci_hi"] < 0.0
 
     deep_lost = lost("e3_t8") or lost("e3_t32")
-    if won("e3_t1") and deep_lost:
+    if cur["complete"] and won("e3_t1") and deep_lost:
         return ("F", "K-2E FIRES as written at LOOP_PROMPT.md:400 -- settled "
                      "LOSES on a deep-t* rung AND WINS at t*=1. Theory death.")
     if won("e3_t1"):
@@ -264,7 +264,8 @@ def verdict(cur: dict) -> tuple[str, str]:
     # read a number: settled only ever LOSES. Rows A/B/E/F all condition on
     # settled winning somewhere and C/D on every CI covering zero, so a
     # strictly-losing ladder fell through the whole table.
-    if any(lost(t) for t in RUNGS) and not any(won(t) for t in RUNGS):
+    if cur["complete"] and any(lost(t) for t in RUNGS) and not any(
+            won(t) for t in RUNGS):
         lo = [t for t in RUNGS if lost(t)]
         return ("H", "SETTLING IS A STRICT COST -- the CI excludes zero and is "
                      "NEGATIVE at {} and is positive nowhere. Not a tie: the "
@@ -272,12 +273,20 @@ def verdict(cur: dict) -> tuple[str, str]:
                      "conclusion holds a fortiori and the twin ships."
                 .format(", ".join(lo)))
 
-    # every credited rung's CI covers zero
+    # every credited rung's CI covers zero -- or the ladder is partial and H's
+    # "positive nowhere" universal cannot be checked at the missing rungs
     if not cur["complete"]:
+        lo = [t for t in RUNGS if lost(t)]
+        if lo:
+            return ("--", "the CI excludes zero and is NEGATIVE at {}, but "
+                          "the ladder is PARTIAL: row H quantifies over every "
+                          "rung ('positive nowhere') and an unrun rung could "
+                          "still have won. No kill may be claimed."
+                    .format(", ".join(lo)))
         return ("--", "no rung excludes zero, but the ladder is PARTIAL: rows "
                       "A, C and F quantify over every rung and none of them is "
                       "available. No kill may be claimed.")
-    big = [t for t in ("e3_t8", "e3_t32")
+    big = [t for t in RUNGS
            if t in live and abs(live[t]["delta"]) >= RESOLUTION_13]
     if big:
         return ("D", "UNDERPOWERED, NOT A KILL -- every CI covers zero, but "
