@@ -19,6 +19,56 @@ numerical-radius guard, hopcache decode.
 
 ---
 
+## §0 — DISPATCH AND ORDER LAW
+
+Four rules governing how work is scheduled, added 2026-08-31. They bind every
+round and are not round-specific.
+
+**D-1 DEPENDENCY LAW.** Work is a DAG. Parallel dispatch is legal only on nodes
+with no shared repository state — prior-art fetches, document reads, paper
+derivations. Everything else is a chain and runs as one agent. Note that the
+shared state which actually collides is *git*, not the file set: agents writing
+disjoint files still contend for the index and the branch. Dispatched agents are
+therefore forbidden from `git add`, `git commit`, and every other git write; the
+coordinator reviews and commits serially.
+
+**D-2 SKILLS ARE MODES.** Investigator, caveman, and tda-tdd are registers a
+single agent wears, not workers. Planet names label responsibilities inside
+documents; they do not name concurrent processes. A contract line reading
+"MERCURY does X" is an assignment of accountability, not a dispatch instruction.
+
+**D-3 LOOP GATE.** No autonomous loop mounts until the deactivation commit,
+`MISTAKES.md`, and the standing loop failures have been read, and the reason
+the previous loop died is stated in one sentence in the mount request. The
+iteration count comes from the DAG's critical path and is never chosen by an
+agent.
+
+*First application, 2026-08-31.* The previous loop did not terminate; it was
+removed by hand. `max_iterations: 0` disabled the only ceiling
+(`stop-hook.sh:61`), and the `completion_promise` demanded two forty-iteration
+ranges whose second could not begin until the first reached it.35
+(`PHASE2_CONTRACT_V_MAIN_4.md:22-30`), so no exit condition could fire. The
+state file was renamed out of the hard-coded path `.claude/ralph-loop.local.md`,
+whose existence is the only thing `stop-hook.sh:13-18` tests; the `active: false`
+field credited by `ecbedf7` is never parsed. Filed as V-20.
+
+**D-4 ORDER.** Round 11 it.1–22 — registration and the reading — precede every
+line of v-main.7. Contracts that schedule work behind an unreached round are
+staged, not started.
+
+**Naming correction.** Contract text through v-main.7 directs delta sentences
+and the architecture statement to `ARCH.md`. No such file exists in this
+repository and none ever has. The standing architecture-and-state document is
+`workdonenew.md` ("where CEQ actually stands"), and it is the target those
+instructions mean. Two further contract references resolve to nothing: rule
+D-3 had no text in the tree before this section, and "the fifteen standing loop
+failures" is not an enumerated set but the raw pytest summary at
+`results/r10_loop_suite4.txt:21-35`, whose membership varies across snapshots
+(15 / 15 / 14 / 15, three different sets) while its count happens to stay near
+fifteen.
+
+---
+
 ## CHECKLIST (work-stopping clause)
 
 Item states: UNTESTED / GREEN / RED. Any MANDATORY item RED after its test runs

@@ -1,0 +1,5 @@
+task=e3_t2 n=2048 steps=150 seeds=[0, 1, 2] threads=8  floor_2=0.000000
+  softmax (1 hop)      mean 0.950252  sd 0.019256  ['0.971432', '0.933802', '0.945523']
+  pivot_unsigned K=8   mean 0.960945  sd 0.010289  vs softmax +0.010692  125s
+  pivot_unsigned K=16  mean 0.968518  sd 0.008712  vs softmax +0.018266  138s
+  pivot_unsigned K=32  mean 0.965750  sd 0.011859  vs softmax +0.015497  176s

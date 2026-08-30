@@ -22,6 +22,7 @@ closed-form from `negation_scope.equilibrium_hop_reading`. At t*=32 that is
 from __future__ import annotations
 
 import json
+import math
 import pathlib
 import statistics
 import sys
@@ -31,9 +32,9 @@ STEP_RUNGS = (150, 600, 2400, 9600)
 N_TRAIN = (2048, 8192, 32768)
 
 
-def load(tag: str = "it8"):
+def load(tag: str = "it8", arm: str = "softmax"):
     cells, ceil, dropped = {}, {}, set()
-    for p in sorted((ROOT / "results").glob("r10_%s_capacity_softmax_t*.jsonl" % tag)):
+    for p in sorted((ROOT / "results").glob("r10_%s_capacity_%s_t*.jsonl" % (tag, arm))):
         for line in p.open(encoding="utf-8"):
             line = line.strip()
             if not line:
@@ -76,14 +77,21 @@ def bootstrap_mean_ci(vals, *, b: int = 10000, seed: int = 0, alpha: float = 0.0
 
 def main() -> int:
     tag = sys.argv[1] if len(sys.argv) > 1 else "it8"
-    cells, ceil, dropped = load(tag)
+    #: THE READING runs four arms over this corpus, so the journal an
+    #: invocation reads is now selected rather than assumed.
+    arm = sys.argv[2] if len(sys.argv) > 2 else "softmax"
+    cells, ceil, dropped = load(tag, arm)
     if not cells:
         print("no cells yet")
         return 1
     t_stars = sorted({t for t, _, _ in cells} | set(ceil))
+    #: n columns come from the journal. The module previously pinned
+    #: (2048, 8192, 32768), which silently hid every cell THE READING
+    #: asks for -- it wants n = 4096 / 32768 / 98304.
+    n_cols = sorted({n for _, _, n in cells} | set(N_TRAIN))
 
-    print("=== R10 P1a -- SOFTMAX CAPACITY, e3 chain family, s=64 d=24 "
-          "n_eval=4096, 8 threads ===")
+    print("=== R10 P1a -- %s CAPACITY, e3 chain family, s=64 d=24 "
+          "n_eval=4096 ===" % arm.upper())
     print("bar: NRMSE < 1.0 (predict-the-mean). NO READING = did not clear it.")
     print("--  = cell not run (priced and named in results/r10_it8_priced_dag.txt)")
     print()
@@ -95,10 +103,10 @@ def main() -> int:
         print("--- t* = %d   (softmax hop budget 1; best possible NRMSE for a "
               "1-hop model = %.6f) ---" % (t, c) if c else "--- t* = %d ---" % t)
         print("%-8s %s" % ("steps", "".join("%26s" % ("n_train=%d" % n)
-                                            for n in N_TRAIN)))
+                                            for n in n_cols)))
         for st in STEP_RUNGS:
             row = "%-8d" % st
-            for n in N_TRAIN:
+            for n in n_cols:
                 per = cells.get((t, st, n))
                 if not per:
                     # Every un-run cell here was dropped for budget and is priced
@@ -127,11 +135,24 @@ def main() -> int:
         vals = [per[s] for s in sorted(per)]
         ci = bootstrap_mean_ci(vals)
         floor = 2 * 2.0 ** (-len(vals))
+        mean = statistics.fmean(vals)
+        #: HOP FLOOR. A model with a budget of h hops cannot read a t*-hop label
+        #: better than sqrt((t*-h)/t*). A cell whose CI lies entirely BELOW the
+        #: h=1 floor cannot have been produced by a 1-hop mechanism, which is the
+        #: theorem-grade verdict THE READING is built to return.
+        floor1 = math.sqrt(max(0.0, t - 1) / t)
+        below = ci[1] < floor1
+        #: MECHANISM COLUMN. Inverting the floor at the observed NRMSE gives the
+        #: hop count the reading is consistent with: h_hat = t*(1 - NRMSE^2).
+        h_hat = t * (1.0 - mean ** 2)
         print("  t*=%-3d steps=%-5d n=%-6d  seeds=%d  mean=%.6f  sd=%.6f  "
               "CI95=[%.6f,%.6f]  excludes 1.0: %s  sign floor 2*2^-%d=%.4f"
-              % (t, st, n, len(vals), statistics.fmean(vals),
+              % (t, st, n, len(vals), mean,
                  statistics.stdev(vals) if len(vals) > 1 else 0.0,
                  ci[0], ci[1], "YES" if ci[1] < 1.0 else "NO", len(vals), floor))
+        print("           floor_1=%.6f  CI below floor_1: %-3s  h_hat=t*(1-NRMSE^2)=%.3f  %s"
+              % (floor1, "YES" if below else "NO", h_hat,
+                 "PROVEN MULTI-HOP" if below else "consistent with 1 hop"))
 
     print()
     print("=== VERDICT ===")

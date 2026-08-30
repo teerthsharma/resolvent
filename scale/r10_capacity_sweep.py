@@ -67,12 +67,13 @@ from scale.negation_scope import (M3_TASKS, nrmse, bootstrap_ci, calibrate_bar,
 
 S, D = 64, 24              # the shape every e3 row in results/m3_capability.txt uses
 N_EVAL = 4096              # PINNED across cells, so eval noise is identical everywhere
+GATE_TOL = 1e-3            # 0-step gate tolerance; see train_with_checkpoints
 STEP_RUNGS = (150, 600, 2400, 9600)
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 
 
 def train_with_checkpoints(x_train, y_train, x_eval, y_eval, *, s: int,
-                           rungs, seed: int):
+                           rungs, seed: int, arm: str = "softmax"):
     """`m3_capability.run_arm`'s loop, read at every rung instead of only the end.
 
     Returns (red, [per-rung dict]). `red` is the 0-step gate: the UNTRAINED arm
@@ -80,7 +81,7 @@ def train_with_checkpoints(x_train, y_train, x_eval, y_eval, *, s: int,
     `float('nan') >= 1.0` is False and would pass a broken instrument silently.
     """
     torch.manual_seed(seed)
-    model = Arm("softmax", s)
+    model = Arm(arm, s)
     opt = torch.optim.Adam(model.parameters(), lr=LR)
 
     mu = float(y_train.mean())
@@ -92,8 +93,22 @@ def train_with_checkpoints(x_train, y_train, x_eval, y_eval, *, s: int,
             return model(x) * sigma + mu
 
     r0t, r0e = nrmse(raw_pred(x_train), y_train), nrmse(raw_pred(x_eval), y_eval)
-    red = dict(nrmse0_train=r0t, nrmse0_eval=r0e,
-               ok=(not bad(r0t)) and (not bad(r0e)) and r0t >= 1.0 and r0e >= 1.0)
+    #: GATE_TOL exists because a bare `>= 1.0` sits on the edge of its own null.
+    #: Measured over 16 untrained seeds at t*=2, n=2048, with no training at all:
+    #: softmax's minimum 0-step eval reading is 1.00055844 and pivot_unsigned's
+    #: 1.00055861, clearing a bare 1.0 by 5.6e-4; windowed_signed's minimum is
+    #: 0.99997039, and 1 of its 16 seeds falls below, aborting an 8-seed run at
+    #: its third seed over a 2.96e-5 excursion. The gate's intent is "the
+    #: untrained arm does not MEANINGFULLY beat predict-the-mean", and that word
+    #: has to be a quantity. 1e-3 admits the measured tail (34x the observed
+    #: excursion) while still rejecting anything better than a tenth of the
+    #: trained seed sd at this cell (~1.0e-2). Recorded as M-14.
+    #:
+    #: This changes only WHICH RUNS ABORT. A cell that passes the gate is scored
+    #: exactly as before, so no published number moves.
+    red = dict(nrmse0_train=r0t, nrmse0_eval=r0e, gate_tol=GATE_TOL,
+               ok=(not bad(r0t)) and (not bad(r0e))
+                  and r0t >= 1.0 - GATE_TOL and r0e >= 1.0 - GATE_TOL)
 
     y_std = (y_train - mu) / sigma
     out, done = [], 0
@@ -126,6 +141,11 @@ def main() -> int:
                     help="seeds beyond the first only run rungs at or below this")
     ap.add_argument("--threads", type=int, default=8)
     ap.add_argument("--tag", default="it8")
+    #: Round 11 THE READING needs four arms on this corpus. Default stays
+    #: "softmax" so the journal path and every published cell are unchanged.
+    ap.add_argument("--arm", default="softmax",
+                    choices=("softmax", "pivot_unsigned", "windowed_signed",
+                             "pivot_signed"))
     a = ap.parse_args()
     if len(a.max_steps) != len(a.n_train):
         ap.error("--max-steps needs one entry per --n-train")
@@ -133,19 +153,19 @@ def main() -> int:
 
     task = "e3_t%d" % a.t_star
     batch_fn, oracle_fn, feature_fn, fd_fn = M3_TASKS[task]
-    jl = ROOT / "results" / ("r10_%s_capacity_softmax_t%d.jsonl" % (a.tag, a.t_star))
+    jl = ROOT / "results" / ("r10_%s_capacity_%s_t%d.jsonl" % (a.tag, a.arm, a.t_star))
     log = open(jl, "a", encoding="utf-8")
 
     def emit(rec):
         log.write(json.dumps(rec) + "\n")
         log.flush()
 
-    emit(dict(t="header", task=task, arm="softmax", s=S, d=D, n_eval=N_EVAL,
+    emit(dict(t="header", task=task, arm=a.arm, s=S, d=D, n_eval=N_EVAL,
               threads=a.threads, torch=torch.__version__, lr=LR, d_model=D_MODEL,
               when=time.strftime("%Y-%m-%d %H:%M:%S"), seeds=a.seeds,
               sign_floor=2 * 2.0 ** (-len(a.seeds))))
-    print("=== %s softmax s=%d d=%d n_eval=%d threads=%d torch %s ==="
-          % (task, S, D, N_EVAL, a.threads, torch.__version__), flush=True)
+    print("=== %s %s s=%d d=%d n_eval=%d threads=%d torch %s ==="
+          % (task, a.arm, S, D, N_EVAL, a.threads, torch.__version__), flush=True)
 
     # The analytic ceiling a 1-hop model cannot beat: sqrt((t*-k)/t*) at k=1,
     # from `negation_scope.equilibrium_hop_reading`'s closed form. softmax's hop
@@ -176,7 +196,7 @@ def main() -> int:
                 continue
             x_tr, y_tr, _, _ = batch_fn(n, S, D, d_model=D_MODEL, seed=seed)
             t0 = time.time()
-            red, rows = train_with_checkpoints(x_tr, y_tr, x_eval, y_eval,
+            red, rows = train_with_checkpoints(x_tr, y_tr, x_eval, y_eval, arm=a.arm,
                                                s=S, rungs=use, seed=seed)
             if not red["ok"]:
                 print("INSTRUMENT BROKEN n=%d seed=%d: 0-step %.6f/%.6f"

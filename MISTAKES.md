@@ -925,6 +925,362 @@ repository, which is instance 23 in `R10_MECHANISM.md`; this is that instance in
 its narrowest form, where the bypass is a single dictionary comprehension and the
 author is the person who wrote the guard.
 
+### V-19. A wait-gate polling for work that had already finished
+
+`/tmp/waveB.sh:5` computed its drain condition as
+`n_wrote=$(grep -hc 'WROTE' results/r10_it8_waveAC_t*.log | paste -sd+ | bc)`.
+`bc` is not installed on this host: `which bc` returns nothing across all forty
+PATH entries. The substitution yielded the empty string, and line 7's
+`[ "$n_wrote" -ge 6 ]` raised `integer expression expected` on every pass rather
+than evaluating false. A test that errors is not a test that fails; the loop
+carried no branch for the error, so it slept 45 seconds and retried without
+bound, from 20:40:20 on 2026-08-30 until it was killed at 01:02 the next
+morning.
+
+What it was waiting to start had already run. `results/r10_it8_waveB.log` holds
+the completed wave at lines 16-26 — `t*=2 n=32768 eval NRMSE=0.874834 [LEARNS]`
+`boot[0.8620,0.8903] 624.5s`, `t*=8 ... 0.972372 [LEARNS] boot[0.9641,0.9814]`
+`607.8s`, `t*=32 ... 1.006066 [NO READING] boot[1.0033,1.0094] 680.0s`, then
+`WAVE B COMPLETE` — and the first `bc: command not found` appears at line 27,
+after it. The journals corroborate: `results/r10_it8_capacity_softmax_t8.jsonl`
+and `..._t32.jsonl` each carry `n_train=32768` cells at seeds 0 through 7, a
+complete N=8. The gate spent four hours and twenty-two minutes polling for
+permission to begin work that was already on disk, and appended 43,974 bytes of
+its own error text to the very log that recorded the completion.
+
+The mechanism is therefore not lost data. It is a gate whose predicate could
+neither pass nor fail, attached to a job with no check for whether it was
+already done.
+
+**Check:** a wait-gate must distinguish *condition false* from *condition
+unevaluable* and exit loudly on the second; compute the gate quantity with a
+tool the host is known to carry, since `awk` and shell arithmetic exist wherever
+`sh` does and `bc` does not. Separately, a job that appends to a log must read
+that log's head before starting, not its tail.
+
+### V-21. A tail read as if it were the file
+
+The first record of V-19 in this document asserted that wave B "never ran" and
+that `n=32768` was "the point that never ran", naming it as the cost of the
+defect. Both statements were false when written. They came from reading the
+last 600 bytes of `results/r10_it8_waveB.log`, finding `bc: command not found`
+repeated, and generalising the tail to the file. The completed wave sat at lines
+16-26 of the same file, unread.
+
+The error survived one round of apparent corroboration. A process table showed
+the broken script alive, a `which bc` returned nothing, and the gate arithmetic
+was confirmed unevaluable — three checks that all agreed, and none of which
+touched the question of whether the work had already happened. Agreement among
+checks that share a blind spot is one check.
+
+A second-order defect followed from the first: acting on the false conclusion
+launched a duplicate sweep that recomputed `t*=2 n=32768 seed=0` to
+`eval_nrmse 0.8748335142818684`, bit-identical to the row already journalled,
+and appended header, ceiling and bar rows to three journals before it was
+killed. Those rows were reverted at `git checkout -- results/`.
+
+**Check:** before asserting what a file does not contain, grep the whole file
+for what would contradict the assertion. `tail` answers what happened last, and
+a claim about whether something ever happened is not that question. When several
+checks agree, name the question each one could not have answered.
+
+### V-20. A cap requested in prose, and a sentinel that reads it as infinity
+
+A loop was mounted with a request for a hard ceiling of 60 iterations and
+mounted unbounded. The request never reached the parser: the invocation carried
+the cap four times as prose — `max_iterations 60`, `hard cap`, `terminate at
+60`, `max_iterations MUST be 60` — and never once as `--max-iterations 60`.
+`setup-ralph-loop.sh:25` recognises only the literal flag form, so the prose
+fell through the catch-all argument branch at `setup-ralph-loop.sh:141-145`
+into the prompt body, and `MAX_ITERATIONS` kept its initialiser `0`
+(`setup-ralph-loop.sh:10`). The banner then printed `Max iterations: unlimited`
+and `This loop cannot be stopped manually`, both accurate.
+
+The second defect is what made the first one silent. `stop-hook.sh:61` guards
+the ceiling as `[[ $MAX_ITERATIONS -gt 0 ]] && [[ $ITERATION -ge
+$MAX_ITERATIONS ]]`, so `0` means unlimited — and `0` is also the value left
+behind when a cap is requested in a form the parser does not recognise. "No cap
+was asked for" and "a cap was asked for and lost" are the same byte, and the
+one the machine prefers is infinity. A third form, `--max-iterations=60`, drops
+silently the same way.
+
+A related field is decorative rather than wrong: `stop-hook.sh:13-18` tests only
+whether the state file exists and never parses `active:`, which is why the
+earlier loop deactivated at `ecbedf7` was in fact stopped by renaming the file,
+and why the `active: false` that commit credits had no effect.
+
+Both were repaired and the repair verified by execution — 8 mount cases, 6
+stop-hook cases, an end-to-end run where a cap of 3 terminates on the third
+stop. `--max-iterations` is now mandatory and must be a positive integer or the
+literal `unlimited`; prose, `abc`, `sixty` and bare `0` each exit 1 writing no
+state file; `active: false` now halts. The patch lives in
+`plugins/cache/claude-plugins-official/ralph-loop/1.0.0/` and a plugin update
+reverts it, along with an earlier hand patch already present in that cache and
+absent from the marketplace tree. Full account in `V13_RALPH_LOOP_FIX.md`.
+
+**Check:** after any mount that accepts a bound, read the bound back out of the
+state the machine consults, never out of the request — the request can be
+well-formed prose and still be invisible. Where a sentinel doubles as a parse
+failure, that read-back is the only thing separating them.
+
+### P-9. A commit message that contradicts the commit before it
+
+`ecbedf7` (2026-08-31 00:40:40) states that the range "stopped at it.20 with
+the it.21 n=8,192 wave killed before its first cell landed."
+
+`67162a6` (00:40:12), twenty-eight seconds earlier and by the same author,
+committed `results/r10_r10_it21_t8_n8192_capacity_softmax_t8.jsonl`, whose
+cell row reads `"t_star": 8, "n_train": 8192, "seed": 0, "steps": 150,`
+`"train_nrmse": 0.9732971180581712, "eval_nrmse": 1.0252097125261737,`
+`"boot_lo": 1.0168885291722383, "boot_hi": 1.0339123632622422,`
+`"verdict": "NO READING", "secs": 97.3`.
+
+The first cell landed, ran 97.3 seconds, and returned NO READING. What was
+killed was the remainder of the wave: the same journal's final row records
+`"t": "dropped", "steps": [600, 2400, 9600], "why": "unaffordable, see priced`
+`DAG"`. The message conflated *the wave was truncated after its first cell*
+with *the first cell never landed*, and the distinction is the whole of the
+result — a cell that returns NO READING is a measurement, and a cell that
+never ran is an absence.
+
+**Check:** a commit message that describes what did not happen must name the
+artefact it checked to establish the absence. Where the artefact is a journal,
+quote the row, or quote the empty result of the grep that found no row.
+
+### D-6. The repair that was written and never started
+
+`/tmp/waveB2.sh`, modified at 20:50 on 2026-08-30, is `/tmp/waveB.sh` with the
+V-19 defect removed: it counts with `grep -h 'WROTE' ... | wc -l | tr -d ' '`
+and guards the comparison as `[ "${n:-0}" -ge 6 ]`. Both changes are correct
+and either alone would have released the gate.
+
+It was never run. The broken script, started at 20:40:20, was still the only
+live process at 01:02 the following morning, four hours and twelve minutes
+after its replacement was authored ten minutes downstream of it. No process
+for `waveB2.sh` appears in the process table at any point, and
+`results/` contains no log it would have written.
+
+The failure is not the bug; the bug was found and fixed inside ten minutes.
+The failure is that fixing it and deploying it were treated as the same act,
+so the diagnosis was recorded on disk while the diagnosed process kept
+running.
+
+**Check:** a repair to a running process is not applied until the old process
+is dead and the new one has emitted its first line. Kill first, then start,
+then read one line of output before moving on.
+
+### M-10. A finding filed without grepping for the guard that already existed
+
+The first version of this entry reported the thread-count effect on
+`eval_nrmse` as a new discovery and asserted that "nothing in the protocol pins
+the value". Both halves were wrong, and the evidence was one grep away.
+
+The effect is real and was reproduced here — `t*=2, n=2048, seed=0, steps=150`
+returns `0.971432426855954` at `threads=8` and `0.9690874072329486` at
+`threads=6`, both bit-for-bit against the journal — but the repository found it
+first and had already built the guard. `scale/it11_verdict.py:129-165`'s
+`by_seed` states the mechanism at equation level in its own docstring, names the
+drift as `2.345e-3` across all three cross-thread pairs
+(`2.345e-3, 4.911e-4, 7.311e-6`), builds every seed interval at a fixed thread
+count, picks the count carrying the most distinct seeds, and raises on a
+same-seed same-threads disagreement. `thread_split` reports what was dropped.
+`results/r10_inspector_phase1a.md:25` verified the floor independently and
+marked it CLEAN; `R10_MECHANISM.md:370` already catalogues *misreporting* that
+floor as its own defect; `R10_ITERATION_10.md:142` warns against comparing a
+7e-5 quantity against it "as if they were the same kind of uncertainty".
+
+What survives is narrow and prospective. The equivalence margin
+`Δ_eq = 0.5 σ_softmax-seed` that v-main.6 introduces appears nowhere in the
+tree, so the thread floor has never been compared against *it*: at
+`t*=2, n=2048` the N=8 seed sd is `0.010101`, giving `Δ_eq = 0.005051`, and the
+`0.002345` floor is `0.464` of that. A margin under roughly `4.7e-3` is smaller
+than twice the reduction-order floor and cannot be defended. Separately,
+`r10_capacity_sweep.py` defaults `--threads` to 8 while the recorded N=8 wave
+ran at 6, so a cell added with default flags will not join the existing spread —
+`by_seed` will silently drop it into the minority thread group rather than
+corrupt the interval, which is the guard working, but the cell is then wasted.
+
+**Check:** before filing a defect, grep for its guard. The instruction to do so
+was already standing in this round's own loop prompt — *before asserting a file
+lacks something, grep the whole file* — and this entry is what skipping it
+produces: a rediscovery written in the voice of a discovery, which costs more
+than silence because it invites re-fixing something already fixed.
+
+### M-11. Whitening checked at lag 1, integrated at frequency zero
+
+A sequential detector was calibrated on an independent null and deployed on a
+dependent one. The closed-form threshold agreed with simulation to 0.71% where
+the assumption held, which is what made the failure invisible: at the measured
+first-order autocorrelation `φ̂ = 0.709` the realized average run length to
+false alarm was `41.5` against a nominal `1000`, a `24.1×` shortfall, and even
+a mild `φ = 0.3` gave `149.1`. End-to-end at the deployable operating point the
+nominal `22000` was realized as `1459`, a 53.0% chance of at least one false
+alarm per run.
+
+The standard remedy was applied and the standard diagnostic passed while the
+defect survived. After AR(1) pre-whitening the residual's lag-1 autocorrelation
+read `−0.0999`, which any whiteness check accepts, but its Bartlett long-run
+variance ratio climbed to `2.78` at bandwidth 200. A cumulative statistic
+integrates the spectral density at frequency zero, not the autocorrelation at
+lag 1, so a residual can be white by the usual test and still carry the power
+that matters. The sliding window that produced the residual writes correlation
+at a range of order `W + G`, longer than the burn-in available to measure it.
+
+The same geometry silently filters signal as well as noise. A trailing-window
+detrender with a guard-to-transition-width ratio of 0.5 passes only 13% of the
+transition amplitude; an earlier revision lost 5 of 8 planted seeds to exactly
+that, with no diagnostic naming the cause. At `W=300, G=150` it passes 76.8%.
+
+**Check:** for any statistic that accumulates, validate the null by simulating
+from the dependence structure actually present, not by testing residuals for
+whiteness at lag 1. Report the long-run variance ratio at a bandwidth of the
+window's own scale. And before trusting a detrender, measure what fraction of a
+planted signal survives it.
+
+### V-22. A pre-registered constant carried in from another system
+
+A contract pre-registered the worked figure `α = 0.2`, with an uncertain
+fraction of `0.398` at `ε = 1e-2` and `0.251` at `1e-3`, as the number the
+planted fractal bed would be built to read. Two defects sit inside it.
+
+The exponent is self-consistent and the levels are not measured. `0.398 / 0.251
+= 1.58566` against `10^{0.2} = 1.58489`, so the per-decade *ratio* does follow
+from `α = 0.2` alone. The levels do not: `(10^{-2})^{0.2} = 0.398107` and
+`(10^{-3})^{0.2} = 0.251189` to six figures, which is the scaling law evaluated
+with its prefactor silently set to 1. The published law is `f(ε) ~ C·(ε/L)^α`
+with a system-dependent `C`, printed explicitly as `n_k/ñ` by Daza et al.
+Setting `C = 1` asserts that every state is uncertain at unit resolution, which
+is a claim about the bed, not a consequence of the scaling law.
+
+`α = 0.2` is itself the forced damped pendulum's value, from `D₀ ≅ 1.8` with
+`D = 2` in Ott's Scholarpedia article on basins of attraction. Pre-registering
+it imports one system's boundary dimension into a prediction about a different
+system that had not been built yet. A pre-registration is supposed to bind the
+analyst to a number derived from the design under test; a number carried in
+from an unrelated system binds nothing and will be met or missed for reasons
+that have nothing to do with the hypothesis.
+
+This is V-17's mechanism — a threshold imported out of its units — moved one
+level up, from a decision threshold to a predicted value.
+
+**Check:** every pre-registered constant states which system produced it and by
+what derivation. If the answer is another system's published figure, it is a
+prior, not a prediction, and must be labelled as one. Where a law carries a
+prefactor, either measure the prefactor or register only the quantity the law
+determines without it — here, the ratio, never the level.
+
+### M-12. A calibrated model whose untested branch went unchecked
+
+`ceq/sizing.py` opens by insisting that "a sizing model that has never been
+compared against a scale is a spreadsheet", and its live path earns that. Run
+against the CUDA allocator on the card it was calibrated on, at `d=256,
+heads=4, seq=512, bs=8, fp32`, its non-checkpointed predictions land at
+`1.11 / 1.01 / 0.99` of measured for softmax at `L = 4 / 8 / 16` and
+`0.98 / 0.94 / 0.91` for the signed arm.
+
+Its checkpointed branch was never measured, and it is wrong. The branch returns
+`resid / L + C_OPERATOR * op_one + head`, which is independent of `L` once the
+residual term is divided out, so it predicts `204.8 MiB` for the signed arm at
+every depth. Measured peaks grow with depth: `289.0` at `L=4`, `329.1` at
+`L=8`, `409.2` at `L=16`, so the ratio of measured to predicted climbs
+`1.41 → 1.61 → 2.00`. The same branch is applied unchanged to the softmax arm,
+where it returns the non-checkpointed figure and therefore over-predicts by up
+to `4.8×` (`243.7` measured against `1160.0` predicted at `L=16`).
+
+The failure is not the coefficient but the coverage. The docstring's measured
+table has five sequence lengths and two arms and no checkpointed column, so the
+one branch with no row in the table is the one that drifted. A module can be
+scrupulously calibrated and still ship an unmeasured path, and that path will
+be the one a memory-constrained plan reaches for first.
+
+**Check:** every branch of a model that returns a number needs a row in the
+calibration table, and a branch whose prediction is constant in a parameter the
+measurement varies is a claim to test, not a simplification to accept. Where a
+model has an `if`, the test needs both sides.
+
+*Recurrence, one entry later.* `Cap.__str__` in `scale/it11_verdict.py` formatted
+`h_hat` unconditionally and raised `TypeError` on every cell above the bar, where
+`h_hat` is deliberately `None`. Its demo asserted `r3.h_hat is None` but never
+rendered `r3`, so the branch had an assertion and no row — the same shape as the
+sizing model's unmeasured checkpointed path, committed while that entry was being
+written. Asserting a value and exercising the code that consumes it are different
+tests, and the second is the one that catches formatting. The demo now prints
+every case it asserts.
+
+### M-13. An equivalence margin registered without a reachability check
+
+v-main.6 fixed the parity grammar as TOST with a pre-registered margin
+`Δ_eq = 0.5 σ_softmax-seed`, at `α = 0.05`, on the round's standing `N = 8`. The
+three constants were chosen separately and their joint consequence was never
+computed.
+
+The 90% confidence interval for a two-sample contrast has half-width
+`t₍.₉₅, 2N−2₎ · σ · √(2/N)`. Dividing through by `σ` makes the comparison pure
+arithmetic against the margin's `0.5`: at `N = 8` the half-width is `0.8807`, at
+`N = 16` it is `0.6001`, and it first drops below `0.5` at `N = 23`. So for every
+`N` the round actually runs, the interval is wider than the window it has to sit
+inside, and **two bit-identical arms return NO VERDICT**. The test cannot emit
+its own passing verdict.
+
+Adequacy is a further step beyond reachability. TOST power at a true difference
+of zero — the probability of correctly certifying genuinely equivalent arms —
+reads `0.000` at `N = 8`, `0.042` at `N = 24`, `0.431` at `N = 40`, and first
+clears `0.80` at `N = 70`. That is `8.8×` the registered seed count. Priced
+against the measured cost curve, THE READING's three points at N=8 cost about
+`8.9 h` per arm; at `N = 70` the same three points cost roughly `78 h` per arm,
+or about ten days for three arms on this host.
+
+This is M-9's mechanism — a verdict whose finest achievable statistic cannot
+reach the level it quotes — moved from a difference test to an equivalence test.
+M-9 was filed in this same round. The check it prescribes, *compute the
+control's expected value before it runs*, was not applied to the margin because
+the margin arrived as a definition rather than as a control.
+
+**Check:** a pre-registered margin is a claim about achievable resolution and
+must be divided by the design's own standard error before it is registered. Run
+the test on two identical inputs first: a design that cannot certify equivalence
+between a sample and itself has no passing branch, and every result it later
+reports is the failure branch wearing different numbers.
+
+### M-14. A gate whose threshold sits on the edge of its own null
+
+`scale/r10_capacity_sweep.py:94` guards every cell with
+`ok = (not bad(r0t)) and (not bad(r0e)) and r0t >= 1.0 and r0e >= 1.0` — the
+untrained arm must read at or above NRMSE 1.0 on both splits, or the run aborts
+with INSTRUMENT BROKEN and credits nothing. The intent is right: an
+initialisation that already beats predict-the-mean makes every later
+"improvement" a measurement against a moving start.
+
+The threshold has no tolerance band, and it is placed exactly where the null
+distribution ends. Measured over 16 seeds at `t*=2, n_train=2048`, untrained,
+with no training performed:
+
+| arm | min | max | mean | seeds below 1.0 |
+|---|---|---|---|---|
+| softmax | 1.00055844 | 1.03349997 | 1.01178392 | 0/16 |
+| pivot_unsigned | 1.00055861 | 1.03350431 | 1.01178596 | 0/16 |
+| windowed_signed | 0.99997039 | 1.03467607 | 1.01216808 | 1/16 |
+
+Softmax's own lower edge clears the gate by `5.6e-4`. The arms sit against the
+threshold, not above it. `windowed_signed` has a marginally wider spread
+(`3.468e-2` against `3.350e-2`) and its lower tail crosses: seed 2 reads
+`0.9999703932724174`, short of the bar by `2.96e-5`, and an eight-seed run
+aborted at its third seed.
+
+A constant predictor can never read below 1.0 — offsetting toward any constant
+only raises the residual — so a sub-1.0 reading does require some correlation
+between the untrained output and the label. At `2.96e-5` that correlation is a
+tail excursion of the random initialisation, not a defect the gate was built to
+catch, and the gate cannot tell the two apart because it compares against a
+bare constant rather than against the null's own spread.
+
+**Check:** a threshold placed at the exact boundary of a null distribution fires
+on the null. Measure the null first — here, sixteen untrained seeds costing no
+training at all — and set the bound at a stated distance from its edge, so that
+the gate's false-abort rate is a number rather than a surprise. Where the intent
+is "not meaningfully better than the mean", the threshold must carry the word
+*meaningfully* as a quantity.
+
 ## The eleven checks, before any control ships
 
 Condensed from the above; this is the list to run down.

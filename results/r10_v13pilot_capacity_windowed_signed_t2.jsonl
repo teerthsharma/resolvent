@@ -1,0 +1,7 @@
+{"t": "header", "task": "e3_t2", "arm": "windowed_signed", "s": 64, "d": 24, "n_eval": 4096, "threads": 6, "torch": "2.5.1+cu121", "lr": 0.02, "d_model": 16, "when": "2026-08-31 02:09:36", "seeds": [0, 1, 2, 3, 4, 5, 6, 7], "sign_floor": 0.0078125}
+{"t": "ceiling", "t_star": 2, "hop_budget": 1, "nrmse_ceiling": 0.7071067811865476}
+{"t": "bar", "ok": true, "why": "BAR CALIBRATED", "predict_the_mean": 1.0, "payload_only": 1.2272241529888959, "oracle": 0.0, "flipper_dependence": 1.4012436552018552, "trained_two_feature": 0.013981608070254312}
+{"t": "cell", "task": "e3_t2", "t_star": 2, "n_train": 2048, "seed": 0, "threads": 6, "steps": 150, "train_nrmse": 0.7747378913590046, "eval_nrmse": 1.0213662162051715, "boot_lo": 1.0022463440998264, "boot_hi": 1.039666316242775, "verdict": "NO READING", "secs": 101.35}
+{"t": "dropped", "task": "e3_t2", "t_star": 2, "n_train": 2048, "steps": [600, 2400, 9600], "why": "unaffordable, see priced DAG"}
+{"t": "cell", "task": "e3_t2", "t_star": 2, "n_train": 2048, "seed": 1, "threads": 6, "steps": 150, "train_nrmse": 0.7915984119981154, "eval_nrmse": 1.0169346311810716, "boot_lo": 1.000806128673705, "boot_hi": 1.0364830847753381, "verdict": "NO READING", "secs": 101.27}
+{"t": "instrument_broken", "n_train": 2048, "seed": 2, "nrmse0_train": 1.0007840721511323, "nrmse0_eval": 0.9999703932724174, "ok": false}
