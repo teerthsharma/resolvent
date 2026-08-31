@@ -1379,6 +1379,54 @@ interruption must read the lane out of the existing journal rather than off the
 machine's current capacity. Where a discipline can be violated by a flag, the
 guard belongs in the consumer of the data, not in the producer.
 
+### P-10. A source's intro was cited as its theorem
+
+`CEQ_V15_CONTRACT.md:51-55` names this class L-EQ and files it under the
+author's own name: the tag `[V]` — page fetched, intro or description matched
+— was treated as license for a load-bearing claim, when the claim required
+the source's theorem read WITH its hypotheses. The contract asserts *"two-
+thirds of the pre-v13 section-5 strikes were `[V]`-as-theorem."*
+
+**The measured fraction is not two-thirds.** `attic/workdonenew.pre-v13.md`
+section 5 ("CLAIMS DISPROVED, WITHDRAWN, OR STRUCK", `:160-211`) holds 44
+rows; 4 of them record a claim that held (`:190` 4/4 HELD, `:204` WORKS,
+`:205` CONFIRMED, `:179` ALREADY GUARDED), leaving 40 genuine strikes. Of
+those 40, four are `[V]`-as-theorem — a real source named, its own equation
+or hypotheses not honoured:
+
+- **`:177`** "ARL₀ from the closed form is the false-alarm rate" — Siegmund's
+  closed form holds only under i.i.d. nulls; at the measured autocorrelation
+  `φ̂=0.709` the real ARL₀ misses the nominal by **24.1×**.
+- **`:196`** "X₂₇a's box-counting `d` feeding `κ=λ(1−d)`" — every fetched
+  statement of the Kantz–Grassberger relation uses the **information**
+  dimension `D₁`; the claim substituted box-counting `D₀`.
+- **`:200`** X32 "`ρ_P=√2` for a planted antisymmetric A" — `√2` is the
+  random-**matrix** ensemble average; an **exactly** antisymmetric `J` gives
+  `ρ_P=2`, measured `2.000000` at four sizes.
+- **`:201`** X32 "Poincaré–Hopf gives Σ index=1 for the replicator" — the
+  theorem needs the field transverse to the boundary; at `μ=0` it is tangent
+  everywhere (measured `dz₀ = −0.000000e+00`), so the hypothesis fails.
+
+**4/40 = 10%, not 66.7%.** Rows that look like candidates and are not: X27b
+(no source was cited at all — "no source fixes `c`" — fabrication, not
+misreading a citation), X27c (the corrected claim leaned on no named source),
+X27d (its own row says "Citation owed `[U]`" — nothing was cited to
+misapply), X32's Fisher relation (row's own verdict: "CORRECT THEOREM, wrong
+quantity" — the citation is not at fault), X28c (the cited relation is read
+correctly; the fault is that agreement is then tautological, not that the
+source failed to back the claim). Full row-by-row reasoning in
+`V15_N2_SATURN.md`, Task B.
+
+**Check.** Every citation entering a load-bearing statement carries `[V-eq]`
+— the theorem's statement WITH its hypotheses, plus one numeric instance run
+— or it is `[V]` and inadmissible (`CEQ_V15_CONTRACT.md:51-53`, L-EQ).
+Greppable: `grep -c '\[V-eq\]'` against `grep -c '\[V\]'` on any document
+about to enter a contract; a nonzero `[V]` count on a load-bearing line is a
+blocked commit, not a style note. Before trusting a fetched source, name
+which hypothesis in its own statement your instance satisfies — "the page
+exists and the intro matches" answers a different question than "the
+equation applies here."
+
 ## The eleven checks, before any control ships
 
 Condensed from the above; this is the list to run down.
