@@ -585,8 +585,12 @@ def main() -> int:
                   f"A closed-cap arm reset to zeroed heads sits at m = 0, where "
                   f"the path product is exactly zero on every window -- a "
                   f"harness bug that reads as a catastrophic arm.")
+            #: `**{k: v ...}` and not `**r`: the identity row already carries a
+            #: `t`, and `dict(t="abort", **r)` raises `TypeError` -- which would
+            #: turn the abort into a crash and lose the journal row that says
+            #: WHY the run stopped.
             emit(dict(t="abort", why="identity_point_is_the_annihilating_gate",
-                      **r))
+                      **{k: v for k, v in r.items() if k != "t"}))
             return 1
 
     for kind in [k for k in a.arms if k in GATED_ARMS]:
