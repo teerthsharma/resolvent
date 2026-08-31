@@ -1,0 +1,58 @@
+=== V15 R1  e3_t2  s=64 d=24 n_train=2048 n_eval=4096 steps=150 seeds=[0, 1, 2, 3, 4, 5, 6, 7] arms=['arm_pl', 'softmax'] ===
+  torch 2.5.1+cu121  torch.get_num_threads()=8  device=cpu  floor_1=0.7071067812
+
+=== 1. THE BIND, RE-MEASURED AT THIS CELL'S SHAPE (no gradient yet) ===
+  s=  8  (L) residual=6.661338e-16  bar=1e-06  rowsum drift=3.331e-16  min entry=6.634e-04  Z-1=4.441e-16
+        planted negatives: drop_key_bias=0.974946  drop_value_rescale=0.916527  drop_bos_sink=1.000000  half_key_bias=0.484493
+  s= 64  (L) residual=7.549517e-15  bar=1e-06  rowsum drift=3.331e-16  min entry=1.982e-21  Z-1=3.775e-15
+        planted negatives: drop_key_bias=1.571521  drop_value_rescale=1.914841  drop_bos_sink=1.000000  half_key_bias=0.721525
+  BIND GREEN at s=64: 7.549517e-15 <= 1e-06, and all four planted negatives fire at O(1). Training is licensed.
+
+=== 2. BAR CALIBRATION (must pass before any arm is credited) ===
+        predict_the_mean 1.000000
+            payload_only 1.227224
+                  oracle 0.000000
+      flipper_dependence 1.401244
+     trained_two_feature 0.013982
+  BAR CALIBRATED -- BAR CALIBRATED
+
+=== 3. TRAIN + EVAL  (live band = positions [62, 63], head=61) ===
+  eval n=4096 seed=12345; per-seed train n=2048 at the seed itself
+  [ arm_pl seed=0] NRMSE=0.645614 h=+1.1664 drift=3.58e-07 boot[0.6283,0.6638] 83.0s  p=1.0000 c=+1.0000 gateR2=+0.9889
+  [ arm_pl seed=1] NRMSE=0.644454 h=+1.1694 drift=4.17e-07 boot[0.6277,0.6664] 85.1s  p=1.0000 c=+1.0000 gateR2=+0.9898
+  [ arm_pl seed=2] NRMSE=1.152430 h=-0.6562 drift=4.77e-07 boot[1.1365,1.1712] 79.2s  p=0.6531 c=+0.3062 gateR2=+0.0111
+  [ arm_pl seed=3] NRMSE=1.113403 h=-0.4793 drift=4.77e-07 boot[1.0972,1.1322] 77.7s  p=1.0000 c=+1.0000 gateR2=+0.6268
+  [ arm_pl seed=4] NRMSE=0.634002 h=+1.1961 drift=3.58e-07 boot[0.6173,0.6517] 110.9s  p=1.0000 c=+1.0000 gateR2=+0.9807
+  [ arm_pl seed=5] NRMSE=0.641881 h=+1.1760 drift=3.58e-07 boot[0.6251,0.6586] 119.6s  p=1.0000 c=+1.0000 gateR2=+0.9719
+  [ arm_pl seed=6] NRMSE=0.662021 h=+1.1235 drift=3.58e-07 boot[0.6425,0.6818] 90.7s  p=1.0000 c=+1.0000 gateR2=+0.9785
+  [ arm_pl seed=7] NRMSE=1.139404 h=-0.5965 drift=4.77e-07 boot[1.1217,1.1585] 86.9s  p=0.6906 c=+0.3811 gateR2=+0.0468
+  [softmax seed=0] NRMSE=0.971432 h=+0.1126 drift=1.00e+00 boot[0.9545,0.9888] 77.8s
+  [softmax seed=1] NRMSE=0.933802 h=+0.2560 drift=1.00e+00 boot[0.9170,0.9509] 76.3s
+  [softmax seed=2] NRMSE=0.945523 h=+0.2120 drift=1.00e+00 boot[0.9311,0.9596] 76.1s
+  [softmax seed=3] NRMSE=0.951174 h=+0.1905 drift=1.00e+00 boot[0.9340,0.9687] 75.0s
+  [softmax seed=4] NRMSE=0.960759 h=+0.1539 drift=1.00e+00 boot[0.9440,0.9787] 67.1s
+  [softmax seed=5] NRMSE=0.945679 h=+0.2114 drift=1.00e+00 boot[0.9299,0.9625] 68.2s
+  [softmax seed=6] NRMSE=0.960282 h=+0.1557 drift=1.00e+00 boot[0.9443,0.9779] 64.8s
+  [softmax seed=7] NRMSE=0.945482 h=+0.2121 drift=1.00e+00 boot[0.9291,0.9614] 65.2s
+
+=== 4. SEED AGGREGATE (N=8 draws, never one seed read as the result -- M-4) ===
+   arm_pl: mean=0.829151 sd=0.253673 95%CI=[0.617075,1.041227] h=+0.6250 floor_1=0.707107 dist=+0.122044 CROSSES=False power=0.2321
+           drift(all rows)=4.768e-07 drift(rows 1..s-1)=4.768e-07  max_j|V_j|=4.585275  a_hat_max=285.071901  1/(1-a_hat_max)=inf
+  softmax: mean=0.951767 sd=0.011824 95%CI=[0.941881,0.961652] h=+0.1883 floor_1=0.707107 dist=+0.244660 CROSSES=False power=0.2321
+           drift(all rows)=1.000e+00 drift(rows 1..s-1)=3.576e-07  max_j|V_j|=4.585275  a_hat_max=1.000000  1/(1-a_hat_max)=inf
+
+  PAIRED CONTRAST arm_pl - softmax: mean=-0.122616 sd=0.257560
+  RESOLUTION STATEMENT (no TOST at N=8): excludes a difference beyond Delta = t(.975,7).sd/sqrt(8) = 0.215326 NRMSE and nothing smaller
+  achieved power against a 0.5*sd true effect at N=8: 0.2321
+
+  sign(a) PROBE off the arm's gate, out of sample: p=0.917953 95%CI=[0.790669,1.045238]  c=2p-1=+0.835907
+    0-step control (same seeds, untrained gate): p=0.943741 95%CI=[0.893282,0.994200]  trained gain=-0.025787
+  gate-vs-a probe R^2 (VENUS's row): +0.699299 95%CI=[+0.338436,+1.060162]
+    0-step control: R^2=+0.371839 95%CI=[+0.195975,+0.547703]  trained gain=+0.327460
+  M-18's retired diagnostic, for contrast: SST of log|a| on the live band = 0.000000e+00
+
+  peak process working set: 1.002 GiB (NEPTUNE's 0.250 GiB is a CUDA allocator figure, not this quantity)
+  ARM PL mean seconds per 150 steps at n=2048: 91.63 s (NEPTUNE inherited ~18.19 s/150 steps, re-measured 12.2 s at 12 threads)
+
+=== WALL CLOCK: 1358.3 s ===
+WROTE C:\Users\seal\Desktop\New folder (32)\results\v15_r1.jsonl
