@@ -168,17 +168,25 @@ def chain_label(a: torch.Tensor, b: torch.Tensor) -> torch.Tensor:
     return y
 
 
-def draw(seed: int = 15, s: int = 8, lo: float = 0.15, hi: float = 0.85):
+def draw(seed: int = 15, s: int = 8, lo: float = 0.15, hi: float = 0.85,
+         device=None):
     """The fork probe's draw, so every number here is comparable to the ones
     `V15_JUPITER2_FORK.md` §4 published: `default_rng(seed)`, gates uniform on
-    `(lo, hi)`, drives standard normal, BOS slot at index 0."""
+    `(lo, hi)`, drives standard normal, BOS slot at index 0.
+
+    `device` moves the drawn tensors AFTER `default_rng` has produced them, so
+    the bytes are the host draw on every device -- the same construct-then-move
+    ordering `V16_BAR_RECERT.md` §6.1 verified byte-identical for the corpus.
+    A device generator would draw different numbers and silently retire every
+    published residual below.
+    """
     rng = np.random.default_rng(seed)
     a = np.empty(s + 1)
     a[0] = np.nan                        # BOS has no gate; poisons any misuse
     a[1:] = rng.uniform(lo, hi, size=s)
     b = np.zeros(s + 1)
     b[1:] = rng.normal(size=s)
-    return torch.from_numpy(a), torch.from_numpy(b)
+    return torch.from_numpy(a).to(device), torch.from_numpy(b).to(device)
 
 
 def constant_gate_draw(a_const: float, s: int = 8):
@@ -221,7 +229,7 @@ def label_cell(a: torch.Tensor, b: torch.Tensor, *, mutation: str = "none",
     """
     g, s, v = mutate(*oracle_heads(a, b), b, mutation)
     n = b.shape[-1]
-    zero_q = torch.zeros(n, 1, dtype=b.dtype)
+    zero_q = torch.zeros(n, 1, dtype=b.dtype, device=b.device)
     out = readout(zero_q, zero_q, v, g, s)
     y = chain_label(a, b)
     a_max = float(a[..., 1:].max())
@@ -235,7 +243,16 @@ def label_cell(a: torch.Tensor, b: torch.Tensor, *, mutation: str = "none",
         "d_model": 1,                 # scalar values
         "steps": 0,                   # L-LEAN: nothing is trained by this node
         "seed": seed,
-        "device": "cpu",
+        #: THE DEVICE THIS CELL WAS MEASURED ON, read off the tensors the cell
+        #: was measured with. It was the literal `"cpu"` until V16, which made a
+        #: cuda run hash IDENTICALLY to a cpu one -- `identity_manifest`
+        #: `CONFIG_FIELDS` carries `device` as a first-class field and the
+        #: literal was filling it with a constant, so the manifest asserted the
+        #: run happened somewhere it had not (`V16_BAR_RECERT.md` F4).
+        #: `.type` and not `str(...)`: `"cuda"`, not `"cuda:0"`, so the value
+        #: matches `--device`'s own vocabulary and the one
+        #: `refuse_cross_device_pool` buckets on.
+        "device": b.device.type,
         "torch_version": torch.__version__,
         "variant": VARIANT,
         "g_setting": "log a_j, g_0 = 0",

@@ -38,6 +38,7 @@ from __future__ import annotations
 
 import functools
 import math
+import os
 
 import pytest
 import torch
@@ -49,6 +50,24 @@ DT = torch.float64
 S = 8                       # positions 0..S; 0 is the BOS sink
 SEED = 15                   # the fork probe's draw, so the numbers are comparable
 
+#: THE DEVICE THE WHOLE SUITE RUNS ON. `ARM_PHASE_DEVICE=cuda python -m pytest
+#: tests/arm_phase` re-runs the IDENTICAL suite on the GPU -- same test ids,
+#: same count, so the two runs diff line for line. Default `cpu`, so a bare
+#: `pytest` is the run that produced `V15_ARM_PHASE.md`.
+#:
+#: An env var and not a `params=` fixture ON PURPOSE: parametrizing would rename
+#: every test id and double the collected count, and both `V15_ARM_PHASE.md` and
+#: the loop-level collection guards quote these ids.
+#:
+#: EVERY DRAW IS MADE ON THE HOST AND THEN MOVED. `torch.Generator()` is a CPU
+#: generator and a cuda generator draws different bytes; the corpus builders in
+#: `scale/negation_scope.py` already construct-then-`.to()` for that reason, and
+#: `V16_BAR_RECERT.md` 6.1 verified the draw byte-identical on both devices. So
+#: `.to(DEV)` always sits AFTER the generator, never inside it -- otherwise this
+#: file would be measuring a different corpus rather than a different device.
+DEV = torch.device(os.environ.get("ARM_PHASE_DEVICE", "cpu"))
+ON_CUDA = DEV.type == "cuda"
+
 #: `V15_R1.md` section 7's own `a_hat_max` column, all eight seeds. These are
 #: gate magnitudes a TRAINED ARM PL actually produced, five crossing and three
 #: divergent. Fed to this arm's parametrization they must all read `|a| <= 1`.
@@ -58,9 +77,9 @@ R1_A_HAT_MAX = (1.4107265932952324, 1.2868, 20.3090, 49.6613,
 
 def _qk(n: int = S + 1, d: int = 4, seed: int = 3):
     g = torch.Generator().manual_seed(seed)
-    return (torch.randn(n, d, generator=g, dtype=DT),
-            torch.randn(n, d, generator=g, dtype=DT),
-            torch.randn(n, 2, generator=g, dtype=DT))
+    return (torch.randn(n, d, generator=g, dtype=DT).to(DEV),
+            torch.randn(n, d, generator=g, dtype=DT).to(DEV),
+            torch.randn(n, 2, generator=g, dtype=DT).to(DEV))
 
 
 # ================================================================== BIND 1
@@ -79,6 +98,7 @@ def test_bind1_the_magnitude_cap_holds_over_a_wide_parameter_range():
     u = (torch.rand(n, generator=g, dtype=DT) * 48.0 - 24.0).exp()   # 1e-10..1e10
     u = u * torch.where(torch.rand(n, generator=g, dtype=DT) < 0.5, -1.0, 1.0)
     th = (torch.rand(n, generator=g, dtype=DT) * 2000.0) - 1000.0
+    u, th = u.to(DEV), th.to(DEV)
     mod = arm_phase.gate(u, th).abs()
     assert float(mod.max()) <= 1.0, f"worst |a| = {float(mod.max())!r}"
     assert bool(torch.isfinite(mod).all())
@@ -87,7 +107,7 @@ def test_bind1_the_magnitude_cap_holds_over_a_wide_parameter_range():
 def test_bind1_holds_at_the_exact_gate_magnitudes_r1_measured():
     """The eight `a_hat_max` values `V15_R1.md` section 7 printed, including the
     `285.07` that put the `1/(1-a)` rescale out of its domain."""
-    u = torch.tensor(R1_A_HAT_MAX, dtype=DT)
+    u = torch.tensor(R1_A_HAT_MAX, dtype=DT, device=DEV)
     th = torch.zeros_like(u)
     assert float(arm_phase.gate(u, th).abs().max()) <= 1.0
 
@@ -95,7 +115,8 @@ def test_bind1_holds_at_the_exact_gate_magnitudes_r1_measured():
 def test_bind1_holds_at_the_endpoints_of_the_float_line():
     """Infinities and the largest finite doubles included, because a cap that
     is only tested on ordinary numbers is a cap on ordinary numbers."""
-    u = torch.tensor([-math.inf, -1e308, -1.0, 0.0, 1.0, 1e308, math.inf], dtype=DT)
+    u = torch.tensor([-math.inf, -1e308, -1.0, 0.0, 1.0, 1e308, math.inf],
+                     dtype=DT, device=DEV)
     th = torch.zeros_like(u)
     m = arm_phase.magnitude(u)
     assert float(m.max()) <= 1.0 and float(m.min()) >= 0.0
@@ -110,7 +131,7 @@ def test_bind1_zero_and_one_are_ATTAINED_and_not_approached():
     are evaluated on the same parameter grid so the difference is measured and
     not asserted.
     """
-    u = torch.linspace(-2.0, 2.0, 401, dtype=DT)
+    u = torch.linspace(-2.0, 2.0, 401, dtype=DT, device=DEV)
     m = arm_phase.magnitude(u)
     assert float(m.max()) == 1.0 and float(m.min()) == 0.0
     lru = torch.exp(-torch.exp(u))                      # LRU's open magnitude
@@ -120,7 +141,7 @@ def test_bind1_zero_and_one_are_ATTAINED_and_not_approached():
 def test_bind1_planted_negative_dropping_the_cap_restores_the_r1_divergence():
     """PLANTED NEGATIVE 1. `cap=False` is the open magnitude ARM PL had. The
     bind must fail at the size R1 measured, not merely fail."""
-    u = torch.tensor(R1_A_HAT_MAX, dtype=DT)
+    u = torch.tensor(R1_A_HAT_MAX, dtype=DT, device=DEV)
     th = torch.zeros_like(u)
     worst = float(arm_phase.gate(u, th, cap=False).abs().max())
     assert worst > 1.0, "the planted negative did not fire"
@@ -137,14 +158,25 @@ def test_bind2_the_band_path_product_has_modulus_one_over_1e4_phases():
     `exp(C_i - C_j)`, and a direct cumulative complex product. Both are read,
     over every prefix and not only the endpoint.
     """
-    r = arm_phase.band_modulus(n=10_000, seed=SEED)
+    r = arm_phase.band_modulus(n=10_000, seed=SEED, device=DEV)
     assert r["prefix_route"] == pytest.approx(1.0, abs=1e-12)
     assert r["product_route"] == pytest.approx(1.0, abs=1e-12)
     assert r["max_abs_dev"] < 1e-12
     #: the bound is `<= 1`, and it survives float64: every one-ulp miss over the
     #: 1e4 prefixes is a miss DOWNWARD, so no prefix reads above the band.
     assert r["n_above_one"] == 0
-    assert r["n_exactly_one"] == 9767, r["n_exactly_one"]
+    #: `n_exactly_one` IS NOT A BIND, AND THE DEVICE SPLIT IS WHAT PROVES IT.
+    #: The four assertions above ARE the bind and all four hold unchanged on
+    #: both devices. This line is a CENSUS of how many of the 1e4 prefixes land
+    #: on `1.0` with no ulp of error at all, which is a property of the
+    #: SUMMATION ORDER inside `cumsum` -- sequential on cpu, a parallel scan on
+    #: cuda -- and not of the construction. Measured, exact on both, neither
+    #: relaxed: cpu `9767`, cuda `7713` of 10000. `n_above_one == 0` on both, so
+    #: the extra 2054 prefixes are still misses DOWNWARD and the `<= 1` bound
+    #: the bind actually claims is untouched. Pinned per device rather than
+    #: widened to a range: a range would stop being able to say which device
+    #: moved.
+    assert r["n_exactly_one"] == (7713 if ON_CUDA else 9767), r["n_exactly_one"]
 
 
 def test_bind2_the_modulus_is_bounded_by_one_off_the_band_too():
@@ -152,8 +184,8 @@ def test_bind2_the_modulus_is_bounded_by_one_off_the_band_too():
     band. The inequality is the half `Lean #6` gave; the equality is `#16`."""
     g = torch.Generator().manual_seed(2)
     for _ in range(5):
-        u = torch.rand(64, generator=g, dtype=DT) * 3.0 - 1.0     # spans the cap
-        th = torch.randn(64, generator=g, dtype=DT) * 4.0
+        u = (torch.rand(64, generator=g, dtype=DT) * 3.0 - 1.0).to(DEV)  # spans the cap
+        th = (torch.randn(64, generator=g, dtype=DT) * 4.0).to(DEV)
         c = arm_phase.scan_phase(arm_phase.magnitude(u), th)
         assert float(torch.exp(c.real).max()) <= 1.0 + 1e-15
 
@@ -163,7 +195,7 @@ def test_bind2_planted_negative_a_magnitude_leak_kills_the_modulus():
     possible departure from the cap's upper endpoint. Over `1e4` positions the
     modulus must collapse, i.e. the bind must be a statement about `m` and not
     a statement about `exp(i theta)` alone."""
-    r = arm_phase.band_modulus(n=10_000, seed=SEED, band_magnitude=0.9)
+    r = arm_phase.band_modulus(n=10_000, seed=SEED, band_magnitude=0.9, device=DEV)
     assert abs(r["prefix_route"] - 1.0) == pytest.approx(1.0, abs=1e-9)
 
 
@@ -178,7 +210,7 @@ def test_bind3_theta_in_zero_pi_reproduces_the_signed_parity_mask_exactly():
     BITWISE -- `torch.equal`, not a tolerance.
     """
     g = torch.Generator().manual_seed(3)
-    p = torch.randint(0, 2, (64,), generator=g)
+    p = torch.randint(0, 2, (64,), generator=g).to(DEV)
     th = math.pi * p.to(DT)
     w = arm_phase.winding_matrix(th)
     assert float(w["residual"]) < 1e-12, "non-integer winding is an instrument defect"
@@ -191,7 +223,7 @@ def test_bind3_the_continuous_exponential_agrees_to_machine_precision():
     `pi` is not `fl(k*pi)` -- and the size of that gap is reported rather than
     hidden behind the integer route."""
     g = torch.Generator().manual_seed(4)
-    p = torch.randint(0, 2, (64,), generator=g)
+    p = torch.randint(0, 2, (64,), generator=g).to(DEV)
     th = math.pi * p.to(DT)
     twist = arm_phase.phase_factor(th)
     mask = arm_phase.parity_sign_mask(p).to(twist.dtype)
@@ -202,7 +234,7 @@ def test_bind3_the_per_instance_winding_is_an_integer():
     """`CEQ_V15_3_DELTA.md` X37 (a): the winding is printed per instance and is
     an INTEGER; a non-integer reading is an instrument defect."""
     g = torch.Generator().manual_seed(5)
-    p = torch.randint(0, 2, (128,), generator=g)
+    p = torch.randint(0, 2, (128,), generator=g).to(DEV)
     w, res = arm_phase.winding(math.pi * p.to(DT))
     assert res < 1e-12
     assert torch.equal(w, torch.cumsum(p, 0))
@@ -212,7 +244,7 @@ def test_bind3_planted_negative_a_quarter_turn_breaks_the_winding():
     """PLANTED NEGATIVE 3. `theta in {0, pi/2}` is a `Z4` gate, not a `Z2` one.
     The winding stops being an integer and the mask stops agreeing."""
     g = torch.Generator().manual_seed(6)
-    p = torch.randint(0, 2, (64,), generator=g)
+    p = torch.randint(0, 2, (64,), generator=g).to(DEV)
     th = (math.pi / 2.0) * p.to(DT)
     w = arm_phase.winding_matrix(th)
     assert float(w["residual"]) > 0.4, "quarter turn read as an integer winding"
@@ -234,7 +266,8 @@ def test_bind4_the_identity_setting_is_bitwise_standard_attention():
     """
     q, k, v = _qk()
     ref = lm.Attention("softmax_x", 4, 1).operator(q, k)
-    op = arm_phase.operator(q, k, *arm_phase.identity_setting(q.shape[0], DT))
+    op = arm_phase.operator(q, k,
+                            *arm_phase.identity_setting(q.shape[0], DT, device=DEV))
     assert torch.equal(op.real, ref)
     assert torch.equal(op.imag, torch.zeros_like(op.imag))
     assert torch.equal(op.real @ v, ref @ v)
@@ -251,17 +284,29 @@ def test_bind4_the_complex_readout_costs_one_ulp_and_the_size_is_named():
     """
     q, k, v = _qk()
     ref = lm.Attention("softmax_x", 4, 1).operator(q, k)
-    out = arm_phase.readout(q, k, v, *arm_phase.identity_setting(q.shape[0], DT))
+    out = arm_phase.readout(q, k, v,
+                            *arm_phase.identity_setting(q.shape[0], DT, device=DEV))
     gap = float((out.real - (ref @ v)).abs().max())
-    assert gap == pytest.approx(1.1102230246251565e-16, abs=1e-18), gap
+    #: THE DEVICE-INDEPENDENT HALF FIRST: whatever the gemm does, it costs AT
+    #: MOST the one ulp the docstring names. Neither device may exceed the
+    #: published figure, and that assertion is not per-device.
+    assert gap <= 1.1102230246251565e-16, gap
+    #: AND THE EXACT VALUE, PER DEVICE, NEITHER RELAXED. cpu
+    #: `1.1102230246251565e-16`, the published number, untouched. cuda `0.0`:
+    #: cuBLAS returns this read-out BITWISE, so on cuda the gap this test exists
+    #: to name does not open at all. That is the device being STRICTER than the
+    #: published claim, so the claim is preserved and the cuda row is pinned at
+    #: `0.0` rather than admitted by a widened tolerance.
+    assert gap == pytest.approx(0.0 if ON_CUDA else 1.1102230246251565e-16,
+                                abs=1e-18), gap
 
 
 def test_bind4_holds_for_the_drop_in_module_and_not_only_the_function():
     """The same bind on `ArmPhase`, the object a harness would actually hold --
     a parity bind on a free function the shipped module does not dispatch
     through is a reading of a non-shipped operator."""
-    arm = arm_phase.ArmPhase(s=S + 1, d_model=4, hidden=8).identity_heads()
-    x = torch.randn(3, S + 1, 4, generator=torch.Generator().manual_seed(5))
+    arm = arm_phase.ArmPhase(s=S + 1, d_model=4, hidden=8).identity_heads().to(DEV)
+    x = torch.randn(3, S + 1, 4, generator=torch.Generator().manual_seed(5)).to(DEV)
     u, th, s = arm.heads(x)
     assert torch.equal(arm_phase.magnitude(u), torch.ones_like(u))
     assert torch.equal(th, torch.zeros_like(th))
@@ -279,12 +324,12 @@ def test_bind4_planted_negative_every_head_moves_the_operator():
     n = q.shape[0]
     ref = lm.Attention("softmax_x", 4, 1).operator(q, k)
     gen = torch.Generator().manual_seed(7)
-    one = torch.ones(n, dtype=DT)
-    zero = torch.zeros(n, dtype=DT)
+    one = torch.ones(n, dtype=DT, device=DEV)
+    zero = torch.zeros(n, dtype=DT, device=DEV)
     cases = {
-        "m only": (torch.rand(n, generator=gen, dtype=DT) * 0.8, zero, zero),
-        "theta only": (one, torch.randn(n, generator=gen, dtype=DT), zero),
-        "s only": (one, zero, torch.randn(n, generator=gen, dtype=DT)),
+        "m only": ((torch.rand(n, generator=gen, dtype=DT) * 0.8).to(DEV), zero, zero),
+        "theta only": (one, torch.randn(n, generator=gen, dtype=DT).to(DEV), zero),
+        "s only": (one, zero, torch.randn(n, generator=gen, dtype=DT).to(DEV)),
     }
     for name, (u, th, s) in cases.items():
         moved = float((arm_phase.operator(q, k, u, th, s) - ref).abs().max())
@@ -298,12 +343,13 @@ def test_the_modulus_row_never_leaves_the_softmax_class():
     and that is stated rather than quietly dropped."""
     q, k, _ = _qk()
     gen = torch.Generator().manual_seed(11)
-    tri = torch.ones(S + 1, S + 1, dtype=torch.bool).tril(0)
+    tri = torch.ones(S + 1, S + 1, dtype=torch.bool, device=DEV).tril(0)
     for _ in range(3):
-        a = arm_phase.operator(q, k,
-                               torch.rand(S + 1, generator=gen, dtype=DT),
-                               torch.randn(S + 1, generator=gen, dtype=DT),
-                               torch.randn(S + 1, generator=gen, dtype=DT) * 0.7)
+        a = arm_phase.operator(
+            q, k,
+            torch.rand(S + 1, generator=gen, dtype=DT).to(DEV),
+            torch.randn(S + 1, generator=gen, dtype=DT).to(DEV),
+            (torch.randn(S + 1, generator=gen, dtype=DT) * 0.7).to(DEV))
         assert (a.abs().sum(-1) - 1.0).abs().max().item() < 1e-14
         assert a.abs()[tri].min().item() > 0.0
 
@@ -315,16 +361,22 @@ def test_bind5_the_oracle_setting_reproduces_the_complex_chain_label():
     """(L) on the OPEN interior `|a| in (0.15, 0.85)`: `O_i = y_i` for the
     COMPLEX recurrence `y_i = a_i y_{i-1} + b_i`. The contract bar is `1e-6`;
     ARM PL reached `6.6613381477509392e-16` on the real chain at this shape."""
-    a, b = arm_phase.draw(seed=SEED, s=S)
+    a, b = arm_phase.draw(seed=SEED, s=S, device=DEV)
     cell = arm_phase.label_cell(a, b, seed=SEED)
     assert cell["residual"] <= 1e-6
     assert cell["residual"] < 1e-14
+    #: BITWISE THE PUBLISHED FIGURE ON BOTH DEVICES -- a stronger reading than
+    #: either bar above, which is why it is asserted rather than described.
+    assert cell["residual"] == 9.155133597044475e-16, repr(cell["residual"])
+    #: and the cell says where it was measured. Until V16 this field was the
+    #: literal `"cpu"` (`V16_BAR_RECERT.md` F4).
+    assert cell["device"] == DEV.type
 
 
 def test_bind5_the_normalizer_telescopes_to_one():
     """`Z_i = 1` EXACTLY is the mechanism, and it is a statement about the
     MAGNITUDES only -- the twist has modulus 1 and cannot move it."""
-    a, b = arm_phase.draw(seed=SEED, s=S)
+    a, b = arm_phase.draw(seed=SEED, s=S, device=DEV)
     u, th, s, _ = arm_phase.oracle_heads(a, b)
     z = arm_phase.normalizer(arm_phase.magnitude(u), s)
     assert (z - 1.0).abs().max().item() < 1e-15
@@ -337,7 +389,7 @@ def test_bind5_the_label_bind_FAILS_on_the_closed_band():
     where ARM PL's `g = log a` read `nan/-inf/inf` (`V15_R1.md` section 1). The
     VALUE path is what stays out of range, and this test is the receipt.
     """
-    a, b = arm_phase.band_draw(seed=SEED, s=S)
+    a, b = arm_phase.band_draw(seed=SEED, s=S, device=DEV)
     cell = arm_phase.label_cell(a, b, seed=SEED)
     assert not (cell["residual"] <= 1e-6), "the band cell silently passed"
     assert math.isnan(cell["residual"])          # inf value against a 0 weight
@@ -356,7 +408,8 @@ def test_bind5_the_cost_is_the_VALUE_path_and_the_ladder_prices_it(capsys):
     rows = []
     for eps in (1e-2, 1e-4, 1e-6, 1e-9, 1e-12):
         c = arm_phase.label_cell(*arm_phase.band_draw(seed=SEED, s=S,
-                                                      magnitude=1.0 - eps),
+                                                      magnitude=1.0 - eps,
+                                                      device=DEV),
                                  seed=SEED)
         rows.append((eps, c["residual"], c["v_max"], c["dyn_range_bound"]))
         assert c["residual"] < 1e-13, rows[-1]
@@ -374,7 +427,7 @@ def test_bind5_planted_negatives_all_fire(mutation):
     """PLANTED NEGATIVE 5. ARM PL's four mutilations plus `drop_phase`, which is
     this arm's own: deleting the twist leaves a magnitude-only chain, and the
     complex label is not reproduced by any real one."""
-    a, b = arm_phase.draw(seed=SEED, s=S)
+    a, b = arm_phase.draw(seed=SEED, s=S, device=DEV)
     r = arm_phase.label_cell(a, b, mutation=mutation, seed=SEED)["residual"]
     assert r > 1e-6, f"plant {mutation!r} did not fire: {r}"
 
@@ -389,8 +442,8 @@ def test_the_prefix_route_is_undefined_once_a_magnitude_hits_zero():
     Past a zero gate `Re C = -inf` at both endpoints and `C_i - C_j` is `nan`.
     The cumulative-product route returns the true `0`. Reported, not repaired:
     ARM PL has the identical hole at `a = 0` (`g = log 0 = -inf`)."""
-    m = torch.tensor([1.0, 0.5, 0.0, 0.5], dtype=DT)
-    th = torch.zeros(4, dtype=DT)
+    m = torch.tensor([1.0, 0.5, 0.0, 0.5], dtype=DT, device=DEV)
+    th = torch.zeros(4, dtype=DT, device=DEV)
     c = arm_phase.scan_phase(m, th)
     assert torch.isnan(c[3] - c[2])
     assert float(torch.cumprod(m, 0)[3]) == 0.0
@@ -399,7 +452,7 @@ def test_the_prefix_route_is_undefined_once_a_magnitude_hits_zero():
 # ================================================== THE IDENTITY MANIFEST
 
 def test_the_manifest_hash_moves_when_a_planted_negative_moves_the_cell():
-    a, b = arm_phase.draw(seed=SEED, s=S)
+    a, b = arm_phase.draw(seed=SEED, s=S, device=DEV)
     honest = arm_phase.label_cell(a, b, seed=SEED)["manifest"]
     for f in arm_phase.PHASE_FIELDS:
         assert f in honest["pl_values"], f"manifest does not carry {f}"
@@ -421,8 +474,10 @@ def test_the_manifest_hash_moves_when_a_planted_negative_moves_the_cell():
 def _probe(f_tr, y_tr, f_ev, y_ev):
     """`scripts/v15_r1.py::probe`, same form: least squares fit on train,
     scored out of sample on eval."""
-    a_tr = torch.cat([torch.ones(f_tr.shape[0], 1, dtype=DT), f_tr.double()], 1)
-    a_ev = torch.cat([torch.ones(f_ev.shape[0], 1, dtype=DT), f_ev.double()], 1)
+    a_tr = torch.cat([torch.ones(f_tr.shape[0], 1, dtype=DT, device=f_tr.device),
+                      f_tr.double()], 1)
+    a_ev = torch.cat([torch.ones(f_ev.shape[0], 1, dtype=DT, device=f_ev.device),
+                      f_ev.double()], 1)
     w = torch.linalg.lstsq(a_tr, y_tr.double().unsqueeze(1)).solution
     pred = (a_ev @ w).squeeze(1)
     yv = y_ev.double()
@@ -440,8 +495,8 @@ def test_the_gate_r2_instrument_is_read_on_the_corpus_alone_and_at_zero_steps(ca
     batch = functools.partial(ns.make_equilibrium_batch, t_star=2)
     s, d, d_model, t_star = 64, 24, 16, 2
     live = list(range(s - t_star, s))
-    x_tr, _, _, _ = batch(512, s, d, d_model=d_model, seed=0)
-    x_ev, _, _, _ = batch(512, s, d, d_model=d_model, seed=12345)
+    x_tr, _, _, _ = batch(512, s, d, d_model=d_model, seed=0, device=DEV)
+    x_ev, _, _, _ = batch(512, s, d, d_model=d_model, seed=12345, device=DEV)
     a_tr = x_tr[:, live, ns.CH_DRIVE].reshape(-1)
     a_ev = x_ev[:, live, ns.CH_DRIVE].reshape(-1)
 
@@ -451,7 +506,7 @@ def test_the_gate_r2_instrument_is_read_on_the_corpus_alone_and_at_zero_steps(ca
     zero_step = []
     for seed in range(8):
         torch.manual_seed(seed)
-        arm = arm_phase.ArmPhase(s, d_model=d_model)
+        arm = arm_phase.ArmPhase(s, d_model=d_model).to(DEV)
         zero_step.append(_probe(arm.gate_feature(x_tr, live), a_tr,
                                 arm.gate_feature(x_ev, live), a_ev))
     z = sum(zero_step) / len(zero_step)

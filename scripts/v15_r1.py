@@ -1,4 +1,4 @@
-"""V15 R1 -- BED-M, t* = 2, n = 2048, N = 8 seeds. ARM PL vs softmax, on CPU.
+"""V15 R1 -- BED-M, t* = 2, n = 2048, N = 8 seeds. ARM PL vs softmax.
 
 THE DECIDING MEASUREMENT OF THE ROUND, and it is NOT what `CEQ_V15_CONTRACT.md`
 PART IV registered. Four of that clause's five parts are corrected here and the
@@ -34,10 +34,34 @@ argument -- same optimiser, same lr, same standardisation, same RED 0-step gate
 internally and cannot be handed an `ArmPL`, and both files are outside this
 node's write scope.
 
-CPU ONLY, BY DESIGN. `--device cuda` aborts: `calibrate_bar` is CPU-only and a
-threshold carried across a device boundary is MISTAKES.md V-22.
-`refuse_cross_device_pool` is called on the collected rows before any verdict,
-so a mixed-device pool raises rather than averages.
+`--device` IS LIVE AND EVERY RECORD NAMES THE DEVICE IT WAS MEASURED ON. Until
+V16 this file carried a `--device` flag, called `refuse_cross_device_pool` on
+the collected rows, and then wrote the STRING LITERAL `device="cpu"` on its
+header, cell, manifest and summary records. The guard was therefore being fed a
+constant: it could not refuse a cross-device pool because every row it saw said
+`cpu` whatever had run. That is MISTAKES.md V-22's exact shape on the deciding
+measurement of the round, and it is worse than an absent guard because it reads
+as present. The literals are now `a.device`, and the abort that was the only
+thing holding the defect shut is gone -- `V16_BAR_RECERT.md` certifies
+`calibrate_bar` and the 0-step RED gate on cuda at this file's own shapes, so
+the abort's stated reason ("`calibrate_bar` is CPU-only") is no longer true.
+`refuse_cross_device_pool` is still called on the collected rows before any
+verdict, and it now has something real to read.
+
+THE DEVICE IS THREADED, NOT STAMPED. `batch_fn`, `calibrate_bar` and the model
+all take the device; the model is CONSTRUCTED then `.to(device)`'d, which is
+`train_with_checkpoints`'s ordering and what keeps the init bytes identical to
+the cpu run's (`V16_BAR_RECERT.md` 6.1).
+
+WHAT A CUDA RUN OF THIS FILE STILL DOES NOT CARRY, stated here because the
+header journals it rather than because it is settled: `use_deterministic_
+algorithms` is NOT set by this file and never was. `scale/r10_capacity_sweep.py`
+sets it unconditionally on its cuda path, and that is the regime
+`V16_BAR_RECERT.md` 4 certified the bar under. The flag is read and journalled
+below so a reading says which regime produced it; it is not set here, because
+setting it would make ARM PL's own `scan` raise (`cumsum_cuda_kernel` has no
+deterministic implementation in torch 2.5.1) and this node may not decide that
+trade. See `V16_R1_DEVICE_READY.md`.
 """
 from __future__ import annotations
 
@@ -88,11 +112,20 @@ def make_arm(kind: str, s: int):
     return Arm(kind, s)
 
 
-def train_one(kind, x_tr, y_tr, x_ev, y_ev, *, s, steps, seed):
+def train_one(kind, x_tr, y_tr, x_ev, y_ev, *, s, steps, seed, device=None):
     """`m3_capability.run_arm`'s loop, with a model factory and an eval hook.
-    Same optimiser, lr, standardisation and RED gate; nothing else differs."""
+    Same optimiser, lr, standardisation and RED gate; nothing else differs.
+
+    CONSTRUCT, THEN MOVE. `make_arm` runs before `.to(device)`, so the weights
+    are drawn from the CPU global generator on every device and the init bytes
+    are the ones every cpu reading in `results/` was taken through
+    (`V16_BAR_RECERT.md` 6.1). Constructing on the device instead would draw
+    different numbers and silently retire the comparison.
+    """
     torch.manual_seed(seed)
     model = make_arm(kind, s)
+    if device is not None:
+        model = model.to(device)
     opt = torch.optim.Adam(model.parameters(), lr=LR)
     mu = float(y_tr.mean())
     sigma = float(y_tr.std(unbiased=False)) or 1.0
@@ -174,8 +207,12 @@ def probe(feat_tr, y_tr, feat_ev, y_ev):
     M-2: a threshold calibrated on one draw is scored on another, never on
     itself. Returns (R^2 out-of-sample, sign accuracy out-of-sample).
     """
-    a_tr = torch.cat([torch.ones(feat_tr.shape[0], 1, dtype=feat_tr.dtype), feat_tr], 1)
-    a_ev = torch.cat([torch.ones(feat_ev.shape[0], 1, dtype=feat_ev.dtype), feat_ev], 1)
+    #: `ones_like` on a one-column slice, not `torch.ones(...)`: the intercept
+    #: column has to land on the DEVICE the features are on, and `dtype=` alone
+    #: does not carry that. A bare `torch.ones` was the only site in this file
+    #: that would have raised on a cuda feature tensor.
+    a_tr = torch.cat([torch.ones_like(feat_tr[:, :1]), feat_tr], 1)
+    a_ev = torch.cat([torch.ones_like(feat_ev[:, :1]), feat_ev], 1)
     w = torch.linalg.lstsq(a_tr.double(), y_tr.double().unsqueeze(1)).solution
     pred = (a_ev.double() @ w).squeeze(1)
     yv = y_ev.double()
@@ -188,7 +225,7 @@ def probe(feat_tr, y_tr, feat_ev, y_ev):
 
 # ------------------------------------------------------------------ the binds
 
-def bind_check(out):
+def bind_check(out, device=None):
     """The (L) bind, re-measured at THIS CELL'S SHAPE before any gradient step.
 
     Published at `s = 8`: 6.6613381477509392e-16 (`V15_ARM_PL.md` section 2).
@@ -199,20 +236,27 @@ def bind_check(out):
     """
     rows = []
     for s in (8, S):
-        a, b = arm_pl.draw(seed=15, s=s)
+        #: THE BIND IS RE-MEASURED ON THE RUN'S OWN DEVICE. A bind row taken on
+        #: cpu in front of cells taken on cuda licenses training against an
+        #: identity that was never checked where the cells were computed --
+        #: F1's defect one level down. `draw` moves AFTER `default_rng`, so the
+        #: drawn bytes are the same on both devices.
+        a, b = arm_pl.draw(seed=15, s=s, device=device)
         rec = arm_pl.label_cell(a, b, seed=15, cell=f"arm_pl:none:s{s}")
         g, sh, v = arm_pl.oracle_heads(a, b)
-        zq = torch.zeros(s + 1, 1, dtype=b.dtype)
+        zq = torch.zeros(s + 1, 1, dtype=b.dtype, device=b.device)
         op = arm_pl.operator(zq, zq, g, sh)
         z = arm_pl.normalizer(g, sh)
         rows.append(dict(t="bind", s=s, residual=rec["residual"],
+                         device=rec["device"],
                          row_sum_drift=float((op.sum(-1) - 1.0).abs().max()),
                          min_entry=float(op[op > 0].min()),
                          normalizer_drift=float((z - 1.0).abs().max()),
                          a_max=rec["a_max"], v_max=rec["v_max"],
                          dyn_range_bound=rec["dyn_range_bound"],
                          manifest_hash=rec["manifest"]["hash"],
-                         mutations={m: arm_pl.label_cell(a, b, mutation=m, seed=15)["residual"]
+                         mutations={m: arm_pl.label_cell(a, b, mutation=m,
+                                                         seed=15)["residual"]
                                     for m in arm_pl.MUTATIONS[1:]}))
         out(rows[-1])
     return rows
@@ -230,12 +274,14 @@ def main() -> int:
     ap.add_argument("--tag", default="v15_r1")
     a = ap.parse_args()
 
-    if a.device == "cuda":
-        print("ABORT: --device cuda cannot produce a scored verdict. "
-              "calibrate_bar is CPU-only and GATE_TOL was established on CPU; "
-              "carrying either across a device boundary is MISTAKES.md V-22. "
-              "See V15_NEPTUNE_SYSTEMS.md condition 2.")
-        return 1
+    #: THE V15 ABORT IS GONE, and what replaces it is a certification rather
+    #: than a lifted guard. It read "calibrate_bar is CPU-only and GATE_TOL was
+    #: established on CPU"; `V16_BAR_RECERT.md` 4 and 6 measured both on cuda at
+    #: THIS FILE'S shapes -- the bar's worst clause at 8.6% of its own
+    #: tolerance, the 0-step gate 5,780x inside `GATE_TOL`. What the abort was
+    #: really holding shut was the four `device="cpu"` literals below it, which
+    #: blinded `refuse_cross_device_pool`; those are now `a.device`.
+    dev = a.device
     torch.set_num_threads(a.threads)
 
     jl = ROOT / "results" / f"{a.tag}.jsonl"
@@ -250,17 +296,24 @@ def main() -> int:
     task = f"e3_t{T_STAR}"
     print(f"=== V15 R1  {task}  s={S} d={D} n_train={a.n_train} n_eval={a.n_eval} "
           f"steps={a.steps} seeds={a.seeds} arms={a.arms} ===")
+    det = torch.are_deterministic_algorithms_enabled()
     print(f"  torch {torch.__version__}  torch.get_num_threads()={torch.get_num_threads()}  "
-          f"device=cpu  floor_1={floor1:.10f}")
+          f"device={dev}  deterministic_algorithms={det}  floor_1={floor1:.10f}")
+    #: F1 SITE 1 of 4 (header). `device="cpu"` was a literal here.
+    #: `deterministic_algorithms` is journalled beside it because on cuda that
+    #: flag names the reduction regime, and `V16_BAR_RECERT.md` 4 certified the
+    #: bar with it ON while this file does not set it. A record that names the
+    #: device but not the regime still under-describes the reading.
     emit(dict(t="header", tag=a.tag, task=task, t_star=T_STAR, s=S, d=D,
               n_train=a.n_train, n_eval=a.n_eval, steps=a.steps, seeds=a.seeds,
-              arms=a.arms, lr=LR, d_model=D_MODEL, device="cpu",
+              arms=a.arms, lr=LR, d_model=D_MODEL, device=dev,
+              deterministic_algorithms=bool(det),
               threads=torch.get_num_threads(), torch=torch.__version__,
               floor_1=floor1, when=time.strftime("%Y-%m-%d %H:%M:%S")))
 
     # ---------------------------------------------------- 1. BIND, THEN TRAIN
     print("\n=== 1. THE BIND, RE-MEASURED AT THIS CELL'S SHAPE (no gradient yet) ===")
-    binds = bind_check(emit)
+    binds = bind_check(emit, device=dev)
     for r in binds:
         print(f"  s={r['s']:>3}  (L) residual={r['residual']:.6e}  bar={BIND_BAR:.0e}  "
               f"rowsum drift={r['row_sum_drift']:.3e}  min entry={r['min_entry']:.3e}  "
@@ -286,13 +339,18 @@ def main() -> int:
     # ------------------------------------------------------ 2. THE BAR
     batch_fn, oracle_fn, feature_fn, fd_fn = M3_TASKS[task]
     print("\n=== 2. BAR CALIBRATION (must pass before any arm is credited) ===")
+    #: `device=dev` -- the parameter `V16_BAR_RECERT.md` 2 added, threaded.
+    #: The bar is a PER-DEVICE measurement: reading a cuda cell against a bar
+    #: calibrated on cpu is V-22 one level up, and the `t="bar"` record below
+    #: is inside `refuse_cross_device_pool`'s reach precisely so it cannot be.
     cal = calibrate_bar(n=a.n_eval, s=S, d=D, steps=600, lr=LR, batch_fn=batch_fn,
-                        oracle_fn=oracle_fn, feature_fn=feature_fn)
+                        oracle_fn=oracle_fn, feature_fn=feature_fn, device=dev)
     ok, why = bar_verdict(cal, flipper_dependence=chain_flipper_dependence(S, t_star=T_STAR))
     for k, v in cal.items():
         print(f"  {k:>22} {v:.6f}")
     print(f"  BAR {'CALIBRATED' if ok else 'BROKEN'} -- {why}")
-    emit(dict(t="bar", ok=bool(ok), why=why, **{k: float(v) for k, v in cal.items()}))
+    emit(dict(t="bar", ok=bool(ok), why=why, device=dev,
+              **{k: float(v) for k, v in cal.items()}))
     if not ok:
         print("ABORT: calibration bar failed; crediting nothing.")
         return 1
@@ -300,7 +358,8 @@ def main() -> int:
     # ------------------------------------------------------ 3. THE CELL
     head = S - 1 - T_STAR
     live = list(range(head + 1, S))          # the positions where a_i != 0
-    x_ev, y_ev, f_ev, p_ev = batch_fn(a.n_eval, S, D, d_model=D_MODEL, seed=12345)
+    x_ev, y_ev, f_ev, p_ev = batch_fn(a.n_eval, S, D, d_model=D_MODEL, seed=12345,
+                                      device=dev)
     a_ev = x_ev[:, live, CH_DRIVE].reshape(-1)
     print(f"\n=== 3. TRAIN + EVAL  (live band = positions {live}, head={head}) ===")
     print(f"  eval n={a.n_eval} seed=12345; per-seed train n={a.n_train} at the seed itself")
@@ -308,9 +367,10 @@ def main() -> int:
     rows, models = [], {}
     for kind in a.arms:
         for seed in a.seeds:
-            x_tr, y_tr, _, _ = batch_fn(a.n_train, S, D, d_model=D_MODEL, seed=seed)
+            x_tr, y_tr, _, _ = batch_fn(a.n_train, S, D, d_model=D_MODEL,
+                                        seed=seed, device=dev)
             model, r = train_one(kind, x_tr, y_tr, x_ev, y_ev, s=S,
-                                 steps=a.steps, seed=seed)
+                                 steps=a.steps, seed=seed, device=dev)
             if not r["red_ok"]:
                 print(f"INSTRUMENT BROKEN {kind} seed={seed}: 0-step "
                       f"{r['nrmse0_train']:.6f}/{r['nrmse0_eval']:.6f}")
@@ -349,7 +409,7 @@ def main() -> int:
                 #: model is rebuilt under the same seed, so its weights are
                 #: bitwise the ones training started from.
                 torch.manual_seed(seed)
-                m0 = make_arm(kind, S)
+                m0 = make_arm(kind, S).to(dev)
                 r["sign_acc_0step"] = probe(gate_features(m0, x_tr, live),
                                             torch.sign(a_tr),
                                             gate_features(m0, x_ev, live),
@@ -363,15 +423,22 @@ def main() -> int:
                 r["dyn_range_bound"] = math.inf
             r["eval_h_hat"] = T_STAR * (1.0 - r["eval_nrmse"] ** 2)
             r["dist_to_floor"] = r["eval_nrmse"] - floor1
+            #: F1 SITE 2 of 4 (cell record). This is the row
+            #: `refuse_cross_device_pool` actually reads; the literal here was
+            #: the whole of the defect.
             r.update(task=task, t_star=T_STAR, n_train=a.n_train, n_eval=a.n_eval,
-                     s=S, d=D, d_model=D_MODEL, device="cpu",
+                     s=S, d=D, d_model=D_MODEL, device=dev,
                      threads=torch.get_num_threads(), torch_version=torch.__version__,
                      cell=f"{kind}:t{T_STAR}:n{a.n_train}:seed{seed}", floor_1=floor1)
 
             base = {k: r[k] for k in identity_manifest.CONFIG_FIELDS if k in r}
+            #: F1 SITE 3 of 4 (identity manifest). `device` is a first-class
+            #: `identity_manifest.CONFIG_FIELDS` entry and the literal made a
+            #: cuda cell hash identically to a cpu one -- a manifest asserting
+            #: the run happened somewhere it did not.
             base.update(cell=r["cell"], kind=kind, task=task, s=S, d=D,
                         d_model=D_MODEL, steps=a.steps, n_train=a.n_train,
-                        n_eval=a.n_eval, seed=seed, device="cpu",
+                        n_eval=a.n_eval, seed=seed, device=dev,
                         torch_version=torch.__version__)
             params = dict(model.named_parameters())
             if kind == "arm_pl":
@@ -421,7 +488,8 @@ def main() -> int:
                                                         for r in rows if r["kind"] == kind),
                          a_hat_max=max(r["a_hat_max"] for r in rows if r["kind"] == kind),
                          v_max=max(r["v_max"] for r in rows if r["kind"] == kind),
-                         device="cpu", threads=torch.get_num_threads())
+                         #: F1 SITE 4 of 4 (seed-aggregate summary).
+                         device=dev, threads=torch.get_num_threads())
         emit(dict(t="agg", **agg[kind]))
         print(f"  {kind:>7}: mean={m:.6f} sd={sd:.6f} 95%CI=[{agg[kind]['ci_lo']:.6f},"
               f"{agg[kind]['ci_hi']:.6f}] h={agg[kind]['h_hat']:+.4f} "
@@ -439,7 +507,14 @@ def main() -> int:
         dm, dsd = statistics.fmean(d), statistics.stdev(d)
         delta = resolution_delta(dsd, len(d))
         pw = achieved_power_at_reference(dsd, len(d))
-        con = dict(t="contrast", mean=dm, sd=dsd, n=len(d), delta=delta,
+        #: `device` on the DERIVED rows too. They are not readings and
+        #: `refuse_cross_device_pool` is not called on them, but a consumer
+        #: handing the whole journal to the guard reads a missing field as
+        #: `"cpu"` (its documented rule) and would refuse a cuda journal
+        #: against its own summary -- the `t="ceiling"` false positive
+        #: `V16_BAR_RECERT.md` 5 pinned. These rows DO come from one device,
+        #: so naming it is the honest fix rather than a filter.
+        con = dict(t="contrast", device=dev, mean=dm, sd=dsd, n=len(d), delta=delta,
                    achieved_power=pw, reference_effect_in_sd=REFERENCE_EFFECT_IN_SD,
                    statement=(f"excludes a difference beyond Delta = "
                               f"t(.975,{len(d) - 1}).sd/sqrt({len(d)}) = {delta:.6f} "
@@ -459,7 +534,7 @@ def main() -> int:
         gm, glo, ghi = band("gate_r2")
         p0, p0lo, p0hi = band("sign_acc_0step")
         g0, g0lo, g0hi = band("gate_r2_0step")
-        emit(dict(t="probe", sign_acc_mean=pm, sign_acc_ci=[plo, phi],
+        emit(dict(t="probe", device=dev, sign_acc_mean=pm, sign_acc_ci=[plo, phi],
                   c_mean=2 * pm - 1, gate_r2_mean=gm, gate_r2_ci=[glo, ghi],
                   sign_acc_0step_mean=p0, sign_acc_0step_ci=[p0lo, p0hi],
                   gate_r2_0step_mean=g0, gate_r2_0step_ci=[g0lo, g0hi],
@@ -488,7 +563,14 @@ def main() -> int:
         print(f"  (peak RSS unavailable: {exc})")
     per150 = statistics.fmean([r["secs"] for r in rows if r["kind"] == "arm_pl"]) \
         if any(r["kind"] == "arm_pl" for r in rows) else float("nan")
-    emit(dict(t="wall", secs=wall, peak_wset_gib=peak_gib,
+    #: NEPTUNE's OWN quantity, on the device it is defined on, beside the host
+    #: one rather than instead of it. `vram_gate`/`r10_it8_pricing` both still
+    #: assert this harness spends no VRAM (`V16_BAR_RECERT.md` F6, not this
+    #: node's scope); journalling the figure is what lets that be checked.
+    vram_gib = (torch.cuda.max_memory_allocated() / 2 ** 30
+                if dev == "cuda" else None)
+    emit(dict(t="wall", secs=wall, peak_wset_gib=peak_gib, device=dev,
+              cuda_max_memory_allocated_gib=vram_gib,
               arm_pl_secs_per_150_steps=per150))
     print(f"\n  peak process working set: {peak_gib:.3f} GiB "
           f"(NEPTUNE's 0.250 GiB is a CUDA allocator figure, not this quantity)")

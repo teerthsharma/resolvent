@@ -239,7 +239,7 @@ def parity_sign_mask(p: torch.Tensor, dtype: torch.dtype = DTYPE) -> torch.Tenso
 # ------------------------------------------------- the band modulus, BIND 2
 
 def band_modulus(n: int = 10_000, seed: int = 15,
-                 band_magnitude: float = 1.0) -> dict:
+                 band_magnitude: float = 1.0, device=None) -> dict:
     """`[RUN: 1e4 phases -> modulus 1.000000000000]`, both routes.
 
     `prefix_route` is the construction: `|exp(C_n - C_0)|`. `product_route` is a
@@ -248,18 +248,28 @@ def band_modulus(n: int = 10_000, seed: int = 15,
 
     `band_magnitude` is PLANTED NEGATIVE 2: at `0.9` the modulus must collapse,
     which is what makes this a statement about `m` and not about `exp(i theta)`.
+
+    `device` moves the PREFIX route only. The product route stays on the host
+    ON PURPOSE and is not a device omission: numpy has no cuda, and the whole
+    point of the second route is that it shares no code with the first. It is
+    fed `.cpu()` copies of the same tensors, so what it checks on a cuda run is
+    `cuda prefix scan` against `host cumulative product` -- a stronger reading
+    than the cpu run's, not a weaker one. The three `.numpy()` calls were bare
+    until V16 and raised `TypeError` on a cuda tensor (`V16_BAR_RECERT.md` F4).
     """
     rng = np.random.default_rng(seed)
-    th = torch.from_numpy(rng.uniform(-math.pi, math.pi, n))
-    m = torch.full((n,), float(band_magnitude), dtype=DTYPE)
+    th = torch.from_numpy(rng.uniform(-math.pi, math.pi, n)).to(device)
+    m = torch.full((n,), float(band_magnitude), dtype=DTYPE, device=device)
     c = scan_phase(m, th)
     prefix = torch.exp(c).abs()
-    prod = np.abs(np.cumprod(m.numpy() * np.exp(1j * th.numpy())))
+    host_m, host_th = m.cpu().numpy(), th.cpu().numpy()
+    prod = np.abs(np.cumprod(host_m * np.exp(1j * host_th)))
     return {"n": n,
+            "device": (m.device.type),
             "prefix_route": float(prefix[-1]),
             "product_route": float(prod[-1]),
             "max_abs_dev": float((prefix - 1.0).abs().max()),
-            "max_route_gap": float(np.abs(prefix.numpy() - prod).max()),
+            "max_route_gap": float(np.abs(prefix.cpu().numpy() - prod).max()),
             #: the modulus is bounded ABOVE by 1 in float64 as well as in the
             #: reals -- the one-ulp misses are all misses DOWNWARD.
             "n_exactly_one": int((prefix == 1.0).sum()),
@@ -298,10 +308,17 @@ def chain_label(a: torch.Tensor, b: torch.Tensor) -> torch.Tensor:
     return y
 
 
-def draw(seed: int = 15, s: int = 8, lo: float = 0.15, hi: float = 0.85):
+def draw(seed: int = 15, s: int = 8, lo: float = 0.15, hi: float = 0.85,
+         device=None):
     """The fork probe's draw made complex: `|a|` uniform on `(lo, hi)`, `arg a`
     uniform on `(-pi, pi)`, drives standard normal, BOS at index 0 poisoned with
-    `nan` so any code path that reads it says so loudly."""
+    `nan` so any code path that reads it says so loudly.
+
+    `device` moves the result AFTER `default_rng` drew it, so the bytes are the
+    host draw on every device (`V16_BAR_RECERT.md` §6.1's construct-then-move
+    ordering). A device generator would draw different numbers and retire every
+    residual `V15_ARM_PHASE.md` published.
+    """
     rng = np.random.default_rng(seed)
     m = np.empty(s + 1)
     m[0] = np.nan
@@ -310,10 +327,11 @@ def draw(seed: int = 15, s: int = 8, lo: float = 0.15, hi: float = 0.85):
     th[1:] = rng.uniform(-math.pi, math.pi, size=s)
     b = np.zeros(s + 1)
     b[1:] = rng.normal(size=s)
-    return torch.from_numpy(m * np.exp(1j * th)), torch.from_numpy(b)
+    return (torch.from_numpy(m * np.exp(1j * th)).to(device),
+            torch.from_numpy(b).to(device))
 
 
-def band_draw(seed: int = 15, s: int = 8, magnitude: float = 1.0):
+def band_draw(seed: int = 15, s: int = 8, magnitude: float = 1.0, device=None):
     """BED-M's own coefficients: `a in {-1, +1}` on the live band, i.e. `m = 1`
     and `theta in {0, pi}` -- both ENDPOINTS of the closed cap.
 
@@ -330,7 +348,8 @@ def band_draw(seed: int = 15, s: int = 8, magnitude: float = 1.0):
     m[0] = np.nan
     b = np.zeros(s + 1)
     b[1:] = rng.normal(size=s)
-    return torch.from_numpy(m * np.exp(1j * th)), torch.from_numpy(b)
+    return (torch.from_numpy(m * np.exp(1j * th)).to(device),
+            torch.from_numpy(b).to(device))
 
 
 def mutate(u, th, s, v, b, mutation: str):
@@ -367,7 +386,7 @@ def label_cell(a: torch.Tensor, b: torch.Tensor, *, mutation: str = "none",
     """
     u, th, s, v = mutate(*oracle_heads(a, b), b, mutation)
     n = a.shape[-1]
-    zero_q = torch.zeros(n, 1, dtype=DTYPE)
+    zero_q = torch.zeros(n, 1, dtype=DTYPE, device=a.device)
     out = readout(zero_q, zero_q, v, u, th, s)
     y = chain_label(a, b)
     m_max = float(a[..., 1:].abs().max())
@@ -381,7 +400,19 @@ def label_cell(a: torch.Tensor, b: torch.Tensor, *, mutation: str = "none",
         "d_model": 1,
         "steps": 0,                   # L-LEAN: nothing is trained by this node
         "seed": seed,
-        "device": "cpu",
+        #: THE DEVICE THIS CELL WAS MEASURED ON, read off the tensors it was
+        #: measured with. It was the literal `"cpu"` until V16, which made a
+        #: cuda run of this arm hash IDENTICALLY to a cpu one --
+        #: `identity_manifest.CONFIG_FIELDS` carries `device` as a first-class
+        #: field and the literal was filling it with a constant, so the
+        #: manifest asserted the run happened somewhere it had not
+        #: (`V16_BAR_RECERT.md` F4). This arm is the one
+        #: `CEQ_V16_CONTRACT.md` names for R1', so the constant was on the
+        #: deciding measurement's identity record.
+        #: `.type` and not `str(...)`: `"cuda"`, not `"cuda:0"`, so the value
+        #: matches `--device`'s vocabulary and the bucket
+        #: `refuse_cross_device_pool` reads.
+        "device": a.device.type,
         "torch_version": torch.__version__,
         "variant": VARIANT,
         "m_setting": "clamp(|a_j|, 0, 1), m_0 = 1",
