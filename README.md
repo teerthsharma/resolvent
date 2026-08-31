@@ -32,6 +32,96 @@ gradient reaching the gate — bitwise the same tensor, straight-through — rea
 equilibrium oracle is not the arm's own resolvent and that no truncation of it is ever
 exact.
 
+## Current status — the distance to the goal
+
+The abstract above reports a result on `negation_scope`. It stands, and it is
+narrow: it is a statement about **that** task. The project's stated goal is
+wider, and against the wider goal the honest distance is large. This section
+exists so that opening the README shows the gap rather than the best result.
+
+**The goal, one sentence.** Attention that is TOST-equal to self-attention on its
+own ground, built FROM softmax and AdamW, and capable on ground they cannot
+occupy — predicting the next STATE toward equilibrium (which basin, whether at a
+decision point, which transition), not the next token.
+
+**The ladder that sentence needs, and where each bar stands.**
+
+| bar | what it demands | status | the measurement that decides it |
+|---|---|---|---|
+| **C-PAR** | TOST-parity with softmax at matched parameters | **UNREACHABLE at the registered N** | with `Δ_eq = 0.5σ` the 90% CI half-width is `t(.95, 2N−2)·√(2/N) = 0.8807σ` at N=8 against a `0.5σ` margin, so two *bit-identical* arms return NO VERDICT. The interval first fits at N=23; power ≥ 0.80 first at **N=70** |
+| **C-CAP** | a seed CI below the 1-hop floor `√((t*−1)/t*)` | **0 of 9 cells** | every cell in `results/` with N=8 distinct seeds at a fixed thread count: zero crossings. `ĥ = t*(1 − NRMSE²)` peaks at `0.389` — no arm reaches even one hop |
+| **C-TS** | transition-state / exit accuracy | **NOT BUILT** | its bed is blocked behind a registration round that has not run |
+
+**Scoreboard: 0 of 39.**
+
+### Two beds, and why the difference matters
+
+The abstract's `+0.108437` is measured on `negation_scope`. The equilibrium
+claim is measured on the `e3_t*` **chain corpus**, and there the picture is
+different: `pivot_unsigned` at `t*=8, n=32768`, N=8 seeds in one thread lane,
+reads `0.976488` against softmax's `0.975371` — a contrast of `+0.001117`,
+indistinguishable.
+
+The reason is structural rather than statistical. `Arm._operator` returns the
+same tensor for `softmax` and `pivot_unsigned` — `max|difference| = 0.000e+00` —
+so the entire architectural difference on this bed is one hop-2 term. Five
+independent routes measured that term and agree it carries nothing:
+
+| route | result |
+|---|---|
+| K sweep, `K ∈ {8,16,32,64}` | `0.960945 / 0.968518 / 0.965750 / 1.000329` against softmax `0.950252`; at the full `a@a` it stops reading |
+| gain sweep, branches pre-registered | no `γ` beats `γ=0`; the pre-registered CONTENT branch holds |
+| common-mode deflation | recovers the damage, lands `+0.001148` from the 1-hop control at Welch `p = 0.9286` |
+| MMSE/Wiener per-mode gains | **all 64 modes inside the zero-correlation null band**, trained and untrained; optimal treatment attenuates the hop ≈`979×` |
+| gated multiplicative hop | `0.966692` — worse than both controls |
+
+**Why, in one line.** The chain label is `z_i = a_i·z_{i-1} + b_i`
+(`scale/negation_scope.py:307-331`), so its `t`-hop term is a **path product**
+`a_{s-1}···a_{s-t}·b`. Attention supplies weighted **sums**, and composing hops
+supplies sums of sums. The term is the wrong shape, which is why no `K`, no gain
+and no deflation moved it.
+
+A further limit, stated because it bounds what this bed can ever settle: a
+recurrence with input-dependent coefficients is the defining form of a selective
+state-space model, so this corpus asks for what a gated linear scan computes
+natively. The softmax control is not a strong baseline here either, which is why
+it sits at `0.950252` rather than near the floor.
+
+### What is solid
+
+The Lean core is untouched by any of the above. `occupancy_eq_inverse_of_nilpotent`
+and `occupancy_is_exact_inverse` prove that `M = (I − γP)⁻¹ = Σ γᵗPᵗ` **is** the
+nilpotent resolvent, exact in `n` terms. A negative capability result does not
+weaken a theorem.
+
+So is the instrumentation. The verdict machinery refuses what it cannot support:
+TOST rejects a margin below twice the measured `2.345e-3` reduction-order floor,
+rejects a failed difference test read as parity, and rejects either sample below
+N=8; the capability verdict returns *no* hop count above the bar rather than a
+negative one; the prediction adjudicator refuses below N=8 and across thread
+lanes, and did refuse, twice, including once against its own author's relaunch.
+
+### What would have to be true to ship the sentence
+
+Measurable conditions, not tasks.
+
+1. A cell exists with **N ≥ 70** seeds per arm at one thread count. Priced on the
+   measured cost curve, the reading's three points cost about `78 h` per arm at
+   N=70 against `8.9 h` at N=8.
+2. Some arm's N=8 seed CI lies **entirely below** `√((t*−1)/t*)`. Nine cells,
+   zero crossings, `ĥ ≤ 0.389`.
+3. A hop construction exists whose term is the **right shape**. Four have been
+   measured and refuted.
+4. The registration round runs. It gates everything downstream.
+5. The bed can distinguish the claim at all.
+
+Full state, every measurement and every struck claim: **`workdonenew.md`**.
+Failure mechanisms: **`MISTAKES.md`**, 54 entries. Independent audit of this
+round's numbers: **`V13_CLAIM_AUDIT.md`** — 44 confirmed, 9 discrepant, 1
+unverifiable, all nine corrected.
+
+---
+
 ## Background
 
 ### Why route through pivots rather than deepen the stack?

@@ -1,69 +1,61 @@
 # workdonenew — where CEQ actually stands
 
-The architecture-and-state document. `ARCH.md` does not exist and must not be
-created; this file is it. Every number below carries its file, its cell, its seed
-count and its thread count, or it is not written.
-
-Rewritten at the close of the V13 round, 2026-08-31. The prior version is kept at
-`attic/workdonenew.pre-v13.md`.
+**Written at v-main.3M iteration 20, branch `feat/r9-causal-consequence`, pinned at
+`bf2a769`.** Every number here carries its source. Where a number is a bound, a
+prediction, or a single draw, it says so. Where a claim was withdrawn, it is listed
+under withdrawn and not quietly dropped.
 
 ---
 
 ## 0. THE ONE-LINE ANSWER
 
-**A calibrated instrument with a proved mathematical spine, a complete negative
-result on its own capability claim, and no reading yet taken against its
-registered protocol.**
+**The engineering is strong and the architectural claim has not been made.**
 
-The north star is one sentence:
+`done7.md` scored the product at **37%** — engineering ≈ 80%, scientific claim
+≈ 5% — and named the reason in one sentence: *the deciding measurement had been
+taken zero times*.
 
-> attention that is TOST-equal to self-attention on its own ground, built FROM
-> softmax and AdamW, and capable on ground they cannot occupy — predicting the
-> next STATE toward equilibrium (which basin, whether at a decision point, which
-> transition), not the next token.
+**Round 10 took it.** That is the change. The scientific claim moves from *never
+measured* to *measured, bounded, and with its boundary located*. It does **not**
+yet move to *CEQ beats softmax*, because no CEQ arm has been run on the corpus that
+now exists.
 
-Distance to it, in three facts. The parity half is **unreachable at the
-registered seed count** and needs N=70 rather than N=8. The capability half has a
-**deciding measurement that came back negative**, 4/4 against a prediction filed
-before the data existed. And the arm that was to carry the capability shares its
-operator with softmax **bit-identically**, so the whole architectural difference
-is one hop-2 term that five independent measurements agree carries nothing.
+What you have is a **calibrated instrument and a mapped playing field**. What you
+do not have is a **result on it**.
 
 ---
 
-## 1. THE CLAIM LADDER — the twenty-second read
+## 1. WHAT THE THING IS TRYING TO BE
 
-The shipped sentence requires `C-PAR ∧ (C-CAP ∨ C-TS)`.
+Not the best token predictor — the **next-equilibrium predictor**. Attention that
+understands causality and consequence on Turing-grade problems at the smallest
+scale, with the whole attention module built to survive equal to self-attention or
+supersede it. Trainable on free tiers, with a capability table.
 
-| bar | what it demands | status | the measurement that decides it |
-|---|---|---|---|
-| **C-PAR** | TOST-parity with softmax at matched params | **UNREACHABLE at N=8** | with `Δ_eq = 0.5σ` the 90% CI half-width is `t(.95, 2N−2)·√(2/N)` = `0.8807σ` at N=8 against a `0.5σ` margin. Two *bit-identical* arms return NO VERDICT. The CI first fits at N=23; power ≥ 0.80 first at **N=70** |
-| **C-CAP** | a seed CI below the 1-hop floor `√((t*−1)/t*)` | **NEVER ACHIEVED — 0 of 9 cells** | `cap_verdict` over every N=8 cell at fixed threads: zero crossings, `ĥ` peaks at `0.389` |
-| **C-TS** | transition-state / exit accuracy | **NOT BUILT** | BED-1 is blocked on Round 11, which has not run |
-
-**Scoreboard: 0 of 39.** Itemised in §8. `41` is the sum of the contract's line
-items; X₂₆ was struck, leaving `39` live.
+The scientific content sits in one word: **equilibrium**. The oracle is an
+absorbing-chain solve, `N = (I − Q)⁻¹`, `B = NR`, the fixed point of
+`z ← Qz + R` — an equilibrium in the exact sense the goal names, and provably not
+a closed form of any bounded neighbourhood.
 
 ---
 
-## 2. WHAT THE REPO HOLDS
+## 2. THE REPO AS IT NOW STANDS
 
 | directory | contents |
 |---|---|
-| `ceq/` | 26 modules — the architecture: `attention.py`, `arms.py`, `hankel.py`, `multizoom.py`, `nash.py`, `rips.py`, `eviction.py`, `hopcache.py`, `lm.py`, `sizing.py` |
-| `scale/` | 104 modules — harnesses, gates, oracles, pricing, verdict machinery |
-| `scripts/` | 9 `v13_*` instruments built this round |
-| `tests/` | 200 files; `tests/loop/` holds 29 guards written to catch instrument defects |
+| `ceq/` | 26 modules — the architecture itself: `attention.py`, `arms.py`, `hankel.py`, `multizoom.py`, `nash.py`, `rips.py`, `eviction.py`, `hopcache.py`, `lm.py` |
+| `scale/` | 104 modules — harnesses, gates, oracles, pricing. This is where the measurement lives |
+| `tests/` | 200 files, of which `tests/loop/` holds **29 guards** written to catch instrument defects |
 | `lean/` | 6 CEQ proof files, machine-checked |
 | `results/` | journals — every published number's provenance |
-| `attic/` | retired code, kept resolvable |
+| `attic/` | retired code, kept resolvable: guards look here before reporting a file missing |
 
-**Ledger:** 10,809 events, 425 findings, 141 adjudications. Parse with
+**Ledger:** 10,809 events, 425 findings, 141 adjudications. Parse it with
 `scale/ledger.py`; **never grep it** — `json.dumps` writes a space after each
 colon and a literal-string grep silently returns zero.
 
-**Failure record:** `MISTAKES.md` carries **54 entries**, each a failure mechanism
-with a check. Ten were added this round.
+**Suite:** 499 passing in `tests/loop`, **15 failing** — and every failure is a
+bound finding with a stated route, not breakage.
 
 ---
 
@@ -80,174 +72,92 @@ with a check. Ten were added this round.
 | `Refcount.lean` | `mem_fibre`, `one_le_refcount`, `floor_add_orbits`, `floor_eq_sum_refcount_pred`, `card_survivors_add_refcount` |
 | `OracleSeparation.lean` | `one_nonneg`, `mul_nonneg'`, `pow_nonneg'`, `diag_sq_le`, `diag_pos_double` |
 
-**The load-bearing one is the resolvent.** `occupancy_eq_inverse_of_nilpotent`
-and `occupancy_is_exact_inverse` establish that `M = (I − γP)⁻¹ = Σ γᵗPᵗ` **is**
-the nilpotent resolvent, exact in `n` terms. The architecture's claim to compute
-equilibrium rests on an identity that is proved, not fitted.
+**The load-bearing one is the resolvent.** `occupancy_eq_inverse_of_nilpotent` and
+`occupancy_is_exact_inverse` establish that the successor representation
+`M = (I − γP)⁻¹ = Σ γᵗPᵗ` **is** the nilpotent resolvent, exact in `n` terms. That
+is the mathematical spine: the architecture's claim to compute equilibrium rests on
+an identity that is proved, not fitted.
 
-This is the strongest asset in the repository and nothing below touches it. A
-negative capability result does not weaken a theorem.
-
----
-
-## 4. EVERY N=8 CELL IN THE REPOSITORY
-
-Nine cells carry N=8 distinct seeds at a fixed thread count. This is the complete
-census; there are no others.
-
-| arm | `t*` | `n` | thr | mean | sd | floor_1 | `ĥ` | verdict |
-|---|---|---|---|---|---|---|---|---|
-| softmax | 2 | 2048 | 6 | 0.952349 | 0.010101 | 0.707107 | 0.186 | consistent with 1 hop |
-| pivot_unsigned | 2 | 2048 | 6 | 0.956525 | 0.013133 | 0.707107 | 0.170 | consistent with 1 hop |
-| softmax | 8 | 2048 | 6 | 1.124057 | 0.012204 | 0.935414 | n/a | NO READING |
-| softmax | 8 | 16384 | 12 | 0.983154 | 0.004732 | 0.935414 | 0.267 | consistent with 1 hop |
-| softmax | 8 | 32768 | 12 | 0.975371 | 0.002360 | 0.935414 | 0.389 | consistent with 1 hop |
-| **pivot_unsigned** | **8** | **32768** | **12** | **0.976488** | **0.004039** | 0.935414 | **0.372** | **consistent with 1 hop** |
-| softmax | 32 | 2048 | 6 | 1.153720 | 0.041984 | 0.984251 | n/a | NO READING |
-| softmax | 32 | 32768 | 12 | 1.003371 | 0.003759 | 0.984251 | n/a | NO READING |
-| softmax | 32 | 49152 | 12 | 0.998841 | 0.001873 | 0.984251 | 0.074 | consistent with 1 hop |
-
-**Zero crossings of the 1-hop floor.** `ĥ = t*(1 − NRMSE²)` peaks at `0.389`, so
-no arm at any cell reaches even one hop. The theorem-grade verdict "a cell below
-`floor_1` with CI is PROVEN multi-hop" has never had a candidate to adjudicate.
+`weighted_contraction` is cited by the corpus's dose theorem — and see §6, because
+its **norm** turned out to matter.
 
 ---
 
-## 5. THE DECIDING MEASUREMENT — filed blind, adjudicated by script
+## 4. MATHEMATICS MEASURED — numbers with provenance
 
-`V13_PREDICTION_HOP2.md` was written while the target journal held **zero** cell
-rows, hashed at filing, and never edited — including when an intermediate finding
-made its failure look likely and this repository recorded that it did.
-`scripts/v13_adjudicate_hop2.py` was written at 4 of 8 seeds and refuses below
-N=8. It refused at 6/8, and refused again when the completing seeds arrived in
-the wrong thread lane.
+### 4.1 The deciding measurement, Round 10
 
-`pivot_unsigned`, `t*=8, n=32768, steps=150, threads=12`, N=8 in one lane:
+**Question:** can softmax learn the `t* > hop` region at all? If not, no CEQ result
+in that region means anything.
 
-```
-0.973990  0.977050  0.974743  0.978135  0.982110  0.981606  0.970375  0.973892
-mean 0.976488   sd 0.004039   CI95 [0.973932, 0.979036]
-```
+Pre-registered rule (v-main.3M it.11): *region learnable iff ≥1 cell < 1.0 with an
+**N=8 seed CI** excluding 1.0, bootstrap B=10⁴*.
 
-| clause | verdict | value |
+| t\* | 1-hop ceiling `√((t*−1)/t*)` | cell | seed CI (N=8) | verdict |
+|---|---|---|---|---|
+| 2 | 0.7071 | n=2048 | [0.9462, 0.9591] | **LEARNABLE** |
+| 8 | 0.9354 | n=32768 | [0.9739, 0.9768] | **LEARNABLE** |
+| 32 | 0.9843 | n=32768 | [1.000851, 1.005679] | NOT LEARNABLE |
+| 32 | 0.9843 | **n=49152** | **[0.997535, 0.999930]** | **LEARNABLE** |
+
+**Every block crosses. The wall is DATA, not architecture.** The crossing point
+rises with `t*` — n=2048, n≈13–16k, n≈40k — as the ceiling headroom falls: 0.29,
+0.065, **0.0157**.
+
+**Softmax's hop budget is 1** — `scale/e_ladder.py:55`, `HOP_BUDGET = {"softmax": 1,
+"glance": 1, "settled": 2, "twin": 2, …}`, an enforced constant consumed at `:202`
+to compute the very ceilings above. (Not `m3_capability.py:271`, which is a print
+statement; that citation was struck.)
+
+### 4.2 What the shape of the data says
+
+- **Steps hurt, data helps, monotonically.** `dNRMSE/d(steps) > 0` in **12 of 12**
+  adjacent pairs across 6 eligible cells; smallest +0.087107, largest +0.646806.
+  **All 15 sub-bar cells sit at the shortest rung (150 steps).** A budget spent on
+  steps rather than examples would have concluded the region unlearnable and been
+  wrong.
+- **Seed variance collapses faster than sampling noise.** sd 0.003759 → 0.001804
+  between n=32768 and n=49152, a factor **2.08** where `1/√n` predicts 1.22.
+  Consistent with part of the spread being under-training that data removes.
+- **A natural theory of the crossing over-predicts by ~6×.** If the crossing were
+  set by *resolving* the shrinking margin (`m ~ 1/2t*`, `n ~ 1/m²`), then `t*` ×4
+  would cost `n*` ×16. Measured: **~2.5×**. **Softmax's difficulty at large `t*` is
+  not primarily margin-resolution, and the round did not identify what it is.**
+
+### 4.3 Arms, from Round 3 (a different task — negation-scope, not the chain)
+
+At `n_train=8192`, all params matched at **4769**:
+
+| arm | eval NRMSE | 95% CI |
 |---|---|---|
-| P1 mean in `[0.960, 0.990]` | **HOLDS** | 0.976488 |
-| P2 CI does not clear `floor_1` | **HOLDS** | `proven_hops = 0` |
-| P3 at least `0.09` above `floor_2` | **HOLDS** | 0.110462 |
-| P4 `ĥ` below 1.0 | **HOLDS** | 0.372 |
+| softmax | 0.877168 | [0.830455, 0.924226] |
+| pivot_unsigned | 0.747528 | [0.696849, 0.797716] |
+| pivot_signed | 0.673762 | [0.632559, 0.715564] |
 
-**4/4 held.** Against softmax at the identical cell (`0.975371`) the contrast is
-**`+0.001117`** — indistinguishable.
+**Routing beat softmax with disjoint CIs.** This is the strongest pro-CEQ number in
+the repo — **and it is on `negation_scope`, not on the equilibrium chain**, so it
+does not transfer to the claim in §1 without being re-run there.
 
----
+`ARMS = ("softmax", "pivot_signed", "pivot_unsigned", "windowed_signed")`,
+`scale/m3_capability.py:66`.
 
-## 6. THE FIVE MEASUREMENTS THAT AGREE
+### 4.4 The corpus (Phase 1b)
 
-`pivot_unsigned` shares softmax's operator **bit-identically** —
-`Arm._operator` returns `bench._softmax_operator` for both, `max|difference| =
-0.000e+00`. The entire architectural difference is one hop-2 term. Five
-independent routes measured it:
+Harmonic extension on graphs: `u(v) = mean of neighbours` in the interior,
+`u|_B = g`; oracle `u_I = (I − P_II)⁻¹ P_IB g`.
 
-| route | result |
+| measurement | value |
 |---|---|
-| **K sweep**, `K ∈ {8,16,32,64}` at `t*=2, n=2048`, 3 seeds | `0.960945 / 0.968518 / 0.965750 / 1.000329` against softmax `0.950252`. At `K=64`, which is the full `a@a`, it stops reading |
-| **Gain sweep**, `γ ∈ {0,.05,.10,.25,.50,1.0}`, branches pre-registered | `+0.000000 / +0.008261 / +0.006960 / +0.002384 / +0.031754 / +0.048981`. No `γ` beats zero, so the pre-registered **CONTENT** branch holds. `γ=1.0` reproduces the K sweep's `1.000329` to `0.000254`, so the two harnesses agree |
-| **Deflation, X₂₉a** | renorm `K=64` = `0.951400`, 3/3 seeds below the pre-registered `≤ 0.960945`, `p = 0.0399`. Recovers `0.048929` of the `0.050077` destroyed and lands `+0.001148` from the 1-hop control at Welch `p = 0.9286`. **Stops the damage; does not make the hop work** |
-| **Wiener/MMSE, X₂₉b** | **all 64 modes inside the zero-correlation null band**, max `g = 0.004041` against the 99.9% quantile `0.005287`, at `K=64` and `K=8`, against the exact oracle. `‖P_wiener‖_F = 0.008173` against `‖I‖_F = 8` — the optimal treatment attenuates the hop about **979×**. Still zero modes above the band on the **trained** operator |
-| **Gated multiplicative hop** | `0.966692` against softmax `0.952203` and the additive hop `0.957855` — worse than both |
-
-**Why, structurally.** `scale/negation_scope.py:307-331` — the label is
-`z_i = a_i·z_{i-1} + b_i`, so its `t`-hop term is a **path product**
-`a_{s-1}···a_{s-t}·b_{s-1-t}`. Attention supplies weighted **sums**, and composing
-hops supplies sums of sums. The term is the wrong *shape*, which is why no `K`,
-no gain and no deflation moved it.
-
-**And the bed's own limitation.** A recurrence `z ← a·z + b` with input-dependent
-`a` is the defining form of a selective state-space model. This corpus asks for
-what a gated linear scan computes natively. The softmax control is therefore not
-a strong baseline here — it is the wrong primitive too, which is why it sits at
-`0.950252` rather than near the floor. A C-CAP sentence from this bed would
-measure which arm approximates a scan less badly, not whether either occupies
-ground softmax cannot.
+| dual-oracle max disagreement | **9.99e-16** (it.14), **1.554e-15** (it.15) against an imported 1e-10 |
+| planted `deg+1` rejection | 29/29 absorbing-side, 17/17 Kirchhoff-side |
+| **shared plant rejection** | **0/17, max gap 3.331e-16** |
+| λ₂ stratification yield | naive **16/200 = 8.0%** into `[0.90, 0.95]` |
+| rung coverage | all 12 in **[0.9435, 0.9499]** — the **top fifth** of the declared band |
+| k-hop arm, untrained | `khop_128` reads **0.005092**; crossing of 1.0 between k=32 and k=64 |
 
 ---
 
-## 7. INSTRUMENTS BUILT THIS ROUND, AND WHAT EACH REFUSES
-
-| instrument | what it does | what it refuses |
-|---|---|---|
-| `it11_verdict.tost` | two one-sided tests, `Δ_eq = 0.5σ`, achieved power | a margin below twice the `2.345e-3` reduction-order floor; a difference test read as parity; either sample below N=8 |
-| `it11_verdict.cap_verdict` | one-sample CI against `√((t*−h)/t*)`, `proven_hops` | below N=8; returns **no** hop count above the bar rather than a negative one |
-| `scripts/v13_adjudicate_hop2.py` | reads the filed prediction's four clauses off the journal | below N=8, and across thread lanes |
-| `r10_capacity_sweep --arm` | four arms on the chain corpus | default `softmax` reproduces published cells at `delta = 0.000e+00` |
-| `r10_it8_table.py` | per-arm table with floors and `ĥ` | `ĥ` undefined above the bar |
-| 0-step gate, `GATE_TOL = 1e-3` | derived from a measured 16-seed null | a genuine `0.99997` reading still aborts the run |
-| `scripts/v13_derivation_check.py` | discrete Kramers, fan-out null | passes; tolerances were not loosened |
-| `scripts/v13_b9_4060_probe.py` | card memory and throughput | fp32 predictions matched to an fp32 loop |
-
-All pass a regression run taken after every subsequent edit.
-
----
-
-## 8. SCOREBOARD, ITEMISED
-
-| item | pts | state |
-|---|---|---|
-| R11 verdict as priced (V1 +12 / V2 +6 / V3 +2) | 12 | not achieved — no reading has run |
-| corpus registration | 3 | not achieved — the λ₂ band covers 12.9% of its declared width |
-| α-instrument past both must-fires | 2 | not built; the instrument is published (Ly & Gong, arXiv:2510.05606) |
-| S5′ beats argmax and approaches ceiling | 8 | not built; X₂₇b's ceiling STRUCK |
-| CK-test admissibility GREEN | 2 | not built |
-| X₂₅ separation | 3 | not run; its deciding test needs a third arm |
-| X₂₆ alarm-precedes-transition | 2 | **STRUCK** — lead-time CI `[−13.88, +1.50]` includes zero |
-| TOST parity with power ≥ 0.8 | 5 | unreachable at N=8; needs N=70 |
-| local-trained HF package | 4 | not done |
-
-`41 − 2 = 39` live, **0 earned**.
-
----
-
-## 9. WHAT WOULD HAVE TO BE TRUE TO SHIP THE SENTENCE
-
-Measurable conditions, not tasks.
-
-1. **A cell exists with N ≥ 70 seeds per arm at one thread count.** Below that
-   `C-PAR` has no passing branch — two bit-identical arms return NO VERDICT.
-   Priced against the measured cost curve, the reading's three points cost about
-   `78 h` per arm at N=70 against `8.9 h` at N=8.
-2. **Some arm's N=8 seed CI lies entirely below `√((t*−1)/t*)`.** Nine cells,
-   zero crossings, `ĥ ≤ 0.389`. Nothing in the repository is near this.
-3. **A hop construction exists whose term is the right shape.** Four have been
-   measured and refuted. The label needs a path product; every candidate supplied
-   sums.
-4. **Round 11 runs.** It gates everything under D-4 and has not started.
-5. **The bed can distinguish the claim.** If the corpus is a selective SSM in
-   disguise, a win on it is a statement about scans rather than about this
-   operator.
-
----
-
-## 10. HOW TO READ THIS REPO
-
-- **Numbers:** `results/*.jsonl` — every published figure has a row. Read the
-  journal, never the task stdout: stdout buffers, and a cell can exist for an
-  hour before it appears there.
-- **Ledger:** `scale/ledger.py`, never grep.
-- **Defect taxonomy:** `R10_MECHANISM.md` diagnoses; `MISTAKES.md` prescribes.
-- **This round's working record:** `V13_DAG_TASKLIST.md`, carrying every
-  derivation and every correction.
-- **Independent audit:** `V13_CLAIM_AUDIT.md` — 44 CONFIRMED, 9 DISCREPANT, 1
-  UNVERIFIABLE, all nine corrected.
-- **Thread count is part of a cell's identity.** The harness is deterministic
-  given a thread count and returns a different number across counts, drift
-  `2.345e-3`. `it11_verdict.by_seed` refuses to pool, and so does the
-  adjudicator.
-- **The rule that governs everything:** a finding is not real until a test was
-  RED before the repair, and an instrument that cannot fail proves nothing.
-
----
-
-## 11. CLAIMS DISPROVED, WITHDRAWN, OR STRUCK
+## 5. CLAIMS DISPROVED, WITHDRAWN, OR STRUCK
 
 This is the section that matters most, because these are the ones that would
 otherwise still be believed.
@@ -301,3 +211,104 @@ otherwise still be believed.
 
 ---
 
+## 6. WHAT ROUND 10 ADDED THAT WAS NOT THERE
+
+**A calibrated field.** Before: one task, one budget, no seed discipline. Now: the
+learnable region is mapped in `(t*, n, steps)` with N=8 seed CIs, and the boundary
+is located to within an octave.
+
+**A corpus, unregistered.** Built, dual-checked to 1e-15, with its dose theorem
+corrected and its band coverage honestly reported as the **top fifth** rather than
+the whole. **NOT REGISTERED** — four of six admissibility clauses fail.
+
+**Instruments that refuse.** `it11_verdict.py` (refuses below N=8, counts distinct
+seeds not rows, fixed thread count), `idle_gate.py` (UNKNOWN ≠ idle, level-triggered),
+`vram_gate.py` (prices host RSS, reports UNKNOWN rather than GREEN).
+
+**A defect taxonomy.** `R10_MECHANISM.md` — one mechanism, 23 instances, split
+instrument-side from reader-side. `MISTAKES.md` gained **V-14a, V-15, V-16, V-17**
+and went from seven checks to ten.
+
+---
+
+## 7. HOW FAR FROM A NOVEL ATTENTION MECHANISM
+
+Honest accounting.
+
+**DONE:**
+1. The mathematical spine is **proved** — the resolvent identity, machine-checked.
+2. The playing field is **measured** — softmax's reachable region, with its
+   boundary, at N=8.
+3. An oracle exists that is an equilibrium in the exact sense, with an executable
+   second route.
+4. The engineering — harness, gates, journals, pricing, provenance — is genuinely
+   strong. This is the 80%.
+
+**NOT DONE:**
+1. **No CEQ arm has been run on the equilibrium corpus.** The corpus is built and
+   not registered; the arms exist and have not met it. This is the whole gap.
+2. **The strongest pro-CEQ number is on the wrong task.** Routing beat softmax with
+   disjoint CIs on `negation_scope`, not on the chain.
+3. **The one signed-vs-unsigned result was withdrawn.** What "routing" buys is
+   currently unexplained: the signed arm was the unsigned arm renamed.
+4. **S3/S4/S5 are unbuilt.** Trained selection, equilibrium readout, action head —
+   Phase 2 is gated behind v-main.3M it.36.
+
+**The distance, in one sentence:** the field is measured and the instrument is
+calibrated, so a CEQ result on the chain corpus is now a **runnable experiment**
+rather than an unanswerable question — and until it is run, the scientific claim
+stays where `done7.md` put it.
+
+---
+
+## 8. WHERE DEVELOPMENT REMAINS — ranked
+
+1. **Declare the tensorisation.** *Does the arm see boundary values?* On geometric
+   features the corpus is admissible **28/28**; adding `gbar` makes it **25/28
+   inadmissible**, because `gbar` is literally the first Neumann term of
+   `u = P_IB g + P_II u`. **This decides whether the corpus is a test at all.**
+   The round proceeds assuming it does **not** — if wrong, the corpus is rebuilt,
+   not re-declared, and downstream S1/S2 results are void.
+2. **Declare the train/eval split.** By arm gives **0** shared graphs; by file gives
+   12 and 43.66% leaked. Free to fix.
+3. **Run a CEQ arm on the chain corpus.** The gap in §7. Everything else is
+   preparation for this.
+4. **Fix `admissible`** — one clause, the mirror of the one there: every boundary
+   vertex needs an interior neighbour. One instance of twelve currently has a
+   `do()`-bit with **zero** effect.
+5. **Score the bar's control held-out.** Measured harmless (all three blocks pass
+   held-out by ~38×), but it is the *only* one of `bar_verdict`'s five clauses that
+   tests learnability, and it is in-sample.
+6. **Explain what routing buys**, now that sign is withdrawn.
+7. **Explain the 6× scaling discrepancy** — what sets the crossing, if not margin.
+
+---
+
+## 9. QUESTIONS THE ROUND COULD NOT ANSWER
+
+- **What limits softmax at large `t*`?** Not margin-resolution — that theory
+  over-predicts the data requirement by ~6×.
+- **Does the crossing scale predictably with `t*`?** Two usable points and a bound.
+  Not enough for a law.
+- **Is the corpus's top-fifth band coverage enough?** Widening is priced at **64%
+  more second-oracle work per rung**, and has not been taken.
+- **How do you mechanize a reader-side check?** Instances 19, 23 and 24 have **no
+  plant** — nothing is wrong with the instrument to plant against. They were caught
+  only by asking: *is this claim verified, or only the report it arrived in?*,
+  *what did this guard actually scan?*, *what did we correctly file as harmless,
+  back when it was?*
+- **Can the corpus provenance be reconstructed?** `data/README.md` describes a
+  20,000-line head; the file has **211,765 lines** and no countable unit equals
+  20,000. All 11 corpora verify byte-identical, so what exists is intact and
+  cannot be recreated from its written instructions.
+
+---
+
+## 10. HOW TO READ THIS REPO
+
+- **Numbers:** `results/*.jsonl` — every published figure has a row.
+- **Ledger:** `scale/ledger.py`, never grep.
+- **Defect taxonomy:** `R10_MECHANISM.md` diagnoses; `MISTAKES.md` prescribes.
+- **Round records:** `R10_ITERATION_*.md`, one per iteration, 14 of them.
+- **The rule that governs everything:** a finding is not real until a test was RED
+  before the repair, and an instrument that cannot fail proves nothing.

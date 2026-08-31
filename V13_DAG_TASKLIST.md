@@ -1474,6 +1474,41 @@ basin, and an ESS verdict is silent on whether the basin reached is the one the
 data implies. The quantity that answers that is the potential `P` or the mean
 fitness `f_bar` at `z*` compared across basins, which is a different print.
 
+## THE DECIDING CELL - complete, and the prediction holds 4/4
+
+`pivot_unsigned`, `t*=8, n=32768, steps=150, threads=12`, N=8 distinct seeds in
+a single thread lane:
+
+    0.973990  0.977050  0.974743  0.978135  0.982110  0.981606  0.970375  0.973892
+    mean 0.976488   sd 0.004039   CI95 [0.973932, 0.979036]
+
+| clause | verdict | value |
+|---|---|---|
+| P1 mean in `[0.960, 0.990]` | **HOLDS** | 0.976488 |
+| P2 CI does not clear `floor_1` | **HOLDS** | `proven_hops = 0`, `CI_hi 0.979036` vs `0.935414` |
+| P3 at least `0.09` above `floor_2` | **HOLDS** | 0.110462 |
+| P4 `h_hat` below 1.0 | **HOLDS** | 0.372 |
+
+Against softmax at the identical cell (`0.975371`, sd `0.002360`) the contrast is
+`+0.001117` - well inside either arm's seed spread, so the two are
+indistinguishable. `cap_verdict` returns "consistent with 1 hop".
+
+**The provenance is the point.** `V13_PREDICTION_HOP2.md` was filed while the
+journal held zero cell rows, hashed at filing, and never edited - including when
+an intermediate finding made its failure look likely and the tasklist said so.
+`scripts/v13_adjudicate_hop2.py` was written at 4 of 8 seeds and refuses below
+N=8; it refused at 6/8, and refused again when the completing seeds arrived in
+the wrong thread lane. The verdict was computed by machinery that could not see
+the answer while it was being built.
+
+**What it establishes.** The `pivot_unsigned` arm's second hop, at the cell where
+multi-hop should matter most, moves the reading by `+0.001117` - and `h_hat =
+0.372` says the arm is not reaching even one hop, let alone the two its
+construction nominally provides. Combined with the K sweep, the gain sweep's
+CONTENT verdict, the deflation's return-to-baseline and the gated hop's
+refutation, five independent measurements now agree that this second hop carries
+no capability. No increase in `n` from this arm produces a floor crossing.
+
 ## C. Contract defects these nodes exposed
 
 **C-1. The exit label is defined wrongly.** v-main.7 §2 and v-main.8 Part II set
@@ -1659,6 +1694,22 @@ The direction of the flattery is what makes it matter: fewer seeds widen the
 confidence interval, and a wide interval sitting inside a wide margin still
 reads PARITY. A short N makes an equivalence test easier to pass, not harder,
 which is the opposite of the intuition that protects a difference test.
+
+## Regression check before the endgame
+
+Every instrument built this session, re-run after all subsequent edits:
+
+| check | result |
+|---|---|
+| `scale/it11_verdict.py` self-check | passes - TOST refuses sub-floor margins, refuses difference-test parity, refuses a short N; `cap_verdict` proves a planted crossing, refuses a short N, returns no hop count above the bar |
+| `tests/test_zero_step_gate.py` | 4 passed |
+| `scale/r10_it8_table.py`, both arms | renders, floors and `h_hat` correct |
+| `scripts/v13_derivation_check.py` | passes |
+
+Nothing regressed. That matters more than it sounds: the verdict machinery was
+edited four separate times after it was first written - the short-N refusal, the
+`Cap.__str__` above-bar branch, the power redefinition at true difference zero,
+and the margin floor - and each edit was made while other work was in flight.
 
 ## E. Housekeeping done this iteration
 

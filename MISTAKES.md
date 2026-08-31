@@ -1343,6 +1343,42 @@ explain a difference between trained models without first showing it survives
 training — a check that costs one 150-step run and, here, would have stopped the
 entire line of argument at its first measurement.
 
+### M-16. The thread lane broken by the person who filed the rule against breaking it
+
+The `t*=8, n=32768` deciding cell was taken at `threads=12` for seeds 0 through
+5. A session crash killed the lane at 6 of 8 seeds, and the relaunch that
+completed it used `--threads 14` - chosen because the machine had been freed and
+14 was faster, with no thought given to the lane.
+
+Both cells landed and both read well: seed 6 at `0.970655` and seed 7 at
+`0.973938`, LEARNS, `597.3s` and `451.1s`. The journal holds eight cells for the
+configuration. But `scripts/v13_adjudicate_hop2.py` filters on a fixed thread
+count, inheriting the refusal in `scale/it11_verdict.py:129-165`, and reported
+`6/8 - INSUFFICIENT`. It was right to. M-10 records that this harness is
+deterministic given a thread count and returns a different number across counts,
+with a measured drift of `2.345e-3`; pooling `threads=12` and `threads=14` cells
+would put a non-seed variance source inside an interval claiming to measure seed
+variance.
+
+Two things make this worth an entry rather than a note.
+
+The rule was filed in this same session, by the same agent, three iterations
+before the violation. M-10 was written, the lane discipline was recorded in the
+work list under "THE READING must therefore run every cell in one lane", and the
+`windowed_signed` run was deliberately launched at `threads=6` to match the cells
+it would be compared against. Then a crash made speed feel urgent and the rule
+did not survive contact with a freed machine.
+
+And the guard held anyway. The refusal is in the reader, not in the writer, so an
+agent that forgets the discipline at write time still cannot cash the result at
+read time. That is the property worth building for: a rule enforced only where it
+is remembered protects nothing, and this one was enforced where it was not.
+
+**Check:** thread count is part of a cell's identity, so a relaunch after any
+interruption must read the lane out of the existing journal rather than off the
+machine's current capacity. Where a discipline can be violated by a flag, the
+guard belongs in the consumer of the data, not in the producer.
+
 ## The eleven checks, before any control ships
 
 Condensed from the above; this is the list to run down.
