@@ -1655,6 +1655,71 @@ than left to the reader. Related: [[V-5]] slice-to-nothing is the same defect on
 the data axis, where the sentence is true because its subject was narrowed until
 nothing failed.
 
+### V-24. An identity bind whose rejection region is empty
+
+Formulated by the JUPITER-2 node, `V15_JUPITER2_FORK.md` §1, and renumbered here
+from its proposed V-23, which was taken earlier the same round.
+
+When a refuted parity claim is repaired by adding a branch:
+
+```
+out = softmax_causal(q) @ V1  +  lambda * X @ V2
+```
+
+parity is asserted at `lambda = 0` and the label bind at `V1 = 0, lambda = 1`.
+Both appear to pass. Run the parity half against three substitutions for `X`:
+
+```
+X = Wc(g), the honest gate       (P) bitwise: True   (L) max|out - y| = 1.11e-16
+X = i.i.d. Gaussian noise        (P) bitwise: True   (L) max|out - y| = 4.3978
+X = the LABEL y itself           (P) bitwise: True   (L) max|out - y| = 0
+```
+
+**An architecture that hardcodes the answer passes the parity bind bitwise. A
+gate that the answer key passes is not a gate.**
+
+**The mechanism.** The proof of the `lambda = 0` bind uses exactly one fact —
+that `lambda` multiplies the second summand — and no property of `X` whatsoever.
+Substituting any `X` leaves the proof intact, so the bind's rejection region over
+candidate mechanisms is **empty** and its expected value is PASS before it
+executes. That is `V-10` reached from the architecture side. A second defect
+rides along in `V-9`'s shape: at the parity setting the added mechanism
+contributes nothing to the object, and at the label setting standard attention is
+not in the object at all, since `V1 = 0` deletes it. **The two binds are
+witnessed by two disjoint operators joined by a straight line along which nothing
+is claimed.**
+
+**Why it is worth its own entry.** `V-10` catches a gate whose *threshold* is
+satisfied by construction. This is a gate whose *subject* is unconstrained: the
+threshold is fine and the quantity it is applied to can be anything, including
+the answer. The tell is that the bind's proof never mentions the mechanism it is
+supposed to be certifying.
+
+**Check — plant negatives against your own bind.** A bind is informative only if
+deliberate mutilations of the mechanism make it fail. The same node's replacement
+construction was held to this and passed:
+
+```
+drop the key bias s                 max|out - y| = 0.9749
+drop the value rescale              max|out - y| = 0.9165
+drop the BOS sink                   max|out - y| = 1
+wrong bias  s_j = log(1 - a_j)/2    max|out - y| = 0.4845
+```
+
+Four mutilations, four failures at `O(1)`. **That contrast — three substitutions
+passing versus four mutilations failing — is the operational difference between
+an informative identity bind and a vacuous one, and it costs one probe to
+establish.** Any bind offered as evidence must ship it.
+
+**A residual caution this entry does not dissolve.** The replacement's own parity
+bind sits at "both auxiliary heads zero". Its rejection region is non-empty — it
+excludes every modification that is not a pure additive key-logit bias — but it
+is narrower than the refuted original, which asserted parity at *the gate's own
+identity point*. State the bind's information content in the words that are true
+of it: **the modification enters only through the key logit, additively, and
+vanishes at zero.** Do not restate it as "bitwise standard attention" unqualified,
+which is what the original clause claimed and what the refutation removed.
+
 ## The eleven checks, before any control ships
 
 Condensed from the above; this is the list to run down.

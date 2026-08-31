@@ -54,6 +54,7 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import os
 import pathlib
 import sys
 import time
@@ -73,15 +74,26 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 
 
 def train_with_checkpoints(x_train, y_train, x_eval, y_eval, *, s: int,
-                           rungs, seed: int, arm: str = "softmax"):
+                           rungs, seed: int, arm: str = "softmax",
+                           device=None):
     """`m3_capability.run_arm`'s loop, read at every rung instead of only the end.
 
     Returns (red, [per-rung dict]). `red` is the 0-step gate: the UNTRAINED arm
     must sit at or above NRMSE 1.0 on both splits, NaN checked FIRST because
     `float('nan') >= 1.0` is False and would pass a broken instrument silently.
+
+    `device=None` (default) touches nothing and is byte-identical to every
+    number this file has ever published. `x_train`/`y_train`/`x_eval`/`y_eval`
+    are expected to already sit on `device` (the caller places them via
+    `batch_fn(..., device=device)`, matching `scale/paired_arm.py`'s pattern);
+    only the model is moved here, and it is constructed BEFORE the move so its
+    initial weights are drawn from the seeded CPU generator on every device --
+    `.to(device)` copies values, it does not redraw them.
     """
     torch.manual_seed(seed)
     model = Arm(arm, s)
+    if device is not None:
+        model = model.to(device)
     opt = torch.optim.Adam(model.parameters(), lr=LR)
 
     mu = float(y_train.mean())
@@ -130,6 +142,39 @@ def train_with_checkpoints(x_train, y_train, x_eval, y_eval, *, s: int,
     return red, out
 
 
+def refuse_cross_device_pool(rows: list[dict]) -> str:
+    """Refuse a set of cell records that spans more than one `device`.
+
+    CONDITION 1, V15_NEPTUNE_SYSTEMS.md: "a CUDA cell may never be pooled with
+    a CPU-taken cell." MISTAKES.md M-10 measured *thread count alone* moving
+    `eval_nrmse` by 2.345e-3, which is 0.464 of the pre-registered equivalence
+    margin `Delta_eq`; device is named a LARGER perturbation than threads.
+    `it11_verdict.by_seed` already refuses a same-seed, same-`threads`
+    disagreement, but it buckets by `threads` only -- it has no reason yet to
+    keep a CPU cell and a CUDA cell apart, and picks the bucket with the most
+    seeds rather than refusing outright. Device gets the stricter rule: ANY
+    spread refuses, unconditionally, because condition 1 states no
+    accommodation for it ("the reading is void"), not "prefer the bigger
+    bucket".
+
+    A row with no `device` field is treated as `"cpu"` -- every journal this
+    file wrote before this change was CPU-only by construction, and reading a
+    missing field as an unknown fourth bucket would make an old journal and a
+    new `--device cpu` journal refuse to pool with each other, which is not
+    the defect this guard exists to catch.
+    """
+    devices = {r.get("device", "cpu") for r in rows}
+    if len(devices) > 1:
+        raise ValueError(
+            f"refuse to pool cells across devices {sorted(devices)}: device is "
+            "a larger perturbation than thread count (MISTAKES.md M-10 moved "
+            "eval_nrmse by 0.464 of Delta_eq on threads alone; "
+            "V15_NEPTUNE_SYSTEMS.md condition 1). Filter to one device before "
+            "computing a verdict."
+        )
+    return devices.pop() if devices else "cpu"
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--t-star", type=int, required=True, choices=(1, 2, 8, 32))
@@ -146,10 +191,66 @@ def main() -> int:
     ap.add_argument("--arm", default="softmax",
                     choices=("softmax", "pivot_unsigned", "windowed_signed",
                              "pivot_signed"))
+    #: Default "cpu" is the byte-identical status quo: nothing in this file
+    #: called `.to(...)` or `device=` before this flag existed, so every
+    #: number ever published by it was measured on whatever device
+    #: `torch.randn`/`nn.Linear` land on with no device argument, i.e. cpu.
+    ap.add_argument("--device", default="cpu", choices=("cpu", "cuda"),
+                    help="cpu is the shipped default. cuda currently cannot "
+                         "produce a scored verdict from this entry point -- "
+                         "see the ABORT below and V15_NEPTUNE_SYSTEMS.md "
+                         "condition 2.")
     a = ap.parse_args()
     if len(a.max_steps) != len(a.n_train):
         ap.error("--max-steps needs one entry per --n-train")
     torch.set_num_threads(a.threads)
+
+    device = None
+    if a.device == "cuda":
+        if not torch.cuda.is_available():
+            ap.error("--device cuda requested but torch.cuda.is_available() is False")
+        device = torch.device("cuda")
+        #: CONDITION 3, V15_NEPTUNE_SYSTEMS.md: cuBLAS is not bitwise
+        #: deterministic by default and this run must DECLARE that rather than
+        #: leave it silent. Measured on this box (instrumentation, not a
+        #: journalled reading): `torch.use_deterministic_algorithms(True)` cost
+        #: 0.921x -- i.e. no slowdown, within run-to-run noise -- over 20 timed
+        #: steps of this exact Arm/shape (s=64, n=2048, softmax) on cuda, so it
+        #: is set unconditionally rather than left off to save a cost that does
+        #: not exist. `CUBLAS_WORKSPACE_CONFIG` must be set before the first
+        #: CUDA call in the process; nothing above this line has touched cuda.
+        #: `cudnn.deterministic` is set too, matching `scale/paired_arm.py`'s
+        #: existing cuda lane, though this Arm has no cudnn-backed op to bind.
+        os.environ.setdefault("CUBLAS_WORKSPACE_CONFIG", ":4096:8")
+        torch.use_deterministic_algorithms(True)
+        torch.backends.cudnn.deterministic = True
+
+        #: CONDITION 2, V15_NEPTUNE_SYSTEMS.md: calibrate_bar() and GATE_TOL
+        #: were established on CPU and neither re-certifies on cuda for free.
+        #: `negation_scope.calibrate_bar` never accepts a `device` argument --
+        #: its reference batch, its positive-control net and its `feats`
+        #: tensor are built with no device threading on every call, cuda run or
+        #: not -- so "run calibrate_bar on cuda" is not reachable from this
+        #: file; it needs scale/negation_scope.py to accept and honour a
+        #: device, and that module is owned by another node this round (out of
+        #: this node's write scope). GATE_TOL=1e-3 above is a threshold
+        #: measured over 16 untrained CPU seeds (see its docstring). Scoring a
+        #: cuda cell against either is importing a CPU-established constant
+        #: across a device boundary -- MISTAKES.md V-22's shape -- so this
+        #: path refuses to produce a scored verdict rather than do that
+        #: silently. `train_with_checkpoints(..., device=...)` and
+        #: `refuse_cross_device_pool` are still fully wired (see both above):
+        #: the mechanism this predecessor was asked to add exists and is
+        #: tested; only the credited-verdict path is gated on re-certification
+        #: this node cannot perform.
+        print("ABORT: --device cuda cannot produce a scored verdict here.",
+              flush=True)
+        print("  calibrate_bar() and GATE_TOL=%.0e were established on cpu and "
+              "neither re-certifies on cuda without editing "
+              "scale/negation_scope.py, which is outside this node's write "
+              "scope. See V15_NEPTUNE_SYSTEMS.md condition 2 and "
+              "MISTAKES.md V-22." % GATE_TOL, flush=True)
+        return 1
 
     task = "e3_t%d" % a.t_star
     batch_fn, oracle_fn, feature_fn, fd_fn = M3_TASKS[task]
@@ -163,9 +264,11 @@ def main() -> int:
     emit(dict(t="header", task=task, arm=a.arm, s=S, d=D, n_eval=N_EVAL,
               threads=a.threads, torch=torch.__version__, lr=LR, d_model=D_MODEL,
               when=time.strftime("%Y-%m-%d %H:%M:%S"), seeds=a.seeds,
-              sign_floor=2 * 2.0 ** (-len(a.seeds))))
-    print("=== %s %s s=%d d=%d n_eval=%d threads=%d torch %s ==="
-          % (task, a.arm, S, D, N_EVAL, a.threads, torch.__version__), flush=True)
+              sign_floor=2 * 2.0 ** (-len(a.seeds)), device=a.device,
+              deterministic_algorithms=torch.are_deterministic_algorithms_enabled()))
+    print("=== %s %s s=%d d=%d n_eval=%d threads=%d torch %s device=%s ==="
+          % (task, a.arm, S, D, N_EVAL, a.threads, torch.__version__, a.device),
+          flush=True)
 
     # The analytic ceiling a 1-hop model cannot beat: sqrt((t*-k)/t*) at k=1,
     # from `negation_scope.equilibrium_hop_reading`'s closed form. softmax's hop
@@ -186,7 +289,8 @@ def main() -> int:
         print("ABORT: calibration bar failed; crediting nothing.", flush=True)
         return 1
 
-    x_eval, y_eval, _, _ = batch_fn(N_EVAL, S, D, d_model=D_MODEL, seed=12345)
+    x_eval, y_eval, _, _ = batch_fn(N_EVAL, S, D, d_model=D_MODEL, seed=12345,
+                                    device=device)
     for n, cap in zip(a.n_train, a.max_steps):
         rungs = [r for r in STEP_RUNGS if r <= cap]
         dropped = [r for r in STEP_RUNGS if r > cap]
@@ -194,18 +298,21 @@ def main() -> int:
             use = rungs if si == 0 else [r for r in rungs if r <= a.seed_cap]
             if not use:
                 continue
-            x_tr, y_tr, _, _ = batch_fn(n, S, D, d_model=D_MODEL, seed=seed)
+            x_tr, y_tr, _, _ = batch_fn(n, S, D, d_model=D_MODEL, seed=seed,
+                                        device=device)
             t0 = time.time()
             red, rows = train_with_checkpoints(x_tr, y_tr, x_eval, y_eval, arm=a.arm,
-                                               s=S, rungs=use, seed=seed)
+                                               s=S, rungs=use, seed=seed,
+                                               device=device)
             if not red["ok"]:
                 print("INSTRUMENT BROKEN n=%d seed=%d: 0-step %.6f/%.6f"
                       % (n, seed, red["nrmse0_train"], red["nrmse0_eval"]), flush=True)
-                emit(dict(t="instrument_broken", n_train=n, seed=seed, **red))
+                emit(dict(t="instrument_broken", n_train=n, seed=seed,
+                          device=a.device, **red))
                 return 1
             for r in rows:
                 emit(dict(t="cell", task=task, t_star=a.t_star, n_train=n,
-                          seed=seed, threads=a.threads, **r))
+                          seed=seed, threads=a.threads, device=a.device, **r))
                 print("  t*=%2d n=%6d seed=%d steps=%5d  eval NRMSE=%.6f  [%s]  "
                       "boot[%.4f,%.4f]  %.1fs"
                       % (a.t_star, n, seed, r["steps"], r["eval_nrmse"],
@@ -213,7 +320,8 @@ def main() -> int:
                       flush=True)
             if dropped and si == 0:
                 emit(dict(t="dropped", task=task, t_star=a.t_star, n_train=n,
-                          steps=dropped, why="unaffordable, see priced DAG"))
+                          steps=dropped, why="unaffordable, see priced DAG",
+                          device=a.device))
                 print("  t*=%2d n=%6d DROPPED steps=%s (unaffordable)"
                       % (a.t_star, n, dropped), flush=True)
             del x_tr, y_tr
