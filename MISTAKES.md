@@ -1480,6 +1480,90 @@ name.** Related: [[V-7]] is the same failure inverted, a search that cannot find
 anything read as absence; this is a search that finds the repair and reads it as
 the defect.
 
+### M-18. A pre-registered kill-diagnostic whose value the corpus fixes, not the arm
+
+`CEQ_V15_CONTRACT.md` PART IV, R1: *"Kill: bind passes, floor not crossed ⇒ `g`
+unlearnable at budget — diagnose by linear probe on `log a` (should be
+near-exact), never by a new construction."* The diagnostic is registered before
+the data, which is right; what was never checked is whether it can return two
+different answers.
+
+**It cannot.** BED-M's coefficients are Rademacher
+(`scale/negation_scope.py:428`):
+
+```python
+a = (torch.randint(0, 2, (n, s), generator=g).float() * 2 - 1).to(x.device)
+a[:, :head + 1] = 0.0
+```
+
+so `a_i ∈ {−1, +1}` on the live band and `0` outside, giving `|a_i| ∈ {0, 1}`.
+`log|a|` is therefore **identically 0 on the band** and `−∞` outside it. A linear
+probe's `R²` on a constant target has `SST = 0.000e+00` and is undefined;
+pooled and clamped (at `−30` or at `−100`, identically) it reads
+`3.2466e-04` against a `d/N` null of `1.22e-04`.
+
+The registered diagnostic returns NaN or `~0.0003` **whatever the arm does**.
+Reading that as "`g` is unlearnable" would attribute to the architecture a
+property of the corpus, and reading it as "`g` is learnable" is equally
+unavailable. It is a kill condition that cannot fire and cannot fail to fire.
+
+**The mechanism.** A diagnostic is registered against a QUANTITY (`log a`)
+without checking the quantity's DISTRIBUTION in the corpus it will be run on. The
+same probe on a corpus with continuous gates would be perfectly discriminating;
+here the label's entire content lives in `sign(a_i)`, and `log|a|` is the one
+function of `a` that throws that content away. This is `M-5` (a process that
+cannot cross its own threshold) applied to a diagnostic rather than to a verdict,
+and it is `V-8` (the PASS half's label is constant) with the constancy in the
+regressand instead of the class label.
+
+**The finding underneath it, which is larger than the diagnostic.** The contract
+parametrizes the gate as `g = −softplus(W x)`, which is **monotone** in the drive
+channel. The true `g = log|a|` is a band mask — **even** in the drive channel —
+and `scale/m3_capability.py` gives its arms no positional feature to route
+around it. Adding one squared feature recovers the band at `R² = 1.000000`
+exactly. **The obstruction is evenness, not information**, and no amount of data
+or optimization fixes a parametrization that cannot represent the target.
+
+**Check.** Before a diagnostic is registered, run it on the CORPUS ALONE with no
+arm and report its value and its null. A diagnostic whose no-arm value equals its
+expected with-arm value is measuring the corpus. Concretely, for any probe
+registered on a target `z`: print `Var(z)` over the draws it will see. `Var(z) =
+0` is a blocked registration. Amendment for R1: probe `sign(a_i)` off the arm's
+gate and report accuracy `p`, which is discriminating where `log|a|` is not.
+
+### M-19. A dynamical invariant estimated on a float64 orbit that has already collapsed
+
+The contract's S-G section carries `[RUN: 0.0003 at the right guard, 0.156 at a
+wrong one]` for the Pesin deficit `λ̂ − h_sym`. Reproducing it, a probe first
+returned `h_sym = 0` **at the generating partition** — the one place the deficit
+is supposed to vanish for the right reason, returning the right answer for the
+wrong one.
+
+The cause is the arithmetic, not the estimator. A tent-map orbit in float64
+loses one bit of the initial condition per step, so after roughly 52 iterations
+the trajectory carries no information from `x₀` and collapses to a fixed point
+of the rounding. Every symbol after that is an artifact of the last representable
+bit. The instrument had to be rebuilt on exact rational arithmetic (`x = s/q`
+with `q` prime) before it measured dynamics at all.
+
+**Consequence for anything downstream.** Any `X33` deficit, any symbolic entropy,
+any Lyapunov exponent computed by iterating a chaotic map in float64 past ~52
+steps is measuring round-off. The contract's own `0.0003` and `0.156` inherit
+this and are `INHERITED` under L-TIME until re-run in exact arithmetic — the
+number may be right, but the run that produced it has not been shown to be.
+
+**A second constraint on the same instrument, from the source.** Bollt et al.
+(2001) prove the deficit is **non-monotone** in partition misplacement. Ranking
+candidate guards by deficit is therefore unsound; only the "`≈ 0`" test is
+admissible. A guard search that picks the argmin of the deficit is using the
+instrument outside its stated behaviour.
+
+**Check.** Any orbit-based invariant states its arithmetic and its horizon. In
+floating point, the usable horizon is `mantissa_bits / log2(stretching rate)` —
+about 52 steps for a tent map in float64 — and a run longer than that reports
+round-off with a physical-looking name. Either use exact arithmetic, or state the
+horizon and stop before it, or shadow the orbit and prove the shadowing.
+
 ## The eleven checks, before any control ships
 
 Condensed from the above; this is the list to run down.
