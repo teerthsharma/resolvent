@@ -509,7 +509,17 @@ $ python -m pytest tests/x35p/test_kk_crb.py -q
 $ python -m pytest tests/x35 -q          # sibling suite, unaffected
 ..............                                                           [100%]
 14 passed in 3.09s
+
+$ python -m pytest tests/x35p tests/x35 tests/beds -q    # wider control
+........................................................................ [ 83%]
+..............                                                           [100%]
+86 passed in 1950.71s (0:32:30)
 ```
+
+The wider control is there because this node added two directories to a tree
+other nodes are writing in the same round; 86/86 says the additions collide
+with nothing. The 32-minute wall time is `tests/beds`, not `tests/x35p` --
+this node's 29 tests run in 6.48 s and the whole of `(c)` runs in under one.
 
 **Two assertions in the RED draft were guesses and were corrected before
 implementation, not after.** `crbs[0] < 1.0` in the ramp test and
