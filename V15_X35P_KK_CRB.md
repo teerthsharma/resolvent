@@ -15,7 +15,7 @@ than a floor. The bound in §8–§10 is a Ziv–Zakai bound and is labelled as 
 in every row it appears in.
 
 Code: `ceq/x35p/kk.py`, `ceq/x35p/crb.py`. Tests: `tests/x35p/test_kk_crb.py`,
-27 tests, RED pasted at §11 before either module existed, GREEN after.
+29 tests, RED pasted at §11 before either module existed, GREEN after.
 float64 throughout. Nothing trains.
 
 ---
@@ -503,8 +503,8 @@ ERROR tests/x35p/test_kk_crb.py
 
 ```
 $ python -m pytest tests/x35p/test_kk_crb.py -q
-...........................                                              [100%]
-27 passed in 1.41s
+.............................                                            [100%]
+29 passed in 6.48s
 
 $ python -m pytest tests/x35 -q          # sibling suite, unaffected
 ..............                                                           [100%]
