@@ -1,6 +1,0 @@
-t*=2 n=2048 steps=150 seeds=[0, 1, 2] K=8 threads=10  floor_1=0.707107 floor_2=0.000000
-  softmax (1 hop)        mean 0.952203  sd 0.017053  LEARNS      115s
-  pivot_unsigned (add)   mean 0.957855  sd 0.014174  LEARNS      142s
-  gated hop (mult)       mean 0.966692  sd 0.005926  LEARNS      130s
-
-  gated vs softmax: +0.014489    gated vs floor_1 0.707107: above

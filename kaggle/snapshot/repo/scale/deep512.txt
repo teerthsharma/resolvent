@@ -1,5 +1,0 @@
-sgate       s=  512     5/16384 rate=0.000305 CP95=[0.000099,0.000712] 369.8s
-paraformer  s=  512     0/16384 rate=0.000000 CP95=[0.000000,0.000225] 170.2s
-
-s    sgate  paraformer   ratio_lo_over_hi
-  512 0.000305  0.000000   0.44

@@ -1,5 +1,0 @@
-{"t": "header", "task": "e3_t2", "arm": "softmax", "s": 64, "d": 24, "n_eval": 4096, "threads": 8, "torch": "2.5.1+cu121", "lr": 0.02, "d_model": 16, "when": "2026-08-30 19:41:51", "seeds": [0], "sign_floor": 1.0}
-{"t": "ceiling", "t_star": 2, "hop_budget": 1, "nrmse_ceiling": 0.7071067811865476}
-{"t": "bar", "ok": true, "why": "BAR CALIBRATED", "predict_the_mean": 1.0, "payload_only": 1.2272241529888959, "oracle": 0.0, "flipper_dependence": 1.4012436552018552, "trained_two_feature": 0.013981593578261986}
-{"t": "cell", "task": "e3_t2", "t_star": 2, "n_train": 2048, "seed": 0, "threads": 8, "steps": 150, "train_nrmse": 0.7694675684213573, "eval_nrmse": 0.971432426855954, "boot_lo": 0.9545371510497663, "boot_hi": 0.988756147918852, "verdict": "LEARNS", "secs": 17.52}
-{"t": "dropped", "task": "e3_t2", "t_star": 2, "n_train": 2048, "steps": [600, 2400, 9600], "why": "unaffordable, see priced DAG"}

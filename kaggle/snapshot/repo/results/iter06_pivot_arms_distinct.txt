@@ -1,9 +1,0 @@
-..
-  pivot-probe ARMS-DISTINCT on cpu: 7 arms, 21 pairs, 0 collisions
-.
-  pivot-probe ARMS-DISTINCT on cuda: 7 arms, 21 pairs, 0 collisions
-.
-  rank(pivot hop2) = 8 == k = 8;  rank(dense hop2) = 54
-  spectral gap at k: sigma_8/sigma_9 = 1.249e+06
-..
-6 passed in 13.23s
