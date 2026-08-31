@@ -1,0 +1,8 @@
+t*=2 n=2048 steps=150 seeds=[0, 1, 2] K=64 threads=6
+  softmax control      mean 0.951602  sd 0.015381
+  gain=0.00             mean 0.951602  sd 0.015381  vs softmax +0.000000  154s  <-- identity check vs softmax
+  gain=0.05             mean 0.959863  sd 0.015795  vs softmax +0.008261  222s
+  gain=0.10             mean 0.958562  sd 0.009422  vs softmax +0.006960  381s
+  gain=0.25             mean 0.953986  sd 0.006788  vs softmax +0.002384  496s
+  gain=0.50             mean 0.983356  sd 0.025191  vs softmax +0.031754  514s
+  gain=1.00             mean 1.000583  sd 0.027812  vs softmax +0.048981  382s

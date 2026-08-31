@@ -1,0 +1,41 @@
+=== R10 P1a CAPACITY SWEEP -- PRICED DAG (softmax only) ===
+rate: 18.01 s/RE uncontended, 48.89 s/RE at four seats (both measured this round)
+
+c_step MEASURED, 8 threads, s=64 d=24, 8 steps after 2 warmup:
+  n=2048    0.11137 s/step   (2 threads: 0.15403)  peak RSS   901.2 MiB
+  n=8192    0.55395 s/step   (2 threads: 0.87456)  peak RSS  1567.9 MiB
+  n=32768   2.54988 s/step   (2 threads: 3.94342)  peak RSS  4275.1 MiB
+  per-example cost is NOT flat: 54.4 -> 67.6 -> 77.8 us. A unit fitted
+  at n=2048 and multiplied out to n=32768 is low by 1.43x.
+
+36 CELLS OR 12 RUNS? -- 36 cells, 9 TRAININGS.
+  t* is a CORPUS, not an eval slice: M3_TASKS registers e3_t{2,8,32}
+  as partial(make_equilibrium_batch, t_star=t), which zeroes the
+  sub-diagonal at head=s-1-t*, giving a different label law N(0,t*+1)
+  and a different bar 2/sqrt(t*). So the t* axis costs 3x, always.
+  steps IS nested: one 9600-step run is read at all four rungs.
+  So the grid is 3 t* x 3 n = 9 trainings read at 4 rungs = 36 cells,
+  NOT 36 trainings and NOT 12.
+
+  36 independent trainings :     122981 s =  34.16 h =   6828.5 RE
+   9 nested trainings      :      92598 s =  25.72 h =   5141.5 RE
+  nesting saves            :      30384 s =   8.44 h =   1687.0 RE  (24.7%)
+
+UNAFFORDABLE, with the arithmetic. The corner cell alone:
+  (9600 steps, n=32768), ONE t*  :    24479 s = 6.80 h = 1359.2 RE
+  the same cell at all three t*  :    73437 s = 20.40 h = 4077.5 RE = 79% of the whole nested grid
+
+WHAT RAN, and what was dropped:
+  n=2048   ran steps [150, 600, 2400, 9600] dropped none
+  n=8192   ran steps [150, 600]             dropped [2400, 9600]
+  n=32768  ran steps [150]                  dropped [600, 2400, 9600]
+  cells covered: 21 of 36.  spend: 5352 s = 297.2 RE (5.8% of the grid)
+  cells dropped: 15, marginal cost 87246 s = 24.23 h = 4844.3 RE (94.2% of the grid)
+    t*=2   n=8192   steps=(2400, 9600)       marginal     4986 s =  276.8 RE
+    t*=2   n=32768  steps=(600, 2400, 9600)  marginal    24096 s = 1337.9 RE
+    t*=8   n=8192   steps=(2400, 9600)       marginal     4986 s =  276.8 RE
+    t*=8   n=32768  steps=(600, 2400, 9600)  marginal    24096 s = 1337.9 RE
+    t*=32  n=8192   steps=(2400, 9600)       marginal     4986 s =  276.8 RE
+    t*=32  n=32768  steps=(600, 2400, 9600)  marginal    24096 s = 1337.9 RE
+
+ALL CHECKS PASSED

@@ -1,0 +1,58 @@
+
+########## DRIVER PASS 0 rc=0 ##########
+=== M3 QUINTUPLE  s=64 d=24 steps=150 n_train=8192 n_eval=512 ks=[8] seeds=[0, 1, 2, 3, 4] beta=0.5 t_max=21 N=21 threads=2 torch 2.5.1+cu121 ===
+Pre-registration: M3_QUINTUPLE_PREREGISTERED_READING.md
+Cost: analytic FLOPs only. Every seconds figure below is PROVISIONAL, CONTENDED BOX, NOT A MEASUREMENT.
+
+=== BINDS (the run does not start if either fails) ===
+  REQUIRED -- the shapes this run actually uses:
+  map bind n=2 s=64 d=24 k=8 seed=0: BITWISE
+  map bind n=2 s=64 d=24 k=8 seed=1: BITWISE
+  pivot-rule divergence (DECLARED DEVIATION, not a failure): 0/4 examples where arm_s.pivots_of drops index 0 and batched_pivots backfills it
+  DIAGNOSTIC -- other shapes. Reported, NOT gating this run, and carried into the report as a limit on the follow-on k sweep:
+  map bind n=4 s=64 d=24 k=8 seed=0: BITWISE
+  map bind n=3 s=64 d=24 k=16 seed=1: BITWISE
+    av differs at i=0: max abs 8.673617e-18
+    av differs at i=1: max abs 1.387779e-17
+  map bind n=2 s=128 d=16 k=32 seed=2: NOT BITWISE, max abs diff = 1.387779e-17
+  pivot-rule divergence (DECLARED DEVIATION, not a failure): 1/9 examples where arm_s.pivots_of drops index 0 and batched_pivots backfills it
+  G3 glance == softmax, bitwise: YES
+
+=== SOFTMAX FIRST: the published n_train=8192 reading, re-taken ===
+        n_params published=4769 re-taken=4769 MATCH
+    nrmse0_train published=1.003287 re-taken=1.003287 MATCH
+     nrmse0_eval published=1.000340 re-taken=1.000340 MATCH
+     train_nrmse published=0.820513 re-taken=0.820513 MATCH
+      eval_nrmse published=0.877168 re-taken=0.877168 MATCH
+           ci_lo published=0.830455 re-taken=0.830455 MATCH
+           ci_hi published=0.924226 re-taken=0.924226 MATCH
+
+=== 25 units, bucketed, budget 1500s ===
+[m3_quintuple_v2] 20/25 units already journalled, 5 remaining, budget 1500s
+  replay softmax_k0_s64_d24_st150_ntr8192_nev512_b21_sd0: MATCH
+  [21/25] argmax_k8_s64_d24_st150_ntr8192_nev512_b21_sd0 -> {'eval_nrmse': 1.0229100603025747, 'n_params': 4769, 'nrmse0_train': 1.003285508731, 'nrmse0_eval': 1.0003014569862125, 'marg_lo': 1.0083072161974325, 'marg_hi': 1.042528655540848} (241s)
+  [22/25] argmax_k8_s64_d24_st150_ntr8192_nev512_b21_sd1 -> {'eval_nrmse': 0.9948669621484079, 'n_params': 4769, 'nrmse0_train': 1.0133551750038154, 'nrmse0_eval': 1.0219409747818877, 'marg_lo': 0.9825038087582175, 'marg_hi': 1.0088751882939295} (240s)
+  [23/25] argmax_k8_s64_d24_st150_ntr8192_nev512_b21_sd2 -> {'eval_nrmse': 1.0117045251109624, 'n_params': 4769, 'nrmse0_train': 1.002262096823328, 'nrmse0_eval': 1.0017055973501665, 'marg_lo': 0.9981536414053929, 'marg_hi': 1.025793349565323} (238s)
+  [24/25] argmax_k8_s64_d24_st150_ntr8192_nev512_b21_sd3 -> {'eval_nrmse': 1.0108039523469563, 'n_params': 4769, 'nrmse0_train': 1.0077431986567427, 'nrmse0_eval': 1.023242351731761, 'marg_lo': 0.9998637536785762, 'marg_hi': 1.025470945009876} (211s)
+  [25/25] argmax_k8_s64_d24_st150_ntr8192_nev512_b21_sd4 -> {'eval_nrmse': 1.0136094994756117, 'n_params': 4769, 'nrmse0_train': 1.0262787234367894, 'nrmse0_eval': 1.03789417264827, 'marg_lo': 0.9975822649433308, 'marg_hi': 1.030289470982752} (197s)
+[m3_quintuple_v2] bucket end: 25/25 done, 0 remaining
+
+=== PER-CELL, ALL FIVE SEEDS ===
+      cell    k                                    seeds 0..4 eval NRMSE      mean        sd  0-step min  params
+    argmax    8             1.022910 0.994867 1.011705 1.010804 1.013609  1.010779  0.010115    1.000301    4769
+           ^ seed-mean at or above 1.0: this cell did not beat predict-the-mean and is credited with nothing.
+    glance    0             0.877168 0.889523 0.919148 0.890175 0.885603  0.892323  0.015866    1.000340    4769
+   settled    8             0.753581 0.768802 0.874658 0.816071 0.706317  0.783886  0.064106    1.000284    4769
+   softmax    0             0.877168 0.889523 0.919148 0.890175 0.885603  0.892323  0.015866    1.000340    4769
+      twin    8             0.767403 0.784397 0.794505 0.798001 0.760328  0.780927  0.016547    1.000302    4769
+
+=== CONTRASTS, paired bootstrap over seeds, B=10000 (G6) ===
+       arm         vs    k      delta      ci_lo      ci_hi         verdict  note
+   settled       twin    8  -0.002959  -0.048587  +0.031557   NO DIFFERENCE  HEADLINE
+             ^ pre-registered floor: with five seeds a real gap below ~0.05 NRMSE reads NO DIFFERENCE whether or not it is real.
+   settled     argmax    8  +0.226893  +0.175040  +0.275862    SETTLED WINS  HEADLINE CAVEAT
+   settled    softmax    8  +0.108437  +0.066232  +0.147110    SETTLED WINS  
+      twin    softmax    8  +0.111396  +0.100873  +0.121920    SETTLED WINS  
+    argmax    softmax    8  -0.118456  -0.134115  -0.102204       TWIN WINS  
+
+{"settled_vs_twin_k8": "NO DIFFERENCE", "settled_vs_argmax_k8": "SETTLED WINS", "settled_vs_softmax_k8": "SETTLED WINS", "twin_vs_softmax_k8": "SETTLED WINS", "argmax_vs_softmax_k8": "TWIN WINS"}

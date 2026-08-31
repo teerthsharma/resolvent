@@ -1,0 +1,29 @@
+=== e3_t2 softmax s=64 d=24 n_eval=4096 threads=6 torch 2.5.1+cu121 ===
+  1-hop truncation ceiling at t*=2: NRMSE 0.707107 (softmax hop budget = 1)
+  BAR CALIBRATED -- BAR CALIBRATED
+  t*= 2 n=  8192 seed=0 steps=  150  eval NRMSE=0.888001  [LEARNS]  boot[0.8729,0.9025]  212.6s
+  t*= 2 n=  8192 seed=0 steps=  600  eval NRMSE=1.011686  [NO READING]  boot[0.9908,1.0340]  710.8s
+  t*= 2 n=  8192 DROPPED steps=[2400, 9600] (unaffordable)
+    (924.3s for n=8192 seed=0)
+WROTE C:\Users\seal\Desktop\New folder (32)\results\r10_it8_capacity_softmax_t2.jsonl
+=== e3_t2 softmax s=64 d=24 n_eval=4096 threads=6 torch 2.5.1+cu121 ===
+  1-hop truncation ceiling at t*=2: NRMSE 0.707107 (softmax hop budget = 1)
+  BAR CALIBRATED -- BAR CALIBRATED
+  t*= 2 n=  2048 seed=0 steps=  150  eval NRMSE=0.969087  [LEARNS]  boot[0.9524,0.9865]  42.9s
+  t*= 2 n=  2048 DROPPED steps=[600, 2400, 9600] (unaffordable)
+    (43.3s for n=2048 seed=0)
+  t*= 2 n=  2048 seed=1 steps=  150  eval NRMSE=0.940160  [LEARNS]  boot[0.9246,0.9573]  42.6s
+    (43.0s for n=2048 seed=1)
+  t*= 2 n=  2048 seed=2 steps=  150  eval NRMSE=0.945560  [LEARNS]  boot[0.9312,0.9596]  43.5s
+    (43.9s for n=2048 seed=2)
+  t*= 2 n=  2048 seed=3 steps=  150  eval NRMSE=0.951586  [LEARNS]  boot[0.9344,0.9690]  44.0s
+    (44.4s for n=2048 seed=3)
+  t*= 2 n=  2048 seed=4 steps=  150  eval NRMSE=0.960526  [LEARNS]  boot[0.9441,0.9777]  43.3s
+    (43.7s for n=2048 seed=4)
+  t*= 2 n=  2048 seed=5 steps=  150  eval NRMSE=0.945688  [LEARNS]  boot[0.9299,0.9625]  43.1s
+    (43.5s for n=2048 seed=5)
+  t*= 2 n=  2048 seed=6 steps=  150  eval NRMSE=0.961044  [LEARNS]  boot[0.9451,0.9787]  43.6s
+    (44.0s for n=2048 seed=6)
+  t*= 2 n=  2048 seed=7 steps=  150  eval NRMSE=0.945139  [LEARNS]  boot[0.9288,0.9611]  42.4s
+    (42.8s for n=2048 seed=7)
+WROTE C:\Users\seal\Desktop\New folder (32)\results\r10_it8_capacity_softmax_t2.jsonl

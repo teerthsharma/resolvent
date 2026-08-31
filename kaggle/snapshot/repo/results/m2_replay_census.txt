@@ -1,0 +1,39 @@
+37 journalled+live units, threads=2
+[ 0] DRIFT  dense_signed__at_pivots/s1024/b0  (67.0s)  fields=['sigma', 'term']  got={'sigma': 2.9093518977946347, 'term': 0.0070104254339412855}  want={'sigma': 2.9093518966758096, 'term': 0.007010425434393368}
+[ 1] DRIFT  dense_signed__at_pivots/s1024/b1  (66.8s)  fields=['sigma', 'term']  got={'sigma': 2.893501553859051, 'term': 0.007023371529950365}  want={'sigma': 2.893501553375283, 'term': 0.007023371533896542}
+[ 2] DRIFT  dense_signed__at_pivots/s128  (4.8s)  fields=['sigma', 'term']  got={'sigma': 0.38330301849340376, 'term': 0.007153101776411555}  want={'sigma': 0.3833030187701487, 'term': 0.007153101804950095}
+[ 3] MATCH  dense_signed__at_pivots/s16  (2.6s)
+[ 4] MATCH  dense_signed__at_pivots/s2048/b0  (118.6s)
+[ 5] MATCH  dense_signed__at_pivots/s2048/b1  (122.6s)
+[ 6] MATCH  dense_signed__at_pivots/s2048/b2  (139.8s)
+[ 7] MATCH  dense_signed__at_pivots/s2048/b3  (124.5s)
+[ 8] MATCH  dense_signed__at_pivots/s2048/b4  (128.7s)
+[ 9] MATCH  dense_signed__at_pivots/s2048/b5  (135.5s)
+[10] MATCH  dense_signed__at_pivots/s2048/b6  (137.4s)
+[11] MATCH  dense_signed__at_pivots/s32  (3.2s)
+[12] DRIFT  dense_signed__at_pivots/s512  (28.8s)  fields=['sigma', 'term']  got={'sigma': 1.4427584711983887, 'term': 0.007226389750784511}  want={'sigma': 1.4427584761124048, 'term': 0.007226389799818177}
+[13] DRIFT  pivot_signed__in_P/s1024  (244.6s)  fields=['sigma', 'term']  got={'sigma': 0.047736885933434815, 'term': 0.007219709789820153}  want={'sigma': 0.047736885919128814, 'term': 0.0072197097889437015}
+[14] DRIFT  pivot_signed__in_P/s128  (5.4s)  fields=['sigma', 'term']  got={'sigma': 0.04458233321675683, 'term': 0.007153101776411555}  want={'sigma': 0.04458233330775549, 'term': 0.007153101804993282}
+[15] MATCH  pivot_signed__in_P/s16  (3.1s)
+[16] DRIFT  pivot_signed__in_P/s2048/b0  (75.1s)  fields=['sigma', 'term']  got={'sigma': 0.045015555356755964, 'term': 0.007464751652353385}  want={'sigma': 0.04501555540727958, 'term': 0.007464751646683254}
+[17] DRIFT  pivot_signed__in_P/s2048/b1  (73.8s)  fields=['sigma', 'term']  got={'sigma': 0.05010549047276446, 'term': 0.007169061006901067}  want={'sigma': 0.05010549046224745, 'term': 0.007169061006815802}
+[18] MATCH  pivot_signed__in_P/s2048/b10  (73.9s)
+[19] MATCH  pivot_signed__in_P/s2048/b11  (73.1s)
+[20] MATCH  pivot_signed__in_P/s2048/b12  (75.4s)
+[21] MATCH  pivot_signed__in_P/s2048/b13  (76.6s)
+[22] MATCH  pivot_signed__in_P/s2048/b14  (85.3s)
+[23] MATCH  pivot_signed__in_P/s2048/b15  (90.0s)
+[24] DRIFT  pivot_signed__in_P/s2048/b2  (91.1s)  fields=['sigma', 'term']  got={'sigma': 0.04709726412699182, 'term': 0.006450949464884115}  want={'sigma': 0.04709726413610097, 'term': 0.006450949461416666}
+[25] DRIFT  pivot_signed__in_P/s2048/b3  (90.3s)  fields=['sigma', 'term']  got={'sigma': 0.04669555943990954, 'term': 0.006894312177279538}  want={'sigma': 0.04669555938446903, 'term': 0.0068943121763913595}
+[26] DRIFT  pivot_signed__in_P/s2048/b4  (74.4s)  fields=['sigma', 'term']  got={'sigma': 0.048026207717982265, 'term': 0.007738582567714536}  want={'sigma': 0.04802620772055652, 'term': 0.0077385825643323525}
+[27] MATCH  pivot_signed__in_P/s2048/b5  (72.6s)
+[28] MATCH  pivot_signed__in_P/s2048/b6  (73.2s)
+[29] MATCH  pivot_signed__in_P/s2048/b7  (68.2s)
+[30] MATCH  pivot_signed__in_P/s2048/b8  (67.5s)
+[31] MATCH  pivot_signed__in_P/s2048/b9  (74.7s)
+[32] MATCH  pivot_signed__in_P/s32  (5.8s)
+[33] MATCH  pivot_signed__in_P/s512  (23.0s)
+[34] DRIFT  pivot_signed__not_in_P/s128  (10.9s)  fields=['sigma']  got={'sigma': 0.049038190317006944}  want={'sigma': 0.04903819007063796}
+[35] MATCH  pivot_signed__not_in_P/s32  (6.7s)
+[36] DRIFT  pivot_signed__not_in_P/s512  (25.4s)  fields=['sigma']  got={'sigma': 0.051529050200851766}  want={'sigma': 0.05152904989329683}
+TOTAL DRIFT: 13/37

@@ -1,0 +1,44 @@
+# Lean build artefacts — mathlib toolchain, hundreds of MB, fully reproducible
+lean/.lake/
+lean/build/
+*.olean
+*.ilean
+*.trace
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+
+# Measurement locks are process state, not evidence.
+# The JOURNALS (results/*.jsonl) ARE evidence and ARE committed.
+results/*.lock
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Third-party benchmark corpora — NOT redistributed here.
+# COGS (Kim & Linzen 2020), SCAN (Lake & Baroni 2018) and TinyStories
+# (Eldan & Li 2023) carry their own licences and are fetchable upstream.
+# See data/README.md for provenance and exact fetch commands.
+data/*.tsv
+data/*.txt
+
+# pytest-benchmark output. Regenerated on every run.
+.benchmarks/
+
+# Python packaging artefacts. `ceq/` is packaged for the Hub, so an editable
+# install drops these in.
+*.egg-info/
+/build/
+/dist/
+
+# scale/planted.py writes this while a source mutation is live and removes it on
+# revert. It must never be committed: a stale sentinel in the repo would make
+# assert_no_stale_plant() raise for every clone, forever.
+results/.planted_mutation.json

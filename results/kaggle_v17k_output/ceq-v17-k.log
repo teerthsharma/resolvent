@@ -1,0 +1,90 @@
+[{"stream_name":"stderr","time":11.672218863,"data":"0.00s - Debugger warning: It seems that frozen modules are being used, which may\n"}
+,{"stream_name":"stderr","time":11.672310727,"data":"0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off\n"}
+,{"stream_name":"stderr","time":11.672318725,"data":"0.00s - to python to disable frozen modules.\n"}
+,{"stream_name":"stderr","time":11.672323088,"data":"0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.\n"}
+,{"stream_name":"stderr","time":12.458467925,"data":"0.00s - Debugger warning: It seems that frozen modules are being used, which may\n"}
+,{"stream_name":"stderr","time":12.458511227,"data":"0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off\n"}
+,{"stream_name":"stderr","time":12.458516873,"data":"0.00s - to python to disable frozen modules.\n"}
+,{"stream_name":"stderr","time":12.458521173,"data":"0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.\n"}
+,{"stream_name":"stdout","time":15.24208081,"data":"python  3.12.13 (main, Mar  4 2026, 09:23:07) [GCC 11.4.0]\n"}
+,{"stream_name":"stdout","time":21.488957839,"data":"[OK] torch importable\n"}
+,{"stream_name":"stdout","time":21.488997841,"data":"torch   2.10.0+cu128\n"}
+,{"stream_name":"stdout","time":21.489004204,"data":"[OK] CUBLAS_WORKSPACE_CONFIG set before torch -- got ':4096:8' -- if Kaggle imported torch before this cell ran, the run header must record which determinism regime actually applied\n"}
+,{"stream_name":"stdout","time":21.489009541,"data":"cuda available True\n"}
+,{"stream_name":"stdout","time":21.489013875,"data":"  device 0: Tesla P100-PCIE-16GB  free 15.64 GiB / total 15.89 GiB\n"}
+,{"stream_name":"stdout","time":21.48901949,"data":"[OK] a CUDA device is visible -- select a GPU accelerator in Notebook Settings\n"}
+,{"stream_name":"stderr","time":21.490256114,"data":"/usr/local/lib/python3.12/dist-packages/torch/cuda/__init__.py:435: UserWarning: \n"}
+,{"stream_name":"stderr","time":21.490288237,"data":"    Found GPU0 Tesla P100-PCIE-16GB which is of cuda capability 6.0.\n"}
+,{"stream_name":"stderr","time":21.490312108,"data":"    Minimum and Maximum cuda capability supported by this version of PyTorch is\n"}
+,{"stream_name":"stderr","time":21.490318877,"data":"    (7.0) - (12.0)\n"}
+,{"stream_name":"stderr","time":21.490324361,"data":"    \n"}
+,{"stream_name":"stderr","time":21.490330078,"data":"  queued_call()\n"}
+,{"stream_name":"stderr","time":21.490336141,"data":"/usr/local/lib/python3.12/dist-packages/torch/cuda/__init__.py:435: UserWarning: \n"}
+,{"stream_name":"stderr","time":21.490342084,"data":"    Please install PyTorch with a following CUDA\n"}
+,{"stream_name":"stderr","time":21.490348025,"data":"    configurations:  12.6 following instructions at\n"}
+,{"stream_name":"stderr","time":21.490354566,"data":"    https://pytorch.org/get-started/locally/\n"}
+,{"stream_name":"stderr","time":21.490360889,"data":"    \n"}
+,{"stream_name":"stderr","time":21.490366456,"data":"  queued_call()\n"}
+,{"stream_name":"stderr","time":21.490372046,"data":"/usr/local/lib/python3.12/dist-packages/torch/cuda/__init__.py:435: UserWarning: \n"}
+,{"stream_name":"stderr","time":21.490377969,"data":"Tesla P100-PCIE-16GB with CUDA capability sm_60 is not compatible with the current PyTorch installation.\n"}
+,{"stream_name":"stderr","time":21.490383869,"data":"The current PyTorch install supports CUDA capabilities sm_70 sm_75 sm_80 sm_86 sm_90 sm_100 sm_120.\n"}
+,{"stream_name":"stderr","time":21.490389008,"data":"If you want to use the Tesla P100-PCIE-16GB GPU with PyTorch, please check the instructions at https://pytorch.org/get-started/locally/\n"}
+,{"stream_name":"stderr","time":21.490420465,"data":"\n"}
+,{"stream_name":"stderr","time":21.490426054,"data":"  queued_call()\n"}
+,{"stream_name":"stderr","time":21.490430719,"data":"\n"}
+,{"stream_name":"stderr","time":21.490435482,"data":"/usr/local/lib/python3.12/dist-packages/torch/cuda/__init__.py:435: UserWarning: \n"}
+,{"stream_name":"stderr","time":21.490440355,"data":"    Found GPU0 Tesla P100-PCIE-16GB which is of cuda capability 6.0.\n"}
+,{"stream_name":"stderr","time":21.490452301,"data":"    Minimum and Maximum cuda capability supported by this version of PyTorch is\n"}
+,{"stream_name":"stderr","time":21.490456544,"data":"    (7.0) - (12.0)\n"}
+,{"stream_name":"stderr","time":21.490460468,"data":"    \n"}
+,{"stream_name":"stderr","time":21.490464332,"data":"  queued_call()\n"}
+,{"stream_name":"stderr","time":21.490468328,"data":"/usr/local/lib/python3.12/dist-packages/torch/cuda/__init__.py:435: UserWarning: \n"}
+,{"stream_name":"stderr","time":21.490472638,"data":"    Please install PyTorch with a following CUDA\n"}
+,{"stream_name":"stderr","time":21.490478502,"data":"    configurations:  12.6 following instructions at\n"}
+,{"stream_name":"stderr","time":21.490486821,"data":"    https://pytorch.org/get-started/locally/\n"}
+,{"stream_name":"stderr","time":21.490490344,"data":"    \n"}
+,{"stream_name":"stderr","time":21.490493004,"data":"  queued_call()\n"}
+,{"stream_name":"stderr","time":21.490495644,"data":"/usr/local/lib/python3.12/dist-packages/torch/cuda/__init__.py:435: UserWarning: \n"}
+,{"stream_name":"stderr","time":21.490498422,"data":"Tesla P100-PCIE-16GB with CUDA capability sm_60 is not compatible with the current PyTorch installation.\n"}
+,{"stream_name":"stderr","time":21.490501358,"data":"The current PyTorch install supports CUDA capabilities sm_70 sm_75 sm_80 sm_86 sm_90 sm_100 sm_120.\n"}
+,{"stream_name":"stderr","time":21.490504315,"data":"If you want to use the Tesla P100-PCIE-16GB GPU with PyTorch, please check the instructions at https://pytorch.org/get-started/locally/\n"}
+,{"stream_name":"stderr","time":21.490507344,"data":"\n"}
+,{"stream_name":"stderr","time":21.490511137,"data":"  queued_call()\n"}
+,{"stream_name":"stdout","time":21.51667335,"data":"[OK] PINNED_SHA is set -- fill in PINNED_SHA above\n"}
+,{"stream_name":"stdout","time":21.516707378,"data":"[HALT] a code source is configured -- set CODE_DATASET_DIR or REPO_URL above\n"}
+,{"stream_name":"stderr","time":25.001618025,"data":"Traceback (most recent call last):\n"}
+,{"stream_name":"stderr","time":25.001649438,"data":"  File \"\u003cstring\u003e\", line 1, in \u003cmodule\u003e\n"}
+,{"stream_name":"stderr","time":25.001655872,"data":"  File \"/usr/local/lib/python3.12/dist-packages/papermill/execute.py\", line 131, in execute_notebook\n"}
+,{"stream_name":"stderr","time":25.001724776,"data":"    raise_for_execution_errors(nb, output_path)\n"}
+,{"stream_name":"stderr","time":25.00186091,"data":"  File \"/usr/local/lib/python3.12/dist-packages/papermill/execute.py\", line 251, in raise_for_execution_errors\n"}
+,{"stream_name":"stderr","time":25.002070715,"data":"    raise error\n"}
+,{"stream_name":"stderr","time":25.002266561,"data":"papermill.exceptions.PapermillExecutionError: \n"}
+,{"stream_name":"stderr","time":25.002284099,"data":"---------------------------------------------------------------------------\n"}
+,{"stream_name":"stderr","time":25.002289887,"data":"Exception encountered at \"In [2]\":\n"}
+,{"stream_name":"stderr","time":25.00229458,"data":"---------------------------------------------------------------------------\n"}
+,{"stream_name":"stderr","time":25.002314899,"data":"RuntimeError                              Traceback (most recent call last)\n"}
+,{"stream_name":"stderr","time":25.002319048,"data":"/tmp/ipykernel_23/4246310673.py in \u003ccell line: 0\u003e()\n"}
+,{"stream_name":"stderr","time":25.002323049,"data":"     33     run([\"git\", \"checkout\", \"-q\", PINNED_SHA], cwd=REPO_DIR)\n"}
+,{"stream_name":"stderr","time":25.002327172,"data":"     34 else:\n"}
+,{"stream_name":"stderr","time":25.00233178,"data":"---\u003e 35     gate(\"a code source is configured\", False, \"set CODE_DATASET_DIR or REPO_URL above\")\n"}
+,{"stream_name":"stderr","time":25.002336954,"data":"     36 \n"}
+,{"stream_name":"stderr","time":25.002340717,"data":"     37 # THE SNAPSHOT CARRIES NO `.git`. `git archive` writes the tree at a commit and\n"}
+,{"stream_name":"stderr","time":25.002345254,"data":"\n"}
+,{"stream_name":"stderr","time":25.002348957,"data":"/tmp/ipykernel_23/295298260.py in gate(name, ok, msg)\n"}
+,{"stream_name":"stderr","time":25.002352561,"data":"     19     print(\"[{}] {}\".format(\"OK\" if ok else \"HALT\", name) + (\" -- \" + msg if msg else \"\"))\n"}
+,{"stream_name":"stderr","time":25.002357103,"data":"     20     if not ok:\n"}
+,{"stream_name":"stderr","time":25.002360563,"data":"---\u003e 21         raise RuntimeError(\"GATE FAILED: {}: {}\".format(name, msg))\n"}
+,{"stream_name":"stderr","time":25.00236437,"data":"     22 \n"}
+,{"stream_name":"stderr","time":25.002367973,"data":"     23 print(\"python \", sys.version)\n"}
+,{"stream_name":"stderr","time":25.002372188,"data":"\n"}
+,{"stream_name":"stderr","time":25.002375471,"data":"RuntimeError: GATE FAILED: a code source is configured: set CODE_DATASET_DIR or REPO_URL above\n"}
+,{"stream_name":"stderr","time":25.002379207,"data":"\n"}
+,{"stream_name":"stderr","time":27.369646535,"data":"/usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":27.369702133,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":27.564413953,"data":"/usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":27.56444403,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":28.251620968,"data":"[NbConvertApp] Converting notebook __notebook__.ipynb to notebook\n"}
+,{"stream_name":"stderr","time":28.572407564,"data":"[NbConvertApp] Writing 60832 bytes to __notebook__.ipynb\n"}
+,{"stream_name":"stderr","time":31.068220578,"data":"[NbConvertApp] Converting notebook __notebook__.ipynb to html\n"}
+,{"stream_name":"stderr","time":32.09029489,"data":"[NbConvertApp] Writing 402293 bytes to __results__.html\n"}
+]

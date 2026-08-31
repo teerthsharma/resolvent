@@ -1,0 +1,70 @@
+==============================================================================
+LADDER E TREND -- Page's L and isotonic regression on settled - twin
+==============================================================================
+    convention: delta = mean(NRMSE_twin - NRMSE_settled). POSITIVE MEANS SETTLED WINS.
+    blocks = seeds [0, 1, 2, 3, 4]   conditions = t* [1, 2, 8, 32]
+    pre-registration is in this file's docstring and was frozen before the statistic ran.
+
+    seed           e3_t1         e3_t2         e3_t8        e3_t32
+    0          -0.055196     -0.002190     -0.007976     +0.014555
+    1          +0.137445     -0.046550     -0.030893     +0.042255
+    2          -0.166152     -0.003045     +0.024999     -0.023460
+    3          -0.045577     -0.026350     +0.002610     +0.013438
+    4          -0.050646     -0.007940     -0.010158     +0.033385
+    mean       -0.036025     -0.017215     -0.004284     +0.016035
+    iso        -0.036025     -0.017215     -0.004284     +0.016035
+
+PAGE'S TREND TEST (ordered alternative theta_1 <= ... <= theta_k)
+    rank sums R_j        ['8.0', '12.0', '13.0', '17.0']
+    L = sum_j j * R_j    139
+    exact null           support [100, 150], mean 125.0, 7962624 rank assignments
+    exact p (L >= obs)   0.016724
+    GRANULARITY          51 achievable p-values on the whole support; finest 1.256e-07
+    alpha=0.05 reachable  True  -- critical L = 137, TRUE size 0.037002877, 14 achievable p-values at or below alpha
+    permutation p        0.016255  (se 0.000283, 200000 draws, seed 0)
+    two paths agree      True
+    ties present         False
+
+ISOTONIC REGRESSION (PAVA, non-decreasing, on the rung means)
+    top rung             +0.016035
+    bootstrap CI         [+0.002826, +0.033167]  (10000 draws over 5 seeds, seed 0, 3125 distinct resamples)
+    excludes zero        True
+    seeds favouring settled at the top rung: 4 of 5
+
+    GRANULARITY OF THIS CLAUSE, WHICH IS NOT PAGE'S
+    A percentile CI over 5 blocks is driven by sign agreement, so the finest
+    two-sided p it can express is 2/2^5 = 0.0625 -- ABOVE alpha=0.05.
+    This clause therefore CANNOT be a 0.05-level statement at this seed
+    count, whatever its interval reads. Page's L is not subject to it:
+    its outcome space is 24^5 = 7962624, not 2^5 = 32.
+
+    WHAT THE CONSTRAINT IS WORTH -- the same bootstrap WITHOUT isotonic
+    unconstrained top    +0.016035  CI [-0.004711, +0.033167]  excludes zero False
+    PAVA pooled the top in 13.07% of resamples and lifted the lower bound by +0.007537.
+    The pooling is ONE-SIDED, so this lift is a property of the estimator, not of
+    the data. Read the size clause knowing that.
+
+LEAVE-ONE-SEED-OUT (diagnostic only; changes no branch)
+    dropped       L         p        iso top        CI          RISES
+    seed 0       110  0.050411  +0.016404  [+0.002583,+0.037820]  False
+    seed 1       115  0.003864  +0.009479  [+0.002029,+0.028398]  True
+    seed 2       112  0.021741  +0.025908  [+0.013996,+0.037820]  True
+    seed 3       109  0.072401  +0.016684  [+0.001997,+0.037820]  False
+    seed 4       110  0.050411  +0.011697  [+0.001997,+0.035051]  False
+    the verdict survives 2 of 5 single-seed deletions.
+
+SCOPE -- LADDER E's OWN ROW G OUTRANKS THIS STATISTIC
+    rung      settled       twin   credited
+    e3_t1    0.994399   0.958373   True
+    e3_t2    1.013958   0.996743   False
+    e3_t8    1.096009   1.091725   False
+    e3_t32   1.103711   1.119745   False
+    3 of 4 rungs have a cell AT OR ABOVE predict-the-mean: e3_t2, e3_t8, e3_t32.
+    Row G credits those rungs NOTHING in either direction. A trend in
+    the difference between two arms that both lose to the mean is an
+    ORDERING, not a capability. The verdict below is a statement about
+    the contrast as a number and NOT a claim that settling bought
+    anything at depth.
+
+=== PRE-REGISTERED VERDICT ===
+    RISES: Page's L is significant at alpha=0.05 (L=139, exact p=0.016724) AND the isotonic top rung is +0.016035 with CI [+0.002826, +0.033167] excluding zero.

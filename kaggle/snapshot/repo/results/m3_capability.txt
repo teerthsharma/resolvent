@@ -1,0 +1,1561 @@
+
+=== RUN 2026-08-25 15:13:58 s=64 d=24 steps=150 n_train=128 n_eval=256 seed=0 arms=['softmax', 'pivot_signed', 'pivot_unsigned'] ===
+torch 2.5.1+cu121  torch.get_num_threads()=20  device=cpu (no .cuda() anywhere in this file)
+
+=== BAR CALIBRATION (must pass before any arm is credited) ===
+    predict_the_mean NRMSE 1.000000
+        payload_only NRMSE 1.361782
+              oracle NRMSE 0.000000
+  BAR CALIBRATED
+
+=== DATA (same train/eval batches reused across every arm) ===
+  train: n=128 seed=0  flipper@39 payload@62
+  eval : n=256 seed=12345 (DIFFERENT seed)  flipper@39 payload@62
+
+=== TRAIN + EVAL per arm ===
+
+  [softmax]  n_params=1601
+    RED  0-step NRMSE  train=1.006674  eval=1.012233  [OK]
+    POST steps=150  train NRMSE=0.244777   eval NRMSE=1.855584
+    eval bootstrap_ci (n_boot=400) = [1.657172, 2.084444]
+
+  [pivot_signed]  n_params=1666
+    RED  0-step NRMSE  train=1.005776  eval=1.010263  [OK]
+    POST steps=150  train NRMSE=0.035425   eval NRMSE=1.342215
+    eval bootstrap_ci (n_boot=400) = [1.239470, 1.454918]
+
+  [pivot_unsigned]  n_params=1601
+    RED  0-step NRMSE  train=1.006672  eval=1.012236  [OK]
+    POST steps=150  train NRMSE=0.245675   eval NRMSE=1.956147
+    eval bootstrap_ci (n_boot=400) = [1.708499, 2.193635]
+
+=== PARAM MATCH (arm 1 vs 2/3, must be within 10%) ===
+  softmax=1601  pivot_signed=1666  ratio=0.0406
+  softmax=1601  pivot_unsigned=1601  ratio=0.0000
+
+=== WALL CLOCK: 48.419 s ===
+
+=== RUN 2026-08-25 15:19:08 s=64 d=21 steps=20 n_train=128 n_eval=256 seed=0 arms=['softmax', 'pivot_signed', 'pivot_unsigned'] ===
+torch 2.5.1+cu121  torch.get_num_threads()=20  device=cpu (no .cuda() anywhere in this file)
+
+=== BAR CALIBRATION (must pass before any arm is credited) ===
+    predict_the_mean NRMSE 1.000000
+        payload_only NRMSE 1.361782
+              oracle NRMSE 0.000000
+  BAR CALIBRATED
+
+=== DATA (same train/eval batches reused across every arm) ===
+  train: n=128 seed=0  flipper@42 payload@62
+  eval : n=256 seed=12345 (DIFFERENT seed)  flipper@42 payload@62
+
+=== TRAIN + EVAL per arm ===
+
+  [softmax]  n_params=1601
+    RED  0-step NRMSE  train=1.006674  eval=1.012233  [OK]
+    POST steps=20  train NRMSE=0.934706   eval NRMSE=1.069687
+    eval bootstrap_ci (n_boot=400) = [1.031543, 1.113392]
+
+  [pivot_signed]  n_params=1666
+    RED  0-step NRMSE  train=1.006512  eval=1.010052  [OK]
+    POST steps=20  train NRMSE=0.271412   eval NRMSE=1.335635
+    eval bootstrap_ci (n_boot=400) = [1.237586, 1.448751]
+
+  [pivot_unsigned]  n_params=1601
+    RED  0-step NRMSE  train=1.006672  eval=1.012238  [OK]
+    POST steps=20  train NRMSE=0.934669   eval NRMSE=1.069695
+    eval bootstrap_ci (n_boot=400) = [1.031690, 1.113406]
+
+=== PARAM MATCH (arm 1 vs 2/3, must be within 10%) ===
+  softmax=1601  pivot_signed=1666  ratio=0.0406
+  softmax=1601  pivot_unsigned=1601  ratio=0.0000
+
+=== WALL CLOCK: 13.815 s ===
+
+=== RUN 2026-08-25 15:19:34 s=128 d=42 steps=20 n_train=128 n_eval=256 seed=0 arms=['softmax', 'pivot_signed', 'pivot_unsigned'] ===
+torch 2.5.1+cu121  torch.get_num_threads()=20  device=cpu (no .cuda() anywhere in this file)
+
+=== BAR CALIBRATION (must pass before any arm is credited) ===
+    predict_the_mean NRMSE 1.000000
+        payload_only NRMSE 1.398922
+              oracle NRMSE 0.000000
+  BAR CALIBRATED
+
+=== DATA (same train/eval batches reused across every arm) ===
+  train: n=128 seed=0  flipper@85 payload@126
+  eval : n=256 seed=12345 (DIFFERENT seed)  flipper@85 payload@126
+
+=== TRAIN + EVAL per arm ===
+
+  [softmax]  n_params=1601
+    RED  0-step NRMSE  train=1.006172  eval=1.015035  [OK]
+    POST steps=20  train NRMSE=0.963095   eval NRMSE=1.052397
+    eval bootstrap_ci (n_boot=400) = [1.025816, 1.086845]
+
+  [pivot_signed]  n_params=1730
+    RED  0-step NRMSE  train=1.005663  eval=1.014927  [OK]
+    POST steps=20  train NRMSE=0.459846   eval NRMSE=1.253901
+    eval bootstrap_ci (n_boot=400) = [1.186241, 1.349310]
+
+  [pivot_unsigned]  n_params=1601
+    RED  0-step NRMSE  train=1.006170  eval=1.015039  [OK]
+    POST steps=20  train NRMSE=0.963198   eval NRMSE=1.052056
+    eval bootstrap_ci (n_boot=400) = [1.025529, 1.086376]
+
+=== PARAM MATCH (arm 1 vs 2/3, must be within 10%) ===
+  softmax=1601  pivot_signed=1730  ratio=0.0806
+  softmax=1601  pivot_unsigned=1601  ratio=0.0000
+
+=== WALL CLOCK: 18.984 s ===
+
+=== RUN 2026-08-25 15:20:04 s=192 d=64 steps=20 n_train=128 n_eval=256 seed=0 arms=['softmax', 'pivot_signed', 'pivot_unsigned'] ===
+torch 2.5.1+cu121  torch.get_num_threads()=20  device=cpu (no .cuda() anywhere in this file)
+
+=== BAR CALIBRATION (must pass before any arm is credited) ===
+    predict_the_mean NRMSE 1.000000
+        payload_only NRMSE 1.356594
+              oracle NRMSE 0.000000
+  BAR CALIBRATED
+
+=== DATA (same train/eval batches reused across every arm) ===
+  train: n=128 seed=0  flipper@127 payload@190
+  eval : n=256 seed=12345 (DIFFERENT seed)  flipper@127 payload@190
+
+=== TRAIN + EVAL per arm ===
+
+  [softmax]  n_params=1601
+    RED  0-step NRMSE  train=1.006727  eval=1.005532  [OK]
+    POST steps=20  train NRMSE=0.934482   eval NRMSE=1.089822
+    eval bootstrap_ci (n_boot=400) = [1.053861, 1.135778]
+
+  [pivot_signed]  n_params=1794
+    RED  0-step NRMSE  train=1.004399  eval=1.004029  [OK]
+    POST steps=20  train NRMSE=0.460097   eval NRMSE=1.372082
+    eval bootstrap_ci (n_boot=400) = [1.292967, 1.465588]
+
+  [pivot_unsigned]  n_params=1601
+    RED  0-step NRMSE  train=1.006730  eval=1.005531  [OK]
+    POST steps=20  train NRMSE=0.934396   eval NRMSE=1.089716
+    eval bootstrap_ci (n_boot=400) = [1.053890, 1.135697]
+
+=== PARAM MATCH (arm 1 vs 2/3, must be within 10%) ===
+  softmax=1601  pivot_signed=1794  ratio=0.1205
+
+=== RUN 2026-08-25 15:20:52 s=256 d=85 steps=20 n_train=128 n_eval=256 seed=0 arms=['softmax', 'pivot_signed', 'pivot_unsigned'] ===
+torch 2.5.1+cu121  torch.get_num_threads()=20  device=cpu (no .cuda() anywhere in this file)
+
+=== BAR CALIBRATION (must pass before any arm is credited) ===
+    predict_the_mean NRMSE 1.000000
+        payload_only NRMSE 1.253505
+              oracle NRMSE 0.000000
+  BAR CALIBRATED
+
+=== DATA (same train/eval batches reused across every arm) ===
+  train: n=128 seed=0  flipper@170 payload@254
+  eval : n=256 seed=12345 (DIFFERENT seed)  flipper@170 payload@254
+
+=== TRAIN + EVAL per arm ===
+
+  [softmax]  n_params=1601
+    RED  0-step NRMSE  train=1.006921  eval=1.000477  [OK]
+    POST steps=20  train NRMSE=0.898923   eval NRMSE=1.069291
+    eval bootstrap_ci (n_boot=400) = [1.016334, 1.126905]
+
+  [pivot_signed]  n_params=1858
+    RED  0-step NRMSE  train=1.006919  eval=0.999456  [INSTRUMENT BROKEN]
+INSTRUMENT BROKEN: arm=pivot_signed untrained NRMSE below 1.0 (or NaN/Inf). Aborting, crediting nothing.
+
+=== RUN 2026-08-25 15:21:48 s=192 d=64 steps=20 n_train=128 n_eval=256 seed=0 arms=['softmax', 'pivot_signed', 'pivot_unsigned'] ===
+torch 2.5.1+cu121  torch.get_num_threads()=20  device=cpu (no .cuda() anywhere in this file)
+
+=== BAR CALIBRATION (must pass before any arm is credited) ===
+    predict_the_mean NRMSE 1.000000
+        payload_only NRMSE 1.356594
+              oracle NRMSE 0.000000
+  BAR CALIBRATED
+
+=== DATA (same train/eval batches reused across every arm) ===
+  train: n=128 seed=0  flipper@127 payload@190
+  eval : n=256 seed=12345 (DIFFERENT seed)  flipper@127 payload@190
+
+=== TRAIN + EVAL per arm ===
+
+  [softmax]  n_params=1601
+    RED  0-step NRMSE  train=1.006727  eval=1.005532  [OK]
+    POST steps=20  train NRMSE=0.934482   eval NRMSE=1.089822
+    eval bootstrap_ci (n_boot=400) = [1.053861, 1.135778]
+
+  [pivot_signed]  n_params=1794
+    RED  0-step NRMSE  train=1.004399  eval=1.004029  [OK]
+    POST steps=20  train NRMSE=0.460097   eval NRMSE=1.372082
+    eval bootstrap_ci (n_boot=400) = [1.292967, 1.465588]
+
+  [pivot_unsigned]  n_params=1601
+    RED  0-step NRMSE  train=1.006730  eval=1.005531  [OK]
+    POST steps=20  train NRMSE=0.934396   eval NRMSE=1.089716
+    eval bootstrap_ci (n_boot=400) = [1.053890, 1.135697]
+
+=== PARAM MATCH (arm 1 vs 2/3, must be within 10%) ===
+  softmax=1601  pivot_signed=1794  ratio=0.1205
+
+=== RUN 2026-08-25 15:23:30 s=128 d=42 steps=20 n_train=128 n_eval=256 seed=0 arms=['softmax', 'pivot_signed', 'pivot_unsigned'] ===
+torch 2.5.1+cu121  torch.get_num_threads()=20  device=cpu (no .cuda() anywhere in this file)
+
+=== BAR CALIBRATION (must pass before any arm is credited) ===
+    predict_the_mean NRMSE 1.000000
+        payload_only NRMSE 1.398922
+              oracle NRMSE 0.000000
+  BAR CALIBRATED
+
+=== DATA (same train/eval batches reused across every arm) ===
+  train: n=128 seed=0  flipper@85 payload@126
+  eval : n=256 seed=12345 (DIFFERENT seed)  flipper@85 payload@126
+
+=== TRAIN + EVAL per arm ===
+
+  [softmax]  n_params=4769
+    RED  0-step NRMSE  train=1.003567  eval=1.011467  [OK]
+    POST steps=20  train NRMSE=0.961524   eval NRMSE=1.066239
+    eval bootstrap_ci (n_boot=400) = [1.036772, 1.101223]
+
+  [pivot_signed]  n_params=4898
+    RED  0-step NRMSE  train=1.001484  eval=1.012339  [OK]
+    POST steps=20  train NRMSE=0.444721   eval NRMSE=1.392703
+    eval bootstrap_ci (n_boot=400) = [1.300104, 1.503077]
+
+  [pivot_unsigned]  n_params=4769
+    RED  0-step NRMSE  train=1.003564  eval=1.011464  [OK]
+    POST steps=20  train NRMSE=0.961551   eval NRMSE=1.065980
+    eval bootstrap_ci (n_boot=400) = [1.036478, 1.100729]
+
+=== PARAM MATCH (arm 1 vs 2/3, must be within 10%) ===
+  softmax=4769  pivot_signed=4898  ratio=0.0270
+  softmax=4769  pivot_unsigned=4769  ratio=0.0000
+
+=== WALL CLOCK: 21.204 s ===
+
+=== RUN 2026-08-25 15:24:01 s=192 d=64 steps=20 n_train=128 n_eval=256 seed=0 arms=['softmax', 'pivot_signed', 'pivot_unsigned'] ===
+torch 2.5.1+cu121  torch.get_num_threads()=20  device=cpu (no .cuda() anywhere in this file)
+
+=== BAR CALIBRATION (must pass before any arm is credited) ===
+    predict_the_mean NRMSE 1.000000
+        payload_only NRMSE 1.356594
+              oracle NRMSE 0.000000
+  BAR CALIBRATED
+
+=== DATA (same train/eval batches reused across every arm) ===
+  train: n=128 seed=0  flipper@127 payload@190
+  eval : n=256 seed=12345 (DIFFERENT seed)  flipper@127 payload@190
+
+=== TRAIN + EVAL per arm ===
+
+  [softmax]  n_params=4769
+    RED  0-step NRMSE  train=1.003252  eval=1.002288  [OK]
+    POST steps=20  train NRMSE=0.928777   eval NRMSE=1.113176
+    eval bootstrap_ci (n_boot=400) = [1.070415, 1.163840]
+
+  [pivot_signed]  n_params=4962
+    RED  0-step NRMSE  train=1.020976  eval=1.003884  [OK]
+    POST steps=20  train NRMSE=0.317437   eval NRMSE=1.447200
+    eval bootstrap_ci (n_boot=400) = [1.344011, 1.580368]
+
+  [pivot_unsigned]  n_params=4769
+    RED  0-step NRMSE  train=1.003254  eval=1.002287  [OK]
+    POST steps=20  train NRMSE=0.928636   eval NRMSE=1.113203
+    eval bootstrap_ci (n_boot=400) = [1.070400, 1.163821]
+
+=== PARAM MATCH (arm 1 vs 2/3, must be within 10%) ===
+  softmax=4769  pivot_signed=4962  ratio=0.0405
+  softmax=4769  pivot_unsigned=4769  ratio=0.0000
+
+=== WALL CLOCK: 48.493 s ===
+
+=== RUN 2026-08-25 15:25:04 s=256 d=85 steps=20 n_train=128 n_eval=256 seed=0 arms=['softmax', 'pivot_signed', 'pivot_unsigned'] ===
+torch 2.5.1+cu121  torch.get_num_threads()=20  device=cpu (no .cuda() anywhere in this file)
+
+=== BAR CALIBRATION (must pass before any arm is credited) ===
+    predict_the_mean NRMSE 1.000000
+        payload_only NRMSE 1.253505
+              oracle NRMSE 0.000000
+  BAR CALIBRATED
+
+=== DATA (same train/eval batches reused across every arm) ===
+  train: n=128 seed=0  flipper@170 payload@254
+  eval : n=256 seed=12345 (DIFFERENT seed)  flipper@170 payload@254
+
+=== TRAIN + EVAL per arm ===
+
+  [softmax]  n_params=4769
+    RED  0-step NRMSE  train=1.002876  eval=1.000289  [OK]
+    POST steps=20  train NRMSE=0.896991   eval NRMSE=1.069095
+    eval bootstrap_ci (n_boot=400) = [1.018820, 1.123512]
+
+  [pivot_signed]  n_params=5026
+    RED  0-step NRMSE  train=1.003390  eval=1.009670  [OK]
+    POST steps=20  train NRMSE=0.332672   eval NRMSE=1.288932
+    eval bootstrap_ci (n_boot=400) = [1.195689, 1.395381]
+
+  [pivot_unsigned]  n_params=4769
+    RED  0-step NRMSE  train=1.002879  eval=1.000289  [OK]
+    POST steps=20  train NRMSE=0.897179   eval NRMSE=1.068886
+    eval bootstrap_ci (n_boot=400) = [1.018635, 1.123251]
+
+=== PARAM MATCH (arm 1 vs 2/3, must be within 10%) ===
+  softmax=4769  pivot_signed=5026  ratio=0.0539
+  softmax=4769  pivot_unsigned=4769  ratio=0.0000
+
+=== WALL CLOCK: 66.262 s ===
+
+=== RUN 2026-08-25 15:26:44 s=128 d=42 steps=150 n_train=128 n_eval=256 seed=0 arms=['softmax', 'pivot_signed', 'pivot_unsigned'] ===
+torch 2.5.1+cu121  torch.get_num_threads()=20  device=cpu (no .cuda() anywhere in this file)
+
+=== BAR CALIBRATION (must pass before any arm is credited) ===
+    predict_the_mean NRMSE 1.000000
+        payload_only NRMSE 1.398922
+              oracle NRMSE 0.000000
+  BAR CALIBRATED
+
+=== DATA (same train/eval batches reused across every arm) ===
+  train: n=128 seed=0  flipper@85 payload@126
+  eval : n=256 seed=12345 (DIFFERENT seed)  flipper@85 payload@126
+
+=== TRAIN + EVAL per arm ===
+
+  [softmax]  n_params=4769
+    RED  0-step NRMSE  train=1.003567  eval=1.011467  [OK]
+    POST steps=150  train NRMSE=0.295149   eval NRMSE=1.831696
+    eval bootstrap_ci (n_boot=400) = [1.612867, 2.049513]
+
+  [pivot_signed]  n_params=4898
+    RED  0-step NRMSE  train=1.001484  eval=1.012339  [OK]
+    POST steps=150  train NRMSE=0.044765   eval NRMSE=1.358602
+    eval bootstrap_ci (n_boot=400) = [1.265152, 1.480306]
+
+  [pivot_unsigned]  n_params=4769
+    RED  0-step NRMSE  train=1.003564  eval=1.011464  [OK]
+    POST steps=150  train NRMSE=0.196052   eval NRMSE=1.830175
+    eval bootstrap_ci (n_boot=400) = [1.613846, 2.055582]
+
+=== PARAM MATCH (arm 1 vs 2/3, must be within 10%) ===
+  softmax=4769  pivot_signed=4898  ratio=0.0270
+  softmax=4769  pivot_unsigned=4769  ratio=0.0000
+
+=== WALL CLOCK: 112.722 s ===
+
+=== RUN 2026-08-25 15:28:53 s=96 d=32 steps=150 n_train=128 n_eval=256 seed=0 arms=['softmax', 'pivot_signed', 'pivot_unsigned'] ===
+torch 2.5.1+cu121  torch.get_num_threads()=20  device=cpu (no .cuda() anywhere in this file)
+
+=== BAR CALIBRATION (must pass before any arm is credited) ===
+    predict_the_mean NRMSE 1.000000
+        payload_only NRMSE 1.499749
+              oracle NRMSE 0.000000
+  BAR CALIBRATED
+
+=== DATA (same train/eval batches reused across every arm) ===
+  train: n=128 seed=0  flipper@63 payload@94
+  eval : n=256 seed=12345 (DIFFERENT seed)  flipper@63 payload@94
+
+=== TRAIN + EVAL per arm ===
+
+  [softmax]  n_params=4769
+    RED  0-step NRMSE  train=1.003291  eval=1.002563  [OK]
+    POST steps=150  train NRMSE=0.157779   eval NRMSE=2.000973
+    eval bootstrap_ci (n_boot=400) = [1.765158, 2.256785]
+
+  [pivot_signed]  n_params=4866
+    RED  0-step NRMSE  train=0.999392  eval=1.001842  [INSTRUMENT BROKEN]
+INSTRUMENT BROKEN: arm=pivot_signed untrained NRMSE below 1.0 (or NaN/Inf). Aborting, crediting nothing.
+
+=== RUN 2026-08-25 15:31:27 s=80 d=27 steps=150 n_train=128 n_eval=256 seed=0 arms=['softmax', 'pivot_signed', 'pivot_unsigned'] ===
+torch 2.5.1+cu121  torch.get_num_threads()=20  device=cpu (no .cuda() anywhere in this file)
+
+=== BAR CALIBRATION (must pass before any arm is credited) ===
+    predict_the_mean NRMSE 1.000000
+        payload_only NRMSE 1.358254
+              oracle NRMSE 0.000000
+  BAR CALIBRATED
+
+=== DATA (same train/eval batches reused across every arm) ===
+  train: n=128 seed=0  flipper@52 payload@78
+  eval : n=256 seed=12345 (DIFFERENT seed)  flipper@52 payload@78
+
+=== TRAIN + EVAL per arm ===
+
+  [softmax]  n_params=4769
+    RED  0-step NRMSE  train=1.002193  eval=1.001256  [OK]
+    POST steps=150  train NRMSE=0.165036   eval NRMSE=2.870674
+    eval bootstrap_ci (n_boot=400) = [1.816826, 4.401876]
+
+  [pivot_signed]  n_params=4850
+    RED  0-step NRMSE  train=1.003184  eval=0.998889  [INSTRUMENT BROKEN]
+INSTRUMENT BROKEN: arm=pivot_signed untrained NRMSE below 1.0 (or NaN/Inf). Aborting, crediting nothing.
+
+=== RUN 2026-08-25 15:31:58 s=80 d=27 steps=150 n_train=128 n_eval=256 seed=1 arms=['softmax', 'pivot_signed', 'pivot_unsigned'] ===
+torch 2.5.1+cu121  torch.get_num_threads()=20  device=cpu (no .cuda() anywhere in this file)
+
+=== BAR CALIBRATION (must pass before any arm is credited) ===
+    predict_the_mean NRMSE 1.000000
+        payload_only NRMSE 1.358254
+              oracle NRMSE 0.000000
+  BAR CALIBRATED
+
+=== DATA (same train/eval batches reused across every arm) ===
+  train: n=128 seed=1  flipper@52 payload@78
+  eval : n=256 seed=12346 (DIFFERENT seed)  flipper@52 payload@78
+
+=== TRAIN + EVAL per arm ===
+
+  [softmax]  n_params=4769
+    RED  0-step NRMSE  train=1.013810  eval=1.032357  [OK]
+    POST steps=150  train NRMSE=0.214146   eval NRMSE=1.748821
+    eval bootstrap_ci (n_boot=400) = [1.544662, 1.943307]
+
+  [pivot_signed]  n_params=4850
+    RED  0-step NRMSE  train=1.013780  eval=1.032435  [OK]
+    POST steps=150  train NRMSE=0.024204   eval NRMSE=1.361877
+    eval bootstrap_ci (n_boot=400) = [1.252546, 1.488790]
+
+  [pivot_unsigned]  n_params=4769
+    RED  0-step NRMSE  train=1.013813  eval=1.032364  [OK]
+    POST steps=150  train NRMSE=0.199094   eval NRMSE=2.054964
+    eval bootstrap_ci (n_boot=400) = [1.607167, 2.639949]
+
+=== PARAM MATCH (arm 1 vs 2/3, must be within 10%) ===
+  softmax=4769  pivot_signed=4850  ratio=0.0170
+  softmax=4769  pivot_unsigned=4769  ratio=0.0000
+
+=== WALL CLOCK: 31.604 s ===
+
+=== RUN 2026-08-25 15:32:45 s=64 d=24 steps=150 n_train=128 n_eval=256 seed=1 arms=['softmax', 'pivot_signed', 'pivot_unsigned'] ===
+torch 2.5.1+cu121  torch.get_num_threads()=20  device=cpu (no .cuda() anywhere in this file)
+
+=== BAR CALIBRATION (must pass before any arm is credited) ===
+    predict_the_mean NRMSE 1.000000
+        payload_only NRMSE 1.361782
+              oracle NRMSE 0.000000
+  BAR CALIBRATED
+
+=== DATA (same train/eval batches reused across every arm) ===
+  train: n=128 seed=1  flipper@39 payload@62
+  eval : n=256 seed=12346 (DIFFERENT seed)  flipper@39 payload@62
+
+=== TRAIN + EVAL per arm ===
+
+  [softmax]  n_params=4769
+    RED  0-step NRMSE  train=1.012752  eval=1.075172  [OK]
+    POST steps=150  train NRMSE=0.111310   eval NRMSE=1.846141
+    eval bootstrap_ci (n_boot=400) = [1.637662, 2.062440]
+
+  [pivot_signed]  n_params=4834
+    RED  0-step NRMSE  train=1.012951  eval=1.076508  [OK]
+    POST steps=150  train NRMSE=0.024403   eval NRMSE=1.335947
+    eval bootstrap_ci (n_boot=400) = [1.225899, 1.468226]
+
+  [pivot_unsigned]  n_params=4769
+    RED  0-step NRMSE  train=1.012766  eval=1.075183  [OK]
+    POST steps=150  train NRMSE=0.184102   eval NRMSE=1.782599
+    eval bootstrap_ci (n_boot=400) = [1.582826, 1.986109]
+
+=== PARAM MATCH (arm 1 vs 2/3, must be within 10%) ===
+  softmax=4769  pivot_signed=4834  ratio=0.0136
+  softmax=4769  pivot_unsigned=4769  ratio=0.0000
+
+=== WALL CLOCK: 25.432 s ===
+
+=== RUN 2026-08-25 15:33:14 s=112 d=38 steps=150 n_train=128 n_eval=256 seed=1 arms=['softmax', 'pivot_signed', 'pivot_unsigned'] ===
+torch 2.5.1+cu121  torch.get_num_threads()=20  device=cpu (no .cuda() anywhere in this file)
+
+=== BAR CALIBRATION (must pass before any arm is credited) ===
+    predict_the_mean NRMSE 1.000000
+        payload_only NRMSE 1.485235
+              oracle NRMSE 0.000000
+  BAR CALIBRATED
+
+=== DATA (same train/eval batches reused across every arm) ===
+  train: n=128 seed=1  flipper@73 payload@110
+  eval : n=256 seed=12346 (DIFFERENT seed)  flipper@73 payload@110
+
+=== TRAIN + EVAL per arm ===
+
+  [softmax]  n_params=4769
+    RED  0-step NRMSE  train=1.013698  eval=1.006487  [OK]
+    POST steps=150  train NRMSE=0.183309   eval NRMSE=1.767844
+    eval bootstrap_ci (n_boot=400) = [1.555646, 2.008892]
+
+  [pivot_signed]  n_params=4882
+    RED  0-step NRMSE  train=1.015795  eval=1.009833  [OK]
+    POST steps=150  train NRMSE=0.055645   eval NRMSE=1.278876
+    eval bootstrap_ci (n_boot=400) = [1.147208, 1.392616]
+
+  [pivot_unsigned]  n_params=4769
+    RED  0-step NRMSE  train=1.013696  eval=1.006487  [OK]
+    POST steps=150  train NRMSE=0.159752   eval NRMSE=1.817263
+    eval bootstrap_ci (n_boot=400) = [1.566491, 2.122610]
+
+=== PARAM MATCH (arm 1 vs 2/3, must be within 10%) ===
+  softmax=4769  pivot_signed=4882  ratio=0.0237
+  softmax=4769  pivot_unsigned=4769  ratio=0.0000
+
+=== WALL CLOCK: 38.801 s ===
+
+=== RUN 2026-08-25 15:34:04 s=128 d=42 steps=150 n_train=128 n_eval=256 seed=1 arms=['softmax', 'pivot_signed', 'pivot_unsigned'] ===
+torch 2.5.1+cu121  torch.get_num_threads()=20  device=cpu (no .cuda() anywhere in this file)
+
+=== BAR CALIBRATION (must pass before any arm is credited) ===
+    predict_the_mean NRMSE 1.000000
+        payload_only NRMSE 1.398922
+              oracle NRMSE 0.000000
+  BAR CALIBRATED
+
+=== DATA (same train/eval batches reused across every arm) ===
+  train: n=128 seed=1  flipper@85 payload@126
+  eval : n=256 seed=12346 (DIFFERENT seed)  flipper@85 payload@126
+
+=== TRAIN + EVAL per arm ===
+
+  [softmax]  n_params=4769
+    RED  0-step NRMSE  train=1.013471  eval=1.000181  [OK]
+    POST steps=150  train NRMSE=0.237356   eval NRMSE=2.093964
+    eval bootstrap_ci (n_boot=400) = [1.829356, 2.403073]
+
+  [pivot_signed]  n_params=4898
+    RED  0-step NRMSE  train=1.029271  eval=1.002024  [OK]
+    POST steps=150  train NRMSE=0.024808   eval NRMSE=1.337631
+    eval bootstrap_ci (n_boot=400) = [1.211546, 1.472418]
+
+  [pivot_unsigned]  n_params=4769
+    RED  0-step NRMSE  train=1.013474  eval=1.000180  [OK]
+    POST steps=150  train NRMSE=0.237550   eval NRMSE=2.039616
+    eval bootstrap_ci (n_boot=400) = [1.780612, 2.326454]
+
+=== PARAM MATCH (arm 1 vs 2/3, must be within 10%) ===
+  softmax=4769  pivot_signed=4898  ratio=0.0270
+  softmax=4769  pivot_unsigned=4769  ratio=0.0000
+
+=== WALL CLOCK: 49.048 s ===
+
+=== RUN 2026-08-25 15:34:57 s=160 d=54 steps=150 n_train=128 n_eval=256 seed=1 arms=['softmax', 'pivot_signed', 'pivot_unsigned'] ===
+torch 2.5.1+cu121  torch.get_num_threads()=20  device=cpu (no .cuda() anywhere in this file)
+
+=== BAR CALIBRATION (must pass before any arm is credited) ===
+    predict_the_mean NRMSE 1.000000
+        payload_only NRMSE 1.432617
+              oracle NRMSE 0.000000
+  BAR CALIBRATED
+
+=== DATA (same train/eval batches reused across every arm) ===
+  train: n=128 seed=1  flipper@105 payload@158
+  eval : n=256 seed=12346 (DIFFERENT seed)  flipper@105 payload@158
+
+=== TRAIN + EVAL per arm ===
+
+  [softmax]  n_params=4769
+    RED  0-step NRMSE  train=1.013997  eval=1.007122  [OK]
+    POST steps=150  train NRMSE=0.212803   eval NRMSE=1.723800
+    eval bootstrap_ci (n_boot=400) = [1.507765, 1.995668]
+
+  [pivot_signed]  n_params=4930
+    RED  0-step NRMSE  train=1.016327  eval=1.012668  [OK]
+    POST steps=150  train NRMSE=0.039843   eval NRMSE=1.184561
+    eval bootstrap_ci (n_boot=400) = [1.092116, 1.293018]
+
+  [pivot_unsigned]  n_params=4769
+    RED  0-step NRMSE  train=1.013995  eval=1.007125  [OK]
+    POST steps=150  train NRMSE=0.234064   eval NRMSE=1.663397
+    eval bootstrap_ci (n_boot=400) = [1.485817, 1.887009]
+
+=== PARAM MATCH (arm 1 vs 2/3, must be within 10%) ===
+  softmax=4769  pivot_signed=4930  ratio=0.0338
+  softmax=4769  pivot_unsigned=4769  ratio=0.0000
+
+=== WALL CLOCK: 67.245 s ===
+
+=== RUN 2026-08-25 15:36:14 s=192 d=64 steps=150 n_train=128 n_eval=256 seed=1 arms=['softmax', 'pivot_signed', 'pivot_unsigned'] ===
+torch 2.5.1+cu121  torch.get_num_threads()=20  device=cpu (no .cuda() anywhere in this file)
+
+=== BAR CALIBRATION (must pass before any arm is credited) ===
+    predict_the_mean NRMSE 1.000000
+        payload_only NRMSE 1.356594
+              oracle NRMSE 0.000000
+  BAR CALIBRATED
+
+=== DATA (same train/eval batches reused across every arm) ===
+  train: n=128 seed=1  flipper@127 payload@190
+  eval : n=256 seed=12346 (DIFFERENT seed)  flipper@127 payload@190
+
+=== TRAIN + EVAL per arm ===
+
+  [softmax]  n_params=4769
+    RED  0-step NRMSE  train=1.013663  eval=1.018659  [OK]
+    POST steps=150  train NRMSE=0.226589   eval NRMSE=3.696671
+    eval bootstrap_ci (n_boot=400) = [2.061535, 5.486734]
+
+  [pivot_signed]  n_params=4962
+    RED  0-step NRMSE  train=1.015751  eval=1.026653  [OK]
+    POST steps=150  train NRMSE=0.058589   eval NRMSE=1.302965
+    eval bootstrap_ci (n_boot=400) = [1.217857, 1.409547]
+
+  [pivot_unsigned]  n_params=4769
+    RED  0-step NRMSE  train=1.013660  eval=1.018660  [OK]
+    POST steps=150  train NRMSE=0.254578   eval NRMSE=2.517211
+    eval bootstrap_ci (n_boot=400) = [1.976460, 3.149252]
+
+=== PARAM MATCH (arm 1 vs 2/3, must be within 10%) ===
+  softmax=4769  pivot_signed=4962  ratio=0.0405
+  softmax=4769  pivot_unsigned=4769  ratio=0.0000
+
+=== WALL CLOCK: 126.028 s ===
+
+=== RUN 2026-08-25 15:38:31 s=160 d=54 steps=150 n_train=128 n_eval=256 seed=1 arms=['softmax', 'pivot_signed', 'pivot_unsigned'] ===
+torch 2.5.1+cu121  torch.get_num_threads()=20  device=cpu (no .cuda() anywhere in this file)
+
+=== BAR CALIBRATION (must pass before any arm is credited) ===
+    predict_the_mean NRMSE 1.000000
+        payload_only NRMSE 1.432617
+              oracle NRMSE 0.000000
+  BAR CALIBRATED
+
+=== DATA (same train/eval batches reused across every arm) ===
+  train: n=128 seed=1  flipper@105 payload@158
+  eval : n=256 seed=12346 (DIFFERENT seed)  flipper@105 payload@158
+
+=== TRAIN + EVAL per arm ===
+
+  [softmax]  n_params=4769
+    RED  0-step NRMSE  train=1.013997  eval=1.007122  [OK]
+    POST steps=150  train NRMSE=0.212803   eval NRMSE=1.723800
+    eval bootstrap_ci (n_boot=400) = [1.507765, 1.995668]
+
+  [pivot_signed]  n_params=4930
+    RED  0-step NRMSE  train=1.016327  eval=1.012668  [OK]
+    POST steps=150  train NRMSE=0.039843   eval NRMSE=1.184561
+    eval bootstrap_ci (n_boot=400) = [1.092116, 1.293018]
+
+  [pivot_unsigned]  n_params=4769
+    RED  0-step NRMSE  train=1.013995  eval=1.007125  [OK]
+    POST steps=150  train NRMSE=0.234064   eval NRMSE=1.663397
+    eval bootstrap_ci (n_boot=400) = [1.485817, 1.887009]
+
+=== PARAM MATCH (arm 1 vs 2/3, must be within 10%) ===
+  softmax=4769  pivot_signed=4930  ratio=0.0338
+  softmax=4769  pivot_unsigned=4769  ratio=0.0000
+
+=== WALL CLOCK: 67.820 s ===
+
+=== RUN 2026-08-25 15:39:52 s=176 d=60 steps=150 n_train=128 n_eval=256 seed=1 arms=['softmax', 'pivot_signed', 'pivot_unsigned'] ===
+torch 2.5.1+cu121  torch.get_num_threads()=20  device=cpu (no .cuda() anywhere in this file)
+
+=== BAR CALIBRATION (must pass before any arm is credited) ===
+    predict_the_mean NRMSE 1.000000
+        payload_only NRMSE 1.351148
+              oracle NRMSE 0.000000
+  BAR CALIBRATED
+
+=== DATA (same train/eval batches reused across every arm) ===
+  train: n=128 seed=1  flipper@115 payload@174
+  eval : n=256 seed=12346 (DIFFERENT seed)  flipper@115 payload@174
+
+=== TRAIN + EVAL per arm ===
+
+  [softmax]  n_params=4769
+    RED  0-step NRMSE  train=1.013286  eval=1.009334  [OK]
+    POST steps=150  train NRMSE=0.298893   eval NRMSE=3.295691
+    eval bootstrap_ci (n_boot=400) = [2.475714, 4.129709]
+
+  [pivot_signed]  n_params=4946
+    RED  0-step NRMSE  train=1.019066  eval=1.018099  [OK]
+    POST steps=150  train NRMSE=0.009252   eval NRMSE=1.370582
+    eval bootstrap_ci (n_boot=400) = [1.280698, 1.475150]
+
+  [pivot_unsigned]  n_params=4769
+    RED  0-step NRMSE  train=1.013290  eval=1.009336  [OK]
+    POST steps=150  train NRMSE=0.279801   eval NRMSE=2.845193
+    eval bootstrap_ci (n_boot=400) = [2.454776, 3.272868]
+
+=== PARAM MATCH (arm 1 vs 2/3, must be within 10%) ===
+  softmax=4769  pivot_signed=4946  ratio=0.0371
+  softmax=4769  pivot_unsigned=4769  ratio=0.0000
+
+=== WALL CLOCK: 86.662 s ===
+
+=== RUN 2026-08-25 15:45:59 s=128 d=24 steps=300 n_train=512 n_eval=256 seed=0 arms=['softmax'] ===
+torch 2.5.1+cu121  torch.get_num_threads()=3  device=cpu (no .cuda() anywhere in this file)
+
+=== BAR CALIBRATION (must pass before any arm is credited) ===
+    predict_the_mean NRMSE 1.000000
+        payload_only NRMSE 1.398922
+              oracle NRMSE 0.000000
+  BAR CALIBRATED
+
+=== DATA (same train/eval batches reused across every arm) ===
+  train: n=512 seed=0  flipper@103 payload@126
+  eval : n=256 seed=12345 (DIFFERENT seed)  flipper@103 payload@126
+
+=== TRAIN + EVAL per arm ===
+
+  [softmax]  n_params=4769
+    RED  0-step NRMSE  train=1.003200  eval=1.004525  [OK]
+    POST steps=300  train NRMSE=0.531924   eval NRMSE=1.725106
+    eval bootstrap_ci (n_boot=400) = [1.374256, 2.103521]
+
+=== PARAM MATCH (arm 1 vs 2/3, must be within 10%) ===
+
+=== WALL CLOCK: 65.192 s ===
+
+=== RUN 2026-08-25 15:45:46 s=64 d=24 steps=50 n_train=1024 n_eval=256 seed=0 arms=['softmax', 'pivot_signed', 'pivot_unsigned'] ===
+torch 2.5.1+cu121  torch.get_num_threads()=20  device=cpu (no .cuda() anywhere in this file)
+
+=== BAR CALIBRATION (must pass before any arm is credited) ===
+    predict_the_mean NRMSE 1.000000
+        payload_only NRMSE 1.361782
+              oracle NRMSE 0.000000
+  BAR CALIBRATED
+
+=== DATA (same train/eval batches reused across every arm) ===
+  train: n=1024 seed=0  flipper@39 payload@62
+  eval : n=256 seed=12345 (DIFFERENT seed)  flipper@39 payload@62
+
+=== TRAIN + EVAL per arm ===
+
+  [softmax]  n_params=4769
+    RED  0-step NRMSE  train=1.003322  eval=1.016747  [OK]
+    POST steps=50  train NRMSE=0.968343   eval NRMSE=1.014708
+    eval bootstrap_ci (n_boot=400) = [0.976483, 1.056117]
+
+  [pivot_signed]  n_params=4834
+    RED  0-step NRMSE  train=1.003954  eval=1.018389  [OK]
+    POST steps=50  train NRMSE=0.711962   eval NRMSE=1.218096
+    eval bootstrap_ci (n_boot=400) = [1.109281, 1.335253]
+
+  [pivot_unsigned]  n_params=4769
+    RED  0-step NRMSE  train=1.003324  eval=1.016747  [OK]
+    POST steps=50  train NRMSE=0.967238   eval NRMSE=1.016664
+    eval bootstrap_ci (n_boot=400) = [0.976575, 1.059889]
+
+=== PARAM MATCH (arm 1 vs 2/3, must be within 10%) ===
+  softmax=4769  pivot_signed=4834  ratio=0.0136
+  softmax=4769  pivot_unsigned=4769  ratio=0.0000
+
+=== WALL CLOCK: 158.759 s ===
+
+=== RUN 2026-08-25 15:49:05 s=64 d=24 steps=100 n_train=256 n_eval=256 seed=0 arms=['softmax', 'pivot_signed', 'pivot_unsigned'] ===
+torch 2.5.1+cu121  torch.get_num_threads()=20  device=cpu (no .cuda() anywhere in this file)
+
+=== BAR CALIBRATION (must pass before any arm is credited) ===
+    predict_the_mean NRMSE 1.000000
+        payload_only NRMSE 1.361782
+              oracle NRMSE 0.000000
+  BAR CALIBRATED
+
+=== DATA (same train/eval batches reused across every arm) ===
+  train: n=256 seed=0  flipper@39 payload@62
+  eval : n=256 seed=12345 (DIFFERENT seed)  flipper@39 payload@62
+
+=== TRAIN + EVAL per arm ===
+
+  [softmax]  n_params=4769
+    RED  0-step NRMSE  train=1.002940  eval=1.019429  [OK]
+    POST steps=100  train NRMSE=0.581255   eval NRMSE=1.476843
+    eval bootstrap_ci (n_boot=400) = [1.334960, 1.629448]
+
+  [pivot_signed]  n_params=4834
+    RED  0-step NRMSE  train=1.005387  eval=1.021233  [OK]
+    POST steps=100  train NRMSE=0.126917   eval NRMSE=1.389342
+    eval bootstrap_ci (n_boot=400) = [1.257608, 1.549443]
+
+  [pivot_unsigned]  n_params=4769
+    RED  0-step NRMSE  train=1.002955  eval=1.019428  [OK]
+    POST steps=100  train NRMSE=0.583939   eval NRMSE=1.501222
+    eval bootstrap_ci (n_boot=400) = [1.311895, 1.712432]
+
+=== PARAM MATCH (arm 1 vs 2/3, must be within 10%) ===
+  softmax=4769  pivot_signed=4834  ratio=0.0136
+  softmax=4769  pivot_unsigned=4769  ratio=0.0000
+
+=== WALL CLOCK: 30.810 s ===
+
+=== RUN 2026-08-25 15:50:06 s=128 d=24 steps=300 n_train=2048 n_eval=256 seed=0 arms=['softmax'] ===
+torch 2.5.1+cu121  torch.get_num_threads()=3  device=cpu (no .cuda() anywhere in this file)
+
+=== BAR CALIBRATION (must pass before any arm is credited) ===
+    predict_the_mean NRMSE 1.000000
+        payload_only NRMSE 1.398922
+              oracle NRMSE 0.000000
+  BAR CALIBRATED
+
+=== DATA (same train/eval batches reused across every arm) ===
+  train: n=2048 seed=0  flipper@103 payload@126
+  eval : n=256 seed=12345 (DIFFERENT seed)  flipper@103 payload@126
+
+=== TRAIN + EVAL per arm ===
+
+  [softmax]  n_params=4769
+    RED  0-step NRMSE  train=1.003307  eval=1.003554  [OK]
+    POST steps=300  train NRMSE=0.733221   eval NRMSE=1.304590
+    eval bootstrap_ci (n_boot=400) = [1.016958, 1.640773]
+
+=== PARAM MATCH (arm 1 vs 2/3, must be within 10%) ===
+
+=== WALL CLOCK: 131.532 s ===
+
+=== RUN 2026-08-25 18:35:36 s=64 d=24 steps=150 n_train=128 n_eval=256 seed=0 arms=['softmax'] ===
+torch 2.5.1+cu121  torch.get_num_threads()=2  device=cpu (no .cuda() anywhere in this file)
+
+=== BAR CALIBRATION (must pass before any arm is credited) ===
+      predict_the_mean 1.000000
+          payload_only 1.361782
+                oracle 0.000000
+    flipper_dependence 2.000000
+   trained_two_feature 0.036698
+  BAR CALIBRATED  -- BAR CALIBRATED
+
+=== DATA (same train/eval batches reused across every arm) ===
+  train: n=128 seed=0  flipper@39 payload@62
+  eval : n=256 seed=12345 (DIFFERENT seed)  flipper@39 payload@62
+
+=== TRAIN + EVAL per arm ===
+
+  [softmax]  n_params=4769
+    RED  0-step NRMSE  train=1.003153  eval=1.008951  [OK]
+    POST steps=150  train NRMSE=0.196599   eval NRMSE=2.116579
+    eval bootstrap_ci (n_boot=400) = [1.791078, 2.411601]
+
+=== PARAM MATCH (arm 1 vs 2/3, must be within 10%) ===
+
+=== WALL CLOCK: 13.408 s ===
+
+=== RUN 2026-08-25 18:56:46 s=64 d=24 steps=150 n_train=512 n_eval=512 seed=0 arms=['softmax'] ===
+torch 2.5.1+cu121  torch.get_num_threads()=2  device=cpu (no .cuda() anywhere in this file)
+
+=== BAR CALIBRATION (must pass before any arm is credited) ===
+      predict_the_mean 1.000000
+          payload_only 1.366459
+                oracle 0.000000
+    flipper_dependence 2.000000
+   trained_two_feature 0.047149
+  BAR CALIBRATED  -- BAR CALIBRATED
+
+=== DATA (same train/eval batches reused across every arm) ===
+  train: n=512 seed=0  flipper@39 payload@62
+  eval : n=512 seed=12345 (DIFFERENT seed)  flipper@39 payload@62
+
+=== TRAIN + EVAL per arm ===
+
+  [softmax]  n_params=4769
+    RED  0-step NRMSE  train=1.003614  eval=1.000325  [OK]
+    POST steps=150  train NRMSE=0.662082   eval NRMSE=1.316514
+    eval bootstrap_ci (n_boot=400) = [1.134451, 1.540035]
+
+=== PARAM MATCH (arm 1 vs 2/3, must be within 10%) ===
+
+=== WALL CLOCK: 4.716 s ===
+
+=== RUN 2026-08-25 18:56:53 s=64 d=24 steps=150 n_train=2048 n_eval=512 seed=0 arms=['softmax'] ===
+torch 2.5.1+cu121  torch.get_num_threads()=2  device=cpu (no .cuda() anywhere in this file)
+
+=== BAR CALIBRATION (must pass before any arm is credited) ===
+      predict_the_mean 1.000000
+          payload_only 1.366459
+                oracle 0.000000
+    flipper_dependence 2.000000
+   trained_two_feature 0.047149
+  BAR CALIBRATED  -- BAR CALIBRATED
+
+=== DATA (same train/eval batches reused across every arm) ===
+  train: n=2048 seed=0  flipper@39 payload@62
+  eval : n=512 seed=12345 (DIFFERENT seed)  flipper@39 payload@62
+
+=== TRAIN + EVAL per arm ===
+
+  [softmax]  n_params=4769
+    RED  0-step NRMSE  train=1.003355  eval=1.000432  [OK]
+    POST steps=150  train NRMSE=0.790853   eval NRMSE=0.949529
+    eval bootstrap_ci (n_boot=400) = [0.891522, 1.011235]
+
+=== PARAM MATCH (arm 1 vs 2/3, must be within 10%) ===
+
+=== WALL CLOCK: 18.706 s ===
+
+=== RUN 2026-08-25 18:57:26 s=64 d=24 steps=150 n_train=8192 n_eval=512 seed=0 arms=['softmax'] ===
+torch 2.5.1+cu121  torch.get_num_threads()=2  device=cpu (no .cuda() anywhere in this file)
+
+=== BAR CALIBRATION (must pass before any arm is credited) ===
+      predict_the_mean 1.000000
+          payload_only 1.366459
+                oracle 0.000000
+    flipper_dependence 2.000000
+   trained_two_feature 0.047149
+  BAR CALIBRATED  -- BAR CALIBRATED
+
+=== DATA (same train/eval batches reused across every arm) ===
+  train: n=8192 seed=0  flipper@39 payload@62
+  eval : n=512 seed=12345 (DIFFERENT seed)  flipper@39 payload@62
+
+=== TRAIN + EVAL per arm ===
+
+  [softmax]  n_params=4769
+    RED  0-step NRMSE  train=1.003287  eval=1.000340  [OK]
+    POST steps=150  train NRMSE=0.820513   eval NRMSE=0.877168
+    eval bootstrap_ci (n_boot=400) = [0.830455, 0.924226]
+
+=== PARAM MATCH (arm 1 vs 2/3, must be within 10%) ===
+
+=== WALL CLOCK: 95.123 s ===
+
+=== RUN 2026-08-25 19:34:49 s=64 d=24 steps=150 n_train=8192 n_eval=512 seed=0 arms=['pivot_signed'] ===
+torch 2.5.1+cu121  torch.get_num_threads()=2  device=cpu (no .cuda() anywhere in this file)
+
+=== BAR CALIBRATION (must pass before any arm is credited) ===
+      predict_the_mean 1.000000
+          payload_only 1.366459
+                oracle 0.000000
+    flipper_dependence 2.000000
+   trained_two_feature 0.047149
+  BAR CALIBRATED  -- BAR CALIBRATED
+
+=== DATA (same train/eval batches reused across every arm) ===
+  train: n=8192 seed=0  flipper@39 payload@62
+  eval : n=512 seed=12345 (DIFFERENT seed)  flipper@39 payload@62
+
+=== TRAIN + EVAL per arm ===
+
+  [pivot_signed]  n_params=4769
+    RED  0-step NRMSE  train=1.003282  eval=1.000329  [OK]
+    POST steps=150  train NRMSE=0.664873   eval NRMSE=0.673762
+    eval bootstrap_ci (n_boot=400) = [0.632559, 0.715564]
+
+=== WALL CLOCK: 300.856 s ===
+
+=== RUN 2026-08-25 19:40:16 s=64 d=24 steps=150 n_train=8192 n_eval=512 seed=0 arms=['pivot_unsigned'] ===
+torch 2.5.1+cu121  torch.get_num_threads()=2  device=cpu (no .cuda() anywhere in this file)
+
+=== BAR CALIBRATION (must pass before any arm is credited) ===
+      predict_the_mean 1.000000
+          payload_only 1.366459
+                oracle 0.000000
+    flipper_dependence 2.000000
+   trained_two_feature 0.047149
+  BAR CALIBRATED  -- BAR CALIBRATED
+
+=== DATA (same train/eval batches reused across every arm) ===
+  train: n=8192 seed=0  flipper@39 payload@62
+  eval : n=512 seed=12345 (DIFFERENT seed)  flipper@39 payload@62
+
+=== TRAIN + EVAL per arm ===
+
+  [pivot_unsigned]  n_params=4769
+    RED  0-step NRMSE  train=1.003285  eval=1.000335  [OK]
+    POST steps=150  train NRMSE=0.732424   eval NRMSE=0.747528
+    eval bootstrap_ci (n_boot=400) = [0.696849, 0.797716]
+
+=== WALL CLOCK: 217.575 s ===
+
+=== RUN 2026-08-25 22:22:49 s=64 d=24 steps=150 n_train=8192 n_eval=512 seed=0 arms=['pivot_unsigned'] ===
+torch 2.5.1+cu121  torch.get_num_threads()=2  device=cpu (no .cuda() anywhere in this file)
+
+=== BAR CALIBRATION (must pass before any arm is credited) ===
+      predict_the_mean 1.000000
+          payload_only 1.366459
+                oracle 0.000000
+    flipper_dependence 2.000000
+   trained_two_feature 0.047149
+  BAR CALIBRATED  -- BAR CALIBRATED
+
+=== DATA (same train/eval batches reused across every arm) ===
+  train: n=8192 seed=0  flipper@39 payload@62
+  eval : n=512 seed=12345 (DIFFERENT seed)  flipper@39 payload@62
+
+=== TRAIN + EVAL per arm ===
+
+  [pivot_unsigned]  n_params=4769
+    RED  0-step NRMSE  train=1.003285  eval=1.000335  [OK]
+    POST steps=150  train NRMSE=0.732424   eval NRMSE=0.747528
+    eval bootstrap_ci (n_boot=400) = [0.696849, 0.797716]
+
+=== WALL CLOCK: 249.385 s ===
+
+=== RUN 2026-08-25 22:27:55 s=64 d=24 steps=150 n_train=8192 n_eval=512 seed=0 arms=['pivot_unsigned'] ===
+torch 2.5.1+cu121  torch.get_num_threads()=20  device=cpu (no .cuda() anywhere in this file)
+
+=== BAR CALIBRATION (must pass before any arm is credited) ===
+      predict_the_mean 1.000000
+          payload_only 1.366459
+                oracle 0.000000
+    flipper_dependence 2.000000
+   trained_two_feature 0.047149
+  BAR CALIBRATED  -- BAR CALIBRATED
+
+=== DATA (same train/eval batches reused across every arm) ===
+  train: n=8192 seed=0  flipper@39 payload@62
+  eval : n=512 seed=12345 (DIFFERENT seed)  flipper@39 payload@62
+
+=== TRAIN + EVAL per arm ===
+
+  [pivot_unsigned]  n_params=4769
+    RED  0-step NRMSE  train=1.003285  eval=1.000335  [OK]
+    POST steps=150  train NRMSE=0.731080   eval NRMSE=0.747062
+    eval bootstrap_ci (n_boot=400) = [0.696544, 0.797743]
+
+=== WALL CLOCK: 157.421 s ===
+
+=== RUN 2026-08-26 08:17:02 s=64 d=24 steps=150 n_train=8192 n_eval=512 seed=0 arms=['softmax'] ===
+torch 2.5.1+cu121  torch.get_num_threads()=2  device=cpu (no .cuda() anywhere in this file)
+
+=== BAR CALIBRATION (must pass before any arm is credited) ===
+      predict_the_mean 1.000000
+          payload_only 1.366459
+                oracle 0.000000
+    flipper_dependence 2.000000
+   trained_two_feature 0.047149
+  BAR CALIBRATED  -- BAR CALIBRATED
+
+=== DATA (same train/eval batches reused across every arm) ===
+  train: n=8192 seed=0  flipper@39 payload@62
+  eval : n=512 seed=12345 (DIFFERENT seed)  flipper@39 payload@62
+
+=== TRAIN + EVAL per arm ===
+
+  [softmax]  n_params=4769
+    RED  0-step NRMSE  train=1.003287  eval=1.000340  [OK]
+    POST steps=150  train NRMSE=0.820513   eval NRMSE=0.877168
+    eval bootstrap_ci (n_boot=400) = [0.830455, 0.924226]
+
+=== PARAM MATCH (arm 1 vs 2/3, must be within 10%) ===
+
+=== WALL CLOCK: 143.144 s ===
+
+=== RUN 2026-08-26 11:02:26 s=64 d=24 steps=30 n_train=256 n_eval=512 seed=0 arms=['softmax', 'pivot_signed'] task=counter_squared ===
+torch 2.5.1+cu121  torch.get_num_threads()=2  device=cpu (no .cuda() anywhere in this file)
+
+=== BAR CALIBRATION (must pass before any arm is credited) ===
+      predict_the_mean 1.000000
+          payload_only 1.226624
+                oracle 0.000000
+    flipper_dependence 0.409477
+   trained_two_feature 0.590196
+  BAR CALIBRATED  -- BAR CALIBRATED
+
+=== DATA (same train/eval batches reused across every arm) ===
+  train: n=256 seed=0  flipper@39 payload@62
+  eval : n=512 seed=12345 (DIFFERENT seed)  flipper@39 payload@62
+
+=== TRAIN + EVAL per arm ===
+
+  [softmax]  n_params=4769
+    RED  0-step NRMSE  train=1.001495  eval=1.004808  [OK]
+    POST steps=30  train NRMSE=0.884128   eval NRMSE=1.088559
+    eval bootstrap_ci (n_boot=400) = [1.033372, 1.149546]
+
+  [pivot_signed]  n_params=4769
+    RED  0-step NRMSE  train=1.001501  eval=1.004946  [OK]
+    POST steps=30  train NRMSE=0.855833   eval NRMSE=1.089049
+    eval bootstrap_ci (n_boot=400) = [1.023881, 1.159167]
+
+=== PARAM MATCH (arm 1 vs 2/3, must be within 10%) ===
+  softmax=4769  pivot_signed=4769  ratio=0.0000
+
+=== WALL CLOCK: 6.359 s ===
+
+=== RUN 2026-08-26 12:48:09 s=64 d=24 steps=150 n_train=1024 n_eval=2048 seed=0 arms=['softmax', 'pivot_signed', 'pivot_unsigned', 'windowed_signed'] task=e1_anchor ===
+torch 2.5.1+cu121  torch.get_num_threads()=2  device=cpu (no .cuda() anywhere in this file)
+
+=== E-TASK e1_anchor: t* = 63 (difficulty dial, LOOP_PROMPT.md 1.7) ===
+  Model hop budgets, to read the ladder against: softmax 1, pivot_signed / pivot_unsigned / windowed_signed 2.
+  TRUNCATION LADDER -- NRMSE of a FIXED k-budget reading
+  against the label. The label requires iteration iff this is
+  bounded away from 0 at small k and tightens with k. A k=1
+  reading at ~0 would mean this task is a static expression of
+  x, like the two tasks registered before it.
+    k=   0   NRMSE=0.993286
+    k=   1   NRMSE=0.987184
+    k=   2   NRMSE=0.978921
+    k=   4   NRMSE=0.961950
+    k=   8   NRMSE=0.928319
+    k=  16   NRMSE=0.848626
+    k=  32   NRMSE=0.696708
+    k=  63   NRMSE=0.000000
+    k=  64   NRMSE=0.000000
+
+=== BAR CALIBRATION (must pass before any arm is credited) ===
+      predict_the_mean 1.000000
+          payload_only 1.014730
+                oracle 0.000000
+    flipper_dependence 0.253429
+   trained_two_feature 0.136936
+  BAR CALIBRATED  -- BAR CALIBRATED
+
+=== DATA (same train/eval batches reused across every arm) ===
+  train: n=1024 seed=0  flipper@0 payload@62
+  eval : n=2048 seed=12345 (DIFFERENT seed)  flipper@0 payload@62
+
+=== TRAIN + EVAL per arm ===
+
+  [softmax]  n_params=4769
+    RED  0-step NRMSE  train=1.001846  eval=1.001049  [OK]
+    POST steps=150  train NRMSE=0.745419   eval NRMSE=1.248126
+    eval bootstrap_ci (n_boot=400) = [1.213678, 1.288829]
+
+  [pivot_signed]  n_params=4769
+    RED  0-step NRMSE  train=1.001882  eval=1.001075  [OK]
+    POST steps=150  train NRMSE=0.766081   eval NRMSE=1.236533
+    eval bootstrap_ci (n_boot=400) = [1.195592, 1.286374]
+
+  [pivot_unsigned]  n_params=4769
+    RED  0-step NRMSE  train=1.001840  eval=1.001050  [OK]
+    POST steps=150  train NRMSE=0.757119   eval NRMSE=1.264289
+    eval bootstrap_ci (n_boot=400) = [1.222786, 1.317883]
+
+  [windowed_signed]  n_params=4769
+    RED  0-step NRMSE  train=1.002476  eval=1.001336  [OK]
+    POST steps=150  train NRMSE=0.670246   eval NRMSE=1.240181
+    eval bootstrap_ci (n_boot=400) = [1.203462, 1.275511]
+
+=== PARAM MATCH (arm 1 vs 2/3, must be within 10%) ===
+  softmax=4769  pivot_signed=4769  ratio=0.0000
+  softmax=4769  pivot_unsigned=4769  ratio=0.0000
+
+=== WALL CLOCK: 99.725 s ===
+
+=== RUN 2026-08-26 12:49:52 s=64 d=24 steps=150 n_train=1024 n_eval=2048 seed=0 arms=['softmax', 'pivot_signed', 'pivot_unsigned', 'windowed_signed'] task=e3_t32 ===
+torch 2.5.1+cu121  torch.get_num_threads()=2  device=cpu (no .cuda() anywhere in this file)
+
+=== E-TASK e3_t32: t* = 32 (difficulty dial, LOOP_PROMPT.md 1.7) ===
+  Model hop budgets, to read the ladder against: softmax 1, pivot_signed / pivot_unsigned / windowed_signed 2.
+  TRUNCATION LADDER -- NRMSE of a FIXED k-budget reading
+  against the label. The label requires iteration iff this is
+  bounded away from 0 at small k and tightens with k. A k=1
+  reading at ~0 would mean this task is a static expression of
+  x, like the two tasks registered before it.
+    k=   0   NRMSE=0.987253
+    k=   1   NRMSE=0.975330
+    k=   2   NRMSE=0.956260
+    k=   4   NRMSE=0.919398
+    k=   8   NRMSE=0.856915
+    k=  16   NRMSE=0.692908
+    k=  32   NRMSE=0.000000
+    k=  33   NRMSE=0.000000
+
+=== BAR CALIBRATION (must pass before any arm is credited) ===
+      predict_the_mean 1.000000
+          payload_only 1.023822
+                oracle 0.000000
+    flipper_dependence 0.359005
+   trained_two_feature 0.117606
+  BAR CALIBRATED  -- BAR CALIBRATED
+
+=== DATA (same train/eval batches reused across every arm) ===
+  train: n=1024 seed=0  flipper@31 payload@62
+  eval : n=2048 seed=12345 (DIFFERENT seed)  flipper@31 payload@62
+
+=== TRAIN + EVAL per arm ===
+
+  [softmax]  n_params=4769
+    RED  0-step NRMSE  train=1.000667  eval=1.001064  [OK]
+    POST steps=150  train NRMSE=0.691176   eval NRMSE=1.357586
+    eval bootstrap_ci (n_boot=400) = [1.298238, 1.435836]
+
+  [pivot_signed]  n_params=4769
+    RED  0-step NRMSE  train=1.000695  eval=1.001065  [OK]
+    POST steps=150  train NRMSE=0.708670   eval NRMSE=1.311444
+    eval bootstrap_ci (n_boot=400) = [1.248311, 1.377358]
+
+  [pivot_unsigned]  n_params=4769
+    RED  0-step NRMSE  train=1.000665  eval=1.001060  [OK]
+    POST steps=150  train NRMSE=0.704804   eval NRMSE=1.321131
+    eval bootstrap_ci (n_boot=400) = [1.266128, 1.381701]
+
+  [windowed_signed]  n_params=4769
+    RED  0-step NRMSE  train=1.000522  eval=1.001497  [OK]
+    POST steps=150  train NRMSE=0.610691   eval NRMSE=1.372158
+    eval bootstrap_ci (n_boot=400) = [1.322386, 1.422053]
+
+=== PARAM MATCH (arm 1 vs 2/3, must be within 10%) ===
+  softmax=4769  pivot_signed=4769  ratio=0.0000
+  softmax=4769  pivot_unsigned=4769  ratio=0.0000
+
+=== WALL CLOCK: 90.650 s ===
+
+=== RUN 2026-08-26 12:51:27 s=64 d=24 steps=150 n_train=1024 n_eval=2048 seed=0 arms=['softmax', 'pivot_signed', 'pivot_unsigned', 'windowed_signed'] task=e3_t8 ===
+torch 2.5.1+cu121  torch.get_num_threads()=2  device=cpu (no .cuda() anywhere in this file)
+
+=== E-TASK e3_t8: t* = 8 (difficulty dial, LOOP_PROMPT.md 1.7) ===
+  Model hop budgets, to read the ladder against: softmax 1, pivot_signed / pivot_unsigned / windowed_signed 2.
+  TRUNCATION LADDER -- NRMSE of a FIXED k-budget reading
+  against the label. The label requires iteration iff this is
+  bounded away from 0 at small k and tightens with k. A k=1
+  reading at ~0 would mean this task is a static expression of
+  x, like the two tasks registered before it.
+    k=   0   NRMSE=0.943318
+    k=   1   NRMSE=0.887218
+    k=   2   NRMSE=0.824106
+    k=   4   NRMSE=0.667859
+    k=   8   NRMSE=0.000000
+    k=   9   NRMSE=0.000000
+
+=== BAR CALIBRATION (must pass before any arm is credited) ===
+      predict_the_mean 1.000000
+          payload_only 1.061183
+                oracle 0.000000
+    flipper_dependence 0.659676
+   trained_two_feature 0.092893
+  BAR CALIBRATED  -- BAR CALIBRATED
+
+=== DATA (same train/eval batches reused across every arm) ===
+  train: n=1024 seed=0  flipper@55 payload@62
+  eval : n=2048 seed=12345 (DIFFERENT seed)  flipper@55 payload@62
+
+=== TRAIN + EVAL per arm ===
+
+  [softmax]  n_params=4769
+    RED  0-step NRMSE  train=0.998061  eval=1.002916  [INSTRUMENT BROKEN]
+INSTRUMENT BROKEN: arm=softmax untrained NRMSE below 1.0 (or NaN/Inf). Aborting, crediting nothing.
+
+=== RUN 2026-08-26 12:52:14 s=64 d=24 steps=150 n_train=2048 n_eval=4096 seed=0 arms=['softmax', 'pivot_signed', 'pivot_unsigned', 'windowed_signed'] task=e3_t8 ===
+torch 2.5.1+cu121  torch.get_num_threads()=2  device=cpu (no .cuda() anywhere in this file)
+
+=== E-TASK e3_t8: t* = 8 (difficulty dial, LOOP_PROMPT.md 1.7) ===
+  Model hop budgets, to read the ladder against: softmax 1, pivot_signed / pivot_unsigned / windowed_signed 2.
+  TRUNCATION LADDER -- NRMSE of a FIXED k-budget reading
+  against the label. The label requires iteration iff this is
+  bounded away from 0 at small k and tightens with k. A k=1
+  reading at ~0 would mean this task is a static expression of
+  x, like the two tasks registered before it.
+    k=   0   NRMSE=0.944013
+    k=   1   NRMSE=0.880512
+    k=   2   NRMSE=0.815162
+    k=   4   NRMSE=0.674331
+    k=   8   NRMSE=0.000000
+    k=   9   NRMSE=0.000000
+
+=== BAR CALIBRATION (must pass before any arm is credited) ===
+      predict_the_mean 1.000000
+          payload_only 1.055989
+                oracle 0.000000
+    flipper_dependence 0.668958
+   trained_two_feature 0.096279
+  BAR CALIBRATED  -- BAR CALIBRATED
+
+=== DATA (same train/eval batches reused across every arm) ===
+  train: n=2048 seed=0  flipper@55 payload@62
+  eval : n=4096 seed=12345 (DIFFERENT seed)  flipper@55 payload@62
+
+=== TRAIN + EVAL per arm ===
+
+  [softmax]  n_params=4769
+    RED  0-step NRMSE  train=0.999442  eval=0.998051  [INSTRUMENT BROKEN]
+INSTRUMENT BROKEN: arm=softmax untrained NRMSE below 1.0 (or NaN/Inf). Aborting, crediting nothing.
+
+=== RUN 2026-08-26 12:52:52 s=64 d=24 steps=150 n_train=2048 n_eval=4096 seed=0 arms=['softmax', 'pivot_signed', 'pivot_unsigned', 'windowed_signed'] task=e3_t2 ===
+torch 2.5.1+cu121  torch.get_num_threads()=2  device=cpu (no .cuda() anywhere in this file)
+
+=== E-TASK e3_t2: t* = 2 (difficulty dial, LOOP_PROMPT.md 1.7) ===
+  Model hop budgets, to read the ladder against: softmax 1, pivot_signed / pivot_unsigned / windowed_signed 2.
+  TRUNCATION LADDER -- NRMSE of a FIXED k-budget reading
+  against the label. The label requires iteration iff this is
+  bounded away from 0 at small k and tightens with k. A k=1
+  reading at ~0 would mean this task is a static expression of
+  x, like the two tasks registered before it.
+    k=   0   NRMSE=0.817943
+    k=   1   NRMSE=0.574068
+    k=   2   NRMSE=0.000000
+    k=   3   NRMSE=0.000000
+
+=== BAR CALIBRATION (must pass before any arm is credited) ===
+      predict_the_mean 1.000000
+          payload_only 1.151746
+                oracle 0.000000
+    flipper_dependence 1.137541
+   trained_two_feature 0.069189
+  BAR CALIBRATED  -- BAR CALIBRATED
+
+=== DATA (same train/eval batches reused across every arm) ===
+  train: n=2048 seed=0  flipper@61 payload@62
+  eval : n=4096 seed=12345 (DIFFERENT seed)  flipper@61 payload@62
+
+=== TRAIN + EVAL per arm ===
+
+  [softmax]  n_params=4769
+    RED  0-step NRMSE  train=0.995634  eval=0.994451  [INSTRUMENT BROKEN]
+INSTRUMENT BROKEN: arm=softmax untrained NRMSE below 1.0 (or NaN/Inf). Aborting, crediting nothing.
+
+=== RUN 2026-08-26 12:53:32 s=64 d=24 steps=150 n_train=2048 n_eval=4096 seed=0 arms=['softmax', 'pivot_signed', 'pivot_unsigned', 'windowed_signed'] task=e3_t1 ===
+torch 2.5.1+cu121  torch.get_num_threads()=2  device=cpu (no .cuda() anywhere in this file)
+
+=== E-TASK e3_t1: t* = 1 (difficulty dial, LOOP_PROMPT.md 1.7) ===
+  Model hop budgets, to read the ladder against: softmax 1, pivot_signed / pivot_unsigned / windowed_signed 2.
+  TRUNCATION LADDER -- NRMSE of a FIXED k-budget reading
+  against the label. The label requires iteration iff this is
+  bounded away from 0 at small k and tightens with k. A k=1
+  reading at ~0 would mean this task is a static expression of
+  x, like the two tasks registered before it.
+    k=   0   NRMSE=0.703436
+    k=   1   NRMSE=0.000000
+    k=   2   NRMSE=0.000000
+
+=== BAR CALIBRATION (must pass before any arm is credited) ===
+      predict_the_mean 1.000000
+          payload_only 1.218138
+                oracle 0.000000
+    flipper_dependence 1.409244
+   trained_two_feature 0.057939
+  BAR CALIBRATED  -- BAR CALIBRATED
+
+=== DATA (same train/eval batches reused across every arm) ===
+  train: n=2048 seed=0  flipper@62 payload@62
+  eval : n=4096 seed=12345 (DIFFERENT seed)  flipper@62 payload@62
+
+=== TRAIN + EVAL per arm ===
+
+  [softmax]  n_params=4769
+    RED  0-step NRMSE  train=0.993760  eval=0.993600  [INSTRUMENT BROKEN]
+INSTRUMENT BROKEN: arm=softmax untrained NRMSE below 1.0 (or NaN/Inf). Aborting, crediting nothing.
+
+=== RUN 2026-08-26 12:58:11 s=64 d=24 steps=150 n_train=2048 n_eval=4096 seed=0 arms=['softmax', 'pivot_signed', 'pivot_unsigned', 'windowed_signed'] task=e3_t1 ===
+torch 2.5.1+cu121  torch.get_num_threads()=2  device=cpu (no .cuda() anywhere in this file)
+
+=== E-TASK e3_t1: t* = 1 (difficulty dial, LOOP_PROMPT.md 1.7) ===
+  Model hop budgets, to read the ladder against: softmax 1, pivot_signed / pivot_unsigned / windowed_signed 2.
+  TRUNCATION LADDER -- NRMSE of a FIXED k-budget reading
+  against the label. The label requires iteration iff this is
+  bounded away from 0 at small k and tightens with k. A k=1
+  reading at ~0 would mean this task is a static expression of
+  x, like the two tasks registered before it.
+    k=   0   NRMSE=1.000248
+    k=   1   NRMSE=0.000000
+    k=   2   NRMSE=0.000000
+
+=== BAR CALIBRATION (must pass before any arm is credited) ===
+      predict_the_mean 1.000000
+          payload_only 1.412077
+                oracle 0.000000
+    flipper_dependence 2.000000
+   trained_two_feature 0.036084
+  BAR CALIBRATED  -- BAR CALIBRATED
+
+=== DATA (same train/eval batches reused across every arm) ===
+  train: n=2048 seed=0  flipper@62 payload@62
+  eval : n=4096 seed=12345 (DIFFERENT seed)  flipper@62 payload@62
+
+=== TRAIN + EVAL per arm ===
+
+  [softmax]  n_params=4769
+    RED  0-step NRMSE  train=1.003547  eval=1.005459  [OK]
+    POST steps=150  train NRMSE=0.698067   eval NRMSE=0.817476
+    eval bootstrap_ci (n_boot=400) = [0.799843, 0.836727]
+
+  [pivot_signed]  n_params=4769
+    RED  0-step NRMSE  train=1.003537  eval=1.005479  [OK]
+    POST steps=150  train NRMSE=0.726215   eval NRMSE=0.836517
+    eval bootstrap_ci (n_boot=400) = [0.821710, 0.851715]
+
+  [pivot_unsigned]  n_params=4769
+    RED  0-step NRMSE  train=1.003544  eval=1.005468  [OK]
+    POST steps=150  train NRMSE=0.705355   eval NRMSE=0.820816
+    eval bootstrap_ci (n_boot=400) = [0.803544, 0.839541]
+
+  [windowed_signed]  n_params=4769
+    RED  0-step NRMSE  train=1.003248  eval=1.005600  [OK]
+    POST steps=150  train NRMSE=0.725935   eval NRMSE=0.927367
+    eval bootstrap_ci (n_boot=400) = [0.910155, 0.944888]
+
+=== PARAM MATCH (arm 1 vs 2/3, must be within 10%) ===
+  softmax=4769  pivot_signed=4769  ratio=0.0000
+  softmax=4769  pivot_unsigned=4769  ratio=0.0000
+
+=== WALL CLOCK: 728.035 s ===
+
+=== RUN 2026-08-26 13:10:32 s=64 d=24 steps=150 n_train=2048 n_eval=4096 seed=0 arms=['softmax', 'pivot_signed', 'pivot_unsigned', 'windowed_signed'] task=e3_t2 ===
+torch 2.5.1+cu121  torch.get_num_threads()=2  device=cpu (no .cuda() anywhere in this file)
+
+=== E-TASK e3_t2: t* = 2 (difficulty dial, LOOP_PROMPT.md 1.7) ===
+  Model hop budgets, to read the ladder against: softmax 1, pivot_signed / pivot_unsigned / windowed_signed 2.
+  TRUNCATION LADDER -- NRMSE of a FIXED k-budget reading
+  against the label. The label requires iteration iff this is
+  bounded away from 0 at small k and tightens with k. A k=1
+  reading at ~0 would mean this task is a static expression of
+  x, like the two tasks registered before it.
+    k=   0   NRMSE=1.000023
+    k=   1   NRMSE=0.701860
+    k=   2   NRMSE=0.000000
+    k=   3   NRMSE=0.000000
+
+=== BAR CALIBRATION (must pass before any arm is credited) ===
+      predict_the_mean 1.000000
+          payload_only 1.227224
+                oracle 0.000000
+    flipper_dependence 1.401244
+   trained_two_feature 0.031118
+  BAR CALIBRATED  -- BAR CALIBRATED
+
+=== DATA (same train/eval batches reused across every arm) ===
+  train: n=2048 seed=0  flipper@61 payload@62
+  eval : n=4096 seed=12345 (DIFFERENT seed)  flipper@61 payload@62
+
+=== TRAIN + EVAL per arm ===
+
+  [softmax]  n_params=4769
+    RED  0-step NRMSE  train=1.003632  eval=1.003351  [OK]
+    POST steps=150  train NRMSE=0.768451   eval NRMSE=0.970437
+    eval bootstrap_ci (n_boot=400) = [0.953630, 0.987786]
+
+  [pivot_signed]  n_params=4769
+    RED  0-step NRMSE  train=1.003641  eval=1.003358  [OK]
+    POST steps=150  train NRMSE=0.759792   eval NRMSE=0.946352
+    eval bootstrap_ci (n_boot=400) = [0.930669, 0.962831]
+
+  [pivot_unsigned]  n_params=4769
+    RED  0-step NRMSE  train=1.003631  eval=1.003354  [OK]
+    POST steps=150  train NRMSE=0.773045   eval NRMSE=0.961363
+    eval bootstrap_ci (n_boot=400) = [0.944597, 0.977857]
+
+  [windowed_signed]  n_params=4769
+    RED  0-step NRMSE  train=1.003713  eval=1.003257  [OK]
+    POST steps=150  train NRMSE=0.787107   eval NRMSE=1.051652
+    eval bootstrap_ci (n_boot=400) = [1.033185, 1.070305]
+
+=== PARAM MATCH (arm 1 vs 2/3, must be within 10%) ===
+  softmax=4769  pivot_signed=4769  ratio=0.0000
+  softmax=4769  pivot_unsigned=4769  ratio=0.0000
+
+=== WALL CLOCK: 930.424 s ===
+
+=== RUN 2026-08-26 13:26:20 s=64 d=24 steps=150 n_train=2048 n_eval=4096 seed=0 arms=['softmax', 'pivot_signed', 'pivot_unsigned', 'windowed_signed'] task=e3_t8 ===
+torch 2.5.1+cu121  torch.get_num_threads()=2  device=cpu (no .cuda() anywhere in this file)
+
+=== E-TASK e3_t8: t* = 8 (difficulty dial, LOOP_PROMPT.md 1.7) ===
+  Model hop budgets, to read the ladder against: softmax 1, pivot_signed / pivot_unsigned / windowed_signed 2.
+  TRUNCATION LADDER -- NRMSE of a FIXED k-budget reading
+  against the label. The label requires iteration iff this is
+  bounded away from 0 at small k and tightens with k. A k=1
+  reading at ~0 would mean this task is a static expression of
+  x, like the two tasks registered before it.
+    k=   0   NRMSE=1.000007
+    k=   1   NRMSE=0.932740
+    k=   2   NRMSE=0.863514
+    k=   4   NRMSE=0.714329
+    k=   8   NRMSE=0.000000
+    k=   9   NRMSE=0.000000
+
+=== BAR CALIBRATION (must pass before any arm is credited) ===
+      predict_the_mean 1.000000
+          payload_only 1.064078
+                oracle 0.000000
+    flipper_dependence 0.713086
+   trained_two_feature 0.055559
+  BAR CALIBRATED  -- BAR CALIBRATED
+
+=== DATA (same train/eval batches reused across every arm) ===
+  train: n=2048 seed=0  flipper@55 payload@62
+  eval : n=4096 seed=12345 (DIFFERENT seed)  flipper@55 payload@62
+
+=== TRAIN + EVAL per arm ===
+
+  [softmax]  n_params=4769
+    RED  0-step NRMSE  train=1.003845  eval=1.002998  [OK]
+    POST steps=150  train NRMSE=0.865491   eval NRMSE=1.128033
+    eval bootstrap_ci (n_boot=400) = [1.111258, 1.147301]
+
+  [pivot_signed]  n_params=4769
+    RED  0-step NRMSE  train=1.003848  eval=1.003004  [OK]
+    POST steps=150  train NRMSE=0.867805   eval NRMSE=1.120991
+    eval bootstrap_ci (n_boot=400) = [1.107099, 1.139178]
+
+  [pivot_unsigned]  n_params=4769
+    RED  0-step NRMSE  train=1.003845  eval=1.003000  [OK]
+    POST steps=150  train NRMSE=0.860972   eval NRMSE=1.112208
+    eval bootstrap_ci (n_boot=400) = [1.095736, 1.129413]
+
+  [windowed_signed]  n_params=4769
+    RED  0-step NRMSE  train=1.003808  eval=1.003371  [OK]
+    POST steps=150  train NRMSE=0.800208   eval NRMSE=1.164149
+    eval bootstrap_ci (n_boot=400) = [1.142423, 1.185129]
+
+=== PARAM MATCH (arm 1 vs 2/3, must be within 10%) ===
+  softmax=4769  pivot_signed=4769  ratio=0.0000
+  softmax=4769  pivot_unsigned=4769  ratio=0.0000
+
+=== WALL CLOCK: 1000.113 s ===
+
+=== RUN 2026-08-26 13:59:31 s=64 d=24 steps=150 n_train=2048 n_eval=4096 seed=0 arms=['softmax'] task=e3_t32 ===
+torch 2.5.1+cu121  torch.get_num_threads()=2  device=cpu (no .cuda() anywhere in this file)
+
+=== E-TASK e3_t32: t* = 32 (difficulty dial, LOOP_PROMPT.md 1.7) ===
+  Model hop budgets, to read the ladder against: softmax 1, pivot_signed / pivot_unsigned / windowed_signed 2.
+  TRUNCATION LADDER -- NRMSE of a FIXED k-budget reading
+  against the label. The label requires iteration iff this is
+  bounded away from 0 at small k and tightens with k. A k=1
+  reading at ~0 would mean this task is a static expression of
+  x, like the two tasks registered before it.
+    k=   0   NRMSE=1.000004
+    k=   1   NRMSE=0.983744
+    k=   2   NRMSE=0.969120
+    k=   4   NRMSE=0.934971
+    k=   8   NRMSE=0.867263
+    k=  16   NRMSE=0.704263
+    k=  32   NRMSE=0.000000
+    k=  33   NRMSE=0.000000
+
+=== BAR CALIBRATION (must pass before any arm is credited) ===
+      predict_the_mean 1.000000
+          payload_only 1.013693
+                oracle 0.000000
+    flipper_dependence 0.368705
+   trained_two_feature 0.092398
+  BAR CALIBRATED  -- BAR CALIBRATED
+
+=== DATA (same train/eval batches reused across every arm) ===
+  train: n=2048 seed=0  flipper@31 payload@62
+  eval : n=4096 seed=12345 (DIFFERENT seed)  flipper@31 payload@62
+
+=== TRAIN + EVAL per arm ===
+
+  [softmax]  n_params=4769
+    RED  0-step NRMSE  train=1.003704  eval=1.003015  [OK]
+    POST steps=150  train NRMSE=0.879304   eval NRMSE=1.158167
+    eval bootstrap_ci (n_boot=400) = [1.130292, 1.185891]
+
+=== PARAM MATCH (arm 1 vs 2/3, must be within 10%) ===
+
+=== WALL CLOCK: 422.293 s ===
+
+=== RUN 2026-08-26 14:07:36 s=64 d=24 steps=150 n_train=2048 n_eval=4096 seed=0 arms=['softmax'] task=e1_anchor ===
+torch 2.5.1+cu121  torch.get_num_threads()=2  device=cpu (no .cuda() anywhere in this file)
+
+=== E-TASK e1_anchor: t* = 63 (difficulty dial, LOOP_PROMPT.md 1.7) ===
+  Model hop budgets, to read the ladder against: softmax 1, pivot_signed / pivot_unsigned / windowed_signed 2.
+  TRUNCATION LADDER -- NRMSE of a FIXED k-budget reading
+  against the label. The label requires iteration iff this is
+  bounded away from 0 at small k and tightens with k. A k=1
+  reading at ~0 would mean this task is a static expression of
+  x, like the two tasks registered before it.
+    k=   0   NRMSE=1.000030
+    k=   1   NRMSE=0.990328
+    k=   2   NRMSE=0.986177
+    k=   4   NRMSE=0.972203
+    k=   8   NRMSE=0.938035
+    k=  16   NRMSE=0.866643
+    k=  32   NRMSE=0.705080
+    k=  63   NRMSE=0.000000
+    k=  64   NRMSE=0.000000
+
+=== BAR CALIBRATION (must pass before any arm is credited) ===
+      predict_the_mean 1.000000
+          payload_only 1.005721
+                oracle 0.000000
+    flipper_dependence 0.252393
+   trained_two_feature 0.118748
+  BAR CALIBRATED  -- BAR CALIBRATED
+
+=== DATA (same train/eval batches reused across every arm) ===
+  train: n=2048 seed=0  flipper@0 payload@62
+  eval : n=4096 seed=12345 (DIFFERENT seed)  flipper@0 payload@62
+
+=== TRAIN + EVAL per arm ===
+
+  [softmax]  n_params=4769
+    RED  0-step NRMSE  train=1.003654  eval=1.004778  [OK]
+    POST steps=150  train NRMSE=0.880235   eval NRMSE=1.224318
+    eval bootstrap_ci (n_boot=400) = [1.146809, 1.322952]
+
+=== PARAM MATCH (arm 1 vs 2/3, must be within 10%) ===
+
+=== WALL CLOCK: 2641.717 s ===

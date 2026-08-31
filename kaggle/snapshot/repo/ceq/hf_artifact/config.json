@@ -1,0 +1,21 @@
+{
+  "auto_map": {
+    "AutoConfig": "configuration_ceq.CEQConfig"
+  },
+  "hidden_size": 1280,
+  "hops": 2,
+  "initializer_range": 0.02,
+  "intermediate_size": 5120,
+  "lam": 0.1,
+  "layer_norm_eps": 1e-05,
+  "max_position_embeddings": 2048,
+  "model_type": "ceq",
+  "num_attention_heads": 20,
+  "num_hidden_layers": 24,
+  "operator": "sgate",
+  "rho": 1.5,
+  "tie_word_embeddings": false,
+  "transformers_version": "5.3.0",
+  "use_cache": false,
+  "vocab_size": 256
+}

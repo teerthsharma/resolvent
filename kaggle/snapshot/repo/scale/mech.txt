@@ -1,0 +1,78 @@
+FF                                                                       [100%]
+================================== FAILURES ===================================
+_ test_claim_the_context_decay_is_the_path_count_and_not_the_row_normalizer[cpu] _
+
+device = 'cpu'
+
+    @pytest.mark.parametrize("device", DEVICES)
+    def test_claim_the_context_decay_is_the_path_count_and_not_the_row_normalizer(device):
+        """RED first. Round 3's mechanism sentence, isolated.
+    
+        Round 3: "the two-hop term sums over ~s intermediates of which c is one, so
+        its share is 1/s BY CONSTRUCTION". That sweep moved `j = s/4` and `c = s/2`,
+        so the number of intermediates between `j` and `i` grew with `s` at the same
+        time as every row normalizer did. Two channels, one measurement.
+    
+        Pin the offsets instead -- `j = i-4`, `c = i-2` -- so the path count between
+        `j` and `i` is a constant 3 at every context length. If the 1/s share is the
+        cause, every arm must now be FLAT in `s`. DeltaNet, whose entries
+        `-beta_i (k_i . k_j)` carry no row normalizer at all, is the control.
+        """
+        dev = torch.device(device)
+        def at(kind, s):
+            return bench.sign_flip_rate(kind, hops=2, n_draws=1024, s=s, i=s - 1,
+                                        j=s - 5, c=s - 3, seed=0, device=dev)
+    
+        delta = [at("deltanet", s) for s in (32, 512)]
+        sgate = [at("sgate", s) for s in (32, 512)]
+        assert delta[1] > 0.5 * delta[0], (
+            f"control is dead: the normalizer-free arm decayed too, {delta}")
+>       assert sgate[1] > 0.5 * sgate[0], (
+            f"at a FIXED path count the row-normalized arm still fell "
+            f"{sgate[0]} -> {sgate[1]} while the normalizer-free arm held "
+            f"{delta[0]} -> {delta[1]}. The decay is the softmax row normalizer "
+            f"summing over s tokens, not the two-hop share being 1/s.")
+E       AssertionError: at a FIXED path count the row-normalized arm still fell 0.0185546875 -> 0.0 while the normalizer-free arm held 0.07421875 -> 0.0654296875. The decay is the softmax row normalizer summing over s tokens, not the two-hop share being 1/s.
+E       assert 0.0 > (0.5 * 0.0185546875)
+
+tests\foreman\test_paraformer_ratio_across_context.py:203: AssertionError
+_ test_claim_the_context_decay_is_the_path_count_and_not_the_row_normalizer[cuda] _
+
+device = 'cuda'
+
+    @pytest.mark.parametrize("device", DEVICES)
+    def test_claim_the_context_decay_is_the_path_count_and_not_the_row_normalizer(device):
+        """RED first. Round 3's mechanism sentence, isolated.
+    
+        Round 3: "the two-hop term sums over ~s intermediates of which c is one, so
+        its share is 1/s BY CONSTRUCTION". That sweep moved `j = s/4` and `c = s/2`,
+        so the number of intermediates between `j` and `i` grew with `s` at the same
+        time as every row normalizer did. Two channels, one measurement.
+    
+        Pin the offsets instead -- `j = i-4`, `c = i-2` -- so the path count between
+        `j` and `i` is a constant 3 at every context length. If the 1/s share is the
+        cause, every arm must now be FLAT in `s`. DeltaNet, whose entries
+        `-beta_i (k_i . k_j)` carry no row normalizer at all, is the control.
+        """
+        dev = torch.device(device)
+        def at(kind, s):
+            return bench.sign_flip_rate(kind, hops=2, n_draws=1024, s=s, i=s - 1,
+                                        j=s - 5, c=s - 3, seed=0, device=dev)
+    
+        delta = [at("deltanet", s) for s in (32, 512)]
+        sgate = [at("sgate", s) for s in (32, 512)]
+        assert delta[1] > 0.5 * delta[0], (
+            f"control is dead: the normalizer-free arm decayed too, {delta}")
+>       assert sgate[1] > 0.5 * sgate[0], (
+            f"at a FIXED path count the row-normalized arm still fell "
+            f"{sgate[0]} -> {sgate[1]} while the normalizer-free arm held "
+            f"{delta[0]} -> {delta[1]}. The decay is the softmax row normalizer "
+            f"summing over s tokens, not the two-hop share being 1/s.")
+E       AssertionError: at a FIXED path count the row-normalized arm still fell 0.0185546875 -> 0.0 while the normalizer-free arm held 0.07421875 -> 0.0654296875. The decay is the softmax row normalizer summing over s tokens, not the two-hop share being 1/s.
+E       assert 0.0 > (0.5 * 0.0185546875)
+
+tests\foreman\test_paraformer_ratio_across_context.py:203: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/foreman/test_paraformer_ratio_across_context.py::test_claim_the_context_decay_is_the_path_count_and_not_the_row_normalizer[cpu]
+FAILED tests/foreman/test_paraformer_ratio_across_context.py::test_claim_the_context_decay_is_the_path_count_and_not_the_row_normalizer[cuda]
+2 failed in 163.70s (0:02:43)

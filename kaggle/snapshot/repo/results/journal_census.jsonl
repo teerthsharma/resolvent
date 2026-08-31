@@ -1,0 +1,4 @@
+{"key": "dense_signed__at_pivots/s1024/b0", "threads": 1, "rate_match": true, "full_match": true, "got_sigma": 2.9093518966758096, "want_sigma": 2.9093518966758096}
+{"key": "dense_signed__at_pivots/s1024/b1", "threads": 1, "rate_match": true, "full_match": true, "got_sigma": 2.893501553375283, "want_sigma": 2.893501553375283}
+{"key": "dense_signed__at_pivots/s128", "threads": 1, "rate_match": true, "full_match": false, "got_sigma": 0.3833030191586593, "want_sigma": 0.3833030187701487}
+{"key": "dense_signed__at_pivots/s16", "threads": 1, "rate_match": true, "full_match": true, "got_sigma": 0.06102873440521165, "want_sigma": 0.06102873440521165}

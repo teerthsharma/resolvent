@@ -1,0 +1,17 @@
+ITERATION 42 - FLOOR INSTRUMENT TEST
+PROTOCOL: SCALING   arm: sgate operator, pivot hop-2, placement in_P, k=8
+DECLARED CHEAT: 256 draws at s<=128, 128 at s=512 (journalled table used 768/512).
+PAIRED: both floors evaluated on IDENTICAL draws in one pass; the difference is exact.
+
+    s     n |             floor=1e-6 |                floor=0 |  gated by floor
+    8   256 | 0.16016 [0.1174,0.2109] | 0.17188 [0.1277,0.2238] |   3 of  44 signs
+   32   256 | 0.03516 [0.0162,0.0657] | 0.07422 [0.0453,0.1135] |  10 of  19 signs
+  128   256 | 0.00000 [0.0000,0.0143] | 0.00781 [0.0009,0.0279] |   2 of   2 signs
+  512   128 | 0.00000 [0.0000,0.0284] | 0.00000 [0.0000,0.0284] |   0 of   0 signs
+
+  floor=1e-6  slope -1.0938   (2 fitted points)
+  floor=0     slope -1.1150   R2 0.9350   (3 fitted points)
+
+  M2 bar -0.3.  Published (768/512 draws) -1.298.
+  KILL FIRES AT floor=0: YES.
+  Floor gating fraction GROWS with s: 6.8% -> 52.6% -> 100%.

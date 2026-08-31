@@ -1,5 +1,46 @@
 # CEQ v17-K -- pinned environment for the Kaggle image.  Gate-0 item G0.4 (K-ENV).
 #
+# ===========================================================================
+# G0.17 K-COMPAT ADDENDUM -- THE TARGET STACK IS NOW MEASURED, AND IT IS NOT
+# THIS ONE.  THIS FILE IS NOT AN INSTALL INPUT FOR THE KAGGLE RUN.
+# ===========================================================================
+#
+# When this file was written, "in Kaggle base image?" was `[ASSUMED]` on every
+# row and section 3.2 of V17_G04_ENV.md said so.  Kaggle run 1 has since
+# executed and its log answers two of those rows outright:
+#
+#   python        3.12.13 (main, Mar  4 2026, 09:23:07) [GCC 11.4.0]   [RUN]
+#   torch         2.10.0+cu128                                          [RUN]
+#
+# read verbatim off `results/kaggle_v17k_output/ceq-v17-k.log`, entries 8 and
+# 10.  Against this box's `python 3.11.9 / torch 2.5.1+cu121`, BOTH move.  The
+# rest of the table is still `[NOT MEASURED -- KAGGLE]`: run 1 halted in cell 2
+# on a code-source gate, before any `pip list`, so no other version came back.
+#
+# NO PIN BELOW WAS RELAXED, AND NONE WAS ADDED.  Relaxing `torch==2.5.1` to
+# `torch==2.10.0` would make this file a record of a box nobody measured the
+# suites on; adding `torch==2.10.0` as a REQUIREMENT would be unsatisfiable
+# with internet OFF unless the image happened to carry that exact build, which
+# is section 3.2's whole point.  The lines below stay what they have always
+# been: **the closure of this repository's imports at the versions the five
+# G0.4 suites were measured green on, on Windows, on 2026-08-31.**  They are a
+# provenance record.  They are not a `pip install -r` for Kaggle and never were.
+#
+# WHAT ADAPTS INSTEAD.  `ceq/compat.py`, called by `kaggle/ceq_v17k.ipynb`
+# cell "3a" before K-CERT.  It MEASURES the running stack rather than asserting
+# this one, reports which of the six undocumented `PreTrainedModel` internals
+# named under B2 below the running transformers actually honors, resolves the
+# `GenerationMixin` import path, and MEASURES the determinism regime instead of
+# inheriting the `cumsum_cuda_kernel` finding Rulings 1 and 9 rest on.  It
+# halts legibly, naming the module and the exception, on anything it cannot
+# adapt to.  `V17_COMPAT_BRIDGE.md` is its receipt.
+#
+# STILL OPEN, AND NOT CLOSED BY THE BRIDGE.  B1 (`ripser` / `persim` /
+# `hopcroftkarp`, absent from any standard image, no network to add them) and
+# B4 (`streaming=True` needs a network) are blockers no version detection
+# removes.  A bridge that reported them as handled would be the fiction this
+# file exists to avoid.
+#
 # DERIVATION.  Not `pip freeze` verbatim.  `pip freeze` on this box lists 300+
 # distributions, most of them belonging to other projects that share the
 # interpreter (pytest-django, hydra, langsmith, syrupy, faraday, sigmoid ...).
