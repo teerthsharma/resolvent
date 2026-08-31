@@ -173,6 +173,82 @@ implementation run isn't evidence"** — so it ran five mutants and killed all f
 
 ---
 
+## 4c. R1 — THE DECIDING CELL, LANDED AFTER THE CEILING
+
+**Verdict: NOT CROSSED. The scoreboard does not move; it stays 4 of 38.**
+
+ARM PL, N=8: mean `0.829151`, sd `0.253673`, 95% CI **`[0.617075, 1.041227]`** —
+**straddles** `floor₁ = 0.7071067812`. Softmax `0.951767`, sd `0.011824`.
+
+**The shape of the failure is the finding: the seeds are bimodal, not spread.**
+
+| population | seeds | NRMSE | `ĥ` | gate `R²` | `â_max` |
+|---|---|---|---|---|---|
+| **crossed** | 5 of 8 | `0.634002 – 0.662021` | `1.1235 – 1.1961` | `0.97 – 0.99` | `1.10 – 1.51` |
+| NO READING | 3 of 8 | `1.113403 – 1.152430` | — | `0.011 / 0.627 / 0.047` | `20.31 / 49.66 / 285.07` |
+
+**Nothing lies between `0.663` and `1.113`. The reported mean is a value no seed
+produced.** The three failures never fit *train* either (`0.84–0.88`).
+
+**Two campaign firsts, inside a negative verdict.** `ĥ = 0.625017` exceeds the
+nine-cell census ceiling of `0.389`; and **no prior arm produced a single seed
+below `floor₁` at any cell — this one produced five.** C-CAP asks for a CI, and
+this CI straddles. No seed dropped, no run extended, no variant tried.
+
+### Three things R1 found that were not asked of it
+
+**The identity licensing training does not cover the data trained on.** The (L)
+setting needs `0 < a < 1`; BED-M draws `a ∈ {−1, 0, +1}`, where it evaluates to
+`nan / −inf / inf`. The bind held at the cell's shape (`7.55e-15` at `s = 64`,
+`s = 8` reproducing the published figure digit for digit) — but the theorem and
+the corpus do not overlap.
+
+**M-18's prescribed replacement is also non-discriminating, sign flipped.** The
+trained `sign(a)` probe reads `p = 0.917953`; the **zero-step control reads
+`0.943741` — higher**, a trained gain of `−0.025787`. M-18 recorded a diagnostic
+whose target was *constant*; its replacement has a target so *easy* the predictor
+saturates before training. **Same mechanism, mirrored, inside the fix M-18 itself
+specified.**
+
+**The instrument that does discriminate was found by measurement**, not
+prescribed: the gate's own `R²` (`â = exp(g)` vs `a`), `0.699` trained against
+`0.372` at zero steps, separating the two populations cleanly.
+
+### Venus: right on the verdict, refuted on her own discriminator
+
+Right — no crossing; mean `0.86` against a measured `0.829151`, inside her 80%
+`[0.74, 0.96]`; gate probe `R² = 0.699` inside her `[0.30, 0.75]`; `log a` probe
+dead. Wrong — the improvement does not resolve, and **`c = 0.835907 ≥ 0.8182`, so
+her own registered discriminator points at the contract's prediction, which
+lost.** Seed 3 is the counterexample: `p = 1.000000`, no crossing. Her c-model is
+optimistic by `+0.18` to `+0.27` NRMSE at every measured `c`.
+
+**Contract: 1 of 3** — bind CONFIRMED, crossing REFUTED, kill diagnostic
+UNRUNNABLE.
+
+### The amendment's predicted failure mode: right degeneration, wrong tensor
+
+`1/(1 − â_max)` is **undefined at all eight seeds** — `â_max ∈ [1.1029, 285.07]`,
+above 1 everywhere. The it.13 prediction of a degeneration is real; it appears as
+**gate divergence in the key logit**, not value saturation, and the value path
+stays flat at `4.585275`.
+
+### Resolution statement
+
+> Paired contrast (PL − softmax) `= −0.122616`, sd `0.257560`, N=8. The cell
+> **excludes a difference beyond `Δ = t(.975,7)·sd/√8 = 0.215326` NRMSE and
+> nothing smaller.**
+
+ARM PL is better by `0.122616` — **52× M-10's thread-count floor** and 24× the
+equivalence margin — and it is **not resolved**, because the three failing seeds
+inflate the paired sd. Achieved power `0.232077`. No TOST.
+
+**Owed:** the scan skyline was not run because **it does not exist**, and
+building one is the new construction the contract's own kill forbids.
+Distance-to-native-skyline is outstanding.
+
+---
+
 ## 5. THE HONEST SUMMARY
 
 R11 spent twenty-seven iterations making the next round's measurements mean
