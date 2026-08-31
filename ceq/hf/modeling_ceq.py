@@ -6,6 +6,17 @@ THE DEFAULT OPERATOR IS THE ONE THAT REACHED PARITY, AND IT IS `sgate`.
 
     sgate    A = rho * (softmax(w) - lam * softmax(-w)) / (1 + lam)
     signed   A = rho * w / sum_j |w_ij|
+    smprime  A_ij = G_ij exp(qk q_i.k_j) / Z_i^beta,  G the PATH PRODUCT
+
+A THIRD OPERATOR IS SELECTABLE AND CARRIES NO NUMBER OF ITS OWN. `smprime` is
+`ceq/arm_smprime.py` -- the workhorse arm `CEQ_V16_CONTRACT.md` names -- wired
+in as PLUMBING so it can be trained at all. Nothing below applies to it: the
+parity ratio, the COSTS table, the capability number and the decay rates are all
+`sgate` measurements. It is the only operator in this file that is IMPORTED
+rather than duplicated, so a checkpoint that selects it needs the `ceq` package
+present; `sgate` and `signed` are untouched and the Hub copy still loads without
+it. `V17_ARM_WIRING.md` is that wiring's receipt, including the proof that the
+default path is bitwise what it was.
 
 `sgate` at rho=1.5 lam=0.10 hops=2 lr=1e-3 measured val loss **1.0334x** softmax,
 median over 5 seeds (1.0199-1.0413), at **3,319,296 parameters on both arms** --
@@ -74,6 +85,7 @@ RUN THE SMOKE TEST BEFORE TRUSTING ANY OF THIS: `python -m ceq.hf.smoke`.
 from __future__ import annotations
 
 import math
+import statistics
 
 import torch
 import torch.nn.functional as F
@@ -389,9 +401,27 @@ def path_sum(a: torch.Tensor, v: torch.Tensor, hops: int) -> torch.Tensor:
 # ------------------------------------------------------------------ the blocks
 
 class CEQAttention(nn.Module):
-    """Carries the SAME parameters a softmax block would: qkv and an output
-    projection, nothing extra. The operator itself has no parameters, which is
-    what makes a matched-parameter comparison against softmax possible at all."""
+    """At `sgate` and `signed`, carries the SAME parameters a softmax block
+    would: qkv and an output projection, nothing extra. The operator itself has
+    no parameters, which is what makes a matched-parameter comparison against
+    softmax possible at all.
+
+    AT `smprime` IT CARRIES MORE, AND THE EXCESS IS NAMED. The arm's
+    parametrization is two per-position scalar heads (`m_head`, `theta_head`)
+    and three scalar switches (`beta`, `qk`, `g`), which is
+    `ceq/arm_smprime.py::ArmSMPrime`'s own -- `2*(d+1) + 3` parameters per block
+    and nothing else. `V16_ARM_SMPRIME.md` section 1 records the same excess
+    against a softmax control as `4,806 - 4,769 = 37` at `d_model = 16`, which
+    is `2*16 + 5`. So a matched-parameter comparison at `smprime` is matched to
+    within a stated, counted quantity and NOT exactly, and
+    `tests/gate0/test_g10_arm_wiring.py` asserts the difference is that quantity
+    and nothing more.
+
+    THE HEADS ARE SHARED ACROSS HEADS, `nn.Linear(d, 1)`, because that is the
+    arm's shape: one magnitude and one phase per POSITION. A per-head widening
+    to `nn.Linear(d, n_heads)` would be a construction the arm does not have,
+    and the round's first law strikes it.
+    """
 
     def __init__(self, config: CEQConfig):
         super().__init__()
@@ -405,6 +435,56 @@ class CEQAttention(nn.Module):
         self.operator = config.operator
         self.qkv = nn.Linear(d, 3 * d, bias=False)
         self.o_proj = nn.Linear(d, d, bias=False)
+        if self.operator == "smprime":
+            self.m_head = nn.Linear(d, 1)
+            self.theta_head = nn.Linear(d, 1)
+            #: `nn.Parameter`s because they are `nn.Parameter`s on the arm --
+            #: `#5a` requires the three switches to be settable and the arm
+            #: makes them trainable. `config.smp_*` names where they START.
+            self.beta = nn.Parameter(torch.tensor(float(config.smp_beta)))
+            self.qk = nn.Parameter(torch.tensor(float(config.smp_qk)))
+            self.g = nn.Parameter(torch.tensor(float(config.smp_g)))
+
+    def _smprime(self, q, k, v, x):
+        """`ceq/arm_smprime.py`'s read-out, CALLED rather than reimplemented.
+
+        THE IMPORT IS LOCAL AND THAT IS THE WHOLE COST OF THIS SEAM. Every other
+        operator in this file is duplicated from the package so the Hub's flat
+        copy is self-contained; a third duplicate would be a SECOND
+        IMPLEMENTATION of a module the contract fixes as the workhorse
+        ("Workhorse arm_smprime only"), and a duplicate that drifts is the
+        failure this file already carries two bitwise oracles against. So the
+        arm is imported instead, INSIDE the branch:
+
+          * `import ceq.arm_smprime` at module scope would make the checkpoint
+            fail to LOAD on every machine without this repository -- the same
+            argument the module docstring makes about `import triton`;
+          * as written, the Hub copy still imports and still runs at `sgate`
+            and `signed`, and `operator="smprime"` raises ImportError there.
+
+        Making `smprime` Hub-portable requires duplicating the arm, which is a
+        construction for the author to rule on rather than one to build here.
+
+        NO PATH SUM. The arm's read-out is `O_i = sum_j W_ij V_j`, one
+        application of the operator, so `path_sum` is not called and `hops` has
+        no meaning at this operator -- `CEQConfig` refuses to carry one.
+
+        CAUSAL INCLUSIVE OF THE DIAGONAL (`j <= i`), where `ceq_operator` and
+        `sgate_operator` are STRICTLY causal (`j < i`) because they need `A`
+        nilpotent for the path sum. The arm takes no path sum, its window is
+        `Ico (j+1) (i+1)` -- empty at `j = i`, so `G_ii = 1` -- and position `i`
+        reading its own value is ordinary causal attention, not leakage.
+        """
+        from ceq.arm_smprime import readout as smprime_readout
+
+        #: `[B, S] -> [B, 1, S]`: the gate is per position, and the singleton
+        #: broadcasts against the operator's `[B, H, S, S]` over heads. Without
+        #: the singleton a `[B, S, S]` path product would align B against H.
+        u = self.m_head(x).squeeze(-1).unsqueeze(-2)
+        th = self.theta_head(x).squeeze(-1).unsqueeze(-2)
+        #: `.real` is `ArmSMPrime.forward`'s own read-out of the complex output.
+        return smprime_readout(q, k, v, u, th,
+                               beta=self.beta, qk=self.qk, g=self.g).real
 
     def forward(self, x, attention_mask=None):
         b, s, d = x.shape
@@ -413,12 +493,30 @@ class CEQAttention(nn.Module):
         def shape(t):
             return t.view(b, s, self.n_heads, self.d_head).transpose(1, 2)
 
-        if self.operator == "sgate":
-            a = sgate_operator(shape(q), shape(k), attention_mask,
-                               rho=self.rho, lam=self.lam)
+        if self.operator == "smprime":
+            if attention_mask is not None:
+                # RAISES RATHER THAN IGNORING. `ceq/arm_smprime.py::operator`
+                # takes no mask argument, so a padding mask handed to this
+                # branch would be dropped in silence -- the constraint reported
+                # applied and not applied, which is the bug `_keep_mask` above
+                # exists because this project shipped twice. Threading a mask
+                # through the arm is a change to the arm, not to this seam.
+                raise NotImplementedError(
+                    "operator='smprime' cannot apply a padding mask: "
+                    "ceq/arm_smprime.py's operator takes no mask argument and "
+                    "silently dropping it would report a constraint that was "
+                    "not applied. Causality is unaffected (the path product is "
+                    "masked to j <= i unconditionally). Train without padding, "
+                    "or add the mask to the arm -- which is the arm's change to "
+                    "make, not this file's.")
+            o = self._smprime(shape(q), shape(k), shape(v), x)
         else:
-            a = ceq_operator(shape(q), shape(k), attention_mask, rho=self.rho)
-        o = path_sum(a, shape(v), self.hops)
+            if self.operator == "sgate":
+                a = sgate_operator(shape(q), shape(k), attention_mask,
+                                   rho=self.rho, lam=self.lam)
+            else:
+                a = ceq_operator(shape(q), shape(k), attention_mask, rho=self.rho)
+            o = path_sum(a, shape(v), self.hops)
         return self.o_proj(o.transpose(1, 2).reshape(b, s, d))
 
 
@@ -592,6 +690,506 @@ class CEQForCausalLM(CEQPreTrainedModel, GenerationMixin):
         s = self.config.max_position_embeddings
         return {"input_ids": input_ids[:, -s:],
                 "attention_mask": kwargs.get("attention_mask")}
+
+
+# ------------------------------------------------ the beta column (RULING 2)
+
+def beta_column(model) -> dict:
+    """`smprime`'s `beta`, ONE SCALAR PER LAYER, with its gradient and its flag.
+
+    GRANULARITY, STATED RATHER THAN CHOSEN. `ceq/arm_smprime.py::ArmSMPrime`
+    carries `beta` as one scalar `nn.Parameter` per arm instance, shared across
+    attention heads, and `CEQAttention` above carries that same parametrization
+    once per layer. So the column is `[n_layers]` and "per instance" is PER
+    LAYER. A `[n_layers, n_heads]` beta would be a construction the arm does not
+    have -- the same argument section 2 of `V17_ARM_WIRING.md` makes about the
+    gate heads -- so it is not built here.
+
+    THREE LISTS AND NOT ONE, because the value alone cannot answer RULING 2's
+    question. `beta` frozen by a bug and `beta` moved-and-returned both read
+    exactly `1.0` at the end of a run and mean opposite things. `grad` says
+    whether a gradient ever reached the parameter and `requires_grad` separates
+    the two ways it can fail to: `requires_grad=False` (frozen at the flag) from
+    a detached call site (flag still True, `grad` still `None`).
+
+    `grad` is `None`, not `0.0`, when no backward has run or the parameter is
+    out of the graph -- those are not a zero gradient and recording them as one
+    would erase the distinction this function exists for. `None` survives JSON
+    as `null`.
+
+    A PURE READ: no tensor is written, no RNG advanced, no graph built. Empty
+    lists on `sgate` and `signed`, which have no `beta`.
+    """
+    named = _beta_parameters(model)
+    return {"name": [n for n, _ in named],
+            "beta": [float(b) for _, b in named],
+            "grad": [None if b.grad is None else float(b.grad)
+                     for _, b in named],
+            "requires_grad": [bool(b.requires_grad) for _, b in named]}
+
+
+def beta_census(model, acc: list | None = None) -> list:
+    """Integrated `|dL/dbeta_i|` over training, one running total per `beta`.
+
+    RULING 2a's GRADIENT CENSUS, and the reason it is a separate call from
+    `beta_column`: the trajectory is sampled every `log_every`, the census is an
+    INTEGRAL and has to see every step. Call it once per step, immediately after
+    `loss.backward()` and BEFORE `clip_grad_norm_`, so the quantity is the
+    gradient the ruling names and not the clipped one.
+
+    A `beta` whose gradient never arrives contributes exactly `0.0`, which is the
+    PINNED-WITHOUT-SIGNAL witness: `beta` sitting at 1 with a census of `0.0` is
+    a dial that was never exercised, and the card's word is "unused". `None` is
+    not summed as a zero by accident -- a missing gradient IS a zero
+    contribution to the integral, and the column's `grad` field is where the
+    `None` itself is recorded.
+
+    Mutates and returns `acc`, in `ceq/hf/train.py::_attach_row_l1_probe`'s own
+    idiom (a plain list the caller owns), so no buffer is added to the model and
+    no checkpoint or parameter count moves.
+    """
+    named = _beta_parameters(model)
+    if acc is None:
+        acc = []
+    if not acc:
+        acc.extend([0.0] * len(named))
+    for i, (_, b) in enumerate(named):
+        if b.grad is not None:
+            acc[i] += abs(float(b.grad))
+    return acc
+
+
+def _beta_parameters(model):
+    """`[(name, parameter)]` for every `smprime` `beta`, in layer order.
+
+    THE NAME IS THE PER-INSTANCE IDENTITY AND IT HAS NO HEAD AXIS. RULING 2a's
+    branch C asks WHERE the moved betas live, "which layers / heads". The answer
+    the arm can give is LAYERS: `ceq/arm_smprime.py` carries one scalar `beta`
+    per arm instance, shared across attention heads, so there is no per-head
+    beta to report and manufacturing one would be a construction the arm does
+    not have. The name is emitted rather than left implicit in the list position
+    so that a record consumer joins by name, and so that the absence of a head
+    index is visible in the artifact instead of only in prose.
+    """
+    layers = getattr(getattr(model, "model", model), "layers", [])
+    return [("model.layers.{}.self_attn.beta".format(i), b.self_attn.beta)
+            for i, b in enumerate(layers) if hasattr(b.self_attn, "beta")]
+
+
+def beta_summary(series, *, init: float = 1.0, census=None, delta_beta=None,
+                 k: float = 5.0) -> dict:
+    """Read a logged `beta_column` series back into the two quantities RULING 2
+    turns on, plus the final distribution the card must print.
+
+    `5*delta_beta` IS NO LONGER THE PIN CRITERION -- RULING 10' RETIRED IT AND
+    THIS FUNCTION'S `pinned` / `branch` / `pinned_fraction` ARE NOW A DIAGNOSTIC.
+    The criterion is `beta_lrt`'s likelihood ratio against `3.841` and `ln n`.
+    Why the old one went: it was defined off an identical-seed training pair, and
+    the re-take measured that pair BITWISE on the certified device, so
+    `delta_beta = 0`, the tolerance collapsed to exactly zero, and every run read
+    the "moved" branch for a reason about the optimizer rather than about
+    training (`n_degenerate_floor` below counts exactly that). RULING 10' does
+    not patch the floor: Wilks' randomness is over the DATA, so a training pair
+    is irrelevant to the test. `delta_beta` survives as the diagnostic it always
+    was, `scripts/k_noise_floor.py` keeps measuring it, and NOTHING here is
+    deleted -- a diagnostic that CONTRADICTS the LRT verdict is a finding, and it
+    cannot contradict anything if it stops being computed. `criterion` in the
+    returned dict says all of this to a consumer that never reads a docstring.
+
+    `mobile`      a gradient reached `beta` at every logged step. FALSE is a
+                  broken experiment: the run could not have moved `beta` no
+                  matter what the data said.
+    `moved`       `beta`'s value left `init` at some logged step.
+
+    THE FOUR CASES, AND WHY THE FINAL VALUE COLLAPSES THREE OF THEM:
+
+      mobile  moved   state          reading
+      False   False   immobile       beta COULD NOT move -- a bug, not a result
+      True    False   not_updated    beta had a live gradient and was never
+                                     stepped (out of the optimizer)
+      True    True    moved          beta moved; `final_displacement` says
+                                     whether it came back
+      False   True    moved          moved by something other than its gradient
+
+    All three of the first cases can end at exactly `init`, so `final` alone
+    reads the same for a frozen run and for the ruling's "beta pins at 1".
+
+    NO TOLERANCE IS INVENTED HERE and no verdict is issued. "Pins at 1" is the
+    author's reading of `final` and `final_displacement`, which are printed;
+    this function reports whether the run was capable of answering the question
+    at all. `max_displacement` is over the LOGGED steps only, so it is a lower
+    bound on the true excursion -- an excursion entirely between two log points
+    is not seen. Log every step if the excursion itself is the object.
+    """
+    cols = [c for c in series if c["beta"]]
+    if not cols:
+        return {"n_layers": 0, "n_logged": 0, "final": [], "state": "absent",
+                "branch": None}
+    grads = [g for c in cols for g in c["grad"] if g is not None]
+    n_missing = sum(1 for c in cols for g in c["grad"] if g is None)
+    max_abs_grad = max((abs(g) for g in grads), default=0.0)
+    max_disp = max(abs(b - init) for c in cols for b in c["beta"])
+    final = cols[-1]["beta"]
+    mobile = n_missing == 0 and max_abs_grad > 0.0
+    moved = max_disp > 0.0
+    out = {"name": cols[-1].get("name", [None] * len(final)),
+           "n_layers": len(final), "n_logged": len(cols), "init": init,
+           "final": final, "final_min": min(final),
+           "final_median": statistics.median(final), "final_max": max(final),
+           "displacement": [abs(b - init) for b in final],
+           "final_displacement": max(abs(b - init) for b in final),
+           "max_displacement": max_disp, "max_abs_grad": max_abs_grad,
+           "n_missing_grad": n_missing,
+           "requires_grad": all(r for c in cols for r in c["requires_grad"]),
+           "mobile": mobile, "moved": moved,
+           "state": "moved" if moved else
+                    ("not_updated" if mobile else "immobile")}
+    out.update(_pinning(final, init, census, delta_beta, k))
+    if out.get("pinned") is not None:
+        #: BRANCH C's whole content: which instances left the corner. By NAME,
+        #: because a flattened distribution cannot answer "where".
+        out["moved_names"] = [n for n, pin in zip(out["name"], out["pinned"])
+                              if not pin]
+    return out
+
+
+def _pinning(final, init, census, delta_beta, k) -> dict:
+    """THE `5*delta_beta` DIAGNOSTIC. **NOT the pin criterion any more.**
+
+    RULING 10' STRUCK IT AS THE CRITERION and replaced it with `beta_lrt`'s
+    likelihood ratio against `3.841` (chi-squared, 1 dof, 0.95) and `ln n`. What
+    this function computes is retained, unchanged, as a DIAGNOSTIC: it is read
+    for whether it CONTRADICTS the LRT verdict, never for the verdict itself.
+    `scripts/k_noise_floor.py` keeps measuring `delta_beta` and that is correct.
+
+    The retired rule, kept here because the numbers below still implement it:
+    `beta_i` was PINNED iff `|beta_i,final - 1| <= k * delta_beta_i`,
+    `delta_beta` the end-of-training spread of that same parameter across the
+    RULING 1 identical-seed pair, `k = 5` a HEURISTIC SCALE and not a CI.
+
+    THREE BRANCHES, not two: `>= 95 %` pinned is A, `<= 5 %` is B, anything else
+    is C and the card prints WHERE the moved betas live. `name` carries that
+    identity; there is no head axis to carry (see `_beta_parameters`).
+
+    THE CENSUS SETS THE CARD'S WORD, and it is set to the WEAKER one by default.
+    "Preferred" is a COMPARATIVE claim -- softmax was chosen over the
+    alternative -- so it needs the alternative to have been priced: every pinned
+    beta's integrated `|dL/dbeta|` at least the MEDIAN of the moved betas'. With
+    no moved beta there is no comparison group at all and the word stays
+    "unused", which is also branch A's own sentence, so this rule can never
+    upgrade a card sentence and can only refuse to.
+
+    THE DEGENERACY THAT KILLED IT, and it was measured rather than predicted. If
+    the identical-seed pair is bitwise on its path then `delta_beta_i = 0`, the
+    tolerance is `0`, and PINNED collapses to `beta_i` being EXACTLY 1.0 -- so
+    every beta reads NOT pinned and the run lands in branch B for a reason that
+    is about the pair's determinism and not about training. The re-take then
+    measured exactly that on the certified device. `n_degenerate_floor` counts
+    those entries and still does, because a diagnostic reading `B` at
+    `n_degenerate_floor > 0` is saying something about the pair, not the model.
+    """
+    criterion = ("DIAGNOSTIC ONLY. RULING 10' retired 5*delta_beta as the pin "
+                 "criterion; the criterion is beta_lrt's Lambda against 3.841 "
+                 "(chi2_1 at 0.95) and ln n. delta_beta survives as the "
+                 "diagnostic it always was (scripts/k_noise_floor.py).")
+    if census is not None:
+        signal = [c > 0.0 for c in census]
+    if delta_beta is None:
+        out = {"criterion": criterion, "pinned": None, "branch": None,
+               "branch_reason": "delta_beta not supplied; the retired RULING 2a "
+                                "diagnostic needs the identical-seed pair's "
+                                "per-parameter spread "
+                                "(scripts/k_noise_floor.py). The VERDICT does "
+                                "not wait on it -- see beta_lrt (RULING 10')."}
+        if census is not None:
+            out.update({"census": list(census), "signal": signal})
+        return out
+    pinned = [abs(b - init) <= k * d for b, d in zip(final, delta_beta)]
+    frac = sum(pinned) / len(pinned)
+    out = {"criterion": criterion,
+           "delta_beta": list(delta_beta), "k": k, "pinned": pinned,
+           "pinned_fraction": frac,
+           "n_degenerate_floor": sum(1 for d in delta_beta if d == 0.0),
+           "branch": "A" if frac >= 0.95 else ("B" if frac <= 0.05 else "C")}
+    if census is not None:
+        movedc = [c for c, pin in zip(census, pinned) if not pin]
+        pinnedc = [c for c, pin in zip(census, pinned) if pin]
+        bar = statistics.median(movedc) if movedc else None
+        out.update({"census": list(census), "signal": signal,
+                    "census_median_pinned":
+                        statistics.median(pinnedc) if pinnedc else None,
+                    "census_median_moved": bar,
+                    "word": "preferred" if (bar is not None and pinnedc
+                                            and all(c >= bar for c in pinnedc))
+                            else "unused"})
+    return out
+
+
+@torch.no_grad()
+def beta_substitution(model, **forward_kwargs) -> dict:
+    """Forward the model twice -- at its trained `beta` and with `beta` set to
+    1.0 in every layer -- and return the two losses and `|delta|`.
+
+    WHY THIS AND NOT A THRESHOLD ON `beta` ITSELF. RULING 2 branches on "beta
+    pins at 1" and RULING 1 fixes the only scale this round has measured: the
+    training noise floor, `|delta|` in FINAL LOSS over two identical-seed
+    chunks. That floor is a loss-space quantity and `beta` is a dimensionless
+    exponent, so it cannot be carried into `beta`'s units -- the conversion
+    factor is `dL/dbeta`, which is small exactly where the question is asked and
+    makes the tolerance diverge. This function moves the PARAMETER into LOSS
+    SPACE instead, which is the direction that works: it asks what the card's
+    sentence actually claims -- that substituting the softmax corner for the
+    trained model changes nothing anyone in this round can measure.
+
+    FORWARD-ONLY, so RULING 1's bitwise regime applies and `delta` is exact
+    rather than floor-limited. `beta` is restored on every path.
+
+    L-LEAN: this reports one difference of two losses on whatever batch the
+    caller passes. It is not an evaluation, not a cell and not a verdict.
+    """
+    layers = getattr(getattr(model, "model", model), "layers", [])
+    attn = [b.self_attn for b in layers if hasattr(b.self_attn, "beta")]
+    if not attn:
+        return {"beta": [], "delta": None}
+    was = [a.beta.detach().clone() for a in attn]
+    try:
+        trained = float(model(**forward_kwargs).loss)
+        for a in attn:
+            a.beta.fill_(1.0)
+        at_one = float(model(**forward_kwargs).loss)
+    finally:
+        for a, w in zip(attn, was):
+            a.beta.copy_(w)
+    return {"beta": [float(w) for w in was], "loss_trained": trained,
+            "loss_at_beta_one": at_one, "delta": abs(trained - at_one)}
+
+
+# ------------------------------ RULING 10': "PINNED" BY LIKELIHOOD RATIO
+
+#: chi-squared at 1 dof, 0.95 -- Wilks'. RULING 10' NAMES this constant and this
+#: module does not choose it. `3.841`, `ln n` and the `2` in `Lambda` were on the
+#: shelf; the ruling forbids inventing a fourth constant, a `k`, or an
+#: interpolation between the first two, and `_lrt_verdict` below has none.
+CHI2_1_AT_95 = 3.841
+
+
+def _lrt_verdict(lam: float, ln_n: float) -> str:
+    """RULING 10's three-way table, and nothing between its two constants.
+
+        Lambda <= 3.841          PINNED
+        Lambda >  ln n           MOVED
+        otherwise                the interval verdict, verbatim
+
+    A NEGATIVE `Lambda` READS PINNED, and that is correct rather than a guard:
+    `Lambda < 0` means `beta_final` fits the HELD-OUT split WORSE than
+    `beta == 1`, which is no evidence at all against `beta == 1`. It happens
+    whenever `beta_final` is not the eval split's own maximiser -- the normal
+    case, since it was fit on the training split. Wilks assumes the MLE; off it
+    the statistic is CONSERVATIVE, biased toward PINNED, so the direction of the
+    violation is the direction that claims less.
+
+    THE INTERVAL IS EMPTY FOR `n <= 46`, because `ln 46 < 3.841 < ln 47`. On a
+    small eval split every rejection is therefore a MOVED. That is a property of
+    the two shelf constants and not a rule chosen here; it is reported by
+    printing `ln n` beside every verdict rather than patched.
+    """
+    if lam <= CHI2_1_AT_95:
+        return "PINNED"
+    if lam > ln_n:
+        return "MOVED"
+    return "rejected at 0.95, below description-length"
+
+
+def beta_lrt(model, **forward_kwargs) -> dict:
+    """RULING 10': `Lambda = 2*[LL_eval(beta_final) - LL_eval(beta == 1)]`.
+
+    TWO DETERMINISTIC FORWARD PASSES ON THE HELD-OUT SPLIT. No training, no
+    identical-seed pair, no floor. RULING 2a's `5*delta_beta` is retired as the
+    criterion because it broke on measurement -- the re-take read the pair
+    BITWISE on the certified device, so its tolerance collapsed to exactly zero
+    and every run took the "moved" branch for a reason about the optimizer.
+    RULING 10' does not patch that: Wilks' randomness is over the DATA, so a
+    bitwise training pair is IRRELEVANT to this test. `delta_beta` survives as
+    the diagnostic it always was, in `beta_summary`.
+
+    `LL = -n * loss`, because `CEQForCausalLM.forward` returns a MEAN
+    cross-entropy and `n` is the number of scored targets. `n` is READ OFF
+    `labels` -- `(labels[:, 1:] != -100).sum()`, matching the forward's own
+    shift and `F.cross_entropy`'s default `ignore_index` -- and never inferred
+    from a shape, because `n` sets `ln n` AND the power line and a guessed `n`
+    is an invented tolerance wearing arithmetic's hat.
+
+    THE SECOND PASS SETS EVERY `beta` TO EXACTLY `1.0` AND RESTORES. The restore
+    is in a `finally` and copies back a pre-call clone, so the model is
+    bit-identical afterwards under `torch.equal`; `.grad` is not touched
+    (`torch.autograd.grad` does not accumulate into it), which matters because
+    `.grad` is `beta_census`'s input and the census is what RULING 10' leaves
+    standing as the scientific payload. `model.training` is saved and restored
+    around an `eval()`.
+
+    THE HESSIAN-DIAGONAL METHOD, STATED. `I_beta` is the OBSERVED Fisher
+    information, taken by exact double backward: one `torch.autograd.grad(loss,
+    betas, create_graph=True)`, then one `torch.autograd.grad(g_i, beta_i)` per
+    parameter. That is the `i`-th diagonal entry of the Hessian of the mean loss
+    and no off-diagonal term is formed or needed. Since `LL = -n*loss`,
+
+        I_beta_total   = -d2 LL / dbeta2  =  n * d2 loss / dbeta2
+        I_beta_per_obs = I_beta_total / n =      d2 loss / dbeta2
+
+    Both are emitted BY NAME because the ruling's two formulas use different
+    ones: the Wald form `(beta-1)^2 * I_beta` needs the TOTAL, and the power line
+    `sqrt(3.841 / (n * I_beta))` needs the PER-OBSERVATION. They are the same
+    number divided by `n`, and confusing them is a factor of `n`.
+
+    A NON-POSITIVE `I_beta` IS REPORTED, NEVER CLAMPED. Observed information is
+    only guaranteed non-negative AT an MLE, and `beta_final` is not one; an
+    untrained model at `beta == 1` measures it negative on this box. Where it is
+    non-positive, `wald` and `beta_min_detectable` are `None` and `note` says
+    why. An `abs()` there would manufacture a resolution out of a curvature
+    pointing the other way.
+
+    THIS CALL IS NOT EXECUTABLE UNDER STRICT DETERMINISM ON CUDA, AND THE SPLIT
+    RUNS EXACTLY WHERE RULING 1 SAYS THE HOLE IS. The two `Lambda` passes are
+    FORWARD-ONLY and are fine: measured on the certified 4060, the forward runs
+    under `use_deterministic_algorithms(True)` and repeats BITWISE. The
+    Hessian-diagonal read takes a BACKWARD (twice), autograd differentiates
+    `cumprod` with `cumsum`, and `cumsum_cuda_kernel` has no deterministic
+    implementation -- so under strict mode this function RAISES, and under the
+    round's `warn_only=True` regime it warns and proceeds. Consequence, flagged
+    rather than worked around: `Lambda` and its verdict sit inside RULING 1's
+    B2 regime, but `wald` and `beta_min_detectable` do NOT, and RULING 10' calls
+    a verdict printed without its resolution a defect -- so a `Lambda` cell
+    cannot be a B2 strict cell. That is a question for the deciding-cell list
+    RULING 6f freezes, not something this function decides by catching the
+    error. `V17_R10P_LRT.md` section 6.
+
+    DOF, WHICH THE RULING'S TWO SENTENCES DO NOT AGREE ON, so both are emitted.
+    `Lambda` is written over `beta == 1` -- every one of them -- and called a
+    1-dof comparison. With one `beta` per LAYER those coincide only at
+    `n_layers == 1`. `lambda_joint` carries `dof_joint = n_beta`; the
+    `per_parameter` rows each hold ONE `beta` out at a time and are the 1-dof
+    statistics `3.841` actually licenses, which is also the per-parameter
+    reporting RULING 10' leaves standing. Nothing here picks a constant for
+    `dof > 1`; the dof is printed instead.
+    """
+    named = _beta_parameters(model)
+    labels = forward_kwargs.get("labels")
+    if labels is None:
+        raise ValueError(
+            "beta_lrt needs `labels`: n is the eval count, and it sets both "
+            "`ln n` and the power line. Inferring it from a shape would be an "
+            "invented tolerance (RULING 10').")
+    n = int((labels[:, 1:] != -100).sum())
+    ln_n = math.log(n) if n > 0 else float("-inf")
+    head = {"n_eval": n, "ln_n": ln_n, "chi2_1_at_95": CHI2_1_AT_95,
+            "n_beta": len(named), "dof_joint": len(named)}
+    if not named:
+        return dict(head, ll_final=None, ll_beta_one=None, lambda_joint=None,
+                    verdict_joint=None, per_parameter=[])
+
+    betas = [b for _, b in named]
+    was = [b.detach().clone() for b in betas]
+    was_training = model.training
+    model.eval()
+    try:
+        with torch.no_grad():
+            ll_final = -n * float(model(**forward_kwargs).loss)
+            for b in betas:
+                b.fill_(1.0)
+            ll_joint = -n * float(model(**forward_kwargs).loss)
+            ll_one = []
+            for i in range(len(betas)):
+                #: ONE beta out at a time: the genuinely 1-dof comparison.
+                for j, (bj, wj) in enumerate(zip(betas, was)):
+                    if j == i:
+                        bj.fill_(1.0)
+                    else:
+                        bj.copy_(wj)
+                ll_one.append(-n * float(model(**forward_kwargs).loss))
+            for b, w in zip(betas, was):
+                b.copy_(w)
+        #: the Hessian-diagonal read, exact double backward
+        loss = model(**forward_kwargs).loss
+        g1 = torch.autograd.grad(loss, betas, create_graph=True)
+        hess = [float(torch.autograd.grad(g1[i], b, retain_graph=True)[0])
+                for i, b in enumerate(betas)]
+    finally:
+        with torch.no_grad():
+            for b, w in zip(betas, was):
+                b.copy_(w)
+        model.train(was_training)
+
+    rows = []
+    for i, (name, _) in enumerate(named):
+        lam = 2.0 * (ll_final - ll_one[i])
+        i_total = n * hess[i]
+        d = float(was[i]) - 1.0
+        row = {"name": name, "beta_final": float(was[i]), "lambda": lam,
+               "verdict": _lrt_verdict(lam, ln_n),
+               "lrt_rejects_at_95": lam > CHI2_1_AT_95,
+               "I_beta_per_obs": hess[i], "I_beta_total": i_total,
+               "wald": None, "wald_rejects_at_95": None, "wald_agrees": None,
+               "wald_rel_gap": None, "beta_min_detectable": None, "note": None}
+        if i_total > 0.0:
+            wald = d * d * i_total
+            scale = max(abs(wald), abs(lam), 1e-300)
+            row.update(wald=wald, wald_rejects_at_95=wald > CHI2_1_AT_95,
+                       wald_agrees=(wald > CHI2_1_AT_95) == (lam > CHI2_1_AT_95),
+                       wald_rel_gap=abs(wald - lam) / scale,
+                       beta_min_detectable=math.sqrt(CHI2_1_AT_95 / i_total))
+        else:
+            row["note"] = (
+                "observed information is {:.6g} <= 0, so the Wald form and the "
+                "power line do not exist here: beta_final is not a maximiser of "
+                "the eval log-likelihood along beta. Reported, not clamped."
+                .format(i_total))
+        rows.append(row)
+
+    lam_joint = 2.0 * (ll_final - ll_joint)
+    return dict(head, ll_final=ll_final, ll_beta_one=ll_joint,
+                lambda_joint=lam_joint,
+                verdict_joint=_lrt_verdict(lam_joint, ln_n),
+                per_parameter=rows)
+
+
+def lrt_report(res: dict) -> str:
+    """RULING 10' printed, with BOTH constants and the resolution on every line.
+
+    "Print both constants alongside the verdict always", and "a verdict printed
+    without its minimum detectable departure is a defect" -- so the FORMATTER,
+    not the caller's discipline, is what makes the defect unreachable. Where the
+    resolution does not exist the field is still printed, as `undefined`, with
+    the reason on its own line.
+    """
+    n, ln_n = res["n_eval"], res["ln_n"]
+    both = "3.841 / ln n = {:.4f}".format(ln_n)
+    out = ["RULING 10' LRT -- n_eval = {}, chi2_1(0.95) = {}, ln n = {:.4f}, "
+           "n_beta = {}".format(n, CHI2_1_AT_95, ln_n, res["n_beta"])]
+    if not res["per_parameter"]:
+        out.append("  no beta on this operator: no verdict "
+                   "(absence is not 'pinned')")
+        return "\n".join(out)
+    out.append("  JOINT  Lambda = {:+.4f}  [{}]  {}   dof = {}{}".format(
+        res["lambda_joint"], both, res["verdict_joint"], res["dof_joint"],
+        "" if res["dof_joint"] == 1 else
+        "  <- 3.841 is the 1-dof constant; the per-parameter rows below are the "
+        "1-dof statistics"))
+    for r in res["per_parameter"]:
+        resolution = ("undefined" if r["beta_min_detectable"] is None
+                      else "{:.6f}".format(r["beta_min_detectable"]))
+        wald = ("undefined" if r["wald"] is None
+                else "{:+.4f} ({})".format(
+                    r["wald"], "agrees" if r["wald_agrees"] else "DISAGREES"))
+        out.append(
+            "  {}  beta={:.6f}  Lambda={:+.4f}  [{}]  {}  |beta-1|_min={}  "
+            "Wald={}  I_beta_total={:.6g}".format(
+                r["name"], r["beta_final"], r["lambda"], both, r["verdict"],
+                resolution, wald, r["I_beta_total"]))
+        if r["note"]:
+            out.append("      note: {}".format(r["note"]))
+    out.append("  PINNED means indistinguishable AT THIS RESOLUTION, never "
+               "exact: |beta-1|_min = sqrt(3.841 / (n * I_beta)).")
+    return "\n".join(out)
 
 
 CEQForCausalLM.register_for_auto_class("AutoModelForCausalLM")

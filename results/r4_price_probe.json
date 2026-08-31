@@ -1,0 +1,345 @@
+{
+  "schema": "r4_price_probe/1",
+  "what_this_is": "PRICING PROBE ONLY. Nothing here is a research reading. No record was written into results/v15_r1.jsonl: the instrument's ROOT was redirected to a scratch directory for all three probe runs, the convention V16_BAR_RECERT.md used for the same reason.",
+  "when": "2026-08-31 23:01:13",
+  "git": {
+    "head_at_start": "ab5b48547884e04258276e6e808d5a71ea65f917",
+    "head_at_end": "ab5b48547884e04258276e6e808d5a71ea65f917",
+    "porcelain_at_end": " M MODEL_CARD.md\n M ceq/arm_smprime.py\n M ceq/hf/configuration_ceq.py\n M ceq/hf/modeling_ceq.py\n M ceq/hf/train.py\n M house-events.jsonl\n M scale/identity_manifest.py\n M scripts/v15_r1.py\n?? COSTS.md\n?? V17K_RULINGS.md\n?? V17_ARM_WIRING.md\n?? V17_G01_IDENTITY.md\n?? V17_G02_G03_CHECKPOINT.md\n?? V17_G04_ENV.md\n?? V17_G05_DATA.md\n?? V17_G06_G07_CERT_COST.md\n?? V17_G08_G09_AUTOPILOT.md\n?? V17_GPU_QUEUE.md\n?? V17_LABEL_CELL_REPAIR.md\n?? V17_NOTEBOOK.md\n?? V17_R1_R3_R7_EDITS.md\n?? V17_R5_INSTRUMENT.md\n?? V17_R6_ENVELOPE.md\n?? ceq/autopilot.py\n?? ceq/kdata.py\n?? kaggle/\n?? requirements-kaggle.txt\n?? results/k_cert_local.json\n?? results/k_data_manifest.json\n?? scripts/k_cert.py\n?? scripts/k_cost.py\n?? scripts/k_noise_floor.py\n?? tests/gate0/\n"
+  },
+  "instrument": {
+    "path": "scripts/v15_r1.py",
+    "state": "WORKING TREE (M) -- the RULING 5 instrument-manifest edit is already landed by another node and was timed as it stands, not at HEAD",
+    "instrument_hash": "77429cdbb37dc0f3a6c5ca59910a6842063e9c721831d6fbc2665fcd26535498",
+    "sets_use_deterministic_algorithms": false
+  },
+  "box": {
+    "device_name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+    "torch": "2.5.1+cu121",
+    "total_vram_bytes": 8585216000,
+    "threads": 8
+  },
+  "regime": {
+    "timing_ran_under": "use_deterministic_algorithms OFF -- the instrument does not set the flag and its t=header record reads deterministic_algorithms=false",
+    "strict_forward": "OK",
+    "strict_backward": "RuntimeError: cumsum_cuda_kernel does not have a deterministic implementation",
+    "measured_here": true,
+    "cublas_workspace_config_note": "CUBLAS_WORKSPACE_CONFIG=:4096:8 must be set in the ENVIRONMENT before the process starts. Set after CUDA init it does not take, and strict mode then fails the FORWARD too (measured here, both ways).",
+    "consequence": "an R1/R1' cell takes 150 gradient steps, so it is NOT forward-only and cannot run under RULING 1 B2's strict regime at all. The re-take runs with the flag OFF as the instrument stands, or warn_only=True if a caller sets it."
+  },
+  "measured_cells": {
+    "runA_one_cell_end_to_end": {
+      "cell": "arm_smprime:t2:n2048:seed0",
+      "device": "cuda",
+      "process_wall_s": 20.021,
+      "instrument_import_and_manifest_s": 2.102,
+      "train_loop_secs": 14.39,
+      "eval_nrmse": 0.9260818361710341,
+      "note": "aggregation raises at N=1 (statistics.stdev needs 2 points); the cell itself completed and was journalled before that point"
+    },
+    "runB_six_cells": {
+      "device": "cuda",
+      "wall_s": 41.84214901924133,
+      "process_wall_s": 44.533,
+      "peak_cuda_max_memory_allocated_gib": 0.9223513603210449,
+      "peak_process_working_set_gib": 1.3566970825195312,
+      "secs_per_150_steps_by_arm": {
+        "arm_smprime": 15.969999999999999,
+        "arm_pl": 1.6135000000000002,
+        "softmax": 1.4965000000000002
+      },
+      "per_cell_secs": {
+        "arm_pl:0": 1.622,
+        "arm_pl:1": 1.605,
+        "arm_smprime:0": 17.839,
+        "arm_smprime:1": 14.101,
+        "softmax:0": 1.496,
+        "softmax:1": 1.497
+      }
+    },
+    "runC_two_cells_cpu": {
+      "device": "cpu",
+      "wall_s": 276.10232281684875,
+      "peak_process_working_set_gib": 1.6251983642578125,
+      "secs_per_150_steps_by_arm": {
+        "arm_smprime": 135.4965
+      },
+      "per_cell_secs": {
+        "arm_smprime:0": 136.638,
+        "arm_smprime:1": 134.355
+      }
+    }
+  },
+  "throughput_law_crosscheck": {
+    "source": "results/k_cert_local.json throughput.laws (COSTS.md section 1.1)",
+    "law_regime": "s=64, d_model=16, forward+backward+Adam.step -- the same regime and the same shape as an R1 cell, so the law is directly comparable",
+    "per_cell_150_steps": {
+      "arm_smprime": {
+        "law_s": 13.959848581549231,
+        "law_r2": 0.9999998720186614,
+        "measured_s_mean_of_2": 15.969999999999999,
+        "measured_s_observed": [
+          14.39,
+          17.839,
+          14.101
+        ],
+        "ratio_measured_over_law": 1.1439952164744531
+      },
+      "softmax": {
+        "law_s": 1.5242678305295505,
+        "law_r2": 0.9999975361960808,
+        "measured_s_mean_of_2": 1.4965000000000002,
+        "ratio_measured_over_law": 0.9817828402768932
+      },
+      "arm_pl": {
+        "law_s": null,
+        "why": "the certificate fitted softmax and arm_smprime only; arm_pl has no law",
+        "measured_s_mean_of_2": 1.6135000000000002
+      }
+    }
+  },
+  "projection_24_cells_150_steps": {
+    "cells": "8 seeds x {arm_pl, arm_smprime, softmax} = 24, one invocation",
+    "fixed_overhead_s": 4.0,
+    "instrument_import_s": 2.1,
+    "measured_driven_total_s": 158.74,
+    "measured_driven_total_gpu_min": 2.6456666666666666,
+    "law_crosscheck_total_s": 142.88093129663025,
+    "law_crosscheck_total_gpu_min": 2.3813488549438375,
+    "disagreement_pct": 11.099499813901193,
+    "per_seed_gpu_s": 19.080000000000002,
+    "author_estimate_gpu_h": 2.0,
+    "measured_over_author_estimate": 0.022047222222222225
+  },
+  "projection_9600_step_ladder_24_cells": {
+    "measured_scaled_gpu_h": 2.7136000000000005,
+    "law_scaled_gpu_h": 2.4316610008289823,
+    "note": "a 9600-step cell is not the same cell as the 150-step cell in the journal and cannot be diffed against it. This row prices the OTHER ladder; it does not price the re-take."
+  },
+  "cpu_vs_cuda_delta": {
+    "note": "RULING 4 refused WIDENING a tolerance to absorb an UNMEASURED delta. This measures the delta. No tolerance is changed by this file.",
+    "pairs": {
+      "arm_pl:0": {
+        "cpu_source": "results/v15_r1.jsonl -- the superseded journal record itself (device:cpu)",
+        "cuda_source": "probe runB",
+        "fields": {
+          "eval_nrmse": {
+            "cpu": 0.6456144346724637,
+            "cuda": 0.6446726192039927,
+            "abs_delta": 0.0009418154684710522
+          },
+          "train_nrmse": {
+            "cpu": 0.5056581317131843,
+            "cuda": 0.5048031396566239,
+            "abs_delta": 0.0008549920565603664
+          },
+          "eval_h_hat": {
+            "cpu": 1.1663640034851102,
+            "cuda": 1.1687944280973277,
+            "abs_delta": 0.002430424612217541
+          },
+          "conservation_drift": {
+            "cpu": 3.5762786865234375e-07,
+            "cuda": 2.384185791015625e-07,
+            "abs_delta": 1.1920928955078125e-07
+          },
+          "a_hat_max": {
+            "cpu": 1.4107265932952324,
+            "cuda": 1.4104527235031128,
+            "abs_delta": 0.0002738697921196298
+          },
+          "dist_to_floor": {
+            "cpu": -0.06149234651408386,
+            "cuda": -0.062434161982554914,
+            "abs_delta": 0.0009418154684710522
+          }
+        }
+      },
+      "arm_pl:1": {
+        "cpu_source": "results/v15_r1.jsonl -- the superseded journal record itself (device:cpu)",
+        "cuda_source": "probe runB",
+        "fields": {
+          "eval_nrmse": {
+            "cpu": 0.6444541428485409,
+            "cuda": 0.6445174549187496,
+            "abs_delta": 6.331207020870977e-05
+          },
+          "train_nrmse": {
+            "cpu": 0.5093975274448448,
+            "cuda": 0.5092992305094624,
+            "abs_delta": 9.829693538243589e-05
+          },
+          "eval_h_hat": {
+            "cpu": 1.169357715530705,
+            "cuda": 1.1691945006101152,
+            "abs_delta": 0.00016321492058990472
+          },
+          "conservation_drift": {
+            "cpu": 4.172325134277344e-07,
+            "cuda": 2.384185791015625e-07,
+            "abs_delta": 1.7881393432617188e-07
+          },
+          "a_hat_max": {
+            "cpu": 1.2867535290974197,
+            "cuda": 1.2868505716323853,
+            "abs_delta": 9.704253496556348e-05
+          },
+          "dist_to_floor": {
+            "cpu": -0.06265263833800672,
+            "cuda": -0.062589326267798,
+            "abs_delta": 6.331207020870977e-05
+          }
+        }
+      },
+      "softmax:0": {
+        "cpu_source": "results/v15_r1.jsonl -- the superseded journal record itself (device:cpu)",
+        "cuda_source": "probe runB",
+        "fields": {
+          "eval_nrmse": {
+            "cpu": 0.971432426855954,
+            "cuda": 0.9734002295313872,
+            "abs_delta": 0.0019678026754331723
+          },
+          "train_nrmse": {
+            "cpu": 0.7694675684213573,
+            "cuda": 0.7715027865677551,
+            "abs_delta": 0.0020352181463977326
+          },
+          "eval_h_hat": {
+            "cpu": 0.11263808010550314,
+            "cuda": 0.10498398629648564,
+            "abs_delta": 0.007654093809017493
+          },
+          "conservation_drift": {
+            "cpu": 1.0,
+            "cuda": 1.0,
+            "abs_delta": 0.0
+          },
+          "a_hat_max": {
+            "cpu": 1.0,
+            "cuda": 1.0,
+            "abs_delta": 0.0
+          },
+          "dist_to_floor": {
+            "cpu": 0.2643256456694064,
+            "cuda": 0.2662934483448396,
+            "abs_delta": 0.0019678026754331723
+          }
+        }
+      },
+      "softmax:1": {
+        "cpu_source": "results/v15_r1.jsonl -- the superseded journal record itself (device:cpu)",
+        "cuda_source": "probe runB",
+        "fields": {
+          "eval_nrmse": {
+            "cpu": 0.9338021926992646,
+            "cuda": 0.9387956332491751,
+            "abs_delta": 0.004993440549910577
+          },
+          "train_nrmse": {
+            "cpu": 0.8194784015675766,
+            "cuda": 0.8229660278982873,
+            "abs_delta": 0.003487626330710758
+          },
+          "eval_h_hat": {
+            "cpu": 0.25602692982009123,
+            "cuda": 0.23732551798456059,
+            "abs_delta": 0.018701411835530646
+          },
+          "conservation_drift": {
+            "cpu": 1.0,
+            "cuda": 1.0,
+            "abs_delta": 0.0
+          },
+          "a_hat_max": {
+            "cpu": 1.0,
+            "cuda": 1.0,
+            "abs_delta": 0.0
+          },
+          "dist_to_floor": {
+            "cpu": 0.226695411512717,
+            "cuda": 0.23168885206262757,
+            "abs_delta": 0.004993440549910577
+          }
+        }
+      },
+      "arm_smprime:0": {
+        "cpu_source": "probe runC (no CPU journal record exists for this arm)",
+        "cuda_source": "probe runB",
+        "fields": {
+          "eval_nrmse": {
+            "cpu": 0.9261164530172925,
+            "cuda": 0.9260818361710341,
+            "abs_delta": 3.4616846258384015e-05
+          },
+          "train_nrmse": {
+            "cpu": 0.6731894251208965,
+            "cuda": 0.6732899706886399,
+            "abs_delta": 0.00010054556774341528
+          },
+          "eval_h_hat": {
+            "cpu": 0.28461663090133804,
+            "cuda": 0.2847448654281719,
+            "abs_delta": 0.00012823452683385916
+          },
+          "conservation_drift": {
+            "cpu": 2.047200918197632,
+            "cuda": 2.0495996475219727,
+            "abs_delta": 0.0023987293243408203
+          },
+          "a_hat_max": {
+            "cpu": 1.0,
+            "cuda": 1.0,
+            "abs_delta": 0.0
+          },
+          "dist_to_floor": {
+            "cpu": 0.21900967183074493,
+            "cuda": 0.21897505498448655,
+            "abs_delta": 3.4616846258384015e-05
+          }
+        }
+      },
+      "arm_smprime:1": {
+        "cpu_source": "probe runC (no CPU journal record exists for this arm)",
+        "cuda_source": "probe runB",
+        "fields": {
+          "eval_nrmse": {
+            "cpu": 0.8812468318716505,
+            "cuda": 0.8812466551692475,
+            "abs_delta": 1.7670240304301643e-07
+          },
+          "train_nrmse": {
+            "cpu": 0.6953142233878281,
+            "cuda": 0.6953146063629011,
+            "abs_delta": 3.829750729877901e-07
+          },
+          "eval_h_hat": {
+            "cpu": 0.44680804263235774,
+            "cuda": 0.4468086655060268,
+            "abs_delta": 6.228736690871983e-07
+          },
+          "conservation_drift": {
+            "cpu": 1.0676608085632324,
+            "cuda": 1.0676606893539429,
+            "abs_delta": 1.1920928955078125e-07
+          },
+          "a_hat_max": {
+            "cpu": 1.0,
+            "cuda": 1.0,
+            "abs_delta": 0.0
+          },
+          "dist_to_floor": {
+            "cpu": 0.17414005068510297,
+            "cuda": 0.17413987398269992,
+            "abs_delta": 1.7670240304301643e-07
+          }
+        }
+      }
+    },
+    "worst_abs_delta_eval_nrmse": 0.004993440549910577,
+    "worst_pair": "softmax:1",
+    "arm_smprime_worst_abs_delta_eval_nrmse": 3.4616846258384015e-05,
+    "reference_M10_thread_count_effect_on_eval_nrmse": 0.002345,
+    "reference_R1_contrast_resolution_delta": 0.21532587429202768
+  }
+}

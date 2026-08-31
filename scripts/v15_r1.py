@@ -75,21 +75,35 @@ Three things had to follow the factory rather than be assumed by it:
      ordering, and a column read once after training cannot check one. The
      `t="trace"` record carries both series per seed from step 0.
 
-WHAT A CUDA RUN OF THIS FILE STILL DOES NOT CARRY, stated here because the
-header journals it rather than because it is settled: `use_deterministic_
-algorithms` is NOT set by this file and never was. `scale/r10_capacity_sweep.py`
-sets it unconditionally on its cuda path, and that is the regime
-`V16_BAR_RECERT.md` 4 certified the bar under. The flag is read and journalled
-below so a reading says which regime produced it; it is not set here, because
-setting it would make ARM PL's own `scan` raise (`cumsum_cuda_kernel` has no
-deterministic implementation in torch 2.5.1) and this node may not decide that
-trade. See `V16_R1_DEVICE_READY.md`.
+THE DETERMINISM REGIME IS RULING 1's, AND IT IS SET HERE. `main` calls
+`torch.use_deterministic_algorithms(True, warn_only=True)` before the first
+tensor is constructed, and the header record journals the flag, the `warn_only`
+setting and the inherited `CUBLAS_WORKSPACE_CONFIG`. Until v17-K this file set
+NO flag at all -- neither of the two regimes `V17K_RULINGS.md` RULING 1
+describes -- and journalled `deterministic_algorithms: false`; the paragraph
+that stood here said so and declined to decide the trade.
+
+RULING 1 decides it. STRICT mode (`warn_only=False`) is NOT EXECUTABLE on a
+cell this file takes: the cell trains for `--steps` gradient steps and the
+backward of `cumprod` reaches `cumsum_cuda_kernel`, which has no deterministic
+implementation in torch 2.5.1 (`COSTS.md` 1.6; `V17_R4_RETAKE_PRICE.md` 2.1
+measures the raise on this box). `warn_only=True` warns there instead of
+raising, which is exactly why the ruling ledger's A1.2 holds training to a
+MEASURED FLOOR and not to bitwise -- so this file's cells are floor cells, and
+the flag they run under is the run's flag rather than a second regime nobody
+declared. `CUBLAS_WORKSPACE_CONFIG` must be EXPORTED BEFORE THE PROCESS STARTS:
+set from inside Python after CUDA is initialised it does not take, and strict
+mode then fails the FORWARD as well (`V17_R4_RETAKE_PRICE.md` 2.1). This file
+therefore READS it and journals it rather than setting it, so a run launched
+without it is legible in its own header instead of silently mis-described. See
+`V16_R1_DEVICE_READY.md`, `V17_R4_RETAKE.md`.
 """
 from __future__ import annotations
 
 import argparse
 import json
 import math
+import os
 import pathlib
 import statistics
 import sys
@@ -133,6 +147,31 @@ GATED_ARMS = ("arm_pl", "arm_smprime")
 #: The modules those two names resolve to, so a kind string is turned into a
 #: module exactly once instead of at every branch.
 ARM_MODULES = {"arm_pl": arm_pl, "arm_smprime": arm_smprime}
+
+#: V17K_RULINGS.md RULING 5 -- "Hash into the identity manifest ... Q1/Q2 cite
+#: it by hash." `identity_manifest.instrument_manifest` is NEW and ADDITIVE
+#: (`scale/identity_manifest.py`'s existing `_sha`/`_code_fingerprint` are
+#: reused, not reimplemented). Computed ONCE at import time, the same point
+#: `_power`'s cross-module import above resolves, so every record this run
+#: writes cites the same digest a caller could recompute later against this
+#: exact tree.
+#:
+#: `reaches` is every callable that participates in SCORING a cell: the
+#: batch/oracle/feature triple for the task this file runs, the two gated
+#: arms' forward and operator paths, the control arm, and the guard/bar
+#: functions between a draw and a verdict. NOT exhaustive -- see
+#: `instrument_manifest`'s own docstring for what a named reach set never
+#: claims to cover (a helper one of these calls, that nobody listed here).
+_hash_task = f"e3_t{T_STAR}"
+_hash_batch_fn, _hash_oracle_fn, _hash_feature_fn, _ = M3_TASKS[_hash_task]
+INSTRUMENT_REACHES = (
+    getattr(_hash_batch_fn, "func", _hash_batch_fn), _hash_oracle_fn, _hash_feature_fn,
+    arm_pl.ArmPL.forward, arm_pl.operator, arm_pl.readout,
+    arm_smprime.ArmSMPrime.forward, arm_smprime.operator, arm_smprime.readout,
+    Arm.forward, calibrate_bar, bar_verdict, refuse_cross_device_pool,
+    nrmse, bootstrap_ci,
+)
+INSTRUMENT_MANIFEST = identity_manifest.instrument_manifest(__file__, reaches=INSTRUMENT_REACHES)
 
 
 # ------------------------------------------------------------------ the arms
@@ -527,6 +566,13 @@ def main() -> int:
     #: really holding shut was the four `device="cpu"` literals below it, which
     #: blinded `refuse_cross_device_pool`; those are now `a.device`.
     dev = a.device
+    #: RULING 1's regime, SET rather than merely read. `warn_only=True` is the
+    #: whole run's flag; strict mode is not executable on a cell that trains
+    #: (`cumsum_cuda_kernel` in the backward of `cumprod`), so this is the only
+    #: one of the two ruled regimes an R1/R1' cell can be taken under. Set here
+    #: -- before the bind, the bar calibration, the eval draw or any cell -- so
+    #: one run is one regime instead of a flag that changes partway down.
+    torch.use_deterministic_algorithms(True, warn_only=True)
     torch.set_num_threads(a.threads)
 
     jl = ROOT / "results" / f"{a.tag}.jsonl"
@@ -542,19 +588,31 @@ def main() -> int:
     print(f"=== V15 R1  {task}  s={S} d={D} n_train={a.n_train} n_eval={a.n_eval} "
           f"steps={a.steps} seeds={a.seeds} arms={a.arms} ===")
     det = torch.are_deterministic_algorithms_enabled()
+    warn_only = torch.is_deterministic_algorithms_warn_only_enabled()
+    #: READ, not set: it only takes effect if it was exported before the process
+    #: started. A `None` here says the run inherited nothing and is a fact about
+    #: the reading, not a knob this file may turn.
+    cublas_cfg = os.environ.get("CUBLAS_WORKSPACE_CONFIG")
     print(f"  torch {torch.__version__}  torch.get_num_threads()={torch.get_num_threads()}  "
-          f"device={dev}  deterministic_algorithms={det}  floor_1={floor1:.10f}")
+          f"device={dev}  deterministic_algorithms={det} warn_only={warn_only}  "
+          f"CUBLAS_WORKSPACE_CONFIG={cublas_cfg!r}  floor_1={floor1:.10f}")
     #: F1 SITE 1 of 4 (header). `device="cpu"` was a literal here.
     #: `deterministic_algorithms` is journalled beside it because on cuda that
     #: flag names the reduction regime, and `V16_BAR_RECERT.md` 4 certified the
     #: bar with it ON while this file does not set it. A record that names the
     #: device but not the regime still under-describes the reading.
+    #: RULING 5's citation, on the header too: a reader with only the run's
+    #: console log or its header line (no cell reached yet) can already name
+    #: the instrument that will score every cell below it.
     emit(dict(t="header", tag=a.tag, task=task, t_star=T_STAR, s=S, d=D,
               n_train=a.n_train, n_eval=a.n_eval, steps=a.steps, seeds=a.seeds,
               arms=a.arms, lr=LR, d_model=D_MODEL, device=dev,
               deterministic_algorithms=bool(det),
+              deterministic_warn_only=bool(warn_only),
+              cublas_workspace_config=cublas_cfg,
               threads=torch.get_num_threads(), torch=torch.__version__,
-              floor_1=floor1, when=time.strftime("%Y-%m-%d %H:%M:%S")))
+              floor_1=floor1, instrument_hash=INSTRUMENT_MANIFEST["hash"],
+              when=time.strftime("%Y-%m-%d %H:%M:%S")))
 
     # ---------------------------------------------------- 1. BIND, THEN TRAIN
     print("\n=== 1. THE BIND, RE-MEASURED AT THIS CELL'S SHAPE (no gradient yet) ===")
@@ -754,10 +812,22 @@ def main() -> int:
             #: F1 SITE 2 of 4 (cell record). This is the row
             #: `refuse_cross_device_pool` actually reads; the literal here was
             #: the whole of the defect.
+            #:
+            #: RULING 5's citation, WIRED HERE rather than left for a future
+            #: run to remember: every `t="cell"` row this file ever writes now
+            #: names the instrument that produced it, by hash, alongside the
+            #: cell's OWN identity manifest below (`r["manifest"]`) -- the two
+            #: are different objects. `r["manifest"]` answers "what config,
+            #: code, shapes and rng produced THIS cell"; `instrument_hash`
+            #: answers "which build of the SCRIPT ran it", which
+            #: `identity_manifest.manifest`'s per-cell `code` component cannot
+            #: -- it fingerprints the callables named at that call site, not
+            #: the file that dispatches to them.
             r.update(task=task, t_star=T_STAR, n_train=a.n_train, n_eval=a.n_eval,
                      s=S, d=D, d_model=D_MODEL, device=dev,
                      threads=torch.get_num_threads(), torch_version=torch.__version__,
-                     cell=f"{kind}:t{T_STAR}:n{a.n_train}:seed{seed}", floor_1=floor1)
+                     cell=f"{kind}:t{T_STAR}:n{a.n_train}:seed{seed}", floor_1=floor1,
+                     instrument_hash=INSTRUMENT_MANIFEST["hash"])
 
             base = {k: r[k] for k in identity_manifest.CONFIG_FIELDS if k in r}
             #: F1 SITE 3 of 4 (identity manifest). `device` is a first-class

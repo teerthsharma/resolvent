@@ -31,13 +31,14 @@ import json
 import math
 import os
 import pathlib
+import shutil
 
 import torch
 import torch.nn.functional as F
 
 from .. import sizing
 from .configuration_ceq import CEQConfig
-from .modeling_ceq import CEQForCausalLM
+from .modeling_ceq import CEQForCausalLM, beta_column, beta_census
 
 #: A shape that fits the smallest Colab GPU. Byte-level vocabulary, so there is
 #: no tokenizer dependency and nothing about the comparison hides in a merge
@@ -137,32 +138,137 @@ def _attach_row_l1_probe(model, store):
     decides whether the operator has any negative entries at all -- see
     `COSTS["signedness"]`) and NOT a blow-up alarm. Left on for both, described
     correctly for both.
+
+    THE OWNING ATTENTION IS BOUND IN A CLOSURE, NOT STORED ON THE `qkv` MODULE.
+    It used to be `qkv._ceq_owner = self_attn`, and assigning an `nn.Module` to
+    an attribute of another `nn.Module` REGISTERS IT AS A SUBMODULE -- so `qkv`
+    contained `self_attn` which contained `qkv`, a cycle that sends
+    `Module.state_dict()` into unbounded recursion. It never fired because the
+    only `save_pretrained` happened after the post-loop `del`; the first
+    mid-loop checkpoint hit `RecursionError: maximum recursion depth exceeded`
+    inside `state_dict` immediately. A closure carries the same reference with
+    no registration, and the model tree is unchanged while the probe is on.
     """
-    def hook(mod, inputs, output):
-        attn = mod._ceq_owner
-        b, s, _ = output.shape
-        q, k, _ = output.chunk(3, dim=-1)
+    def make_hook(attn):
+        def hook(mod, inputs, output):
+            b, s, _ = output.shape
+            q, k, _ = output.chunk(3, dim=-1)
 
-        def shape(t):
-            return t.view(b, s, attn.n_heads, attn.d_head).transpose(1, 2)
+            def shape(t):
+                return t.view(b, s, attn.n_heads, attn.d_head).transpose(1, 2)
 
-        with torch.no_grad():
-            w = (shape(q) @ shape(k).transpose(-2, -1)) / math.sqrt(attn.d_head)
-            m = torch.ones(s, s, dtype=torch.bool, device=w.device).tril(-1)
-            l1 = w.masked_fill(~m, 0.0).abs().sum(-1)[..., 1:]   # row 0 is empty
-            store.append(float(l1.min()))
+            with torch.no_grad():
+                w = (shape(q) @ shape(k).transpose(-2, -1)) / math.sqrt(attn.d_head)
+                m = torch.ones(s, s, dtype=torch.bool, device=w.device).tril(-1)
+                l1 = w.masked_fill(~m, 0.0).abs().sum(-1)[..., 1:]  # row 0 is empty
+                store.append(float(l1.min()))
+        return hook
 
     handles = []
     for layer in model.model.layers:
-        layer.self_attn.qkv._ceq_owner = layer.self_attn
-        handles.append(layer.self_attn.qkv.register_forward_hook(hook))
+        handles.append(layer.self_attn.qkv.register_forward_hook(
+            make_hook(layer.self_attn)))
     return handles
 
 
 # --------------------------------------------------------------------- train
 
 #: Operator settings this function will FORWARD but never DEFAULT.
-_OPERATOR_KEYS = ("operator", "rho", "lam", "hops")
+_OPERATOR_KEYS = ("operator", "rho", "lam", "hops",
+                  "smp_beta", "smp_qk", "smp_g")
+
+
+def _atomic_torch_save(obj, path):
+    """`torch.save` that a kill cannot leave half-written.
+
+    `torch.save(obj, path)` TRUNCATES `path` and then streams into it. A session
+    cap landing between the truncate and the last byte leaves a
+    `trainer_state.pt` that exists, is the newest file in its directory, and
+    does not load -- measured at 57,636 bytes of a 115,272-byte state by
+    `tests/gate0/test_g03_persist.py`. Present-but-unloadable is strictly worse
+    than absent, because absent is a loud `FileNotFoundError` while present is a
+    directory that looks resumable.
+
+    The temp file is a SIBLING of the target, not in the system temp directory,
+    because `os.replace` is only atomic within one filesystem. `fsync` before
+    the rename so the rename cannot be ordered ahead of the data.
+
+    ponytail: the containing directory is not fsynced after the rename -- there
+    is no portable way to do that on Windows, where this is developed. On a
+    power cut the rename itself could be lost and the PREVIOUS checkpoint
+    directory is then the last good one, which is what the rotation policy
+    already assumes. Add a directory fsync in the POSIX branch if a
+    non-graceful host reboot ever turns up as a real loss mode on Kaggle.
+    """
+    tmp = path + ".tmp"
+    with open(tmp, "wb") as fh:
+        torch.save(obj, fh)
+        fh.flush()
+        os.fsync(fh.fileno())
+    os.replace(tmp, path)
+
+
+#: The two alternating periodic-checkpoint slots, as suffixes on `out_dir`.
+#:
+#: TWO AND NOT ONE, because `save_pretrained` is not atomic. A periodic save
+#: that overwrote a single slot in place would destroy the only mid-chunk
+#: checkpoint at exactly the moment it is being replaced, which is the window a
+#: session cap is most likely to land in on a long chunk. Alternating leaves the
+#: previous slot complete at every instant.
+#:
+#: TWO AND NOT N, because N needs a reaper, and a reaper needs to decide what to
+#: delete. Two is bounded by construction: no globbing, no policy, no deletion
+#: of anything this function did not itself just write.
+_SLOTS = (".ckpt-a", ".ckpt-b")
+
+
+def _ckpt_step(out_dir):
+    """The step a checkpoint directory stands at, or None if it is not one.
+
+    This IS the completeness test. `_save_checkpoint` writes the model shards
+    first and `trainer_state.pt` last and atomically, so a directory whose
+    `trainer_state.pt` loads has complete shards by construction. One
+    `torch.load` therefore certifies the whole directory and no DONE marker
+    exists or is needed.
+    """
+    try:
+        return int(torch.load(os.path.join(out_dir, "trainer_state.pt"),
+                              map_location="cpu", weights_only=True)["step"])
+    except Exception:
+        return None
+
+
+def latest_checkpoint(out_dir):
+    """The newest COMPLETE checkpoint for `out_dir`, or None.
+
+    Looks at the chunk directory and its two periodic slots and returns the one
+    standing at the highest step. Pass the result straight back as
+    `resume_from`; the autopilot passes it as `event.last_good_ckpt`.
+    """
+    best = None
+    for d in (out_dir,) + tuple(out_dir + s for s in _SLOTS):
+        step = _ckpt_step(d)
+        if step is not None and (best is None or step > best[0]):
+            best = (step, d)
+    return best[1] if best else None
+
+
+def _save_checkpoint(model, opt, gen, step, out_dir):
+    """One complete, resumable checkpoint directory.
+
+    THE ORDER IS THE CERTIFICATE: shards first, `trainer_state.pt` last and
+    atomically. `grad_checkpoint` is toggled off across the save and restored,
+    so a mid-chunk save leaves the running loop exactly as it found it.
+    """
+    was = model.model.gradient_checkpointing
+    model.model.gradient_checkpointing = False
+    os.makedirs(out_dir, exist_ok=True)
+    model.save_pretrained(out_dir)
+    model.model.gradient_checkpointing = was
+    _atomic_torch_save(
+        dict(optimizer=opt.state_dict(), step=step,
+             torch_rng_state=torch.get_rng_state(), data_gen_state=gen.get_state()),
+        os.path.join(out_dir, "trainer_state.pt"))
 
 
 def build(*, hidden_size, n_layers, n_heads, seq, vocab_size=256, **overrides):
@@ -176,6 +282,17 @@ def build(*, hidden_size, n_layers, n_heads, seq, vocab_size=256, **overrides):
     places is a default that drifts, so this one lives in `CEQConfig` alone and
     anything passed here is forwarded verbatim.
     """
+    unknown = sorted(set(overrides) - set(_OPERATOR_KEYS))
+    if unknown:
+        # SILENT DROP IS THE DEFECT CLASS, not this key. `train()` used to
+        # forward no operator at all and every run built the default while
+        # the caller believed otherwise; `smp_beta/qk/g` were dropped the
+        # same way and `train(operator='smprime', smp_beta=0.0)` trained at
+        # (1,1,1) with nothing raised. A key this function does not know is
+        # a caller expectation it cannot meet, so it says so.
+        raise TypeError(
+            "build() does not understand {}; known operator keys are {}"
+            .format(unknown, list(_OPERATOR_KEYS)))
     operator = {k: overrides[k] for k in _OPERATOR_KEYS if k in overrides}
     return CEQForCausalLM(CEQConfig(
         vocab_size=vocab_size, hidden_size=hidden_size, num_hidden_layers=n_layers,
@@ -185,8 +302,20 @@ def build(*, hidden_size, n_layers, n_heads, seq, vocab_size=256, **overrides):
 def train(*, out_dir, steps, batch, seq, hidden_size, n_layers, n_heads,
           device="cuda", vocab_size=256, data_path=None, max_bytes=64 * 1024 * 1024,
           lr=3e-4, seed=0, grad_checkpoint=False, clip=1.0, probe_every=1,
-          log_every=50, gpu=None, resume_from=None):
+          log_every=50, gpu=None, resume_from=None, save_every=0, **overrides):
     """Train and `save_pretrained` into `out_dir`. Returns the run record.
+
+    PERIODIC CHECKPOINTS. `save_every=N` writes a complete checkpoint every N
+    steps into `{out_dir}.ckpt-a` and `{out_dir}.ckpt-b` alternately, through
+    the same atomic path as the end-of-chunk save. `0`, the default, is
+    end-of-chunk only. This is not a convenience: a Kaggle chunk runs up to
+    11 hours against a 30 GPU-h weekly quota, so an end-of-chunk-only save
+    turns one kernel death into ten lost GPU-hours and three of them into the
+    entire week. `latest_checkpoint(out_dir)` returns whichever of the three
+    directories stands at the highest step and is loadable -- pass it back as
+    `resume_from`. Both slots are removed once `out_dir` itself is complete,
+    because they are redundant from that moment; the disk cost during a chunk
+    is therefore bounded at two extra directories with no reaper anywhere.
 
     RESUME. `resume_from`, if given, is an earlier `train()` call's `out_dir`.
     Model weights come back through `from_pretrained` (already correct); what
@@ -206,7 +335,27 @@ def train(*, out_dir, steps, batch, seq, hidden_size, n_layers, n_heads,
         if not ok:
             raise MemoryError("preflight refused this shape:\n" + msg)
 
+    forbidden = {os.path.abspath(out_dir)}
+    forbidden |= {os.path.abspath(out_dir + s) for s in _SLOTS}
+    if resume_from and os.path.abspath(resume_from) in forbidden:
+        raise ValueError(
+            "out_dir must not be resume_from, nor either of its periodic slots "
+            "{!r}. `save_pretrained` is not "
+            "atomic, so writing back into the directory being resumed from "
+            "overwrites the model shards of the very state being resumed -- and "
+            "on Windows it does not even get that far, safetensors raises "
+            "os error 1224 against its own memory-mapped read. Use a NEW "
+            "out_dir per chunk, as TRAINING.md 6.6 prescribes.".format(resume_from))
+
     gen = torch.Generator().manual_seed(seed + 1)
+    if resume_from and overrides:
+        # A resumed run reads its operator out of the checkpoint's own
+        # config, so anything passed here would be silently ignored -- the
+        # same shape of defect as the missing passthrough itself.
+        raise ValueError(
+            "operator overrides {} cannot be applied on resume; the operator "
+            "comes from {}/config.json. Drop them, or start a fresh run."
+            .format(sorted(overrides), resume_from))
     if resume_from:
         model = CEQForCausalLM.from_pretrained(resume_from).to(device)
         # weights_only=True: this file is tensors, ints and dicts only, and a
@@ -219,7 +368,7 @@ def train(*, out_dir, steps, batch, seq, hidden_size, n_layers, n_heads,
     else:
         torch.manual_seed(seed)
         model = build(hidden_size=hidden_size, n_layers=n_layers, n_heads=n_heads,
-                      seq=seq, vocab_size=vocab_size).to(device)
+                      seq=seq, vocab_size=vocab_size, **overrides).to(device)
         start_step = 0
     if grad_checkpoint:
         model.model.gradient_checkpointing = True
@@ -237,7 +386,8 @@ def train(*, out_dir, steps, batch, seq, hidden_size, n_layers, n_heads,
         torch.cuda.empty_cache()
         torch.cuda.reset_peak_memory_stats()
 
-    losses, gnorms, l1mins = [], [], []
+    losses, gnorms, l1mins, slot = [], [], [], 0
+    beta_track, beta_acc = [], None
     for step in range(steps):
         probe_store.clear()
         x, _ = data.batch("train", batch, seq, gen, device)
@@ -246,6 +396,7 @@ def train(*, out_dir, steps, batch, seq, hidden_size, n_layers, n_heads,
         loss = model(input_ids=x, labels=x).loss
         opt.zero_grad()
         loss.backward()
+        beta_acc = beta_census(model, beta_acc)
         g = torch.norm(torch.stack([p.grad.detach().norm()
                                     for p in model.parameters() if p.grad is not None]))
         torch.nn.utils.clip_grad_norm_(model.parameters(), clip)
@@ -256,21 +407,32 @@ def train(*, out_dir, steps, batch, seq, hidden_size, n_layers, n_heads,
         if log_every and step % log_every == 0:
             print("step {:6d}  loss {:.4f}  |g| {:.4e}  min row L1 {:.3e}".format(
                 step, losses[-1], gnorms[-1], l1mins[-1]), flush=True)
+            beta_track.append(beta_column(model))
+        # `step + 1 < steps`: the end-of-chunk save below already covers the
+        # last step, and at the training shape a redundant one costs 0.29 GiB
+        # and a wall-clock stall.
+        if save_every and (step + 1) % save_every == 0 and step + 1 < steps:
+            _save_checkpoint(model, opt, gen, start_step + step + 1,
+                             out_dir + _SLOTS[slot])
+            slot = 1 - slot
 
     for h in handles:
         h.remove()
-    for layer in model.model.layers:
-        del layer.self_attn.qkv._ceq_owner
 
     peak = torch.cuda.max_memory_allocated() if device == "cuda" else 0
     model.model.gradient_checkpointing = False
-    os.makedirs(out_dir, exist_ok=True)
-    model.save_pretrained(out_dir)
-    torch.save(dict(optimizer=opt.state_dict(), step=start_step + steps,
-                    torch_rng_state=torch.get_rng_state(), data_gen_state=gen.get_state()),
-              os.path.join(out_dir, "trainer_state.pt"))
+    _save_checkpoint(model, opt, gen, start_step + steps, out_dir)
+    # The slots are redundant the instant `out_dir` itself loads, and that is
+    # verified rather than assumed before anything is deleted. Only the two
+    # names this call itself wrote are ever removed.
+    if save_every and _ckpt_step(out_dir) == start_step + steps:
+        for s in _SLOTS:
+            shutil.rmtree(out_dir + s, ignore_errors=True)
 
-    record = dict(steps=steps, start_step=start_step, losses=losses, grad_norms=gnorms,
+    beta_track.append(beta_column(model))
+    record = dict(steps=steps, start_step=start_step,
+                  beta=beta_track, beta_census=beta_acc,
+                  operator=model.config.operator, losses=losses, grad_norms=gnorms,
                   row_l1_min=l1mins, peak_bytes=int(peak),
                   n_params=sum(p.numel() for p in model.parameters()),
                   grad_checkpoint=bool(grad_checkpoint), device=str(device))

@@ -22,6 +22,14 @@ see `COSTS` in `modeling_ceq.py`, which ships in the same repository.
 and that is load-bearing rather than stylistic: it is the only way this file can
 tell a fresh construction from a `config.json` written before the `operator` key
 existed. Setting any of the three knobs without naming the operator raises.
+
+A THIRD OPERATOR IS SELECTABLE AND CARRIES NO NUMBER. `operator="smprime"` is
+`ceq/arm_smprime.py`, the workhorse arm, wired into the block so it can be
+trained at all; nothing in this file's headline applies to it. It has its own
+three knobs -- `smp_beta`, `smp_qk`, `smp_g`, the arm's own switches -- which
+default to `SMPRIME_CORNER` and follow the same rule: a knob without its
+operator, or a knob belonging to the OTHER operator, raises rather than being
+stored and never read.
 """
 from __future__ import annotations
 
@@ -36,8 +44,31 @@ PARITY_POINT = (1.5, 0.10, 2)
 #: belongs to `sgate`; every number on record for the L1 `signed` operator was
 #: measured at rho = 0.9 hops = 3, so a shared default would silently move the
 #: control arm the moment the default arm moved.
-OPERATOR_DEFAULTS = {"sgate": PARITY_POINT, "signed": (0.9, 0.10, 3)}
+#:
+#: `smprime` carries `(None, None, None)` and that is not a placeholder: the arm
+#: has NO rho (it does not normalize by a row L1), NO lam (it has no negative
+#: softmax half) and NO hops (its read-out is `O = A V`, one application, not a
+#: truncated path sum). A number in any of those slots would be a knob the
+#: operator never reads, which is the exact defect the guard below exists for.
+OPERATOR_DEFAULTS = {"sgate": PARITY_POINT, "signed": (0.9, 0.10, 3),
+                     "smprime": (None, None, None)}
 OPERATORS = tuple(OPERATOR_DEFAULTS)
+
+#: `smprime`'s three switches `(beta, qk, g)` at construction. THIS IS THE ARM's
+#: OWN CORNER AND NOT A NEW ONE: `ceq/arm_smprime.py::ArmSMPrime.__init__` sets
+#: `beta = qk = g = 1.0`, the softmax corner, "the only initialisation inside the
+#: softmax class (`#5b`), which is where an arm built FROM softmax should start".
+#: All three are `nn.Parameter`s, so this names where training STARTS.
+#:
+#: IT IS NOT THE CORNER THE (L) BIND IS CLAIMED AT, and the difference is named
+#: here rather than left to be discovered. `ceq/arm_smprime.py`'s docstring
+#: claims its identity bind at `beta = 0` with QK OFF, where the read-out is
+#: `O_i = sum_j G_ij V_j` with `V = b` unrescaled and neither `log m` nor
+#: `1/(1-m)` is instantiated. `qk = 0` deletes the content term exactly, so an LM
+#: at that corner has no query-key channel at all and its `q`/`k` projections are
+#: dead weights. An LM needs `qk = 1`. `V17_ARM_WIRING.md` states what carries
+#: over from the bind corner to this one and what does not.
+SMPRIME_CORNER = (1.0, 1.0, 1.0)
 
 
 class CEQConfig(PretrainedConfig):
@@ -63,6 +94,9 @@ class CEQConfig(PretrainedConfig):
         rho: float | None = None,
         lam: float | None = None,
         hops: int | None = None,
+        smp_beta: float | None = None,
+        smp_qk: float | None = None,
+        smp_g: float | None = None,
         initializer_range: float = 0.02,
         layer_norm_eps: float = 1e-5,
         tie_word_embeddings: bool = False,
@@ -79,7 +113,8 @@ class CEQConfig(PretrainedConfig):
         #: nothing complains. Bound by
         #: `test_a_config_written_before_the_operator_key_existed_is_refused`.
         if operator is None:
-            if any(v is not None for v in (rho, lam, hops)):
+            if any(v is not None for v in (rho, lam, hops, smp_beta, smp_qk,
+                                           smp_g)):
                 raise ValueError(
                     "operator knobs were set without naming an operator "
                     "(rho={!r}, lam={!r}, hops={!r}). A config.json written "
@@ -101,10 +136,31 @@ class CEQConfig(PretrainedConfig):
                 "is 'sgate', the operator the 1.0334 parity median was measured "
                 "on. 'signed' is the L1-normalized negative control and measured "
                 "1.337x.".format(operator, OPERATORS))
+        #: A KNOB THAT BELONGS TO THE OTHER OPERATOR IS REFUSED, for the reason
+        #: the guard above exists rather than for tidiness: `PretrainedConfig`
+        #: stores an unknown keyword as an attribute and nothing reads it, so
+        #: `operator="smprime", rho=1.5` would look like a configured operating
+        #: point and be a value no line of code ever loads. The two knob sets
+        #: are disjoint -- `smprime` has no rho/lam/hops, `sgate` and `signed`
+        #: have no beta/qk/g -- so the cross product is exactly what is refused.
+        cross = ([("rho", rho), ("lam", lam), ("hops", hops)]
+                 if operator == "smprime" else
+                 [("smp_beta", smp_beta), ("smp_qk", smp_qk), ("smp_g", smp_g)])
+        wrong = [n for n, v in cross if v is not None]
+        if wrong:
+            raise ValueError(
+                "{} {} for operator {!r}, which does not read {}. The "
+                "'smprime' arm takes (smp_beta, smp_qk, smp_g); 'sgate' and "
+                "'signed' take (rho, lam, hops). A knob nothing reads looks "
+                "exactly like a configured operating point."
+                .format(", ".join(wrong), "was set" if len(wrong) == 1
+                        else "were set", operator,
+                        "them" if len(wrong) > 1 else "it"))
         default_rho, default_lam, default_hops = OPERATOR_DEFAULTS[operator]
         rho = default_rho if rho is None else rho
         lam = default_lam if lam is None else lam
         hops = default_hops if hops is None else hops
+        corner = SMPRIME_CORNER if operator == "smprime" else (None, None, None)
         self.vocab_size = vocab_size
         self.hidden_size = hidden_size
         self.num_hidden_layers = num_hidden_layers
@@ -121,6 +177,14 @@ class CEQConfig(PretrainedConfig):
         #: at all: peak row weight was 0.100336 at logit scales 0.25, 1.0, 4.0
         #: and 16.0 alike, spread exactly 0.000e+00 over a 64x sweep. That is why
         #: it lost, and it stays selectable as the control.
+        #:
+        #: "smprime" -- `ceq/arm_smprime.py`, the workhorse arm
+        #: `CEQ_V16_CONTRACT.md` names, WIRED IN rather than reimplemented:
+        #: the block calls that module's `readout` and carries that module's
+        #: own parametrization. NO NUMBER IS ON RECORD FOR IT IN THIS MODEL.
+        #: It is selectable so the arm the contract names can be trained at
+        #: all; everything else about it here is unmeasured.
+        #: `V17_ARM_WIRING.md` is the wiring's receipt.
         self.operator = operator
         #: Row L1 budget of the operator, `||A||_inf <= rho` for both forms.
         #:
@@ -148,6 +212,14 @@ class CEQConfig(PretrainedConfig):
         #: where the content-conditional sign rate peaks (0.1641 at hops=2
         #: against 0.0234 at hops=1 and 0.1484 at hops=3).
         self.hops = hops
+        #: `smprime`'s three switches at CONSTRUCTION -- `SMPRIME_CORNER`,
+        #: which is `ArmSMPrime.__init__`'s own setting and not a corner
+        #: chosen here. They are `nn.Parameter`s on the block, so these name
+        #: where training starts and not where it stays. `None` on the other
+        #: two operators, which have no such switches.
+        self.smp_beta = corner[0] if smp_beta is None else smp_beta
+        self.smp_qk = corner[1] if smp_qk is None else smp_qk
+        self.smp_g = corner[2] if smp_g is None else smp_g
         #: UNTIED BY DEFAULT, and this is a rollback rather than a preference.
         #: `PreTrainedModel.is_remote_code()` is `cls._auto_class is not None`,
         #: so `register_for_auto_class()` -- the only way save_pretrained copies

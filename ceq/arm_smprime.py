@@ -367,7 +367,26 @@ def label_cell(a: torch.Tensor, b: torch.Tensor, *, y: torch.Tensor | None = Non
         "v_max": float(v.abs().max()),
         "n_zero_gates": int((live.abs() == 0).sum()),
     }
-    record["residual"] = float((out - tgt).abs().max())
+    #: THE BOS SLOT IS NOT SCORED, AND IS REPORTED INSTEAD.
+    #: `chain_label`'s loop starts at `i = 1` and leaves `y_0 = 0`, so slot 0 is
+    #: the chain's drive-free INITIAL STATE. The read-out there is `G_00 V_0`
+    #: and `G_00` is the EMPTY path product, so no gate, no `m`, no `theta`, no
+    #: route and no `beta` enters it: measured, the slot-0 read-out is `V_0`
+    #: bitwise under all of `MUTATIONS` (`exp_scan` excepted, where it is `nan`
+    #: from the BOS's own `log m_0 = -inf`, a quantity the path product never
+    #: reads). A term no setting of the arm can move is not a reading of the
+    #: arm -- it is a reading of what the caller put in slot 0.
+    #: This module's own draws set `b[0] = 0` and it read `0`; BED-M's
+    #: `scale/negation_scope.py::make_equilibrium_batch` zeroes `b[s-1]` and
+    #: NOT `b[0]`, and the residual then read `max |b_0|` = 1.440495 with
+    #: honest settings, where the hops read 2.965914e-16
+    #: (`V17_LABEL_CELL_REPAIR.md`).
+    #: The excluded term is REPORTED and not deleted: the drive at slot 0 does
+    #: reach later rows whenever `G_i0 != 0`, and that disagreement stays in
+    #: `residual`. Zeroing `b_0` instead would have moved BOTH sides and hidden
+    #: it. `residual_bos` is outside `SMP_FIELDS`, so no published hash moves.
+    record["residual_bos"] = float((out[..., BOS] - tgt[..., BOS]).abs().max())
+    record["residual"] = float((out[..., BOS + 1:] - tgt[..., BOS + 1:]).abs().max())
     record["manifest"] = cell_manifest(
         record, callables=(operator, readout, hop, path_product, oracle_heads),
         params={"u": u, "theta": th, "V": v})

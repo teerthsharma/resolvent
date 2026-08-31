@@ -54,6 +54,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import pathlib
 from types import CodeType
 
 #: Every field that makes a measured cell the cell it is. A field missing here
@@ -165,6 +166,53 @@ def manifest(record: dict, *, callables, params, rng_plan: dict | None = None) -
             "values": cfg, "absent": absent, "plan": plan,
             "hash": _sha(config.encode(), code.encode(), shape.encode(),
                          rng.encode())}
+
+
+def instrument_manifest(path, *, reaches: tuple = ()) -> dict:
+    """X-R1 for an INSTRUMENT rather than a cell -- V17K_RULINGS.md RULING 5.
+
+    `manifest()` above identifies one MEASURED CELL: config, code, shapes, rng.
+    An instrument (a script like `scripts/v15_r1.py` that SCORES cells) has no
+    shapes or rng of its own to hash -- what identifies it is its own source
+    plus the callables it dispatches through that live in OTHER modules.
+    `path` is the .py file on disk; `reaches` are those callables, named
+    explicitly by the CALLER, because this module cannot discover "everything
+    a script calls" without executing it -- the same limit `manifest()`'s own
+    `callables=` argument has always had.
+
+    TWO COMPONENTS, NOT ONE, AND THEY COVER DIFFERENT EDITS.
+      file   sha256 of `path`'s own bytes, read off disk. Moves on ANY edit to
+             the named file, prose included -- deliberately NOT run through
+             `_code_fingerprint`'s docstring-dropping rule: a per-cell `code`
+             component drops comments because a comment edit must not
+             invalidate a PUBLISHED NUMBER, but an instrument's own prose
+             states load-bearing facts about what it measures
+             (`scripts/v15_r1.py`'s header records four corrected contract
+             clauses), so this component does not try to tell documentation
+             from behaviour and moves on either.
+      reach  `_code_fingerprint` -- the same bytecode fingerprint `manifest()`
+             uses for a cell's `code` component, reused rather than
+             reimplemented -- over every callable in `reaches`. This is the
+             component `file` cannot be: an edit to
+             `scale/negation_scope.py::make_equilibrium_batch` (a module the
+             instrument imports and calls, not the instrument itself) moves
+             `reach` with the instrument's own bytes untouched. A hash over
+             `file` alone would miss it entirely.
+
+    WHAT NEITHER COVERS. Only the functions NAMED in `reaches` are walked; a
+    helper one of them calls that the caller did not list, or a change two
+    imports deep, is invisible here. `reaches=()` hashes the file alone
+    (`n_reaches=0` says so in the return value) and is exactly as blind to
+    imported helpers as a byte hash would be on its own.
+
+    Pure read: opens `path` for reading and nothing else.
+    """
+    data = pathlib.Path(path).read_bytes()
+    file_hash = _sha(data)
+    reach_hash = _sha(*(_code_fingerprint(f).encode() for f in reaches))
+    return {"path": str(path), "file": file_hash, "reach": reach_hash,
+            "n_reaches": len(reaches),
+            "hash": _sha(file_hash.encode(), reach_hash.encode())}
 
 
 def refuse_if_changed(stored: dict, current: dict) -> None:
