@@ -37,7 +37,7 @@ The shipped sentence requires `C-PAR ∧ (C-CAP ∨ C-TS)`.
 
 | bar | what it demands | status | the measurement that decides it |
 |---|---|---|---|
-| **C-PAR** | parity with softmax at matched params | **NO INSTRUMENT — both routes closed** | *TOST route:* with `Δ_eq = 0.5σ` the 90% CI half-width is `t(.95, 2N−2)·√(2/N)` = `0.8807σ` at N=8 against a `0.5σ` margin. Two *bit-identical* arms return NO VERDICT. The CI first fits at N=23; power ≥ 0.80 first at **N=70**, and at N=23 achieved power is **0.0669** (`V15_CONTRACT_ARITHMETIC_AUDIT.md` A-1). *Identity-bind route:* **REFUTED** — see the note below |
+| **C-PAR** | parity with softmax at matched params | **INSTRUMENT REPAIRED — bitwise, on an amended operator** | *TOST route:* still closed. With `Δ_eq = 0.5σ` the 90% CI half-width is `0.8807σ` at N=8 against a `0.5σ` margin; the CI first fits at N=23, power ≥ 0.80 first at **N=70**, and at N=23 achieved power is **0.0669** (`V15_CONTRACT_ARITHMETIC_AUDIT.md` A-1). *Identity-bind route:* the v15 clause was **REFUTED** and then **REPAIRED**. `l_ij = q_ij − C_j + s_j` over a value-zero BOS slot is **bitwise** standard attention at `(g,s) = (0,0)` and reproduces the chain label to **2.2e-16** at the oracle setting. Both binds, one softmax head (`lean/CEQ/V15Fork.lean`, `V15_JUPITER2_FORK.md`). See the two notes below |
 | **C-CAP** | a seed CI below the 1-hop floor `√((t*−1)/t*)` | **NEVER ACHIEVED — 0 of 9 cells** | `cap_verdict` over every N=8 cell at fixed threads: zero crossings, `ĥ` peaks at `0.389` |
 | **C-TS** | transition-state / exit accuracy | **NOT BUILT** | BED-1 is blocked on Round 11, which has not run |
 
@@ -82,9 +82,67 @@ reproduction (`prefix_logit_computes_chain`) is proved for the MULTIPLICATIVE
 hop, and no single operator is yet known to carry both. Whether one can is open
 and is the round's load-bearing question.
 
-**This is the strongest fact the round has produced and it is a negative one.**
+**This was the strongest fact the round had produced and it was a negative one.**
 It was reached by proof before any gradient step, which is what putting the Lean
-train-gate in front of training was for.
+train-gate in front of training was for. It has since been repaired — see below.
+
+### The repair: one softmax head carries both binds
+
+Recorded 2026-08-31, R11 it.13, under the author's L-AMEND permission
+(`CEQ_V15_1_DELTA.md`) — *a refuted clause may be repaired by amending its
+formula, not only recorded as a loss.*
+
+```
+l_ij  =  q_ij  −  C_j  +  s_j          C = scan(g),  value-zero BOS slot at j = 0
+O_i   =  Σ_{j≤i} softmax_j(l_i·) · V_j
+```
+
+`g` and `s` are two independent per-position scalar heads.
+
+| bind | setting | measured |
+|---|---|---|
+| **(P)** parity | `g ≡ 0, s ≡ 0` | `l_ij = q_ij`, **bitwise** standard attention against an independent reference |
+| **(L)** label | `g_j = log a_j`, `s_j = log(1−a_j)`, `V_j = b_j/(1−a_j)`, `V_0 = 0` | **2.2e-16** at `s = 8` |
+
+**The mechanism is a telescope.** `(1−a_j)e^{−C_j} = e^{−C_j} − e^{−C_{j−1}}`;
+partial sums collapse to `e^{−C_i} − e^{−C_0}`; the BOS slot contributes exactly
+the boundary term, so `Z_i = e^{−C_i}` and the normalizer **reproduces** the
+target factor instead of cancelling it. The BOS sink is the boundary term of the
+telescope, not a patch. The entire difference from §S-M is one factor `(1−a_j)`.
+
+Machine-checked in `lean/CEQ/V15Fork.lean`: `Asink_row_sum` (no hypothesis on `a`
+at all), `Asink_nonneg`, `Asink_computes_chain`, `gate_zero_key_logit_identity`,
+`Asink_eq_hop`, `no_row_stochastic_with_drive_values`. `lake build` exit 0, no
+`sorry`, `[propext, Classical.choice, Quot.sound]` only.
+
+**Two hoped-for results were refuted in the process.** The additive-logit repair
+computes exactly `y_i / R_i` — the label over the multiplicative hop's own row
+sum — to `4.44e-16`. And **"softmax's normalizer is the obstruction to path
+products" is FALSE**: it holds only with the drives carried as values, and
+allowing a position-local rescale dissolves it uniquely at `γ_j = 1/(1−a_j)`.
+**The normalizer was never an obstruction — it is a change of units.** What
+survives is the bound `max_j|V_j| ≥ max_i|y_i|`.
+
+**What the repair costs, three of seven.** "Unnormalized" goes and §S-M's
+operator with it — `prefix_logit_computes_chain` stays true and now describes an
+operator the arm does not use. The **query-side scan term is deleted**: under a
+causal softmax a scan enters key-side only, and the query half annihilates
+identically (`max|diff| = 0`), so anything reasoning about the query half is
+void. And **stationarity becomes load-bearing** — the construction needs
+`a_j ≠ 1` while parity sits at `a ≡ 1`, so the two binds are at opposite ends of
+one degeneration and at the parity setting the oracle values diverge. Value range
+`1/(1−a)` reaches `1e6` at `a = 1−1e-6`, shipped as a per-cell diagnostic column:
+a predicted failure mode filed before the arm ran.
+
+**How strong the repaired bind is, stated exactly.** Its rejection region is
+non-empty — four planted mutilations of the construction fail the label bind at
+`O(1)` (`0.9749`, `0.9165`, `1.000`, `0.4845`) — but it is **narrower than the
+refuted original**, which claimed parity at the gate's own identity point. Every
+parity row must therefore read *"the modification enters only through the key
+logit, additively, and vanishes at zero"*, never "bitwise standard attention"
+unqualified. The two-branch escape that would have restored the stronger wording
+for free is vacuous: it passes parity bitwise for the honest gate, for Gaussian
+noise, and **for the label itself** (`MISTAKES.md` V-24).
 
 ---
 
@@ -121,6 +179,28 @@ with a check. Ten were added this round.
 | `OrbitBound.lean` | `card_agree_add_card_errors`, `injOn_agree`, `card_agree_le_orbits`, **`orbit_error_bound`**, `orbit_error_bound_attained` |
 | `Refcount.lean` | `mem_fibre`, `one_le_refcount`, `floor_add_orbits`, `floor_eq_sum_refcount_pred`, `card_survivors_add_refcount` |
 | `OracleSeparation.lean` | `one_nonneg`, `mul_nonneg'`, `pow_nonneg'`, `diag_sq_le`, `diag_pos_double` |
+| **`V15.lean`** (R11) | `chain_path_product`, `prefix_logit_mask`, `parity_sign`, **`gate_zero_is_attention`**, `gate_zero_row_sum`, **`gate_zero_not_stochastic`**, `gate_zero_logit_identity`, `bounded_gates_stable`, `bounded_gates_prod_le_one`, `bounded_gates_antitone`, `scan_assoc`, `prefix_logit_computes_chain`, and the affine-monoid support |
+| **`V15Fork.lean`** (R11) | **`Asink_computes_chain`**, `Asink_row_sum`, `Asink_nonneg`, `gate_zero_key_logit_identity`, `Asink_eq_hop`, **`no_row_stochastic_with_drive_values`** |
+
+`V15.lean` is the train-gate: `#1, #2, #3, #5, #6, #7`. It contains the round's
+**refutation** — `gate_zero_not_stochastic` proves §S-M's operator is not any
+softmax row — and `V15Fork.lean` contains the **repair**. Both build under
+`lake build` exit 0 with no `sorry`; every theorem was run through
+`#print axioms` and depends only on `[propext, Classical.choice, Quot.sound]`,
+since exit 0 alone does not exclude a `sorry` inside a macro.
+
+Two trivial versions were refused and the refusals recorded: `scan_assoc` read
+literally is `add_assoc`, one token, licensing nothing — it is stated instead for
+the affine monoid `(a,b) ↦ (x ↦ a·x + b)`, with `affApply_affComp` proving
+`affComp` is genuinely map composition and `chain_step_eq_affApply` proving by
+`rfl` that those maps are the recurrence's own steps.
+
+`no_row_stochastic_with_drive_values` is the sharpest of the set and it is a
+**conditional impossibility**: with the drives themselves as values, no causal
+row-stochastic operator reproduces the label at any `i ≥ 2`, for any positive
+gates — witness `a ≡ 1, b ≡ 1`, where `y_i = i` and every stochastic row over
+`V ≡ 1` gives `1`. The hypothesis is the entire content: drop it and the
+construction above exists.
 
 **The load-bearing one is the resolvent.** `occupancy_eq_inverse_of_nilpotent`
 and `occupancy_is_exact_inverse` establish that `M = (I − γP)⁻¹ = Σ γᵗPᵗ` **is**
