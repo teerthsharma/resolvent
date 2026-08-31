@@ -1516,13 +1516,43 @@ cannot cross its own threshold) applied to a diagnostic rather than to a verdict
 and it is `V-8` (the PASS half's label is constant) with the constancy in the
 regressand instead of the class label.
 
-**The finding underneath it, which is larger than the diagnostic.** The contract
-parametrizes the gate as `g = −softplus(W x)`, which is **monotone** in the drive
-channel. The true `g = log|a|` is a band mask — **even** in the drive channel —
-and `scale/m3_capability.py` gives its arms no positional feature to route
-around it. Adding one squared feature recovers the band at `R² = 1.000000`
-exactly. **The obstruction is evenness, not information**, and no amount of data
-or optimization fixes a parametrization that cannot represent the target.
+**A finding underneath it, and see the correction below before using it.** The
+contract parametrizes the gate as `g = −softplus(W x)`, which is **monotone** in
+the drive channel. The true `g = log|a|` is a band mask — **even** in the drive
+channel. Adding one squared feature recovers the band at `R² = 1.000000` exactly.
+Within the gate sub-problem the obstruction is evenness rather than information,
+and no amount of data fixes a parametrization that cannot represent its target.
+
+> **CORRECTION, filed the same round against this entry's own author.**
+> The paragraph above was first written as *"the obstruction is evenness, not
+> information"* full stop, and was read as the mechanism behind the campaign's
+> nine-cell non-crossing census. **That reading was wrong, and the measurement
+> that shows it is in `V15_SATURN2_LEAK_RULING.md`.**
+>
+> `scale/negation_scope.py` assigns `x[:, :, CH_DRIVE] = a` at `:245` and `:432`
+> and documents it at `:520-522`. **The gate was visible in the input for the
+> entire campaign.** No arm was ever failing to discover a hidden quantity, so
+> a representability defect in the gate cannot be what nine cells died of.
+>
+> The order boundary settles it. The same `[x, x²]` feature that reaches
+> `R² = 1.000000` on the gate reaches `R² = 0.25 → 0.16` against the composed
+> multi-hop resolvent and **`R² = 0.01–0.02` against the label R1 and R2 actually
+> score**. The repair never leaves order 0, and the scored quantity is not at
+> order 0.
+>
+> The real unresolved burden is composing `t*` gated reads **multiplicatively
+> into the resolvent** — the campaign's one surviving algebraic fact, now with a
+> measured boundary rather than an assertion behind it. The evenness finding is
+> a true fix to a sub-problem that was never binding.
+>
+> **The mechanism in this correction is worth as much as the entry it corrects:
+> a real defect, correctly diagnosed, promoted to the explanation of a failure it
+> does not account for.** The check is an order audit — before a representability
+> finding is offered as the cause of a scored failure, measure the finding's
+> feature set against the *scored target*, not against the sub-quantity where it
+> was discovered. A fix that reaches `R² = 1.0` on the thing you were looking at
+> and `0.01` on the thing you are measuring has explained nothing about the
+> measurement.
 
 **Check.** Before a diagnostic is registered, run it on the CORPUS ALONE with no
 arm and report its value and its null. A diagnostic whose no-arm value equals its

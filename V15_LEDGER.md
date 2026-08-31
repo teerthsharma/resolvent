@@ -104,6 +104,71 @@ the 45.8 s/turn figure (L-TIME).
 | 9 | `n7` Neptune returned: **R2 FITS, measured 4.000 GiB** | opus | **DONE** | `V15_NEPTUNE_SYSTEMS.md` |
 | 9 | `n11` Mercury: `--device` flag + the three conditions Neptune attached | sonnet | DISPATCHED | `V15_MERCURY_DEVICE.md` |
 
+| 10 | `n9` normalization sweep: foundation **SOUND**, 2 confirmed, 6 sound | sonnet | **DONE** | `V15_NORMALIZATION_SWEEP.md`, P-11 + V-23 |
+| 10 | coordinator: VORT **verified** from the arXiv page; regime conflict found | opus | **DONE** | relayed to `n12` |
+| 11 | **CONTRACT DELTA v15 → v15.1 received**: X₃₅, X₈′, and **L-AMEND** | — | **FILED** | `CEQ_V15_1_DELTA.md` |
+| 11 | `n10` Saturn-2 returned: **LEGITIMATE**, and it corrects it.7 | sonnet | **DONE** | `V15_SATURN2_LEAK_RULING.md` |
+| 11 | `n12` Jupiter-3: Lean #12 / #13 | opus | DISPATCHED | `V15_JUPITER3_KERNEL.md` |
+| 11 | `n13` Saturn-3: X₃₅a residual instrument, TDD | opus | DISPATCHED | `V15_X35A_RESIDUAL.md` |
+| 11 | `n14` Jupiter-4: X₃₅c prior art, before names | opus | DISPATCHED | `V15_X35C_PRIOR_ART.md` |
+| 11 | `n15` Jupiter-5: X₈′ Möbius identity + rename plan | sonnet | DISPATCHED | `V15_X8_MOBIUS.md` |
+
+---
+
+## it.11 — L-AMEND ARRIVES, AND THE GATE WAS NEVER THE BINDING CONSTRAINT
+
+### The delta
+
+`CEQ_V15_1_DELTA.md` adds **X₃₅** (residual inference of hidden causes), **X₈′**
+(the four-point estimator formalized as Möbius inversion), and a new standing
+permission:
+
+> **L-AMEND.** A refuted clause may be REPAIRED by amending its formula, not only
+> recorded as a loss, provided the amendment moves toward the north star and is
+> stated as an amendment — original clause, refutation, new formula, and **what
+> the new formula gives up**.
+
+It is a change of disposition, not of standard: an amended formula still needs
+its identity theorems before training, its equations before naming, and **an
+amendment that restores a clause by making its bind vacuous is worse than the
+refutation it replaces**. Relayed to the fork node, whose brief changes from
+adjudicate to adjudicate-then-amend.
+
+### The ruling that corrects this round's own reading
+
+`n10` was asked whether the squared-feature repair from M-18 is a legitimate fix
+or an oracle leak. **LEGITIMATE, and scoped by measurement:**
+
+| condition | `R²` |
+|---|---|
+| disclosed, as shipped | **1.000000** |
+| shielded (`CH_DRIVE` overwritten post-label, `CH_PAYLOAD` confound controlled) | **0.003961** — ~250x collapse, `CH_DRIVE`'s own contribution `0.000003` |
+| `[x, x²]` vs the **composed** multi-hop resolvent | 0.25 → 0.16 |
+| `[x, x²]` vs the **actual R1/R2 label** | **0.01 – 0.02** |
+
+`scale/negation_scope.py` assigns `x[:, :, CH_DRIVE] = a` at `:245` and `:432`
+and documents it at `:520-522` — *"CH_DRIVE carries the Rademacher coefficients
+`a`."* The gate is disclosed to every arm and to the skyline alike. Squaring a
+disclosed channel smuggles in nothing, and **the repair provably never leaves
+order 0.**
+
+**This corrects the it.7 entry above.** That entry recorded the nine-cell
+non-crossing mechanism as "the obstruction is evenness, not information". True of
+the gate sub-problem — and **the gate sub-problem was never the binding
+constraint.** The gate was visible in `x` for the whole campaign, so no arm was
+ever failing to *discover* a hidden quantity. The unresolved burden is composing
+`t*` gated reads **multiplicatively into the resolvent**, which the squared
+feature does not touch in either direction.
+
+That is the campaign's one surviving algebraic fact reached from the leak side —
+*the label composes values along paths; the arms compose weights across
+positions* — and it now has a **measured order boundary** behind it rather than
+an assertion. M-18's degenerate kill-diagnostic stands, orthogonal; neither
+finding rescues the other.
+
+`n10` also re-ran Mars's `test_skyline_gate_containment.py` unmodified rather
+than taking the parallel node's report on trust: 4 passed, 1 skipped.
+
 ---
 
 ## it.9 — THE LAST LOOP DIED BESIDE AN IDLE GPU
