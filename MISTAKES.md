@@ -1564,6 +1564,67 @@ about 52 steps for a tent map in float64 — and a run longer than that reports
 round-off with a physical-looking name. Either use exact arithmetic, or state the
 horizon and stop before it, or shadow the orbit and prove the shadowing.
 
+### P-11. A contract citing its own `[M]`-tagged theorem as settled
+
+`CEQ_V15_CONTRACT.md` §S-C, the conservation census, reads *"carriers conserve
+mass to 1e-12 (softmax rows 1.000; **replicator by Lean #8**)"*. Lean #8 is
+`replicator_eq_cumsoftmax`. Twenty lines later, in the same document, PART II
+tags it `[M]` — **not proved** — and no such theorem exists anywhere under
+`lean/CEQ/`.
+
+The document cites its own unproven item as though it had settled the question,
+in the census section whose whole function is to say which properties are
+established. This is `P-10` / L-EQ turned inward: the defect L-EQ was written to
+catch is a *fetched* source cited for more than its theorem supports, and this is
+the same move made against the author's own inventory, where the status column
+is three sections away and reads `[M]`.
+
+**Why it is worth its own entry rather than being an instance of P-10.** A
+fetched citation has to be checked against an external document, which is work.
+An internal one has its status recorded **in the same file**, so the check costs
+a scroll — and it still was not done. The failure is not access to the evidence;
+it is that a `[M]` in a status table and a bare "by Lean #8" in prose were
+written by the same hand and never read against each other.
+
+**Check.** Every internal theorem reference carries its status inline at the
+point of use — "by Lean #8 `[M]`" — so a reader cannot encounter the citation
+without the tag. Greppable: for each `Lean #N` reference in prose, the status of
+`#N` in the inventory must be `[M]`-free before the sentence may state a
+consequence as fact. A reference to an unproved item may state an *intention*
+("Lean #8 would give"), never a result.
+
+### V-23. A plural claim whose own central member is the counterexample
+
+`CEQ_V15_CONTRACT.md` §S-C opens *"CARRIERS conserve mass to 1e-12"* — plural,
+unscoped, no restricting clause — and then names two examples. The contract's own
+§S-M, four sections earlier, introduces its central carrier as **"ONE
+unnormalized causal hop"**. At `g ≡ 0` that carrier's row `i` sums to `i + 1`
+(machine-checked, `lean/CEQ/V15.lean` `gate_zero_row_sum`). Under the natural
+reading, in which "carriers" includes the architecture's principal carrier, the
+sentence is false by the same arithmetic that refuted the parity clause. Under
+the narrow reading, in which it covers only the two named examples, it is true
+and silently omits the one carrier a reader most needs the answer for.
+
+Both readings fail, and that is the signature of the mechanism: **a claim
+quantified over a class, evidenced only on the members that satisfy it.** The
+reader cannot tell whether the omission is a scope or an oversight, and neither
+can the author later.
+
+**What makes it durable.** The conservation census is scheduled to run "on all"
+beds and arms. A census inherits its subject from the sentence that defines it,
+so an unscoped plural becomes a specification, and the arm that fails it is the
+one the census was never written to include.
+
+**Check.** Any claim quantified over a class names its members explicitly and
+reports the value for each, including the failures — a conservation census with
+no non-conserving row has either checked nothing or omitted something. Where a
+member genuinely falls outside, the exclusion is written into the claim
+(`"the normalized carriers conserve mass; S-M's hop is unnormalized by
+construction and conserves nothing, which is what the mask supplies"`) rather
+than left to the reader. Related: [[V-5]] slice-to-nothing is the same defect on
+the data axis, where the sentence is true because its subject was narrowed until
+nothing failed.
+
 ## The eleven checks, before any control ships
 
 Condensed from the above; this is the list to run down.

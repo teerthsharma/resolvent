@@ -100,6 +100,78 @@ the 45.8 s/turn figure (L-TIME).
 | 8 | `n4` returned: BED-K built, **6/6 tests pass both halves** | sonnet | **DONE** (commit held) | `V15_N4_BEDK.md`, `ceq/beds/`, `tests/beds/` |
 | 8 | `n10` Saturn-2: is the squared-feature fix a repair or an ORACLE LEAK? | sonnet | DISPATCHED | `V15_SATURN2_LEAK_RULING.md` |
 
+| 9 | `n5` Mars returned: **21 passed, 4 skipped, 0 failed**, every skip must-fired | sonnet | **DONE** | `V15_MARS_ATTACKS.md`, `tests/mars_v15/` |
+| 9 | `n7` Neptune returned: **R2 FITS, measured 4.000 GiB** | opus | **DONE** | `V15_NEPTUNE_SYSTEMS.md` |
+| 9 | `n11` Mercury: `--device` flag + the three conditions Neptune attached | sonnet | DISPATCHED | `V15_MERCURY_DEVICE.md` |
+
+---
+
+## it.9 — THE LAST LOOP DIED BESIDE AN IDLE GPU
+
+The R10 loop stopped when its `n = 8,192` wave journalled its remaining budget
+as *"unaffordable, see priced DAG"*. v15 then scheduled R2 at `n = 32,768`, four
+times that cell. Neptune priced it **by allocating it**.
+
+| quantity | value | how |
+|---|---|---|
+| R2 peak at `n = 32768` | **4.000 GiB** | `max_memory_allocated()`, **run not projected** |
+| free VRAM | 6.939 GiB of 7.996 total | `mem_get_info()` |
+| headroom | **2.61 GiB, 38% of free** | measured |
+| largest affordable `n` at 20% margin | **42,489** | `n = 65536` needs 8.26 GiB, exceeding *total* VRAM — 32768 is the last power of two this device runs |
+| it.9-it.23, 184 cells | **637 CPU-hours or 47.0 GPU-hours** | fitted, ratio **13.6x** |
+
+**The calibrated sizing model holds, and holds conservatively.** measured/predicted
+`= 0.950, 0.950, 0.950, 0.949` at `n = 512 / 1024 / 2048 / 32768` — a constant
+ratio across a **64x span**, which is what licenses the extrapolation. The module
+over-predicts by 5% and never under-predicts. An `s`-sweep back-solves
+`C_RESIDUAL = 17.92` against the module's 18.00 and `C_OPERATOR = 3.50` against
+3.90. **No new correction factor needed.**
+
+**Three contract/brief premises refuted by measurement:**
+
+1. *"the dominant term is the `[n,s,s]` operator"* — **FALSE at BED-M's shape.**
+   At `s = 64, d_model = 16`, fp32, the operator is **43.7%** of measured peak;
+   the residual/MLP chain is 56.3%. The terms cross at `s = 73.8` (fp32) /
+   `s = 47.8` (bf16). This premise was in the coordinator's own brief and came
+   back false.
+2. *`secs ~ n^1.338`* `[INHERITED]` — **does not reproduce.** Re-fits here as
+   CPU `n^1.1920` (R² 0.999642) and CUDA `n^0.9734` (R² 0.999316), stable under
+   4-point refit. The inherited figure's `1.634` tail at `n = 16384` is
+   consistent with **page-file pressure at a ~2 GiB working set**, which is
+   exactly `n = 16384` at this shape — its own tasklist entry warned of it.
+3. `activation_bytes(arm="softmax")` is **the wrong call** for this comparison:
+   in `sizing.py` "softmax" means fused SDPA with no `[S,S]` tensor, while
+   `m3_capability.Arm`'s softmax branch materialises `[n,s,s]`. On the memory
+   axis it is a *signed* arm.
+
+**The recommendation is not a cut.** Move the cells to the CUDA device that sat
+idle while the last loop died of unaffordability. That needs a `--device` flag in
+`scale/r10_capacity_sweep.py` — dispatched as `n11` with Neptune's three
+conditions attached, the first of which is load-bearing: `MISTAKES.md` **M-10**
+records that *thread count alone* moves NRMSE by **0.464 of `Δ_eq`**, so pooling
+CUDA and CPU cells would void the reading.
+
+**Open, and stated rather than assumed:** ARM PL's own `C_OPERATOR` is **NOT
+MEASURED** (a composed S-M + S-K may retain ~2x, pricing R2 at 5.74 GiB — still
+fits, 1.0 GiB margin). And **if BED-K's power-law bed needs `s = 256`, R4's
+matched-`n` requirement caps both beds at `n ≈ 5,273` and R2's `n = 32768` cannot
+enter the two-sided table at all** — which would put the `+8` R4 item out of
+reach for a reason unrelated to any architecture.
+
+### BED-K, final: an honest negative inside a green suite
+
+`n4` replaced its naive `(i−j)^(H−1.5)` kernel with exact FARIMA/GL weights and
+reports that this **did not meaningfully shrink the DFA bias — 0.812 → 0.818 at
+`H_true = 0.75`** — rather than presenting the correction as a fix. The must-fires
+are clean (white noise `H ≈ 0.478`, AR(0.5) `H ≈ 0.486`, nowhere near R/S's
+biased 0.75) but the estimator reads **+0.06 high on the bed it will actually
+score**. R3 asks for `Ĥ = α̂ + ½` within CI of the calibrated estimator; that CI
+must accommodate a known `+0.06` bias, or the bias must be corrected, and either
+way it is registered now rather than discovered at R3.
+
+`hard_delay_attention` was also narrowed to read only `b` and `pos`, never `K` —
+closing a leak before it existed.
+
 ---
 
 ## it.8 — BED-K IS BUILT, AND R1 AS SPECIFIED IS NOT RUNNABLE
