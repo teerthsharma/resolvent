@@ -1773,6 +1773,125 @@ consistent; if two disagree, **the cell does not run until the author picks one*
 because running it produces a number that confirms whichever half is quoted
 afterwards. Related: [[M-7]] is the hole; this is the double-fill.
 
+## ROUND ENTRY — R11 (CEQ v15 / v15.1 / v15.2), 2026-08-31
+
+The contract specifies this entry's contents at it.29: the wrong-hop mechanism
+sentence, L-EQ, the Markov-corpus blindness, and the six author-owned strikes.
+Each is below with what the round measured, including where the round's own
+first reading of it was wrong.
+
+### 1. The wrong hop — and the sharper version the round found
+
+The sentence the contract asked for:
+
+> **The label composes values along paths; the arms composed weights across
+> positions. Same word "hop", different algebra.**
+
+That is true and it is not the whole mechanism. The round's own it.7 reading —
+that the arms failed because `−softplus(Wx)` is monotone while the target
+`log|a|` is even — **is wrong as an explanation of the nine-cell census**, and
+the measurement that kills it is `V15_SATURN2_LEAK_RULING.md`.
+
+`scale/negation_scope.py` assigns `x[:, :, CH_DRIVE] = a` at `:245` and `:432`
+and documents it at `:520-522`. **The gate was visible in the input for the whole
+campaign.** No arm was ever failing to *discover* a hidden quantity. And the
+order boundary is measured: the `[x, x²]` repair reads `R² = 1.000000` on the
+gate, `0.25 → 0.16` on the composed resolvent, and **`0.01 – 0.02` on the label
+R1 actually scores.**
+
+So the corrected sentence is:
+
+> **The gate was never the hard part — it was in the input all along. The hard
+> part is composing `t*` gated reads multiplicatively into a resolvent, and no
+> order-0 feature of the input reaches it.**
+
+The mechanism class this belongs to is filed as the correction block inside
+**M-18**: *a real defect, correctly diagnosed, promoted to the explanation of a
+failure it does not account for.* The check is an **order audit** — measure a
+representability finding against the *scored* target, not against the
+sub-quantity where it was found.
+
+### 2. L-EQ, and its own evidence base
+
+L-EQ rules `[V]` — page fetched, intro matched — inadmissible for a load-bearing
+statement, requiring `[V-eq]`: the theorem with hypotheses, plus one numeric
+instance run. It is filed under the author's name, and the round's first act was
+to count the evidence offered for it.
+
+**The contract asserts two-thirds. The measured fraction is `4/40 = 10%`**
+(`P-10`). Of 44 rows in `attic/workdonenew.pre-v13.md` §5, four record a claim
+that held, leaving 40 strikes; four are `[V]`-as-theorem — Siegmund's ARL₀ on a
+non-i.i.d. null (missing nominal by `24.1×` at `φ̂ = 0.709`), Kantz–Grassberger
+fed `D₀` where the source uses `D₁`, `ρ_P = √2` from the random-*matrix* ensemble
+applied to an exactly antisymmetric `J` whose value is `2.000000`, and
+Poincaré–Hopf where the field is tangent at `μ = 0`.
+
+**Two of those four are already repaired by the contract that cites them** — v15
+carries `ρ_P = 2` and requires `μ > 0`. So L-EQ's evidence base is smaller than
+claimed *and* its repairs are further along than claimed.
+
+The law is nonetheless vindicated by its own round: **`H = α + ½` entered v15
+without its `|d| < ½` hypothesis** (`V15_CONTRACT_ARITHMETIC_AUDIT.md` A-3), in
+the document that introduces L-EQ. And `P-11` records the inward form — the
+contract citing its own `[M]`-tagged Lean #8 as settled, with the status column
+three sections away.
+
+### 3. The Markov-corpus blindness — fixed, and only half fixed
+
+Every corpus before this round was Markov-generated, so **no label had ever
+contained a delayed cause** and no measurement could separate a memory kernel
+from a recurrence. BED-K (`ceq/beds/bed_k.py`) is the first that can.
+
+The fix is **partial, and the round measured the part that failed.** The delay
+bed is genuinely scan-blind — a best-case first-order recurrence, given the
+label's own true previous value, reads `R² = −0.000170`, while the identical
+fitting code recovers a true AR(1) at `1.000000`. But **the power-law bed is not
+scan-blind**: `R² = 0.604` at BED-K's registered `H = 0.75`, rising to `0.755` at
+`H = 0.9`.
+
+That is not a contradiction of Lean #12, and the distinction is the lesson:
+**#12 is an exact-identity result, not an approximation bound.** A recurrence
+that cannot reproduce a kernel *exactly* may still fit 60% of its variance. Any
+future claim of the form "X cannot represent Y, therefore X cannot fit Y" needs
+an approximation bound, and this campaign does not have one.
+
+The same bed produced **M-20**: the contract registers it twice, three sections
+apart, with inverse predictions — PART III "attention-native, scan-blind", PART
+IV R3 "scan-only ≥ 0.95, attention near 0". The two share not one word, so no
+grep would pair them.
+
+### 4. The six author-owned strikes
+
+Located in `STRUCK.md` alone — not in `attic/workdonenew.pre-v13.md` or
+`V13_CLAIM_AUDIT.md`, where the round's reading order assumed. Twelve struck
+constants collapse to seven claims; one is instrument-caused (the M2 decay
+exponent, a `floor=1e-6` pipeline artifact); **six are author-owned**: the K1
+live-rows slope, the M2 slope as first reported, two M5 tail-norm fabrications at
+`s = 128` and `s = 512`, the U1/N3 pilot Spearman `ρ` for which *no producer has
+ever existed*, and the Karcher residual `5.4944e-13`.
+
+The count matches the contract exactly. **The agreement is on the total only** —
+the contract names no six, so the number is the only available check, and that is
+recorded rather than presented as a match of membership.
+
+### 5. What this round added, and the pattern across it
+
+Eight mechanisms, each with a real instance, a measured number, and a check:
+`M-17`, `M-18` (with a correction against its own author), `M-19`, `M-20`,
+`P-10`, `P-11`, `V-23`, `V-24`.
+
+**The pattern worth designing against.** Nine contract statements were checked
+and six were wrong — and **all six erred in the same direction, over-crediting
+the project**: a parity claim that was false, an evidence base overstated `6.7×`,
+a repair reported as outstanding that was already done, a baseline with no
+producer, a TOST licensed from an `N` where its power is `0.0669`, and a
+conservation claim false for its own central carrier. Errors distributed by
+chance do not share a sign. **A document's errors having a direction is itself a
+measurement, and the direction here is optimism.** The design rule: when a
+contract's numbers are audited and the misses are one-sided, weight the next
+unaudited number in that document *against* the direction of the miss, and audit
+it before building on it rather than after.
+
 ## The eleven checks, before any control ships
 
 Condensed from the above; this is the list to run down.
