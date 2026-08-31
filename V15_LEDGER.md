@@ -554,6 +554,31 @@ Left in the document rather than deleted.
 
 ---
 
+## LOG, it.14 – it.23
+
+| it | node / action | model | verdict |
+|---|---|---|---|
+| 14 | `n17` ARM PL dispatched on the amended operator | opus | running |
+| 14 | R1 **re-registered** — four of five clauses wrong | opus | DONE `caec1ed` |
+| 15 | `n15` X₈′ Möbius returned | sonnet | DONE `k=2` bitwise, `k=3` sign |
+| 15 | coordinator **corrected `n15`'s own provenance trace** before committing | opus | DONE |
+| 16 | `n18` X₃₅′ source solve + Lean #15 ∥ `n19` KK rebuild + CRB | opus ×2 | running |
+| 17 | `n13` X₃₅a returned: **NOT VOID**, gate shown able to reject | opus | DONE |
+| 18 | `workdonenew.md` C-PAR row retracted and rewritten | opus | DONE `e0066b1` |
+| 19 | `n12` Lean #12/#13 returned; **power-law bed is NOT scan-blind** | opus | DONE |
+| 19 | `import CEQ.V15Kernel` added; full `lake build` exit 0 `[1527/1528]` | opus | DONE |
+| 20 | **M-20** filed; R3 blocked, not amended | opus | DONE `6f2356a` |
+| 21 | **SCOREBOARD MOVE** — 4 of 38 | opus | DONE `b11d314` |
+| 22 | `ceq/x35p/__init__.py` created; a coordinator-caused stall cleared | opus | DONE |
+| 23 | **SCOREBOARD MOVE — no movement.** No node landed since it.21; 4 of 38 stands | opus | DONE |
+
+**it.23 is a scheduled scoreboard iteration and the score does not move.** Five
+nodes were running at it.21 and the same five are running now. Recording a
+non-move is the point of a scheduled move: a scoreboard that only appears when it
+has good news is not a scoreboard.
+
+---
+
 ## SCOREBOARD — it.21 (a scheduled move; the contract fixes it.10, 17, 21, 23, 30)
 
 Baseline `0 of 39` per RUL-7. The contract's own "current 22%" has no producer.
@@ -620,6 +645,59 @@ binding constraint is, and always was, **multiplicative composition along paths*
 ---
 
 ## NEXT
+
+**it.24 – it.30 — the run-in, and what it can and cannot deliver.**
+
+Five nodes hold everything unresolved. Until they land, the coordinator does not
+dispatch more: the round has nineteen commits and seven iterations left, and a
+tenth concurrent node would produce artifacts nobody reads before it.30.
+
+**On collection, in this order.**
+
+1. **`n17` ARM PL.** Its three binds decide whether R1 can run at all. If the
+   parity bind is not bitwise against the repo's own reference implementation, the
+   amendment does not survive contact with the harness and that outranks
+   everything else in the round.
+2. **`n18` source solve.** Watch for its self-directed kill: if the exact inverse
+   loses to the adjoint at high noise it must be **retired to the noiseless
+   regime in writing**. A node that reports only where it wins has not run the
+   sweep it was asked for.
+3. **`n19` KK / CRB.** The KK rebuild cannot be substituted — the author struck
+   his own probe for reading `0.000` on an acausal kernel. The CRB half is
+   expected to return "the bound does not exist for a discrete onset", which is a
+   **passing** outcome and must not be dressed up as a failure or filled with an
+   estimate.
+4. **`n16` BED-1.** Carries C-TS, the only ladder bar never built.
+5. **`n14` X₃₅c prior art.** Holds the question that could void X₃₅b: if
+   FCI-class identifiability says a latent's location is fixed only up to an
+   equivalence class, **LATENT LOCALIZATION ACCURACY has a theoretical ceiling
+   that is not a property of any method.**
+
+**Then, in whatever iterations remain:**
+
+- **it.29's `MISTAKES.md` round entry**, which the contract specifies by content:
+  the wrong-hop mechanism sentence, L-EQ, the Markov-corpus blindness, and the
+  six author-owned strikes. Eight mechanisms are already filed
+  (`M-17`–`M-20`, `P-10`, `P-11`, `V-23`, `V-24`); the round entry is the
+  synthesis, not a restatement.
+- **it.30's prognosis**: the scoreboard, **the one claim sentence the tables
+  permit**, and the next-X list.
+
+**What this round will not deliver, stated now rather than at it.30.** R1 and R2
+will not have run unless `n17` lands early enough to leave a training cell's
+wall-clock inside the remaining iterations — and on the re-measured law
+(`n^1.1920` CPU, `n^0.9734` CUDA) an N=8 R1 cell is affordable but has to queue
+behind a device re-certification that is itself blocked on `calibrate_bar` being
+CPU-only. **The honest expected outcome of R11 is the contract's stated Floor,
+not its ceiling**: a diagnosed non-crossing with theorems attached. The
+difference from previous rounds is that the diagnosis is now specific — the
+binding constraint is multiplicative composition along paths, bounded at
+`R² = 0.01–0.02` for order-0 features against the label — and the theorems are
+machine-checked rather than asserted.
+
+---
+
+## SUPERSEDED — it.15's plan, kept for the record
 
 **it.15 — R1, and it is a different measurement than the contract registered.**
 
