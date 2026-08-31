@@ -136,12 +136,76 @@ def kernel_matrix(kind: str, n: int, **params) -> np.ndarray:
 # --------------------------------------------------------------------------
 
 
-def build(kind: str, n: int, seed: int, **params) -> dict:
-    """z = K @ b, oracle-labeled: K IS the label generator, never fit to it.
+def _plant_field(plant, n: int, rng) -> dict:
+    """The PLANTED HIDDEN CAUSE field -- CEQ_V15_1_DELTA.md X35b, "the bed
+    variant costs one extra field in the generator."
+
+    A plant is a latent source that switches on at `index` and drives `z`
+    from there with iid N(0, magnitude^2) -- `u_i = magnitude * g_i` for
+    `i >= index`, exactly 0 before it. It is a HIDDEN cause in the only sense
+    that matters to X35a: it enters `z`, and it is absent from every visible
+    input the manifest hands an arm (`b`, `pos`). Its realisation is recorded
+    here as ground truth for SCORING only; a detector that reads
+    `bed["plant"]` is scoring itself.
+
+    `plant` is a dict `{index, magnitude}`, a LIST of them (v15.2's
+    superposition must-fire: two sources, summed), or None. The field is
+    written on EVERY manifest, planted or not, so that a run can never be
+    scored against the wrong ground truth by a caller who forgot to ask --
+    `present` is False and `index` is None on an unplanted bed rather than
+    the key being missing.
+
+    `index` and `magnitude` name the EARLIEST source, which is the only one an
+    onset detector can call (a later source switches on inside a residual that
+    is already above threshold); `indices`/`magnitudes` carry all of them, for
+    the source-recovery estimators that can separate them.
+
+    A magnitude of 0.0 is a null plant BY VALUE: `u` is identically 0.0 and
+    `z` is bitwise the unplanted label, while `present` is still True. That is
+    deliberate -- it is what separates "detects a plant" from "detects the
+    plant field being set" (MISTAKES.md V-10).
+
+    SEEDING. Draws come from `build`'s single rng AFTER `b`, so the visible
+    input `b` is bitwise identical at a given seed whether or not a plant is
+    present: planted and unplanted runs are matched pairs, not independent
+    draws. Each source draws its own full-length vector and masks the prefix
+    (rather than drawing `n - index`), so moving a source's index does not
+    reshuffle any other source's realisation.
+    """
+    sources = [] if plant is None else ([plant] if isinstance(plant, dict) else list(plant))
+    u = np.zeros(n, dtype=np.float64)
+    idxs, mags = [], []
+    for s in sources:
+        idx, mag = int(s["index"]), float(s["magnitude"])
+        if not 0 <= idx < n:
+            raise ValueError(f"plant index {idx} outside [0, {n})")
+        drive = mag * rng.standard_normal(n)
+        drive[:idx] = 0.0
+        u += drive
+        idxs.append(idx)
+        mags.append(mag)
+    first = int(np.argmin(idxs)) if idxs else None
+    return dict(present=bool(sources),
+                index=idxs[first] if idxs else None,
+                magnitude=mags[first] if idxs else None,
+                indices=idxs, magnitudes=mags, u=u)
+
+
+def build(kind: str, n: int, seed: int, plant=None, **params) -> dict:
+    """z = K @ b (+ a planted latent), oracle-labeled: K IS the label
+    generator, never fit to it.
 
     Manifest dict, matching ceq/corpus.py's build() shape: every field a
-    caller needs (kind, n, seed, params, K, b, z, pos) sits at the top level,
-    no internal state hidden behind a class.
+    caller needs (kind, n, seed, params, K, b, z, pos, plant) sits at the top
+    level, no internal state hidden behind a class.
+
+    PLANTED HIDDEN CAUSE. `plant` (default None) is the one extra field
+    CEQ_V15_1_DELTA.md X35b asks for; see `_plant_field` for its shape and its
+    seeding. The visible forward computation stays `K @ b` and is recoverable
+    from the manifest at any time as `rebuild(bed, bed["b"])`, which is what
+    X35a's oracle `z_model(visible)` is -- so `z - rebuild(bed, bed["b"])` is
+    exactly the planted latent, and the residual instrument has an exact
+    ground truth to be scored against.
 
     POSITIONAL CHANNEL. `pos = arange(n)` is an explicit field of the
     manifest, not just an implicit array index: `b[i]`'s position is `pos[i]`
@@ -161,16 +225,20 @@ def build(kind: str, n: int, seed: int, **params) -> dict:
     b = rng.standard_normal(n).astype(np.float64)
     K = kernel_matrix(kind, n, **params)
     z = K @ b
+    pl = _plant_field(plant, n, rng)
+    if pl["present"]:
+        z = z + pl["u"]
     pos = np.arange(n, dtype=np.int64)
-    return dict(kind=kind, n=n, seed=seed, params=dict(params), K=K, b=b, z=z, pos=pos)
+    return dict(kind=kind, n=n, seed=seed, params=dict(params), K=K, b=b, z=z,
+                pos=pos, plant=pl)
 
 
-def build_delay(n: int, d: int, seed: int) -> dict:
-    return build("delay", n, seed, d=d)
+def build_delay(n: int, d: int, seed: int, plant=None) -> dict:
+    return build("delay", n, seed, plant=plant, d=d)
 
 
-def build_powerlaw(n: int, H: float, seed: int) -> dict:
-    return build("powerlaw", n, seed, H=H)
+def build_powerlaw(n: int, H: float, seed: int, plant=None) -> dict:
+    return build("powerlaw", n, seed, plant=plant, H=H)
 
 
 # --------------------------------------------------------------------------
