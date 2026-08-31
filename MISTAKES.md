@@ -1720,6 +1720,59 @@ of it: **the modification enters only through the key logit, additively, and
 vanishes at zero.** Do not restate it as "bitwise standard attention" unqualified,
 which is what the original clause claimed and what the refutation removed.
 
+### M-20. A pre-registration that predicts both outcomes, in two sections that never met
+
+`CEQ_V15_CONTRACT.md` registers BED-K's delay bed twice, three sections apart,
+with **opposite** predictions.
+
+PART III, defining the bed:
+
+> BED-K (memory kernels, new) … **attention-native, scan-blind by Lean #12**
+> `[RUN: best first-order recurrence 0.990]`
+
+PART IV, R3, scoring it:
+
+> R3 BED-K delay bed: **scan-only ≥ 0.95** (theorem-backed), **attention** /
+> fractional head **near 0**
+
+PART III says the scan fails and attention wins. PART IV says the scan wins at
+`≥ 0.95` and attention reads near zero. **The arms are transposed.** Whichever
+result the cell returns, one section is confirmed and the other refuted, so the
+registration constrains nothing — which is the entire purpose a pre-registration
+serves.
+
+The measurement settles which is right and, separately, kills a third figure:
+a best-case first-order recurrence reads `R² = −0.000166` on the delay bed and
+`0.604` on the power-law bed at the registered `H = 0.75`, rising to `0.755` at
+`H = 0.9` (`V15_JUPITER3_KERNEL.md`). PART III's reading is correct for the delay
+bed; PART IV's is the inverse of the truth; and `[RUN: 0.990]` matches **neither**
+bed at any tested `H`.
+
+**Why this is not `M-7`.** `M-7` is a pre-registration with a *hole* — some
+outcome the registration failed to specify, which is then decided after the data.
+This is the opposite defect: **every outcome is specified, twice, oppositely.**
+A hole is found by asking "what if the result is X?" and finding no answer. This
+is found only by reading two distant sections against each other and noticing
+they cannot both be true — which nobody did, because each is locally coherent and
+they are three sections apart in a document long enough that no reader holds both
+at once.
+
+**What made it survive.** The two statements use different vocabulary for the
+same fact. "Attention-native, scan-blind" and "scan-only ≥ 0.95, attention near
+0" do not share a single word in common, so no grep, no diff and no eye
+skimming for repetition would pair them. The contradiction is only visible after
+translating both into the same predicate.
+
+**Check.** Every cell's prediction is stated **once**, in one place, in a form
+that names the arm and the number together — `arm=scan, metric=R², predicted <
+0.05` — and every other section that refers to that cell **links** to it rather
+than restating it. Where a contract must restate, the restatement carries the
+canonical line's file and line reference so the two can be diffed mechanically.
+Before any cell runs, list its predictions from all sections and check they are
+consistent; if two disagree, **the cell does not run until the author picks one**,
+because running it produces a number that confirms whichever half is quoted
+afterwards. Related: [[M-7]] is the hole; this is the double-fill.
+
 ## The eleven checks, before any control ships
 
 Condensed from the above; this is the list to run down.
