@@ -113,6 +113,83 @@ the 45.8 s/turn figure (L-TIME).
 | 11 | `n14` Jupiter-4: X₃₅c prior art, before names | opus | DISPATCHED | `V15_X35C_PRIOR_ART.md` |
 | 11 | `n15` Jupiter-5: X₈′ Möbius identity + rename plan | sonnet | DISPATCHED | `V15_X8_MOBIUS.md` |
 
+| 12 | **CONTRACT DELTA v15.1 → v15.2**: X₃₅′ wave-theoretic, Lean #15 | — | **FILED** | `CEQ_V15_2_DELTA.md` |
+| 12 | `n16` Cameron-2: BED-1, committor labels, guards, CK, Morse, Pesin | opus | DISPATCHED | `V15_BED1.md` |
+| 13 | `n8` Jupiter-2 returned: **the parity clause is REPAIRED, not retired** | opus | **DONE** | `V15_JUPITER2_FORK.md`, `lean/CEQ/V15Fork.lean` |
+| 13 | `n11` Mercury returned: `--device` lands and **correctly refuses** cuda | sonnet | **DONE** | `V15_MERCURY_DEVICE.md` |
+| 13 | coordinator: V-24 filed with the reflexive caution the node omitted | opus | **DONE** | `MISTAKES.md` |
+| 14 | `n17` Mercury-2: **ARM PL** built on the amended operator + 3 binds | opus | DISPATCHED | `V15_ARM_PL.md` |
+
+---
+
+## it.13 — THE PARITY CLAUSE IS REPAIRED, AND L-LEAN'S BLOCK LIFTS
+
+`V15_N3_LEAN.md` concluded *"no single operator has both"*. **That was too
+strong.** Under L-AMEND one operator has both, and `n8` built it.
+
+```
+l_ij  =  q_ij  −  C_j  +  s_j          C = scan(g),  value-zero BOS at j = 0
+O_i   =  Σ_{j≤i} softmax_j(l_i·) · V_j
+```
+
+| bind | setting | measured |
+|---|---|---|
+| **(P)** parity | `g ≡ 0, s ≡ 0` | `l_ij = q_ij`, **bitwise** standard attention |
+| **(L)** label | `g_j = log a_j`, `s_j = log(1−a_j)`, `V_j = b_j/(1−a_j)`, `V_0 = 0` | **2.2e-16** at `s = 8` |
+
+**The mechanism is a telescope**, verified independently by the coordinator:
+`(1−a_j)e^{−C_j} = e^{−C_j} − e^{−C_{j−1}}`, whose partial sums collapse to
+`e^{−C_i} − e^{−C_0}`; the BOS slot contributes exactly the boundary term, so
+`Z_i = e^{−C_i}` and the normalizer **reproduces** the target factor instead of
+cancelling it. The BOS sink is not a patch — it is the boundary term of the
+telescope. The entire difference from §S-M is one factor `(1−a_j)`.
+
+### Two hoped-for results refuted, and the second was the coordinator's
+
+- The additive-logit repair computes **exactly** `y_i / R_i` — the label over the
+  multiplicative hop's own row sum — to `4.44e-16`. One scalar `R_i` obstructs
+  (P) for one form and (L) for the other.
+- **"Softmax's normalizer is the obstruction to path products" is FALSE.** That
+  framing was proposed by the coordinator at it.5 as the round's possible
+  headline. It holds only with the drives carried as values; allow a
+  position-local rescale and the obstruction dissolves, uniquely, at
+  `γ_j = 1/(1−a_j)`. **The normalizer was never an obstruction — it is a change
+  of units.** What survives is the bound `max_j|V_j| ≥ max_i|y_i|`.
+
+### The escape refused, and the standard applied reflexively
+
+`out = softmax(q)@V1 + λ·X@V2` passes parity **bitwise** for the honest gate, for
+Gaussian noise, and **for the label itself**. Empty rejection region; the `λ = 0`
+proof uses one fact and no property of `X`. Filed **V-24**.
+
+Against that, the replacement's own four planted mutilations all fire at `O(1)`:
+`0.9749`, `0.9165`, `1.000`, `0.4845`.
+
+### Seven costs, three binding
+
+"Unnormalized" goes, and §S-M's operator with it. The **query-side scan term is
+deleted** — under a causal softmax a scan enters key-side only and the query half
+annihilates identically (`max|diff| = 0`); anything reasoning about the query
+half is void. **Stationarity becomes load-bearing**: the construction needs
+`a_j ≠ 1` while parity sits at `a ≡ 1`, so the two binds are at opposite ends of
+one degeneration and at the parity setting the oracle values diverge. Value range
+`1/(1−a)` reaches `1e6` at `a = 1−1e-6` — a **predicted failure mode filed before
+the arm exists**, shipping as a per-cell column.
+
+### The coordinator's added caution, written into V-24
+
+The replacement's parity bind sits at "both auxiliary heads zero". Its rejection
+region is non-empty — it excludes every modification that is not a pure additive
+key-logit bias — but it is **narrower** than the refuted original, which claimed
+parity at the gate's own identity point. Every parity row must state the bind's
+content as *"the modification enters only through the key logit, additively, and
+vanishes at zero"*, never as "bitwise standard attention" unqualified.
+
+**L-LEAN's block lifts.** `#1, #2, #3, #5, #6, #7` plus `Asink_row_sum`,
+`Asink_nonneg`, `Asink_computes_chain`, `gate_zero_key_logit_identity` are green
+with no `sorry` and on the three standard axioms only. ARM PL may be built and,
+once its binds are green, trained.
+
 ---
 
 ## it.11 — L-AMEND ARRIVES, AND THE GATE WAS NEVER THE BINDING CONSTRAINT
@@ -478,6 +555,40 @@ Left in the document rather than deleted.
 ---
 
 ## NEXT
+
+**it.15 — R1, and it is a different measurement than the contract registered.**
+
+The block is lifted. ARM PL is building on the amended operator (`n17`). When its
+three binds are green, R1 runs — but **not as PART IV registered it**, and the
+differences are all findings from this round rather than convenience:
+
+| contract's R1 | what it must now be | why |
+|---|---|---|
+| ARM PL = §S-M's unnormalized hop | the amended `l_ij = q_ij − C_j + s_j` operator with the BOS sink | §S-M's operator is refuted; `Asink_computes_chain` replaces `prefix_logit_computes_chain` as the (L) bind |
+| bind at `≤ 1e-6` | measured, and it reads `2.2e-16` | re-measured, not re-quoted (L-TIME) |
+| kill by linear probe on `log a` | **probe `sign(a_i)`, report accuracy `p`** | `log|a|` has `SST = 0.000e+00` on this corpus and returns the same value whatever the arm does (M-18) |
+| `ĥ > 1` scored separately from the crossing at R2 | **one event, not two** | `NRMSE < floor₁ ⟺ ĥ > 1` exactly, verified at `t* = 2, 8, 32` to ten decimals |
+| — | **new column:** `max_j\|V_j\|` against `1/(1 − â_max)` | the amended operator's predicted failure mode, filed before it runs |
+| — | **new column:** achieved power | Mars attack #2, and A-1's `0.0669` at `N = 23` |
+| CPU cells | GPU if and only if `calibrate_bar` is re-certified on device | `--device cuda` currently aborts by design (V-22); 637 CPU-hours against 47 GPU-hours turns on this one predecessor |
+
+**Venus's filing already stands against this** (`V15_VENUS_PREDICTIONS.md`,
+`2026-08-31T11:01:32Z`, pre-data): PL does **not** cross `0.7071`, seed mean
+`0.86`, 80% interval `[0.74, 0.96]`, confidence `0.72` — and R2 crosses **before**
+R1, inverting the contract's ordering, at `0.78`. Those are scored on arrival.
+
+**Still in flight, do not duplicate:** `n12` Lean #12/#13, `n13` X₃₅a residual,
+`n14` X₃₅c prior art, `n15` X₈′ Möbius, `n16` BED-1, `n17` ARM PL.
+
+**Owed and not yet dispatched:** X₃₅′ instruments (a) exact source solve, (b)
+time-reversal + Wiener, (c) the KK rebuild — which ships only after a planted
+anticipating kernel reads nonzero, the author's own having read `0.000` and been
+voided — and (d) the CRB floor. Lean #15 `resolvent_inverse_is_difference` rides
+with (a).
+
+---
+
+## SUPERSEDED — it.6's block, kept for the record
 
 **it.6 — the arm is BLOCKED on `n8`, and that block is correct.**
 
