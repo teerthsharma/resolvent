@@ -554,6 +554,42 @@ Left in the document rather than deleted.
 
 ---
 
+## TERMINATION RECORD — for the next round's D-3 gate
+
+**This loop terminated by reaching its ceiling.** `.claude/ralph-loop.local.md`
+read `iteration: 30`, `max_iterations: 30` at the stop. No hand-rename, no
+`rm`, no orphaned process.
+
+**It is the first CEQ loop to do so.** The two before it mounted with
+`max_iterations: 0` — the sentinel the stop hook reads as infinity
+(`stop-hook.sh:61` guards the ceiling behind `MAX_ITERATIONS -gt 0`) — and both
+were killed by hand. The cause of death sentence a future mount should quote:
+
+> **The R11 loop reached its declared ceiling of 30 iterations and stopped
+> there.** The cap was passed as the literal `--max-iterations 30` flag and read
+> back out of the state file at mount rather than trusted from the request; prose
+> forms of the cap fall through the launcher's catch-all and leave the sentinel
+> `0`, which is what killed R10 and the loop before it.
+
+**Two nodes were still running at the ceiling** and their reports land after it:
+`n20` R1 (the deciding cell — `results/v15_r1.jsonl` and `results/v15_r1.txt`
+exist, `V15_R1.md` does not) and `n18` the X₃₅′ source solve
+(`ceq/x35p/source.py` and `lean/CEQ/V15Source.lean` exist,
+`V15_X35P_SOURCE.md` does not). **Neither result is in the prognosis and the
+prognosis says so.** Do not read the presence of a journal as a verdict.
+
+**Final verified state at the ceiling:**
+
+| | |
+|---|---|
+| commits on `feat/ceq-v15-r11` | 28 |
+| `tests/loop` | **15 failed / 515 passed** — the same 15 by name; passing count grew from 501 as modules were added |
+| `lake build` | exit 0 at `[1527/1528]`, three new files, every theorem `#print axioms`-checked |
+| scoreboard | **4 of 38**, both instrument points |
+| claim ladder | C-PAR repaired to bitwise · C-CAP unchanged 0 of 9 · C-TS has a bed |
+
+---
+
 ## LOG, it.14 – it.23
 
 | it | node / action | model | verdict |
