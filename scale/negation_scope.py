@@ -1409,7 +1409,7 @@ def bootstrap_ci(pred, y, *, n_boot: int = 400, seed: int = 0, alpha=0.05):
 def calibrate_bar(n: int = 2048, s: int = 512, d: int = 256, *,
                   oracle_fn=None, batch_fn=None, feature_fn=None,
                   steps: int = 150, lr: float = 0.02,
-                  seed: int = 0, standardise: bool = True) -> dict:
+                  seed: int = 0, standardise: bool = True, device=None) -> dict:
     """Five reference points pin the scale AND prove the task and budget are real.
 
     THE THREE ORIGINAL CHECKS WERE NOT ALL MEASUREMENTS. Two were algebraic
@@ -1446,13 +1446,38 @@ def calibrate_bar(n: int = 2048, s: int = 512, d: int = 256, *,
        far from the initialisation's the control was solving a strictly harder
        problem than the arms and its failure was read as the task's. See the
        note above the training loop.
+
+    `device=None` (the default) IS the shipped path, byte-identically: the
+    builder call below omits the `device=` keyword entirely when it is None, so
+    the call expression is the one every published bar reading was taken
+    through, and the positive control's net is neither constructed nor moved
+    differently. That is why the default is None rather than
+    `torch.device("cpu")` -- "cpu" would be *equivalent*, but None is
+    *unchanged*, and equivalence here is a claim that would have to be
+    measured rather than read off the source.
+
+    On a non-None device the corpus is built there (every `M3_TASKS` builder
+    already threads `device=` and draws from a seeded CPU generator before
+    moving, so the tensor BYTES are the same draw on either device), and the
+    positive control's net is constructed and initialised on cpu from the same
+    seeded `g` and only THEN moved -- `.to()` copies values, it does not redraw
+    them, so the control starts from identical weights on both devices and any
+    difference in `trained_two_feature` is device arithmetic. What is NOT
+    device-independent is the arithmetic itself: clauses 2/3/4/5 are reductions
+    over `n` examples and cuBLAS/cuDNN do not promise the CPU's reduction
+    order. Re-certified at `V16_BAR_RECERT.md`; `chain_flipper_dependence` and
+    its siblings are pure closed forms in Python floats and take no device.
     """
     ofn = oracle_fn or oracle
     #: A SECOND task needs a second tensor builder, not just a second label:
     #: `make_batch` writes CH_FLIP at ONE position, so `counter_squared` over
     #: that tensor is identically 1.0 and every clause below reads NaN. The hook
     #: defaults to the shipped builder, so the shipped path is unchanged.
-    x, y, f, p = (batch_fn or make_batch)(n, s, d, seed=seed)
+    #: The keyword is OMITTED when `device is None`, not passed as None: that
+    #: keeps the default call byte-identical to the pre-device one and keeps a
+    #: `batch_fn` hook that never accepted `device=` working on the cpu path.
+    x, y, f, p = (batch_fn or make_batch)(
+        n, s, d, seed=seed, **({} if device is None else {"device": device}))
     if oracle_fn is not None:
         y = ofn(x, f, p)
     out = {}
@@ -1498,6 +1523,14 @@ def calibrate_bar(n: int = 2048, s: int = 512, d: int = 256, *,
         if isinstance(layer, torch.nn.Linear):
             torch.nn.init.normal_(layer.weight, 0.0, 0.5, generator=g)
             torch.nn.init.zeros_(layer.bias)
+    #: MOVED AFTER INITIALISATION, deliberately. `g` is a cpu generator, and
+    #: `normal_(..., generator=g)` on a cuda parameter would refuse it outright;
+    #: initialising on cpu and copying means the control's starting weights are
+    #: bit-identical on every device, so `trained_two_feature`'s cpu/cuda gap
+    #: measures the optimiser's arithmetic and not a different draw. Same
+    #: ordering as `scale/r10_capacity_sweep.py::train_with_checkpoints`.
+    if device is not None:
+        net = net.to(device)
     #: THE CONTROL TRAINS ON THE LABEL THE ARMS TRAIN ON. `run_arm`
     #: (`scale/m3_capability.py:196`) optimises against `(y - mu) / sigma` and
     #: un-standardises before it scores (`:187`); this clause used to optimise

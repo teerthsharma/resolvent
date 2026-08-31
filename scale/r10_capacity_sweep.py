@@ -45,9 +45,17 @@ THREADS ARE PINNED HERE, at 8, and stated in every record. The house pin is 2
 (`m3_capability.py:66`) and that is what the numbers already in
 `results/m3_capability.txt` were taken at; 8 was measured 1.38x-1.55x faster on
 this box and saturates there (2/8/16 threads at n=32768: 3.943 / 2.550 / 2.612
-s/step). No number here is compared against a 2-thread number, and NRMSE is not
-a function of the reduction order at this precision, but the pin is recorded so
-the reading is reproducible rather than merely repeated.
+s/step). No number here is compared against a 2-thread number, and the pin is
+recorded so the reading is reproducible rather than merely repeated.
+
+THIS PARAGRAPH USED TO END "and NRMSE is not a function of the reduction order
+at this precision". That sentence is false and its own file already refutes it:
+MISTAKES.md M-10 measured `eval_nrmse` moving 2.345e-3 on thread count ALONE,
+which is nothing but reduction order, and `refuse_cross_device_pool` below
+exists because of it. The device axis is smaller at 0 steps and unmeasured at
+9600: V16_BAR_RECERT.md reads |cpu-cuda| at 1.68e-07 on the 0-step gate over 32
+cells, and does not measure the trained readings at all. NRMSE IS a function of
+the reduction order; what is claimed is only that the pin makes it reproducible.
 """
 from __future__ import annotations
 
@@ -157,11 +165,29 @@ def refuse_cross_device_pool(rows: list[dict]) -> str:
     accommodation for it ("the reading is void"), not "prefer the bigger
     bucket".
 
+    IT IS NOT ONLY CELL ROWS. `calibrate_bar` now takes a device and the `bar`
+    record carries one, so a bar measured on cpu and a bar measured on cuda are
+    two readings of two instruments and pooling them is the same defect one
+    level up -- the level V-22 names. This function inspects `device` and
+    nothing else about a row, so it already refuses such a set; the only thing
+    that had to change was that `bar` records started carrying the field.
+
     A row with no `device` field is treated as `"cpu"` -- every journal this
     file wrote before this change was CPU-only by construction, and reading a
     missing field as an unknown fourth bucket would make an old journal and a
     new `--device cpu` journal refuse to pool with each other, which is not
     the defect this guard exists to catch.
+
+    THAT DEFAULT HAS ONE LIVE TRAP AND IT IS NAMED HERE RATHER THAN FIXED.
+    The `t="ceiling"` record carries NO `device` field and deliberately never
+    will: `sqrt((t*-1)/t*)` is a closed form with no arithmetic on any device
+    in it, and stamping a device on it would assert it had been measured on
+    one. Read as `"cpu"` by the rule above, it will refuse against the cuda
+    cells of its own journal. So FILTER BY `t` BEFORE CALLING THIS -- it wants
+    readings (`cell`, `bar`, `instrument_broken`), not the analytic rows. The
+    false positive is loud rather than silent, which is the correct direction
+    for this guard, but a caller that hands it a whole journal file will hit
+    it. `tests/loop/test_no_cross_device_pooling.py` pins the behaviour.
     """
     devices = {r.get("device", "cpu") for r in rows}
     if len(devices) > 1:
@@ -196,10 +222,11 @@ def main() -> int:
     #: number ever published by it was measured on whatever device
     #: `torch.randn`/`nn.Linear` land on with no device argument, i.e. cpu.
     ap.add_argument("--device", default="cpu", choices=("cpu", "cuda"),
-                    help="cpu is the shipped default. cuda currently cannot "
-                         "produce a scored verdict from this entry point -- "
-                         "see the ABORT below and V15_NEPTUNE_SYSTEMS.md "
-                         "condition 2.")
+                    help="cpu is the shipped default and every published cell "
+                         "in results/ was taken there. cuda is certified for "
+                         "the BAR and the 0-STEP GATE only -- V16_BAR_RECERT.md "
+                         "-- and its cells may never be pooled with cpu cells "
+                         "(refuse_cross_device_pool).")
     a = ap.parse_args()
     if len(a.max_steps) != len(a.n_train):
         ap.error("--max-steps needs one entry per --n-train")
@@ -225,32 +252,44 @@ def main() -> int:
         torch.use_deterministic_algorithms(True)
         torch.backends.cudnn.deterministic = True
 
-        #: CONDITION 2, V15_NEPTUNE_SYSTEMS.md: calibrate_bar() and GATE_TOL
-        #: were established on CPU and neither re-certifies on cuda for free.
-        #: `negation_scope.calibrate_bar` never accepts a `device` argument --
-        #: its reference batch, its positive-control net and its `feats`
-        #: tensor are built with no device threading on every call, cuda run or
-        #: not -- so "run calibrate_bar on cuda" is not reachable from this
-        #: file; it needs scale/negation_scope.py to accept and honour a
-        #: device, and that module is owned by another node this round (out of
-        #: this node's write scope). GATE_TOL=1e-3 above is a threshold
-        #: measured over 16 untrained CPU seeds (see its docstring). Scoring a
-        #: cuda cell against either is importing a CPU-established constant
-        #: across a device boundary -- MISTAKES.md V-22's shape -- so this
-        #: path refuses to produce a scored verdict rather than do that
-        #: silently. `train_with_checkpoints(..., device=...)` and
-        #: `refuse_cross_device_pool` are still fully wired (see both above):
-        #: the mechanism this predecessor was asked to add exists and is
-        #: tested; only the credited-verdict path is gated on re-certification
-        #: this node cannot perform.
-        print("ABORT: --device cuda cannot produce a scored verdict here.",
-              flush=True)
-        print("  calibrate_bar() and GATE_TOL=%.0e were established on cpu and "
-              "neither re-certifies on cuda without editing "
-              "scale/negation_scope.py, which is outside this node's write "
-              "scope. See V15_NEPTUNE_SYSTEMS.md condition 2 and "
-              "MISTAKES.md V-22." % GATE_TOL, flush=True)
-        return 1
+        #: CONDITION 2, V15_NEPTUNE_SYSTEMS.md, DISCHARGED -- not waived.
+        #: This branch used to ABORT here, because `calibrate_bar` took no
+        #: `device` argument and GATE_TOL=1e-3 was a threshold measured over 16
+        #: untrained CPU seeds; scoring a cuda cell against either is
+        #: MISTAKES.md V-22's shape, a constant carried across a system
+        #: boundary. Both were re-measured on cuda at `V16_BAR_RECERT.md`
+        #: against tolerances read out of `bar_verdict`'s own signature and out
+        #: of GATE_TOL's own docstring -- tolerances that PREDATE the
+        #: measurement rather than being fitted to the gap it found (M-2):
+        #:
+        #:   BAR, e3_t{1,2,8,32} at n=N_EVAL, s=S, d=D, steps=600, seed 0:
+        #:     CALIBRATED on both devices at every rung. Worst |cpu-cuda| as a
+        #:     fraction of the clause's OWN tolerance -- predict_the_mean
+        #:     8.580e-08 / 1e-6 = 8.6%; flipper_dependence 1.053e-07 / 0.05 =
+        #:     2.1e-06; oracle 0.0 exactly on both; payload_only and
+        #:     trained_two_feature below 1.5e-06 of their margin to the bar.
+        #:   0-STEP GATE at the shapes R1' uses (t*=2, n_train=2048,
+        #:     n_eval=4096, s=64, d=24), all four arms x 8 seeds = 32 cells:
+        #:     PASSES on both devices. Worst |cpu-cuda| 1.679e-07 = 1.7e-04 of
+        #:     GATE_TOL, and the SMALLEST margin any of those 64 readings holds
+        #:     above the gate line (1.0 - GATE_TOL) is 9.704e-04, i.e. 5,780x
+        #:     the device gap.
+        #:
+        #: WHAT IS NOT CERTIFIED, and why it does not gate this branch: the
+        #: TRAINED eval_nrmse readings are not device-comparable and nothing
+        #: here claims they are. They do not have to be. Condition 1 forbids
+        #: pooling a cuda cell with a cpu one AT ALL -- `refuse_cross_device_pool`
+        #: above, plus `device` on every record this file writes -- and a cuda
+        #: run is otherwise scored only against the analytic 1-hop ceiling and
+        #: the absolute bar of 1.0, both closed forms with no device in them,
+        #: plus a bar and a gate now measured on the device the cells were
+        #: taken on. See V16_BAR_RECERT.md's Limits for what remains open.
+        #:
+        #: `--threads` is still journalled here and still honoured by torch,
+        #: but on cuda it does NOT name the reduction lane -- the GPU's
+        #: accumulation order is not a function of it. Do not bucket cuda rows
+        #: by `threads` alone (`it11_verdict.by_seed` does exactly that);
+        #: bucket by `device` first.
 
     task = "e3_t%d" % a.t_star
     batch_fn, oracle_fn, feature_fn, fd_fn = M3_TASKS[task]
@@ -280,11 +319,21 @@ def main() -> int:
           % (a.t_star, ceiling), flush=True)
     emit(dict(t="ceiling", t_star=a.t_star, hop_budget=1, nrmse_ceiling=ceiling))
 
+    #: THE BAR IS MEASURED ON THE DEVICE THE CELLS ARE TAKEN ON. Reading a
+    #: cuda cell against a bar calibrated on cpu is V-22 exactly -- a threshold
+    #: carried across a system boundary -- and it is now avoidable, so it is
+    #: not done. `device=None` on the cpu path leaves the call byte-identical
+    #: to every bar record already in `results/`.
     cal = calibrate_bar(n=N_EVAL, s=S, d=D, steps=600, lr=LR, batch_fn=batch_fn,
-                        oracle_fn=oracle_fn, feature_fn=feature_fn)
+                        oracle_fn=oracle_fn, feature_fn=feature_fn, device=device)
     ok, why = bar_verdict(cal, flipper_dependence=None if fd_fn is None else fd_fn(S))
     print("  BAR %s -- %s" % ("CALIBRATED" if ok else "BROKEN", why), flush=True)
-    emit(dict(t="bar", ok=bool(ok), why=why, **{k: float(v) for k, v in cal.items()}))
+    #: `device` on the bar record too, not only on the cells: the bar is now a
+    #: per-device measurement, so a set of bar records spanning devices is the
+    #: same pooling defect condition 1 names and `refuse_cross_device_pool`
+    #: must refuse it. Bound by `tests/loop/test_no_cross_device_pooling.py`.
+    emit(dict(t="bar", ok=bool(ok), why=why, device=a.device,
+              **{k: float(v) for k, v in cal.items()}))
     if not ok:
         print("ABORT: calibration bar failed; crediting nothing.", flush=True)
         return 1
