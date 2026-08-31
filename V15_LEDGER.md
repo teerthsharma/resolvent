@@ -90,6 +90,119 @@ the 45.8 s/turn figure (L-TIME).
 | 5 | `n3` returned: **train-gate green as algebra, PARITY CLAUSE REFUTED** | opus | **DONE** | `V15_N3_LEAN.md`, `lean/CEQ/V15.lean` |
 | 5 | `n8` Jupiter-2: settle whether (L) and (P) can share one operator | opus | DISPATCHED | `V15_JUPITER2_FORK.md` |
 
+| 6 | coordinator: C-PAR row rewritten, both routes closed | opus | **DONE** | `089e789` |
+| 6 | `n9` normalization-boundary sweep (does the same defect recur?) | sonnet | DISPATCHED | `V15_NORMALIZATION_SWEEP.md` |
+| 7 | `n1` returned: **10/10 [V-eq]**; the bind lands on LINEAR attention | opus | **DONE** | `V15_N1_PRIOR_ART.md` |
+| 7 | `n6` Venus returned: **R1's kill-diagnostic cannot discriminate** | opus | **DONE** | `V15_VENUS_PREDICTIONS.md` |
+| 7 | coordinator: M-18, M-19 filed; three Venus claims verified in source | opus | **DONE** | `MISTAKES.md` |
+| 7 | hazards relayed to `n4` mid-flight (positional channel, GL NaN, α box) | opus | **SENT** | — |
+
+| 8 | `n4` returned: BED-K built, **6/6 tests pass both halves** | sonnet | **DONE** (commit held) | `V15_N4_BEDK.md`, `ceq/beds/`, `tests/beds/` |
+| 8 | `n10` Saturn-2: is the squared-feature fix a repair or an ORACLE LEAK? | sonnet | DISPATCHED | `V15_SATURN2_LEAK_RULING.md` |
+
+---
+
+## it.8 — BED-K IS BUILT, AND R1 AS SPECIFIED IS NOT RUNNABLE
+
+**`n4`: six tests, both halves each, all passing.** The discipline is what makes
+them worth having:
+
+| test | result |
+|---|---|
+| delay bed scan-blind | `R² = −0.000170` using **the true previous label** as recurrence state — the most generous state any scan could get. Population `R²` is exactly 0 (`b` iid, so `z_{i−1}` and `z_i` draw different noise positions for any `d ≥ 1`); 30-seed sweep measured `[−0.0027, 0.0028]` |
+| the control that validates it | the **same fitting code** recovers a true AR(1) at `α = 0.8000, β = 1.0000, R² = 1.000000` — exact. So the near-zero is the bed, not a broken fitter |
+| delay bed attention-reachable | `8.67e-19` against a `1e-12` bar, via **one-hot positional query/key** at offset `d = 7` |
+| Jacobian oracle | delay `2.88e-11`, power-law `4.88e-10`, both `≤ 1e-9`, against an *independent* `rebuild` call |
+| bumps move the label | nonzero at **every** kernel-nonzero position, **bitwise zero** at every kernel-zero position, nonzero-mask checked non-degenerate first |
+| seeded reproducibility | bitwise equal same seed, differing across seeds, both beds |
+
+**Hurst: DFA order-1, not R/S.** White-noise must-fire passes; on AR(0.5) it
+lands within `~0.02–0.03` of 0.5 — nowhere near the author's documented biased
+R/S reading of `0.75`. Cross-checked through autocovariance decay independently
+of DFA (`H = 1 + slope/2 = 0.735` at `H_true = 0.7`), confirming the residual
+bias is a property of the **generator**, not a DFA window artifact.
+
+**Three vacuous tests refused and named by class:** a "K is lower-triangular"
+check (V-3, an algebraic identity of its own construction), a self-written R/S
+calibrated to reproduce the contract's own 0.75 (tests nothing about this
+corpus), and a bump test asserting only `np.any(diff != 0)` (V-9 exactly).
+
+### The it.8 verdict that matters: R1 cannot run as written
+
+Three independent findings each block it, and together they mean the deciding
+measurement of the round is measuring something other than what it says.
+
+1. **The arm cannot represent its own gate.** `−softplus(Wx)` is monotone; the
+   target `log|a|` is even. (M-18)
+2. **The kill-diagnostic cannot discriminate.** `R²` on `log|a|` has
+   `SST = 0.000e+00`; it returns the same value whatever the arm does. (M-18)
+3. **The parity bind is false**, twice over and by two methods. (`n3`, `n1`)
+
+And a fourth is now under adjudication by `n10`: if the drive channel of `x`
+carries `a` itself, then the proposed squared-feature repair reads the oracle,
+"learning the gate" is a change of variables on a visible input, and **the
+existing nine-cell non-crossing census means something different from what it
+has been taken to mean.**
+
+**Registration owed before R3, from `n4`'s own numbers.** Its attention head
+reaches the delay bed through **one-hot positional coding**. That establishes the
+bed is attention-reachable *in principle*. It does not establish that a trained
+arm can reach it, because `scale/m3_capability.py` gives its arms no positional
+feature. Whether BED-K's `x` carries position must be registered **before** the
+cell runs — afterwards, "attention lacks a memory kernel" and "attention was
+given no position" are inseparable explanations for the same number.
+
+---
+
+## it.7 — TWO INDEPENDENT ROUTES REACH THE SAME REFUTATION
+
+**`n1` confirms `n3` from prior art, not from Lean.** Dao & Gu's dual form is
+`(L ∘ QK^T)V` with **no softmax** (§2.4), and §S-M specifies an *unnormalized*
+hop — so `g ≡ 0` binds to causal **LINEAR** attention. Probes: `a_t = 1 →
+tril(ones)`; `alpha = 1 →` ungated linear attention to `8.9e-16`. The Lean node
+reached the same conclusion from row sums (`i+1 ≠ 1`). Two methods, two nodes,
+one verdict, and they agree on *what the `g ≡ 0` object actually is*.
+
+**Prior art: 10/10 at `[V-eq]`,** each with equation, hypotheses as the source
+states them, and an executed numeric instance — every probe carrying an **O(1)
+mis-transcription control** so a `1e-16` residual is evidence, not decoration.
+Four sub-statements stall at `[V]` and are flagged inadmissible, including
+Dayan 1993's SR resolvent, which PART I leans on.
+
+**Venus: R1's registered kill-diagnostic cannot fire or fail to fire.**
+Verified in source by the coordinator, not taken on report:
+`scale/negation_scope.py:428` is `a = (randint(0,2)*2 − 1)` then
+`a[:, :head+1] = 0.0` — Rademacher, so `|a| ∈ {0,1}` and **`log|a|` is
+identically 0 on the live band.** `R²` on a constant target: `SST = 0.000e+00`.
+Pooled/clamped it reads `3.2466e-04` against a `1.22e-04` null. Filed **M-18**.
+
+**The finding underneath it is larger than the diagnostic.** `g = −softplus(Wx)`
+is **monotone** in the drive channel; the true `g = log|a|` is a band mask and
+therefore **even**; `scale/m3_capability.py` gives its arms no positional feature
+to route around it (grep for `pos|position`: zero hits). One squared feature
+recovers the band at `R² = 1.000000` exactly. **The obstruction is evenness, not
+information** — no amount of data fixes a parametrization that cannot represent
+its target.
+
+**Two scoreboard clauses are one event.** `NRMSE < floor₁ ⟺ ĥ > 1` by algebra
+(`ĥ = t*(1 − NRMSE²)`, `floor₁ = √((t*−1)/t*)`), verified identical at
+`t* = 2, 8, 32` across four NRMSE values straddling each floor to ten decimals.
+The scoreboard pays `+12` for the crossing and `+4` for `ĥ > 1` separately.
+
+**M-19 filed.** A tent-map orbit in float64 loses one bit per step and carries
+nothing from `x₀` after ~52 iterations; the Pesin probe first returned
+`h_sym = 0` **at the generating partition** — the right answer for the wrong
+reason. Rebuilt in exact rational arithmetic it reads `0.0003` generating against
+`0.139/0.208/0.223` at four wrong guards, corroborating the contract. Bollt et
+al. 2001 additionally prove the deficit is **non-monotone** in misplacement, so
+ranking guards by deficit is unsound; only the `≈ 0` test is admissible.
+
+**Recorded as read-not-verified.** `arXiv:2605.08966` (VORT) would occupy the
+S-K fractional head entirely and publishes a sharper form of Lean #12. It was
+read by local PDF extraction after the summarizer returned a *wrong paraphrase
+that was discarded*. The independent citation registry was unavailable this
+session, so **no component is retired on it** until it is confirmed.
+
 ---
 
 ## it.5 — THE LEAN TRAIN-GATE VERDICT (the contract's own milestone)
