@@ -554,6 +554,71 @@ Left in the document rather than deleted.
 
 ---
 
+## SCOREBOARD — it.21 (a scheduled move; the contract fixes it.10, 17, 21, 23, 30)
+
+Baseline `0 of 39` per RUL-7. The contract's own "current 22%" has no producer.
+
+| event | pts | status at it.21 |
+|---|---|---|
+| Lean train-gate green | **+2** | **EARNED.** `#1, #2, #3, #5, #6, #7` green; `lake build` exit 0; all 16 theorems axiom-checked to `[propext, Classical.choice, Quot.sound]`; two trivial versions explicitly refused |
+| BED-K registered | **+2** | **EARNED.** Built, 15 tests both halves, Hurst must-fire seen (white noise `0.478`, AR(0.5) `0.486` against R/S's biased `0.75`) |
+| R1 floor crossing | +12 | **not attempted.** R1 re-registered against four wrong clauses (it.14); ARM PL building |
+| R2 `ĥ > 1` | +4 | **not attempted** — and it is the *same event* as R1's crossing, so this line double-counts |
+| R4 two-sided parity | +8 | **BLOCKED.** R3 is unscoreable (M-20), and R4 is defined on top of it |
+| R5 CK with committor labels | +4 | BED-1 building |
+| R6 intervention budget halved | +2 | not attempted; Venus's filing already calls R6 unscoreable as written |
+| conservation + Lyapunov columns | +1 | no tables cut |
+| package | +3 | not attempted |
+
+**Score: 4 of 38.** Both earned points are instrument points. **No capability point
+has been earned, and none has been attempted.**
+
+### What the round produced that the scoreboard cannot score
+
+The contract anticipated this and called it the Floor: *"a diagnosed non-crossing
+with theorems attached, and D1's strongest chapter."*
+
+**The parity clause was refuted and then repaired.** `C-PAR` had no working
+instrument at it.6 — TOST unreachable at N=8 and carrying `0.0669` power at the
+N=23 the contract licenses it from, and the identity bind false. It now has a
+bitwise one on an amended operator, with the label bind at `2.2e-16` on the same
+head. That is not a scoreboard line because the contract did not anticipate
+needing to repair its own clause.
+
+**Nine contract statements checked; six were wrong, all in the direction of
+over-crediting the project.**
+
+| statement | verdict |
+|---|---|
+| `g ≡ 0` gives bitwise standard attention | **FALSE**, three independent routes |
+| two-thirds of pre-v13 §5 strikes were `[V]`-as-theorem | **10%** (4/40) |
+| "the sizing model replaced everywhere it was cited" | already satisfied; the 5 flagged sites are the *record of the repair* |
+| "the current 22%" baseline | no producer anywhere in the tree |
+| TOST retires to `N ≥ 23` | licenses a verdict with `0.0669` power |
+| `H = α + ½` | shipped without its `\|d\| < ½` hypothesis |
+| `[RUN: best first-order recurrence 0.990]` | matches neither bed at any tested `H` |
+| PART III vs PART IV R3 | mutually inverse; R3 unscoreable |
+| "carriers conserve mass to 1e-12" | false for the contract's own central carrier |
+
+**Seven new failure mechanisms filed**, each with a real instance, a measured
+number, and a check: `M-17` (a census that classified the correction record as
+the defect), `M-18` (a kill-diagnostic the corpus fixes) **with a correction
+against its own author**, `M-19` (an orbit invariant past its float64 horizon),
+`M-20` (a pre-registration that predicts both outcomes), `P-10` (a source's intro
+cited as its theorem), `P-11` (a contract citing its own `[M]` item as settled),
+`V-23` (a plural claim whose central member is the counterexample), `V-24` (an
+identity bind whose rejection region is empty).
+
+**And one campaign-level correction.** The nine-cell non-crossing census was
+re-read at it.7 as an evenness/monotonicity mismatch in the gate. That reading is
+wrong: `CH_DRIVE` **is** `a`, disclosed by design (`negation_scope.py:520-522`),
+so no arm was ever failing to discover a hidden quantity. The `[x, x²]` repair
+reads `R² = 1.0` on the gate and `0.01–0.02` on the label R1 actually scores. The
+binding constraint is, and always was, **multiplicative composition along paths**
+— now with a measured order boundary rather than an assertion.
+
+---
+
 ## NEXT
 
 **it.15 — R1, and it is a different measurement than the contract registered.**
