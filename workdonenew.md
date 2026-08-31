@@ -37,12 +37,54 @@ The shipped sentence requires `C-PAR ∧ (C-CAP ∨ C-TS)`.
 
 | bar | what it demands | status | the measurement that decides it |
 |---|---|---|---|
-| **C-PAR** | TOST-parity with softmax at matched params | **UNREACHABLE at N=8** | with `Δ_eq = 0.5σ` the 90% CI half-width is `t(.95, 2N−2)·√(2/N)` = `0.8807σ` at N=8 against a `0.5σ` margin. Two *bit-identical* arms return NO VERDICT. The CI first fits at N=23; power ≥ 0.80 first at **N=70** |
+| **C-PAR** | parity with softmax at matched params | **NO INSTRUMENT — both routes closed** | *TOST route:* with `Δ_eq = 0.5σ` the 90% CI half-width is `t(.95, 2N−2)·√(2/N)` = `0.8807σ` at N=8 against a `0.5σ` margin. Two *bit-identical* arms return NO VERDICT. The CI first fits at N=23; power ≥ 0.80 first at **N=70**, and at N=23 achieved power is **0.0669** (`V15_CONTRACT_ARITHMETIC_AUDIT.md` A-1). *Identity-bind route:* **REFUTED** — see the note below |
 | **C-CAP** | a seed CI below the 1-hop floor `√((t*−1)/t*)` | **NEVER ACHIEVED — 0 of 9 cells** | `cap_verdict` over every N=8 cell at fixed threads: zero crossings, `ĥ` peaks at `0.389` |
 | **C-TS** | transition-state / exit accuracy | **NOT BUILT** | BED-1 is blocked on Round 11, which has not run |
 
 **Scoreboard: 0 of 39.** Itemised in §8. `41` is the sum of the contract's line
 items; X₂₆ was struck, leaving `39` live.
+
+### The C-PAR identity bind is refuted, and both routes to parity are now closed
+
+Recorded 2026-08-31, R11 it.5. The v15 contract retired TOST for the parity half
+and substituted an identity bind: *"PARITY WITH SELF-ATTENTION is by IDENTITY
+BIND, not TOST. `g == 0` gives bitwise standard attention."* That substitution
+does not hold for the operator the same contract specifies.
+
+§S-M specifies "ONE **unnormalized** causal hop `W_ij = exp(C_i − C_j)`". At
+`g ≡ 0` every `C_i = 0`, so every causally-masked entry is `1` and row `i` sums
+to `i + 1`. Every row of every softmax attention matrix sums to `1`, for every
+query, key and weight matrix. Machine-checked in `lean/CEQ/V15.lean`:
+
+```
+gate_zero_row_sum        : ∑ j in range (i+1), Wc g i j = ↑i + 1
+gate_zero_not_stochastic : 1 ≤ i → ∑ j in range (i+1), Wc g i j ≠ 1
+```
+
+Smallest witness is `i = 1`: the row is `(1, 1)`, sum `2`. Normalizing does not
+recover the claim — the normalized row is uniform `1/(i+1)`, which coincides
+with attention only for a head with constant QK logits, and §S-M's hop carries
+no QK term. The failure is mathematical, not proof engineering: the refuting
+statement is three lines and green, and the two objects differ by a per-row
+factor of `i + 1` because the hop **replaces** the attention logits instead of
+**adding to** them.
+
+What is true is the mask half, and it is proved: `gate_zero_is_attention` gives
+`Wc g i j = if j ≤ i then 1 else 0`, which is standard attention's *mask*. The
+mask matching is what let the identity claim stand unexamined.
+
+**Consequence for the ladder.** C-PAR now has no working instrument. TOST is
+unreachable at the registered N=8 and carries 0.0669 power at the N=23 the v15
+contract licenses it from; the identity bind that was to replace TOST is false.
+A route exists — `gate_zero_logit_identity : q i j + (scan g i − scan g j) =
+q i j`, the ADDITIVE-logit reading, where the bind is genuine — but label
+reproduction (`prefix_logit_computes_chain`) is proved for the MULTIPLICATIVE
+hop, and no single operator is yet known to carry both. Whether one can is open
+and is the round's load-bearing question.
+
+**This is the strongest fact the round has produced and it is a negative one.**
+It was reached by proof before any gradient step, which is what putting the Lean
+train-gate in front of training was for.
 
 ---
 

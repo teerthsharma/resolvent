@@ -85,6 +85,69 @@ the 45.8 s/turn figure (L-TIME).
 | 3 | `n6` Venus files competing predictions for R1/R2/R3/R6 early | opus | DISPATCHED | `V15_VENUS_PREDICTIONS.md` |
 | 3 | coordinator: branch `feat/ceq-v15-r11`, two commits | opus | **DONE** | `deee6c4..52d7052` |
 
+| 4 | coordinator: M-17 filed, RUL-5/6/7 | opus | **DONE** | `6aef853` |
+| 4 | `n7` Neptune systems gate (R2 affordability, the cell that killed R10) | opus | DISPATCHED | `V15_NEPTUNE_SYSTEMS.md` |
+| 5 | `n3` returned: **train-gate green as algebra, PARITY CLAUSE REFUTED** | opus | **DONE** | `V15_N3_LEAN.md`, `lean/CEQ/V15.lean` |
+| 5 | `n8` Jupiter-2: settle whether (L) and (P) can share one operator | opus | DISPATCHED | `V15_JUPITER2_FORK.md` |
+
+---
+
+## it.5 — THE LEAN TRAIN-GATE VERDICT (the contract's own milestone)
+
+The contract's it.5 line: *"#1, #2, #5, #6, #7 green, or the failing statement
+named — a failing [M] item means the arm is WRONG, and that is the point."*
+
+**Verdict: five of five green as algebra. The contract's PARITY CLAUSE is FALSE
+and the refutation is a theorem.**
+
+| # | statement | status |
+|---|---|---|
+| 1 | `chain_path_product` | GREEN |
+| 2 | `prefix_logit_mask` | GREEN |
+| 3 | `parity_sign` | GREEN |
+| 5 | `gate_zero_is_attention` | **GREEN on the mask half; the contract's parity clause FALSE** |
+| 6 | `bounded_gates_stable` | GREEN, and stronger than asked (`a ∈ (0,1)` strict) |
+| 7 | `scan_assoc` | GREEN, trivial version explicitly refused |
+
+**The falsehood.** The contract reads *"PARITY WITH SELF-ATTENTION is by IDENTITY
+BIND, not TOST. `g == 0` gives bitwise standard attention (Lean #5)."* §S-M
+specifies "ONE **unnormalized** causal hop" — the contract's own word. At `g ≡ 0`
+every `C_i = 0`, every masked entry is 1, and row `i` sums to `i + 1`:
+
+```
+gate_zero_row_sum        : ∑ j in range (i+1), Wc g i j = ↑i + 1
+gate_zero_not_stochastic : 1 ≤ i → ∑ j in range (i+1), Wc g i j ≠ 1
+```
+
+Every softmax row sums to 1, for every query, key and weight matrix. Smallest
+witness `i = 1`, row `(1,1)`, sum 2. Normalizing does not rescue it: the
+normalized row is uniform `1/(i+1)`, which is attention only for a constant-logit
+head, and §S-M's hop carries no QK term to recover. **Mathematics, not proof
+engineering** — the refuting statement is three lines and green.
+
+**The repair, also proved.** `gate_zero_logit_identity : q i j + (scan g i −
+scan g j) = q i j` — under the ADDITIVE-logit reading the bind is genuine and
+needs no TOST.
+
+**The fork, which is what this costs.** Label reproduction
+(`prefix_logit_computes_chain`) holds for the **multiplicative** hop; parity
+(`gate_zero_logit_identity`) holds for the **additive** hop. The contract claims
+both from one construction. Settling whether any single operator can carry both
+— with a bind that carries information — is dispatched as `n8`.
+
+**Provenance.** `lake build` exit 0 at `[1525/1526]`, toolchain
+`leanprover/lean4:v4.7.0`, mathlib vendored at matching tag. Exit 0 alone was
+treated as insufficient: all 16 theorems run through `#print axioms`, every one
+depending only on `[propext, Classical.choice, Quot.sound]`, `sorryAx` nowhere.
+
+**Two trivial versions refused, and the refusals recorded.** #7 read literally is
+`add_assoc` — one token, licenses nothing. Stated instead for the affine monoid
+`(a,b) ↦ (x ↦ a·x + b)` with `affApply_affComp` proving `affComp` is genuinely
+map composition and `chain_step_eq_affApply` proving by `rfl` that those maps are
+the recurrence's own steps. #1 stated in absolute indices so it composes with #2
+into `prefix_logit_computes_chain` — the oracle-gate bind at **exact arithmetic**
+rather than at the contract's inherited `4.0e-15`.
+
 ### it.3 verdicts
 
 **`n2`, Task B — the round's sharpest finding so far.** The contract introduces
@@ -166,8 +229,46 @@ Left in the document rather than deleted.
 
 ## NEXT
 
-**it.3-4 — collect the five nodes still in flight, then the two follow-ons the
-audit opened.**
+**it.6 — the arm is BLOCKED on `n8`, and that block is correct.**
+
+The contract's it.6-7 line is *"ARM PL + three binds"*. One of the three binds —
+`g ≡ 0` gives bitwise standard attention — **is refuted**. Building ARM PL now
+means building an arm around a bind known to be false, which is what L-LEAN
+exists to prevent: *"binds become theorems; tests confirm theorems."* A bind that
+is not a theorem cannot become one by being coded.
+
+So it.6 does not build the arm. It waits on `n8`'s ruling and then does one of
+three things, decided by that ruling and not before:
+
+| `n8` returns | it.6-7 builds |
+|---|---|
+| a single operator carrying both (L) and (P) with an **informative** bind | ARM PL as the contract intends, with the new operator and the new identity setting |
+| the incompatibility is a **theorem** | ARM PL with the parity claim RETIRED, and the theorem becomes the round's headline: softmax's normalizer is the obstruction to path products. That is a stronger result than the parity claim it replaces |
+| only the **two-branch** form works, and it is judged vacuous | ARM PL with parity by resolution statement only, and the vacuous-bind ruling filed to `MISTAKES.md` as a new mechanism |
+
+**Do not pre-build for any of the three.** Two of the three make the third's code
+dead, and speculative construction against an unsettled algebra is what produced
+four failed hop-2 terms in the prior campaign.
+
+**Still in flight, do not duplicate:** `n1` (prior art, opus), `n4` (BED-K, sonnet),
+`n5` (Mars, sonnet — test files landing), `n6` (Venus, opus), `n7` (Neptune, opus
+— probe script landed), `n8` (Jupiter-2 fork, opus).
+
+**On collection, still owed from earlier iterations:**
+
+1. Apply the audit's **A-2** route into whatever `n4` built — if its GL code uses
+   `scipy.special.binom(-alpha, k)` it cannot evaluate its own `alpha -> 1` bind
+   (NaN). Replace with the ratio recurrence, assert `equal_nan=False`.
+2. Register BED-K's box before any cell runs (**A-3**): `alpha in (0, 0.5)`,
+   `H in (0.5, 1.0)`; the generator REFUSES `alpha >= 0.5` rather than silently
+   emitting a non-stationary bed.
+3. Wire **A-1** into Mars's attack #2 — the achieved-power column is the
+   instrument that makes the `N >= 23` / 6.7%-power finding visible.
+
+**it.8 is unchanged and is now partly pre-paid:** Venus files R1/R2 predictions
+(dispatched early at it.3), Mars files attacks (dispatched at it.1), Mercury
+prices — and Neptune's `n7` verdict decides whether R2 at `n = 32768` is a cell
+that can be run at all.
 
 In flight: `n1` (prior art, opus), `n2` (loop-suite re-date + L-EQ, sonnet),
 `n3` (Lean train-gate, opus), `n4` (BED-K + interventional channel, sonnet),
