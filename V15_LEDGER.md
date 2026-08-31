@@ -39,6 +39,9 @@ Contract: `CEQ_V15_CONTRACT.md`. Architecture-and-state: `workdonenew.md`
 | RUL-2 | Dispatched agents get **no git writes** (D-1: the shared state that collides is git, not the file set). The coordinator commits serially after review. | None known; this is D-1 read literally. |
 | RUL-3 | `n1`-`n4` write **disjoint fresh paths** and therefore need no worktree isolation. Worktrees are reserved for agents editing files another agent also edits. | If two agents collide on a path, one write is lost. Mitigated by naming each agent's output paths explicitly in its prompt. |
 | RUL-4 | The four it.0 nodes are dispatched as a **mixed fleet**: Opus where the node adjudicates or derives, Sonnet where it produces code or a mechanical census. | A Sonnet node returning a weak artifact costs one re-dispatch. |
+| RUL-5 | `CEQ_V15_CONTRACT.md` is **verbatim-of-record and is never edited**. Corrections to it live in `V15_CONTRACT_ARITHMETIC_AUDIT.md` and in `MISTAKES.md`, so the contract as authored stays diffable against what was later found wrong. Same for `attic/**`, which is archive. | If wrong, the contract carries known-bad numbers. Mitigated: every finding names the contract line it corrects, so the pair is readable together. |
+| RUL-6 | The contract's it.1-4 clause *"the sizing model replaced by the calibrated one everywhere it was cited"* is **already satisfied and requires no edit**. `ceq/sizing.py` is calibrated (`:48`, `:68`); the five sites a census flagged STALE are all the *record of the correction*, not uses of it. Filed as `MISTAKES.md` M-17. | If wrong, a genuinely stale use survives. Checked directly: the only executable site is `ceq/sizing.py` and it is calibrated. |
+| RUL-7 | The scoreboard baseline is **`0 of 39`** (`README.md:55`, `workdonenew.md:44`), not the contract's *"the current 22%"*, which has no producer anywhere in the tree including the round archives. The five scoreboard moves (it.10, 17, 21, 23, 30) are deltas from `0 of 39`. | If `22%` names a real quantity the repo does not compute, the ceiling sentence is measuring something else and the author must name it. Cost of the wrong choice is one renumbered scoreboard, not a lost measurement. |
 
 ---
 
@@ -77,6 +80,54 @@ the 45.8 s/turn figure (L-TIME).
 | 1 | `n5` Mars files the four standing attacks at it.0 | sonnet | DISPATCHED | `V15_MARS_ATTACKS.md` |
 | 2 | `n2b` returned: 5 STALE sites, all prose; `ceq/sizing.py` ALREADY calibrated | haiku | **DONE** | `V15_N2B_SIZING_CITATIONS.md` |
 | 2 | coordinator: audit of the contract's own arithmetic | opus | **DONE — 4 findings** | `V15_CONTRACT_ARITHMETIC_AUDIT.md` |
+
+| 3 | `n2` returned: L-EQ's evidence base measured at **4/40 = 10%**, not two-thirds | sonnet | **DONE** | `V15_N2_SATURN.md`, `MISTAKES.md` P-10 |
+| 3 | `n6` Venus files competing predictions for R1/R2/R3/R6 early | opus | DISPATCHED | `V15_VENUS_PREDICTIONS.md` |
+| 3 | coordinator: branch `feat/ceq-v15-r11`, two commits | opus | **DONE** | `deee6c4..52d7052` |
+
+### it.3 verdicts
+
+**`n2`, Task B — the round's sharpest finding so far.** The contract introduces
+L-EQ and justifies it with *"two-thirds of the pre-v13 §5 strikes were
+[V]-as-theorem"*. Counted against the section it names: `attic/workdonenew.pre-v13.md`
+`:160-211` holds 44 rows, 4 of which record a claim that HELD, leaving 40
+genuine strikes. **Four are [V]-as-theorem. 4/40 = 10%, not 66.7%** — the
+contract overstates its own law's evidence base by 6.7x. The four, each a real
+source cited and its own hypotheses not honoured:
+
+| row | strike |
+|---|---|
+| `:177` | Siegmund's ARL₀ closed form applied to a non-i.i.d. null; at measured `φ̂ = 0.709` the real ARL₀ misses nominal by **24.1x** |
+| `:196` | Kantz-Grassberger fed box-counting `D₀` where every fetched statement uses information dimension `D₁` |
+| `:200` | `ρ_P = √2` (the random-**matrix** ensemble average) applied to an exactly antisymmetric `J`, whose value is `2.000000` at four sizes |
+| `:201` | Poincaré-Hopf invoked where the field is tangent to the boundary at `μ = 0` (`dz₀ = −0.000000e+00`), so transversality fails |
+
+Five near-misses excluded **with reasons per row**, not silently: X27b/X27c cite
+no source at all (fabrication, not misreading); X27d owes a citation it never
+made; X32's Fisher relation is a correct theorem on the wrong quantity; X28c
+reads its source correctly and fails on tautology.
+
+**The synthesis the coordinator adds:** two of those four are *already repaired
+by the contract that cites them*. v15 carries `ρ_P` at **2** not `√2`, and
+requires `μ > 0` for Poincaré-Hopf. So L-EQ's evidence base is smaller than
+claimed **and** its repairs are further along than claimed. This also closes the
+arithmetic audit's open item — the audit listed `ρ_P = 2` as unchecked
+`[V]`-grade; it is in fact the L-EQ repair of strike `:200`, measured at four
+sizes.
+
+**`n2`, Task A — the standing set stopped moving.** `results/v15_loop_suite5.txt`:
+**15 failed, 501 passed**, node ids byte-for-byte the 15 filed in
+`V13_D3_LOOP_FORENSICS.md`. Zero resolved, zero new, zero turnover; the two
+extra passes fall outside the standing set. The prior round measured membership
+turning over by more than half across three snapshots. Across this interval it
+did not. One interval is evidence it has stopped, not proof.
+
+**`n2`, Task C — six author-owned strikes, count matches exactly.** Located in
+`STRUCK.md` alone, not in `attic/workdonenew.pre-v13.md` or `V13_CLAIM_AUDIT.md`
+where the round's reading order assumed. 12 struck constants collapse to 7
+claims; 1 is instrument-caused (M2 decay exponent, a `floor=1e-6` artifact); 6
+are author-owned. Agreement with the contract is on the **total only** — the
+contract names no six, so the number is the only check available.
 
 ### it.2 verdicts
 

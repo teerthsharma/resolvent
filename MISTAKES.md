@@ -1427,6 +1427,59 @@ which hypothesis in its own statement your instance satisfies — "the page
 exists and the intro matches" answers a different question than "the
 equation applies here."
 
+### M-17. A census that classified the correction record as the defect
+
+The v15 contract's it.1-4 line requires "the sizing model replaced by the
+calibrated one everywhere it was cited". A read-only census was dispatched first
+to enumerate the sites, since nothing can be replaced before it is found. The
+census returned **5 STALE sites across 4 files** and recommended correcting them
+in priority order (`V15_N2B_SIZING_CITATIONS.md:25-33`, `:139`).
+
+**None of the five is a use of the uncalibrated model. All five are the record
+that the uncalibrated model was wrong.**
+
+| site | what the line actually is |
+|---|---|
+| `attic/workdonenew.pre-v13.md:185` | the strike row itself — *"6.63× LOW"* — naming `ceq/sizing.py`'s calibrated constants as the fix |
+| `workdonenew.md:275` | the same strike row, carried forward |
+| `CEQ_V15_CONTRACT.md:32` | *"The sizing line was 6.63x low."* — a past-tense historical fact in a WHERE WE ARE census |
+| `V13_CLAIM_AUDIT.md:59` | an audit row whose verdict column reads **CONFIRMED**, evidence `ceq/sizing.py:48,68` |
+| `V13_CLAIM_AUDIT.md:60` | the worked instance, `0.0671` vs `0.4449 GB/layer`, verdict **CONFIRMED** |
+
+The one file that could have held a stale *use* — `ceq/sizing.py` — was already
+calibrated: `C_OPERATOR = 3.9` at `:48`, `DTYPE_MODES['bf16_autocast'] = (2.2,
+3.4)` at `:68`. The census reports this correctly under its CALIBRATED heading.
+The defect is confined to the STALE column, where a keyword match on `6.63`
+became a verdict.
+
+**Why this is a mechanism and not a typo.** The census searched for the literal
+number and classified by presence, so the sentence *"X was 6.63× low"* and a
+sentence *using* a 6.63×-low figure are indistinguishable to it. Every
+correction record in a repository states the wrong number in order to say it was
+wrong. A citation census keyed on the value therefore lands hardest on exactly
+the documents that already fixed the problem — the audit trail scores as maximal
+defect density.
+
+**What it would have cost.** Had the recommendation been applied, the five
+sites carrying `6.63` would have been rewritten to the calibrated figures, and
+`6.63` — the discrepancy factor, whose derivation `3.9 × (3.4 / 2.0)` lives only
+in those rows — would have had no producer anywhere in the tree. Repairing a
+provenance record by deleting it manufactures a fresh **P-1 (a number with no
+live producer)** out of a completed fix, and does so invisibly, because the
+diff looks like a correction.
+
+**Check.** A census that classifies must distinguish *use* from *mention*. Before
+any site is edited, read the surrounding clause and answer one question: does
+this line ASSERT the number as current, or REPORT that it was wrong? Mechanically:
+a hit whose line also contains a strike verdict (`STRUCK`, `LOW`, `CONFIRMED`,
+`was`, `×`-as-discrepancy) or that sits in a table with a verdict column is a
+mention until proven otherwise. More generally — **a search keyed on a value
+cannot classify that value's role, and any census reporting a STALE count
+without a use/mention column is reporting a keyword count under a verdict's
+name.** Related: [[V-7]] is the same failure inverted, a search that cannot find
+anything read as absence; this is a search that finds the repair and reads it as
+the defect.
+
 ## The eleven checks, before any control ships
 
 Condensed from the above; this is the list to run down.
