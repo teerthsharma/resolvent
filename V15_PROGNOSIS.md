@@ -123,6 +123,56 @@ oracle does not, and *the detector cannot outrun the model it subtracts.*
 
 ---
 
+## 4b. LATE RESULTS — landed after §1–§4 were written
+
+**X₃₅ is occupied, in closed form, since 1993.** The composition is Basseville &
+Nikiforov §7.2.4 (orig. Willsky & Jones 1976), equation for equation: `(7.2.110)`
+is X₃₅b's re-propagation, `(7.2.123)` the onset, `(7.2.126)` the magnitude,
+`§7.2.5` the localization, `§7.2.6 Def 7.2.1` the detectability condition. Those
+1993 equations **discharge both X₃₅a must-fires on the first attempt**. The
+learned-model form is arXiv:2604.25655 (28 Apr 2026), whose **Theorem 3.1 is
+X₃₅a's must-fire as a theorem**, with the delta's KILL appearing as its
+local-identifiability eigenvalue. What survives is a **transfer gap**: the
+residual belongs to a learned model whose `Γ` is not enumerable.
+
+**LATENT LOCALIZATION ACCURACY has a ceiling set by theory.** A 1-latent and a
+3-latent generator give observed covariances agreeing to `5.6e-17` — identical CI
+oracles, so FCI/RFCI/FCI+/LPCMCI must return the same PAG, and completeness
+guarantees it never resolves at any sample size. The column is admissible only as
+*recovery of a planted node under a known generator*.
+
+**The memoryless comparator is vindicated with a better argument than the delta
+had.** Shewhart ARL₀ measured `80.11 ± 0.40` against a predicted `80.52`, and
+under AR(1) it rises to `1.71×` — **conservative**. CUSUM moves the opposite way,
+to `0.46×`. The two charts sit a factor `3.6` apart on the same data.
+
+**The struck KK probe is rebuilt and fires**: `0.9899` against a null of
+`1.37e-15`. Its diagnosis eliminated one of four candidate causes by measurement
+(a `1/√M` normalizer cannot print an exact zero) and **refused to guess between
+the two surviving families**, specifying the one-run experiment that separates
+them. The CRB does not exist for a discrete onset; a **Ziv–Zakai** bound ships
+instead, agreeing with direct evaluation to `0.00e+00`.
+
+**BED-1 is built — C-TS has a bed.** 28 tests pass. The strike reproduces to
+every digit and **the labels disagree exactly where theory says they must**: at
+`1.1 T*` the barrier label reads `lo` while the committor reads `hi`. A **third,
+independent route** confirms it from the dynamics — simulated walkers cross the
+five-fold *higher* barrier more often, empirical `lo:hi = 0.86679 < 1`, agreeing
+with the committor ratio to 0.34%.
+
+**And BED-1 reports a negative it did not have to volunteer.** The `q = 1/2`
+guard partition's **own** Pesin deficit is `0.009654`, **11.9% of `h`** — not near
+zero, so **the contract's guards are not a generating partition.** That is R5's
+distribution-predict verdict, arrived at against the contract's S-G design, and
+printed rather than buried. It also *observed* Bollt's non-monotonicity on its own
+bed rather than citing it: two **equally** misplaced cuts differ from each other
+by `7.0e-4`, more than one of them differs from the correct cut (`2.6e-5`).
+
+Its methodological line is the best in the round: **"13/13 green on the first
+implementation run isn't evidence"** — so it ran five mutants and killed all five.
+
+---
+
 ## 5. THE HONEST SUMMARY
 
 R11 spent twenty-seven iterations making the next round's measurements mean
