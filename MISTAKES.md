@@ -1941,3 +1941,248 @@ Condensed from the above; this is the list to run down.
 And one more that costs more than all eleven when it is skipped: **state the
 regime in which your baseline is optimal, and check your task is not in it**
 (D-1).
+
+---
+
+## THE THREE R12 LAWS — the entries that pay for them
+
+`CEQ_V16_CONTRACT.md` STANDING LAWS adds **L-DOM**, **L-SIGN** and **L-DIAG**.
+None is an abstraction: each was bought by one measured R11 failure, and the
+mechanism, the instance and the check are below. Every number here was re-run or
+re-read against its producing file, not copied from a round summary.
+
+### V-25. A theorem whose hypothesis no draw in the corpus satisfies
+
+*(pays for **L-DOM**; the sign-flip of [[V-11]], which is a precondition
+satisfied at every real draw)*
+
+`lean/CEQ/V15.lean:128` states Lean #2:
+
+```lean
+theorem prefix_logit_mask (a : ℕ → ℝ) (ha : ∀ k, 0 < a k) {i j : ℕ} (hij : j ≤ i) :
+    W (fun k => Real.log (a k)) i j = ∏ k in Ico (j + 1) (i + 1), a k
+```
+
+The hypothesis is `∀ k, 0 < a k`, and the file states it deliberately — *"the
+positivity hypothesis is load-bearing and is stated, not assumed away"*
+(`lean/CEQ/V15.lean:123-126`). The theorem is green, it sits in the TRAIN-GATE
+set, and it gates the run.
+
+**The corpus it gates.** BED-M draws its coefficients Rademacher and then zeroes
+the head (`scale/negation_scope.py:428-429`):
+
+```python
+a = (torch.randint(0, 2, (n, s), generator=g).float() * 2 - 1).to(x.device)
+a[:, :head + 1] = 0.0
+```
+
+**The census, run here on BED-M `e3_t2` (`n=2048, s=64, t*=2, seed=0` — the shape
+`V15_ARM_PHASE.md` §8 reads at R1's size):**
+
+| quantity | measured |
+|---|---|
+| value support of `a` | `{-1.0, 0.0, +1.0}` — **3 values** |
+| support values satisfying `0 < a` | `{+1.0}` — **1 of 3** |
+| entries with `a > 0` | `2,077 / 131,072` = **1.5846%** |
+| entries with `a = 0` | `126,976 / 131,072` = **96.875%** |
+| entries with `a < 0` | `2,019 / 131,072` = **1.5404%** |
+| **sequences satisfying `∀k, 0 < a k`** | **0 of 2,048** |
+
+The last row is the one that decides it, and it is **structural, not sampling**:
+`:429` writes `0.0` into `a[:, :head + 1]`, so every row carries at least
+`head + 1` zeros for every `(n, s, t*)`. The quantified hypothesis is satisfiable
+on **no** draw this builder can produce, at any seed, at any size. Overlap is
+1 of 3 on values and exactly 0 on the object the `∀` ranges over.
+
+**The consequence, measured rather than argued.** `V15_ARM_PHASE.md:36` runs the
+label bind on the same band: `|a| = 1` there, so `s_j = log(1 - m) = -inf` and
+`V_j = b_j/0 = ±inf`, and the residual reads **`nan`** — against
+`9.155133597044475e-16` at `s = 8` and `5.2510145522368515e-15` at `s = 64` on
+the open interior, where the hypothesis does hold. The `ε`-sweep is in
+`V15_ARM_PHASE.md:303-308`: `ε = 1e-2 → 1.332268e-15`, `ε = 1e-6 →
+2.220446e-15`, `ε = 1e-9 → 2.442491e-15`, **`ε = 0 → nan`**. The identity is
+exact everywhere except at the one value the corpus draws.
+
+**The mechanism.** A theorem is proved, machine-checked, tagged green and made a
+precondition of training, and the set its hypotheses describe is disjoint from
+the set the corpus samples. Nothing about the proof is wrong. The gate does not
+constrain the run, because the run never enters the region the gate speaks about.
+**A theorem green in Lean and inapplicable to every draw the corpus makes is
+decoration with a proof attached** — worse than no theorem, because a green
+status column reads as coverage.
+
+Distinguish from [[V-11]]: there a *precondition* excluded 0% of draws and so
+constrained nothing; here a *hypothesis* admits 0% of draws and so certifies
+nothing. Both are the same arithmetic — the intersection of a stated region with
+a measured distribution — read from opposite ends.
+
+**Check — the domain census, printed beside the status column.** Every theorem
+that gates a run ships, in the same table as its `[M]`/green tag:
+
+1. the theorem's hypotheses as a predicate on the corpus's variables;
+2. the corpus's **measured** value support for each of those variables, drawn,
+   not assumed (`torch.unique` on the builder's own output);
+3. the **fraction of draws satisfying the hypothesis**, at the quantifier level
+   the theorem uses — per-element if the hypothesis is per-element, **per-sequence
+   if it is `∀k`**, which is where this instance dies;
+4. `0%` is a blocked train-gate. Not a caveat and not a limitations paragraph:
+   the theorem is inadmissible as a gate until it is re-stated on the support
+   that exists. v16's #2 is re-stated on `[0,1]` magnitudes and circle phases for
+   exactly this reason.
+
+Greppable: for each theorem cited as a gate, the census prints a nonzero
+denominator **and** a nonzero numerator. A census that prints the corpus's range
+but not the fraction admitted has not run the check.
+
+### D-7. A prediction filed without its counter, in a document whose errors have a sign
+
+*(pays for **L-SIGN**)*
+
+R11 checked nine statements of `CEQ_V15_CONTRACT.md` and every one returned an
+adverse verdict (`V15_LEDGER.md:649-661`; row-by-row provenance and the count
+audit in `V16_CALIBRATION.md`). The R11 round entry above enumerates six of them
+and reports them as *"all six erred in the same direction, over-crediting the
+project"*.
+
+**Signed explicitly — `+` = the statement credits the project more than the
+measurement supports — the nine read 7 `+`, 1 `-`, 1 unsigned:**
+
+| # | statement | measured | sign |
+|---|---|---|---|
+| 1 | `g ≡ 0` gives bitwise standard attention (`CEQ_V15_CONTRACT.md:139-140`) | row `i` sums to `i + 1` (`lean/CEQ/V15.lean:221` `gate_zero_row_sum`) | **+** |
+| 2 | two-thirds of pre-v13 §5 strikes were `[V]`-as-theorem (`:54`) | `4/40 = 10%`, a `6.67×` overstatement ([[P-10]]) | **+** |
+| 3 | "the sizing model replaced … everywhere it was cited" (`:251`) | already satisfied; all 5 flagged sites are the repair record ([[M-17]]) | **-** |
+| 4 | "the current 22%" baseline | no producer in the tree; the true baseline is `0 of 39` | **+** |
+| 5 | TOST retires to `N ≥ 23` (`:140`) | achieved power at `N = 23` is `0.0669` | **+** |
+| 6 | `H = α + ½` | shipped without its `\|d\| < ½` stationarity hypothesis | **+** |
+| 7 | `[RUN: best first-order recurrence 0.990]` (`:180`) | `-0.000166` delay, `0.604` power-law at `H = 0.75` | **+** |
+| 8 | PART III vs PART IV on the same bed | mutually inverse ([[M-20]]) | **none** |
+| 9 | "carriers conserve mass to `1e-12`" (`:125`) | false for the contract's own central carrier ([[V-23]]) | **+** |
+
+**Row 3 goes the other way and row 8 has no direction.** A contradiction cannot
+be one-sided, because one half of it is right; and a repair reported as
+outstanding that was already done understates the project rather than
+over-crediting it.
+
+**The direction survives the correction and the round entry's own six does not.**
+One-sided sign test on the eight rows carrying a sign: `7 of 8`, `p = 0.0352`.
+On the six the round entry enumerates, honestly signed, it is `5 of 6`,
+`p = 0.1094` — **not significant**. The R11 headline is right about the direction
+and wrong about the evidence it offers for it: the finding clears `0.05` only
+when the three rows the prose dropped are put back in.
+
+**The mechanism.** An author files a prediction, the data arrives, the prediction
+is scored, and the *sign of the residual* is discarded as noise. It is not noise.
+A sequence of independent estimation errors has no expected direction; a sequence
+that shares one carries a bias in the estimator, and the estimator here is a
+person. The defect is not that any single number was wrong — several were close —
+but that **nothing in the process could have detected the direction**, because a
+prediction with no counter of equal specificity leaves no residual to sign. If
+the only filed number is the one the author hopes for, "wrong" and "wrong
+optimistically" are the same event and the second is unmeasurable.
+
+**Check.**
+
+1. **Every prediction ships a counter-prediction of equal specificity**, filed
+   before the data, by the same author, and **both are scored**. Equal
+   specificity is the load-bearing clause: *"the crossing shrinks to `≤ 3/8`"* is
+   a counter; *"or it might not work"* is not. `CEQ_V16_CONTRACT.md` KILLS makes
+   a bare prediction a blocked filing.
+2. **A calibration column is kept across rounds** — statements checked, wrong,
+   sign — with the denominator fixed **before** the audit and confirmations
+   listed beside the findings. R11's nine has neither, which is why its rate is
+   uninterpretable as a rate (`V16_CALIBRATION.md`, Limits).
+3. **Sign, then size, in that order, and never size at this `N`.** Report the
+   sign test. Do not report a shrink factor: at `7/8` the Wilson 95% interval on
+   the optimism fraction is `[0.5291, 0.9776]`, which excludes `0.5` and fixes
+   nothing else. A direction is a design input; a magnitude at nine observations
+   is invention.
+
+### M-21. A diagnostic prescribed by its statistic instead of by what it must distinguish
+
+*(pays for **L-DIAG**; this is [[M-18]] and the correction inside it read as one
+mechanism, and the instance is doubled — the prescription and its own prescribed
+replacement failed the same way, mirrored)*
+
+`CEQ_V15_CONTRACT.md` PART IV, R1 prescribes the statistic by name: *"diagnose by
+linear probe on `log a`"*. Two failures follow from that single move.
+
+**Half one — the prescribed statistic is constant on the corpus.** BED-M draws
+`a ∈ {-1, 0, +1}` (`scale/negation_scope.py:428-429`), so `|a| ∈ {0, 1}` and
+`log|a|` is identically `0` on the live band and `-∞` off it. `R²` on a constant
+target has **`SST = 0.000e+00`**; pooled and clamped at `-30` or at `-100`,
+identically, it reads **`3.2466e-04`** against a `d/N` null of `1.22e-04`
+(`V15_VENUS_PREDICTIONS.md:323-325`). The kill condition returns the same value
+whatever the arm does.
+
+**Half two — so does the replacement `M-18` itself prescribed.** M-18's amendment
+reads *"probe `sign(a_i)` off the arm's gate and report accuracy `p`, which is
+discriminating where `log|a|` is not."* Measured (`V15_R1.md:340-341`):
+
+| reading | value | 95% CI |
+|---|---|---|
+| `sign(a)` accuracy `p`, trained | **`0.917953`** | `[0.790669, 1.045238]` |
+| `sign(a)` accuracy `p₀`, **0 steps, same seeds** | **`0.943741`** | `[0.893282, 0.994200]` |
+
+**Trained gain `-0.025787` — negative.** The target saturated the predictor
+before the first step: `0.056` of headroom against a ceiling of `1.0`, and the
+arm spent it going backwards. **The entry that diagnosed a non-discriminating
+diagnostic prescribed a non-discriminating diagnostic, in the same paragraph.**
+That mirroring is what shows the mechanism is not about `log|a|`.
+
+**The sharpest form of the same thing.** `V15_ARM_PHASE.md:432-433` runs the
+successor instrument on the corpus alone, no arm, at both shapes:
+
+```
+gate R², corpus alone, all 16 channels, NO arm  = 1.000000
+gate R², corpus alone, CH_DRIVE only            = 1.000000
+```
+
+The diagnostic's **target is an input channel** — `scale/negation_scope.py:432`
+writes `x[:, :, CH_DRIVE] = a`. A least-squares probe on the raw corpus recovers
+`a` exactly, so any reading short of `1.0` measures the arm's parametrization and
+never the availability of the information.
+
+**And the statistic that worked was found on data, not prescribed.** The gate
+`R²` was carried because its controls were read first, not because a contract
+named it:
+
+| reading | value |
+|---|---|
+| corpus alone, no arm (ceiling) | `1.000000` |
+| zero-step `ArmPL`, 8 seeds (floor) | `0.371583` re-run; `0.371839` published, `V15_R1.md:344` |
+| zero-step `ArmPhase`, 8 seeds | `0.300689` |
+| **R1 trained** | **`0.699299`**, 95% CI `[0.338436, 1.060162]` (`V15_R1.md:343`) |
+
+Floor `≈ 0.30-0.37`, trained `0.699299`, ceiling `1.000000`: a trained gain of
+`+0.327460` inside roughly `0.63` of real headroom — against the `sign(a)`
+probe's `0.056` of headroom and `-0.025787` of gain.
+
+**The mechanism.** A contract can know what a diagnostic must accomplish —
+separate trained from untrained, planted from unplanted — and it cannot know
+which statistic accomplishes it, because that depends on the corpus's
+distribution, which is a measurement. Prescribing the statistic converts an
+empirical question into a mandate, and the mandate is then obeyed: the probe gets
+built, it returns a number, the number gets read. **A prescribed statistic is a
+diagnostic whose must-fire was never tested, wearing the authority of a
+pre-registration** — and the pre-registration is what makes it durable, because
+the statistic is protected from revision by the very discipline that was supposed
+to make it trustworthy.
+
+**Check.** A contract states the **discrimination**, never the statistic:
+*"a diagnostic that separates a trained arm from a zero-step arm on the same
+seeds, with its floor and its ceiling printed."* The statistic is then found on
+data and admitted only after three readings, all taken before it is trusted:
+
+1. **corpus alone, no arm** — the ceiling. If it equals the with-arm value the
+   probe is measuring the corpus. M-18's original form of this check, `Var(z) =
+   0`, blocks registration outright;
+2. **zero-step arm, same seeds** — the floor. A trained reading is a *gain*
+   against this floor and never a level;
+3. **headroom = ceiling - floor**, printed. `0.056` is a blocked registration;
+   `0.63` is an instrument.
+
+Only then does the statistic receive its must-fire. Any diagnostic named in a
+contract before those three numbers exist is struck as this class, and
+`CEQ_V16_CONTRACT.md` KILLS carries it verbatim: *"Prescribed statistic in a
+diagnostic ⇒ M-18 class, struck."*
