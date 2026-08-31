@@ -53,6 +53,28 @@ all take the device; the model is CONSTRUCTED then `.to(device)`'d, which is
 `train_with_checkpoints`'s ordering and what keeps the init bytes identical to
 the cpu run's (`V16_BAR_RECERT.md` 6.1).
 
+`arm_smprime` IS REACHABLE, AND R1' IS THE ARM IT IS REACHABLE FOR. Until V16
+`make_arm` knew `arm_pl` and `m3_capability.Arm` only, so the arm
+`CEQ_V16_CONTRACT.md` PART IV names for R1' -- `ceq/arm_smprime.py` -- could not
+be constructed from the runner that scores it and R1' could not run at all.
+Three things had to follow the factory rather than be assumed by it:
+
+  A. THE IDENTITY POINT IS PER ARM. ARM PL's is zeroed heads; ARM S-M''s
+     magnitude head is the magnitude itself under a CLOSED `[0,1]` cap, so
+     zeroing it is `m = 0` -- the ANNIHILATING gate, where the path product is
+     exactly `0` on every off-diagonal window. `identity_point` resolves it per
+     module and `identity_bind` asserts the resolution with `torch.equal`
+     against the all-ones causal mask BEFORE anything trains, so the harness bug
+     aborts instead of publishing a whole-corpus zero as the arm's number.
+  B. THE GATE COLUMNS ARE THE SAME QUANTITY FOR BOTH ARMS ONLY IF THE RECOVERY
+     DIFFERS. ARM PL's gate head is `log a_hat`; ARM S-M''s feature already IS
+     `Re(a_hat)`. `recovered_gate` is that one difference, so `gate_r2` is one
+     column and not two.
+  C. THE EARLY-WARNING COLUMN IS PER STEP, NOT PER CELL. PART IV R1' asks
+     whether `lambda_hat` turns positive BEFORE the loss does; that is an
+     ordering, and a column read once after training cannot check one. The
+     `t="trace"` record carries both series per seed from step 0.
+
 WHAT A CUDA RUN OF THIS FILE STILL DOES NOT CARRY, stated here because the
 header journals it rather than because it is settled: `use_deterministic_
 algorithms` is NOT set by this file and never was. `scale/r10_capacity_sweep.py`
