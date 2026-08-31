@@ -7,6 +7,116 @@ file. No existing module touched -- confirmed by `git status --porcelain`
 before and after: the only new paths are `ceq/beds/`, `tests/beds/`, and
 `V15_N4_BEDK.md`.
 
+## Post-GREEN revision: three cross-node findings applied
+
+The coordinator relayed three findings from parallel nodes after the section
+below was already green (10/10). All three were in-scope (`ceq/beds/**`,
+`tests/beds/**`) and are now applied; the suite is re-run at the end of this
+section and stands at 15/15. What follows states what changed and what each
+finding's own report request asked for, verbatim where it matters.
+
+**1. Positional channel -- now explicit, "yes."** `build()`'s manifest gained
+a `pos = arange(n)` field, documented in its own docstring paragraph. Before
+this change, position was only implicit in array order (available to
+anything that bothered to use the index, but not a field a caller could
+point to). `hard_delay_attention` now takes `pos` as an explicit parameter
+and reads ONLY `b` and `pos` -- the two fields a real arm could actually be
+handed -- rather than assuming index order or reaching into `bed["K"]`. The
+must-fire (test 2) now calls it as `hard_delay_attention(bed["b"], d,
+pos=bed["pos"])`, so "attention-reachable" is a claim about a channel a real
+arm could be given, not a claim about what only this test script can see.
+Numerically nothing changed (`pos` still equals `arange(n)`), but the
+channel is now a stated field of the corpus rather than an assumption buried
+in a test helper. **What is NOT addressed, and is out of this node's scope:**
+whether `scale/m3_capability.py`'s existing arms actually read a positional
+feature at all. That file is untouched (hard constraint: write only under
+`ceq/beds/**`, `tests/beds/**`). If an arm is fed `bed["b"]` alone, a
+delay-bed failure at R3 will still be confounded between "no positional
+feature" and "no memory kernel" exactly as flagged -- BED-K now exposes the
+channel needed to resolve that, but does not and cannot force a downstream
+arm to consume it.
+
+**2. Grunwald-Letnikov weights -- implemented via the ratio recurrence, not
+`scipy.special.binom`.** Added `gl_weights(alpha, k_max)`:
+`psi_0=1; psi_k=psi_{k-1}*(alpha+k-1)/k`. Verified independently before
+using it (`scipy.special.binom(-alpha, k)` vs the recurrence):
+
+```
+alpha=0.3:  mine  [1.0, 0.3, 0.195, 0.1495, 0.1233375, 0.10607025]
+            scipy [1.0, 0.30000000000000004, 0.19500000000000003,
+                   0.14949999999999988, 0.12333749999999989, 0.10607024999999991]
+alpha=1.0:  mine  [1. 1. 1. 1. 1. 1.]
+            scipy [nan, nan, nan, nan, nan, nan]
+```
+
+Matches to float equality at alpha=0.3 (differences are last-bit rounding
+noise from the two different recurrences, not a disagreement); at alpha=1
+scipy returns all-NaN (the `binom(-1, k)` negative-integer branch) where the
+recurrence returns the correct `[1,1,1,...]` (coefficients of
+`(1-z)^{-1} = sum z^k`). `_powerlaw_kernel_matrix` now builds
+`K[i, i-k] = psi_k` for `k=1..i` (still strictly `j<i`, no self-term, per the
+contract's own formula) instead of the crude `(i-j)^(H-1.5)` applied
+directly at every lag. `gl_weights`' docstring states explicitly that this is
+the FRACTIONAL INTEGRAL kernel (`(-1)^k C(-alpha,k)`, coefficients of
+`(1-z)^{-alpha}`), not the GL derivative, which has the opposite sign --
+BED-K's power-law bed is long-memory/integrated (`H>0.5`), so the integral
+kernel is the correct one and this was checked before writing the sign, not
+after.
+
+**3. The alpha box -- the generator now raises, under test.** `alpha = H -
+0.5` must lie in `(0, 0.5)`, i.e. `H` strictly in `(0.5, 1.0)`:
+`_powerlaw_kernel_matrix` raises `ValueError` outside that range, and
+`test_powerlaw_bed_refuses_outside_the_stationarity_box` checks it at
+`H in {0.3, 0.5, 1.0, 1.2}` (all four must raise) alongside
+`test_powerlaw_bed_builds_inside_the_stationarity_box` (`H=0.75` must not,
+per V-8's rule applied to a refusal: a gate that rejects everything is as
+vacuous as one that accepts everything, so the non-empty interior is checked
+on the same code path). The weight-energy divergence figures the coordinator
+cited (15.9 at alpha=0.5, 26.9 at alpha=0.6) were not independently
+re-derived here -- accepted on the coordinator's report, since the box's
+enforcement doesn't depend on the exact divergence rate, only on divergence
+occurring at `alpha>=0.5`, which is the standard ARFIMA stationarity
+condition (`|d|<0.5`) and was cross-checked against that literature fact,
+not against the two specific numbers.
+
+**Effect on the Hurst-recovery numbers.** Re-measured after switching to the
+GL-weight kernel (same `H=0.75`, `n=8192`, seeds 100-104):
+`ests=[0.7319, 0.7114, 0.8737, 0.8839, 0.8869]`, `mean=0.8176` -- bias +0.068,
+essentially unchanged from the naive-kernel reading of +0.062 reported
+below. The GL-weight fix corrects the SHORT-LAG coefficients (`psi_1=alpha`
+instead of always `1`) and was the mathematically correct thing to do
+regardless, but it did not meaningfully shrink the DFA crossover bias in
+practice: a direct autocovariance check (bypassing DFA entirely) on the
+naive kernel already read an ACF-implied `H~0.72-0.735` at `H_true=0.7`
+using only lags 10-2000 of a 20000-length realization, meaning the finite-
+lag effective correlation structure runs hot relative to the asymptotic `H`
+for BOTH kernel constructions -- this looks like a genuine finite-sample DFA
+characteristic of this causal, growing-window generator, not an artifact
+the GL-weight fix was positioned to remove. The existing test tolerance
+(`0.15`) was set from measurements before this fix and still holds with
+room to spare after it; it was not loosened or tightened in response.
+
+```
+$ python -m pytest tests/beds/test_bed_k.py -v
+collected 15 items
+... (10 tests from before) + 5 new:
+test_powerlaw_bed_refuses_outside_the_stationarity_box[0.3] PASSED
+test_powerlaw_bed_refuses_outside_the_stationarity_box[0.5] PASSED
+test_powerlaw_bed_refuses_outside_the_stationarity_box[1.0] PASSED
+test_powerlaw_bed_refuses_outside_the_stationarity_box[1.2] PASSED
+test_powerlaw_bed_builds_inside_the_stationarity_box PASSED
+============================= 15 passed in 1.03s ==============================
+```
+
+The rest of this file (below) describes the state at the first GREEN, before
+these three findings arrived; numbers in the "six must-fires" and "Hurst
+estimator" sections below are from the naive-kernel version except where the
+paragraph above states the re-measured value. The RED/GREEN transcripts
+below are the original 10-test run and remain the valid TDD record; they
+were not re-staged for the 5 added tests since those were written directly
+against an already-passing `build_powerlaw` (their own red/green cycle was
+run interactively above rather than transcribed a second time).
+
 ## What was built
 
 - `ceq/beds/__init__.py` -- package marker, one line of `__all__`.
@@ -27,9 +137,14 @@ before and after: the only new paths are `ceq/beds/`, `tests/beds/`, and
     other, so their agreement is a check, not an identity.
   - `fit_first_order_recurrence`, `hard_delay_attention` -- the two
     instruments Lean #12 (`first_order_cannot_delay`) needs: a least-squares
-    scan fit and a hand-set single attention head.
+    scan fit and a hand-set single attention head. `hard_delay_attention`
+    reads an explicit `pos` channel (see the post-GREEN revision section
+    above), not implicit array order.
   - `estimate_hurst_dfa` -- DFA, order 1, with a window range restricted to
     >=3% of the series length (justified below).
+  - `gl_weights` -- Grunwald-Letnikov / fractional-integral weights via the
+    stable ratio recurrence, used by `_powerlaw_kernel_matrix` and gated by
+    an explicit stationarity-box check (see post-GREEN revision above).
 - `tests/beds/test_bed_k.py` -- the six must-fires, 10 collected tests
   (two are parametrized over both bed kinds).
 

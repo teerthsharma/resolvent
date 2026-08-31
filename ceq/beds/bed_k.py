@@ -288,14 +288,20 @@ def estimate_hurst_dfa(x: np.ndarray, min_win: int | None = None,
     that DFA is unbiased in general.
 
     `min_win` defaults to 3% of the series length rather than a small
-    constant. This bed's causal power-law kernel has weight EXACTLY 1 at
-    lag 1 for every H ((i-j)^(H-1.5) at i-j=1 is 1 regardless of H), which
-    injects a short-range crossover: fitting from min_win=8 measured H_hat in
-    [0.86, 1.03] for true H in [0.6, 0.9] -- compressed toward 1 and useless
-    for discriminating H. Restricting the fit to windows >= 3% of n (past the
-    crossover) measured a +0.02..+0.10 bias instead, at n=8192, 5-seed
-    averages (see tests/beds/test_bed_k.py's docstrings for the exact runs
-    this default is calibrated against).
+    constant. This bed's causal, TRUNCATED power-law kernel (finite history:
+    row i only sums j=0..i-1, never an infinite past) has a genuine short-
+    range crossover measured directly against its own autocovariance decay,
+    not just against DFA: fitting from min_win=8 measured H_hat compressed
+    toward 1 (0.86-1.03 for true H in [0.6, 0.9]), useless for discriminating
+    H. Restricting the fit to windows >= 3% of n (past the crossover)
+    measured a +0.02..+0.10 bias instead, at n=8192, 5-seed averages. This
+    was measured on the naive `(i-j)^(H-1.5)` kernel and re-measured after
+    switching to the exact GL-weight kernel (`gl_weights`, below) -- the bias
+    did NOT meaningfully shrink from that switch (still +0.02..+0.07), so it
+    reads as a property of the finite/causal truncation itself, not of which
+    short-lag coefficient formula generates the tail. See
+    tests/beds/test_bed_k.py's docstrings and V15_N4_BEDK.md's "post-GREEN
+    revision" section for the exact runs this default is calibrated against.
     """
     x = np.asarray(x, dtype=np.float64)
     n = len(x)
