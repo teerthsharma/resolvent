@@ -2186,3 +2186,50 @@ Only then does the statistic receive its must-fire. Any diagnostic named in a
 contract before those three numbers exist is struck as this class, and
 `CEQ_V16_CONTRACT.md` KILLS carries it verbatim: *"Prescribed statistic in a
 diagnostic ⇒ M-18 class, struck."*
+
+### V-26. A marginal assertion standing in for a joint claim
+
+**Where.** `tests/venus/test_v20_r15_it10_venus.py:147-151` (VENUS, R15 it.10), the node
+certifying corrections-index row `C14` — the round's flagship repair, which turned an
+unpaired it.8 headline (`p = 6.730e-04`) into a paired contrast (`8 of 9` vs `0 of 9`,
+three eval draws). Found by MARS at it.12 and graded **F2 — unbound, not refuted**.
+Repaired at it.13; the pairing is true in the data and was certified by nothing.
+
+**The defect.** The prose claim is a **relation between two collections**: *the arms ran on
+the same seeds.* The assertion was a **function of each collection separately** — the count
+of `arm_pl` cells below `floor_1`, the count of `softmax` cells below `floor_1`, compared
+to `(8, 0)`. **Two marginals cannot express a joint.** Move every `softmax` record onto a
+seed block disjoint from `arm_pl`'s and both counts are bitwise unchanged; the assertion
+stays green while the property it certifies is false by construction.
+
+**Why it is not `D4`.** `D4` — an assertion looser than the prose it certifies — is a
+**quantitative** loosening: prose `= 0.7176`, node `> 0.5`. Tightening the tolerance
+repairs it, and mutating the code exposes it. `V-26` is a **categorical** loosening: the
+predicate's vocabulary has no term for the relation at all. **No tolerance repairs it and
+no code mutation exposes it**, because the code computes exactly what it claims. The D4
+audit found 15 sites by comparing assertion tolerance against prose precision, and that
+search is structurally incapable of finding this one — there is no tolerance to compare.
+
+**Check.** For any claim about a **relation between two collections**, the falsifying
+mutation is the one that **preserves every per-collection statistic**. Marginal-preserving
+data mutation: permute, relabel, or disjoin the index on one side while leaving every
+measured value untouched. If no such mutation turns the suite red, the suite is not
+asserting the relation. One line is usually the whole repair:
+
+```python
+assert {s for (k, s) in tab if k == "arm_pl"} == {s for (k, s) in tab if k == "softmax"},     "unpaired: the arms did not run on the same seeds"
+```
+
+**The companion failure, which is the part worth keeping.** A second node existed on the
+same claim — `tests/mars_v20/test_v20_r15_it9_agg_vs_cells.py:67` — and it **does** check
+pairing, but reads `t="cell"` records where the repair was banked as `t="rescore"`, so it
+was RED for a reason unrelated to the claim. **A green node without the check and a red
+node against the wrong file, on one claim, for four iterations.** Neither state looks wrong
+from outside: a passing suite and a known-red dispute both read as instrumented.
+**Redundancy was inferred from the existence of two nodes rather than measured from what
+either asserts.** Counting nodes is not coverage; only reading what each one asserts is.
+
+**Kin.** `M-7` (a falsifier that does not range over the outcome space) is the same gap on
+the other side of the discipline — there, the object *predicted* was narrower than the
+object claimed; here, the object *asserted* is. In both, the gap is invisible precisely
+because the statement is true.

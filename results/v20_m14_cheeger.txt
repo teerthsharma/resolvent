@@ -1,0 +1,115 @@
+M14 CHEEGER STRATIFICATION -- exact sweep cut against brute force
+Levin-Peres-Wilmer 2nd ed. Thm 13.10: Phi^2/2 <= gamma <= 2 Phi,
+P irreducible and reversible; gamma = 1 - lambda_2, NOT the absolute gap.
+
+SYNTHETIC BATTERY
+  complete_8               n=  8  gamma=1.1428571429  gamma_abs=0.8571428571
+      phi_sweep(A)=0.5714285714  phi_exact(B)=0.5714285714  A/B=1.000000
+      lower half phi^2/2 <= gamma : 1.633e-01 <= 1.143e+00  True
+      upper half gamma <= 2 phi   : 1.143e+00 <= 1.143e+00  True
+  cycle_14                 n= 14  gamma=0.0990311321  gamma_abs=0.0000000000
+      phi_sweep(A)=0.1428571429  phi_exact(B)=0.1428571429  A/B=1.000000
+      lower half phi^2/2 <= gamma : 1.020e-02 <= 9.903e-02  True
+      upper half gamma <= 2 phi   : 9.903e-02 <= 2.857e-01  True
+  cycle_8                  n=  8  gamma=0.2928932188  gamma_abs=0.0000000000
+      phi_sweep(A)=0.2500000000  phi_exact(B)=0.2500000000  A/B=1.000000
+      lower half phi^2/2 <= gamma : 3.125e-02 <= 2.929e-01  True
+      upper half gamma <= 2 phi   : 2.929e-01 <= 5.000e-01  True
+  dumbbell_4x4             n=  8  gamma=0.1133824752  gamma_abs=0.1133824752
+      phi_sweep(A)=0.0769230769  phi_exact(B)=0.0769230769  A/B=1.000000
+      lower half phi^2/2 <= gamma : 2.959e-03 <= 1.134e-01  True
+      upper half gamma <= 2 phi   : 1.134e-01 <= 1.538e-01  True
+  dumbbell_6x6             n= 12  gamma=0.0506582368  gamma_abs=0.0506582368
+      phi_sweep(A)=0.0322580645  phi_exact(B)=0.0322580645  A/B=1.000000
+      lower half phi^2/2 <= gamma : 5.203e-04 <= 5.066e-02  True
+      upper half gamma <= 2 phi   : 5.066e-02 <= 6.452e-02  True
+  dumbbell_6x6_w05         n= 12  gamma=0.0288120770  gamma_abs=0.0288120770
+      phi_sweep(A)=0.0163934426  phi_exact(B)=0.0163934426  A/B=1.000000
+      lower half phi^2/2 <= gamma : 1.344e-04 <= 2.881e-02  True
+      upper half gamma <= 2 phi   : 2.881e-02 <= 3.279e-02  True
+  hypercube_16             n= 16  gamma=0.5000000000  gamma_abs=-0.0000000000
+      phi_sweep(A)=0.3750000000  phi_exact(B)=0.2500000000  A/B=1.500000
+      lower half phi^2/2 <= gamma : 3.125e-02 <= 5.000e-01  True
+      upper half gamma <= 2 phi   : 5.000e-01 <= 5.000e-01  True
+  path_12                  n= 12  gamma=0.0405070264  gamma_abs=0.0000000000
+      phi_sweep(A)=0.0909090909  phi_exact(B)=0.0909090909  A/B=1.000000
+      lower half phi^2/2 <= gamma : 4.132e-03 <= 4.051e-02  True
+      upper half gamma <= 2 phi   : 4.051e-02 <= 1.818e-01  True
+  path_6                   n=  6  gamma=0.1909830056  gamma_abs=0.0000000000
+      phi_sweep(A)=0.2000000000  phi_exact(B)=0.2000000000  A/B=1.000000
+      lower half phi^2/2 <= gamma : 2.000e-02 <= 1.910e-01  True
+      upper half gamma <= 2 phi   : 1.910e-01 <= 4.000e-01  True
+  star_10                  n= 10  gamma=1.0000000000  gamma_abs=0.0000000000
+      phi_sweep(A)=1.0000000000  phi_exact(B)=1.0000000000  A/B=1.000000
+      lower half phi^2/2 <= gamma : 5.000e-01 <= 1.000e+00  True
+      upper half gamma <= 2 phi   : 1.000e+00 <= 2.000e+00  True
+
+THIS REPOSITORY'S OWN INSTANCES (scale/foreman_lambda2.py chains)
+  LargestJoin_S2Rips_64    n= 18  gamma=0.0327795158  gamma_abs=0.0327795158
+      phi_sweep(A)=0.0370370370  phi_exact(B)=0.0370370370  A/B=1.000000
+      lower half phi^2/2 <= gamma : 6.859e-04 <= 3.278e-02  True
+      upper half gamma <= 2 phi   : 3.278e-02 <= 7.407e-02  True
+      crude phi_bridge (scale/foreman_lambda2.py:300) = 0.0370370370   crude/exact = 1.000000
+      crude lower half 6.859e-04 <= 3.278e-02  True
+  LargestJoin_S2Rips_1024  n= 62  gamma=0.0035921143  gamma_abs=0.0035921143
+      phi_sweep(A)=0.0117647059  phi_exact(B)=n/a (2^61 cuts)  A/B=n/a
+      lower half phi^2/2 <= gamma : n/a
+      upper half gamma <= 2 phi   : 3.592e-03 <= 2.353e-02  True
+      crude phi_bridge (scale/foreman_lambda2.py:300) = 0.0117647059
+      bracket phi in [gamma/2, phi_sweep] = [0.0017960571, 0.0117647059]  width x6.5503
+
+L-DOM DOMAIN CENSUS -- LPW Thm 13.10's hypotheses against measured draws
+generators as registered in ceq/kdata.py:472-482
+
+BED-M  ceq.corpus.build(n_train=384, n_test=128, seed=0)
+  build() keys                     ['held_out', 'test', 'train', 'vocab']
+  label y                          int, 44 distinct in [-36, 36]
+  tokens                           int32 (384, 12), 16 distinct ids
+  H1 a square matrix over states?  False
+  H2 row-stochastic?               n/a -- no matrix exists
+  H3 irreducible?                  n/a -- no matrix exists
+  H4 reversible w.r.t. some pi?    n/a -- no matrix exists
+  draws satisfying H1..H4          0 / 384
+
+the {-1,0,+1} object  scale/negation_scope.py:428-429 (n=2048, s=64, head=3)
+  measured value support           [-1.0, 0.0, 1.0]
+  entries < 0                      61348 / 131072
+  shape                            (2048, 64) -- a coefficient array, not a square matrix
+  H1 a square matrix over states?  False
+  W >= 0 (needed for any pi)?      False -- 61348 negative entries
+  draws satisfying H1..H4          0 / 2048
+
+BED-K  ceq.beds.bed_k.build_delay(n=500, d=4, seed=7)
+  K shape / dtype                  (500, 500) float64
+  H1 square matrix?                True
+  W symmetric (=> reversible)?     False
+  W >= 0?                          True
+  H2 row sums == 1?                False  (min 0.0000, max 1.0000)
+  zero rows (isolated states)      4 of 500
+  strictly lower triangular?       True
+  H3 irreducible?                  False  (K^n == 0, i.e. NILPOTENT)
+  STRUCTURAL, not sampling -- every (kind, params, n):
+  delay     {'d': 1}     n=  32  sym=False lower-tri=True  rowsum_max=1.0000
+  delay     {'d': 1}     n= 128  sym=False lower-tri=True  rowsum_max=1.0000
+  delay     {'d': 4}     n=  32  sym=False lower-tri=True  rowsum_max=1.0000
+  delay     {'d': 4}     n= 128  sym=False lower-tri=True  rowsum_max=1.0000
+  powerlaw  {'H': 0.6}   n=  32  sym=False lower-tri=True  rowsum_max=0.4844
+  powerlaw  {'H': 0.6}   n= 128  sym=False lower-tri=True  rowsum_max=0.7070
+  powerlaw  {'H': 0.9}   n=  32  sym=False lower-tri=True  rowsum_max=3.4914
+  powerlaw  {'H': 0.9}   n= 128  sym=False lower-tri=True  rowsum_max=6.8419
+  draws satisfying H1..H4          0 / 8 kernels swept
+
+Rips chain  scale/foreman_lambda2.py build_chain(LargestJoin_S2Rips_64)
+  H1 square matrix?                True  ((18, 18))
+  W symmetric?                     True
+  W >= 0?                          True
+  H2 P = D^-1 W row-stochastic?    True by construction (scale/foreman_lambda2.py:670)
+  H3 irreducible (connected)?      True -- _require_graph passed
+  H4 reversible w.r.t. pi = d/vol? True -- W = W^T and W >= 0
+  H5 Phi_* a MINIMUM over cuts?    True in this file, False in scale/foreman_lambda2.py:300
+  draws satisfying H1..H4          2 / 2 (both REROUTED_CASES)
+
+VERDICT OF THE CENSUS: the hypothesis set of Thm 13.10 is satisfied by 0 of the
+campaign's registered beds and by the Rips graph corpus only, which is a different
+corpus and whose lambda_2 dial scale/foreman_lambda2.py:40-66 already records as refuted.
+demo OK

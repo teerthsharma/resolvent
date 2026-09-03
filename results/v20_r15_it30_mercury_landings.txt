@@ -1,0 +1,14 @@
+179 Q4/W1 DECL | V20_R15_IT8_JUPITER.md:105 | | `ceq/arm_smprime.py:163-172` | `path_product` builds `[..., S, S]` rows, then `cumprod` | **O(n·S²)**, complex
+179 Q4/W1 DECL | ceq/arm_smprime.py:144 | def path_product(a: torch.Tensor) -> torch.Tensor:
+179 Q4/W1 DECL | scripts/v15_r1.py:137 | S, D = 64, 24                  # the shape every e3 row in results/ uses
+179 Q4/W1 DECL | lean/CEQ/V16Domain.lean:129 | theorem pathProd_eq_zero_iff (m θ : ℕ → ℝ) (i j : ℕ) :
+179 Q4/W1 DECL | ceq/arm_smprime.py:559 | def zero_hop_mask(self, x: torch.Tensor) -> torch.Tensor:
+180 Q4/W1 CENS | ceq/sizing.py:145 | def flops_per_token(cfg: Config, *, arm: str, hops: int = HOPS,
+180 Q4/W1 CENS | scale/m3_flops.py:207 | CELLS = ("softmax", "glance", "settled", "twin", "argmax")
+180 Q4/W1 CENS | ceq/mz_kernel.py:170 | def attention_flops(plan: ZoomPlan, head_dim: int, batch_heads: int) -> int:
+181 Q4/W1 ROUT | V20_R15_IT13_MERCURY.md:146 | | **RETIRE the re-take (SATURN's split)** | **206 – 537** (point 309.0) | 4 — one `argparse` line, one substitut
+181 Q4/W1 ROUT | scripts/v15_r1.py:249 | t0 = time.time()
+181 Q4/W1 ROUT | scripts/v15_r1.py:267 | secs = time.time() - t0
+187 Q4/W3 GAP  | ceq/arm_pl.py:304 | def brute_force_path_sums(a: torch.Tensor) -> torch.Tensor:
+188 Q4/W3 DECL | ceq/arm_pl.py:113 | w = (q @ k.transpose(-2, -1)) / math.sqrt(q.shape[-1])
+188 Q4/W3 DECL | ceq/arm_pl.py:93 | def key_bias(g: torch.Tensor, s: torch.Tensor) -> torch.Tensor:

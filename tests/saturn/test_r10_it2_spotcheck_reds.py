@@ -60,7 +60,11 @@ def rows():
 def tracked():
     out = subprocess.run(["git", "ls-files"], cwd=ROOT, capture_output=True,
                          text=True, check=True).stdout.splitlines()
-    return [p for p in out if not any(x in p for x in EXCLUDED)]
+    kept = [p for p in out if not any(x in p for x in EXCLUDED)]
+    # it.31 RULE 2 (V-7). Without this, a `git ls-files` that returns
+    # nothing makes every absence claim below pass vacuously.
+    assert kept, "git ls-files returned no tracked path -- git is not running here"
+    return kept
 
 
 # ------------------------------------------------------------------ FINDING A

@@ -1,0 +1,7 @@
+tests/mercury/test_v20_r15_it30_admission.py::test_red_table_306_says_zero_callers_under_scripts XFAIL [ 16%]
+tests/mercury/test_v20_r15_it30_admission.py::test_red_table_354_price_275_matches_its_own_formula XFAIL [ 33%]
+tests/mercury/test_v20_r15_it30_admission.py::test_two_call_sites_at_exactly_the_registered_kwargs PASSED [ 50%]
+tests/mercury/test_v20_r15_it30_admission.py::test_neither_call_site_runs_a_cell_of_bed_ks_shape PASSED [ 66%]
+tests/mercury/test_v20_r15_it30_admission.py::test_neither_275_nor_309_047_is_the_it8_formula PASSED [ 83%]
+tests/mercury/test_v20_r15_it30_admission.py::test_table_still_carries_the_stale_275_at_354 PASSED [100%]
+================== 4 passed, 2 xfailed, 3 warnings in 1.05s ===================

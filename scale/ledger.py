@@ -34,6 +34,7 @@ The ledger is append-only evidence. Nothing here writes to it.
 from __future__ import annotations
 
 import json
+import re
 import pathlib
 from typing import Any, Iterator
 
@@ -82,6 +83,26 @@ def _status(event: dict[str, Any]) -> str | None:
     """
     raw = event.get("status", event.get("state"))
     return raw.lower() if isinstance(raw, str) else None
+
+
+def _t(event: dict[str, Any]) -> str | None:
+    """The event's TYPE, normalised across every spelling in the file.
+
+    Measured round 15 iteration 9: 116 of 12,367 records carry no `t` at all --
+    `kind` at :399 and :993, `event` at :11744 -- and `tests()` filtered
+    `e.get("t") == "test"` literally, so those records were unbindable BY
+    CONSTRUCTION, not by accident. That is the `state`/`status` split this module
+    was written for, arriving in the field every other accessor filters on FIRST,
+    which makes it the widest of the four. Same shape, same fix, one field over.
+
+    `t` wins when present; `kind` and `event` are read only in its absence, so a
+    record carrying both keeps the meaning its author intended.
+    """
+    for key in ("t", "kind", "event"):
+        raw = event.get(key)
+        if isinstance(raw, str) and raw:
+            return raw.lower()
+    return None
 
 
 def _agent(event: dict[str, Any]) -> str | None:
@@ -143,7 +164,7 @@ def tests(agent: str | None = None, status: str | None = None) -> list[dict[str,
     want_agent = agent.lower() if agent else None
     return [
         e for e in read()
-        if e.get("t") == "test"
+        if _t(e) == "test"
         and (want_agent is None or _agent(e) == want_agent)
         and (want_status is None or _status(e) == want_status)
     ]
@@ -152,7 +173,7 @@ def tests(agent: str | None = None, status: str | None = None) -> list[dict[str,
 def findings(agent: str | None = None) -> list[dict[str, Any]]:
     want = agent.lower() if agent else None
     return [e for e in read()
-            if e.get("t") == "finding" and (want is None or _agent(e) == want)]
+            if _t(e) == "finding" and (want is None or _agent(e) == want)]
 
 
 def audits(cites: str | None = None, verdict: str | None = None) -> list[dict[str, Any]]:
@@ -173,7 +194,7 @@ def audits(cites: str | None = None, verdict: str | None = None) -> list[dict[st
     """
     return [
         e for e in read()
-        if e.get("t") == "audit" and e.get("verdict")
+        if _t(e) == "audit" and e.get("verdict")
         and (cites is None or (isinstance(e.get("cites"), str)
                                and e["cites"].lower() == cites.lower()))
         and (verdict is None or e.get("verdict") == verdict)
@@ -183,6 +204,67 @@ def audits(cites: str | None = None, verdict: str | None = None) -> list[dict[st
 def is_bound(node_name: str) -> bool:
     """True if some red event names this node. The binding check, spelled once."""
     return any(e.get("name") == node_name for e in tests(status="red"))
+
+
+#: A `run` claim names a node id, an executable path, or a command line.
+_RUN_TARGET = re.compile(
+    r"(?:[\w./-]+\.(?:py|sh|lean)(?:::[\w:\[\]-]+)?)|(?:(?:pytest|python|bash)\s+\S)")
+
+
+def _names_a_command(run: Any) -> bool:
+    """THE FOURTH REFUSAL. `[RUN]` with no command is `t` spelled `kind`."""
+    return isinstance(run, str) and bool(_RUN_TARGET.search(run))
+
+
+def append(event: dict[str, Any], path: pathlib.Path | None = None) -> str:
+    """THE FORWARD-ONLY SCHEMA GATE. Refuses a malformed append; writes nothing else.
+
+    The ledger is append-only evidence, so a bind over history is a monument and
+    not a bind -- the 116 typeless records and the 4 unparseable ones stay where
+    they are, and `_t()` above is what lets a reader see the first group. This
+    function is the other half: from here on, a record that a reader could not
+    have bound cannot be written in the first place.
+
+    THREE REFUSALS, each one a class measured in the shipped file:
+      no `t`        116 records at :399, :993, :11744 spell the type `kind` or
+                    `event`. `tests()` filters the type FIRST, so those records
+                    match no filter at any status -- an instrument that can
+                    silently fail to see a RED.
+      not a dict    a bare list or string parses and then matches nothing.
+      unserialisable  4 lines (:1899, :2937, :2938, :5871) carry invalid `\e`
+                    escapes from hand-written LaTeX and `read()` drops them
+                    entirely. Routing every append through `json.dumps` makes
+                    that class unwritable: the encoder cannot emit an escape the
+                    decoder rejects, and the round-trip below proves it per call.
+
+    Returns the line it wrote, so a caller can assert on it without re-reading.
+    """
+    if not isinstance(event, dict):
+        raise ValueError(f"ledger.append: event must be a dict, got {type(event).__name__}")
+    t = event.get("t")
+    if not isinstance(t, str) or not t:
+        raise ValueError(
+            "ledger.append: every event needs a non-empty string `t`; got "
+            f"{t!r}. `kind`/`event` are READ by _t() for history and are not "
+            "accepted on new appends -- 116 records already went in that way "
+            "and are unbindable by construction.")
+    run = event.get("run")
+    if run is not None and not _names_a_command(run):
+        raise ValueError(
+            "ledger.append: a `run` claim must name something a reader can "
+            f"execute -- a node id, a .py/.sh/.lean path, or a command. Got "
+            f"{run!r}. This is the fourth refusal and the same class as the "
+            "first: the it.11 Inspector counted 92 of 153 `[RUN]` markers "
+            "naming nothing runnable, exactly as 116 records spelled `t` as "
+            "`kind`. A marker that cannot name its command is a printed "
+            "result with no route back to its producer.")
+
+    line = json.dumps(event, ensure_ascii=False)
+    if json.loads(line) != event:  # the round-trip `read()` will have to survive
+        raise ValueError("ledger.append: event does not round-trip through JSON")
+    with (path or LEDGER).open("a", encoding="utf-8") as fh:
+        fh.write(line + "\n")
+    return line
 
 
 def demo() -> None:
@@ -200,7 +282,7 @@ def demo() -> None:
 
     # Normalisation must reach the historical spellings, or the Inspector's
     # ledger-hazard finding is unfixed.
-    spellings = {k for e in read() if e.get("t") == "test"
+    spellings = {k for e in read() if _t(e) == "test"
                  for k in ("status", "state") if k in e}
     assert _status({"state": "RED"}) == "red", "the reader cannot see MERCURY's spelling"
     assert _status({"status": "RED"}) == "red", "the reader cannot see NEPTUNE's spelling"
