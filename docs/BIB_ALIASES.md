@@ -1,0 +1,53 @@
+# Bib aliases -- cite the CANONICAL key
+
+| alias key | canonical key | reason |
+|---|---|---|
+| `georgiev-2024-dearneurips` | `georgiev-2024-dear-neurips` | same identifier, from bib_resolvent |
+| `yang-2023-looped` | `yang-2024-looped` | same identifier, from bib_resolvent |
+| `sander-2021-sinkformer` | `sander-2022-sinkformer` | same identifier, from bib_resolvent |
+| `ramsauer-2020-hopfield` | `ramsauer-2021-hopfield` | same identifier, from bib_resolvent |
+| `li-2019-committor` | `li-2019-committor-deep` | same identifier, from bib_resolvent |
+| `sanford-2024-graphalgorithms` | `sanford-2024-graph-algorithms` | same identifier, from bib_expressivity |
+| `peng-2024-limitations` | `peng-2024-transformer-limitations` | same identifier, from bib_expressivity |
+| `liu-2023-shortcuts` | `liu-2022-shortcuts-automata` | same identifier, from bib_expressivity |
+| `marion-2025-singlelocation` | `marion-2025-single-location` | same identifier, from bib_expressivity |
+| `duranthon-2026-softmaxadvantage` | `duranthon-2026-softmax-advantage` | same identifier, from bib_expressivity |
+| `tarzanagh-2023-maxmargin` | `tarzanagh-2023-max-margin` | same identifier, from bib_expressivity |
+| `feng-2023-diffuser` | `feng-2022-diffuser` | same identifier, from bib_expressivity |
+| `erel-2025-attentionmarkovchains` | `erel-2025-attentionchains` | same identifier, from bib_expressivity |
+| `sherman-1950-inverse` | `sherman-1950-inverse-adjustment` | same identifier, from bib_safety |
+| `e-2006-transitionpaths` | `e-2006-transition-paths` | same identifier, from bib_safety |
+| `metzner-2009-tptjump` | `metzner-2009-tpt-markov-jump` | same identifier, from bib_safety |
+| `khoo-2019-committor` | `khoo-2018-committor` | same identifier, from bib_safety |
+| `li-2019-committor` | `li-2019-committor-deep` | same identifier, from bib_safety |
+| `contrerasarredondo-2026-committor` | `contrerasarredondo-2025-committor-gnn` | same identifier, from bib_safety |
+| `summers-2010-reachavoid` | `summers-2010-reach-avoid` | same identifier, from bib_safety |
+| `makkuva-2024-attentionmarkov` | `makkuva-2025-attentionmarkov` | same identifier, from bib_safety |
+| `ramsauer-2020-hopfield` | `ramsauer-2021-hopfield` | same identifier, from bib_causality |
+| `dayan-1993-sr` | `dayan-1993-successor` | same identifier, from bib_causality |
+| `makkuva-2024-attentionmarkov` | `makkuva-2025-attentionmarkov` | same identifier, from bib_causality |
+| `kim-2026-topological` | `kim-2026-topological-causal` | same identifier, from bib_causality |
+| `bai-2026-pinnchangepoint` | `bai-2026-pinn-changepoint` | same identifier, from bib_causality |
+| `peng-2024-limitations` | `peng-2024-transformer-limitations` | same identifier, from bib_causality |
+| `gasteiger-2018-appnp` | `gasteiger-2019-appnp` | same identifier, from bib_linrec |
+| `shi-2025-randomwalks` | `shi-2025-random-walks` | same identifier, from bib_linrec |
+| `wang-2025-testtimeregression` | `wang-2025-test-time-regression` | same identifier, from bib_linrec |
+| `vonoswald-2025-mesanet` | `vonoswald-2026-mesanet` | same identifier, from bib_linrec |
+| `ramsauer-2020-hopfield` | `ramsauer-2021-hopfield` | same identifier, from bib_linrec |
+| `erel-2025-attentionmarkovchains` | `erel-2025-attentionchains` | same identifier, from bib_linrec |
+| `karagodin-2024-causalclustering` | `karagodin-2024-clustering` | same identifier, from bib_linrec |
+| `lin-2026-connectionlaplacian` | `lin-2026-connection-laplacian` | same identifier, from bib_linrec |
+| `sander-2021-sinkformers` | `sander-2022-sinkformer` | same identifier, from bib_linrec |
+| `lin-2026-connection-laplacian-attention` | `lin-2026-connection-laplacian` | same identifier, from bib_topology |
+| `makkuva-2024-attention-with-markov` | `makkuva-2025-attentionmarkov` | same identifier, from bib_topology |
+| `kim-2026-topological-causal-effects` | `kim-2026-topological-causal` | same identifier, from bib_topology |
+| `e-2010-transition-path-theory` | `e-2010-tptreview` | same identifier, from bib_topology |
+| `khoo-2018-committor-nn` | `khoo-2018-committor` | same identifier, from bib_topology |
+| `levin-2017-markov` | `levin-2017-markov-mixing` | same identifier, from bib_methods |
+| `doyle-1984-random` | `doyle-1984-electric` | same identifier, from bib_methods |
+| `sherman-1950-adjustment` | `sherman-1950-inverse-adjustment` | same identifier, from bib_methods |
+| `prinz-2011-markov` | `prinz-2011-msm` | same identifier, from bib_methods |
+| `e-2006-transition` | `e-2006-transition-paths` | same identifier, from bib_methods |
+| `metzner-2009-transition` | `metzner-2009-tpt-markov-jump` | same identifier, from bib_methods |
+| `gasteiger-2019-diffusion` | `gasteiger-2019-gdc` | same identifier, from bib_methods |
+| `peng-2024-limitations` | `peng-2024-transformer-limitations` | same identifier, from bib_methods |
