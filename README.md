@@ -18,6 +18,10 @@
 </p>
 
 <p align="center">
+  <a href="docs/canon/00_NORTH_STAR.md"><b>The Canon</b></a>&nbsp;&nbsp;·&nbsp;&nbsp;
+  <a href="docs/canon/CHARTER.md">Charter</a>&nbsp;&nbsp;·&nbsp;&nbsp;
+  <a href="docs/canon/08_ARCHITECTURE.md">Architecture</a>&nbsp;&nbsp;·&nbsp;&nbsp;
+  <a href="docs/CEQ_SHAPE.md">The Shape Paper</a>&nbsp;&nbsp;·&nbsp;&nbsp;
   <a href="workdonenewseal.md">Status Report</a>&nbsp;&nbsp;·&nbsp;&nbsp;
   <a href="MISTAKES.md">Failure Taxonomy</a>&nbsp;&nbsp;·&nbsp;&nbsp;
   <a href="lean/CEQ/">Machine-Checked Proofs</a>&nbsp;&nbsp;·&nbsp;&nbsp;
