@@ -1,0 +1,16 @@
+resolvent
+Copyright 2026 Teerth Sharma
+
+This product is licensed under the Apache License, Version 2.0 (see LICENSE).
+It includes the following third-party code, licensed separately under its own
+copyright and reproduced here as required by Section 4 of the Apache License,
+Version 2.0:
+
+ceq/vendor/island_benchmark_test.cc
+  Copyright 2026 DeepMind Technologies Limited
+  Licensed under the Apache License, Version 2.0 (see ceq/vendor/LICENSE).
+  Upstream: MuJoCo (google-deepmind/mujoco), test/benchmark/island_benchmark_test.cc
+  as it stood at commit 5d91d878c2b2f04847130c80953a73180c1d93d6, contributed in
+  pull request #3396. That file did not reach the merge commit and 404s upstream
+  today; ceq/rips.py is a Python port of its generator with the arithmetic
+  unchanged. See ceq/rips.py for the full provenance note.
