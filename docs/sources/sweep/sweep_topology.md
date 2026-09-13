@@ -1,7 +1,7 @@
 # Prior-art sweep — lineage S6: topology in and around the attention role
 
 SATURN-S6, 2026-09-03. Companion file: `bib_topology.bib` (59 entries, one per source).
-Repository: `C:\Users\seal\Desktop\New folder (32)`, branch `v17k-gate0`, HEAD `207e7b9`.
+Repository: `<repo root>`, branch `v17k-gate0`, HEAD `207e7b9`.
 
 Evidence classes as in `BRIEF.md` §5.3: `RUN` (executed this session), `READ path:line`,
 `CITED [V]` (abs page / DOI metadata record / primary host API fetched this session, title

@@ -197,8 +197,9 @@ beside it, so the interpreter that answers `import numpy` is carrying a distribu
 certificate never named — a fact about which files exist, not about when. The canon reads the
 drift off the name and quotes the date `[ASSUMED]`.
 
-**Hypotheses.** The interpreter is `C:\Users\seal\AppData\Local\Programs\Python\Python311\python.exe`
-(RUN); the root suite is collected with `pytest.ini`'s `norecursedirs` excluding `attic` and
+**Hypotheses.** The interpreter is `<home>\AppData\Local\Programs\Python\Python311\python.exe`
+— a machine-wide CPython 3.11 install, not a repo-local venv — (RUN); the root suite is
+collected with `pytest.ini`'s `norecursedirs` excluding `attic` and
 `kaggle` (`READ pytest.ini:19 @ 99777ab`); the counts are of files, not of tests.
 
 **Evidence.** RUN `python -m pytest -q --collect-only -p no:cacheprovider` at the root,

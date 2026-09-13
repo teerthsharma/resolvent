@@ -1,6 +1,6 @@
 # PRIOR-ART SWEEP — causality, interventions, consequence learning in attention models
 
-**Planet:** MARS-S4. **Date:** 2026-09-03. **Repository:** `C:\Users\seal\Desktop\New folder (32)`,
+**Planet:** MARS-S4. **Date:** 2026-09-03. **Repository:** `<repo root>`,
 branch `v17k-gate0`, HEAD `207e7b9`. **Companion file:** `bib_causality.bib` (same directory,
 59 entries: 58 `[V]`, 1 `[U]`).
 

@@ -1,7 +1,7 @@
 # SWEEP — expressivity, depth laws, optimality of the softmax role
 
 JUPITER-S3, 2026-09-03. Companion file: `bib_expressivity.bib` (45 entries, all `[V]` for
-identifier + title). Repository at `C:\Users\seal\Desktop\New folder (32)`, branch `v17k-gate0`,
+identifier + title). Repository at `<repo root>`, branch `v17k-gate0`,
 HEAD `207e7b9`. Evidence classes per `BRIEF.md` §5.3: `RUN` / `READ path:line` / `CITED [V]|[U]` /
 `DERIVED`. `[V]` means the arXiv abs page (or the Crossref record for a DOI) was fetched this
 session and the title matched; `[U]` means reached only through a search snippet, a summary

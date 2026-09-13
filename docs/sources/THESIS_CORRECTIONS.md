@@ -2,8 +2,8 @@
 
 Companion to `THESIS_NOTES.md`. Fourteen planets reported (`$SCRATCH/sections/sec_*.md`,
 `$SCRATCH/sweep/sweep_*.md`, `$SCRATCH/sweep/bib_*.bib`). The propositions in the notes
-stand or fall as follows. `$SCRATCH` =
-`C:\Users\seal\AppData\Local\Temp\claude\C--Users-seal-Desktop-New-folder--32-\12493ed6-8e0b-4168-994a-075dc6a1800a\scratchpad`.
+stand or fall as follows. `$SCRATCH` is the per-session scratch path named in that
+round's prompt — a path that will not exist for anyone reading this later.
 
 **C1. The read is OCCUPIED — cite it in the first paragraph that writes it.** Fagnou,
 Caillon, Delattre, Allauzen, *Chain and Causal Attention for Efficient Entity Tracking*,

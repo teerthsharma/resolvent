@@ -1,7 +1,7 @@
 # 6. Beds, labels, floors, metrics and the pricing rule
 
 *Section owner: VENUS (IRENE — competing predictions, floors, metrics). Repository
-`C:\Users\seal\Desktop\New folder (32)` at `207e7b9`. Evidence classes: `RUN` (executed
+`<repo root>` at `207e7b9`. Evidence classes: `RUN` (executed
 this session, this box, torch 2.5.1, float32 unless stated), `READ path:line`, `CITED`,
 `DERIVED`. Every design element names the `MISTAKES.md` mechanism it is built against.*
 

@@ -2,7 +2,7 @@
 
 Companion BibTeX: `$SCRATCH/sweep/bib_resolvent.bib` (48 entries, every one resolved this session;
 the `note` field of each entry records the resolution route and marks any field supplied from
-memory as `[U]`). Repository root `C:\Users\seal\Desktop\New folder (32)`, HEAD `207e7b9`.
+memory as `[U]`). Repository root `<repo root>`, HEAD `207e7b9`.
 
 Evidence classes used below (BRIEF.md §5.3): `RUN` (executed this session), `READ path:line`,
 `CITED [V]` (abs/DOI/ISBN/DBLP record fetched this session, title matched), `CITED [U]` (search

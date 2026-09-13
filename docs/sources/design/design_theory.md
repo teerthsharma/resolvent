@@ -1,6 +1,6 @@
 # DESIGN — THEORY: the shape formalised so the plan can be built on it
 
-JUPITER (MYCROFT), 2026-09-03. Repository `C:\Users\seal\Desktop\New folder (32)`, branch `v17k-gate0`, HEAD `207e7b9`. Inputs read in full:
+JUPITER (MYCROFT), 2026-09-03. Repository `<repo root>`, branch `v17k-gate0`, HEAD `207e7b9`. Inputs read in full:
 `BRIEF.md`, `THESIS_NOTES.md`, `THESIS_CORRECTIONS.md`, `THESIS_CORRECTIONS_2.md`, the six `sections/sec_*.md`, the eight
 `sweep/sweep_*.md`, `references.bib` (408 entries) and `bib_aliases.md`. Not read, by instruction: `design/design_instrument.md`,
 `design/design_falsify.md`.

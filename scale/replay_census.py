@@ -8,7 +8,7 @@ leaves evidence -- ADR-001.
 """
 import json, pathlib, sys, time
 import torch
-ROOT = pathlib.Path(r"C:\Users\seal\Desktop\New folder (32)")
+ROOT = pathlib.Path(__file__).resolve().parents[1]  # <repo root>
 sys.path.insert(0, str(ROOT))
 torch.set_num_threads(2)
 from scale.m2_units import compute, units

@@ -3,7 +3,7 @@
 MARS (MORIARTY), 2026-09-03. Target: `design/design_theory.md` (625 lines, JUPITER/MYCROFT). Inputs read in full and in order:
 `BRIEF.md`, `THESIS_NOTES.md`, `THESIS_CORRECTIONS.md`, `THESIS_CORRECTIONS_2.md`, `sections/sec_{proved,measured,refuted,cost,beds,state}.md`,
 `sweep/sweep_{resolvent,linrec,expressivity,causality,safety,topology,occupied,methods}.md`, `references.bib` (grep only), `bib_aliases.md`,
-`MISTAKES.md` at `207e7b9` (all 2,235 lines). Repository root `C:\Users\seal\Desktop\New folder (32)`.
+`MISTAKES.md` at `207e7b9` (all 2,235 lines). Repository root `<repo root>`.
 
 Evidence classes: `RUN` — executed this session (three read-only probes, text below); `READ path:line`; `CITED [V]` — a key in `references.bib`
 whose sweep marks it `[V]`; `DERIVED` — steps written out. Every KILL and REPAIR carries a number, a bib key or a `file:line`. Default under

@@ -464,7 +464,13 @@ is still a ceiling.**
 
 ## 8. THE FORMAL RESULTS
 
-`lake build CEQ` exits 0. **39 theorems across six modules.**
+`lake build CEQ` exits 0. **134 theorems + 41 lemmas across the thirteen files in
+`lean/CEQ/` and `lean/CEQ.lean`**, counted by `python scripts/lean_count.py`, 2026-09-11.
+A raw `grep -c '^\s*theorem\s'` reads 140 + 35 instead: it counts six comment lines that
+open with the word "theorem" and misses six `@[simp] lemma` declarations. (The earlier
+count of **39** covered only the six earliest modules — `Contraction`, `Nilpotent`,
+`Occupancy`, `OracleSeparation`, `OrbitBound`, `Refcount` — and is still exact for them;
+`V15`, `V15Fork`, `V15Kernel`, `V15Phase`, `V15Source` and `V16Domain` came later.)
 
 **`oracle_ne_resolvent`.** The arm's operator is strictly lower triangular, hence
 `A^n = 0`. The oracle's transient block `Q` is non-negative with symmetric support and
@@ -881,13 +887,18 @@ difference: the assertion that fired was true and the instrument was blind.
 **The fix is the scope correction plus a refusal.** `collect_targets` filters on
 the path relative to the scan root, and `main` returns 1 rather than 0 on an
 empty target list — a tool that walks zero paths passes every input and must not
-report success. `tests/jupiter/test_struck_coverage_scans.py` plants a struck
+report success. `tests/jupiter/test_struck_coverage_scans.py` — **deleted from the
+live tree at `c71527a`** as one of the 53 test files removed with the round-report
+cleanup that commit describes; readable at `git show 99777ab:tests/jupiter/test_struck_coverage_scans.py`,
+not at HEAD — plants a struck
 constant in a file on disk that target selection must reach, requires it to be
 found, requires the same text carrying a strike marker **not** to be found, and
 requires a file with no struck constant to be silent — three arms, because two
 would pass for a scanner that flagged everything. **6 of its 8 tests fail against
 the unfixed scanner; the 8th states the root cause without reference to the
-refactor so a later rewrite cannot make it vacuous.**
+refactor so a later rewrite cannot make it vacuous.** (This paragraph narrates
+what that test demonstrated when it ran; the fix and the `27`-candidate finding
+below it are unaffected by the file's later removal.)
 
 **What the fix exposed.** With `346` paths now scanned the tool exits 1 on `27`
 candidates. They split into two classes, and the file's own docstring already

@@ -18,11 +18,12 @@ same init (normal_(0, 0.5) with torch.Generator().manual_seed(seed), zeroed
 biases), same Adam lr, same step count, same standardisation of the target and
 same un-standardisation before scoring.
 """
+import pathlib
 import sys
 
 import torch
 
-sys.path.insert(0, r"C:\Users\seal\Desktop\New folder (32)")
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))  # <repo root>
 from scale import negation_scope as NS  # noqa: E402
 
 # PINNED TO THE SWEEP'S OWN CALL, r10_capacity_sweep.py:160 --

@@ -1,10 +1,10 @@
 # BRIEF — the shape paper, shared context for every planet
 
 Read all of this before doing anything. Every path below is absolute. The repository is
-`C:\Users\seal\Desktop\New folder (32)` (branch `v17k-gate0`, HEAD `207e7b9`). Your
-scratch directory is
-`C:\Users\seal\AppData\Local\Temp\claude\C--Users-seal-Desktop-New-folder--32-\12493ed6-8e0b-4168-994a-075dc6a1800a\scratchpad`
-(call it `$SCRATCH` below). Write your output where your prompt tells you, and nowhere else.
+`<repo root>` (branch `v17k-gate0`, HEAD `207e7b9`). Your scratch directory is the one
+your own prompt names — a per-session path that will not exist for anyone reading this
+later — call it `$SCRATCH` below. Write your output where your prompt tells you, and
+nowhere else.
 
 ## 0. THE MISSION, IN THE AUTHOR'S OWN WORDS (2026-09-03)
 

@@ -32,7 +32,9 @@ tags:
 > arms are called `pivot_signed` and `dense_signed` and `build_arm` maps **both**
 > to it. *The name describes a property, not an implementation.*
 >
-> **The Lean core is sound; it does not certify what ships.** 39 theorems,
+> **The Lean core is sound; it does not certify what ships.** **134 theorems +
+> 41 lemmas**, counted by `python scripts/lean_count.py` (comments stripped,
+> `@[attr]` prefixes admitted), 2026-09-11.
 > `lake build` exit 0, zero `sorry`, no `sorryAx`. `pow_card_eq_zero` is
 > **confirmed against the shipped tensor** — `A^n = 0` at exactly
 > `0.000000e+00` for s = 16/64/128/512. But `occupancy_is_exact_inverse` is
@@ -58,6 +60,15 @@ tags:
 > must never be read as one**, and this section is not publishable while any slot
 > is unfilled. Filed as the documentary consequence of **RULING 2**
 > (`V17K_RULINGS.md` §A2) and **RULING 3** (§A3).
+>
+> **Checked 2026-09-10: none of the twelve slots below are fillable yet.** Every
+> one of them is downstream of the Q3 training run or the floor measurement
+> `V17K_RULINGS.md` §A1.2 owes, and neither has produced a number:
+> `COSTS.md` §4 still carries RULING 1's training noise floor as "☐ NOT YET MEASURED",
+> and the one Kaggle attempt on record
+> (`results/kaggle_v17k_output/ceq-v17-k.log`) halted at
+> `GATE FAILED: a code source is configured` before any training step ran. Slots
+> stay `NOT MEASURED` rather than carrying an invented number.
 
 **Scope, before anything else.** This section describes the **§S-M′ arm** —
 `ceq/arm_smprime.py`, wired into `CEQForCausalLM` as `operator="smprime"`
@@ -70,9 +81,13 @@ CORNERS WITHOUT A BIND AT THE CORNER IT DESCRIBES.**
 
 ## Limits, first (v17-K)
 
-- **There is no trained checkpoint yet.** ⟨SLOT `Q3_CHECKPOINT`⟩ — **NOT
-  MEASURED**, owed by the Q3 training node. Everything below the identity clause
-  is a template until it lands.
+- **There is no trained checkpoint for this v17-K Q3 arm (`CEQForCausalLM`,
+  `operator="smprime"`) yet — a separate fact from the probe-arm weights this
+  card ships elsewhere; see "Weights and checkpoints" below.** The one Kaggle
+  attempt on record (`results/kaggle_v17k_output/ceq-v17-k.log`) halted at setup
+  — `GATE FAILED: a code source is configured` — before any step ran.
+  ⟨SLOT `Q3_CHECKPOINT`⟩ — **NOT MEASURED**, owed by the Q3 training node.
+  Everything below the identity clause is a template until it lands.
 - **The parameter counts are NOT equal, and the arm carries MORE.** Arm
   **25,736,232** against control **25,728,000** at `ceq/hf/train.py::DEFAULTS` —
   **+8,232 = +0.03200 %**. A reading favourable to the arm is the one that needs
@@ -743,8 +758,18 @@ influence Jacobian **in any ordered semiring** — measured exactly zero over 40
 instances and 160 APPNP kernels. Softmax, APPNP and max-plus are all inside that class, so
 none of them can express a negation. Dropping non-negativity is the only escape.
 
-`tests/w6/test_w6_attention.py::test_signed_operator_reaches_negative_influence`, calibrated
-by `::test_the_nonnegative_control_is_stuck_at_exactly_zero`.
+**Citation is stale — flagged rather than silently dropped.** The row above was measured by
+two functions (`test signed operator reaches negative influence`, calibrated by
+`test the nonnegative control is stuck at exactly zero`) in a module named
+`test_w6_attention.py`, formerly under `tests/w6/`. That file was deleted from the live tree
+at `c71527a` ("Remove the round reports from the tree..."), after an earlier move from
+`tests/w6/` to `attic/tests/w6/` at `228a048` — `git log --follow -- attic/tests/w6/test_w6_attention.py`
+shows both moves, and neither path exists at HEAD (`git ls-files | grep w6` returns only
+`tests/w6/conftest.py`). The two functions survive only inside a Kaggle snapshot copy of this
+repository under `kaggle/snapshot/repo/`, which `pytest.ini`'s own
+`norecursedirs = attic kaggle ...` excludes from collection. **No live, collected test
+currently reproduces this row**; the numbers above are not re-verified by the reproduction
+commands at the end of this card until a replacement test is written.
 
 **Published attention is already outside that class.** Reimplemented from their defining
 equations and measured on the same instrument: SimA (arXiv 2206.08898, 2022), which
@@ -836,8 +861,16 @@ the gate is wired correctly; it is not a win condition.
 
 ## Verified core
 
-Lean 4.7.0 + mathlib, `lake build` exit 0, **zero `sorry`**. **39 theorems** across six
-modules; the load-bearing one for the operator is `CEQ.Nilpotent.pow_card_eq_zero` — strictly
+Lean 4.7.0 + mathlib, `lake build` exit 0, **zero `sorry`**. **134 theorems + 41 lemmas**
+across the thirteen files in `lean/CEQ/` and `lean/CEQ.lean`, counted by
+`python scripts/lean_count.py` (comments stripped, `@[attr]` prefixes admitted),
+2026-09-11; re-run it to check for drift. A raw `grep -c '^\s*theorem\s'` reads 140 + 35
+instead: it counts six comment lines that open with the word "theorem" and misses six
+`@[simp] lemma` declarations. (An earlier count of **39** covered only the six earliest
+modules — `Contraction`, `Nilpotent`, `Occupancy`, `OracleSeparation`, `OrbitBound`,
+`Refcount` — and is still exact for them; `V15`, `V15Fork`, `V15Kernel`, `V15Phase`,
+`V15Source` and `V16Domain` came later.)
+The load-bearing one for the operator is `CEQ.Nilpotent.pow_card_eq_zero` — strictly
 lower-triangular ⇒ `A^n = 0` over any `CommRing`, with **no sign hypothesis**, which is what
 licenses dropping non-negativity for free. `CEQ.OracleSeparation.oracle_ne_resolvent` is
 the round-8 addition and it plays that nilpotency off against its negation: an operator
@@ -886,7 +919,13 @@ model.set_attn_implementation("ceq_hybrid")
 Registering the attention function **without** its mask makes `transformers` pass
 `attention_mask=None` and silently drop causal, padding, packing and sliding-window
 constraints. `hybrid.register()` does both.
-`tests/w6/test_w6_attention.py::test_both_interfaces_are_registered`
+**Citation is stale:** the function `test both interfaces are registered`, formerly in
+`test_w6_attention.py` under `tests/w6/`, was deleted from the live tree at `c71527a`, after
+an earlier archive move to `attic/tests/w6/` at `228a048`; neither path exists at HEAD, and
+`pytest.ini` excludes `attic/` and `kaggle/` from collection, so the function is not currently
+collected anywhere this card's own reproduction commands reach. See the same note beside the
+influence-Jacobian
+table above for the git evidence.
 
 CPU works. `α = 0` is free and bitwise; raise `α` only with the cost curve above in view.
 
@@ -996,6 +1035,24 @@ a trained `QuintArm` — 4,769 parameters, module class `scale.m3_quintuple.Quin
 (q/k projection + 2-layer MLP + scalar readout). **The `CEQForCausalLM` model in
 `modeling_ceq.py` still has no published checkpoint**, and no file in `weights/` is named
 `model.safetensors`, because none of them loads into it.
+
+**What is tracked in the repository, and how it breaks down.** `git ls-files | grep -iE
+'\.(safetensors|pt|pth|bin|ckpt)$' | wc -l` counts **171** weight-shaped tracked files,
+2026-09-10. None of them is a `CEQForCausalLM` checkpoint; by directory
+(`... | sed -E 's#/[^/]+$##' | sort | uniq -c`): **135** under
+`results/m3_quintuple_v2_weights/` and **23** under `results/m3_quintuple_v2_cuda_weights/`
+(per-cell `QuintArm`/settled/softmax probe checkpoints from the same m3 journal), **5** under
+`ceq/hf_artifact/weights/` (the table below — the only ones packaged for HF export), **4**
+under `results/paired/` (signed/unsigned probe pairs) and **3** loose in `results/`
+(`phaseD_weights_*.pt`, a separate probe sweep); the remaining **1** is
+`tests/gate0/fixtures/enwik8_short.bin`, a test fixture that only matches the extension
+filter and is not a checkpoint at all. **`ceq/hf_artifact/` is a built HuggingFace package**
+— `config.json`, `configuration_ceq.py`, `modeling_ceq.py`, `weights/MANIFEST.json` and the
+five `.safetensors` above — but the package it builds is the `QuintArm` probe, not a
+language model. **What does not ship, anywhere in this repository, is a trained
+`CEQForCausalLM` weight file of any kind** — not in `weights/`, not in the 166 other tracked
+tensors, and not the v17-K Q3 checkpoint described above, which has never been run to
+completion.
 
 | file (`ceq/hf_artifact/weights/`) | task | cell | seed | eval NRMSE (journal) |
 |---|---|---|---|---|
