@@ -2600,6 +2600,31 @@ separate check that can itself fail. Cheap form: any assert on a
 finiteness-adjacent predicate tests for `NaN` and overflow *first*, and says so,
 before attributing the failure to semantics.
 
+**The mechanism, exactly, from a full trace.** `torch.exp` overflows float32 past
+`w = 88.72283554077147` at `ceq/arm_smprime.py:227`, giving `inf`. Line `:231`
+then multiplies the gate by it, and in complex arithmetic
+`(1+0j) * (inf+0j)` has imaginary part `Re·Im + Im·Re = 1*0 + 0*inf = NaN`. The
+`NaN` propagates through the contraction into every output coordinate of that
+row. The gate is measured exactly `m = 1, theta = 0` on that path — `u` and
+`theta` are hardwired to `None` and defaulted to ones and zeros — so the
+message is false by construction, not merely unhelpful.
+
+**Three corrections to how this defect was first described here, each measured.**
+The width is not the variable: the fire rate across widths 3, 4, 5, 6, 7, 8, 9
+and 16 reads `0, 0, 20, 0, 154, 140, 11, 0` out of 1,500 probe batches —
+non-monotone, the signature of a threshold crossing rather than a dimensional
+law, and the width is not an argument to any of the arithmetic involved. No
+tolerance repairs it: across 13,500 measured batches every imaginary magnitude
+is exactly `0.0` or `NaN` with nothing in between, and `NaN > tol` is true for
+every `tol`. And it fires only on the probe, never in the 1,500 training steps
+that precede it, because the probe draws windows of width `s_len` where training
+draws `s_len + horizon` — so the probe reaches windows training never saw.
+
+**The refusal itself is right and must stay.** On every firing batch `out.real`
+is also non-finite. The check is a genuine numerical blow-up detector correctly
+refusing to return a poisoned read; only its explanation is wrong. Repairing the
+message must not weaken the predicate.
+
 **Kin.** `V-29`, a guard a zero gradient passes because zero is finite — there a
 check is too weak to see the defect; here the check fires correctly and then
 mislabels it. Both are cases where the green or the red is right and the sentence
