@@ -2522,3 +2522,51 @@ could have come out differently.
 distance problem in the other direction — there the definition stayed home and
 the word travelled; here the number travelled and the definition stayed home.
 Both are documents that are locally correct and globally misleading.
+
+### V-29. An initialisation that sits exactly on a critical point, behind a guard a zero gradient passes
+
+`ceq/arm_smprime.py:534 identity_heads()` documents itself as *"`m = 1,
+theta = 0` exactly ... the softmax corner, reached through the gate rather than
+around it"*, and its docstring elsewhere says the switches "are `nn.Parameter`s
+so the harness trains them". Two of the four cannot move from that point, by two
+independent mechanisms, each exactly zero:
+
+- `magnitude(u) = clamp(u, 0, 1)`, and torch's clamp backward is zero **at** the
+  endpoint: `clamp grad at [1.0, 0.5, 1.0, 0.0]` reads `[0.0, 1.0, 0.0, 0.0]`.
+  `:541` sets `m_head.bias.fill_(1.0)` — the endpoint exactly.
+- the read takes `.real`, and `d/dθ Re(m·e^{iθ}) = −m·sin θ`, which is zero at
+  `θ = 0` for every `m`. `:540` zeroes `theta_head.bias` — that point exactly.
+
+Measured at `beta = 1, qk = 1, g = 1`: at `(m, θ) = (1.000, 0.000)` both
+`|dL/du|max` and `|dL/dθ|max` are `0.000000e+00`; at `(0.999, 0.000)` the first
+becomes `2.412707e+00`; at `(1.000, 0.001)` the second becomes `1.006843e-02`.
+Confirmed at scale rather than at a point: an arm trained 2,000 Adam steps from
+this init ended **bitwise identical to softmax**, with
+`m_head_weight_absmax = 0.0`.
+
+**Consequence.** Every gate result in this repository produced from
+`identity_heads` is a measurement of softmax carrying 130 parameters that cannot
+receive a gradient — buffers, under this project's own counting rule at
+`docs/canon/08_ARCHITECTURE.md:12` — at 1.910x the wall clock.
+
+**Why the guard did not catch it, and this is the reusable half.** The shipped
+probe `gradient_finiteness` runs `init="identity"` and asserts only that
+`first_non_finite is None`. **Zero is finite.** A dead gradient passes a
+finiteness check by construction, so the guard's green is evidence that the
+gradient is not NaN and evidence of nothing else. `08_ARCHITECTURE.md:12` had
+already declared these two heads buffers at `g ≡ 0`, for the different reason
+that the blend makes them constant; at `g = 1`, where they are supposed to be
+live, nobody checked.
+
+**Rule.** An initialisation is asserted to have a **non-zero** gradient on every
+parameter it claims to train, not a finite one. Where a parameterisation has a
+critical point — a clamp endpoint, a phase at zero, a symmetry — the default
+init does not sit on it; if it must, the docstring says so and the parameter is
+declared a buffer. The greppable form: for each parameter a module claims is
+trainable, one backward pass at the shipped init must give `|grad| > 0`.
+
+**Kin.** `V-6`, the branch under test never ran — there code does not execute;
+here it executes, produces a number, and the number is zero for a structural
+reason nobody asserted against. And `V-10`, a gate whose threshold is satisfied
+by construction: this is the same shape one level down, a *guard* satisfied by
+construction rather than a threshold.

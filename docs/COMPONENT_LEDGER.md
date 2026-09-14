@@ -33,7 +33,7 @@ parts is the broken one; only a bar per part can.
 | id | component | bar it must clear | status |
 |---|---|---|---|
 | **P1** | Encoder | aggregate context causally; clear a target a position-wise map provably cannot express, with the shipped `Encoder` shown failing it and a permutation control that moves the new one and leaves the shipped one bitwise identical | **PASS** |
-| **P2** | Read / operator | matched head-to-head against a plain softmax attention head at equal parameter count: does containment cost anything when both are trained? | OPEN |
+| **P2** | Read / operator | matched head-to-head against a plain softmax attention head at equal parameter count | **ANSWERED — costs 1.17–2.84x, buys 0.055 nats and zero decisions; the gate is dead at the shipped init** |
 | **P3** | Head / probe | find the binding ceiling among probe rank, read width and encoder | **ANSWERED — the encoder binds** |
 | **P4** | Causal machinery | one synthetic-bed causal claim, measured on real human positions | **FAIL — the claim was an identity; the learned read is at 0.9997** |
 
@@ -170,3 +170,67 @@ bed, every trained number on it is a number about the degeneracy and
 
 Incidental, real, unfixed: the D_LATENT sweep crashes at D = 5 —
 `pi_jepa.py:878 AssertionError: the read carries a nonzero imaginary part`.
+
+## P2 — ANSWERED, 2026-09-14: optimisation parity, and the gate is dead on arrival
+
+Producer ratio 61/61. Scope stated so it cannot be misread: `CHARTER.md:53-56`
+already closes *expressivity* parity. This measures **optimisation** parity —
+does gradient descent on the family reach where gradient descent on the fixed
+corner reaches. Nobody had measured it. Metric is next-move prediction, which the
+north star rules out as a target; it is admissible only because both arms are
+bottlenecked identically and every comparison is arm-against-arm, never against
+a baseline.
+
+Bed: 6,844 real games at ≥33 plies, split by game with `check_game_split`,
+6,148 train / 696 holdout, 22,272 held-out decisions. Tokens are **moves only**,
+no board, so position is recoverable only by mixing over the prefix — which is
+what makes the operator, not an encoder, the thing being scored. CIs are a paired
+game-level bootstrap over the 696 games, 10,000 resamples.
+
+**Containment survives training bitwise.** `arm-beta1` against softmax:
+Δexact `+0.00000`, zero-width CI, at all three seeds. They are the same trained
+model.
+
+**The beta axis is a per-row scalar gain and nothing more.** `num_ij` carries no
+beta, so `W(beta) = softmax · Z^(1−beta)` exactly — worst
+`|softmax_row − linear_row| = 1.110223e-16` over a `[3, 12, 12]` operator once
+rows are normalised. A free beta lowers held-out log-loss by **0.046–0.063 nats**
+(mean 0.055, p < 1e-4 at every seed) and moves exact accuracy **not at all**,
+because `dO_i/dbeta = −log(Z_i)·O_i` is a per-row scale carrying no component
+that re-ranks which `j` a row attends to. Beta lands at an interior optimum,
+0.667 from above and 0.587 from below — not the softmax corner. **A downstream
+RMS norm absorbs the whole axis to 1e-12**, which is a structural tension worth
+naming: the committor bed wants a normaliser and the beta axis cannot survive
+one.
+
+**The gate cannot train from the shipped init.** See `MISTAKES.md` V-29: two
+independent mechanisms, each exactly zero, and `identity_heads` sits on both. An
+arm trained 2,000 Adam steps from it ends bitwise identical to softmax with
+`m_head_weight_absmax = 0.0`, at **1.910x** the wall clock. Woken with a 1e-3
+offset on each bias, both gradients live (`2.412696e+00`, `1.005618e-02`) and the
+operator stays within 5e-2 of the corner — and it then **ties** softmax across
+three seeds (−0.00310 / −0.00054 / +0.00153) at 1.910–2.839x the cost.
+
+Round-robin timing, interleaved so background load falls on every arm equally:
+softmax 23.845 ms/step; `arm-beta-free` 1.174x; `arm-beta1` 1.318x; `arm-gate`
+1.910x; `arm-gate-live` 2.839x.
+
+**Retired with a measured reason:** the committor bed at this capacity. Built
+exactly (`q_residual = 9.645e-13`), 58,940 held-out scored positions split by
+hash of the state index. Only one configuration has the mixing operator beating
+its own deletion, at R² `+0.06317`, and its curve still oscillates
+(−0.1267, −0.1020, −0.1767, +0.0601 at steps 500/1000/1500/2000). A 0.003-scale
+arm difference cannot be read off an unconverged endpoint carrying 6% of the
+variance. The fix is optimisation budget, not architecture — and every
+architectural stabiliser is a normaliser, which deletes the beta axis.
+
+**Decided default: fix `identity_heads` before any further arm is trained.**
+Every gate result in this repo produced from it is a measurement of softmax
+wearing 130 buffers.
+
+Limits: three seeds, one bed, one layer, one head, `d_model` 64, `S` 32, 2,000
+steps — this prices the family at small scale and says nothing at transformer
+scale. p-values are uncorrected for 9 comparisons; Bonferroni at α = 0.0056
+leaves `no-mix` and the three ΔCE results standing, which is the same
+conclusion. Wall clock is CPU-only with softmax held in float64 too, so the
+ratios price the operator and not the dtype.
