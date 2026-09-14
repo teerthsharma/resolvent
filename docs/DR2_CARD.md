@@ -76,7 +76,7 @@ exit 0.
 | 1 | the assignment rule | `three_corners_containment` | checked, R1 (h) | rule serves 7/9, breaks 0, refuses 2 | `all_softmax` 3/3 inside INTENSIVE | INTENSIVE **tie** · EXTENSIVE **tie** vs `all_linear`, **win** vs `all_softmax` · cross-class **win** · FLOOR **void** · NOT-A-POWER-LAW **void** |
 | 2 | T-length | representational collapse / hull bound | checked, R2 (a) and (j) | learned-beta 2.0322 worst cell | assigned-oracle 0.0804 worst cell, 58 vs 60 params | **win** over learned-beta · **void** against `all_softmax` and `all_linear` (bed calibration) |
 | 3 | the refusal channel | none — a cost measurement | checked, R2 (l) | MIXED conservative, NOT-A-POWER-LAW protective | solo corner 0.0526 / 0.2884 at 4x | MIXED-SCALING **win** (refusal survives the flip test) · NOT-A-POWER-LAW **win** (ranking flips) |
-| 4 | the consequence swap | symmetry of `\|dq(i)-dq(j)\|` is an algebraic identity | checked, R3 (b) and (f) | density ratio 0.9 | oracle 0.170141 vs exactly 0.000000 | exact read **win** · estimated read **void** |
+| 4 | the consequence swap | symmetry of `\|dq(i)-dq(j)\|` is an algebraic identity | checked, R3 (b) and (f) | density ratio 0.9 | oracle 0.170141 vs exactly 0.000000 | **SUPERSEDED 2026-09-14 — see the correction below; the 0.000000 is itself an identity** |
 
 The three words, as used here. **Win**: the instrument beats the baseline on a bed built
 inside that baseline's own class, with the baseline's hypotheses checked on the data.
@@ -654,3 +654,72 @@ confirmed to exist in this tree but was not run or read for this card.
 when `test_pi_assign.py` is collected ahead of it in the same interpreter and passes alone in
 1.96 s. The mechanism is documented above under *The runs*. No number in Rows 1-4 depends on
 that test.
+
+
+---
+
+## CORRECTION, 2026-09-14: row 4's `0.000000` is an identity, not a measurement
+
+Measured on 13,479 human-played K+Q-vs-K positions with the exact enumeration
+(368,452 positions, 4,891,672 moves) as ground truth. Producer
+`python -m ceqjepa.human_swap`, exit 0; bound by
+`tests/curvature/test_human_swap.py`, 22 passed.
+
+**The tautology.** The surface-only family is *defined* as "the admitted set `A`
+is unchanged". The oracle read `q` is uniform over `A`. A read that is a function
+of `A` alone therefore cannot move on a family defined by holding `A` fixed, and
+`dtm` is the same identity one step out (`1 + min/max` over `A`), reading
+`0.000000` for the same reason. Neither number could have come out any other
+way, so neither is evidence about consequence understanding. This is `V-3` — an
+assertion that is an algebraic identity of its own construction — in the card's
+flagship causal row.
+
+**What a non-tautological read gives.** The exact committor is not a function of
+`A`:
+
+| family | mean | 95% CI | worst | fraction moving |
+|---|---:|---:|---:|---:|
+| consequence | 0.009537 | [0.009386, 0.009688] | 0.296829 | 1.000000 |
+| surface-only | 0.003812 | [0.003735, 0.003889] | 0.191041 | **0.994916** |
+
+A meaning-preserving swap moves the read on **99.49%** of pinned cells, at
+3.953e+09 times the solver's own residual of 9.645e-13. Separation ratio
+**2.501651** — against this card's reported exact floor of 0.0 and estimated
+ratio of 13.8. It is neither.
+
+**Mechanism.** Surface-only swaps preserve the *set* of admitted futures on
+1.000000 of cells but the *multiset* on only 0.187116; legal-move count survives
+on 0.364814. The intervention changes how many ways each future is reached, and
+a set-valued read is blind to that by construction — which is why the synthetic
+bed could not have found this.
+
+**Where the learned read sits.** Ratios from the same run:
+
+| read | consequence | surface-only | ratio |
+|---|---:|---:|---:|
+| alikeness (the planted negative) | 0.015538 | 0.014474 | 1.073511 |
+| jepa_trained | 0.133098 | 0.133132 | **0.999745** |
+| jepa_random (never trained) | 0.135859 | 0.135922 | 0.999536 |
+
+Training moved the ratio by 0.000209 from a never-trained encoder of the same
+architecture, and the trained model sits *below the planted negative*. Under the
+move-permutation ablation that killed DCM-1, the exact committor loses 1.688503
+of its separation when the pairing is permuted — its separation is genuinely
+move-specific — while `jepa_trained` loses 0.066001, less than the planted
+negative's 0.188571.
+
+This is not the boring failure: the encoder does know something. Predicting
+exact plies from its 9-D embedding over 172,702 held-out positions gives trained
+R² 0.144422 against random-init 0.101277. It knows something; it does not know
+this.
+
+**Headroom, measured rather than hoped.** On a read that is a function of `A`
+the ceiling is infinite and vacuous. On the committor it is 2.501651 with a
+floor of 0.003812. Unlike DCM-1's bed, headroom here exists — it is 2.5x, not
+the infinity the synthetic bed advertises.
+
+**Disposition.** Row 4's exact-read result should not be cited as consequence
+understanding without this identity caveat — the same sentence
+`ceqjepa/hf/README.md` already carries for DCM-1. A multiset redefinition was
+priced and also fails (ratio 2.584147, still moving on 0.971474, jepa_trained
+0.992285). The surviving route is the exact read's own level set.

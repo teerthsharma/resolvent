@@ -35,7 +35,7 @@ parts is the broken one; only a bar per part can.
 | **P1** | Encoder | aggregate context causally; clear a target a position-wise map provably cannot express, with the shipped `Encoder` shown failing it and a permutation control that moves the new one and leaves the shipped one bitwise identical | **PASS** |
 | **P2** | Read / operator | matched head-to-head against a plain softmax attention head at equal parameter count: does containment cost anything when both are trained? | OPEN |
 | **P3** | Head / probe | find the binding ceiling among probe rank, read width and encoder | **ANSWERED — the encoder binds** |
-| **P4** | Causal machinery | one synthetic-bed causal claim, measured on the 13,388 human decisions carrying an exact distance-to-mate — real positions supply an exact ground truth for "admitted futures" that the planted bed never had | OPEN |
+| **P4** | Causal machinery | one synthetic-bed causal claim, measured on real human positions | **FAIL — the claim was an identity; the learned read is at 0.9997** |
 
 ## The joint gate
 

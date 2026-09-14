@@ -2478,3 +2478,47 @@ either states the definition or names the file and line where it is defined.
 there the sentence is true only under a narrow reading the author never states;
 here the word is true only under a local definition the author never exports.
 Both are correct documents that transmit a false belief.
+
+### V-28. The identity was conceded in the docstring and reported as the result anyway
+
+`ceqjepa/intent_do.py:135` states it plainly: *"surface-only control has teeth —
+it reads 0.0 there by construction"*. The module then reports
+`0.170141` against `exactly 0.000000` as its consequence-swap headline, and
+`docs/DR2_CARD.md` row 4 scored it **"exact read win"**.
+
+Both halves are true. The read `q` is uniform over the admitted set `A`; the
+surface-only family is *defined* as "`A` unchanged"; so `dq = 0` follows from the
+definitions and could not have come out otherwise. Reproduced on 13,479 human
+positions: `0.000000` mean, `0.000000` worst, `0.000000` nonzero-fraction over
+71,016 pinned cells. Exact distance-to-mate is the same identity one step out
+(`1 + min` over `A`) and reads `0.000000` for the same reason.
+
+**Why this is not V-3.** `V-3` is an assertion that is an algebraic identity the
+author did not notice. Here the author noticed, wrote it down in the same file,
+and the caveat did not reach the sentence that used the number. The defect is not
+in the analysis; it is in the distance between a docstring line and a headline,
+which is about a hundred lines and one section break.
+
+**What the number was hiding.** On the first exact read that is *not* a function
+of `A` — the transition-path committor from the same enumeration — a
+meaning-preserving swap moves the read on **0.994916** of pinned cells, at
+3.953e+09 times the solver's own residual of 9.645e-13. Separation is
+`2.501651`, against the module's reported exact floor of `0.0` and estimated
+ratio of `13.8`. It is neither. The mechanism the identity concealed: a
+surface-only swap preserves the *set* of admitted futures on `1.000000` of cells
+but the *multiset* on only `0.187116`. It changes how many ways each future is
+reached, and a set-valued read is blind to that by construction.
+
+**Rule.** A caveat that invalidates a number travels in the same sentence as the
+number, not in the file that produces it. Greppable form: for every quantity a
+module reports as evidence, the docstring's own hedges about that quantity are
+either absent or repeated at the point of report. Stronger form, and the one that
+would have caught this: a control that is satisfied by construction is not a
+control — if no possible value of the measured object could change its reading,
+delete it and say so, because its presence in a results table asserts that it
+could have come out differently.
+
+**Kin.** `P-13`, a name exact in-house and false in the field, is the same
+distance problem in the other direction — there the definition stayed home and
+the word travelled; here the number travelled and the definition stayed home.
+Both are documents that are locally correct and globally misleading.
