@@ -240,10 +240,18 @@ For a short-memory claim the citation is **Atar & Zeitouni, SICON 35(1):36–55,
 Corollary 2.1** for the rate, and Ye–Ma–Qian eq. (10) for the window length with
 its constant `C` flagged as never estimated by its own authors.
 
-**Le Gland & Mevel do not own the Lyapunov-gap characterisation.** Their own
-Remark 2.4 attributes it to Atar & Zeitouni; their contribution is a Birkhoff
-contraction coefficient under primitivity. They remain the correct citation for
-forgetting.
+**Le Gland & Mevel do not own the Lyapunov-gap characterisation.** They
+attribute it to Atar & Zeitouni in their Introduction, p. 66. They remain the
+correct citation for forgetting.
+
+> ~~Their own Remark 2.4 attributes it to Atar & Zeitouni; their contribution is
+> a Birkhoff contraction coefficient under primitivity.~~ **SUPERSEDED.** This
+> page invented a Remark 2.4 that does not exist in the paper, and attributed a
+> Birkhoff contraction coefficient to authors whose text contains **zero**
+> occurrences of *Birkhoff* — it is Atar & Zeitouni who use Birkhoff. Real
+> paper, real attribution, fabricated locator and fabricated contribution: the
+> `P-16` shape, committed on the page that files `P-16`. The attribution itself
+> survives at the corrected location.
 
 **The concession to arXiv:2405.15943 can be sharpened.** Full-text grep of v3
 finds **zero** occurrences of *fractal dimension*, *box-count*, *Hausdorff*,
@@ -273,3 +281,36 @@ Lyapunov exponent of the filter's random product equals minus the entropy rate
 of the observation process, `λ₁ = −h(Y)`, identically — because the product's
 norm *is* the sequence likelihood. Measured residual `1.26e-05` on the weak
 draw and `1.41e-13` on a closed-form control.
+
+
+## A second correction pass, 2026-09-14 — after the bed ran, before any arm is published
+
+**Three citations on this page were misaddressed, and all three are corrected
+above or here.** They were written by the same session that runs the citation
+audits, which is the point of recording them.
+
+1. **Le Gland & Mevel "Remark 2.4" does not exist.** Corrected in place above.
+2. **arXiv:2102.10487 Eq. (15) is the dimension formula, not the normaliser
+   identity.** The identity this page needs is the prequel, **arXiv:2008.12886
+   Eq. (16)**. Cited to the wrong paper in the same series — an off-by-one-paper
+   error, which resolves cleanly and is therefore invisible to an identifier
+   check.
+3. **Ye-Ma-Qian eq. (10) gives a slope and no level.** Its constant `C` is never
+   estimated by its own authors, so no absolute window length can be derived
+   from it. The derived-level figures this page carried were produced by
+   multiplying a **quenched** (geometric) rate onto an **annealed**
+   (arithmetic) level, and read **2.5-17x too low on every draw**. Both derived
+   levels are dropped. The slope is kept and verified: fitted on `L >= 4`
+   against the geometric error, quenched slope over `exp(Lyapunov gap)` reads
+   **1.0073** weak and **1.0142** strong (1.65% / 2.75% mean error), while the
+   annealed form misses by **40.6% / 52.5%**. Jensen holds **48/48** in both
+   forms. `lambda_2` of `P` over-predicts the decay factor by **2.1x**.
+
+**The window-4 band was pre-registered wrong.** Measured **0.1423** against the
+pre-registered **0.16-0.22**, with 26.6% of draws inside. The replacement is
+measured rather than preferred: the admissible region is a diagonal ridge,
+`snr = 1.181 * lambda_2 - 0.575`, not an interval in either coordinate alone.
+
+**The free identity holds.** `lambda_1 = -h(Y)` verified to **2.2e-04** on the
+live draw — a correctness check on both the filter and the QR code, costing
+nothing.
