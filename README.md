@@ -126,29 +126,46 @@ Each claim below is proved in Lean and checked in code:
 | `no_prefix_scan_represents_a_zero_gate` | `exp(C_i − C_j)` is never zero, so no prefix scan `C` represents a closed gate, and the path product does | `tests/arm_smprime/test_arm_smprime.py::test_no_prefix_scan_represents_bedm_hop_and_the_product_route_does` |
 | `Asink_computes_chain` | a causal softmax head reproduces a chain's label exactly, for every gate with `a_k ≠ 1` | `tests/arm_pl/test_arm_pl.py::test_bind2_the_oracle_setting_reproduces_the_chain_label` |
 
-### What each one can reach
+### Against self-attention and JEPA
 
-Columns are the operators **as defined in the corner table above**, not a survey
-of the literature: gated and hybrid variants of linear attention exist and are
-not what this table scores. Every tick has a proof or a test behind it, named in
-the last column. The final row is the one that is not yet earned.
+The corner table above compares the family to **its own settings**, which is not a
+comparison. This one is against the two architectures it has to stand beside.
 
-| capability | softmax | linear | resolvent today | planned | evidence for the tick |
-|---|:--:|:--:|:--:|:--:|---|
-| rows sum to one (intensive read) | ✓ | ✗ | **✓** | | `beta = 1` corner, bitwise against causal softmax, max abs `0.000e+00` |
-| no normalizer (extensive read) | ✗ | ✓ | **✓** | | `beta = 0` corner, bitwise |
-| both, as settings of **one** head | ✗ | ✗ | **✓** | | `three_corners_containment` |
-| a gate that closes **exactly** | ✗ | ✗ | **✓** | | `no_prefix_scan_represents_a_zero_gate`: `exp(C_i - C_j)` is never zero; the path product reaches it |
-| exact path product of a Markov chain | ✗ | ✗ | **✓** | | path-product corner, `qk` off, bitwise |
-| which outcome is reached **first**, in closed form | ✗ | ✗ | **✓** | | committor by one triangular solve, max abs `4.441e-16` |
-| exact `do(a)` as a rank-1 edit | ✗ | ✗ | **✓** | | Sherman-Morrison arm, `ceqjepa/hf/` |
-| refuses when a counterfactual is undefined | ✗ | ✗ | **✓** | | 100.00% sensitivity, 100.00% specificity, 138 + 262 cases |
-| edge flows with curl (grade 1) | ✗ | ✗ | **✓** | | pure curl left unrepresented by every node-level model, share `1.0000` |
-| corners proved in a proof assistant | ✗ | ✗ | **✓** | | 134 theorems + 41 lemmas, 0 `sorry` |
-| **beats a trivial baseline at next-state prediction** | ✗ | ✗ | **✗** | **planned** | not earned. [docs/PI_JEPA_KAGGLE_CARD.md](docs/PI_JEPA_KAGGLE_CARD.md), [docs/COMPONENT_LEDGER.md](docs/COMPONENT_LEDGER.md) |
+**JEPA** is an architecture pattern, not an attention kernel: it predicts in
+latent space with an EMA target, and its encoder is normally a transformer. So
+on rows about attention internals it inherits self-attention's answer, and the
+column is scored as **JEPA with a transformer encoder, as shipped**. Rows about
+this repository carry evidence; rows about the other two are definitional or
+are what this repository's own Lean proves about them. Crosses in the last
+column are real and are the reason the programme is not finished.
 
-Everything above the last row says what the operator can **represent**. The last
-row says what it can **predict**, and it is open. That gap is the programme.
+| | self-attention | JEPA | resolvent | evidence / note |
+|---|:--:|:--:|:--:|---|
+| trains with AdamW on a standard recipe | ✓ | ✓ | ✓ | the north star requires it: *built FROM softmax and AdamW* |
+| predicts in latent space, not token space | ✗ | ✓ | ✓ | `ceqjepa/pi_jepa.py` predicts a representation, not a token |
+| causal by construction | ✓ | — | ✓ | JEPA masks; it is not inherently autoregressive |
+| collapse machinery (EMA target, variance + covariance terms) | — | ✓ | ✓ | inherited from JEPA and shipped; a **rank** leg was added because the variance leg alone is blind to dimensional collapse |
+| **proven at billion-parameter scale** | ✓ | ✓ | **✗** | largest run here is one T4 |
+| **mature fused kernels** | ✓ | ✓ | **✗** | no FlashAttention-class kernel exists for this operator |
+| **target independent of the encoder** | ✓ | ✗ | **✗** | tokens are given, so self-attention gets this free; a JEPA target is an EMA of the encoder itself, and this repo measured the cost — target RMS moved by a factor of `4.1101` across arms, which inverted the ranking |
+| **beats a trivial baseline at its own prediction task** | ✓ | ✓ | **✗** | open. [docs/PI_JEPA_KAGGLE_CARD.md](docs/PI_JEPA_KAGGLE_CARD.md) |
+| rows sum to one, *and* an unnormalized read, as settings of one head | ✗ | ✗ | ✓ | `three_corners_containment`; softmax corner bitwise at `0.000e+00` |
+| a gate that closes **exactly** | ✗ | ✗ | ✓ | `no_prefix_scan_represents_a_zero_gate`: `exp(C_i - C_j)` is never zero |
+| exact path product of a Markov chain | ✗ | ✗ | ✓ | path-product corner, `qk` off, bitwise |
+| which outcome is reached **first**, in closed form | ✗ | ✗ | ✓ | committor by one triangular solve, max abs `4.441e-16` |
+| exact `do(a)` as a rank-1 edit | ✗ | ✗ | ✓ | Sherman-Morrison arm, `ceqjepa/hf/` |
+| refuses when a counterfactual is undefined | ✗ | ✗ | ✓ | 100.00% sensitivity, 100.00% specificity, 138 + 262 cases |
+| edge flows with curl (grade 1) | ✗ | ✗ | ✓ | left unrepresented by every node-level model, share `1.0000` |
+| corners proved in a proof assistant | ✗ | ✗ | ✓ | 134 theorems + 41 lemmas, 0 `sorry` |
+
+Read the table in two halves. The **top half** is the ground the other two
+already hold, and three of those rows are crosses here — scale, kernels, and a
+prediction target that does not move with the encoder. The **bottom half** is
+ground they cannot occupy at any width or depth.
+
+That is the honest claim: **strictly more reachable, not yet more accurate.**
+Parity is earned — the `beta = 1` corner *is* softmax, bitwise. Beating it at
+prediction is not, and no tick is going in that row until a number puts it there.
 
 The theorems live in `lean/CEQ/V16Domain.lean` and `lean/CEQ/V15Fork.lean`;
 `ceq/arm_pl.py` is the float64 counterpart of `V15Fork.lean`. The whole proof
