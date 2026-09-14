@@ -34,7 +34,7 @@ parts is the broken one; only a bar per part can.
 |---|---|---|---|
 | **P1** | Encoder | aggregate context causally; clear a target a position-wise map provably cannot express, with the shipped `Encoder` shown failing it and a permutation control that moves the new one and leaves the shipped one bitwise identical | **PASS** |
 | **P2** | Read / operator | matched head-to-head against a plain softmax attention head at equal parameter count: does containment cost anything when both are trained? | OPEN |
-| **P3** | Head / probe | find the binding ceiling among probe rank, read width and encoder; a linear probe from 7 read columns into 64 classes realises at most rank-7 logits, so every negative to date may be a statement about 7 rather than about the operator | OPEN |
+| **P3** | Head / probe | find the binding ceiling among probe rank, read width and encoder | **ANSWERED — the encoder binds** |
 | **P4** | Causal machinery | one synthetic-bed causal claim, measured on the 13,388 human decisions carrying an exact distance-to-mate — real positions supply an exact ground truth for "admitted futures" that the planted bed never had | OPEN |
 
 ## The joint gate
@@ -113,3 +113,60 @@ is synthetic i.i.d. by choice, because i.i.d. is what makes the position-wise
 ceiling a theorem rather than a measurement; and the encoder's own
 representational exponent was not measured, which is a different claim from
 tracking nine timescales.
+
+## P3 — ANSWERED, 2026-09-14: the encoder binds, and the probe is exonerated
+
+Producer ratio 1.00 over 114 claims. Target is the exact committor from
+`chess_steps.oracle()["q"]` (368,452 positions, residual 9.645e-13), not move
+identity. Split by ply-15 **position** index, not by walk, with the train/test
+position intersection asserted 0 — a by-walk split would score a lookup.
+
+**The rank worry was wrong and is retired.** `logit(q)` as a single feature
+reaches mse 2.253433e-15, skill **1.000000**. The committor is a scalar function
+of state, so d = 1 suffices; 7 columns are seven times more than needed and no
+rank bottleneck of the 64-class kind exists on this label.
+
+Skill = 1 − mse/mse(marginal), cluster bootstrap over 4,006 distinct test
+positions, 4,000 resamples.
+
+| features | d | linear | kNN | GBT |
+|---|---:|---:|---:|---:|
+| six ordinal board coords (**the bar**) | 6 | −0.0002 | +0.6818 | **+0.8851** |
+| raw 769 one-hot board | 769 | +0.1875 | | +0.4982 |
+| encoder hidden, frozen_random | 1024 | +0.2560 | | +0.3702 |
+| read7, frozen_random | 7 | +0.0126 | −0.0153 | −0.0061 |
+| read7, trained | 7 | +0.0095 | −0.0388 | −0.0397 |
+
+Three candidates, one binds. **Not the probe:** on the 7 columns every nonlinear
+reader scores *below* linear at every arm, while the same GBT reaches +0.8851
+where structure exists — the reader works, the structure is absent. **Not the
+read width:** opening the two coordinates `pi_assign` refuses moves skill by at
+most +0.0085 against a gap of 0.8851. **The encoder:** +0.3702 at the 1024-wide
+layer falls to −0.0080 at the 9-dim output of the very next layer, one
+`nn.Linear(1024, 9)`, and it is already 0.5154 behind the bar before that matrix.
+
+**Training never helps.** Over a ladder of 0…256 fit steps the maximum skill is
++0.0163, reached after the representation has collapsed, while effective rank
+falls monotonically 7.0038 → 1.0425. With the detector on, the trained arm
+refuses at step 20: erank 1.4825 against floor 1.5 while `std_min` reads
+5.5404e-03, **5.5x above its own floor** — the third independent sighting of the
+variance leg being blind to dimensional collapse.
+
+**Retired with a measured reason:** the D_LATENT sweep. No width crosses,
+because a sweep over D cannot exceed what the layer feeding it carries, and that
+layer carries +0.3697 against a bar of +0.8851.
+
+**Reroute, one constant:** 0.3869 of the reducible variance dies in the
+12-plane × 64-square one-hot before any weight (raw769 +0.4982 against embed6
++0.8851, identical reader and rows). `ceqjepa/chess_steps.py:549 embed` already
+ships the ordinal (file, rank) encoding that recovers it. Change `X_DIM` and the
+feature builder, re-run the bed unchanged; the bar is pre-registered at +0.8851
+and RED #7 in `tests/curvature/test_committor_read_ceiling.py` is the gate.
+
+**Reprice, before any further fit here:** `NU = 100.0` drives that collapse in 64
+steps on a three-piece bed. Until `pi_jepa.covariance_sweep()` is run on this
+bed, every trained number on it is a number about the degeneracy and
+`frozen_random` is the honest arm.
+
+Incidental, real, unfixed: the D_LATENT sweep crashes at D = 5 —
+`pi_jepa.py:878 AssertionError: the read carries a nonzero imaginary part`.
