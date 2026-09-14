@@ -2585,14 +2585,99 @@ init does not sit on it; if it must, the docstring says so and the parameter is
 declared a buffer. The greppable form: for each parameter a module claims is
 trainable, one backward pass at the shipped init must give `|grad| > 0`.
 
-**THE DEFECT IS LIVE IN A SIBLING ARM, unfixed at the time of writing.**
-`ceq/arm_phase.py:492 ArmPhase.identity_heads()` carries the same
+**THE DEFECT IS LIVE IN A SIBLING ARM, unfixed at the time of writing** — and
+repaired since, at `03adf7f` + this change; the sentence is kept because it was
+true when written and the repair is recorded below it, not over it.
+~~`ceq/arm_phase.py:492 ArmPhase.identity_heads()` carries the same
 `m_head.bias.fill_(1.0)` onto the same clamp endpoint: **5 of its 14 trainable
 tensors receive an exactly zero gradient** — `m_head.weight`, `m_head.bias`,
-`theta_head.weight`, `theta_head.bias`, `s_head.bias`. Every `arm_phase` gate
-result stands in the position every `arm_smprime` gate result stood in before
-the repair. It is named rather than fixed because repairing it moves
-`tests/arm_phase`, and the round that found it was not authorised there.
+`theta_head.weight`, `theta_head.bias`, `s_head.bias`.~~ **SUPERSEDED — the
+count was 5, measured it is 4, and the fifth name is a different defect. The
+old cell is kept above because a number that moved is evidence about the
+defect.** `ArmPhase.identity_heads()` does carry the same
+`m_head.bias.fill_(1.0)` onto the same clamp endpoint. Per-parameter census,
+one backward on a REAL batch — BED-M `t* = 2`,
+`make_equilibrium_batch(4, 8, 4, t_star=2, d_model=16, seed=12345)`, the corpus
+`scripts/v15_r1.py` trains this arm on, not a `randn` draw and not a
+ones-tensor — **4 of its 14 trainable tensors receive an exactly zero
+gradient**: `m_head.weight`, `m_head.bias`, `theta_head.weight`,
+`theta_head.bias`. `s_head.bias` is NOT one of them; it reads `8.673617e-19`.
+Producer: `python -m pytest
+tests/arm_phase/test_the_shipped_init_has_a_live_gradient_everywhere.py -q -s`,
+HEAD `03adf7f` + this change, `WIN-16QAL06O9GB`, python 3.11.9,
+torch 2.14.0+cpu, exit 0.
+
+**AND THE FIFTH NAME IS WORSE THAN DEAD AT A CORNER — IT IS DEAD EVERYWHERE.**
+`s_head.bias` is not sitting on a critical point that an offset could step off.
+`key_bias(m, s) = s - cumsum(log m)` enters the logit row and a causal softmax
+is invariant under a constant added across `j`; the head's BIAS is constant
+across `j` by construction, so its analytic gradient is zero at **every**
+parameter value, not only at the corner. Measured at an interior point where
+`m ∈ (0.43, 0.56)` and `theta ∈ (0.26, 0.33)` and the other two head biases are
+live at `m_head.bias 3.021192e-02` and `theta_head.bias 3.337176e-04`, it still
+reads `6.938894e-18`. The forward moves by `2.775558e-17` — one
+ulp of the read-out — when the bias is shifted by a whole unit. **`8.673617e-19`
+is not a gradient; it is the float64 residue of a cancellation that is exact in
+the reals, and a `|grad| > 0` guard passes it for the wrong reason** — which is
+this entry's own shape one level down. It is therefore declared non-trainable
+by `trainable_heads()` rather than left in the trainable set at zero, which is
+this entry's own Rule, and it is bound by invariance (`< 1e-12`) rather than by
+`> 0`.
+
+**LoRA INIT WAS PROPOSED AND IS REFUTED BY MEASUREMENT.** One random factor and
+one zero factor is a statement about a PRODUCT `B A`. Each head here is a single
+`nn.Linear(d_model, 1)` — `W x + b` — so there is no pair to split. Forced (head
+output driven identically to zero, all a zero factor can buy), `m = clamp(0, 0,
+1) = 0.0` is the clamp's LOWER endpoint where `clamp'` is zero again
+(`clamp grad at [0.0, 1.0, 0.5]` reads `[0.0, 0.0, 1.0]`), `log m = -inf` puts
+`+inf` into the key bias, the operator is non-finite and the loss reads `nan` —
+with `m_head.weight` and `m_head.bias` still exactly `0.000000e+00`. It moves
+the defect from four dead tensors to two dead tensors inside a NaN.
+`scripts/v15_r1.py::identity_point` already named `m = 0` the drop-in trap for
+this arm.
+
+**The repair, and it is the sibling's shape.** Every caller was grepped first:
+`tests/arm_phase/test_arm_phase.py:308` asserts `torch.equal(magnitude(u),
+ones)`, `torch.equal(th, zeros)`, `torch.equal(s, zeros)` and bitwise equality
+with `lm.Attention("softmax_x").operator` on exactly what `identity_heads`
+returns, and `scripts/v16_device_probe.py:1082` reads the same exact corner. So
+`identity_heads` keeps its body byte-identical and a separate
+`ArmPhase.trainable_heads(off=1e-3)` is the training door. Three lines, one per
+mechanism: `m_head.bias = 1 - off` clears the clamp endpoint,
+`theta_head.bias = off` clears the phase's flat point, and
+`s_head.bias.requires_grad_(False)` declares the gauge. All four
+corner-dead tensors go live and all 13 declared-trainable tensors are non-zero:
+
+| tensor | `identity_heads` | `trainable_heads(1e-3)` |
+|---|---|---|
+| `m_head.weight` | `0.000000e+00` | `7.905095e-03` |
+| `m_head.bias` | `0.000000e+00` | `4.067769e-02` |
+| `theta_head.weight` | `0.000000e+00` | `4.709942e-05` |
+| `theta_head.bias` | `0.000000e+00` | `3.800616e-04` |
+| `s_head.bias` | `8.673617e-19` (gauge) | declared non-trainable |
+
+The real softmax row moves `p_spread = 4.721359e-04` off the corner — above the
+`delta_p = 1e-12` float64 floor by eight decades and 106 times inside the `5e-2`
+the sibling's door is held to.
+
+**Confirmed at scale rather than at a point.** `Adam(model.parameters(), lr=1e-3)`
+-- `scripts/v15_r1.py`'s own construction, which also proves the frozen gauge
+does not break it -- from `trainable_heads()` on the same batch: loss
+`1.717195 -> 1.692410 -> 0.931579` at steps `0 / 5 / 100`, and **no declared-
+trainable tensor is dead at any checkpoint**. The clamped fraction of `u` rises
+to `0.969` by step 5 and falls back to `0.188` by step 100, so the clamp does
+grab the magnitude early and does not keep it -- which is the failure a step-0
+census alone could not have seen. Guard:
+`tests/arm_phase/test_the_shipped_init_has_a_live_gradient_everywhere.py`,
+7 tests, which fails on the old init and passes on the new.
+
+**THE CONSTANT IS INSIDE THE CLASS, AND THAT IS `P-15` BEING OBEYED RATHER THAN
+REPEATED.** Seven citations in this tree pin lines in `ceq/arm_phase.py` —
+`:60, :121, :126, :158, :179, :476, :492` — and every one is at or above
+`identity_heads`. A module-level `HEAD_INIT_OFF` near the top, mirroring
+`arm_smprime`'s placement, would have shifted six of the seven and re-fired
+`P-15` on the very entry that records it. It is a class attribute declared below
+`identity_heads` instead, and all seven citations still resolve.
 
 A third surface is reported without a number: `ceq/hf/modeling_ceq.py:439`
 builds the same two heads with `_init_weights` zeroing the biases and `smp_g`

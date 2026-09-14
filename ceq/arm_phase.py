@@ -490,12 +490,101 @@ class ArmPhase(nn.Module):
         self.readout = nn.Linear(d_model, 1)
 
     def identity_heads(self) -> "ArmPhase":
-        """`m = 1, theta = 0, s = 0` exactly: the standard-attention setting."""
+        """`m = 1, theta = 0, s = 0` exactly: the standard-attention setting.
+
+        A CORRECTNESS POINT, NOT A TRAINING INITIALISATION -- `MISTAKES.md`
+        V-29, whose closing paragraph names this method as the live half of the
+        defect. The exactness is the whole value of it (`tests/arm_phase/
+        test_arm_phase.py` asserts `torch.equal(magnitude(u), ones)`,
+        `torch.equal(th, zeros)` and `torch.equal(s, zeros)` on what this
+        returns, and `scripts/v16_device_probe.py` reads the same corner) and it
+        is exactly what makes it untrainable: `m = 1` is the closed endpoint of
+        `magnitude`'s clamp, whose backward is zero AT the endpoint, and
+        `theta = 0` is a critical point of `Re(m e^{i theta})` for every `m`.
+        FOUR of the module's fourteen tensors receive an exactly zero gradient
+        from this point -- `m_head.weight`, `m_head.bias`, `theta_head.weight`,
+        `theta_head.bias`. Train from `trainable_heads()` instead; nothing else
+        about the operator changes.
+
+        FOUR, NOT THE FIVE V-29 PREDICTED, and the fifth is a different animal.
+        `s_head.bias` is not dead at this corner; it is dead at EVERY point,
+        because `key_bias` adds `s_j` to the logit row and a causal softmax is
+        invariant under a constant added across `j`. Its analytic gradient is
+        zero for every parameter value, so no initialisation can wake it and a
+        `|grad| > 0` guard reads its float64 rounding residue (`8.673617e-19`
+        at `S=8, d_model=16` on BED-M `t*=2`) as life. `trainable_heads`
+        declares it non-trainable rather than leaving it in the trainable set
+        at zero, which is V-29's own rule for a parameter that must sit on a
+        flat direction.
+        """
         with torch.no_grad():
             for h in (self.m_head, self.theta_head, self.s_head):
                 h.weight.zero_()
                 h.bias.zero_()
             self.m_head.bias.fill_(1.0)
+        return self
+
+    #: How far `trainable_heads` steps each head bias off its own critical
+    #: point. `ceq/arm_smprime.py:GATE_INIT_OFF` is the same number for the
+    #: sibling arm and is NOT imported: `arm_smprime` imports `band_draw` and
+    #: `chain_label` from this module, so the reverse import is a cycle. The
+    #: two are bound to each other by assertion in
+    #: `tests/arm_phase/test_the_shipped_init_has_a_live_gradient_everywhere.py`
+    #: instead, which can import both.
+    #:
+    #: IT LIVES HERE, INSIDE THE CLASS AND BELOW `identity_heads`, AND THE
+    #: PLACEMENT IS THE POINT. `MISTAKES.md` P-15 was filed because the
+    #: sibling's identical repair put its constant near the TOP of its file and
+    #: shifted every line-citation below it by one. Seven citations in this tree
+    #: pin lines in this module -- `:60, :121, :126, :158, :179, :476, :492` --
+    #: and every one of them is at or above `identity_heads`. A module-level
+    #: constant would have re-fired P-15 on all six below `:60`.
+    HEAD_INIT_OFF = 1e-3
+
+    def trainable_heads(self, off: float = HEAD_INIT_OFF) -> "ArmPhase":
+        """`identity_heads()`, then each bias stepped `off` off its OWN critical
+        point and the gauge taken out of the trainable set -- the door to train
+        this arm's gate from. THREE LINES, one per mechanism.
+
+        `m = 1 - off` clears the clamp endpoint and `theta = off` clears the
+        phase's flat point; they are two separate mechanisms, so one offset does
+        not cover for the other. `s_head.bias.requires_grad_(False)` is the
+        third, and it is not an offset because no offset exists: the key-bias
+        head's bias is an exact softmax gauge (see `identity_heads`). The
+        forward is invariant to its value -- exactly in the reals, and to
+        `2.775558e-17` (one ulp of the read-out) at a unit shift in float64.
+        Not "bitwise": the cancellation is exact and the rounding is not, and
+        claiming bitwise here would claim more than the arithmetic gives.
+
+        NOT LoRA INIT, AND THE REASON IS THE PARAMETRIZATION. LoRA's one-random-
+        one-zero split is a statement about a PRODUCT `B A`; each head here is a
+        single `nn.Linear(d_model, 1)`, i.e. `W x + b`, so there is no pair of
+        factors to split. Forced -- the head output driven identically to zero,
+        which is all a zero factor can buy -- it lands on `m = clamp(0, 0, 1) =
+        0.0`, the clamp's LOWER endpoint, where `clamp'` is zero again, where
+        `log m = -inf` puts `+inf` into the key bias, and where the loss reads
+        `nan`. `scripts/v15_r1.py::identity_point` already names `m = 0` the
+        drop-in trap for this arm. Measured in
+        `test_lora_init_does_not_apply_and_would_make_it_worse`.
+
+        Measured at `off = 1e-3` on a `[4, 8, 16]` BED-M `t* = 2` batch
+        (`make_equilibrium_batch(4, 8, 4, t_star=2, d_model=16, seed=12345)`,
+        `python -m pytest tests/arm_phase/test_the_shipped_init_has_a_live_gradient_everywhere.py -q -s`,
+        `WIN-16QAL06O9GB`, python 3.11.9, torch 2.14.0+cpu): the four
+        corner-dead tensors go `m_head.weight 0.000000e+00 -> 7.905095e-03`,
+        `m_head.bias 0.000000e+00 -> 4.067769e-02`,
+        `theta_head.weight 0.000000e+00 -> 4.709942e-05`,
+        `theta_head.bias 0.000000e+00 -> 3.800616e-04`; all 13 declared-
+        trainable tensors are live, and the real softmax row moves
+        `4.721359e-04` off the corner -- 106 times inside the `5e-2` the
+        sibling's door is held to. That price, a start NEAR the corner rather
+        than ON it, is what a gradient costs here and it is not hidden.
+        """
+        self.identity_heads()
+        with torch.no_grad():
+            self.m_head.bias.fill_(1.0 - off)
+            self.theta_head.bias.fill_(off)
+        self.s_head.bias.requires_grad_(False)
         return self
 
     def heads(self, x: torch.Tensor):
