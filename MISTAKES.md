@@ -2585,6 +2585,33 @@ init does not sit on it; if it must, the docstring says so and the parameter is
 declared a buffer. The greppable form: for each parameter a module claims is
 trainable, one backward pass at the shipped init must give `|grad| > 0`.
 
+**THE DEFECT IS LIVE IN A SIBLING ARM, unfixed at the time of writing.**
+`ceq/arm_phase.py:492 ArmPhase.identity_heads()` carries the same
+`m_head.bias.fill_(1.0)` onto the same clamp endpoint: **5 of its 14 trainable
+tensors receive an exactly zero gradient** — `m_head.weight`, `m_head.bias`,
+`theta_head.weight`, `theta_head.bias`, `s_head.bias`. Every `arm_phase` gate
+result stands in the position every `arm_smprime` gate result stood in before
+the repair. It is named rather than fixed because repairing it moves
+`tests/arm_phase`, and the round that found it was not authorised there.
+
+A third surface is reported without a number: `ceq/hf/modeling_ceq.py:439`
+builds the same two heads with `_init_weights` zeroing the biases and `smp_g`
+defaulting to 1.0 via `configuration_ceq.py:71`, which places roughly half of
+`clamp(u, 0, 1)` on the *lower* endpoint. Unmeasured, because `transformers`
+does not import in this environment.
+
+**The repair, for the record.** `identity_heads` was left byte-identical — every
+caller was grepped first, and `tests/arm_smprime/test_arm_smprime.py:641`
+asserts `torch.equal(m, ones)` and `torch.equal(theta, zeros)` on exactly what
+it returns. The corner is a **correctness point**; the defect was using it as a
+training door. A separate `trainable_heads(off=1e-3)` is now that door, moving
+the module-level operator by `7.797813e-04`, sixty-four times inside the 5e-2
+the corner is meant to start within. All five gradients go live:
+`m_head.weight 3.922434e-02`, `m_head.bias 8.783601e-02`,
+`theta_head.weight 2.376933e-04`, `theta_head.bias 6.601839e-04`,
+`g 8.849619e-05`. Corner identities, 69 shipped tests and 25 gate-family tests
+are unmoved.
+
 **Kin.** `V-6`, the branch under test never ran — there code does not execute;
 here it executes, produces a number, and the number is zero for a structural
 reason nobody asserted against. And `V-10`, a gate whose threshold is satisfied

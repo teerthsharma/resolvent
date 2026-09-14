@@ -116,24 +116,30 @@ ARMS = {
     "arm-beta-free-half": dict(mix="resolvent", beta=None, beta0=0.5, gate=False,
                           varies="beta, LEARNED, started HALFWAY between the corners",
                           pins="gate off, and every shared module"),
-    "arm-gate":      dict(mix="resolvent", beta=1.0, beta0=None, gate="identity",
-                          varies="the gate heads (m, theta) at ceq/arm_smprime.py"
-                                 ":534 identity_heads' OWN init, m = 1, theta = 0",
+    "arm-gate":      dict(mix="resolvent", beta=1.0, beta0=None, gate="trainable",
+                          varies="the gate heads (m, theta) at the module's OWN "
+                                 "training init, ceq/arm_smprime.py trainable_heads",
                           pins="beta = 1, and every shared module"),
-    "arm-gate-live": dict(mix="resolvent", beta=1.0, beta0=None, gate="live",
-                          varies="the gate heads, started 1e-3 OFF the two "
-                                 "critical points identity_heads sits on",
+    "arm-gate-dead": dict(mix="resolvent", beta=1.0, beta0=None, gate="dead",
+                          varies="the same heads pinned ON the two critical points "
+                                 "identity_heads sits on -- PLANTED NEGATIVE, the "
+                                 "init MISTAKES.md V-29 kills, kept measurable",
                           pins="beta = 1, and every shared module"),
-    "arm-full":      dict(mix="resolvent", beta=None, beta0=1.0, gate="identity",
-                          varies="beta AND the gate heads at the shipped init",
+    "arm-full":      dict(mix="resolvent", beta=None, beta0=1.0, gate="trainable",
+                          varies="beta AND the gate heads at the module's training "
+                                 "init -- the whole family, every axis able to move",
                           pins="every shared module"),
-    "arm-full-live": dict(mix="resolvent", beta=None, beta0=1.0, gate="live",
-                          varies="beta AND the gate heads at the live init -- the "
-                                 "whole family, every axis able to move",
+    "arm-full-dead": dict(mix="resolvent", beta=None, beta0=1.0, gate="dead",
+                          varies="beta AND the gate heads pinned on the critical "
+                                 "points -- PLANTED NEGATIVE",
                           pins="every shared module"),
 }
 
-GATE_OFF = 1e-3       #: how far the live init steps off each critical point
+#: How far the trainable init steps off each critical point. READ FROM THE
+#: MODULE, never re-typed here: this bed builds its own gate heads rather than
+#: an `ArmSMPrime`, and a second copy of the number is how the bed's init and
+#: the arm's init drift apart silently -- which is the shape of V-29 itself.
+GATE_OFF = arm.GATE_INIT_OFF
 
 
 class Head(nn.Module):
@@ -162,11 +168,11 @@ class Head(nn.Module):
         if spec["gate"]:
             self.m_head = nn.Linear(d, 1)
             self.theta_head = nn.Linear(d, 1)
-            with torch.no_grad():                 # arm_smprime.identity_heads
+            with torch.no_grad():          # arm_smprime.trainable_heads, inline
                 for h in (self.m_head, self.theta_head):
                     h.weight.zero_()
                     h.bias.zero_()
-                off = GATE_OFF if spec["gate"] == "live" else 0.0
+                off = 0.0 if spec["gate"] == "dead" else GATE_OFF
                 self.m_head.bias.fill_(1.0 - off)
                 self.theta_head.bias.fill_(off)
         self.double()

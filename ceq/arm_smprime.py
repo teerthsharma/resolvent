@@ -99,6 +99,11 @@ SMP_FIELDS = ("variant", "route", "beta", "qk", "g", "m_setting",
 #: `inf` is ever created there to meet a zero gradient and make a `nan`.
 NEG = float("-inf")
 
+#: How far `ArmSMPrime.trainable_heads` steps each gate bias off its own
+#: critical point. One constant, so a harness that builds the heads itself
+#: (`ceqjepa/headtohead.py`) cannot drift from the module's own init.
+GATE_INIT_OFF = 1e-3
+
 
 def _ctype(dtype: torch.dtype) -> torch.dtype:
     return torch.complex64 if dtype == torch.float32 else CDTYPE
@@ -532,8 +537,21 @@ class ArmSMPrime(nn.Module):
         self.readout = nn.Linear(d_model, 1)
 
     def identity_heads(self) -> "ArmSMPrime":
-        """`m = 1, theta = 0` exactly, switches at `beta = 1, qk = 1, g = 1`:
-        the softmax corner, reached through the gate rather than around it."""
+        """`m = 1, theta = 0` EXACTLY, switches at `beta = 1, qk = 1, g = 1`:
+        the softmax corner, reached through the gate rather than around it.
+
+        A CORRECTNESS POINT, NOT A TRAINING INITIALISATION -- `MISTAKES.md`
+        V-29. The exactness is the whole value of it for a corner identity
+        (`tests/arm_smprime/test_arm_smprime.py` asserts `torch.equal(m, 1)` and
+        `torch.equal(theta, 0)` on what this returns) and it is exactly what
+        makes it untrainable: `m = 1` is the closed endpoint of
+        `magnitude`'s clamp, whose backward is zero AT the endpoint, and
+        `theta = 0` is a critical point of `Re(m e^{i theta})` for every `m`.
+        Both hold at `g = 1`, and `g` is dead there too, so FIVE of the
+        module's fifteen trainable tensors receive an exactly zero gradient
+        from this point. Train from `trainable_heads()` instead; nothing else
+        about the operator changes.
+        """
         with torch.no_grad():
             for h in (self.m_head, self.theta_head):
                 h.weight.zero_()
@@ -541,6 +559,26 @@ class ArmSMPrime(nn.Module):
             self.m_head.bias.fill_(1.0)
             for sw in (self.beta, self.qk, self.g):
                 sw.fill_(1.0)
+        return self
+
+    def trainable_heads(self, off: float = GATE_INIT_OFF) -> "ArmSMPrime":
+        """`identity_heads()`, then each bias stepped `off` off its OWN critical
+        point -- the initialisation to train the gate from.
+
+        `m = 1 - off` clears the clamp endpoint and `theta = off` clears the
+        phase's flat point, which are the two mechanisms separately, so one
+        offset does not cover for the other. Measured at `off = 1e-3` on a
+        `[2, 6]` head at the shipped switches: `|dL/du|max` goes `0.000000e+00
+        -> 2.412696e+00` and `|dL/dtheta|max` goes `0.000000e+00 ->
+        1.005618e-02`, no trainable tensor is left at zero, and the operator
+        stays within `5e-2` of the corner `identity_heads()` lands on exactly.
+        That price -- a start NEAR the corner rather than ON it -- is what a
+        gradient costs here and it is not hidden.
+        """
+        self.identity_heads()
+        with torch.no_grad():
+            self.m_head.bias.fill_(1.0 - off)
+            self.theta_head.bias.fill_(off)
         return self
 
     def heads(self, x: torch.Tensor):
@@ -579,7 +617,8 @@ class ArmSMPrime(nn.Module):
 
 #: re-exported so a probe can draw BED-M's `{-1, +1}` band without importing
 #: two arm modules; the draw is `ceq/arm_phase.py`'s, unchanged.
-__all__ = ["NAME", "VARIANT", "ROUTES", "MUTATIONS", "SMP_FIELDS", "magnitude",
+__all__ = ["NAME", "VARIANT", "ROUTES", "MUTATIONS", "SMP_FIELDS",
+           "GATE_INIT_OFF", "magnitude",
            "blend", "gate", "path_product", "hop_scan", "hop", "numerator",
            "operator", "readout", "oracle_heads", "bedm_draw", "band_draw",
            "chain_label", "mutate", "label_cell", "cell_manifest",
