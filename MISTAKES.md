@@ -2525,7 +2525,7 @@ Both are documents that are locally correct and globally misleading.
 
 ### V-29. An initialisation that sits exactly on a critical point, behind a guard a zero gradient passes
 
-`ceq/arm_smprime.py:534 identity_heads()` documents itself as *"`m = 1,
+`ceq/arm_smprime.py`'s `identity_heads()` documents itself as *"`m = 1,
 theta = 0` exactly ... the softmax corner, reached through the gate rather than
 around it"*, and its docstring elsewhere says the switches "are `nn.Parameter`s
 so the harness trains them". **Five tensors cannot move from that point**, by
@@ -2618,9 +2618,56 @@ reason nobody asserted against. And `V-10`, a gate whose threshold is satisfied
 by construction: this is the same shape one level down, a *guard* satisfied by
 construction rather than a threshold.
 
+### P-15. A line-pinned citation, silently invalidated by an insertion above it
+
+`MISTAKES.md` V-29 cited `ceq/arm_smprime.py:534 identity_heads()`. It was
+correct when written. Four hours later the gate repair inserted
+`GATE_INIT_OFF = 1e-3` near the top of the same file, shifting every line below
+it by one, and `:534` now reads `self.g = nn.Parameter(torch.tensor(1.0))` while
+`identity_heads` sits at `:535`. The citation was broken **by the same session
+that wrote it**, and nothing in the repository can see that: the file exists,
+the line exists, and it simply says something else.
+
+**The scale of it, measured.** A stratified hand-verified sample of 45
+line-citations drawn from 990 across 98 tracked Markdown files found
+**6 DRIFTED / 39 SUPPORTS — 13.3%, 95% CI roughly 6–27%**, every one the same
+mechanism: the citation lands a few lines *above* the construct it names,
+because code was inserted above a pinned line. Extrapolated, roughly **130 of
+990** line-citations in this repository assert something their cited line does
+not say. Separately, **166 citations are already fully broken** — the path does
+not exist in the tree or on disk — the largest single block being
+`lean/CEQ/Shape/`, which does not exist at all and is cited about ninety times.
+
+**Why no existing check catches it.** A file-existence check passes. A
+line-exists check passes. A past-EOF check passes — measured, the maximum
+cited-line to file-length ratio across the whole tree is 0.993, so *zero*
+citations are past EOF. The only check that catches drift is reading the cited
+line and comparing it to the prose, which is why the measurement above is a hand
+sample rather than a script: an automated proxy was tried, leaked tokens between
+citations sharing a table row, reported a bogus 38.5%, and was discarded.
+
+**One drift is systematic rather than a typo**, which is the worst case: a
+misreading of `lean/CEQ/V16Domain.lean:304` — a bounded-magnitude census read as
+a zero-gate census — repeats in six documents, and the repository's own
+`docs/sources/design/refute_theory_occvac.md:118` already flags it.
+
+**Rule.** Cite the **symbol**, not the line: `identity_heads()` in
+`arm_smprime.py` survives every insertion; `arm_smprime.py:534` survives none. A
+line number is admissible only where no symbol exists — a data row, a config
+value, a specific assertion inside a long function — and then it carries a short
+quotation of what it expects to find, so drift shows up as a mismatch instead of
+as nothing. Anything that pins a line without quoting it is a citation with a
+silent expiry date.
+
+**Kin.** `P-12`, the provenance pin that disabled its own guard — both are
+identifiers that go stale invisibly while looking exactly as valid as the day
+they were written. And `V-28`, the identity conceded in a docstring and reported
+anyway: all three are documents that were locally correct at the moment of
+writing and became misleading with no edit to themselves.
+
 ### P-14. An assertion whose message names the wrong cause
 
-`ceqjepa/pi_jepa.py:878` fires as *"the read carries a nonzero imaginary part:
+`ceqjepa/pi_jepa.py`'s imaginary-part assertion in `PiJepa.forward` fires as *"the read carries a nonzero imaginary part:
 the gate is no longer m = 1, theta = 0"*. It is not a complex-arithmetic fault.
 Swept across latent widths 3, 4, 5, 6, 7, 8, 9 and 16, **the largest genuine
 imaginary part is exactly 0.0 at every width**. What actually happens is a
