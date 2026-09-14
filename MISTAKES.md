@@ -2570,3 +2570,37 @@ here it executes, produces a number, and the number is zero for a structural
 reason nobody asserted against. And `V-10`, a gate whose threshold is satisfied
 by construction: this is the same shape one level down, a *guard* satisfied by
 construction rather than a threshold.
+
+### P-14. An assertion whose message names the wrong cause
+
+`ceqjepa/pi_jepa.py:878` fires as *"the read carries a nonzero imaginary part:
+the gate is no longer m = 1, theta = 0"*. It is not a complex-arithmetic fault.
+Swept across latent widths 3, 4, 5, 6, 7, 8, 9 and 16, **the largest genuine
+imaginary part is exactly 0.0 at every width**. What actually happens is a
+float32 overflow: the modulus and the row normalizer reach `inf`, the numerator
+becomes `NaN`, and `float(nan) != 0.0` evaluates True — so an overflow is
+reported as a gate that moved.
+
+The misattribution sent a reader to the wrong subsystem twice. It was recorded
+as "the D = 5 crash", implying a width-specific complex-arithmetic bug; measured,
+widths 7 and 8 fire earlier and harder (first step 9 and 1, against 24 at width
+5), the shipped 9-coordinate mask never fires at all, and what the firing tracks
+is how far the encoder has drifted, not the latent width.
+
+**Why it survived.** The assertion is *correct* — the read does carry a nonzero
+imaginary part, because `NaN` is not zero. Every test of the assertion's own
+truth passes. Only its explanation is wrong, and an explanation is the one part
+of an assert that nothing checks.
+
+**Rule.** An assertion message states what was measured, not what the author
+infers caused it. Where a predicate can be satisfied by more than one mechanism
+— and `x != 0.0` is satisfied by `NaN`, by overflow, and by the thing the author
+had in mind — the message names the measurement and the diagnosis is left to a
+separate check that can itself fail. Cheap form: any assert on a
+finiteness-adjacent predicate tests for `NaN` and overflow *first*, and says so,
+before attributing the failure to semantics.
+
+**Kin.** `V-29`, a guard a zero gradient passes because zero is finite — there a
+check is too weak to see the defect; here the check fires correctly and then
+mislabels it. Both are cases where the green or the red is right and the sentence
+beside it is not.

@@ -234,3 +234,54 @@ scale. p-values are uncorrected for 9 comparisons; Bonferroni at α = 0.0056
 leaves `no-mix` and the three ΔCE results standing, which is the same
 conclusion. Wall clock is CPU-only with softmax held in float64 too, so the
 ratios price the operator and not the dtype.
+
+## P3 reroute — 2026-09-14: the encoding was the loss, and the bar has an axis
+
+The one-constant reroute ran with the bar pre-registered and the assertions
+locked. Producer ratio 1.00; every one-hot figure was re-derived bit-identically
+before anything changed.
+
+| untrained / hid / gbt | skill | gap to bar |
+|---|---:|---:|
+| 769-dim one-hot (before) | +0.3696799025442123 | 0.5154409791866523 |
+| 7-dim ordinal (after) | **+0.8424222612206883** | **0.0426986205101764** |
+| the bar, `embed6` + gbt | +0.8851208817308647 | — |
+
+**91.7161% of the gap closed.** RED #7 did not flip and the bar was not moved.
+
+**The residual is the bar's coordinate system, not lost information.** An exactly
+orthogonal change of basis — `||Q'Q - I||inf` at 6.661e-16, destroying nothing by
+construction — costs the same reader far more than the whole remaining shortfall:
+`embed6` falls 0.1413 and `raw7` falls 0.2500. File and rank are literally the
+tree's split axes, so RED #7 as written is partly an axis-alignment test. The
+bar stays where it was pre-registered; the rotation control is recorded beside
+it. Moving a bar after seeing the result is the defect this project hunts.
+
+**The loss relocated downstream.** Untrained arm, gbt, under the new encoding:
+`raw7` +0.8901 at the encoder's own input, `hid` +0.8424 (−0.0477), `enc9`
++0.4583 (**−0.3842**), `read7` +0.2353 (**−0.2230**). The MLP story now lives at
+the 9-dim projection and the read, an order of magnitude above the residual at
+the widest layer.
+
+**Sixteen plies of context contribute nothing at the widest tap.** `raw7` pushed
+through a *random* `Linear(7,1024)/GELU/Linear(1024,1024)/GELU` — the hid tap's
+exact shape, one observation, no context — scores +0.8424222625154502 against
+the bed's +0.8424222612206883, matching to nine significant figures.
+
+**The collapse is priced, and raising `nu` does not prevent it.** First run of
+`covariance_sweep` on the chess walk bed: at nu = 1, 25 and 100 the effective
+rank falls from 7.6544 and every arm would refuse **at step 20**; nu governs only
+the partial recovery afterwards (erank_last 1.0042 / 1.8198 / 2.5374). The
+ordinal encoding makes it fire *earlier*, at step 13, with the smallest
+per-coordinate sd at 1.8131e-02 — **eighteen times above** its 1e-3 floor.
+Purely dimensional. `frozen_random` remains the honest arm. One contrast worth
+chasing: on the PGN corpus at hidden 256 the trained arm ran all 1,500 steps
+without firing (erank_min 1.6108, erank_last 8.2523) — two things differ, so it
+is a lead, not a conclusion.
+
+**The width-sweep crash is diagnosed and is not what it said** — see `P-14` in
+MISTAKES.md. A float32 overflow reported as a moved gate; the largest genuine
+imaginary part is exactly 0.0 at every width tested, and the shipped mask never
+fires.
+
+Next: attack the 9-dim projection with the encoding pinned to ordinal.
