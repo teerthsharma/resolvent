@@ -2723,3 +2723,53 @@ message must not weaken the predicate.
 check is too weak to see the defect; here the check fires correctly and then
 mislabels it. Both are cases where the green or the red is right and the sentence
 beside it is not.
+
+
+---
+
+## THE TWO R14 LAWS
+
+Filed 2026-09-14. Each is paid for by a defect already measured in this tree.
+
+### L-COUNT — a run whose collected count is not the expected count is RED
+
+Regardless of summary colour. The founding instance is recorded in this
+repository's own `pytest.ini` comment: duplicated test basenames under
+`kaggle/snapshot/repo/` produced **201 collection errors, 0 tests run — and the
+summary looked green**. A suite that collected nothing reported success.
+
+**Why an exit code is not enough.** Collection failure and clean pass can share
+an exit status depending on invocation and plugin set, and "0 tests ran" is not
+an error to pytest. `L-SURFACE` requires the exit code to be asserted; `L-COUNT`
+adds that the *count* must be asserted too, against a number written down in
+advance. Both are needed: one catches a crash, the other catches a vacuum.
+
+**Rule.** Every suite invocation states its expected collected count and fails
+when the actual count differs — including when the actual count is larger,
+because a suite that grew silently is a suite whose contents nobody chose. In a
+refactor this is the only gate that catches a module that stopped being
+importable, since an unimportable module contributes zero tests and zero
+failures.
+
+### L-AUDIT — frozen audit records are read-only, and editing one is falsification
+
+`results/k_cert_local.json` and `results/r4_price_probe.json` embed literal
+`git status --porcelain` output. `house-events-round1.jsonl` and
+`house-events-round2.jsonl` are test-event ledgers. `results/v20_r15_it30_mercury_landings.txt`
+and its siblings are recorded run output. All of them contain module paths, so a
+tree-wide rename is textually tempted to rewrite them.
+
+**Rewriting one does not update a record. It falsifies it.** These files assert
+what a command printed at a moment in the past; changing their contents makes
+them assert something that never happened, and nothing downstream can tell.
+
+**Rule.** Frozen audit records are read-only. Any restructure step that requires
+editing one is **refused, and the step is redesigned** — the record is never the
+thing that moves. Where a path inside a frozen record must coexist with a new
+layout, the resolution is versioning beside it, not substitution within it: the
+old record keeps its old paths and stays valid for the commit it describes.
+
+**Kin.** `P-12` and `P-15` are identifiers going stale invisibly; this is the
+opposite failure — an identifier being *kept* current by editing the evidence
+underneath it, which is worse, because a stale citation misleads while a
+rewritten audit lies.
