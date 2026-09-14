@@ -158,6 +158,7 @@ import time
 from collections import OrderedDict, namedtuple
 from pathlib import Path
 
+import numpy as np
 import torch
 import torch.nn as nn
 
@@ -1296,6 +1297,105 @@ def report(seed=SEED):
                seconds=time.time() - t0)
     _CACHE[seed] = out
     return out
+
+
+# ---------------------------------------------------------------------------
+# THE VALUE AXIS. The reroute after the corner rule lost its referent.
+#
+# beta_d = one minus alpha_d, where alpha_d is the exponent of coordinate d's
+# read in the token count. On the encoder that exponent is zero by construction:
+# Encoder is a position-wise map, so its representation does not depend on the
+# count at all and the rule returns the same corner for every coordinate. The
+# contraction `num @ v` over the key axis is the only place in this module where
+# a token count actually varies, so it is the only axis on which the rule can
+# have a referent.
+# ---------------------------------------------------------------------------
+
+#: The context lengths the key axis contracts over, for the value sweep.
+S_GRID_VALUE = (16, 32, 64, 128)
+
+#: Sequences per length in the value sweep. Large enough that the per-coordinate
+#: RMS is not itself noise at the longest length.
+VALUE_SWEEP_BATCH = 256
+
+
+def _planted_value_stream(plant, s, seed=SEED, batch=VALUE_SWEEP_BATCH,
+                          d=D_LATENT):
+    """The value tensor the sweep contracts, with a named class planted in it.
+
+    `extensive` gives the summands a nonzero mean, so their unnormalised total
+    over the key axis grows with the count. `intensive` centres them, which is
+    the most favourable honest construction of a coordinate whose total should
+    not grow: nothing weaker than a centred summand can be called intensive
+    without making the value itself shrink as the context lengthens, and a value
+    that shrinks with its own context is not a coordinate, it is a schedule.
+
+    This function exists so the plant is CHECKABLE rather than asserted -- a
+    caller can look at what the sweep actually contracts.
+    """
+    g = torch.Generator().manual_seed(int(seed))
+    v = torch.randn(batch, s, d, generator=g)
+    if plant == "extensive":
+        return v + 1.0
+    if plant == "intensive":
+        return v - v.mean(dim=1, keepdim=True)
+    if plant is None:
+        return v
+    raise ValueError("unknown plant %r, expected 'extensive', 'intensive' or "
+                     "None" % (plant,))
+
+
+def value_axis_alpha(beta_at=0.0, s_grid=S_GRID_VALUE, seed=SEED, plant=None,
+                     batch=VALUE_SWEEP_BATCH):
+    """Per-coordinate exponent of the read's RMS in the CONTEXT LENGTH.
+
+    The read is taken at the last position, at a single `beta_at` for every
+    coordinate, and its per-coordinate RMS over the batch is fitted against the
+    context length by the same power-law fitter the rule uses.
+
+    `beta_at` is the parameter the caller must justify. The rule sets beta from
+    alpha, and this measures alpha at a chosen beta, so a reader has to be able
+    to see whether the answer depends on where the measurement was taken. It
+    returns one entry per latent coordinate: a float exponent, or a Refusal
+    carrying its reason where the fit is not a power law. The axis never
+    silently shortens.
+    """
+    model = build(seed)
+    n_s, d = len(s_grid), D_LATENT
+    norms = np.zeros((n_s, d))
+    ses = np.zeros((n_s, d))
+    beta = [float(beta_at)] * d
+    for i, s in enumerate(s_grid):
+        x, _ = draw_bed(seed + i, batch, s, HORIZON, X_DIM)
+        ctx = x[:, :s]
+        with torch.no_grad():
+            st = model.online(ctx)
+            q = model.pred.wq(st)
+            k = model.pred.wk(st)
+            v = (model.pred.wv(st) if plant is None
+                 else _planted_value_stream(plant, s, seed + i, batch, d))
+            out = read_per_coordinate(q, k, v, beta).out[:, -1, :]
+        mag = out.abs().to(torch.float64).numpy()
+        norms[i] = np.sqrt((mag ** 2).mean(axis=0))
+        blocks = mag.reshape(_VALUE_BLOCKS, mag.shape[0] // _VALUE_BLOCKS, d)
+        per_block = np.log2(np.sqrt((blocks ** 2).mean(axis=1)))
+        ses[i] = per_block.std(axis=0, ddof=1) / np.sqrt(_VALUE_BLOCKS)
+    out = []
+    for c in range(d):
+        fit = pa.fit_power_law(tuple(s_grid), norms[:, c], ses[:, c])
+        if not fit.power_law_ok:
+            out.append(Refusal(
+                "NOT-A-POWER-LAW",
+                "coordinate %d's read RMS is not a power law in the context "
+                "length, so it carries no exponent and a corner assigned from "
+                "one would be answering a question the fit declined" % c))
+        else:
+            out.append(float(fit.alpha))
+    return out
+
+
+#: Blocks the value sweep splits its batch into for the fit's standard errors.
+_VALUE_BLOCKS = 16
 
 
 def demo():
