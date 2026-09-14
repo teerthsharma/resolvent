@@ -75,16 +75,126 @@ Printed per bed instance, and an instance outside the band is **REFUSED**:
    belief space, so a recurrence is the right tool and beating it is not the
    claim.
 
-## Prior art, owned before it is named
+## Prior art — REWRITTEN 2026-09-14 after an audit, before any arm ran
 
-- **Shai et al., arXiv:2405.15943** — transformers represent HMM belief-state
-  geometry. **Occupied.** The bed does not claim the representation result.
-- **Kalman / Frühwirth-Schnatter** — the continuous twin.
+The section this replaces named two references and conceded the wrong half of
+one of them. An audit resolved 37 identifiers and found that **three of the four
+things this bed would claim are already occupied, with numbers**. The
+corrections are recorded here rather than in a later card, because the whole
+point of a pre-registration is that it is fixed before the result.
 
-**The delta this project claims over that prior art**, and nothing beyond it:
-exact oracle labels; a **refusal** when the belief is uninformative
-(`entropy ≥ ln S − δ → ⊥`); and the two corners **assigned** by
-intensive/extensive rather than chosen.
+### The substrate is published, twice
+
+- **arXiv:2512.22471** — *The Bayesian Geometry of Transformer Attention*.
+  "Bayesian wind tunnels — controlled environments where the true posterior is
+  known in closed form." Its HMM task draws a **fresh Dirichlet HMM per
+  sequence**, supervises on `p(s_t | o_1:t)` with forward-recursion ground
+  truth, and scores architectures: **Transformer 0.049, Mamba 0.024 ± .009,
+  LSTM 0.411 ± .003 (marked fail), MLP 0.40** in entropy MAE. That is this
+  bed's strong form, already executed.
+- **arXiv:2605.20824** — *Markovian Circuit Tracing for Transformer State
+  Dynamic*. Calls itself "a controlled benchmark and evaluation framework":
+  six HMM families × three seeds, exact latent states, transition matrices,
+  Bayesian belief vectors, Bayes-optimal predictions **and forced-state
+  counterfactual targets**, against four controls.
+
+### The concession was inverted
+
+**arXiv:2405.15943** (Shai, Marzen, Teixeira, Gietelink Oldenziel, Riechers,
+NeurIPS 2024) is real and says what its title says. But it **scores no
+architecture against anything** — no baselines, no windowed oracle, no RNN
+comparison; belief is a *probing target* recovered by linear regression from
+residual activations after next-token training. So conceding "the bed does not
+claim the representation result" gave away ground that paper never held.
+
+And the delta this page kept — **"exact oracle labels"** — is that paper's own
+machinery, and is 35 years older than it: Rabiner 1989,
+`10.1109/5.18626`. **It is struck from the delta.**
+
+Also named, and absent from the original section: **arXiv:2502.01954**
+(Piotrowski, Riechers, Filan, Shai), *Constrained belief updates explain
+geometric structures in transformer representations* — attention **as** the
+constrained Bayesian update, predicted analytically. That is closer to this
+project's operator claim than 2405.15943 is.
+
+**Frühwirth-Schnatter was miscategorised.** Kalman is the continuous twin;
+Frühwirth-Schnatter (2006) is Markov *switching* — the same discrete-latent
+family in a Bayesian idiom, not a continuous analogue.
+
+### Occupied elsewhere, with owners
+
+| claim | owner |
+|---|---|
+| in-context identification of an HMM | 2512.22471, 2506.07298, 2410.16546 |
+| ⊥ as an output symbol | 1907.00208; per-position in a structured output, `garcia18a` ICML 2018 |
+| belief entropy as the uncertainty statistic, decomposed per position | 1202.6545 (Durand & Guédon, 2012) |
+| the `Σ w·v / (Σ w)^α` family | **arXiv:2607.22781**, *Mass-Aware Attention*, July 2026 — the extensivity argument for attention normalisation, arrived at independently, with a global `p` |
+| softmax normalisation destroys the extensive read | **arXiv:2310.08661**, with the ablation, 2023 |
+| extensive-vs-intensive selects the aggregator | arXiv:2207.13779 — sum for extensive, mean for intensive, chosen by physics |
+
+### What survives, and it is one sentence
+
+> A protocol that scores a sequence architecture's **⊥ emission** against an
+> exactly-known filter posterior, with the abstain threshold anchored at
+> `ln S − δ` rather than tuned for coverage — on a bed carrying an extensive
+> label alongside the intensive one, against a windowed-forward-algorithm
+> baseline whose headroom is **derived from `λ₂` in advance**.
+
+Every *mechanism* in that sentence is borrowed and cited. What is new is the
+**evaluation protocol** and the **maximum-entropy anchor**. Nobody scores ⊥
+against a filter posterior — four phrasings found nothing. It is a much smaller
+claim than this page originally made.
+
+### The corner rule adds nothing here, and the reason is internal
+
+Its conjunction — an exponent chosen **per output coordinate** by dimensional
+analysis of what that coordinate reads — is genuinely unoccupied: every
+published exponent is indexed by model, head, layer or query, never by output
+coordinate. But `docs/CORNER_RULE_RETIREMENT.md` retired the rule on the same
+day this bed was pre-registered, on three measured grounds, and closed with
+"No third reroute is proposed." **This bed would be a third reroute.** The
+external gap does not reopen an internally closed question.
+
+## Gate correction: must-fire 1 is a theorem, not a gate
+
+"Window-`L` oracle error must decay with `L`" is guaranteed by filter stability
+— exponential forgetting of the initial condition, Le Gland & Mevel,
+*Math. Control Signals Systems* 13:63–93, 2000 — with the rate in this bed's own
+`λ₂` given by arXiv:1710.06078 as `B = log(ε)/(λ₂ − λ₁)`. It **fires by
+construction** and discriminates nothing. It is retained as a sanity check on
+the generator: if it ever fails, the generator is broken, which is the only
+information it can carry.
+
+It follows that **the window-4 band must be derived, not discovered.** `0.16–0.22`
+was written as a bar; it is a function of `S`, `λ₂` and `snr` fixed at
+generation time and must be computed before it is measured, with any
+disagreement reported as the finding.
+
+## Skyline correction: the GRU as specified is below a published lower bound
+
+`S` hidden units for `S = 8` states sits under the `Ω(N·|Σ|)` bound of
+arXiv:2310.05161, and arXiv:1805.04908 shows the GRU is strictly weaker than
+LSTM and ReLU-Elman in finite precision **because it cannot count** — while the
+extensive label `Σ_τ b_τ·h` *is* a count. The `S`-unit GRU is therefore a
+**floor**, not a skyline; a properly sized recurrent arm and an LSTM must run
+beside it.
+
+## The counter-prediction is itself a published result, and its sign flips
+
+"The GRU skyline wins outright" is arXiv:2406.04089 (June 2024): transformers
+consistently underperform RNNs across all tested HMMs — in the **fixed**-HMM
+regime. In the **strong** form this bed names as its real target, 2512.22471
+reports the opposite with numbers, LSTM failing at 0.411 against Transformer
+0.049. Whichever way this bed lands it replicates one published result and
+contradicts another, and the axis that decides which is exactly the weak/strong
+form of the trap.
+
+## One more gate, from the audit
+
+A near-singular `P` makes the bed unlearnable for every arm — learning HMMs
+without nonsingularity is at least as hard as noisy parity (`cs/0502076`). A
+conditioning gate is required, with its refusal fraction reported beside the
+other two.
 
 ## Prediction, on the record
 
