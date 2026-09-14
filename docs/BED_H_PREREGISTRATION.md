@@ -314,3 +314,32 @@ measured rather than preferred: the admissible region is a diagonal ridge,
 **The free identity holds.** `lambda_1 = -h(Y)` verified to **2.2e-04** on the
 live draw — a correctness check on both the filter and the QR code, costing
 nothing.
+
+## The counter, resolved — 2026-09-14
+
+**The counter holds and the author's delta shrinks to what the counter said it
+would.** A trained GRU-64, given nothing but its own predicted entropy and the
+same `ln S - delta` anchor every other arm gets, reaches **recall 0.8959 at
+precision 0.8903** at `delta = 0.10`, and **0.9101 / 0.9028** at `delta = 0.20`,
+on the same 64 draws with `delta` unchanged. Every untrained consumer reaches
+recall **0.0000**. Inside a planted noise stretch the GRU's mean entropy is
+**1.9035** against the oracle's **2.0400**, while window-4 sits at 1.1206 and EMA
+at 1.2340.
+
+The refusal channel is therefore real and it is **not the read's**. The surviving
+claim is exactly the pre-registered counter's sentence: **abstention scored
+against an exact filter posterior — a metric, not an architecture.** No
+architectural advantage is claimed for the resolvent read on this bed.
+
+**The one unborrowed finding: the two metrics come apart in opposite
+directions.** The GRU skyline reads recall **0.90** with selective-risk dominance
+**0.00** — its entropy tracks what is *knowable* rather than its *own* error, so
+abstaining by it does not lower its risk on what remains. The EMA reads recall
+**0.00** with dominance **0.86** — it ranks its own errors well while never
+crossing the absolute anchor. Neither metric alone characterises a refusal
+channel, which is why both were demanded in advance. A scorer reporting only one
+of the two would have called each of these arms a success.
+
+**The real bar for any arm round is the prior-mean-P baseline at 0.0852**, not
+window-4 at 0.1440. No baseline built here reaches it, so in-context
+identification on this bed is open rather than settled.
