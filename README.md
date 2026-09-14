@@ -10,7 +10,7 @@
 
 <p align="center">
   <b>Softmax attention and Markov path composition are the same operator.</b><br/>
-  <span>One causal head, three switches. Softmax attention, linear attention and the exact path product of a Markov chain are settings of it &mdash; proved in Lean 4, matched bitwise in code.</span><br/>
+  <span>One causal head, three switches. Softmax attention, unnormalized-kernel attention and the exact path product of a Markov chain are settings of it &mdash; proved in Lean 4, matched bitwise in code.</span><br/>
   <i>Invented by <a href="https://teerthsharma.vercel.app/">Teerth Sharma</a></i><br/>
   <sub><a href="mailto:teerths57@gmail.com">teerths57@gmail.com</a> · <a href="https://github.com/teerthsharma/resolvent">github.com/teerthsharma/resolvent</a></sub>
 </p>
@@ -37,7 +37,8 @@ is a single causal softmax head in which both sides are settings of the same
 three switches, so one layer can sit at either end or anywhere between.
 
 - **One operator, three regimes.** The switches `β`, `qk` and `g` move the head
-  between softmax attention, linear attention and the exact path product. All
+  between softmax attention, unnormalized-kernel attention and the exact path
+  product. All
   three are live, trainable parameters on the shipped module.
 - **Every theorem has a test.** Each corner is a Lean 4 theorem, and the
   float64 implementation is checked against each statement, bitwise at the
@@ -52,7 +53,7 @@ three switches, so one layer can sit at either end or anywhere between.
   curl, which no model that reads edges as differences of node values can
   represent, at any width, depth or budget.
 
-**Keywords:** causal attention · softmax attention · linear attention · path
+**Keywords:** causal attention · softmax attention · unnormalized-kernel attention · path
 products · resolvent · committor functions · Hodge decomposition · selective
 prediction · formal verification · Lean 4
 
@@ -98,8 +99,22 @@ Z_i  = Σ_{j≤i} |G_ij| · exp(qk · q_i·k_j)          the row normalizer
 | setting | `β` | `g` | `qk` | what the head computes |
 |---|---|---|---|---|
 | softmax attention | 1 | 0 | on | rows sum to 1 |
-| linear attention | 0 | 0 | on | no normalizer |
+| unnormalized-kernel attention | 0 | 0 | on | no normalizer, **not O(n)** — see below |
 | exact path product | 0 | any | off | `W = G` |
+
+> **The `β = 0` corner is not the O(n) "linear attention" of the literature.**
+> It is the unnormalized exponential kernel `exp(q·k)`, and it has no finite
+> feature map. At fixed `dk = 8` the numerical rank of the score matrix reads
+> 8, 16, 32, 63, 126, 252 for `n = 8 … 256` — it tracks `n` instead of
+> saturating at `dk`, so no factorization `φ(q)·φ(k)` exists and there is no
+> running-state recurrence. Setting `β = 0` removes the division by `Z` and
+> nothing else: the score matrix is still `n × n` at every `β`. The corner
+> costs what softmax costs. Katharopoulos et al. (arXiv:2006.16236) get O(n)
+> from kernel feature maps plus associativity; this corner has neither.
+> The Lean definition has always said so in its own docstring —
+> `linearAttn` at `lean/CEQ/V16Domain.lean:384` is "the score with NO row
+> normalizer" — and earlier revisions of this README dropped that parenthetical
+> and inherited a claim the code does not make.
 
 ### What each switch decides
 
@@ -329,7 +344,7 @@ first build downloads about 4.2 GB (`du -sh lean/.lake/packages`).
 @software{sharma2026resolvent,
   author = {Sharma, Teerth},
   title  = {resolvent: one causal attention family spanning softmax attention,
-            linear attention and exact path products},
+            unnormalized-kernel attention and exact path products},
   year   = {2026},
   url    = {https://github.com/teerthsharma/resolvent}
 }

@@ -2433,3 +2433,48 @@ test. Never read an exit status through a pipe. A missing subject, a missing
 corpus, a missing fixture: fail with the reason named. Kin to `V-6` (the branch
 under test never ran) — `V-6` is a branch going unexecuted inside a green test,
 `L-SURFACE` is a whole suite going unexecuted behind a green-looking line.
+
+### P-13. A name that is exact in-house and false in the field
+
+`lean/CEQ/V16Domain.lean:384` defines corner 2 honestly and says what it means
+in its own docstring: *"linear (unnormalized kernel) attention — the score with
+NO row normalizer"*. The README carried the phrase **"linear attention"** in
+five places with the parenthetical dropped: the title line, the abstract, the
+keywords, the corner table, and the BibTeX title.
+
+In the literature, "linear attention" names an O(n) method: a kernel feature map
+plus the associativity of matrix products (Katharopoulos et al.,
+arXiv:2006.16236, stated in their own abstract). This corner is not that. It is
+`exp(q·k)` with the division removed, and it has no finite feature map — at
+fixed `dk = 8` the numerical rank of the score matrix reads 8, 16, 32, 63, 126,
+252 for `n = 8 … 256`, tracking `n` rather than saturating at `dk`. Setting
+`β = 0` removes the division by `Z` and nothing else; `num.numel()` is `n²` at
+every `β`. The corner costs what softmax costs.
+
+**Why it survived review.** Every internal artefact was correct. The Lean is
+right, its docstring is right, the bitwise test at `0.000e+00` is right, and the
+theorem `gate_zero_beta_zero_is_linear_attention` proves exactly what it says
+against the definition directly above it. Nothing was false anywhere in the
+tree. The defect was created by *export*: a name whose in-house definition is
+three lines away, published into a context where readers carry a different
+definition and no reason to look for a local one. Nobody reading the README
+would think to check whether "linear attention" meant something unusual here.
+
+**Why it is not P-1 or P-11.** Those are a number with no producer and a
+contract citing its own unproven item. Here the producer exists, the proof
+exists, and the claim is true under its own definition. The reader supplies the
+falsehood, from a definition the document never contradicts.
+
+**Rule.** A term of art carries its definition at every point of export, or it
+is replaced by a name that cannot be read as the term of art. When an internal
+definition disagrees with the field's — even by a parenthetical — the
+parenthetical is the load-bearing part and travels with the word. Check by
+asking what a reader who knows the field but not the repo would take the
+sentence to promise, and whether the repo delivers that. Cheap greppable form:
+for every term of art in a published document, the sentence that first uses it
+either states the definition or names the file and line where it is defined.
+
+**Kin.** `V-23`, a plural claim whose own central member is the counterexample —
+there the sentence is true only under a narrow reading the author never states;
+here the word is true only under a local definition the author never exports.
+Both are correct documents that transmit a false belief.
