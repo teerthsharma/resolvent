@@ -35,10 +35,21 @@ from scipy import sparse
 
 from ceqjepa import goal_family as gf
 
-#: `python -m ceqjepa.goal_family --draws 8 --train 4`, cf9b0d2,
-#: WIN-16QAL06O9GB (python 3.11.9, numpy 2.4.6, scipy 1.17.1).
-SMALL = dict(r2_linear=0.8989, r2_linear_within=0.7067, headroom=0.8201,
-             marginal_pooled=0.6554)
+#: `python -m ceqjepa.goal_family --draws 8 --train 4`, 62cb8e0,
+#: WIN-16QAL06O9GB (python 3.11.9, numpy 2.4.6, scipy 1.17.1), FLOOR = 0.50.
+SMALL = dict(r2_linear=0.8830, r2_linear_within=0.6156, headroom=0.8540,
+             marginal_pooled=0.6957, headroom_p0=0.5473, headroom_p50=0.8883,
+             acceptance_rate=0.8000, ceiling_lookup_max=0.4527)
+
+#: The SAME eight draws with the floor switched off (`floor=1.0`), which is the
+#: positive control for the floor: if these two agree the floor is not a floor.
+UNFLOORED = dict(ceiling_lookup_max=0.6449, headroom_p0=0.3551)
+
+#: Declared BEFORE the floored hundred-draw run was executed.
+COMFORTABLY_POSITIVE = 0.50
+MIN_ACCEPTANCE = 0.50
+MAX_MEDIAN_CEILING_DRIFT = 0.05
+PRE_FLOOR_MEDIAN_CEILING = 0.1612
 
 
 @pytest.fixture(scope="module")
@@ -49,6 +60,90 @@ def quo():
 @pytest.fixture(scope="module")
 def small():
     return gf.report(n_test=8, n_train=4, seed=gf.SEED)
+
+
+@pytest.fixture(scope="module")
+def unfloored():
+    return gf.report(n_test=8, n_train=4, seed=gf.SEED, floor=1.0)
+
+
+def test_the_sampler_floor_rejects_draws_and_says_how_many(small):
+    """The floor is in the SAMPLER: a candidate that the training table already
+    answers is discarded before it is ever scored. Every surviving draw must
+    therefore sit under it, and the cost of that must be published."""
+    assert gf.FLOOR == 0.50
+    assert small["floor"] == gf.FLOOR
+    assert small["ceiling_lookup_max"] <= gf.FLOOR + 1e-12
+    assert small["n_candidate_draws"] > small["n_draws"], "nothing was rejected"
+    assert small["n_rejected_draws"] == (small["n_candidate_draws"]
+                                         - small["n_draws"])
+    assert small["acceptance_rate"] == pytest.approx(
+        SMALL["acceptance_rate"], abs=5e-4)
+
+
+def test_the_floor_can_actually_bite(small, unfloored):
+    """V-3: a filter that changes nothing is not a filter. Same seed, same
+    draws, floor switched off."""
+    assert unfloored["acceptance_rate"] == 1.0
+    assert unfloored["ceiling_lookup_max"] == pytest.approx(
+        UNFLOORED["ceiling_lookup_max"], abs=5e-4)
+    assert unfloored["ceiling_lookup_max"] > gf.FLOOR
+    assert unfloored["headroom_p0"] == pytest.approx(UNFLOORED["headroom_p0"],
+                                                     abs=5e-4)
+    assert small["headroom_p0"] > unfloored["headroom_p0"] + 0.1
+
+
+def test_the_per_draw_headroom_distribution_is_published(small):
+    """The mean was the dishonest publication. The distribution is the honest
+    one, and it has to be monotone in the percentile or it is not a quantile."""
+    qs = [small[f"headroom_p{k}"] for k in (0, 10, 25, 50, 75, 90)]
+    assert qs == sorted(qs), qs
+    assert small["headroom_p0"] == pytest.approx(SMALL["headroom_p0"], abs=5e-4)
+    assert small["headroom_p50"] == pytest.approx(SMALL["headroom_p50"], abs=5e-4)
+    assert small["headroom_p0"] == pytest.approx(
+        float(np.min(small["per_draw_headroom"])), abs=1e-12)
+
+
+def test_the_symmetric_difference_floor_is_dead_and_the_kill_is_rederived():
+    """THE FLOOR THAT WAS PROPOSED AND DOES NOT WORK. The defect was read as
+    "some draws land close to a training goal", so the obvious floor is on the
+    symmetric difference of the goal sets. It fails because set proximity is not
+    the mechanism: across PAIRS the distance carries almost no information about
+    the ceiling. Bound here at a size that runs in seconds; the 4,800-pair
+    version is `scratchpad/floor_calib.py`, 62cb8e0, WIN-16QAL06O9GB, which
+    reads -0.045 on B' and +0.021 on B' OR C."""
+    Q = gf.quotient()
+    P, absorbing = Q["P"], Q["absorbing"]
+    rng = np.random.default_rng(1)
+    bank = []
+    for _ in range(6):
+        B, C, interior = gf.draw_goal(rng, absorbing)
+        q, _, _ = gf.committor(P, B, C, interior)
+        bank.append((B, C, q))
+    d, c2 = [], []
+    for _ in range(24):
+        B, C, interior = gf.draw_goal(rng, absorbing)
+        q, _, _ = gf.committor(P, B, C, interior)
+        y = q[interior]
+        for Bt, Ct, qt in bank:
+            c = np.corrcoef(qt[interior], y)[0, 1]
+            c2.append(0.0 if not np.isfinite(c) else float(c ** 2))
+            d.append(float((B ^ Bt).sum()) / float((B | Bt).sum()))
+    d, c2 = np.array(d), np.array(c2)
+    rank = lambda v: np.argsort(np.argsort(v))
+    rho = float(np.corrcoef(rank(d), rank(c2))[0, 1])
+    assert c2.max() - c2.min() > 0.3, "the ceiling does not vary; test vacuous"
+    assert d.max() - d.min() > 0.3, "the distance does not vary; test vacuous"
+    assert abs(rho) < 0.25, f"symmetric difference DOES predict the ceiling: {rho}"
+
+
+def test_most_of_the_lookup_ceiling_is_the_free_recalibration(small):
+    """The published ceiling hands the memoriser a per-draw affine rescale it
+    cannot compute. The same table forced to answer with its STORED value is
+    much weaker, and the gap is the size of that gift."""
+    assert small["ceiling_lookup_raw"] < small["ceiling_lookup"]
+    assert small["ceiling_lookup_raw_max"] <= small["ceiling_lookup_max"]
+    assert 0.0 <= small["ceiling_lookup_raw"] <= 1.0
 
 
 def test_orbit_count_is_rederived_not_quoted(quo):
@@ -227,6 +322,23 @@ def test_the_pinned_hundred_draw_run_reproduces():
               "ceiling_heuristic", "headroom", "headroom_worst_draw"):
         assert r[k] == pytest.approx(pin[k], abs=5e-4), (k, r[k], pin[k])
     assert r["draws_with_headroom_below_0p2"] == pin["draws_with_headroom_below_0p2"]
+    # the three conditions declared before this run was executed
+    assert r["headroom_p0"] >= COMFORTABLY_POSITIVE, r["headroom_p0"]
+    assert r["acceptance_rate"] >= MIN_ACCEPTANCE, r["acceptance_rate"]
+    # the family must be CLEANED, not eaten: the tail moves, the bulk does not
+    drift = abs(r["ceiling_lookup_q"][0] - PRE_FLOOR_MEDIAN_CEILING)
+    assert drift < MAX_MEDIAN_CEILING_DRIFT, (r["ceiling_lookup_q"][0], drift)
+    for k in ("headroom_p0", "headroom_p10", "headroom_p25", "headroom_p50",
+              "headroom_p75", "headroom_p90", "acceptance_rate",
+              "ceiling_lookup_raw", "ceiling_lookup_raw_max",
+              "ceiling_lookup_max", "ceiling_heuristic_max"):
+        assert r[k] == pytest.approx(pin[k], abs=5e-4), (k, r[k], pin[k])
+    assert r["n_candidate_draws"] == pin["n_candidate_draws"]
+    med, p90, mx = r["ceiling_lookup_q"]
+    assert med == pytest.approx(pin["ceiling_lookup_median"], abs=5e-4), med
+    assert p90 == pytest.approx(pin["ceiling_lookup_p90"], abs=5e-4), p90
+    assert mx == pytest.approx(pin["ceiling_lookup_max"], abs=5e-4), mx
+    assert r["ceiling_lookup_max"] <= gf.FLOOR + 1e-12
     for d in (1, 2, 4, 8):
         assert r["dead_mass"][d] == pytest.approx(pin["dead_mass"][d], abs=5e-4)
         assert r["hop_uniform"][d] == pytest.approx(pin["hop_uniform"][d], abs=5e-4)

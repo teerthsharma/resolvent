@@ -16,7 +16,10 @@ weights, THEN draw a goal: an absorbing set B' and a forbidden set C from a
 structured family of orbit subsets. The label is the exact committor
 q_{B',C}(s) = P(the uniform-random-play chain hits B' before C or before any
 terminal), a sparse linear solve on the orbit graph. The model sees the position
-and the (B', C) indicator and answers in one forward pass.
+and the (B', C) indicator and answers in one forward pass. The TRAINING goals
+are drawn first and a candidate test goal that a table over them already answers
+is rejected before it is scored -- see THE SAMPLER FLOOR below, which is the
+only thing about this family that is not simply "draw and keep".
 
 THE REFUTATION THIS FILE RUNS FIRST, aimed by the proposer at his own idea.
 Draw 100 (B', C) pairs. Solve the exact committors. Fit ONE regression, pooled
@@ -35,14 +38,18 @@ THE THREE CEILINGS, each exactly computable and none needing a trained model:
                       Ceiling per test draw = max over training goals of
                       corr(q_B, q_{B'})^2 -- the best a memoriser can do after
                       being handed a free per-draw affine recalibration it has
-                      no way to compute.
+                      no way to compute. The sampler floor is applied to exactly
+                      this quantity, so it is <= FLOOR on every scored draw.
     BEST HEURISTIC    any hand-written state heuristic is a function fixed
                       before (B', C) existed, so the best one is
                       h*(s) = E_{B'}[q_{B'}(s)]. It is estimated here ON THE
                       TEST DRAWS THEMSELVES, which is in-sample and therefore an
                       UPPER bound on every heuristic anyone will ever write.
 
-Headroom = 1 - max(ceilings), with the oracle at 1.0 by construction.
+Headroom = 1 - max(ceilings), with the oracle at 1.0 by construction. The
+FAMILY MEAN of that is the number this module used to publish and it was the
+wrong one: a bed is only as good as its worst draw. The publication is the
+per-draw distribution, and `demo()` prints worst / p10 / p25 / median / p75 / p90.
 
 THE D4 QUOTIENT, and why it is safe. The board's dihedral group has 8 elements,
 all of which preserve legality and the move relation in a pawnless endgame, so
@@ -66,20 +73,96 @@ at cf9b0d2 on WIN-16QAL06O9GB:
     !!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!
     1 error in 8.83s
 
+THE SAMPLER FLOOR, AND THE TWO CANDIDATE FLOORS THAT WERE MEASURED AND KILLED.
+The bed's one real defect was the worst draw, not the mean: the lookup ceiling
+read median 0.1612, p90 0.5012 and MAXIMUM 0.9496, leaving 0.0504 of headroom at
+the bottom of the family (`python -m ceqjepa.goal_family --draws 100 --train 20`
+at 62cb8e0 on WIN-16QAL06O9GB, re-derived with FLOOR = 1.0). A floor in the
+SAMPLER is the fix, and three candidates were measured before one was adopted.
+
+  KILLED, symmetric difference. Reject a test draw whose |B' XOR B_t| / |B' OR B_t|
+  against every training goal falls below a floor. MEASURED on 240 candidate
+  draws against 20 training goals at seed 1
+  (`scratchpad/floor_calib.py`, 62cb8e0, WIN-16QAL06O9GB): across all 4,800
+  (test, train) PAIRS the Spearman correlation between that distance and the
+  pair's corr^2 is -0.045, and on B OR C it is +0.021. The six draws that reach
+  corr^2 > 0.8 sit at symmetric-difference 0.3975 to 0.6637 from the training
+  goal they correlate with -- they are not near-duplicates. Set proximity is not
+  the mechanism. To force the worst accepted draw below 0.5 this floor has to
+  reject 91% of the family (worst 0.3222 at an acceptance rate of 0.092), which
+  hollows the family out rather than cleaning it.
+
+  KILLED, a held-out reference bank. Reject against 10 reference goals and
+  measure against 10 DISJOINT training goals, so nothing is selected on the
+  table it is scored against. MEASURED, same file, five random splits: at a
+  reference threshold of 0.3 (acceptance 0.70 to 0.83) the worst ceiling against
+  the disjoint table is still 0.5604 to 0.8736. The high-ceiling event is
+  specific to the PAIR, so it does not transfer from one bank to another, and no
+  predicate blind to the actual training goals can bound it.
+
+  ADOPTED. Reject a test draw the TRAINING table already answers:
+  max_t corr(q_t, q_test)^2 > FLOOR, with FLOOR = 0.50. That is a property of
+  the label and of the published training goals, computable before a reader
+  exists, and it is applied in `draw_test_goal` -- the draw is discarded, never
+  scored. 0.50 is not taste: it is the pre-floor distribution's own p90
+  (0.5012), so the floor is defined to make the WORST accepted draw exactly as
+  clean as the 90th-percentile draw already was.
+
+DECLARED BEFORE THE FLOORED RUN WAS EXECUTED, so that "comfortably positive" is
+a prediction and not a description. Comfortably positive := worst-draw headroom
+>= 0.50. Two non-vacuity conditions, because a floor that bounds the tail by
+eating the family is worse than the defect: acceptance rate >= 0.50, and the
+MEDIAN lookup ceiling must move less than 0.05 from its pre-floor 0.1612. All
+three were met.
+
 MEASURED. `python -m ceqjepa.goal_family --draws 100 --train 20` at commit
-cf9b0d2 on WIN-16QAL06O9GB (python 3.11.9, numpy 2.4.6, scipy 1.17.1), CPU only,
-SEED = 0, 164.2s, 3,296,692 scored rows, max committor residual 9.841e-15 (worst
-draw 909 fixpoint iterations), lumpability disagreements 0 of 368,452.
+62cb8e0 on WIN-16QAL06O9GB (python 3.11.9, numpy 2.4.6, scipy 1.17.1), CPU only,
+SEED = 0, FLOOR = 0.50, 204.3s, 3,371,479 scored rows, max committor residual
+9.841e-15 (worst draw 909 fixpoint iterations), lumpability disagreements
+0 of 368,452.
 
-    the refutation, pooled LINEAR fit   R2 = 0.7367  [0.6911, 0.7739]
-    the same fit, degree-2 expansion    R2 = 0.8078  [0.7662, 0.8427]
-    the same fit, HELD OUT BY GOAL      R2 = 0.6184  (within-draw 0.0631)
+    the refutation, pooled LINEAR fit   R2 = 0.7106  [0.6669, 0.7451]
+    the same fit, degree-2 expansion    R2 = 0.7874  [0.7433, 0.8222]
+    the same fit, HELD OUT BY GOAL      R2 = 0.7264  (within-draw 0.5091)
     kill line                                0.95    -> NOT REACHED, leap ALIVE
-    marginal / lookup / heuristic ceiling    0.0000 / 0.2400 / 0.0601
-    headroom, family mean                    0.7600
-    headroom, worst single draw              0.0504  (3 of 100 draws below 0.2)
+    marginal / lookup / heuristic ceiling    0.0000 / 0.2336 / 0.0852
+    the floor           121 candidates drawn, 21 rejected, acceptance 0.8264
+    lookup ceiling over draws  median 0.1977  p90 0.4475  max 0.4886
+    headroom, family mean                    0.7664
 
-CAPACITY DOES NOT BUY THE KILL, and this is the load-bearing control. A
+THE PER-DRAW HEADROOM DISTRIBUTION, which is the honest publication and replaces
+the family mean. Same run.
+
+    worst 0.5114   p10 0.5525   p25 0.6380   median 0.7860   p75 0.8640
+    p90 0.9266     0 of 100 draws leave a faker less than 0.2 headroom
+
+WHAT IS EARNED AND WHAT IS IMPOSED, since the floor selects on the ceiling it
+then reports. IMPOSED: no draw can exceed a lookup ceiling of 0.50, so the
+0.5114 worst-draw headroom cannot have come out below 0.50. EARNED, because
+nothing selected on them: the worst draw lands at 0.4886, strictly inside the
+floor rather than pressed against it; the acceptance rate 0.8264; the median
+0.1977, which moved 0.0365 from the pre-floor 0.1612 -- the tail was removed and
+the bulk was not; the heuristic ceiling, which the floor does not touch, worst
+draw 0.3298; and the refutation itself, 0.7106 against the 0.95 kill line.
+
+MOST OF THE LOOKUP CEILING WAS NEVER THE TABLE. The published ceiling hands the
+memoriser a free per-draw affine recalibration it has no way to compute. The
+same 20-entry table forced to answer with its STORED value reads 0.0048 on the
+family mean and 0.2372 on the worst draw (same run, `ceiling_lookup_raw`). So
+97.9% of the mean ceiling is the recalibration, not the memorisation. The
+generous reading is kept, because a ceiling that is too high is the safe error.
+
+THE LIMIT OF THE FLOOR, collected here and not repeated. The guarantee is
+against a table over THESE 20 training goals. A memoriser holding a different or
+larger table is not bounded by it, and the floor would have to be recomputed
+against that table.
+
+CAPACITY DOES NOT BUY THE KILL, and this is the load-bearing control. Every
+number in this paragraph and the three that follow it was measured on the
+PRE-FLOOR draw set at cf9b0d2 and is NOT re-derived by the floored run; they are
+statements about the bed before the sampler changed, kept because what they
+establish -- that the shortfall is not the estimator, not the linearity and not
+the trivial rows -- is a property of the family rather than of one draw set. A
 HistGradientBoostingRegressor at max_iter=1000, max_leaf_nodes=255,
 min_samples_leaf=5, learning_rate=0.1, early_stopping=False, random_state=0,
 fitted on the SAME 27 features, reaches pooled R2 = 0.9965 IN-SAMPLE on 800,000
@@ -94,8 +177,9 @@ same split, which stops down-weighting the draws with the largest interiors).
 Every one of those is below 0.95. The shortfall is not the estimator.
 
 TWO DEAD DIRECTIONS, named rather than carried, so that "27 features" is not
-read as 27 directions. The 28-column linear design has RANK 26 and
-`cond(X'X) = 1.412e+20`, for two exact reasons:
+read as 27 directions. The 28-column linear design has RANK 26, re-derived by
+the floored run, at `cond(X'X) = 6.627e+19` there and 1.412e+20 pre-floor, for
+two exact reasons:
 
   - `in_check` is identically 0 on every scored row. Check occurs only on
     positions with no legal move (`chess_steps.py:354-356` sets it inside the
@@ -131,12 +215,12 @@ b20097c while this ran. The only repo input to every figure above is
 The suite re-derives every figure in the working tree at b20097c and reads
 `10 passed in 294.74s`, exit 0.
 
-THE NUMBER THAT MUST BE READ BESIDE 0.7367. Predicting each draw's own MEAN,
-with no state skill whatsoever, already scores pooled R2 = 0.5653 -- because the
+THE NUMBER THAT MUST BE READ BESIDE 0.7106. Predicting each draw's own MEAN,
+with no state skill whatsoever, already scores pooled R2 = 0.5277 -- because the
 100 draws have very different mean committors and a pooled denominator counts
 that between-draw spread as explainable variance. Against the WITHIN-draw
-variance alone the same fits read 0.3942 (linear) and 0.5578 (degree-2), and the
-mean PER-DRAW R2 of the pooled linear fit is -0.4873 +/- 1.0113: on a typical
+variance alone the same fits read 0.3874 (linear) and 0.5499 (degree-2), and the
+mean PER-DRAW R2 of the pooled linear fit is -0.5065 +/- 1.1964: on a typical
 drawn goal the shallow fit is WORSE than predicting that goal's own mean. The
 refutation does not merely fall short of 0.95, it fails to beat the marginal.
 
@@ -144,33 +228,35 @@ WHERE THE EXPLANATORY POWER IS, by column ablation (same draws, same labels,
 same estimator, only the admissible columns vary):
 
     columns                pooled   within
-    full (28)              0.7367   0.3942
-    state only (20)        0.0188  -1.2573   goal-blind features carry nothing
-    no resolvents (26)     0.4687  -0.2224
-    resolvents only (3)    0.5300  -0.0813
-    goal features (9)      0.7255   0.3686   q1, q2 and the distances are it
+    full (28)              0.7106   0.3874
+    state only (20)        0.0256  -1.0630   goal-blind features carry nothing
+    no resolvents (26)     0.4479  -0.1689
+    resolvents only (3)    0.5276  -0.0001
+    goal features (9)      0.6956   0.3556   q1, q2 and the distances are it
 
 THE GAP AGAINST A d-LAYER STACK, free from the enumeration. A d-layer stack
 composes d hops, and where B' is further than d hops the d-hop truncation q_d is
 EXACTLY zero while q is not. Fraction of the 3,296,692 scored rows in that
 state:
 
-    d = 1   0.7547        d = 4   0.1733
-    d = 2   0.4795        d = 8   0.0049
+    d = 1   0.7736        d = 4   0.1331
+    d = 2   0.4596        d = 8   0.0009
 
 The same fractions by BFS on the move graph, a second route to the same
-quantity, read 0.8030 / 0.5278 / 0.2216 / 0.0532 (BFS counts reachability, the
+quantity, read 0.7956 / 0.4817 / 0.1551 / 0.0230 (BFS counts reachability, the
 truncation additionally requires q > 0, so BFS is the looser of the two);
-orbit-size weighting moves them by at most 0.0002.
+orbit-size weighting moves them by at most 0.0002. Pre-floor the same two routes
+read 0.7547 / 0.4795 / 0.1733 / 0.0049 and 0.8030 / 0.5278 / 0.2216 / 0.0532.
+`ceqjepa/depth_race.py` is what these fractions are a bound FOR, and it carries
+the assumption they rest on.
 
-THE ONE PLACE THIS MEASURE IS NOT YET SAFE. The lookup ceiling is 0.2400 on the
-family mean but 0.9496 on the worst of the 100 draws: 3 draws land close enough
-to one of the 20 training goals that a 20-entry table of committors reaches
-R2 > 0.8 on them. The replacement route is in the family sampler, not in the
-metric -- reject a test draw whose symmetric difference with every training goal
-is below a floor, and publish the per-draw headroom distribution rather than its
-mean. Until that is done the honest headroom of this measure is the per-draw
-one, and it is 0.0504 at the bottom of the family.
+THE PLACE THIS MEASURE WAS NOT SAFE, AND THE STATE OF IT NOW. Pre-floor the
+lookup ceiling was 0.2400 on the family mean but 0.9496 on the worst of the 100
+draws, leaving 0.0504 of headroom at the bottom of the family. With the floor in
+the sampler the worst draw reads 0.4886 and the worst headroom 0.5114, and the
+publication is the distribution above rather than the mean. The bed is ready in
+the sense that was declared: worst-draw headroom >= 0.50, acceptance 0.8264,
+median ceiling moved 0.0365.
 
 WHAT THIS MEASURES AND WHAT IT DOES NOT. This is operator COMPOSITION toward
 arbitrary goals. It is NOT do-versus-see. In a fully observed MDP the two
@@ -205,6 +291,20 @@ SEED = 0
 N_TEST = 100
 N_TRAIN = 20
 
+#: THE SAMPLER FLOOR. A test draw is rejected if a lookup table over the
+#: TRAINING goals already answers it: reject when
+#: max_t corr(q_t, q_test)^2 > FLOOR. PINNED, and chosen from the measured
+#: unfiltered distribution rather than by taste -- 0.50 is that distribution's
+#: own p90 (0.5012, `python -m ceqjepa.goal_family --draws 100 --train 20` at
+#: 62cb8e0 on WIN-16QAL06O9GB with FLOOR = 1.0), so the floor makes the WORST
+#: accepted draw exactly as clean as the 90th-percentile draw already was. See
+#: THE FLOOR, AND THE TWO CANDIDATES THAT WERE MEASURED AND KILLED, above.
+FLOOR = 0.50
+
+#: A draw whose committors cannot be sampled inside this many tries means the
+#: floor has eaten the family; that is a raise, never a silent truncation.
+MAX_DRAW_TRIES = 60
+
 #: A drawn B' must be neither a needle nor half the board, or the committor is
 #: trivial and the draw measures nothing. Orbit counts, out of 46,137.
 B_MIN, B_MAX = 200, 9000
@@ -220,21 +320,27 @@ MAX_ITERS = 200000
 #: equations are solvable; it is 1e-8 and moves no reported digit.
 RIDGE = 1e-8
 
-#: `python -m ceqjepa.goal_family --draws 100 --train 20`, cf9b0d2,
-#: WIN-16QAL06O9GB. Re-derived, not copied, by
+#: `python -m ceqjepa.goal_family --draws 100 --train 20`, 62cb8e0,
+#: WIN-16QAL06O9GB, FLOOR = 0.50. Re-derived, not copied, by
 #: tests/curvature/test_goal_family.py::test_the_pinned_hundred_draw_run_reproduces.
 RESULTS: dict = {
-    "n_orbits": 46137, "n_rows": 3296692,
-    "r2_linear": 0.7367, "r2_quadratic": 0.8078,
-    "r2_linear_within": 0.3942, "r2_quadratic_within": 0.5578,
-    "r2_linear_heldout": 0.6184, "r2_linear_heldout_within": 0.0631,
+    "n_orbits": 46137, "n_rows": 3371479,
+    "r2_linear": 0.7106, "r2_quadratic": 0.7874,
+    "r2_linear_within": 0.3874, "r2_quadratic_within": 0.5499,
+    "r2_linear_heldout": 0.7264, "r2_linear_heldout_within": 0.5091,
     "design_rank": 26,
-    "marginal_pooled": 0.5653,
-    "ceiling_lookup": 0.2400, "ceiling_heuristic": 0.0601,
-    "headroom": 0.7600, "headroom_worst_draw": 0.0504,
-    "draws_with_headroom_below_0p2": 3,
-    "dead_mass": {1: 0.7547, 2: 0.4795, 4: 0.1733, 8: 0.0049},
-    "hop_uniform": {1: 0.8030, 2: 0.5278, 4: 0.2216, 8: 0.0532},
+    "marginal_pooled": 0.5277,
+    "ceiling_lookup": 0.2336, "ceiling_heuristic": 0.0852,
+    "ceiling_lookup_raw": 0.0048, "ceiling_lookup_raw_max": 0.2372,
+    "headroom": 0.7664, "headroom_worst_draw": 0.5114,
+    "acceptance_rate": 0.8264, "n_candidate_draws": 121,
+    "headroom_p0": 0.5114, "headroom_p10": 0.5525, "headroom_p25": 0.6380,
+    "headroom_p50": 0.7860, "headroom_p75": 0.8640, "headroom_p90": 0.9266,
+    "draws_with_headroom_below_0p2": 0,
+    "ceiling_lookup_median": 0.1977, "ceiling_lookup_p90": 0.4475,
+    "ceiling_lookup_max": 0.4886, "ceiling_heuristic_max": 0.3298,
+    "dead_mass": {1: 0.7736, 2: 0.4596, 4: 0.1331, 8: 0.0009},
+    "hop_uniform": {1: 0.7956, 2: 0.4817, 4: 0.1551, 8: 0.0230},
 }
 
 
@@ -399,6 +505,46 @@ def draw_goal(rng: np.random.Generator, absorbing: np.ndarray):
                 and int(interior.sum()) >= INTERIOR_MIN):
             return B, C, interior
     raise AssertionError("the goal family produced no admissible draw in 500 tries")
+
+
+def lookup_ceiling(train, interior, y):
+    """The best a table of TRAINING committors can do on this draw.
+
+    Two readings of "best", both returned. `recal` hands the memoriser a free
+    per-draw affine recalibration it has no way to compute (corr^2, the
+    generous one, and the one the bed publishes); `raw` makes it answer with
+    the stored value (1 - SSE/SS, floored at 0). The gap between them is how
+    much of the ceiling is the recalibration rather than the table.
+    """
+    ss = float(((y - y.mean()) ** 2).sum())
+    recal = raw = 0.0
+    for qb in train:
+        h = qb[interior]
+        c = np.corrcoef(h, y)[0, 1]
+        recal = max(recal, 0.0 if not np.isfinite(c) else float(c ** 2))
+        raw = max(raw, 1.0 - float(((y - h) ** 2).sum()) / ss)
+    return recal, max(raw, 0.0)
+
+
+def draw_test_goal(rng, absorbing, P, train_q, floor=FLOOR):
+    """A test draw the training table does not already answer.
+
+    THE FLOOR IS IN THE SAMPLER, NOT THE METRIC: the candidate is drawn, its
+    exact committor is solved, and the draw is DISCARDED -- never scored, never
+    reported -- when `lookup_ceiling` exceeds `floor`. Nothing about any model
+    enters; the predicate is a property of the label and of the published
+    training goals, computable before a reader exists.
+
+    Returns (B, C, interior, q, residual, iterations, ceilings, n_tries).
+    """
+    for tries in range(1, MAX_DRAW_TRIES + 1):
+        B, C, interior = draw_goal(rng, absorbing)
+        q, res, iters = committor(P, B, C, interior)
+        ceil = lookup_ceiling(train_q, interior, q[interior])
+        if ceil[0] <= floor:
+            return B, C, interior, q, res, iters, ceil, tries
+    raise AssertionError(f"the floor {floor} rejected {MAX_DRAW_TRIES} "
+                         f"consecutive draws: the family has been eaten")
 
 
 # ---------------------------------------------------------------------------
@@ -588,24 +734,48 @@ def _solve_normal(A, b):
     return np.linalg.solve(A, b)
 
 
-def report(n_test=N_TEST, n_train=N_TRAIN, seed=SEED, verbose=False) -> dict:
+def report(n_test=N_TEST, n_train=N_TRAIN, seed=SEED, verbose=False,
+           floor=FLOOR) -> dict:
+    """The bed.
+
+    L-NULL: what VARIES is the drawn goal (B', C). What is PINNED is the
+    46,137-orbit chain, the committor solver, the feature set, the estimator,
+    the seed, and -- since the floor -- the training goals, which are now drawn
+    BEFORE any test goal so that the floor has something to reject against.
+    """
     t0 = time.time()
     Q = quotient()
     P, PT, absorbing = Q["P"], Q["PT"], Q["absorbing"]
     N = Q["n_states"]
     rng = np.random.default_rng(seed)
 
-    draws, res_max, iter_max = [], 0.0, 0
-    for k in range(n_test + n_train):
+    # THE TRAINING GOALS COME FIRST. They are what the lookup ceiling is built
+    # from and what the floor rejects against, so they cannot be drawn after
+    # the draws they have to filter.
+    res_max, iter_max = 0.0, 0
+    train = []
+    for k in range(n_train):
         B, C, interior = draw_goal(rng, absorbing)
         q, res, iters = committor(P, B, C, interior)
         res_max, iter_max = max(res_max, res), max(iter_max, iters)
-        draws.append((B, C, interior, q))
+        train.append((B, C, interior, q))
+    train_q = [d[3] for d in train]
+
+    test, ceil_lookup, ceil_lookup_raw = [], [], []
+    n_candidates, rejected = 0, []
+    for k in range(n_test):
+        B, C, interior, q, res, iters, ceil, tries = draw_test_goal(
+            rng, absorbing, P, train_q, floor)
+        n_candidates += tries
+        res_max, iter_max = max(res_max, res), max(iter_max, iters)
+        test.append((B, C, interior, q))
+        ceil_lookup.append(ceil[0])
+        ceil_lookup_raw.append(ceil[1])
         if verbose:
             print(f"  draw {k:3d}  |B'|={int(B.sum()):6d}  |C|={int(C.sum()):6d}  "
-                  f"interior={int(interior.sum()):6d}  res={res:.2e} it={iters}",
-                  flush=True)
-    test, train = draws[:n_test], draws[n_test:]
+                  f"interior={int(interior.sum()):6d}  res={res:.2e} it={iters} "
+                  f"tries={tries} lookup={ceil[0]:.4f}", flush=True)
+    n_rejected = n_candidates - n_test
 
     # ---- pass 1: the pooled normal equations, and the resolvent nesting -----
     # Features are recomputed rather than cached: one `features()` call is two
@@ -673,7 +843,7 @@ def report(n_test=N_TEST, n_train=N_TRAIN, seed=SEED, verbose=False) -> dict:
     # ---- pass 2: per draw, the ceilings, and the hop table -----------------
     per_lin, per_quad, ssres_lin_t, ssres_quad_t = [], [], [], []
     dead_q = {dd: 0.0 for dd in (1, 2, 4, 8)}
-    ceil_lookup, ceil_heur, variances = [], [], []
+    ceil_heur, variances = [], []
     hop_hits = {dd: [0.0, 0.0] for dd in (1, 2, 4, 8)}
     hop_mass = [0.0, 0.0]
     qbar = np.zeros(N)
@@ -697,11 +867,6 @@ def report(n_test=N_TEST, n_train=N_TRAIN, seed=SEED, verbose=False) -> dict:
             out.append(1.0 - rr / ss)
         for dd in (1, 2, 4, 8):
             dead_q[dd] += float(((qs[dd - 1] <= 0.0) & (y > 0.0)).sum())
-        best = 0.0
-        for _, _, _, qb in train:
-            c = np.corrcoef(qb[interior], y)[0, 1]
-            best = max(best, 0.0 if not np.isfinite(c) else c ** 2)
-        ceil_lookup.append(best)
         h = qbar[interior]
         raw = 1.0 - float(((y - h) ** 2).sum()) / ss
         c = np.corrcoef(h, y)[0, 1]
@@ -742,6 +907,9 @@ def report(n_test=N_TEST, n_train=N_TRAIN, seed=SEED, verbose=False) -> dict:
     worst = dict(marginal=0.0, lookup=float(np.max(ceil_lookup)),
                  heuristic=float(np.max(ceil_heur)))
     per_draw_ceiling = np.maximum(ceil_lookup, ceil_heur)
+    per_draw_headroom = 1.0 - per_draw_ceiling
+    hq = {f"headroom_p{k}": float(np.percentile(per_draw_headroom, k))
+          for k in (0, 10, 25, 50, 75, 90)}
     boot_lin = _boot_pooled(nt_, syt, sy2t, ssres_lin_t, seed)
     boot_quad = _boot_pooled(nt_, syt, sy2t, ssres_quad_t, seed)
     out = dict(
@@ -761,6 +929,11 @@ def report(n_test=N_TEST, n_train=N_TRAIN, seed=SEED, verbose=False) -> dict:
         marginal_pooled=float(1.0 - sswithin / sstot),
         r2_linear_per_draw=np.array(per_lin), r2_quadratic_per_draw=np.array(per_quad),
         ceiling_marginal=0.0,
+        floor=floor, n_candidate_draws=n_candidates, n_rejected_draws=n_rejected,
+        acceptance_rate=n_test / n_candidates,
+        ceiling_lookup_raw=float(np.mean(ceil_lookup_raw)),
+        ceiling_lookup_raw_max=float(np.max(ceil_lookup_raw)),
+        per_draw_headroom=per_draw_headroom, **hq,
         ceiling_lookup=ceilings["lookup"], ceiling_lookup_max=float(np.max(ceil_lookup)),
         ceiling_heuristic=ceilings["heuristic"],
         ceiling_heuristic_max=float(np.max(ceil_heur)),
@@ -852,9 +1025,19 @@ def demo(n_test=N_TEST, n_train=N_TRAIN, seed=SEED, verbose=False) -> dict:
     print(f"               lookup ceiling over draws: median "
           f"{r['ceiling_lookup_q'][0]:.4f}  p90 {r['ceiling_lookup_q'][1]:.4f}  "
           f"max {r['ceiling_lookup_q'][2]:.4f}")
+    print(f"SAMPLER FLOOR  reject a test draw whose lookup ceiling exceeds "
+          f"{r['floor']}: {r['n_candidate_draws']} candidates drawn, "
+          f"{r['n_rejected_draws']} rejected, acceptance "
+          f"{r['acceptance_rate']:.4f}")
+    print(f"               the same table WITHOUT the free per-draw affine "
+          f"recalibration reads {r['ceiling_lookup_raw']:.4f} mean, "
+          f"{r['ceiling_lookup_raw_max']:.4f} worst")
     print(f"HEADROOM       {r['headroom']:.4f} on the family mean   "
-          f"{r['headroom_worst_draw']:.4f} on the worst single draw   "
           f"(oracle 1.0 by construction)")
+    print(f"  PER DRAW     worst {r['headroom_p0']:.4f}   p10 "
+          f"{r['headroom_p10']:.4f}   p25 {r['headroom_p25']:.4f}   median "
+          f"{r['headroom_p50']:.4f}   p75 {r['headroom_p75']:.4f}   p90 "
+          f"{r['headroom_p90']:.4f}")
     print(f"               {r['draws_with_headroom_below_0p2']} of {r['n_draws']} "
           f"draws leave a faker less than 0.2 headroom")
     row = "  ".join(f"d={dd}: {r['dead_mass'][dd]:.4f}" for dd in (1, 2, 4, 8))
