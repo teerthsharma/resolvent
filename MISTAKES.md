@@ -2773,3 +2773,33 @@ old record keeps its old paths and stays valid for the commit it describes.
 opposite failure — an identifier being *kept* current by editing the evidence
 underneath it, which is worse, because a stale citation misleads while a
 rewritten audit lies.
+
+
+### P-16. A search synthesis that attributes a sentence to sources not containing it
+
+A web-search synthesis returned the sentence *"the fractal/information dimension
+… is predictive of learning difficulty"*, attributed to named sources. A targeted
+check of those sources found the sentence in none of them, and two independent
+searches found **no paper anywhere** relating belief-attractor dimension to
+learning difficulty. The claim is a confabulation, and it is precisely the claim
+this project was investigating — which is the dangerous case, because a search
+tool returning the thing you hoped for reads as confirmation.
+
+**Why it is worse than an ordinary bad citation.** A fabricated *identifier*
+fails to resolve and dies on contact. A fabricated *synthesis over real
+identifiers* resolves perfectly: every source named exists, is on-topic, and is
+cited nowhere incorrectly — the sentence simply is not in any of them. Nothing
+in the citation chain is checkable without reading each source for that specific
+claim.
+
+**Rule.** A synthesised sentence is bound to the *sentence*, not to the source
+list. Before a search summary's claim is repeated, one source is opened and the
+claim located in it verbatim; if it cannot be located, the claim is recorded as
+unsourced regardless of how many real papers the summary listed. A summary's
+bibliography is evidence that the topic exists, never that the sentence does.
+
+**Kin.** `P-13`, a name exact in-house and false in the field, and `P-15`, a
+line-pinned citation invalidated by an insertion above it — all three are chains
+where every link resolves and the claim at the end is still wrong. This one is
+the most dangerous of the three because the wrongness is introduced by a tool
+rather than by drift, and arrives already formatted as a finding.

@@ -128,7 +128,7 @@ family in a Bayesian idiom, not a continuous analogue.
 | in-context identification of an HMM | 2512.22471, 2506.07298, 2410.16546 |
 | ⊥ as an output symbol | 1907.00208; per-position in a structured output, `garcia18a` ICML 2018 |
 | belief entropy as the uncertainty statistic, decomposed per position | 1202.6545 (Durand & Guédon, 2012) |
-| the `Σ w·v / (Σ w)^α` family | **arXiv:2607.22781**, *Mass-Aware Attention*, July 2026 — the extensivity argument for attention normalisation, arrived at independently, with a global `p` |
+| the `Σ w·v / (Σ w)^α` family | **arXiv:2607.22781**, *What Softmax Throws Away: Mass-Aware Attention for Evidence Accumulation* (Yu & Ha, 24 Jul 2026) — the extensivity argument for attention normalisation, arrived at independently, with a global `p` |
 | softmax normalisation destroys the extensive read | **arXiv:2310.08661**, with the ablation, 2023 |
 | extensive-vs-intensive selects the aggregator | arXiv:2207.13779 — sum for extensive, mean for intensive, chosen by physics |
 
@@ -217,3 +217,59 @@ with `L`, the bed is Markov and every result on it is uninterpretable. If label
 spread falls under 0.1, the bed is dead. If any arm is handed `P`, the trap is
 broken and the run measures nothing. Any of those three and the instance is
 refused rather than reported.
+
+
+## Corrections from a theory audit, 2026-09-14 — still before any arm ran
+
+**A citation on this page carried the wrong title.** `arXiv:2607.22781` was
+written as *"Mass-Aware Attention"*, which is the mechanism name from the
+subtitle. The actual title is *What Softmax Throws Away: Mass-Aware Attention
+for Evidence Accumulation*. Real identifier, wrong title field — the exact
+pattern a citation audit exists to catch, committed here by the same session
+that runs the audits. Corrected above.
+
+**arXiv:1612.02526 does not transfer to this bed at all**, and the earlier note
+that it "bounds next-observation prediction, not belief estimation" understated
+it. Full-text: *belief* appears **once**, non-technically; *posterior* appears
+only inside the proof of Lemma 1 as a submartingale potential, never as an
+output. Everything is **doubly averaged** — over a uniformly random `t` and over
+the process — and the authors themselves call Proposition 1 "a kind of negative
+result—that average error is not a good metric". This bed's label **is** the
+belief and its metric is per-position TV. `log n/ε` transfers to nothing here.
+For a short-memory claim the citation is **Atar & Zeitouni, SICON 35(1):36–55,
+Corollary 2.1** for the rate, and Ye–Ma–Qian eq. (10) for the window length with
+its constant `C` flagged as never estimated by its own authors.
+
+**Le Gland & Mevel do not own the Lyapunov-gap characterisation.** Their own
+Remark 2.4 attributes it to Atar & Zeitouni; their contribution is a Birkhoff
+contraction coefficient under primitivity. They remain the correct citation for
+forgetting.
+
+**The concession to arXiv:2405.15943 can be sharpened.** Full-text grep of v3
+finds **zero** occurrences of *fractal dimension*, *box-count*, *Hausdorff*,
+*correlation dimension*, *Lyapunov* or *contraction*. It **visualises** the
+fractal and never measures it; its reported R² values are correlations of
+pairwise distances, on one generator, one trained configuration, no architecture
+comparison. Measuring the attractor's information dimension concedes nothing to
+that paper.
+
+**The fractal link is an upper bound with no matching lower bound.**
+`dim_H(ν) ≤ h/χ` holds unconditionally for place-dependent IFS
+(Jaroszewska–Rams, arXiv:0707.3532 Thm 1), applied to the Blackwell measure by
+Bárány–Pollicott–Simon (J. Stat. Phys. 148:393–421, Prop. 14). Every **equality**
+theorem assumes *constant* probabilities; the filter's weights are
+place-dependent by construction, which is exactly the gap. Measured here: the
+bound holds 4/4 with 11–45% slack, and is **vacuous by 23×** in the overlap
+regime, where the attractor collapses to a point while `h/χ = 23.276`.
+
+**A trap for anyone reproducing this.** Box-counting the *support* gives
+`d_box = 2.57–3.31`, which appears to violate `h/χ`. It does not: the theorem
+bounds the dimension of the **measure**, and `dim_H(μ) ≤ dim_B(supp μ)` always.
+Only the information dimension `D₁` is the comparable quantity. Box-counting the
+support here produces a **false refutation**.
+
+**One exact identity, worth asserting as a free correctness check.** The top
+Lyapunov exponent of the filter's random product equals minus the entropy rate
+of the observation process, `λ₁ = −h(Y)`, identically — because the product's
+norm *is* the sequence likelihood. Measured residual `1.26e-05` on the weak
+draw and `1.41e-13` on a closed-form control.
