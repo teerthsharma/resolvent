@@ -2528,14 +2528,34 @@ Both are documents that are locally correct and globally misleading.
 `ceq/arm_smprime.py:534 identity_heads()` documents itself as *"`m = 1,
 theta = 0` exactly ... the softmax corner, reached through the gate rather than
 around it"*, and its docstring elsewhere says the switches "are `nn.Parameter`s
-so the harness trains them". Two of the four cannot move from that point, by two
-independent mechanisms, each exactly zero:
+so the harness trains them". **Five tensors cannot move from that point**, by
+three independent mechanisms, each exactly zero. (An earlier revision of this
+entry said "two of the four" and undercounted; a per-parameter census found the
+`g` switch dead as well.)
+
+The first two mechanisms:
 
 - `magnitude(u) = clamp(u, 0, 1)`, and torch's clamp backward is zero **at** the
   endpoint: `clamp grad at [1.0, 0.5, 1.0, 0.0]` reads `[0.0, 1.0, 0.0, 0.0]`.
   `:541` sets `m_head.bias.fill_(1.0)` — the endpoint exactly.
 - the read takes `.real`, and `d/dθ Re(m·e^{iθ}) = −m·sin θ`, which is zero at
   `θ = 0` for every `m`. `:540` zeroes `theta_head.bias` — that point exactly.
+
+And the third, which kills `g` — one of the three switches the contract names
+as settable — by **three coincident zeros** at the same point. `blend` returns
+`m = clamp(lerp(1, u, g))` and `theta * g`, so at `u = 1, θ = 0, g = 1`:
+`d(lerp)/dg = u − 1 = 0` because `lerp(1, 1, g)` is 1 for every `g`;
+`dm/d(lerp) = 0` by the clamp endpoint again; and `d(theta·g)/dg = theta = 0`.
+Measured through `blend` at that point, `dL/du` and `dL/dg` both read
+`0.000000e+00`, and moving `u` to 0.999 lifts them to `1.000000e+00` and
+`1.000000e-03`.
+
+**A test passed for the wrong reason, and only the repair revealed it.**
+`tests/curvature/test_containment_survives_training.py` asserted that the gated
+arm holds the softmax trajectory to `1e-9` through training. It passed — because
+the gate was dead. Woken, the same gap reads `1.496637e-01`. A test whose green
+depends on a separate defect is not a passing test; it is a second instance of
+the defect, and it cannot be found by reading the test.
 
 Measured at `beta = 1, qk = 1, g = 1`: at `(m, θ) = (1.000, 0.000)` both
 `|dL/du|max` and `|dL/dθ|max` are `0.000000e+00`; at `(0.999, 0.000)` the first
