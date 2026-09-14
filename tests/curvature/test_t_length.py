@@ -723,7 +723,7 @@ def test_the_published_values_are_recomputed_not_literals(capsys):
     rep = stats["report"]
     four, eight = rep["test_lengths"]
 
-    assert stats["head_commit"] == m.HEAD_COMMIT and stats["head_commit"] in out
+    assert stats["head_commit"] == m.STATED_AT_COMMIT and stats["head_commit"] in out
     assert stats["machine_id"] == m.MACHINE_ID and stats["machine_id"] in out
 
     for arm in rep["arms"]:
@@ -772,7 +772,7 @@ def test_the_demo_finishes_inside_the_budget_and_ends_with_the_exact_line(capsys
     for name in m.__all__:
         assert hasattr(m, name), "__all__ advertises a missing name %r" % (name,)
     first = out.splitlines()[0]
-    assert m.HEAD_COMMIT in first and m.MACHINE_ID in first, \
+    assert m.STATED_AT_COMMIT in first and m.MACHINE_ID in first, \
         "L-PROV: the first line is %r" % (first,)
 
 

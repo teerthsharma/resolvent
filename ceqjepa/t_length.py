@@ -275,7 +275,7 @@ import torch
 
 __all__ = [
     "N0", "TEST_LENGTHS", "TARGETS", "MASKS", "OWNER_4X", "TIE_BAND",
-    "HEAD_COMMIT", "MACHINE_ID", "provenance",
+    "STATED_AT_COMMIT", "MACHINE_ID", "provenance",
     "bed", "pool", "Head", "train_head", "predict", "nrmse",
     "predicted_single_exponent_error",
     "lookup_predict", "marginal_predict", "census_n",
@@ -311,9 +311,16 @@ OWNER_4X = (7.9, 31.6)
 #: inside the band is a TIE, stated plainly.
 TIE_BAND = 1.5
 
-#: L-PROV. Pinned, then VERIFIED at run time by provenance() -- the commit from
-#: git itself and the machine id recomputed from this box's node name.
-HEAD_COMMIT = "c9a9434"
+#: L-PROV. The commit at which the numbers in this module's docstrings were
+#: MEASURED. It is deliberately not asserted equal to HEAD: this module was
+#: added at e3d56cb already carrying a pin to c9a9434, its own parent, so the
+#: equality never once held and demo() aborted on it at every commit -- which
+#: silently switched off all 21 value-binding tests behind it, the guard being
+#: off by default and saying nothing. Drift from HEAD is REPORTED here and the
+#: numbers are bound by the value tests recomputing them against a live run,
+#: which is the check that was actually wanted. A guard that must be hand-edited
+#: every commit, and that disables itself when it is not, guards nothing.
+STATED_AT_COMMIT = "c9a9434"
 MACHINE_ID = "60b8cf943ee0"
 
 #: THE WIRING OF THE MEASURED MASK. The rule emits a vector along a NAMED axis
@@ -381,7 +388,8 @@ def provenance():
         commit = "git-unavailable: %r" % (exc,)
     return dict(node=node, machine=machine, commit=commit,
                 machine_ok=(machine == MACHINE_ID),
-                commit_ok=(commit == HEAD_COMMIT))
+                commit_ok=bool(commit) and not commit.startswith("git-unavailable"),
+                commit_matches_stated=(commit == STATED_AT_COMMIT))
 
 
 # ---------------------------------------------------------------------------
@@ -1068,11 +1076,15 @@ def demo():
     """Lettered self-checks, each with its planted negative seen to fire."""
     t_start = time.time()
     prov = provenance()
-    print("PROVENANCE commit %s (git says %s) machine %s (first 12 hex of the "
-          "sha256 over node %s) -- both verified, not copied"
-          % (HEAD_COMMIT, prov["commit"], MACHINE_ID, prov["node"]))
+    print("PROVENANCE numbers stated at %s, running at %s; machine %s (first 12 "
+          "hex of the sha256 over node %s) -- read, not copied"
+          % (STATED_AT_COMMIT, prov["commit"], MACHINE_ID, prov["node"]))
+    if not prov["commit_matches_stated"]:
+        print("    DRIFT: HEAD has moved since these numbers were stated. Every "
+              "value below is recomputed in this run, so a number that no longer "
+              "holds fails here rather than going unchecked.")
     assert prov["machine_ok"], "machine id is %r, not %r" % (prov["machine"], MACHINE_ID)
-    assert prov["commit_ok"], "HEAD is %r, not %r" % (prov["commit"], HEAD_COMMIT)
+    assert prov["commit_ok"], "git resolved no commit: %r" % (prov["commit"],)
 
     print("(a) THE BED. One data set, two bars: the extensive target is EXACTLY n")
     print("    times the intensive one, so the two bars are not two experiments.")
@@ -1615,7 +1627,7 @@ def demo():
     assert elapsed < 300.0, "demo() took %.1f s" % elapsed
 
     stats = dict(
-        report=rep, head_commit=HEAD_COMMIT, machine_id=MACHINE_ID,
+        report=rep, head_commit=STATED_AT_COMMIT, machine_id=MACHINE_ID,
         softmax_extensive_factor_4x=f_soft, linear_intensive_factor_4x=f_lin,
         softmax_extensive_factor_8x=f_soft8, owner_4x=OWNER_4X,
         diff_vs_owner=(f_soft - OWNER_4X[0], f_lin - OWNER_4X[1]),
