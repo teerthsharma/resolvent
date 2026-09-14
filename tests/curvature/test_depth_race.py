@@ -158,3 +158,55 @@ def test_demo_exits_zero():
          "--train", "3", "--epochs", "2"], capture_output=True, text=True)
     assert p.returncode == 0, p.stdout[-4000:] + p.stderr[-4000:]
     assert "DEPTH TABLE" in p.stdout
+
+
+def test_the_goal_pool_pins_the_unseen_draws():
+    """THE SWEEP'S ONE AXIS IS THE TRAINING-GOAL COUNT, so the unseen goals must
+    not move with it -- and by default they do, twice over: the training goals
+    and the test goals come off ONE rng stream, and the sampler floor rejects a
+    test draw against the training table, which gets stricter as that table
+    grows. Comparing n_train=20 against n_train=80 without `pool` compares two
+    different test sets of two different hardnesses. `pool` draws the largest
+    training set, floors every test draw against ALL of it, and hands back the
+    first n_train for fitting: nested training sets, one pinned test set."""
+    a_tr, a_te = dr.draws(2, 2, gf.SEED, gf.FLOOR, pool=4)
+    b_tr, b_te = dr.draws(2, 4, gf.SEED, gf.FLOOR, pool=4)
+    assert len(a_tr) == 2 and len(b_tr) == 4
+    assert all((x[0] == y[0]).all() and (x[1] == y[1]).all()
+               for x, y in zip(a_tr, b_tr)), "the training sets are not nested"
+    assert all((x[0] == y[0]).all() and (x[1] == y[1]).all()
+               for x, y in zip(a_te, b_te)), "the unseen goals moved"
+    _, c_te = dr.draws(2, 2, gf.SEED, gf.FLOOR)
+    assert any((x[0] != y[0]).any() for x, y in zip(a_te, c_te)), \
+        "the check is vacuous: the default path already gives the same draws"
+
+
+def test_the_goal_sweep_retires_the_depth_argument():
+    """THE FINDING, PINNED TO ITS OWN NUMBERS so the prose cannot drift from
+    them. Every point was produced by `scratchpad/gsweep/point.py N E OUT D`
+    calling `dr.race(n_test=100, n_train=N, epochs=E, seed=0, budget=9500,
+    depths=(D,), with_global=False, pool=80)`; this test asserts the relations
+    the conclusion rests on, not the runs, which take 90 minutes."""
+    s = dr.GOAL_SWEEP
+    p = s["points"]
+    assert len({q["test_digest"] for q in p.values()}) == 1, "test sets moved"
+    assert len({q["n_rows"] for q in p.values()}) == 1, "row counts moved"
+    for q in p.values():
+        assert q["pool"] == 80 and q["params"] in (9505, 9425), q
+    w = {k: q["within"] for k, q in p.items()}
+    # the pre-registered line, and the same line re-derived on THESE draws
+    assert w["n80"] >= s["retirement_line_published"], w
+    assert w["n80"] >= w["d8n20"], w
+    assert w["s40e50"] >= w["d8n20"], w
+    assert s["depth_argument_retired"] is True
+    # monotone in goals at pinned epochs
+    assert w["n20"] < w["n40"] < w["n80"], w
+    # the transfer signature that was registered before the run: unseen-goal
+    # fit RISES while the training-goal fit FALLS
+    assert p["n80"]["train_within"] < p["n20"]["train_within"], p
+    # THE INTERNAL NULL. The same training sets refit the two-parameter arms,
+    # which move by less than a fortieth of what the trained stack moves.
+    for d in (1, 2, 4, 8):
+        moved = abs(p["n80"]["trunc_within"][d] - p["n20"]["trunc_within"][d])
+        assert moved < 0.02, (d, moved)
+    assert w["n80"] - w["n20"] > 0.39

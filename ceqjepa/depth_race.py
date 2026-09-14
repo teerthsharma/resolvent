@@ -115,6 +115,89 @@ the module-scoped fixtures of both files plus the autograd graph over 609,873
 edges do not fit together. Separately they are green -- 16 passed in 129.62s and
 11 passed in 582.56s, both exit 0, 62cb8e0, WIN-16QAL06O9GB.
 
+THE DEPTH ARGUMENT IS RETIRED, and the sweep that retired it is below. The
+hole named in the last paragraph of the previous revision -- "the transfer
+failure may be a few-goal failure rather than a depth failure" -- was run, and
+few-goal transfer is not exonerated: it was most of the deficit. Varying ONLY
+the training-goal count at depth 2 and 9,505 parameters, a two-layer stack
+passes the eight-layer stack.
+
+`scratchpad/gsweep/point.py N E OUT D`, which is
+`dr.race(n_test=100, n_train=N, epochs=E, seed=0, budget=9500, depths=(D,),
+with_global=False, pool=80)`, at 4287508 plus the working-tree `pool`/`ckpt`/
+`cache` arguments added here -- and identically at 9336cb0, which lands during
+this sweep and touches neither this file, `goal_family` nor `chess_steps`
+(`git diff --stat 4287508 9336cb0 -- ceqjepa/depth_race.py ceqjepa/goal_family.py
+ceqjepa/chess_steps.py` is empty) -- on WIN-16QAL06O9GB (python 3.11.9, numpy 2.4.6,
+scipy 1.17.1, torch 2.14.0+cpu), CPU only, SEED = 0, FLOOR = 0.50. All six
+points are scored on ONE pinned test set: digest 13d863616a03b028, 3,384,017
+rows, asserted equal across every point by `GOAL_SWEEP` and
+`test_the_goal_sweep_retires_the_depth_argument`.
+
+    point     arm     depth goals epochs steps  within  TRAINfit  seconds
+    n20       attn-2      2    20     25    500  0.0555   0.7428    738.3
+    n40       attn-2      2    40     25   1000  0.3633   0.6940    596.1
+    n80       attn-2      2    80     25   2000  0.4542   0.6834   1077.2
+    s20e100   attn-2      2    20    100   2000  0.3005   0.8914   2415.8
+    s40e50    attn-2      2    40     50   2000  0.4858   0.7568   1066.1
+    d8n20     attn-8      8    20     25    500  0.3324   0.8471    696.3
+
+THE LINE IT CROSSES. Pre-registered before the first run: depth 2 reaching
+0.3826, the published within-draw R2 of the EIGHT-layer stack, retires the
+depth argument. It reads 0.4542 at 80 goals and 0.4858 at 40 goals with the
+same 2,000 steps. Re-derived rather than copied, the eight-layer stack on THESE
+draws reads 0.3324, so the crossing is 0.1218 on the published line's own test
+set and 0.1534 on this one. Depth 2 with a better training recipe is a better
+reader of unseen goals than depth 8 with the published one, at the same
+parameter budget and the same receptive-field wiring.
+
+WHAT THE DEPTH COLUMN WAS ACTUALLY MEASURING. Every arm of the published ladder
+saw 500 gradient steps. Hold the goals at 20 and raise the steps to 2,000 and
+depth 2 moves 0.0555 -> 0.3005, which is the whole distance to depth 8's 0.3324
+bought with no depth at all. Hold the steps at 2,000 and raise the goals 20 ->
+40 -> 80 and it moves 0.3005 -> 0.4858 -> 0.4542. So the ladder 0.0454 / 0.1791
+/ 0.3657 / 0.3826 was a ladder of UNDERTRAINED readers, and the advance bound's
+0.43-to-0.55 over-prediction was measured against an optimiser that had not
+finished, not against a depth limit.
+
+THE INTERNAL NULL, which is why this is not a test-set effect. The same three
+training sets refit the two-parameter arms in the same runs. Over 20 -> 80
+goals the trained stack moves +0.3987 while the exact truncations move +0.0076,
++0.0093, +0.0074 and +0.0043 and the solve stays at 1.0000. Paired over the
+identical 100 draws the stack improves on 80 of them (sign test p = 1.12e-9,
+paired per-draw mean +0.8407 +/- 0.4036, median +0.2778); the per-draw
+distribution is heavy-tailed on small-variance draws, so the aggregate
+within-draw R2 is the pre-registered primary and the sign count is the robust
+second reading.
+
+THE SIGNATURE THAT SAYS TRANSFER, registered before the run as the thing that
+would distinguish transfer from underfitting: the unseen-goal fit RISES while
+the training-goal fit FALLS, 0.7428 -> 0.6940 -> 0.6834 at pinned epochs. It
+did, monotonically, and the 9.9x-capacity control's falling train fit now reads
+as the same mechanism seen from the other side.
+
+WHAT REPLACES IT. The dead thing was "one solve reaches goals a depth-matched
+stack cannot, and the gap is computable in advance". The surviving route to the
+same goal is not depth and not the advance bound: it is the SLOPE. At 2,000
+steps the stack is at 0.4858 against the solve's 1.0000 with 0.5034 of headroom
+on the worst draw, and the goal-count increments are +0.3078 then +0.0909 per
+doubling -- a ratio of 0.295, which extrapolates to 0.4810 at 160 goals and an
+asymptote near 0.4923 if the decay holds, or 0.5451 at 160 if the last slope
+holds. That asymptote, measured rather than assumed, is the sharper claim,
+because it is about what the stack CANNOT reach with unlimited goals rather
+than about how many hops it has. The next point costs more than one run: the
+floor is applied against the pool, so a 160-goal point needs pool=160 and
+re-draws the test set, which re-runs the whole sweep, about 2 hours on a quiet
+box (4,000 steps for the point itself, ~45 minutes).
+
+RESUME IS NOT A NUMBER. `ckpt` exists because this box is shared: with another
+session's suite fleet resident, torch segfaults on a failed 78 MB edge-tensor
+allocation, and the 2,000-step points died at steps ~450, ~900 and ~200 before
+checkpointing was added. The resumed trajectory is the same trajectory -- the
+step order is drawn from the seed, the init is seeded, Adam's whole state is
+saved -- and the run shows it: the loss at step 200 of n80 reads 0.00832 in the
+13:44 process that died and in all five later processes that resumed it.
+
 THE HOLE THIS DOES NOT CLOSE, collected here and nowhere else. The stacks are
 graph-masked message passers, not dense transformers; a dense-attention model
 over the 46,138 orbits is not depth-matched in hops and is not run here. Twenty
@@ -123,12 +206,24 @@ few-goal failure rather than a depth failure -- the capacity control above
 points that way, and separating the two needs a training-goal sweep that is not
 run here. The solve arm is handed the exact operator, so its 1.0000 is a
 construction and not a win on points; what is measured is the stacks distance
-from it.
+from it. The goal sweep pins its test set by flooring every test draw against
+the pool of 80, which makes those draws HARDER than the published run's -- the
+identical n20 network, TRAINfit 0.7428 to the digit, reads 0.0555 here against
+0.1791 there -- so numbers may be compared within this sweep and with d8n20,
+never across to the published table except through d8n20. Nothing here says
+where the stack SATURATES: 160 goals was not run, the extrapolation is two
+increments of arithmetic and not a measurement, and s40e50 reading 0.4858 above
+n80's 0.4542 means the goal-count and step-count axes are not separable at this
+resolution. And the one-solve claim's own pre-registered loss condition, a
+depth<=2 arm at 0.90, is still not met: 0.4858 is the best reader measured.
 """
 
 from __future__ import annotations
 
 import argparse
+import hashlib
+import os
+import pickle
 import sys
 import time
 
@@ -166,6 +261,21 @@ RESULTS: dict = {
     "ceilings": {"marginal": 0.0, "lookup": 0.2336, "heuristic": 0.0852},
     "ceiling_lookup_worst": 0.4886, "ceiling_heuristic_worst": 0.3298,
     "headroom_worst": 0.5114,
+}
+
+GOAL_SWEEP: dict = {
+    "retirement_line_published": 0.3826,
+    "retirement_line_rederived": 0.3324,
+    "depth_argument_retired": True,
+    "ceilings": {'marginal': 0.0, 'lookup': 0.26357708661014584, 'heuristic': 0.1103769080909132},
+    "points": {
+        "n20": {'arm': 'attn-2', 'depth': 2, 'goals': 20, 'epochs': 25, 'steps': 500, 'params': 9505, 'width': 32, 'pool': 80, 'n_rows': 3384017, 'test_digest': '13d863616a03b028', 'within': 0.0555, 'train_within': 0.7428, 'pooled': 0.6008, 'bound_within': 0.711, 'trunc_within': {1: -0.672, 2: -0.2643, 4: 0.1855, 8: 0.5979}, 'seconds': 738.3},
+        "n40": {'arm': 'attn-2', 'depth': 2, 'goals': 40, 'epochs': 25, 'steps': 1000, 'params': 9505, 'width': 32, 'pool': 80, 'n_rows': 3384017, 'test_digest': '13d863616a03b028', 'within': 0.3633, 'train_within': 0.694, 'pooled': 0.7309, 'bound_within': 0.711, 'trunc_within': {1: -0.7759, 2: -0.3323, 4: 0.1537, 8: 0.5902}, 'seconds': 596.1},
+        "n80": {'arm': 'attn-2', 'depth': 2, 'goals': 80, 'epochs': 25, 'steps': 2000, 'params': 9505, 'width': 32, 'pool': 80, 'n_rows': 3384017, 'test_digest': '13d863616a03b028', 'within': 0.4542, 'train_within': 0.6834, 'pooled': 0.7693, 'bound_within': 0.711, 'trunc_within': {1: -0.6644, 2: -0.255, 4: 0.1929, 8: 0.6022}, 'seconds': 1077.2},
+        "s20e100": {'arm': 'attn-2', 'depth': 2, 'goals': 20, 'epochs': 100, 'steps': 2000, 'params': 9505, 'width': 32, 'pool': 80, 'n_rows': 3384017, 'test_digest': '13d863616a03b028', 'within': 0.3005, 'train_within': 0.8914, 'pooled': 0.7043, 'bound_within': 0.711, 'trunc_within': {1: -0.672, 2: -0.2643, 4: 0.1855, 8: 0.5979}, 'seconds': 2415.8},
+        "s40e50": {'arm': 'attn-2', 'depth': 2, 'goals': 40, 'epochs': 50, 'steps': 2000, 'params': 9505, 'width': 32, 'pool': 80, 'n_rows': 3384017, 'test_digest': '13d863616a03b028', 'within': 0.4858, 'train_within': 0.7568, 'pooled': 0.7827, 'bound_within': 0.711, 'trunc_within': {1: -0.7759, 2: -0.3323, 4: 0.1537, 8: 0.5902}, 'seconds': 1066.1},
+        "d8n20": {'arm': 'attn-8', 'depth': 8, 'goals': 20, 'epochs': 25, 'steps': 500, 'params': 9425, 'width': 16, 'pool': 80, 'n_rows': 3384017, 'test_digest': '13d863616a03b028', 'within': 0.3324, 'train_within': 0.8471, 'pooled': 0.7178, 'bound_within': 0.9095, 'trunc_within': {1: -0.672, 2: -0.2643, 4: 0.1855, 8: 0.5979}, 'seconds': 696.3},
+    },
 }
 
 STATE_NAMES = ["wk_f", "wk_r", "wq_f", "wq_r", "bk_f", "bk_r", "turn",
@@ -344,14 +454,38 @@ def receptive_field_violation(depth, seed=SEED, probe_hop=None, n_probe=64,
 # THE PINNED GOALS, THE PINNED CEILINGS
 # ---------------------------------------------------------------------------
 
-def draws(n_test, n_train, seed, floor):
+def draws(n_test, n_train, seed, floor, pool=None, cache=None):
     """The SAME draw stream `goal_family.report` uses: training goals first,
-    then floored test goals. Pinned."""
+    then floored test goals. Pinned.
+
+    `pool` is what makes a training-goal SWEEP possible at all. Without it the
+    unseen goals move with `n_train` twice over -- the two draws share one rng
+    stream, and `gf.draw_test_goal` rejects a candidate against the training
+    table, which gets stricter as the table grows -- so two points of a sweep
+    would be scored on two different test sets of two different hardnesses.
+    With `pool` set to the LARGEST training count in the sweep, `pool` training
+    goals are drawn, every test draw is floored against ALL of them, and the
+    first `n_train` are handed back for fitting. Nested training sets, one
+    pinned test set, and "unseen" meaning the same thing at every point.
+    """
+    pool = n_train if pool is None else max(pool, n_train)
+    # THE DRAWS ARE A PURE FUNCTION of (n_test, pool, seed, floor), so on a box
+    # that kills this process mid-run they are worth 170s of solves exactly
+    # once. The cache is keyed on all four and asserted against the digest it
+    # was written with; it is off unless a path is passed.
+    ck = (None if cache is None else
+          "%s.draws.%d_%d_%d_%s.pkl" % (cache, n_test, pool, seed, floor))
+    if ck is not None and os.path.exists(ck):
+        with open(ck, "rb") as fh:
+            train, test, dg = pickle.load(fh)
+        assert digest(test) == dg, "the cached draws do not match their digest"
+        assert len(train) == pool and len(test) == n_test, (len(train), len(test))
+        return train[:n_train], test
     Q = gf.quotient()
     P, absorbing = Q["P"], Q["absorbing"]
     rng = np.random.default_rng(seed)
     train = []
-    for _ in range(n_train):
+    for _ in range(pool):
         B, C, interior = gf.draw_goal(rng, absorbing)
         q, res, _ = gf.committor(P, B, C, interior)
         assert res < 1e-9, res
@@ -363,7 +497,21 @@ def draws(n_test, n_train, seed, floor):
             rng, absorbing, P, train_q, floor)
         assert res < 1e-9, res
         test.append((B, C, interior, q, ceil))
-    return train, test
+    if ck is not None:
+        with open(ck + ".tmp", "wb") as fh:
+            pickle.dump((train, test, digest(test)), fh, protocol=4)
+        os.replace(ck + ".tmp", ck)
+    return train[:n_train], test
+
+
+def digest(items) -> str:
+    """SHA-256 over the packed (B, C) masks, so "the same goals" is asserted on
+    the goals themselves and not on a seed that was supposed to imply them."""
+    h = hashlib.sha256()
+    for it in items:
+        h.update(np.packbits(it[0]).tobytes())
+        h.update(np.packbits(it[1]).tobytes())
+    return h.hexdigest()[:16]
 
 
 def ceilings(train, test):
@@ -450,7 +598,7 @@ def _affine(pairs):
 
 def race(n_test=100, n_train=20, epochs=EPOCHS, seed=SEED, floor=gf.FLOOR,
          verbose=False, train_stacks=True, budget=PARAM_BUDGET, depths=DEPTHS,
-         with_global=True) -> dict:
+         with_global=True, pool=None, ckpt=None, cache=None) -> dict:
     """`train_stacks=False` scores only the two-parameter arms -- the solve and
     the exact d-hop truncations. Those are the arms the "computable in advance"
     claim rests on, they involve no optimiser and no randomness beyond the
@@ -463,7 +611,7 @@ def race(n_test=100, n_train=20, epochs=EPOCHS, seed=SEED, floor=gf.FLOOR,
     src = torch.from_numpy(np.repeat(np.arange(N), np.diff(P.indptr)))
     dst = torch.from_numpy(P.indices.astype(np.int64))
 
-    train, test = draws(n_test, n_train, seed, floor)
+    train, test = draws(n_test, n_train, seed, floor, pool=pool, cache=cache)
     ceil, look, heur = ceilings(train, test)
     if verbose:
         print("  draws done %.0fs" % (time.time() - t0), flush=True)
@@ -498,7 +646,27 @@ def race(n_test=100, n_train=20, epochs=EPOCHS, seed=SEED, floor=gf.FLOOR,
         order = np.random.default_rng(seed).permutation(
             np.tile(np.arange(n_train), epochs))
         curve = []
+        # RESUME, AND WHY IT CHANGES NO NUMBER. `order` is drawn from the seed
+        # and not from the process, the init is seeded, and Adam's whole state
+        # is saved, so a resumed run walks the identical trajectory -- the
+        # checkpoint is against a SHARED BOX, not against the mathematics. With
+        # another agent's suite fleet resident this run segfaults on a failed
+        # 78 MB edge-tensor allocation, twice at ~500 steps and once at ~900,
+        # and 2,000 steps never land in one piece.
+        done = 0
+        cpath = None if ckpt is None else "%s.%s.pt" % (ckpt, name)
+        if cpath is not None and os.path.exists(cpath):
+            st = torch.load(cpath, weights_only=False)
+            net.load_state_dict(st["net"])
+            opt.load_state_dict(st["opt"])
+            curve, done = st["curve"], st["step"]
+            assert st["order_hash"] == int(order.sum()), "resumed a different run"
+            if verbose:
+                print("  %s RESUMED at step %d/%d" % (name, done, order.size),
+                      flush=True)
         for step, gi in enumerate(order):
+            if step < done:
+                continue
             opt.zero_grad()
             p = net(Ttr[gi], src, dst)
             loss = ((p[mtr[gi]] - ytr[gi][mtr[gi]]) ** 2).mean()
@@ -509,6 +677,12 @@ def race(n_test=100, n_train=20, epochs=EPOCHS, seed=SEED, floor=gf.FLOOR,
                 print("  %s h=%d step %d/%d loss %.5f %.0fs"
                       % (name, h, step, order.size, curve[-1], time.time() - t0),
                       flush=True)
+            if cpath is not None and (step % 100 == 99 or step == order.size - 1):
+                tmp = cpath + ".tmp"
+                torch.save(dict(net=net.state_dict(), opt=opt.state_dict(),
+                                curve=curve, step=step + 1,
+                                order_hash=int(order.sum())), tmp)
+                os.replace(tmp, cpath)
         nets[name] = (net, dpt, h, npar, glob)
         losses[name] = [float(np.mean(curve[:20])), float(np.mean(curve[-40:]))]
 
@@ -567,7 +741,8 @@ def race(n_test=100, n_train=20, epochs=EPOCHS, seed=SEED, floor=gf.FLOOR,
                if n.startswith("attn") and a["depth"] <= LOSS_CONDITION["depth"]]
     retired = any(a["within"] >= LOSS_CONDITION["within"] for a in shallow)
     return dict(n_test=n_test, n_train=n_train, epochs=epochs, seed=seed,
-                floor=floor, n_rows=n_rows,
+                floor=floor, n_rows=n_rows, pool=pool,
+                test_digest=digest(test), train_digest=digest(train),
                 arms=arms, ceilings=ceil, hop_fraction=hop,
                 ceiling_lookup_worst=float(look.max()),
                 ceiling_heuristic_worst=float(heur.max()),
