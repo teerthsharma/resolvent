@@ -1000,3 +1000,93 @@ def test_the_two_refusal_reasons_do_not_cost_the_same(capsys):
         assert abs(got - want) < 0.01, (
             "the half-walk's softmax error is %.4f against the count law %.4f at "
             "n=%d" % (got, want, L))
+
+
+# ---------------------------------------------------------------------------
+# L-SURFACE. A check that prints and then aborts is a FAILED check.
+#
+# The founding instance is this module. From e3d56cb to 391a2d0, `python -m
+# ceqjepa.t_length` printed
+#
+#     PROVENANCE commit c9a9434 (git says 391a2d0) ... -- both verified, not copied
+#
+# and then raised AssertionError on the very next line, because HEAD_COMMIT was
+# a literal that had to equal HEAD and never did. Every value check in this file
+# routes through demo(), so the suite read `21 failed, 13 passed in 5.53s` for
+# two commits while asserting nothing. Two surfaces made that invisible: the
+# word PROVENANCE and two commit hashes printed BEFORE the abort, and the fact
+# that no test in this file ever asserted the module's exit status. Sibling
+# suites already did -- tests/curvature/test_chess_steps.py:338 and
+# tests/curvature/test_drift_null.py:546 -- and this one did not.
+#
+# Exit codes are asserted, never assumed, and never read through a pipeline: a
+# shell `python -m ceqjepa.t_length 2>&1 | tail -3; echo $?` reports tail's
+# status, which is 0 whatever the module did. That mistake was made in this
+# repository while diagnosing this very defect.
+# ---------------------------------------------------------------------------
+
+def _self_check_ok(returncode, stdout):
+    """The predicate: BOTH the exit status AND the terminal banner.
+
+    Either half alone is satisfiable by a run that failed, which is what the
+    planted negatives below demonstrate rather than assert.
+    """
+    lines = [ln for ln in stdout.strip().splitlines() if ln.strip()]
+    return (returncode == 0
+            and bool(lines)
+            and lines[-1].strip() == "ALL SELF-CHECKS PASSED")
+
+
+def _run_snippet(code):
+    """A child process standing in for a module with a given surface."""
+    p = subprocess.run([sys.executable, "-c", code], capture_output=True,
+                       text=True, timeout=60)
+    return p.returncode, p.stdout
+
+
+def test_a_printed_banner_does_not_stand_in_for_an_exit_code():
+    """The planted negatives, entering at the predicate's front door."""
+    rc, out = _run_snippet(
+        "print('PROVENANCE commit deadbee (git says cafef00)')\n"
+        "print('ALL SELF-CHECKS PASSED')\n"
+        "raise SystemExit(1)\n")
+    assert rc == 1 and "ALL SELF-CHECKS PASSED" in out
+    assert not _self_check_ok(rc, out), (
+        "a process that prints the banner and exits 1 passed the predicate: "
+        "the exit status is not being read")
+
+    rc, out = _run_snippet(
+        "print('PROVENANCE commit deadbee (git says cafef00)')\n"
+        "raise SystemExit(0)\n")
+    assert rc == 0 and "ALL SELF-CHECKS PASSED" not in out
+    assert not _self_check_ok(rc, out), (
+        "a process that exits 0 without finishing its checks passed the "
+        "predicate: the banner is not being read")
+
+    rc, out = _run_snippet("print('ALL SELF-CHECKS PASSED')\n")
+    assert _self_check_ok(rc, out), (
+        "the predicate rejects a clean run, so it cannot judge the module")
+
+
+def test_the_module_self_check_exits_zero_and_ends_with_the_banner():
+    """The check whose absence let this module abort unnoticed for two commits."""
+    root = Path(__file__).resolve().parents[2]
+    p = subprocess.run([sys.executable, "-m", "ceqjepa.t_length"], cwd=str(root),
+                       capture_output=True, text=True, timeout=600)
+    tail = "\n".join(p.stdout.strip().splitlines()[-3:])
+    print("\n  python -m ceqjepa.t_length -> exit %d\n%s" % (p.returncode, tail))
+    assert _self_check_ok(p.returncode, p.stdout), (
+        "exit %d, last lines:\n%s\nstderr:\n%s"
+        % (p.returncode, tail, p.stderr[-3000:]))
+
+
+def test_the_provenance_line_reports_drift_instead_of_aborting_on_it():
+    """STATED_AT_COMMIT records where numbers were measured; it never gates."""
+    m = _tl()
+    prov = m.provenance()
+    assert set(prov) >= {"commit", "commit_ok", "commit_matches_stated"}, prov
+    assert prov["commit_ok"], "git resolved no commit: %r" % (prov["commit"],)
+    src = Path(m.__file__).read_text(encoding="utf-8")
+    assert 'assert prov["commit_matches_stated"]' not in src, (
+        "drift from the stated commit is being asserted again: that is the "
+        "self-disabling gate this module was repaired to remove")

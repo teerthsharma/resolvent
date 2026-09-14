@@ -2301,3 +2301,135 @@ printed.
 **Kin.** `V-3` (the assertion is an algebraic identity of your own
 construction), inverted: there the comparison could not fail, here it cannot
 isolate. Both read as rigorous because the sentence they assert is true.
+
+---
+
+## THE THREE R13 LAWS — the entries that pay for them
+
+Filed 2026-09-14 after a four-agent review round at commit `391a2d0` on
+`WIN-16QAL06O9GB` (python 3.11.9, torch 2.14.0+cpu). Each law is paid for by a
+claim that was believed, was wrong, and was wrong in a way every surface
+available to a reader showed as sound. Two of those claims are still unbound at
+the time of filing and are named here rather than quietly dropped.
+
+### L-PROSE — a number in prose carries its producer, or it is struck
+
+Every number in a report cites the command that produced it, the commit, and
+the machine — in the **prose**, not only in the tables, because prose is where
+numbers travel between agents and into chat. The reviewing agent publishes a
+**producer ratio**, bound over reported, as the first line of the report. A
+report below 1.0 is returned, not read.
+
+**The founding instance.** In one review round, an audit re-ran every test claim
+and found the test counts exact — three files, `6 failed, 3 passed`,
+`8 failed`, `2 failed`, all reproducing — while **12 of 19** numeric claims
+stated in the surrounding prose had no producer anywhere in the round. The
+struck set included two p-values computed by mutually inconsistent formulas
+(`(k+1)/(n+1)` in one, `(k+1)/n` in the other) that no test emits at all, an
+entire sweep table whose values return zero matches repo-wide, throughput and
+survival rates with no script behind them, and a suffix-comparison table whose
+**sign was opposite** the assertion it claimed to summarise.
+
+**Why prose and not tables.** Every one of those numbers was in a sentence, and
+sentences are what get quoted forward. The tables were fine. A number that
+survives into a second report has been laundered exactly once and is
+indistinguishable from a measurement thereafter.
+
+**Rule.** Producer ratio is published or the report is returned. The relayer of
+a number without a producer takes the strike, not the originator — including
+when the relayer is the reader assembling the summary. See `P-1`, of which this
+is the social form: `P-1` catches the number in the docstring, `L-PROSE` catches
+it in the sentence that carried it there.
+
+### L-NULL — a permutation test names everything it varies
+
+A null states, by name, **the shuffled object and the pinned objects**. A null
+that varies a second thing it does not name is void, and every claim it licensed
+is unbound.
+
+**The founding instance.** A permutation test asked whether a per-coordinate
+corner assignment carries information by shuffling the whole 9-vector of betas.
+Its docstring said *"the corner multiset and the refused-coordinate count are
+therefore identical"* — true, checkable, and checked. But two coordinates are
+refusals, a refused coordinate is dropped from the read, and re-running the
+generator at its own seed gives:
+
+```
+python -c "... rng = np.random.default_rng(20260914) ..."   # 391a2d0, WIN-16QAL06O9GB
+assigned refused coordinates: [6, 7]
+permutations whose refused set differs from {6,7}: 12 of 12
+arrangements with the 2 refusals pinned at {6,7}: C(7,4) = 35
+total distinct arrangements of the multiset: 9!/(4!*3!*2!) = 1260
+```
+
+So every row re-selects which 7 of 9 coordinates the read sees. The null varies
+corner assignment **and** column selection; the space that isolates the variable
+under test is sampled **0 times**.
+
+**The second instance, and it is the one that costs.** The same family of claim
+appears one layer up. `ceqjepa/t_length.py` reports a 25.3x margin for its
+`assigned-oracle` arm over a learned-beta head at 58 parameters against 60 —
+but that arm is the **literal** `(1.0, 0.0)` in `MASKS` at `t_length.py:300-308`,
+not the assignment rule's output, which enters only through
+`load_measured_mask()`. The measured win is a win for a hand-set two-corner
+mask. Whether the rule selects that mask is untested there, and on the one
+object where the rule was applied to an encoder it returns beta=1 for all nine
+coordinates, which is a different mask.
+
+**Both claims are UNBOUND as of this filing** and are recorded as such rather
+than repaired by argument.
+
+**Rule.** Name the varied and the pinned. State the size of the space and how
+much of it was sampled: `12 of 1260` and `0 of 35` are the two numbers that
+expose this null, and neither was printed. Where a refusal, mask or dropout
+decides what the instrument reads, that selection is a second variable — pin it,
+or sample it deliberately and report both ensembles. Kin to `V-27`, which is
+this defect's entry in the vacuous-control taxonomy, and to `V-3`: there the
+comparison cannot fail, here it cannot isolate, and both read as rigorous
+because the sentence asserted is true.
+
+### L-SURFACE — a check that prints and then aborts is a failed check
+
+Exit codes are **asserted**, never assumed, and never read through a pipeline.
+A check that cannot run is red, not skipped: `no tests ran` and `all tests
+passed` must never be the same colour.
+
+**The founding instance.** `ceqjepa/t_length.py` printed
+
+```
+PROVENANCE commit c9a9434 (git says 391a2d0) ... -- both verified, not copied
+```
+
+and raised on the next line, for two commits, because the pinned commit was a
+literal asserted equal to HEAD (see `P-12`). All 21 value-binding tests route
+through `demo()`, so the suite read `21 failed, 13 passed in 5.53s` while
+asserting nothing. With the gate removed the same suite reads `34 passed in
+323.88s` and every published number reproduces — the pin concealed no drift,
+only the absence of any check. Sibling suites already asserted their module's
+exit status (`tests/curvature/test_chess_steps.py:338`,
+`tests/curvature/test_drift_null.py:546`); this one did not, and that is the
+whole difference between a defect caught in a day and one that lived two
+commits.
+
+**The second instance, in the diagnosis of the first.** A shell check written
+while investigating this exact defect read
+
+```
+python -m ceqjepa.t_length 2>&1 | tail -3; echo "exit=$?"
+```
+
+and reported `exit=0` — the exit status of `tail`. The module had aborted. The
+same law that the module broke was broken again by the tool used to examine it,
+within the hour.
+
+**The third instance.** A test file whose subject was absent called
+`pytest.skip(..., allow_module_level=True)` and reported `1 skipped in 0.24s`,
+exit status **5**, on every machine but the one that staged the subject. Eight
+red checks reported as a suite with nothing to say.
+
+**Rule.** Assert `returncode == 0` **and** the terminal banner; either half alone
+is satisfiable by a run that failed, and both planted negatives belong in the
+test. Never read an exit status through a pipe. A missing subject, a missing
+corpus, a missing fixture: fail with the reason named. Kin to `V-6` (the branch
+under test never ran) — `V-6` is a branch going unexecuted inside a green test,
+`L-SURFACE` is a whole suite going unexecuted behind a green-looking line.
