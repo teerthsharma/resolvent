@@ -2233,3 +2233,71 @@ either asserts.** Counting nodes is not coverage; only reading what each one ass
 the other side of the discipline — there, the object *predicted* was narrower than the
 object claimed; here, the object *asserted* is. In both, the gap is invisible precisely
 because the statement is true.
+
+---
+
+### P-12. A provenance gate that asserts equality to a hand-edited literal
+
+`ceqjepa/t_length.py` carried `HEAD_COMMIT = "c9a9434"` and `demo()` asserted
+the working tree was at that commit. The module was **added** at `e3d56cb`,
+whose parent is `c9a9434`, so the equality never once held. Every one of the 21
+value-binding tests in `tests/curvature/test_t_length.py` routes through
+`demo()`, so the suite reported `21 failed, 13 passed in 5.53s` and had never
+executed a single comparison. With the gate removed the same suite reads
+`34 passed in 323.88s` and every published number reproduces — the pin was
+concealing no drift in the measurements, only the absence of any check on them.
+
+**Why it is not P-1 or P-3.** Those are numbers without a producer and claims
+never retracted. Here the producer exists, is correct, and is switched off by
+its own provenance line. The comment above the constant read *"Pinned, then
+VERIFIED at run time"*, and the failure output printed
+`PROVENANCE commit c9a9434 (git says 391a2d0) ... -- both verified, not copied`
+**before** raising. A reader skimming output sees the word `PROVENANCE` and two
+commits; a reader skimming CI sees 21 red tests and reads them as a known
+dispute rather than as 21 checks that have never run once. Both surfaces look
+instrumented.
+
+**The mechanism, in one line.** A guard whose precondition must be hand-edited
+on every commit is a guard that is *off by default*, and the edit is invisible
+to review because forgetting it produces no diff.
+
+**Rule.** A provenance constant records **where a number was measured**; it is
+never asserted equal to HEAD. Drift is reported, never fatal. Gate only on what
+cannot be true by accident — that git resolved a commit at all, that the value
+recomputes. Bumping such a literal to the current commit is not a repair: it
+re-arms the identical trap for the next commit. If a check must be edited to
+keep passing, delete the check and bind the claim to a recomputation instead.
+
+### V-27. A null that changes more than the variable under test
+
+`tests/curvature/test_pi_jepa_assignment_work.py` (untracked, written during a
+house round) tests whether a per-coordinate corner assignment carries
+information by permuting the beta vector and re-scoring: assigned `0.6881`
+against an ensemble of twelve permutations reading min `0.5171`, median
+`0.7317`, max `0.8371`, with 5 of 12 at or below assigned. The assertion text
+says *"permutations of the SAME betas"*, and the corner multiset **is**
+invariant. But two of the nine coordinates are refusals, refused coordinates are
+dropped from the read, and replaying the ensemble at its own seed shows
+**12 of 12 permutations relocate both refusals**. So every row of the null also
+re-selects which 7 of 9 encoder coordinates the read sees. The null varies
+corner assignment *and* column selection; the arrangement space with refusals
+pinned is `C(7,4) = 35` and is never sampled at all, while 12 of 1260 total
+arrangements are.
+
+**Why it survives review.** The invariant the author checked — the multiset of
+betas — is real, is stated in the assertion, and holds. Nothing in the failure
+message is false. The confound lives in a quantity the test never names, and it
+is introduced by the refusal mechanism, which is elsewhere a virtue of this
+codebase.
+
+**Rule.** A null differs from the treatment in **exactly one** variable, and the
+test asserts the others are fixed across every draw, not just in expectation.
+Where a refusal, mask or dropout changes what the instrument reads, that
+selection is a second variable: pin it, or sample it deliberately and report
+both ensembles. State the size of the space and how much of it was sampled --
+`12 of 1260` and `0 of 35` are the numbers that expose this, and neither was
+printed.
+
+**Kin.** `V-3` (the assertion is an algebraic identity of your own
+construction), inverted: there the comparison could not fail, here it cannot
+isolate. Both read as rigorous because the sentence they assert is true.
