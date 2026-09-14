@@ -285,3 +285,75 @@ imaginary part is exactly 0.0 at every width tested, and the shipped mask never
 fires.
 
 Next: attack the 9-dim projection with the encoding pinned to ordinal.
+
+## P3 CORRECTION and the projection's acquittal, 2026-09-14 (producer ratio 313/313)
+
+**Two claims recorded above are wrong and are corrected here.**
+
+**"Training never helps" was measured at a collapsed width.** The collapse is a
+HIDDEN-WIDTH threshold, not a property of the corpus or the objective:
+
+| hidden | outcome | erank_min |
+|---|---|---|
+| 128 | survives 1,500 steps | 1.5369977235209193 |
+| 256 | survives 1,500 steps | 1.9238083034849818 |
+| 512 | refuses at step 45 | sd 5.7238e-02 |
+| 1024 | refuses at step 13 | sd 1.8131e-02, erank 1.4530 of 9 |
+
+Only `hidden` varies across that sweep, so the corpus is exonerated. The
+non-firing contrast recorded earlier differs from the bed in **three** places,
+not two: corpus, hidden width *and* observation encoding. At hidden 256, where
+the fit is a real 1,500 steps rather than thirteen and a traceback, **training
+helps**: `enc9` +0.6279 against its untrained +0.5663, `read7` +0.3422 against
++0.1919, encoder max|dw| 0.5756, no refusal. Every future trained number on this
+bed is taken at hidden 256.
+
+**The 1024 to 9 projection is an innocent bystander.** All four candidates are
+killed, each by its own measurement. *Width:* `raw7` zero-padded to nine columns
+scores +0.8901038547930719, bit-identical to `raw7` and above the bar, so nine
+coordinates carry the whole label. *Information:* `enc9` reconstructs the six
+ordinal board coordinates at R2 0.9752 to 0.9916 with zero float32 collisions,
+and those reconstructions read +0.7105 against +0.4583 taken off `enc9`
+directly. *Training:* above. *Context:* the encoder never had any, since the
+1024-wide tap is **bit-identical under fifteen different context plies**, max
+abs difference 0.0.
+
+What is left is the **basis**. An orthogonal rotation costs `embed6` -0.1413 and
+`raw7` -0.2500 but `enc9` only -0.0044, because `enc9` is already generic and
+has nothing left to rotate away. Sixteen random 1024 to 9 draws of the same
+`hid` average +0.5439 and +0.5740 by family; the shipped draw at +0.4583 sits
+below all sixteen. The width sweep climbs monotonically (+0.4583 at 9, +0.7221
+at 32, +0.8276 at 256) and never reaches the bar. That is not a capacity curve,
+since capacity saturates at 7, but the count of axis-aligned directions a tree
+can use.
+
+**Where the loss is irreversible: the read.** It reconstructs the six board
+coordinates at R2 0.9182, 0.9105, **0.1487, 0.1329**, 0.7213, 0.7414, and
+coordinates 2 and 3 are the white queen's file and rank, the piece the committor
+turns on. Re-reading from those reconstructions recovers nothing (+0.2596)
+against +0.7105 by the same route from `enc9`. Mechanism: the read is a 16-ply
+**mean**, with five of its seven columns explained by the plain unweighted mean
+at R2 0.9962 to 0.9980 and adding ply 15 changing nothing, and a mean blurs the
+queen because she moves 0.6923 squares per ply against the white king's 0.0810.
+
+**This bed cannot reward an aggregating encoder, and that is measured.** `q` at
+ply 15 is a function of the ply-15 *position*, so the walk is Markov and the
+prefix is conditionally independent of the label. `CausalEncoder` at matched
+parameter count, varying only which positions a query may see: aggregation
+**costs** 0.0810 at `enc9`, prefix +0.2692 against self-span +0.3503. The 16-ply
+mean alone scores +0.2978 against ply 15's +0.8851, and concatenating them costs
+0.0377. Moving the label to ply 19, the horizon the family actually predicts,
+does not rescue it. P1's PASS on the i.i.d. EMA bed is not in question; its sign
+flips on this target, which is exactly the limit its own entry names.
+
+**Next round does not widen the latent and does not give the encoder context**,
+both measured dead ends here. It attacks the read's blur, on a target that is not
+Markov in the ply-15 position.
+
+Limits: one bed, one endgame, one reader family, skill stated for the
+gradient-boosted reader only. The draw ensemble is eight seeds per family, so
+"below all sixteen" is an order statistic, not a p-value. The recovery route uses
+label-free board coordinates the encoder cannot access, so it is a ceiling on
+what the representation carries rather than a shippable probe. The two RED tests
+binding this round live in the session scratchpad and are **not** in the tree.
+The pre-registered bar was not edited and remains RED.
