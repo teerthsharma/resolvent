@@ -9,7 +9,8 @@
 <h1 align="center">resolvent</h1>
 
 <p align="center">
-  <b>One causal attention head with three switches. Softmax attention, linear attention and the exact path product of a Markov chain are three settings of it, proved in Lean 4 and matched bitwise in code.</b><br/>
+  <b>Softmax attention and Markov path composition are the same operator.</b><br/>
+  <span>One causal head, three switches. Softmax attention, linear attention and the exact path product of a Markov chain are settings of it &mdash; proved in Lean 4, matched bitwise in code.</span><br/>
   <i>Invented by <a href="https://teerthsharma.vercel.app/">Teerth Sharma</a></i><br/>
   <sub><a href="mailto:teerths57@gmail.com">teerths57@gmail.com</a> · <a href="https://github.com/teerthsharma/resolvent">github.com/teerthsharma/resolvent</a></sub>
 </p>
@@ -100,6 +101,21 @@ Z_i  = Σ_{j≤i} |G_ij| · exp(qk · q_i·k_j)          the row normalizer
 | linear attention | 0 | 0 | on | no normalizer |
 | exact path product | 0 | any | off | `W = G` |
 
+### What each switch decides
+
+There is no single word for this head because there is no single axis. The
+three switches are independent, and each one turns off a different faculty:
+
+| switch | off | on | what it decides |
+|---|---|---|---|
+| `qk` | `W` ignores content | dot-product logits | **whether positions are compared at all.** With `qk` off the head is pure structure, and the content path is gone. |
+| `g` | `G ≡ 1` | path product `∏ m_k e^{iθ_k}` | **whether values compose along a path.** A gate at zero closes the path exactly; Lean proves no prefix scan in the logit can do that, because `exp(C_i − C_j)` is never zero. |
+| `β` | `β = 0`, no normalizer | `β = 1`, rows sum to 1 | **whether the read is a mean or a total.** The read carries `N^(1−β)` in the token count, so `β = 1` is intensive and `β = 0` is extensive &mdash; the vocabulary `ceqjepa/pi_assign.py` uses for its own verdicts. |
+
+`β` is a separate axis from the Hodge **grade** of section 3, which is what the
+read is *about* (nodes are grade 0, edge flows grade 1). `β` is how it
+normalises. Conflating the two is the most common way to misread the family.
+
 Each claim below is proved in Lean and checked in code:
 
 | Lean theorem | what it proves | code check |
@@ -109,6 +125,30 @@ Each claim below is proved in Lean and checked in code:
 | `gate_zero_beta_zero_is_linear_attention` | with the gate off, `β` alone decides softmax-class membership | `tests/arm_smprime/test_arm_smprime.py::test_bind3_beta_decides_softmax_class_membership_by_row_sum` |
 | `no_prefix_scan_represents_a_zero_gate` | `exp(C_i − C_j)` is never zero, so no prefix scan `C` represents a closed gate, and the path product does | `tests/arm_smprime/test_arm_smprime.py::test_no_prefix_scan_represents_bedm_hop_and_the_product_route_does` |
 | `Asink_computes_chain` | a causal softmax head reproduces a chain's label exactly, for every gate with `a_k ≠ 1` | `tests/arm_pl/test_arm_pl.py::test_bind2_the_oracle_setting_reproduces_the_chain_label` |
+
+### What each one can reach
+
+Columns are the operators **as defined in the corner table above**, not a survey
+of the literature: gated and hybrid variants of linear attention exist and are
+not what this table scores. Every tick has a proof or a test behind it, named in
+the last column. The final row is the one that is not yet earned.
+
+| capability | softmax | linear | resolvent today | planned | evidence for the tick |
+|---|:--:|:--:|:--:|:--:|---|
+| rows sum to one (intensive read) | ✓ | ✗ | **✓** | | `beta = 1` corner, bitwise against causal softmax, max abs `0.000e+00` |
+| no normalizer (extensive read) | ✗ | ✓ | **✓** | | `beta = 0` corner, bitwise |
+| both, as settings of **one** head | ✗ | ✗ | **✓** | | `three_corners_containment` |
+| a gate that closes **exactly** | ✗ | ✗ | **✓** | | `no_prefix_scan_represents_a_zero_gate`: `exp(C_i - C_j)` is never zero; the path product reaches it |
+| exact path product of a Markov chain | ✗ | ✗ | **✓** | | path-product corner, `qk` off, bitwise |
+| which outcome is reached **first**, in closed form | ✗ | ✗ | **✓** | | committor by one triangular solve, max abs `4.441e-16` |
+| exact `do(a)` as a rank-1 edit | ✗ | ✗ | **✓** | | Sherman-Morrison arm, `ceqjepa/hf/` |
+| refuses when a counterfactual is undefined | ✗ | ✗ | **✓** | | 100.00% sensitivity, 100.00% specificity, 138 + 262 cases |
+| edge flows with curl (grade 1) | ✗ | ✗ | **✓** | | pure curl left unrepresented by every node-level model, share `1.0000` |
+| corners proved in a proof assistant | ✗ | ✗ | **✓** | | 134 theorems + 41 lemmas, 0 `sorry` |
+| **beats a trivial baseline at next-state prediction** | ✗ | ✗ | **✗** | **planned** | not earned. [docs/PI_JEPA_KAGGLE_CARD.md](docs/PI_JEPA_KAGGLE_CARD.md), [docs/COMPONENT_LEDGER.md](docs/COMPONENT_LEDGER.md) |
+
+Everything above the last row says what the operator can **represent**. The last
+row says what it can **predict**, and it is open. That gap is the programme.
 
 The theorems live in `lean/CEQ/V16Domain.lean` and `lean/CEQ/V15Fork.lean`;
 `ceq/arm_pl.py` is the float64 counterpart of `V15Fork.lean`. The whole proof
@@ -228,6 +268,8 @@ built.
 | Smoothing the Sherman–Morrison denominator with a teleport kept the solve safe but shrank the interventional signal. | Refusal as a decision rather than a smoothing: the three-way UNDEFINED / NULL / DEFINED verdict in section 3. |
 | A raw `grep` miscounted the Lean proofs in both directions. | `scripts/lean_count.py`, which must count a planted file correctly before it counts the tree. |
 | An absence proof (`git log -S` across all refs) began finding the audit's own recordings. | Every absence search now ships with a control symbol the same search must find (`docs/canon/CORRECTIONS.md`, row C5). |
+| The per-coordinate corner rule `β = 1 − α` assigned each latent coordinate its own corner from a measured exponent. On the encoder that exponent is zero by construction; on a null that enumerates all 35 arrangements with the refused coordinates pinned, the assignment ranked 21st; and on the value axis `α` moves with the `β` it is measured at, at slope `−1.0027`, so `β = 1 − α` reduces to `0 = 1 − α₀` and has no solution. | [docs/CORNER_RULE_RETIREMENT.md](docs/CORNER_RULE_RETIREMENT.md), and the three laws in [MISTAKES.md](MISTAKES.md) that the round paid for: **L-PROSE** (a number in prose carries its producer, and a report publishes its bound-over-reported ratio), **L-NULL** (a permutation names everything it varies and everything it pins), **L-SURFACE** (a check that prints and then aborts is a failed check). |
+| A GPU run scored the model against human moves and lost to a zero-parameter heuristic. The deeper defect was the metric: top-1 next move is next-token prediction, which the project's own north star rules out in favour of the next state toward equilibrium. | [docs/PI_JEPA_KAGGLE_CARD.md](docs/PI_JEPA_KAGGLE_CARD.md), which opens on the heuristic winning, and [docs/COMPONENT_LEDGER.md](docs/COMPONENT_LEDGER.md), which gates joint training on each component clearing its own bar and fixes two columns every future run carries: a frozen-random arm, and a trivial baseline on the real target. |
 
 The full record, with every number, is in [docs/FAILS.md](docs/FAILS.md),
 [MISTAKES.md](MISTAKES.md) and [STRUCK.md](STRUCK.md).
