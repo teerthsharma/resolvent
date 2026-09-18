@@ -272,3 +272,20 @@ def test_calibration_catches_a_lambda_that_never_moves(monkeypatch):
                       alpha=0.05, beta=0.05)
     assert cal["truncated"] == 1.0, cal
     assert cal["accept_h0"] == 0.0 and cal["accept_h1"] == 0.0, cal
+
+
+# ==========================================================================
+# 5. THE DEPENDENCE - the SPRT is reusable without torch (issue #3)
+# ==========================================================================
+
+def test_importing_the_sprt_does_not_load_torch():
+    """`Sprt`, `expected_n` and `calibrate` are pure Python, so a consumer must
+    not take a torch dependency for them. Run in a fresh interpreter, because
+    this test process has torch loaded already. Fails against the module as it
+    stood before issue #3, whose top level ran `import torch` to pin a thread
+    count nothing in it used."""
+    import subprocess
+    probe = "import sys, scale.sprt; print('torch' in sys.modules)"
+    out = subprocess.run([sys.executable, "-c", probe], cwd=ROOT,
+                         capture_output=True, text=True, check=True)
+    assert out.stdout.strip() == "False", out.stdout + out.stderr

@@ -106,18 +106,14 @@ At (alpha, beta) = (0.05, 0.05) both thresholds reduce to +-log(19), because
 G8. The stopping decision is two comparisons of a sum against a constant. No
 product enters it, so the `lo*hi` underflow class cannot reach the boundary.
 
-NO THREAD DEPENDENCE. Nothing here calls BLAS; the simulation is pure Python
-integer and float arithmetic. `torch.set_num_threads(2)` is set anyway so that
-this file, and not its launcher, is the authority on the matter.
+NO THREAD DEPENDENCE, AND NO TORCH. Nothing here calls BLAS; the simulation is
+pure Python integer and float arithmetic, so the module imports only the
+standard library and a consumer of `Sprt` takes no torch dependency (issue #3).
 """
 from __future__ import annotations
 
 import math
 import random
-
-import torch
-
-torch.set_num_threads(2)                       # pinned HERE, not by the launcher
 
 # ---------------------------------------------------------------------------
 # THE PRE-REGISTERED CONSTANTS. Immutable once the first fresh draw lands.
