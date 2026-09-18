@@ -1,5 +1,12 @@
 """Quantal-response (logit Nash) equilibrium as the source of a token's stance.
 
+STATUS: RETIRED AS A STANCE, KEPT AS AN INSTRUMENT (issue #2). Both kill
+conditions in `tests/w7/test_w7_nash.py` fired on 5/5 training seeds: OOD NRMSE
+5.2888 +- 0.6041 against the learned signed stance's 2.7333 +- 1.0235, and
+4.6142 with both known defects repaired. The fixed point below is a genuine
+equilibrium; it does not buy composition. Table and producer: docs/FAILS.md,
+section 3.
+
 THE PROBLEM THIS ADDRESSES. The signed path sum measured a real tier ladder --
 attention 5.8198, APPNP 4.2107, signed 2.6151 OOD NRMSE over 5 seeds -- and
 failed the bar that matters: every arm sat ABOVE 1.0, worse than predicting the
@@ -61,7 +68,7 @@ def safe_tau(m: torch.Tensor, margin: float = 1.25) -> float:
     Lipschitz constant of `s -> sigmoid((Ms+b)/tau)` is `||M||_2 / (4 tau)`, since
     `sigmoid'` is bounded by 1/4. Below this the equilibrium need not be unique.
     """
-    return margin * float(torch.linalg.matrix_norm(m, ord=2).max()) / 4.0
+    return margin * float(torch.linalg.matrix_norm(m.detach(), ord=2).max()) / 4.0
 
 
 def qre_stance(m: torch.Tensor, b: torch.Tensor, tau: float = DEFAULT_TAU,
@@ -85,7 +92,7 @@ def qre_stance(m: torch.Tensor, b: torch.Tensor, tau: float = DEFAULT_TAU,
     s = torch.full(b.shape, 0.5, dtype=b.dtype, device=b.device)
     for _ in range(iters):
         nxt = step(s)
-        done = float((nxt - s).abs().max()) < tol
+        done = float((nxt - s).detach().abs().max()) < tol
         s = nxt
         if done:
             break

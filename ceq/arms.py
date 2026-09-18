@@ -52,9 +52,6 @@ class Arm(nn.Module):
         self.wq = nn.Linear(d, d, bias=False)
         self.wk = nn.Linear(d, d, bias=False)
         self.readout = nn.Linear(d, 1)
-        # nash needs one extra vector for the game bias; +33 params on 2625 is
-        # 1.3%, inside the 10% matched-capacity tolerance the tests enforce.
-        self.wb = nn.Linear(d, 1, bias=False) if kind == "nash" else None
 
     def n_params(self) -> int:
         return sum(p.numel() for p in self.parameters())

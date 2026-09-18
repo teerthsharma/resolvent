@@ -272,7 +272,7 @@ Every self-check in this repository carries a planted negative, a case that
 must fail and is seen to fail, so a passing check shows the instrument can
 tell the difference. The project also keeps its own error record in the open:
 
-- **[MISTAKES.md](MISTAKES.md)** names 66 failure mechanisms the project has
+- **[MISTAKES.md](MISTAKES.md)** names 74 failure mechanisms the project has
   hit, each with the instance, the rule and the check that stops it recurring.
 - **[STRUCK.md](STRUCK.md)** lists 12 withdrawn constants, rendered from a
   registry the test suite enforces.
@@ -280,7 +280,7 @@ tell the difference. The project also keeps its own error record in the open:
   commands that do not run clean yet, and open questions.
 
 ```bash
-grep -oE '\b[VPMD]-[0-9]+[a-z]?\b' MISTAKES.md | sort -u | wc -l   # 66
+grep -oE '\b[VPMD]-[0-9]+[a-z]?\b' MISTAKES.md | sort -u | wc -l   # 74
 grep -c '^| `' STRUCK.md                                          # 12
 ```
 

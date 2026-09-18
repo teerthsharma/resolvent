@@ -193,6 +193,33 @@ returned "no."
   because the teleport is row-stochastic so committor rows still sum to 1.
   See `ceqjepa/beds/gridworld.py:119-140`.
 
+- **The logit-Nash stance, `ceq/nash.py` (GitHub issue #2).** Claim on trial: a
+  stance solved as a quantal-response equilibrium composes two sign flips seen
+  only separately, where the learned stance of the `signed` arm does not.
+  **DEAD on both pre-registered kill conditions, 5/5 seeds, in every
+  configuration.** OOD NRMSE on W7's held-out composition, corpus seed 0,
+  training seeds 0-4, 400 steps, from `python scripts/nash_repairs.py`:
+
+  | arm | mean ± sd | range | beats `signed` | below 1.0 |
+  |---|---|---|---|---|
+  | `signed`, the learned stance | 2.7333 ± 1.0235 | 1.6122 – 3.9058 | — | 0/5 |
+  | `nash` as shipped | 5.2888 ± 0.6041 | 4.6051 – 6.2479 | 0/5 | 0/5 |
+  | + learned game bias | 5.0808 ± 0.3683 | 4.6539 – 5.6255 | 0/5 | 0/5 |
+  | + per-example `tau` | 4.8480 ± 0.7695 | 3.9224 – 5.4408 | 0/5 | 0/5 |
+  | + both | 4.6142 ± 0.7440 | 3.6929 – 5.2668 | 0/5 | 0/5 |
+
+  The two repairs are the arm's two defects known before the run, each with its
+  fix already stated: the learned game bias `ceq/arms.py` built and never read
+  (MISTAKES.md P-4, second instance; now deleted), and the batch-shared
+  temperature that `tests/deimos/test_deimos_r9_iteration1.py` measured at 2.2×
+  the median per-example value. Together they close 26% of the gap to `signed`
+  and win no seed. The issue's single run put the gap at 38%; over five seeds the shipped
+  arm is 93% worse, and its best seed is worse than the learned stance's worst.
+  The equilibrium machinery itself is sound (the seven structural tests pass: a
+  genuine fixed point, non-affine at every probe radius, signed, L1-bounded by
+  `rho`, nilpotent), so the module stays as an instrument and the two kill tests
+  are `xfail(strict=True)`, which fails the run the day either bar is earned.
+
 ---
 
 ## 4. Known defects not yet fixed
@@ -276,9 +303,9 @@ Claims with no producer located, stated as such rather than silently dropped.
 FAILS.md is the front door, not the whole house. Detail lives in dedicated,
 machine-checked ledgers:
 
-- **[MISTAKES.md](../MISTAKES.md)** — the failure-taxonomy proper: 66 failure
-  mechanisms across four classes (V — vacuous controls, 27; P — provenance
-  failures, 11; M — measurement failures, 21; D — design-level failures, 7),
+- **[MISTAKES.md](../MISTAKES.md)** — the failure-taxonomy proper: 74 failure
+  mechanisms across four classes (V — vacuous controls, 30; P — provenance
+  failures, 16; M — measurement failures, 21; D — design-level failures, 7),
   each with an instance, a rule, and a check.
 - **[STRUCK.md](../STRUCK.md)** — every constant this project has withdrawn:
   12 entries, rendered from a module-level registry in

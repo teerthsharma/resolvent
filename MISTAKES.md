@@ -336,6 +336,16 @@ graphs — scaffolding code exists as stubs."* `git grep -i tonnetz` hits
 `BOARD.md` twice and `DONE.md` once. **Zero `.py` anywhere.** No U2
 contact-graph builder exists (FINDINGS B2).
 
+Second instance, in code rather than prose. At `88a7388`, `ceq/arms.py` built
+`self.wb = nn.Linear(d, 1, bias=False)` for the nash arm under the comment
+*"nash needs one extra vector for the game bias"*, and `n_params()` counted its
+32 parameters toward the matched-capacity test. `grep -rn "\.wb\b"` over `ceq/`,
+`tests/`, `scale/` and `scripts/` finds **0 consumers**: `nash_operator` never
+took a bias and used `value.mean(-1)`, so the parameter trained nothing from
+the repository's first commit, `dfc1591`, onward. Reading it moves the 5-seed OOD mean from 5.2888 to 5.0808 and wins no
+seed (GitHub issue #2, `docs/FAILS.md` section 3). A parameter is scaffolding
+too: counted, it is a claim that it does something.
+
 **Rule.** An existence claim about this codebase is a `GUESS` until grepped.
 This is where invented paths and flags come from. Paste the grep, with its hit
 count, beside the claim.
