@@ -1,6 +1,6 @@
 # V16_CALIBRATION — the calibration column
 
-**D-CALIB**, `CEQ_V16_CONTRACT.md:251`, owner SATURN. Opened at R12 it.1.
+**D-CALIB**, `99777ab:CEQ_V16_CONTRACT.md:251`, owner SATURN. Opened at R12 it.1.
 
 L-SIGN requires a calibration column *kept across rounds*: statements checked,
 how many were wrong, and the **sign** of the error. This file is that column. It
@@ -16,8 +16,8 @@ from and the audit of the transcription is itself recorded (§3).
 
 | round | statements checked | wrong | sign of error | notes |
 |---|---|---|---|---|
-| R11 | **9** as filed (`V15_LEDGER.md:649-661`); **≥ 17** with the confirmations that table omits | **9 of 9** filed rows; **10 of ≥ 17** with confirmations | **7 `+`, 1 `−`, 1 unsigned.** Direction holds: `7/8` signed rows optimistic, one-sided sign test `p = 0.0352` | The filed prose says *"six wrong, all six optimistic."* Both halves are off — see §2 and §3. Denominator was chosen after the audit and lists no confirmations, so `9/9` is a count, not a rate |
-| R12 | — | — | — | to be filed at it.38 (`CEQ_V16_CONTRACT.md:298`); every R12 prediction and counter scored, both halves |
+| R11 | **9** as filed (`99777ab:V15_LEDGER.md:649-661`); **≥ 17** with the confirmations that table omits | **9 of 9** filed rows; **10 of ≥ 17** with confirmations | **7 `+`, 1 `−`, 1 unsigned.** Direction holds: `7/8` signed rows optimistic, one-sided sign test `p = 0.0352` | The filed prose says *"six wrong, all six optimistic."* Both halves are off — see §2 and §3. Denominator was chosen after the audit and lists no confirmations, so `9/9` is a count, not a rate |
+| R12 | — | — | — | to be filed at it.38 (`99777ab:CEQ_V16_CONTRACT.md:298`); every R12 prediction and counter scored, both halves |
 
 **Sign convention, fixed here and used in every later round.**
 
@@ -32,20 +32,20 @@ from and the audit of the transcription is itself recorded (§3).
 
 ## 2. R11's NINE, ROW BY ROW
 
-Source of the list: `V15_LEDGER.md:649-661`. Each row was verified against its
+Source of the list: `99777ab:V15_LEDGER.md:649-661`. Each row was verified against its
 producing document, not against the ledger's summary.
 
 | # | claimed | where | measured | producing file | sign |
 |---|---|---|---|---|---|
-| 1 | *"`g == 0` gives bitwise standard attention (Lean #5)"* | `CEQ_V15_CONTRACT.md:139-140` | **FALSE**, three independent routes. At `g ≡ 0` the unnormalized causal hop's row `i` sums to `i + 1`, not `1` | `lean/CEQ/V15.lean:221` `gate_zero_row_sum`; `MISTAKES.md` [[V-23]], [[V-24]] | **+** |
-| 2 | *"two-thirds of the pre-v13 section-5 strikes were `[V]`-as-theorem"* | `CEQ_V15_CONTRACT.md:54` | **`4/40 = 10%`.** 44 rows, 4 record a claim that held, 40 genuine strikes, 4 are `[V]`-as-theorem. `66.7 / 10 = 6.67×` overstated | `MISTAKES.md` [[P-10]]; `attic/workdonenew.pre-v13.md:160-211`; `V15_N2_SATURN.md` Task B | **+** |
-| 3 | *"the sizing model replaced by the calibrated one everywhere it was cited"* — filed as it.1-4 work | `CEQ_V15_CONTRACT.md:251` | **Already satisfied.** `ceq/sizing.py` was calibrated (`C_OPERATOR = 3.9` at `:48`; `bf16_autocast = (2.2, 3.4)` at `:68`). All 5 flagged sites are the *record* of the repair, not uses of the stale model | `MISTAKES.md` [[M-17]]; `V15_N2B_SIZING_CITATIONS.md:25-33`, `:139` | **−** |
-| 4 | *"Ceiling approximately 38 from the current 22 percent."* | `CEQ_V15_CONTRACT.md:285` | **No live producer anywhere in the tree.** The two `22%` hits in the repo are prose about a gap and a different quantity. Baseline under RUL-7 is `0 of 39 = 0%` | `V15_CONTRACT_ARITHMETIC_AUDIT.md:225-253` (A-4) | **+** |
-| 5 | *"TOST retires to `N >= 23` runs"* | `CEQ_V15_CONTRACT.md:140` | **Achieved power at `N = 23` is `0.0669`.** The CI first *fits* at `N = 23` (confirmed) but power `0.80` first arrives at `N = 70` (confirmed). The clause licenses a verdict from a design with `6.7%` power | `V15_CONTRACT_ARITHMETIC_AUDIT.md:76`, `:126` (A-1) | **+** |
-| 6 | `H-hat = alpha-hat + 1/2` as BED-K's recovery target | `CEQ_V15_CONTRACT.md` PART III | **Shipped without its stationarity hypothesis.** ARFIMA(0,d,0) is stationary and invertible iff `\|d\| < 0.5`, so the relation's domain is `α ∈ (0, 0.5)`, `H ∈ (0.5, 1.0)`. The contract gives a lower bound on `H` and no upper bound | `V15_CONTRACT_ARITHMETIC_AUDIT.md:192-200` (A-3) | **+** |
-| 7 | `[RUN: best first-order recurrence 0.990]` on the delay bed | `CEQ_V15_CONTRACT.md:180` | **Matches neither bed at any tested `H`.** Delay bed `R² = −0.000166` (`−0.000170` in the independent N4 run, agreeing to rounding); power-law bed `0.604` at `H = 0.75`, `0.755` at `H = 0.9` | `V15_JUPITER3_KERNEL.md:363`, `:371`, `:387`, `:556`; `V15_N4_BEDK.md` | **+** |
-| 8 | PART III *"attention-native, scan-blind"* vs PART IV R3 *"scan-only ≥ 0.95, attention near 0"* | `CEQ_V15_CONTRACT.md:180` and PART IV | **Mutually inverse.** The arms are transposed; whichever number the cell returns, one section is confirmed and the other refuted, so the registration constrains nothing. PART III is right for the delay bed; PART IV is the inverse of the truth | `MISTAKES.md` [[M-20]]; `V15_JUPITER3_KERNEL.md` | **none** |
-| 9 | *"Carriers conserve mass to `1e-12`"* | `CEQ_V15_CONTRACT.md:125` | **False for the contract's own central carrier.** §S-M's "ONE unnormalized causal hop" has row `i` summing to `i + 1` at `g ≡ 0`. Under the narrow reading it is true and silently omits the one carrier a reader needs | `MISTAKES.md` [[V-23]]; `lean/CEQ/V15.lean:221` | **+** |
+| 1 | *"`g == 0` gives bitwise standard attention (Lean #5)"* | `99777ab:CEQ_V15_CONTRACT.md:139-140` | **FALSE**, three independent routes. At `g ≡ 0` the unnormalized causal hop's row `i` sums to `i + 1`, not `1` | `lean/CEQ/V15.lean:221` `gate_zero_row_sum`; `MISTAKES.md` [[V-23]], [[V-24]] | **+** |
+| 2 | *"two-thirds of the pre-v13 section-5 strikes were `[V]`-as-theorem"* | `99777ab:CEQ_V15_CONTRACT.md:54` | **`4/40 = 10%`.** 44 rows, 4 record a claim that held, 40 genuine strikes, 4 are `[V]`-as-theorem. `66.7 / 10 = 6.67×` overstated | `MISTAKES.md` [[P-10]]; `99777ab:attic/workdonenew.pre-v13.md:160-211`; `99777ab:V15_N2_SATURN.md` Task B | **+** |
+| 3 | *"the sizing model replaced by the calibrated one everywhere it was cited"* — filed as it.1-4 work | `99777ab:CEQ_V15_CONTRACT.md:251` | **Already satisfied.** `ceq/sizing.py` was calibrated (`C_OPERATOR = 3.9` at `:48`; `bf16_autocast = (2.2, 3.4)` at `:68`). All 5 flagged sites are the *record* of the repair, not uses of the stale model | `MISTAKES.md` [[M-17]]; `99777ab:V15_N2B_SIZING_CITATIONS.md:25-33`, `:139` | **−** |
+| 4 | *"Ceiling approximately 38 from the current 22 percent."* | `99777ab:CEQ_V15_CONTRACT.md:285` | **No live producer anywhere in the tree.** The two `22%` hits in the repo are prose about a gap and a different quantity. Baseline under RUL-7 is `0 of 39 = 0%` | `99777ab:V15_CONTRACT_ARITHMETIC_AUDIT.md:225-253` (A-4) | **+** |
+| 5 | *"TOST retires to `N >= 23` runs"* | `99777ab:CEQ_V15_CONTRACT.md:140` | **Achieved power at `N = 23` is `0.0669`.** The CI first *fits* at `N = 23` (confirmed) but power `0.80` first arrives at `N = 70` (confirmed). The clause licenses a verdict from a design with `6.7%` power | `99777ab:V15_CONTRACT_ARITHMETIC_AUDIT.md:76`, `:126` (A-1) | **+** |
+| 6 | `H-hat = alpha-hat + 1/2` as BED-K's recovery target | `99777ab:CEQ_V15_CONTRACT.md` PART III | **Shipped without its stationarity hypothesis.** ARFIMA(0,d,0) is stationary and invertible iff `\|d\| < 0.5`, so the relation's domain is `α ∈ (0, 0.5)`, `H ∈ (0.5, 1.0)`. The contract gives a lower bound on `H` and no upper bound | `99777ab:V15_CONTRACT_ARITHMETIC_AUDIT.md:192-200` (A-3) | **+** |
+| 7 | `[RUN: best first-order recurrence 0.990]` on the delay bed | `99777ab:CEQ_V15_CONTRACT.md:180` | **Matches neither bed at any tested `H`.** Delay bed `R² = −0.000166` (`−0.000170` in the independent N4 run, agreeing to rounding); power-law bed `0.604` at `H = 0.75`, `0.755` at `H = 0.9` | `99777ab:V15_JUPITER3_KERNEL.md:363`, `:371`, `:387`, `:556`; `99777ab:V15_N4_BEDK.md` | **+** |
+| 8 | PART III *"attention-native, scan-blind"* vs PART IV R3 *"scan-only ≥ 0.95, attention near 0"* | `99777ab:CEQ_V15_CONTRACT.md:180` and PART IV | **Mutually inverse.** The arms are transposed; whichever number the cell returns, one section is confirmed and the other refuted, so the registration constrains nothing. PART III is right for the delay bed; PART IV is the inverse of the truth | `MISTAKES.md` [[M-20]]; `99777ab:V15_JUPITER3_KERNEL.md` | **none** |
+| 9 | *"Carriers conserve mass to `1e-12`"* | `99777ab:CEQ_V15_CONTRACT.md:125` | **False for the contract's own central carrier.** §S-M's "ONE unnormalized causal hop" has row `i` summing to `i + 1` at `g ≡ 0`. Under the narrow reading it is true and silently omits the one carrier a reader needs | `MISTAKES.md` [[V-23]]; `lean/CEQ/V15.lean:221` | **+** |
 
 **Totals: 9 rows, 9 adverse verdicts, 7 `+`, 1 `−`, 1 unsigned.**
 
@@ -58,7 +58,7 @@ where the filed summary and the sources disagree. Three findings.
 
 ### 3.1 The count is not six. The table's own nine rows are nine adverse verdicts.
 
-`V15_LEDGER.md:649` reads *"Nine contract statements checked; six were wrong"* —
+`99777ab:V15_LEDGER.md:649` reads *"Nine contract statements checked; six were wrong"* —
 and then lists **nine** rows, every one of which carries an adverse verdict. The
 R11 round entry (`MISTAKES.md`) enumerates six of them: rows 1, 2, 3, 4, 5 and 9.
 Rows **6** (`H = α + ½` without `|d| < ½`), **7** (`[RUN: 0.990]` matching neither
@@ -111,7 +111,7 @@ rate, because nothing fixed the set of statements *before* the checking started
 and the table lists no statement that survived.
 
 One sub-census in R11 does have a stated denominator with confirmations in it —
-`V15_CONTRACT_ARITHMETIC_AUDIT.md`, which re-derived each claim numerically:
+`99777ab:V15_CONTRACT_ARITHMETIC_AUDIT.md`, which re-derived each claim numerically:
 
 | sub-census | checked | wrong | rate | Wilson 95% |
 |---|---|---|---|---|
@@ -123,7 +123,7 @@ The union is `≥` because no node kept a full list of what it checked and passe
 The audit also found a **tenth** contract defect the ledger's nine omits — `A-2`,
 the Grünwald–Letnikov weights `w_k = (−1)^k C(−α, k)` returning **NaN** at the
 contract's own `α = 1` bind under `scipy.special.binom`
-(`V15_CONTRACT_ARITHMETIC_AUDIT.md:152-190`). So the nine is a selection from a
+(`99777ab:V15_CONTRACT_ARITHMETIC_AUDIT.md:152-190`). So the nine is a selection from a
 larger set, in both directions.
 
 **For R12 this is a procedural requirement, not a caveat:** the set of statements
@@ -141,7 +141,7 @@ a sentiment and deliberately not a multiplier.
 
 ### D-CALIB-1 — the counter is the point estimate.
 
-Where `CEQ_V16_CONTRACT.md` files a prediction and a counter-prediction, **a node
+Where `99777ab:CEQ_V16_CONTRACT.md` files a prediction and a counter-prediction, **a node
 reading the pair before data treats the counter as the expected outcome and the
 prediction as the optimistic tail.** The counter is by construction the
 pessimistic half, and `7 of 8` signed R11 misses were optimistic.
@@ -161,7 +161,7 @@ its counter (`composed loses on (a), matches on (b)`).
 
 ### D-CALIB-2 — a prediction with no counter is not read at all.
 
-Already a KILL (`CEQ_V16_CONTRACT.md`: *"Prediction without counter-prediction ⇒
+Already a KILL (`99777ab:CEQ_V16_CONTRACT.md`: *"Prediction without counter-prediction ⇒
 not filed"*). The operational form: a node that encounters a bare directional
 prediction in a contract clause does **not** apply a discount to it and does not
 plan against it. It reports the missing counter and blocks the cell. Discounting
@@ -197,7 +197,7 @@ seed, which reads on the divergence story before the loss curve does.
 At it.38 R12 files its own row: statements checked (**listed before the checking
 began**), wrong, sign per statement, and the sign test. Confirmations are listed
 beside findings. The author's counters are scored as well as his predictions
-(`CEQ_V16_CONTRACT.md:297`, VENUS's forecasting record) — a counter that was also
+(`99777ab:CEQ_V16_CONTRACT.md:297`, VENUS's forecasting record) — a counter that was also
 wrong, and wrong pessimistically, is a `−` and goes in the column. Two rounds
 gives a second point; it does not give a size, and D-CALIB-3 stands until the
 column has enough rows to estimate one.
@@ -226,7 +226,7 @@ Collected once, here.
   assigned them a direction, so their contribution to `7/8` is this file's
   reading, not R11's finding.
 - **The `−0.000166` / `−0.000170` pair in row 7 is two runs, not a discrepancy.**
-  `V15_JUPITER3_KERNEL.md:371` states the reproduction explicitly and uses the
+  `99777ab:V15_JUPITER3_KERNEL.md:371` states the reproduction explicitly and uses the
   agreement as the check that both numbers came from the same corpus.
-- **`house-events.jsonl` was not consulted.** It is never grepped; nothing in
+- **`99777ab:house-events.jsonl` was not consulted.** It is never grepped; nothing in
   this file needed the ledger, so no `scale/ledger.py` parse was run.

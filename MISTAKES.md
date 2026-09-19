@@ -9,12 +9,12 @@ here so the rules are not abstract advice.
 Four classes, in the order they cost the most:
 
 - **V — vacuous controls.** A control that cannot fail. Fourteen were struck
-  across five authors (`STATE.md:53`, `done7.md:175-179`), and the count is a
+  across five authors (`99777ab:STATE.md:53`, `4f619f2:done7.md:175-179`), and the count is a
   floor, not a total: two later items were each independently labelled "the
-  fifteenth" (`DONE.md:1228`, `PIVOT_EXCLUSION_FALSIFIER.md:50-52`). A vacuous
+  fifteenth" (`99777ab:DONE.md:1228`, `99777ab:PIVOT_EXCLUSION_FALSIFIER.md:50-52`). A vacuous
   control is worse than no control because it reads as evidence — one of them
   stood two iterations and was used to strike a colleague's evidence
-  (`done7.md:187-188`).
+  (`4f619f2:done7.md:187-188`).
 - **P — provenance failures.** A number with no live producer, or a claim that
   was true once.
 - **M — measurement failures.** The instrument measured something, but not the
@@ -59,7 +59,7 @@ the entry. Bound here by
 
 A greedy must-fire used a hand-built 2×2 example and could not fire, *"because
 on two points the monotone assignment is forced, so greedy and optimal coincide
-for every such instance"* (`CHECKLIST.md:805`). The repair was drawn instances
+for every such instance"* (`99777ab:CHECKLIST.md:805`). The repair was drawn instances
 with a count: greedy strictly worse in **111/400** random (4,9) instances. The
 same line names the pattern: *"A hand-built minimal example is exactly where a
 control goes vacuous, because the smallest case is usually where right and wrong
@@ -72,7 +72,7 @@ both 0 and n — the repair above asserted `>50/400` as well as `never beats`.
 ### V-3. The assertion is an algebraic identity of your own construction
 
 `pooled < tail` passed **400/400 strict and could not fail**, because pooling
-minimises over a superset (`DONE.md:4775`, `CHECKLIST.md:889`). The same defect
+minimises over a superset (`99777ab:DONE.md:4775`, `99777ab:CHECKLIST.md:889`). The same defect
 sat in the bar itself: `calibrate_bar`'s original clauses 1 and 3 were
 `nrmse(y.mean(), y)`, which is 1.0 by the definition of NRMSE, and
 `nrmse(oracle(x,f,p), y)`, which is `nrmse(t, t)` because `make_batch` *returns*
@@ -89,7 +89,7 @@ definitional in the output, the way `predict_the_mean` now is.
 
 Row 0 of `tril(-1)` sums to exactly 0.0, giving NaN, which makes `torch.equal`
 return False — so the control fired, for a reason unrelated to the property
-under test (`CHECKLIST.md:851`).
+under test (`99777ab:CHECKLIST.md:851`).
 
 **Rule.** A control that fires must be made to state *why*. Assert the
 intermediate quantity, not just the final boolean, and check the fixture for
@@ -99,7 +99,7 @@ degenerate rows before reading a False as a finding.
 
 A genesis assertion sliced a digest to zero characters and asserted a label was
 present in the result: `X in ""[:0] + X` reduces to `X in "" + X`, true for
-every input (`CHECKLIST.md:1096`, `done7.md:181-183`).
+every input (`99777ab:CHECKLIST.md:1096`, `4f619f2:done7.md:181-183`).
 
 **Rule.** Any assertion built from string or tensor slicing must be run once
 against an input it should REJECT. If you cannot construct that input, the
@@ -108,7 +108,7 @@ assertion has no rejection region.
 ### V-6. The branch under test never ran
 
 An overflow test read `left_cone=False, converged=True, steps=1` — *"settled
-before it could drift, branch never ran"* (`CHECKLIST.md:1133`).
+before it could drift, branch never ran"* (`99777ab:CHECKLIST.md:1133`).
 
 **Rule.** Instrument the branch. Assert that the code path under test executed —
 a counter, a recorded step count, a sentinel — in the same test that asserts its
@@ -119,12 +119,12 @@ outcome. Green from a branch that did not run is indistinguishable from green.
 `journal_scan` read only top-level keys of records that nest their payload under
 `value`. It reported *"zero readings above 1.0"*; the truth was **22 of 68**. It
 *"shipped, stood two iterations, and was used to strike a colleague's
-evidence"* (`done7.md:186-188`). The repair made it a mechanism rather than a
+evidence"* (`4f619f2:done7.md:186-188`). The repair made it a mechanism rather than a
 discipline: the caller supplies a witness that must be recovered, and a scan
 whose witness is missing **raises** instead of returning an empty list
-(`done7.md:194-200`). That repair's own tests then found two bugs in it, the
+(`4f619f2:done7.md:194-200`). That repair's own tests then found two bugs in it, the
 worse being that the witness was checked against paths *walked* rather than
-paths the *selector keeps* — so a transposed selector passed. As `done7.md:199`
+paths the *selector keeps* — so a transposed selector passed. As `4f619f2:done7.md:199`
 puts it: a witness that cannot fail on a wrong selector is precisely the disease
 it was written to cure.
 
@@ -137,15 +137,15 @@ the search is required to find.
 
 The fourteenth strike. `SupercriticalDense_S2Rips_256`: all 256 nodes in **one
 component**, 0 isolated, base rate 1.000000, label **sd 0.0**, NRMSE undefined;
-drew 1024 same / 0 different (`CHECKLIST.md:1247`). A one-component graph cannot
+drew 1024 same / 0 different (`99777ab:CHECKLIST.md:1247`). A one-component graph cannot
 answer "same component?" any way but yes. It *"sat in the control half of a
 must-fire"* and was relayed into a dispatch as *"that contrast IS the control"*
 without checking the pass-case could produce a non-constant label
-(`CHECKLIST.md:1248`).
+(`99777ab:CHECKLIST.md:1248`).
 
 **Rule.** Check the PASS half's label is non-degenerate before the FAIL half is
 interesting: `sd > 0`, `0 < frac < 1`, both classes non-empty, discard count
-reported. `BOARD.md:269` now requires every zero to be paired with exactly that
+reported. `99777ab:BOARD.md:269` now requires every zero to be paired with exactly that
 triple. NRMSE is normalised by `std(y)`, so a constant label does not produce a
 bad number — it produces `nan`, and `float('nan') >= 1.0` is False in Python, so
 a bare threshold lets it through as a silent pass (`scale/m3_capability.py`
@@ -155,8 +155,8 @@ a bare threshold lets it through as a silent pass (`scale/m3_capability.py`
 
 `exclude=(0,)` writes `-inf` into a top-k that had selected `s-1` in **0 of 32**
 draws, so the exclusion removed a candidate that was never chosen.
-`PIVOT_EXCLUSION_FALSIFIER.md:50-52`: *"Shipping it as the fix would be a change
-that moves no number, reported as a fix."* `STATE.md:194` states the type
+`99777ab:PIVOT_EXCLUSION_FALSIFIER.md:50-52`: *"Shipping it as the fix would be a change
+that moves no number, reported as a fix."* `99777ab:STATE.md:194` states the type
 exactly: *"a vacuous control shipped as the repair for a vacuous-control
 problem."*
 
@@ -167,8 +167,8 @@ regardless of how correct the reasoning behind it was.
 
 ### V-10. A gate whose threshold is satisfied by construction
 
-`κ_emp ≤ κ_cert` passed **30/30 because `0.1 ≤ 1.0`** (`DONE.md:5535`,
-`CHECKLIST.md:773`). The gate compared a quantity that lives near 0.1 against a
+`κ_emp ≤ κ_cert` passed **30/30 because `0.1 ≤ 1.0`** (`99777ab:DONE.md:5535`,
+`99777ab:CHECKLIST.md:773`). The gate compared a quantity that lives near 0.1 against a
 bound that sits at 1.0.
 
 **Rule.** Compute the control's expected value before you run it. If the
@@ -179,7 +179,7 @@ rejection region and is vacuous before it executes.
 
 An admissibility rule read *"admissible where the third mass is below ~0.115"*
 while characterising masses `0.02–0.2` against a **measured median of
-`1.2454e-20`** — *"vacuously satisfied at every real draw"* (`CHECKLIST.md:989`).
+`1.2454e-20`** — *"vacuously satisfied at every real draw"* (`99777ab:CHECKLIST.md:989`).
 
 **Rule.** State a precondition against the measured distribution of the quantity
 it constrains, not against its theoretical range. Print the median and the
@@ -189,7 +189,7 @@ not a precondition.
 ### V-12. A single absorbing target makes the label constant
 
 *"A single absorbing target makes the label constant to `1.11e-14`"*
-(`DONE.md:1228`) — caught pre-dispatch and labelled the fifteenth vacuous
+(`99777ab:DONE.md:1228`) — caught pre-dispatch and labelled the fifteenth vacuous
 control.
 
 **Rule.** Trace the label back to the structure that generates it. If one
@@ -240,10 +240,10 @@ need the count, not just the zero.
 The one that survives rule 5 being obeyed, which is what makes it a new type
 rather than another instance of V-7.
 
-`scale/chase_struck_coverage.py` scans the tree for struck constants asserted
+`99777ab:scale/chase_struck_coverage.py` scans the tree for struck constants asserted
 without their strike marker. It **ships a must-fire control**, it runs it before
 anything else, and `main` refuses to proceed if the control does not fire
-(`scale/chase_struck_coverage.py:120-122`). The control plants a struck number in a paragraph and requires one
+(`99777ab:scale/chase_struck_coverage.py:120-122`). The control plants a struck number in a paragraph and requires one
 hit, then plants the same number carrying a strike marker and requires zero — a
 planted positive AND a non-degenerate negative half, exactly what V-7's rule
 asks for.
@@ -258,7 +258,7 @@ which reads as "no struck constant is asserted anywhere uncovered" and is in
 fact "no path was looked at".
 
 **The mechanism, and it is one line.** `control()` calls `scan_text(...)` on a
-literal string (`scale/chase_struck_coverage.py:107-110`). `collect_targets()` is never on that path. So the
+literal string (`99777ab:scale/chase_struck_coverage.py:107-110`). `collect_targets()` is never on that path. So the
 control exercised the **matcher** and never the **reach**, and the two halves of
 the instrument fail independently. Rule 5 said "a planted positive on identical
 instances"; the planting was on identical *text* and not on an identical *path
@@ -289,7 +289,7 @@ class of defect keeps coming from.
 ### P-1. A number with no live producer
 
 `5.4944e-13` existed only in a code comment and in prose. The real probe reads
-`7.307e-13`–`8.405e-13` at `--tol 1e-15 --steps 400` (`CHECKLIST.md:665`), and
+`7.307e-13`–`8.405e-13` at `--tol 1e-15 --steps 400` (`99777ab:CHECKLIST.md:665`), and
 building the registry to catch it *"then caught two more unmarked assertions I
 had missed"* (same line).
 
@@ -301,7 +301,7 @@ does not enter a verdict.
 
 The IMPACT gate figures — truncation k2 `0.3243`, decoder local `1.0039` vs
 planted `0.06738`, sign gate degrade `0.8793` CI `[0.8300, 0.9145]` — appear in
-commit `74e5590`'s body and in `DONE.md`. **Nothing on disk reproduces them**:
+commit `74e5590`'s body and in `99777ab:DONE.md`. **Nothing on disk reproduces them**:
 no results file, no test, no CLI (FINDINGS B5). The module's own docstring
 forbade the registration that happened anyway: `scale/impact.py:23` says
 *"Register as IMPACT in M3_TASKS only past all four gates + planted controls"*,
@@ -315,11 +315,11 @@ that the gate was run. A commit message is not a producer.
 
 ### P-3. A stale claim never retracted
 
-`LOOP_PROMPT.md:53-55` calls iterating the representation *"the one live
+`4f619f2:LOOP_PROMPT.md:53-55` calls iterating the representation *"the one live
 direction that has not yet been measured here"* while
 `scale/foreman_looped.py` is a complete 305-line instrument with a bind battery
 and an in-file pre-registration, and `results/foreman_looped.jsonl` holds 2 of 6
-required cells (FINDINGS B1). `PIVOT_EXCLUSION_FALSIFIER.md:156` says
+required cells (FINDINGS B1). `4f619f2:PIVOT_EXCLUSION_FALSIFIER.md:156` says
 `settled_plus` *"was still running when this was written"*; it finished, and
 `results/etask_k5e_plus.txt` records `settled_plus 0.956787` — also worse. The
 document was never updated (FINDINGS B3).
@@ -331,9 +331,9 @@ lands the number.
 
 ### P-4. Claimed scaffolding that does not exist
 
-`BOARD.md:288` says *"U2 mujoco contact-graph DSU n≥1024 and U3 Tonnetz lattice
+`4f619f2:BOARD.md:288` says *"U2 mujoco contact-graph DSU n≥1024 and U3 Tonnetz lattice
 graphs — scaffolding code exists as stubs."* `git grep -i tonnetz` hits
-`BOARD.md` twice and `DONE.md` once. **Zero `.py` anywhere.** No U2
+`99777ab:BOARD.md` twice and `99777ab:DONE.md` once. **Zero `.py` anywhere.** No U2
 contact-graph builder exists (FINDINGS B2).
 
 Second instance, in code rather than prose. At `88a7388`, `ceq/arms.py` built
@@ -375,7 +375,7 @@ docstring names is cheaper than the audit that finds them missing.
 
 `scale/m3_quintuple.py:335` cites `arm_s.pivots_of (line 97)`; it is at `106`.
 `scale/m3_flops.py:44-84` cites nine stale lines.
-`M3_QUINTUPLE_PREREGISTERED_READING.md:38` cites `:236`; it is `256-257`
+`4f619f2:M3_QUINTUPLE_PREREGISTERED_READING.md:38` cites `:236`; it is `256-257`
 (FINDINGS B7).
 
 **Rule.** Cite the symbol, not the line: `arm_s.pivots_of`, not
@@ -385,7 +385,7 @@ commit it was read at. **Do not trust in-tree docstring line numbers.**
 ### P-7. Vocabulary with no referent
 
 `§U`, `X₂₁`, `X₂₂`, "contract v10.1", "amendment v10.4" appear across
-`BOARD.md:282,284,307` and `DONE.md`. `LOOP_PROMPT.md` has 17 headings and
+`99777ab:BOARD.md:282,284,307` and `99777ab:DONE.md`. `99777ab:LOOP_PROMPT.md` has 17 headings and
 **none is §U**; no R10 plan or criteria exists (FINDINGS B6).
 
 **Rule.** A section reference names a heading that can be grepped in the
@@ -446,7 +446,7 @@ spent out of the step budget: at `e2_consequence`'s label sd `0.061984` the
 control read `trained_two_feature = 2.446645` at the shipped 150 steps and the
 bar printed BROKEN. That reads as *"no arm can pass this task"* when what was
 measured is *"the control was handed the label in the wrong units."*
-`STATE.md:73-76` diagnosed it and left it, so `e2_consequence` — the one rung
+`99777ab:STATE.md:73-76` diagnosed it and left it, so `e2_consequence` — the one rung
 the theory actually predicts on, `t* = 31` against a hop budget of 2 — has
 **never been trained** (FINDINGS A7).
 
@@ -474,13 +474,13 @@ already written down correctly; copy it.
 ### M-3. Pilot spread taken as the realised spread
 
 The pilot was **2.18× optimistic**: realised `sd 0.109199` against a piloted
-`0.050146` (`STATE.md:201`, `DONE.md:339`).
+`0.050146` (`99777ab:STATE.md:201`, `99777ab:DONE.md:339`).
 
 **It is not confined to variance, and it recurs.** The same failure in the cost
 domain: `settledrow/settled` measures **`3.48` at `s = 16`** but **`7.43`–
 `11.19` at `s = 64`**, against a flat FLOP ratio of `1.700` — so scaling a pilot
 by the FLOP model understates the bill by `2×`–`3×`
-(`.superpowers/sdd/polymorphic-drifting-squirrel/neptune-report-it2.md:110-118`).
+(`99777ab:.superpowers/sdd/polymorphic-drifting-squirrel/neptune-report-it2.md:110-118`).
 The reason it belongs here rather than in a footnote is that it very nearly
 shipped: *"It nearly caught me: the `s=64` projection was drafted from the pilot
 ratio before being measured."*
@@ -505,7 +505,7 @@ noticed it.
 ### M-4. A single-seed bootstrap interval read as seed variability
 
 *"Disjoint one-seed bootstrap intervals rule out RESAMPLING noise, not SEED
-noise"* (`DONE.md:187`, `STATE.md:211`, which records `sd 0.064106` for
+noise"* (`99777ab:DONE.md:187`, `99777ab:STATE.md:211`, which records `sd 0.064106` for
 settled).
 
 **Rule.** Name the source of variation the interval covers, in the same
@@ -516,7 +516,7 @@ part of the number.
 ### M-5. A process that cannot cross its own threshold
 
 The old `t=5` e-process unit had a ceiling of `3.80169140625` against a
-`THRESHOLD` of `40.0` — *"cannot cross"* (`CHECKLIST.md:1264`, `STATE.md:20`).
+`THRESHOLD` of `40.0` — *"cannot cross"* (`99777ab:CHECKLIST.md:1264`, `99777ab:STATE.md:20`).
 The unit was structurally incapable of producing the verdict it was run to
 produce, whatever the data said.
 
@@ -529,7 +529,7 @@ gates to whole instruments.
 
 `scale/foreman_looped.py`'s `falsifier()` returns `complete: False` and refuses
 a verdict on a partial table; the table holds **2 of 6** cells (FINDINGS D1).
-The CUDA lane holds **22 of 60** (FINDINGS D2). `STATE.md:21` still reads "RUN
+The CUDA lane holds **22 of 60** (FINDINGS D2). `99777ab:STATE.md:21` still reads "RUN
 IN FLIGHT" for the CPU lane, which is complete (FINDINGS D3).
 
 **Rule.** The instrument reports its own completeness and refuses to render a
@@ -538,10 +538,10 @@ artefact, not in a person's memory of how far the run got.
 
 ### M-7. A pre-registration with a hole
 
-`E_LADDER_PREREGISTERED_READING.md` §6 rows A–G all conditioned on `settled`
+`99777ab:E_LADDER_PREREGISTERED_READING.md` §6 rows A–G all conditioned on `settled`
 winning somewhere, so *"a settled arm that only ever loses fell through all of
 them."* Row H was added at 13:35, before the numbers, with the timestamp
-disclosed (`CHECKLIST.md:1268`).
+disclosed (`99777ab:CHECKLIST.md:1268`).
 
 **Rule.** Rows must be **exhaustive before the data**. Enumerate the outcome
 space and check every branch of `verdict()` has a matching row and every row a
@@ -555,17 +555,17 @@ so disclose it.
 
 Two independently sourced instances, in one round, in two different documents:
 
-* `STATE.md:21` prices a rung at roughly 77 min, which is about **twelve
+* `99777ab:STATE.md:21` prices a rung at roughly 77 min, which is about **twelve
   `settled` cells** — but a rung is 5 `settled` + 5 `twin` + 5 `softmax`. The
   four-rung ladder measures **`6,047 s = 1.68 h` against its `~5 h`**:
   over-priced **`3.0×`** (`results/r9_pricing.md:175`, and M22 at
-  `.superpowers/sdd/polymorphic-drifting-squirrel/mercury-report.md:49`).
+  `99777ab:.superpowers/sdd/polymorphic-drifting-squirrel/mercury-report.md:49`).
 * `results/r9_systems_gate.md:196` prices ten units as ten `settled` cells —
   the `29.6 h` of P-8. Re-priced at per-arm rates it is **`15.5 h`**, and the
   headline ratio moves from `34×` to `13.5×`.
 
 Mercury records this as the **third** instance of the type in a single round
-(`.superpowers/sdd/polymorphic-drifting-squirrel/mercury-report-it2.md:216`).
+(`99777ab:.superpowers/sdd/polymorphic-drifting-squirrel/mercury-report-it2.md:216`).
 The two above are the ones with a document and a number attached here; the third
 is the subject of his own §4.4 and is not separately cited in this entry, so
 treat "three" as his count and "two" as what this file evidences.
@@ -592,14 +592,14 @@ one arm has been timed, the estimate covers that one arm and says so.
 M-5 in the inference domain, and it is general to every reading in this
 repository rather than to one instrument. At **N = 5 seeds the verdict is a sign
 test.** Measured on the shipped `contrast()` over 1,000 samples
-(`.superpowers/sdd/polymorphic-drifting-squirrel/progress.md:1013-1021`):
+(`99777ab:.superpowers/sdd/polymorphic-drifting-squirrel/progress.md:1013-1021`):
 unanimity excludes zero **385/385**; a 4–1 split excludes it 20–44 % of the
 time; a 3–2 split 0–3.7 %. So *"the CI excludes zero"* at five seeds is very
 nearly *"all five seeds agreed"* — and **the finest achievable two-sided p at
 N = 5 is `0.0625`, not the `0.05` the project quotes.** The design cannot
 produce the significance level it reports, whatever the data say. This covers
 **every 5-seed reading here, including the standing `+0.108437` headline**
-(`CHECKLIST.md:1168`, `ceq/hf_artifact/README.md:39`).
+(`99777ab:CHECKLIST.md:1168`, `ceq/hf_artifact/README.md:39`).
 
 **Half the repair is already in the tree, which is what makes the rule
 concrete.** Both of those rows already print the seed-agreement count beside the
@@ -624,7 +624,7 @@ distribution. Reproduced from `results/m3_quintuple_v2.jsonl`:
     argmax  - softmax   [-0.134115, -0.102204]  [-0.134115, -0.102786]
 
 The first column is what `ceq/hf_artifact/README.md` ships; the second is what
-the root `README.md` and `CHECKLIST.md` print. **Neither number is wrong. No
+the root `README.md` and `99777ab:CHECKLIST.md` print. **Neither number is wrong. No
 number is orphaned.** `tests/cameron/test_published_intervals_have_producers.py`
 binds both, and rejects the mis-pairing.
 
@@ -643,7 +643,7 @@ not fix.** The card's contrast table names its estimator in the column header
 and carries, beside it, the journal records the row was computed from — the
 keys read from the journal rather than reconstructed from the arm and the
 geometry, which would be a second copy of a grammar that has one parser.
-`tests/cameron/test_headline_ci_provenance.py` recomputes both resampling rules
+`99777ab:tests/cameron/test_headline_ci_provenance.py` recomputes both resampling rules
 from the journal and pins each published endpoint to the estimator its own
 document claims.
 
@@ -699,8 +699,8 @@ source had moved and the checker could not see it, because a blank line is in
 range. That hole is closed in
 `tests/cameron/test_mistakes_citations_resolve.py`. One softmax layer is **provably Bayes-optimal on exactly that shape**,
 where linear attention provably cannot be (`arXiv:2410.01537`, ICLR 2025;
-conceded at `LOOP_PROMPT.md:34-38`) (FINDINGS C2). The repo already knew:
-`STATE.md` items 27-28 record *"every task here asks for a point prediction —
+conceded at `99777ab:LOOP_PROMPT.md:34-38`) (FINDINGS C2). The repo already knew:
+`99777ab:STATE.md` items 27-28 record *"every task here asks for a point prediction —
 which is exactly the single-location problem where one softmax layer is provably
 Bayes-optimal"*, and the novelty claim is *"UNTESTED because no vector-valued
 label exists here"* (FINDINGS C3). The waste is visible in the code:
@@ -722,7 +722,7 @@ voids the `PUBLISHED_SOFTMAX_8192` reproduction gate at
 The `e3_t*` oracle is the arm's own resolvent, so `settled − softmax` is **VOID**
 on that ladder; only `settled − twin` is creditable, and it reads `−0.002959`,
 CI `[−0.042903, +0.031557]` (`results/e_ladder_reading.txt`,
-`LOOP_PROMPT.md §1.7d`, FINDINGS C5). `E1` is the same shape and the registry
+`9593f4a:LOOP_PROMPT.md §1.7d`, FINDINGS C5). `E1` is the same shape and the registry
 says so at `scale/negation_scope.py:1033-1041`: its label is the signed path sum,
 *"the object the ceq resolvent computes, so an arm built on that resolvent is
 being asked to reproduce its own forward"* — kept only as a must-fire, crediting
@@ -738,8 +738,8 @@ model to copy.
 
 Rank was retired as a difficulty column with a proof: `z' = a·z + b` is a
 2-dimensional linear recursion, so ring-automaton rank is **exactly 2 across the
-whole E3 ladder while `t*` runs 1 → 63** (`CHECKLIST.md:1292`,
-`STATE.md:78-79`). A constant column spanning the entire difficulty range
+whole E3 ladder while `t*` runs 1 → 63** (`99777ab:CHECKLIST.md:1292`,
+`99777ab:STATE.md:78-79`). A constant column spanning the entire difficulty range
 describes nothing.
 
 **Rule.** A metadata column claimed as a difficulty axis must be computed across
@@ -819,7 +819,7 @@ powerless against a rule that CONDEMNS, because a condemning rule's failure mode
 is firing on the innocent, and every planted positive it fires on is a success.
 
 Round 10 catalogued nineteen instances of one mechanism — a rule keying on a
-proxy instead of the property it names (`R10_MECHANISM.md`). **Seven of the first
+proxy instead of the property it names (`99777ab:R10_MECHANISM.md`). **Seven of the first
 fourteen condemn rather than excuse**, and a planted positive cannot catch any of
 them: they fired enthusiastically, on the wrong thing.
 
@@ -872,7 +872,7 @@ the self-check. The rule has an unstated precondition, and round 10 paid for it.
 Two imports, both principled, one sound:
 
 **Sound.** `rips_gate.FAIL_BAR = 0.9`, defined as "the decoder is doing
-essentially nothing" and already used in that role at `impact.py:1121`, imported
+essentially nothing" and already used in that role at `scale/impact.py:1121`, imported
 for a within-split probe clause. Same quantity, same role, same units.
 
 **Not sound.** `delta = 0.5`, taken from the chain task's
@@ -931,7 +931,7 @@ constrains only the paths routed through it, and every inline re-implementation 
 a path that is not.
 
 The shape generalises past this repo. A repaired instrument reads as a repaired
-repository, which is instance 23 in `R10_MECHANISM.md`; this is that instance in
+repository, which is instance 23 in `99777ab:R10_MECHANISM.md`; this is that instance in
 its narrowest form, where the bypass is a single dictionary comprehension and the
 author is the person who wrote the guard.
 
@@ -953,7 +953,7 @@ the completed wave at lines 16-26 — `t*=2 n=32768 eval NRMSE=0.874834 [LEARNS]
 `607.8s`, `t*=32 ... 1.006066 [NO READING] boot[1.0033,1.0094] 680.0s`, then
 `WAVE B COMPLETE` — and the first `bc: command not found` appears at line 30,
 after it. The journals corroborate: `results/r10_it8_capacity_softmax_t8.jsonl`
-and `..._t32.jsonl` each carry `n_train=32768` cells at seeds 0 through 7, a
+and `results/r10_it8_capacity_softmax_t32.jsonl` each carry `n_train=32768` cells at seeds 0 through 7, a
 complete N=8. The gate spent four hours and twenty-two minutes polling for
 permission to begin work that was already on disk, and appended 43,974 bytes of
 its own error text to the very log that recorded the completion.
@@ -1026,7 +1026,7 @@ literal `unlimited`; prose, `abc`, `sixty` and bare `0` each exit 1 writing no
 state file; `active: false` now halts. The patch lives in
 `plugins/cache/claude-plugins-official/ralph-loop/1.0.0/` and a plugin update
 reverts it, along with an earlier hand patch already present in that cache and
-absent from the marketplace tree. Full account in `V13_RALPH_LOOP_FIX.md`.
+absent from the marketplace tree. Full account in `99777ab:V13_RALPH_LOOP_FIX.md`.
 
 **Check:** after any mount that accepts a bound, read the bound back out of the
 state the machine consults, never out of the request — the request can be
@@ -1095,8 +1095,8 @@ drift as `2.345e-3` across all three cross-thread pairs
 count, picks the count carrying the most distinct seeds, and raises on a
 same-seed same-threads disagreement. `thread_split` reports what was dropped.
 `results/r10_inspector_phase1a.md:25` verified the floor independently and
-marked it CLEAN; `R10_MECHANISM.md:370` already catalogues *misreporting* that
-floor as its own defect; `R10_ITERATION_10.md:142` warns against comparing a
+marked it CLEAN; `99777ab:R10_MECHANISM.md:370` already catalogues *misreporting* that
+floor as its own defect; `99777ab:R10_ITERATION_10.md:142` warns against comparing a
 7e-5 quantity against it "as if they were the same kind of uncertainty".
 
 What survives is narrow and prospective. The equivalence margin
@@ -1105,7 +1105,7 @@ tree, so the thread floor has never been compared against *it*: at
 `t*=2, n=2048` the N=8 seed sd is `0.010101`, giving `Δ_eq = 0.005051`, and the
 `0.002345` floor is `0.464` of that. A margin under roughly `4.7e-3` is smaller
 than twice the reduction-order floor and cannot be defended. Separately,
-`r10_capacity_sweep.py` defaults `--threads` to 8 while the recorded N=8 wave
+`scale/r10_capacity_sweep.py` defaults `--threads` to 8 while the recorded N=8 wave
 ran at 6, so a cell added with default flags will not join the existing spread —
 `by_seed` will silently drop it into the minority thread group rather than
 corrupt the interval, which is the guard working, but the cell is then wasted.
@@ -1391,13 +1391,13 @@ guard belongs in the consumer of the data, not in the producer.
 
 ### P-10. A source's intro was cited as its theorem
 
-`CEQ_V15_CONTRACT.md:51-55` names this class L-EQ and files it under the
+`99777ab:CEQ_V15_CONTRACT.md:51-55` names this class L-EQ and files it under the
 author's own name: the tag `[V]` — page fetched, intro or description matched
 — was treated as license for a load-bearing claim, when the claim required
 the source's theorem read WITH its hypotheses. The contract asserts *"two-
 thirds of the pre-v13 section-5 strikes were `[V]`-as-theorem."*
 
-**The measured fraction is not two-thirds.** `attic/workdonenew.pre-v13.md`
+**The measured fraction is not two-thirds.** `99777ab:attic/workdonenew.pre-v13.md`
 section 5 ("CLAIMS DISPROVED, WITHDRAWN, OR STRUCK", `:160-211`) holds 44
 rows; 4 of them record a claim that held (`:190` 4/4 HELD, `:204` WORKS,
 `:205` CONFIRMED, `:179` ALREADY GUARDED), leaving 40 genuine strikes. Of
@@ -1425,11 +1425,11 @@ misapply), X32's Fisher relation (row's own verdict: "CORRECT THEOREM, wrong
 quantity" — the citation is not at fault), X28c (the cited relation is read
 correctly; the fault is that agreement is then tautological, not that the
 source failed to back the claim). Full row-by-row reasoning in
-`V15_N2_SATURN.md`, Task B.
+`99777ab:V15_N2_SATURN.md`, Task B.
 
 **Check.** Every citation entering a load-bearing statement carries `[V-eq]`
 — the theorem's statement WITH its hypotheses, plus one numeric instance run
-— or it is `[V]` and inadmissible (`CEQ_V15_CONTRACT.md:51-53`, L-EQ).
+— or it is `[V]` and inadmissible (`99777ab:CEQ_V15_CONTRACT.md:51-53`, L-EQ).
 Greppable: `grep -c '\[V-eq\]'` against `grep -c '\[V\]'` on any document
 about to enter a contract; a nonzero `[V]` count on a load-bearing line is a
 blocked commit, not a style note. Before trusting a fetched source, name
@@ -1443,18 +1443,18 @@ The v15 contract's it.1-4 line requires "the sizing model replaced by the
 calibrated one everywhere it was cited". A read-only census was dispatched first
 to enumerate the sites, since nothing can be replaced before it is found. The
 census returned **5 STALE sites across 4 files** and recommended correcting them
-in priority order (`V15_N2B_SIZING_CITATIONS.md:25-33`, `:139`).
+in priority order (`99777ab:V15_N2B_SIZING_CITATIONS.md:25-33`, `:139`).
 
 **None of the five is a use of the uncalibrated model. All five are the record
 that the uncalibrated model was wrong.**
 
 | site | what the line actually is |
 |---|---|
-| `attic/workdonenew.pre-v13.md:185` | the strike row itself — *"6.63× LOW"* — naming `ceq/sizing.py`'s calibrated constants as the fix |
-| `workdonenew.md:275` | the same strike row, carried forward |
-| `CEQ_V15_CONTRACT.md:32` | *"The sizing line was 6.63x low."* — a past-tense historical fact in a WHERE WE ARE census |
-| `V13_CLAIM_AUDIT.md:59` | an audit row whose verdict column reads **CONFIRMED**, evidence `ceq/sizing.py:48,68` |
-| `V13_CLAIM_AUDIT.md:60` | the worked instance, `0.0671` vs `0.4449 GB/layer`, verdict **CONFIRMED** |
+| `99777ab:attic/workdonenew.pre-v13.md:185` | the strike row itself — *"6.63× LOW"* — naming `ceq/sizing.py`'s calibrated constants as the fix |
+| `6aef853:workdonenew.md:275` | the same strike row, carried forward |
+| `99777ab:CEQ_V15_CONTRACT.md:32` | *"The sizing line was 6.63x low."* — a past-tense historical fact in a WHERE WE ARE census |
+| `99777ab:V13_CLAIM_AUDIT.md:59` | an audit row whose verdict column reads **CONFIRMED**, evidence `ceq/sizing.py:48,68` |
+| `99777ab:V13_CLAIM_AUDIT.md:60` | the worked instance, `0.0671` vs `0.4449 GB/layer`, verdict **CONFIRMED** |
 
 The one file that could have held a stale *use* — `ceq/sizing.py` — was already
 calibrated: `C_OPERATOR = 3.9` at `:48`, `DTYPE_MODES['bf16_autocast'] = (2.2,
@@ -1492,7 +1492,7 @@ the defect.
 
 ### M-18. A pre-registered kill-diagnostic whose value the corpus fixes, not the arm
 
-`CEQ_V15_CONTRACT.md` PART IV, R1: *"Kill: bind passes, floor not crossed ⇒ `g`
+`99777ab:CEQ_V15_CONTRACT.md` PART IV, R1: *"Kill: bind passes, floor not crossed ⇒ `g`
 unlearnable at budget — diagnose by linear probe on `log a` (should be
 near-exact), never by a new construction."* The diagnostic is registered before
 the data, which is right; what was never checked is whether it can return two
@@ -1537,7 +1537,7 @@ and no amount of data fixes a parametrization that cannot represent its target.
 > The paragraph above was first written as *"the obstruction is evenness, not
 > information"* full stop, and was read as the mechanism behind the campaign's
 > nine-cell non-crossing census. **That reading was wrong, and the measurement
-> that shows it is in `V15_SATURN2_LEAK_RULING.md`.**
+> that shows it is in `99777ab:V15_SATURN2_LEAK_RULING.md`.**
 >
 > `scale/negation_scope.py` assigns `x[:, :, CH_DRIVE] = a` at `:245` and `:432`
 > and documents it at `:520-522`. **The gate was visible in the input for the
@@ -1606,7 +1606,7 @@ horizon and stop before it, or shadow the orbit and prove the shadowing.
 
 ### P-11. A contract citing its own `[M]`-tagged theorem as settled
 
-`CEQ_V15_CONTRACT.md` §S-C, the conservation census, reads *"carriers conserve
+`99777ab:CEQ_V15_CONTRACT.md` §S-C, the conservation census, reads *"carriers conserve
 mass to 1e-12 (softmax rows 1.000; **replicator by Lean #8**)"*. Lean #8 is
 `replicator_eq_cumsoftmax`. Twenty lines later, in the same document, PART II
 tags it `[M]` — **not proved** — and no such theorem exists anywhere under
@@ -1635,7 +1635,7 @@ consequence as fact. A reference to an unproved item may state an *intention*
 
 ### V-23. A plural claim whose own central member is the counterexample
 
-`CEQ_V15_CONTRACT.md` §S-C opens *"CARRIERS conserve mass to 1e-12"* — plural,
+`99777ab:CEQ_V15_CONTRACT.md` §S-C opens *"CARRIERS conserve mass to 1e-12"* — plural,
 unscoped, no restricting clause — and then names two examples. The contract's own
 §S-M, four sections earlier, introduces its central carrier as **"ONE
 unnormalized causal hop"**. At `g ≡ 0` that carrier's row `i` sums to `i + 1`
@@ -1667,7 +1667,7 @@ nothing failed.
 
 ### V-24. An identity bind whose rejection region is empty
 
-Formulated by the JUPITER-2 node, `V15_JUPITER2_FORK.md` §1, and renumbered here
+Formulated by the JUPITER-2 node, `99777ab:V15_JUPITER2_FORK.md` §1, and renumbered here
 from its proposed V-23, which was taken earlier the same round.
 
 When a refuted parity claim is repaired by adding a branch:
@@ -1732,7 +1732,7 @@ which is what the original clause claimed and what the refutation removed.
 
 ### M-20. A pre-registration that predicts both outcomes, in two sections that never met
 
-`CEQ_V15_CONTRACT.md` registers BED-K's delay bed twice, three sections apart,
+`99777ab:CEQ_V15_CONTRACT.md` registers BED-K's delay bed twice, three sections apart,
 with **opposite** predictions.
 
 PART III, defining the bed:
@@ -1754,7 +1754,7 @@ serves.
 The measurement settles which is right and, separately, kills a third figure:
 a best-case first-order recurrence reads `R² = −0.000166` on the delay bed and
 `0.604` on the power-law bed at the registered `H = 0.75`, rising to `0.755` at
-`H = 0.9` (`V15_JUPITER3_KERNEL.md`). PART III's reading is correct for the delay
+`H = 0.9` (`99777ab:V15_JUPITER3_KERNEL.md`). PART III's reading is correct for the delay
 bed; PART IV's is the inverse of the truth; and `[RUN: 0.990]` matches **neither**
 bed at any tested `H`.
 
@@ -1800,7 +1800,7 @@ The sentence the contract asked for:
 That is true and it is not the whole mechanism. The round's own it.7 reading —
 that the arms failed because `−softplus(Wx)` is monotone while the target
 `log|a|` is even — **is wrong as an explanation of the nine-cell census**, and
-the measurement that kills it is `V15_SATURN2_LEAK_RULING.md`.
+the measurement that kills it is `99777ab:V15_SATURN2_LEAK_RULING.md`.
 
 `scale/negation_scope.py` assigns `x[:, :, CH_DRIVE] = a` at `:245` and `:432`
 and documents it at `:520-522`. **The gate was visible in the input for the whole
@@ -1829,7 +1829,7 @@ instance run. It is filed under the author's name, and the round's first act was
 to count the evidence offered for it.
 
 **The contract asserts two-thirds. The measured fraction is `4/40 = 10%`**
-(`P-10`). Of 44 rows in `attic/workdonenew.pre-v13.md` §5, four record a claim
+(`P-10`). Of 44 rows in `99777ab:attic/workdonenew.pre-v13.md` §5, four record a claim
 that held, leaving 40 strikes; four are `[V]`-as-theorem — Siegmund's ARL₀ on a
 non-i.i.d. null (missing nominal by `24.1×` at `φ̂ = 0.709`), Kantz–Grassberger
 fed `D₀` where the source uses `D₁`, `ρ_P = √2` from the random-*matrix* ensemble
@@ -1841,7 +1841,7 @@ carries `ρ_P = 2` and requires `μ > 0`. So L-EQ's evidence base is smaller tha
 claimed *and* its repairs are further along than claimed.
 
 The law is nonetheless vindicated by its own round: **`H = α + ½` entered v15
-without its `|d| < ½` hypothesis** (`V15_CONTRACT_ARITHMETIC_AUDIT.md` A-3), in
+without its `|d| < ½` hypothesis** (`99777ab:V15_CONTRACT_ARITHMETIC_AUDIT.md` A-3), in
 the document that introduces L-EQ. And `P-11` records the inward form — the
 contract citing its own `[M]`-tagged Lean #8 as settled, with the status column
 three sections away.
@@ -1872,8 +1872,8 @@ grep would pair them.
 
 ### 4. The six author-owned strikes
 
-Located in `STRUCK.md` alone — not in `attic/workdonenew.pre-v13.md` or
-`V13_CLAIM_AUDIT.md`, where the round's reading order assumed. Twelve struck
+Located in `STRUCK.md` alone — not in `99777ab:attic/workdonenew.pre-v13.md` or
+`99777ab:V13_CLAIM_AUDIT.md`, where the round's reading order assumed. Twelve struck
 constants collapse to seven claims; one is instrument-caused (the M2 decay
 exponent, a `floor=1e-6` pipeline artifact); **six are author-owned**: the K1
 live-rows slope, the M2 slope as first reported, two M5 tail-norm fabrications at
@@ -1956,7 +1956,7 @@ regime in which your baseline is optimal, and check your task is not in it**
 
 ## THE THREE R12 LAWS — the entries that pay for them
 
-`CEQ_V16_CONTRACT.md` STANDING LAWS adds **L-DOM**, **L-SIGN** and **L-DIAG**.
+`99777ab:CEQ_V16_CONTRACT.md` STANDING LAWS adds **L-DOM**, **L-SIGN** and **L-DIAG**.
 None is an abstraction: each was bought by one measured R11 failure, and the
 mechanism, the instance and the check are below. Every number here was re-run or
 re-read against its producing file, not copied from a round summary.
@@ -1987,7 +1987,7 @@ a[:, :head + 1] = 0.0
 ```
 
 **The census, run here on BED-M `e3_t2` (`n=2048, s=64, t*=2, seed=0` — the shape
-`V15_ARM_PHASE.md` §8 reads at R1's size):**
+`99777ab:V15_ARM_PHASE.md` §8 reads at R1's size):**
 
 | quantity | measured |
 |---|---|
@@ -2004,12 +2004,12 @@ The last row is the one that decides it, and it is **structural, not sampling**:
 on **no** draw this builder can produce, at any seed, at any size. Overlap is
 1 of 3 on values and exactly 0 on the object the `∀` ranges over.
 
-**The consequence, measured rather than argued.** `V15_ARM_PHASE.md:36` runs the
+**The consequence, measured rather than argued.** `99777ab:V15_ARM_PHASE.md:36` runs the
 label bind on the same band: `|a| = 1` there, so `s_j = log(1 - m) = -inf` and
 `V_j = b_j/0 = ±inf`, and the residual reads **`nan`** — against
 `9.155133597044475e-16` at `s = 8` and `5.2510145522368515e-15` at `s = 64` on
 the open interior, where the hypothesis does hold. The `ε`-sweep is in
-`V15_ARM_PHASE.md:303-308`: `ε = 1e-2 → 1.332268e-15`, `ε = 1e-6 →
+`99777ab:V15_ARM_PHASE.md:303-308`: `ε = 1e-2 → 1.332268e-15`, `ε = 1e-6 →
 2.220446e-15`, `ε = 1e-9 → 2.442491e-15`, **`ε = 0 → nan`**. The identity is
 exact everywhere except at the one value the corpus draws.
 
@@ -2048,8 +2048,8 @@ but not the fraction admitted has not run the check.
 
 *(pays for **L-SIGN**)*
 
-R11 checked nine statements of `CEQ_V15_CONTRACT.md` and every one returned an
-adverse verdict (`V15_LEDGER.md:649-661`; row-by-row provenance and the count
+R11 checked nine statements of `99777ab:CEQ_V15_CONTRACT.md` and every one returned an
+adverse verdict (`99777ab:V15_LEDGER.md:649-661`; row-by-row provenance and the count
 audit in `V16_CALIBRATION.md`). The R11 round entry above enumerates six of them
 and reports them as *"all six erred in the same direction, over-crediting the
 project"*.
@@ -2059,7 +2059,7 @@ measurement supports — the nine read 7 `+`, 1 `-`, 1 unsigned:**
 
 | # | statement | measured | sign |
 |---|---|---|---|
-| 1 | `g ≡ 0` gives bitwise standard attention (`CEQ_V15_CONTRACT.md:139-140`) | row `i` sums to `i + 1` (`lean/CEQ/V15.lean:221` `gate_zero_row_sum`) | **+** |
+| 1 | `g ≡ 0` gives bitwise standard attention (`99777ab:CEQ_V15_CONTRACT.md:139-140`) | row `i` sums to `i + 1` (`lean/CEQ/V15.lean:221` `gate_zero_row_sum`) | **+** |
 | 2 | two-thirds of pre-v13 §5 strikes were `[V]`-as-theorem (`:54`) | `4/40 = 10%`, a `6.67×` overstatement ([[P-10]]) | **+** |
 | 3 | "the sizing model replaced … everywhere it was cited" (`:251`) | already satisfied; all 5 flagged sites are the repair record ([[M-17]]) | **-** |
 | 4 | "the current 22%" baseline | no producer in the tree; the true baseline is `0 of 39` | **+** |
@@ -2096,7 +2096,7 @@ optimistically" are the same event and the second is unmeasurable.
 1. **Every prediction ships a counter-prediction of equal specificity**, filed
    before the data, by the same author, and **both are scored**. Equal
    specificity is the load-bearing clause: *"the crossing shrinks to `≤ 3/8`"* is
-   a counter; *"or it might not work"* is not. `CEQ_V16_CONTRACT.md` KILLS makes
+   a counter; *"or it might not work"* is not. `99777ab:CEQ_V16_CONTRACT.md` KILLS makes
    a bare prediction a blocked filing.
 2. **A calibration column is kept across rounds** — statements checked, wrong,
    sign — with the denominator fixed **before** the audit and confirmations
@@ -2114,7 +2114,7 @@ optimistically" are the same event and the second is unmeasurable.
 mechanism, and the instance is doubled — the prescription and its own prescribed
 replacement failed the same way, mirrored)*
 
-`CEQ_V15_CONTRACT.md` PART IV, R1 prescribes the statistic by name: *"diagnose by
+`99777ab:CEQ_V15_CONTRACT.md` PART IV, R1 prescribes the statistic by name: *"diagnose by
 linear probe on `log a`"*. Two failures follow from that single move.
 
 **Half one — the prescribed statistic is constant on the corpus.** BED-M draws
@@ -2122,12 +2122,12 @@ linear probe on `log a`"*. Two failures follow from that single move.
 `log|a|` is identically `0` on the live band and `-∞` off it. `R²` on a constant
 target has **`SST = 0.000e+00`**; pooled and clamped at `-30` or at `-100`,
 identically, it reads **`3.2466e-04`** against a `d/N` null of `1.22e-04`
-(`V15_VENUS_PREDICTIONS.md:323-325`). The kill condition returns the same value
+(`99777ab:V15_VENUS_PREDICTIONS.md:323-325`). The kill condition returns the same value
 whatever the arm does.
 
 **Half two — so does the replacement `M-18` itself prescribed.** M-18's amendment
 reads *"probe `sign(a_i)` off the arm's gate and report accuracy `p`, which is
-discriminating where `log|a|` is not."* Measured (`V15_R1.md:340-341`):
+discriminating where `log|a|` is not."* Measured (`99777ab:V15_R1.md:340-341`):
 
 | reading | value | 95% CI |
 |---|---|---|
@@ -2140,7 +2140,7 @@ arm spent it going backwards. **The entry that diagnosed a non-discriminating
 diagnostic prescribed a non-discriminating diagnostic, in the same paragraph.**
 That mirroring is what shows the mechanism is not about `log|a|`.
 
-**The sharpest form of the same thing.** `V15_ARM_PHASE.md:432-433` runs the
+**The sharpest form of the same thing.** `99777ab:V15_ARM_PHASE.md:432-433` runs the
 successor instrument on the corpus alone, no arm, at both shapes:
 
 ```
@@ -2160,9 +2160,9 @@ named it:
 | reading | value |
 |---|---|
 | corpus alone, no arm (ceiling) | `1.000000` |
-| zero-step `ArmPL`, 8 seeds (floor) | `0.371583` re-run; `0.371839` published, `V15_R1.md:344` |
+| zero-step `ArmPL`, 8 seeds (floor) | `0.371583` re-run; `0.371839` published, `99777ab:V15_R1.md:344` |
 | zero-step `ArmPhase`, 8 seeds | `0.300689` |
-| **R1 trained** | **`0.699299`**, 95% CI `[0.338436, 1.060162]` (`V15_R1.md:343`) |
+| **R1 trained** | **`0.699299`**, 95% CI `[0.338436, 1.060162]` (`99777ab:V15_R1.md:343`) |
 
 Floor `≈ 0.30-0.37`, trained `0.699299`, ceiling `1.000000`: a trained gain of
 `+0.327460` inside roughly `0.63` of real headroom — against the `sign(a)`
@@ -2194,7 +2194,7 @@ data and admitted only after three readings, all taken before it is trusted:
 
 Only then does the statistic receive its must-fire. Any diagnostic named in a
 contract before those three numbers exist is struck as this class, and
-`CEQ_V16_CONTRACT.md` KILLS carries it verbatim: *"Prescribed statistic in a
+`99777ab:CEQ_V16_CONTRACT.md` KILLS carries it verbatim: *"Prescribed statistic in a
 diagnostic ⇒ M-18 class, struck."*
 
 ### V-26. A marginal assertion standing in for a joint claim
@@ -2379,7 +2379,7 @@ under test is sampled **0 times**.
 **The second instance, and it is the one that costs.** The same family of claim
 appears one layer up. `ceqjepa/t_length.py` reports a 25.3x margin for its
 `assigned-oracle` arm over a learned-beta head at 58 parameters against 60 —
-but that arm is the **literal** `(1.0, 0.0)` in `MASKS` at `t_length.py:300-308`,
+but that arm is the **literal** `(1.0, 0.0)` in `MASKS` at `ceqjepa/t_length.py:300-308`,
 not the assignment rule's output, which enters only through
 `load_measured_mask()`. The measured win is a win for a hand-set two-corner
 mask. Whether the rule selects that mask is untested there, and on the one
@@ -2583,7 +2583,7 @@ receive a gradient — buffers, under this project's own counting rule at
 probe `gradient_finiteness` runs `init="identity"` and asserts only that
 `first_non_finite is None`. **Zero is finite.** A dead gradient passes a
 finiteness check by construction, so the guard's green is evidence that the
-gradient is not NaN and evidence of nothing else. `08_ARCHITECTURE.md:12` had
+gradient is not NaN and evidence of nothing else. `docs/canon/08_ARCHITECTURE.md:12` had
 already declared these two heads buffers at `g ≡ 0`, for the different reason
 that the blend makes them constant; at `g = 1`, where they are supposed to be
 live, nobody checked.
@@ -2691,7 +2691,7 @@ REPEATED.** Seven citations in this tree pin lines in `ceq/arm_phase.py` —
 
 A third surface is reported without a number: `ceq/hf/modeling_ceq.py:439`
 builds the same two heads with `_init_weights` zeroing the biases and `smp_g`
-defaulting to 1.0 via `configuration_ceq.py:71`, which places roughly half of
+defaulting to 1.0 via `ceq/hf/configuration_ceq.py:71`, which places roughly half of
 `clamp(u, 0, 1)` on the *lower* endpoint. Unmeasured, because `transformers`
 does not import in this environment.
 

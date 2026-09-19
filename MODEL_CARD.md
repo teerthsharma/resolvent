@@ -48,7 +48,7 @@ tags:
 > **What is worth reading this repository for:** the negative result, the Lean
 > core as mathematics, and a falsification harness that caught **seventeen** of
 > its own broken instruments — including the one that invalidated its own
-> headline. Full verdict in [`PROGNOSIS.md`](PROGNOSIS.md).
+> headline. Full verdict in [`99777ab:PROGNOSIS.md`](https://github.com/teerthsharma/resolvent/blob/99777ab0f529702c62b49bf05d87a2eea3c116b5/PROGNOSIS.md).
 
 
 ---
@@ -72,7 +72,7 @@ tags:
 
 **Scope, before anything else.** This section describes the **§S-M′ arm** —
 `ceq/arm_smprime.py`, wired into `CEQForCausalLM` as `operator="smprime"`
-(`V17_ARM_WIRING.md`). **That is a different object from the resolvent operator
+(`99777ab:V17_ARM_WIRING.md`). **That is a different object from the resolvent operator
 the rest of this card describes.** No sentence from the sections below transfers
 into this one, and no sentence here transfers out.
 
@@ -91,18 +91,18 @@ CORNERS WITHOUT A BIND AT THE CORNER IT DESCRIBES.**
 - **The parameter counts are NOT equal, and the arm carries MORE.** Arm
   **25,736,232** against control **25,728,000** at `ceq/hf/train.py::DEFAULTS` —
   **+8,232 = +0.03200 %**. A reading favourable to the arm is the one that needs
-  the caveat (`V17_ARM_WIRING.md` §5) `[MEASURED]`.
+  the caveat (`99777ab:V17_ARM_WIRING.md` §5) `[MEASURED]`.
 - **The corner the arm's bind is claimed at is not the corner the LM runs at.**
   The module docstring claims `β = 0, QK-off`; the LM runs at `β = 1, qk = 1,
   g = 1`, which is `ArmSMPrime.__init__`'s own switch initialisation, because
   `qk = 0` deletes the content term exactly and an LM at that corner has no
-  query-key channel (`V17_ARM_WIRING.md` §3, third caveat) `[MEASURED]`.
+  query-key channel (`99777ab:V17_ARM_WIRING.md` §3, third caveat) `[MEASURED]`.
 - **Training here is not bitwise-reproducible and is not claimed to be.** Under
   L-TOL as amended (`V17K_RULINGS.md` §A1) training between checkpoints is held
   to a measured noise floor, and **that floor is not yet measured**: ⟨SLOT
   `FLOOR_TRAIN_ABS_DLOSS`⟩ — **NOT MEASURED**, owed by the floor node.
 - **Nothing about the arm's quality is claimed anywhere in this section.**
-  `V17_ARM_WIRING.md`'s lead caveat governs everything it supplies: those numbers
+  `99777ab:V17_ARM_WIRING.md`'s lead caveat governs everything it supplies: those numbers
   say the arm can be selected, built, forwarded, checkpointed and stepped. They
   do not say it is good, bad, or comparable to anything.
 - **"PINNED" MEANS "INDISTINGUISHABLE AT THIS RESOLUTION", NEVER "EXACT", and
@@ -114,7 +114,7 @@ CORNERS WITHOUT A BIND AT THE CORNER IT DESCRIBES.**
   that number is not absent; it is **below what this eval split can see**. The
   ruling's own worked case: *"a real 2 % departure is detected only 32 % of the
   time at n = 4000"* `[INHERITED]`, which this card reproduces as a conditional
-  and not as a fact — see `V17_R10P_LRT.md` §5, which recovers the `I_β ≈ 1.390`
+  and not as a fact — see `99777ab:V17_R10P_LRT.md` §5, which recovers the `I_β ≈ 1.390`
   the figure silently assumes.
 - **RULING 2a's `5·δ_β` criterion is RETIRED, and `δ_β` is now a DIAGNOSTIC.**
   It broke on measurement: the re-take read the identical-seed pair **bitwise**
@@ -132,7 +132,7 @@ CORNERS WITHOUT A BIND AT THE CORNER IT DESCRIBES.**
   statistic, but the equivalence holds **at the MLE** and `β_final` is fit on
   the training split, so it never is one. Measured locally at a 27,914-parameter
   shape: `Λ = 7.21` (rejects) against `Wald = 1.15` (does not) — opposite sides
-  of the same constant on the same `β` (`V17_R10P_LRT.md` §4 `[MEASURED]`).
+  of the same constant on the same `β` (`99777ab:V17_R10P_LRT.md` §4 `[MEASURED]`).
 
 ---
 
@@ -148,14 +148,14 @@ be read as evidence for the other.
 ### Identity clause — CITES THE `β = 0` CERTIFICATE, UNCHANGED
 
 **At `β = 0, QK-off` the arm's row weight is exactly the path product**
-`G_ij = Π_{k=j+1}^{i} m_k e^{iθ_k}` (`V16_ARM_SMPRIME.md` §1). This clause is
+`G_ij = Π_{k=j+1}^{i} m_k e^{iθ_k}` (`99777ab:V16_ARM_SMPRIME.md` §1). This clause is
 **not** rewritten for v17-K; it cites the existing certificate as it stands.
 
 | row | what it certifies | reading | source |
 |---|---|---|---|
-| **(a)** | the oracle-gate bind holds on **BED-M's real support** `{−1, 0, +1}`, gates and drives read from `make_equilibrium_batch`, label recomputed by the bed's own `equilibrium_oracle` at float64 | `residual = 5.919777e-16` at `n=64, s=64`; `7.550528e-16` at `n=512, s=64` and at `n=256, s=128`, against a bar of `1e-6`; **real part exactly `0.000e+00`** — the whole residual is the `1.2246e-16` imaginary dust `polar(1, π)` injects | `V16_ARM_SMPRIME.md` row (a) `[MEASURED]` |
-| **(b)** | the reachable parameters | `(u, θ) = (1, π) → −1.0 + 1.2246467991473532e-16j`, `(0, ·) → 0.0 + 0.0j`, `(1, 0) → 1.0 + 0.0j`; **real part exact at all three, modulus exact at all three** (`1.0`, `0.0`, `1.0`) | `V16_ARM_SMPRIME.md` row (b) `[MEASURED]` |
-| **(c)** | the three corners | `β=1, g≡0, QK-on` **bitwise** against `#5a`'s own `softmaxAttn`; `β=0, g≡0, QK-on` **bitwise** against `exp(qk)`; **`β=0, QK-off` bitwise (cpu)** against an independent double-loop path product | `V16_ARM_SMPRIME.md` row (c) `[MEASURED]` |
+| **(a)** | the oracle-gate bind holds on **BED-M's real support** `{−1, 0, +1}`, gates and drives read from `make_equilibrium_batch`, label recomputed by the bed's own `equilibrium_oracle` at float64 | `residual = 5.919777e-16` at `n=64, s=64`; `7.550528e-16` at `n=512, s=64` and at `n=256, s=128`, against a bar of `1e-6`; **real part exactly `0.000e+00`** — the whole residual is the `1.2246e-16` imaginary dust `polar(1, π)` injects | `99777ab:V16_ARM_SMPRIME.md` row (a) `[MEASURED]` |
+| **(b)** | the reachable parameters | `(u, θ) = (1, π) → −1.0 + 1.2246467991473532e-16j`, `(0, ·) → 0.0 + 0.0j`, `(1, 0) → 1.0 + 0.0j`; **real part exact at all three, modulus exact at all three** (`1.0`, `0.0`, `1.0`) | `99777ab:V16_ARM_SMPRIME.md` row (b) `[MEASURED]` |
+| **(c)** | the three corners | `β=1, g≡0, QK-on` **bitwise** against `#5a`'s own `softmaxAttn`; `β=0, g≡0, QK-on` **bitwise** against `exp(qk)`; **`β=0, QK-off` bitwise (cpu)** against an independent double-loop path product | `99777ab:V16_ARM_SMPRIME.md` row (c) `[MEASURED]` |
 
 The statements these evaluate are proved in **`lean/CEQ/V16Domain.lean`** —
 `corner_softmax`, `corner_linear`, `corner_path_product`,
@@ -163,7 +163,7 @@ The statements these evaluate are proved in **`lean/CEQ/V16Domain.lean`** —
 `corners_are_distinct`, and the census theorem `bedM_gate_exact` (every value
 BED-M draws is an ordinary point of the gate) `[INHERITED]`, cited to that file.
 The line-by-line correspondence from module object to Lean statement is
-`V16_ARM_SMPRIME.md` §2.
+`99777ab:V16_ARM_SMPRIME.md` §2.
 
 **Two caveats that travel with this clause and may not be dropped:**
 
@@ -172,7 +172,7 @@ The line-by-line correspondence from module object to Lean statement is
    re-associates: on cuda `11 / 64` entries move by at most `5.551115e-17`. The
    claim was **weakened to what is true and pinned per device**, with the zeros —
    the clause the label bind depends on — asserted equal on both
-   (`V16_ARM_SMPRIME.md` §0) `[MEASURED]`.
+   (`99777ab:V16_ARM_SMPRIME.md` §0) `[MEASURED]`.
 2. **This clause is about the `β = 0` corner and says nothing about any trained
    checkpoint.** It is a certificate about an operator at a setting of its
    switches. It is not evidence about weights.
@@ -230,7 +230,7 @@ rather than waiving it. The equivalence holds **at the MLE**, and `β_final` is
 fit on the **training** split, so it is never the eval split's maximiser.
 Measured on this box at a 27,914-parameter shape: `Λ = 7.206` **rejects** while
 `Wald = 1.150` **does not**, on the same `β` at the same `3.841`
-(`V17_R10P_LRT.md` §4 `[MEASURED]`). **Both are printed; neither is reported
+(`99777ab:V17_R10P_LRT.md` §4 `[MEASURED]`). **Both are printed; neither is reported
 alone.** `I_β` is the observed information, taken as an exact Hessian diagonal
 by double backward (`torch.autograd.grad(..., create_graph=True)` then one
 `grad` per parameter); where it measures **non-positive** — which it does at an
@@ -392,7 +392,7 @@ branches were a false dichotomy; RULING 2a's three:
 > at `β = 1` against `[1.312192, 0.724290, 2.563817, 2.264559, 10.293107,
 > 2.721943, 3.096841, 1.337183]` at `β = 0`; bitwise against `#5a`'s own
 > `softmaxAttn`, and **not** bitwise (`1.110223e-16` on `19/64` entries)
-> against `ceq/lm.py`'s `Attention("softmax_x")` (`V16_ARM_SMPRIME.md` rows
+> against `ceq/lm.py`'s `Attention("softmax_x")` (`99777ab:V16_ARM_SMPRIME.md` rows
 > (c), (e), §4.2) `[MEASURED]` — are properties of **that corner**, not of a
 > layer the eval split merely fails to separate from it. **This branch does not
 > assert the trained layers are bitwise softmax** — only that a `1`-dof
@@ -403,11 +403,11 @@ branches were a false dichotomy; RULING 2a's three:
 > DESCRIBES"); a non-rejection at `Λ ≤ 3.841` is its own, weaker bind — it is a
 > statement about what this eval split can resolve, not about `β` — and the label
 > bind's own failure at the exact corner (`1.335288` where the honest cell
-> reads `1.110223e-16`, `V16_ARM_SMPRIME.md` rows (f), (h) `[MEASURED]`) is
+> reads `1.110223e-16`, `99777ab:V16_ARM_SMPRIME.md` rows (f), (h) `[MEASURED]`) is
 > Lean `#5a`'s content, not evidence against a layer merely sitting near it.
 > The two per-position heads and three switches this corner's object still
 > pays **+8,232 parameters** (**+0.03200 %**) to carry travel with the
-> sentence regardless of branch (`V17_ARM_WIRING.md` §5 `[MEASURED]`).
+> sentence regardless of branch (`99777ab:V17_ARM_WIRING.md` §5 `[MEASURED]`).
 >
 > Measurements: ⟨SLOT `Q3_RUN_SPEC`⟩, ⟨SLOT `BETA_FINAL_DIST`⟩ (fraction
 > pinned `≥ 0.95`), ⟨SLOT `GRADIENT_CENSUS`⟩, ⟨SLOT `Q3_MEASUREMENTS`⟩.
@@ -418,7 +418,7 @@ branches were a false dichotomy; RULING 2a's three:
 > distribution printed.
 >
 > The corners are provably distinct objects — `|c₁−c₂| = 4.472918`,
-> `|c₁−c₃| = 1.144938`, `|c₂−c₃| = 5.335671` (`V16_ARM_SMPRIME.md` row (d),
+> `|c₁−c₃| = 1.144938`, `|c₂−c₃| = 5.335671` (`99777ab:V16_ARM_SMPRIME.md` row (d),
 > `corners_are_distinct`) `[MEASURED]` — so a bind proved at one corner is not
 > a bind at an interpolated point between them, and **neither corner
 > certificate applies to this branch's checkpoint**: not the `β = 0` identity
@@ -468,7 +468,7 @@ most informative one.)*
 ## Parameters — the exact counts (RULING 3)
 
 Every comparison in this section is headed by the exact counts, so no reader has
-to take "matched" on trust. `V17_ARM_WIRING.md` §5 `[MEASURED]`, CPU, float32.
+to take "matched" on trust. `99777ab:V17_ARM_WIRING.md` §5 `[MEASURED]`, CPU, float32.
 
 | shape | arm — `operator="smprime"`: **25,736,232 params** (at `DEFAULTS`) | control — `operator="sgate"`, softmax-shaped: **25,728,000 params** (at `DEFAULTS`) | difference |
 |---|---|---|---|
@@ -478,8 +478,8 @@ to take "matched" on trust. `V17_ARM_WIRING.md` §5 `[MEASURED]`, CPU, float32.
 **The excess is `n_layers · (2·(d+1) + 3)`, and it is exactly these tensors, by
 name** — `m_head.weight [1,d]`, `m_head.bias [1]`, `theta_head.weight [1,d]`,
 `theta_head.bias [1]`, `beta []`, `qk []`, `g []`, per layer — **and the control
-has no parameter the arm lacks** (`V17_ARM_WIRING.md` §5). It cross-checks the
-same excess `V16_ARM_SMPRIME.md` §1 recorded at `d_model = 16`:
+has no parameter the arm lacks** (`99777ab:V17_ARM_WIRING.md` §5). It cross-checks the
+same excess `99777ab:V16_ARM_SMPRIME.md` §1 recorded at `d_model = 16`:
 `4,806 − 4,769 = 37 = 2·16 + 5` `[MEASURED]`.
 
 **The residual is excluded as an explanation by magnitude, not closed.** Ruling 3:
@@ -488,7 +488,7 @@ that is how new constructions sneak in. Three ways to make it exact were priced
 and none taken: shrinking the arm's `d` breaks "same shape"; widening the
 control's `d` is not expressible (the excess is not a multiple of any control
 parameter block); deleting a head or a switch mutilates the arm
-(`V17_ARM_WIRING.md` §5).
+(`99777ab:V17_ARM_WIRING.md` §5).
 
 **Result table for the trained comparison** — headed with the same counts, filled
 by the Q3 run:
@@ -549,14 +549,14 @@ three findings, stated in the pre-registration's own order:
   95% CI **[−0.118936, +0.062209]**, N=5 paired seeds, verdict NO DIFFERENCE (reading's own
   convention: delta = NRMSE_twin − NRMSE_settled, positive favours settled). The interval
   spans zero and five seeds cannot resolve gaps below roughly 0.05 NRMSE
-  (`M3_QUINTUPLE_PREREGISTERED_READING.md` floor). The route owed is pre-registered:
+  (`99777ab:M3_QUINTUPLE_PREREGISTERED_READING.md` floor). The route owed is pre-registered:
   **seeds 5→13 at that rung**, at which the realised resolution is 0.027260
   (`results/e_ladder_reading.txt`). Until that run completes, no sentence about settling at
   t\* = 1 is licensed by this data.
 - **The headline claim is unchanged and stays exactly what was earned, with its interval:**
   pivot-routed mixture attention (twin) beats the softmax baseline by **+0.111396 NRMSE,
   95% CI [+0.100873, +0.121920], 5/5 seeds**, on `negation_scope` at n_train=8192
-  (`results/m3_quintuple_v2.jsonl`; contrast table in [`ceq/hf_artifact/README.md`](ceq/hf_artifact/README.md)).
+  (`results/m3_quintuple_v2.jsonl`; contrast table in [`ceq/hf_artifact/README.md`](https://github.com/teerthsharma/resolvent/blob/master/ceq/hf_artifact/README.md)).
   No superiority claim beyond that interval is made anywhere in this card.
 
 Scope caveat carried from the reading itself: every e3 task binds `equilibrium_oracle`, the
@@ -964,7 +964,7 @@ context-independent sign context-dependent. So a 0.0000 from your operator means
 represent a sign flip at all", never "flat".
 
 **And the flatness of that rate in context is a separate axis from the sign.** The S2 selection
-ablation (`scale/s2_probe.py`, `tests/cameron/test_s2_ablation.py`, table in `DONE.md`) measures
+ablation (`scale/s2_probe.py`, `tests/cameron/test_s2_ablation.py`, table in `99777ab:DONE.md`) measures
 both on a magnitude-matched pair — the signed operator against `|A|`, the same matrix with the
 sign stripped. Dilution-resistance, read as `E|term_c| / σ(background)`, comes out at
 **slope -0.038 signed and -0.046 unsigned** when hop 2 is routed through a fixed set of k
@@ -1030,7 +1030,7 @@ softmax. `README.md` carries the pre-registered kill.
 ## Weights and checkpoints
 
 **What ships here are trained probe-arm tensors, not language-model weights.** Five files
-under [`ceq/hf_artifact/weights/`](ceq/hf_artifact/weights/MANIFEST.json), one per seed, each
+under [`ceq/hf_artifact/weights/`](https://github.com/teerthsharma/resolvent/blob/master/ceq/hf_artifact/weights/MANIFEST.json), one per seed, each
 a trained `QuintArm` — 4,769 parameters, module class `scale.m3_quintuple.QuintArm`
 (q/k projection + 2-layer MLP + scalar readout). **The `CEQForCausalLM` model in
 `modeling_ceq.py` still has no published checkpoint**, and no file in `weights/` is named

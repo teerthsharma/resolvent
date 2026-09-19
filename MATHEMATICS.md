@@ -640,7 +640,7 @@ one-sidedness a choice rather than an artefact.
 ```
 
 `SPLIT` exists because "both / neither" leaves a hole, and this repo has already paid
-for one: row H was added to `E_LADDER_PREREGISTERED_READING.md` because rows A–G all
+for one: row H was added to `99777ab:E_LADDER_PREREGISTERED_READING.md` because rows A–G all
 conditioned on settled winning somewhere. **Neither clause can pick a rung**: `L`
 quantifies over every rung by construction and the size clause reads the last rung,
 fixed by the ladder's definition.
@@ -735,7 +735,7 @@ The pre-registered branch is not refitted after the fact: `RISES` stands as
 written, with the trend clause sound at its own level and the size clause now
 known to be incapable of the level it was written at.
 
-**AND ROW G OUTRANKS ALL OF IT.** `E_LADDER_PREREGISTERED_READING.md` credits a rung
+**AND ROW G OUTRANKS ALL OF IT.** `99777ab:E_LADDER_PREREGISTERED_READING.md` credits a rung
 nothing in either direction when either cell sits at or above predict-the-mean, and
 it fires on **three of the four rungs this statistic is computed on**:
 
@@ -864,7 +864,7 @@ implies, not less. That is the fifteenth pattern, killed pre-birth.
 
 ## 15. A COVERAGE TOOL THAT SCANNED NOTHING
 
-`scale/chase_struck_coverage.py` walks every `.md` and `.py` the shipped
+`99777ab:scale/chase_struck_coverage.py` walks every `.md` and `.py` the shipped
 struck-constant test does not cover, and reports any struck constant asserted
 without a strike marker in its paragraph. It printed
 `SCANNING 0 PATHS THE SHIPPED CHECK DOES NOT COVER`, `uncovered .md: 0,
@@ -905,9 +905,9 @@ candidates. They split into two classes, and the file's own docstring already
 warns that layer 2 is a text scan and text scans cry wolf. Prose **about** a
 strike whose paragraph carries no marker: the scanner's own docstring quoting
 `1.471448` in its must-fire description, `MISTAKES.md:206` discussing
-`5.4944e-13`, `PREREGISTRATION_HOLE_AUDIT.md:424` running a
+`5.4944e-13`, `99777ab:PREREGISTRATION_HOLE_AUDIT.md:424` running a
 `git log -S "0.743864"` forensic. Live assertions: `−1.389` with `R² 0.9938` in
-a `RESEARCH.md` table row, and the three newly struck U1/N3 constants
+a `99777ab:RESEARCH.md` table row, and the three newly struck U1/N3 constants
 `0.743864`, `0.656532`, `0.816955` asserted in
 `tests/cameron/test_harmonic_attribution.py:123-124` and mirrored in
 `tests/deimos/`. **`−1.389` alone accounts for 17 of the 27** and is a short
@@ -1028,11 +1028,11 @@ at `ntr8192`, four times the batch the rate was measured at.
 
 ### 17.4 Why the one stage-A ablation on record could not have said anything
 
-`DONE_ARCHIVE_ROUND1.md:4707` records K4: `randpivot_signed`, `k=8` content-blind
+`99777ab:DONE_ARCHIVE_ROUND1.md:4707` records K4: `randpivot_signed`, `k=8` content-blind
 pivots, slope `+0.081`, CP intervals overlapping the content-selected arm, and the
 pre-registered consequence that content selection is *"not load-bearing for M2"*.
 
-That null was **forced**. `scale/recall_probe.py:3-7` states the identity: for any
+That null was **forced**. `aa82df7:scale/recall_probe.py:3-7` states the identity: for any
 content-blind schedule of size `k`,
 
 ```
@@ -1049,7 +1049,7 @@ was structurally incapable of reading anything else.
 `recall_probe.py:9-11` names the quantity that is not an artefact: whether
 `P(c selected)` stays `Θ(1)` as `s` grows under **content-conditional** selection.
 **That file is imported by zero Python files, has no `results/` artifact, and
-`DONE_ARCHIVE_ROUND1.md:5833` calls it "already sitting unrun".** Stage A's search
+`99777ab:DONE_ARCHIVE_ROUND1.md:5833` calls it "already sitting unrun".** Stage A's search
 space is `C(62,8) = 3 381 098 545` sets, of which `topk` explores exactly one.
 
 ### 17.5 A correction to §C of `FINDINGS.md`
@@ -1134,6 +1134,6 @@ holds both, with `demo()` asserting them.
 
 **What it is worth.** It bounds greedy against the *best* pivot set under a
 reconstruction objective. It says nothing about whether a better pivot set lowers
-NRMSE — that is §17.4's question, and `scale/recall_probe.py` was written to
+NRMSE — that is §17.4's question, and `aa82df7:scale/recall_probe.py` was written to
 answer it and never run. **A provable guarantee on an objective nobody has shown
 to matter is still a guarantee about nothing.**

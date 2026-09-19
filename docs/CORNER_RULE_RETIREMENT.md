@@ -191,7 +191,7 @@ first made, and are named here rather than dropped.** The first null was void
 under `L-NULL`, so the "carries no information" claim rested on nothing until
 the enumerated null above replaced it. And `ceqjepa/t_length.py`'s 25.3x margin
 for its `assigned-oracle` arm is a margin for the **literal** `(1.0, 0.0)` at
-`t_length.py:300-308`, not for the rule's output, which enters only through
+`ceqjepa/t_length.py:300-308`, not for the rule's output, which enters only through
 `load_measured_mask()`. Retiring the rule does not retire that number; it
 retires the claim that the rule would select that mask.
 

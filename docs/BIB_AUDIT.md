@@ -23,6 +23,6 @@ What this audit does **not** establish: that any source supports the sentence it
 cited for. That is the sweeps' `[V]` (abs page fetched, title matched) and `[V-eq]`
 (equation transcribed, hypotheses stated, instance run) marks, which are per-source in
 `sweep_*.md`; the paper carries the mark beside each citation that is load-bearing.
-The record's rule (`PRIOR_ART.md` §1.2) stands: theorem numbers and equation numbers
+The record's rule (`99777ab:PRIOR_ART.md` §1.2) stands: theorem numbers and equation numbers
 read through a rendered page should be re-checked against the compiled PDF before
 publication.

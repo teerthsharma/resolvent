@@ -50,6 +50,9 @@ ALLOWED_DEAD = {
     # P-5 quotes `capability_table.py`'s own TASK_SOURCE string verbatim, and
     # that string names the file without its directory.
     "m3_quintuple.py",
+    # P-15's Rule quotes `arm_smprime.py:534` as the line citation that
+    # "survives none", beside the symbol that survives every insertion.
+    "arm_smprime.py",
 }
 
 
@@ -73,7 +76,13 @@ def test_the_document_exists_and_the_extractor_finds_its_citations():
     print(f"\n  {len(entries)} entries, {len(refs)} numbered citations, "
           f"{len(set(BARE.findall(text)))} bare file references")
     assert len(entries) >= 35, len(entries)
-    assert len(refs) >= 60, len(refs)
+    # Citations into deleted files are pinned as `<sha>:path:line` (git's own
+    # revision syntax), which neither regex extracts by design: they cannot
+    # resolve in the tree and must not be read as live. That moved 66 of the
+    # 121 unique numbered citations out of reach, leaving 55 (2026-09-19). The
+    # floor guards against an extractor that silently matches nothing, and 50
+    # still does that.
+    assert len(refs) >= 50, len(refs)
 
 
 def test_every_numbered_citation_resolves_and_is_in_range(tracked):

@@ -18,12 +18,12 @@ change, is the author's ruling and it is not taken here.**
 
 | # | ruling | consequential edit | owner | state |
 |---|---|---|---|---|
-| 1 | determinism regime | L-TOL amendment; training noise floor measured once; COSTS line | docs / floor node | **OPEN** — amendment FILED (§A1 below). Blocked on ⟨`FLOOR_TRAIN_ABS_DLOSS`⟩, owed by the floor node, and on the COSTS line landing in `COSTS.md` (another node's file; drafted paste-ready in `V17_R1_R3_R7_EDITS.md`) |
+| 1 | determinism regime | L-TOL amendment; training noise floor measured once; COSTS line | docs / floor node | **OPEN** — amendment FILED (§A1 below). Blocked on ⟨`FLOOR_TRAIN_ABS_DLOSS`⟩, owed by the floor node, and on the COSTS line landing in `COSTS.md` (another node's file; drafted paste-ready in `99777ab:V17_R1_R3_R7_EDITS.md`) |
 | 2 | the corner (criterion now **RULING 10'**, not 2a's `5*delta_beta`) | beta LEARNABLE init 1, logged per instance; card template SPLIT | beta node / docs | **OPEN** — card template rebuilt to RULING 2a's THREE branches + census word-gate, all three written (`MODEL_CARD.md`, §A2 below). `BETA_PIN_CRITERION` is now SPECIFIED by RULING 2a itself (`\|β_i,final − 1\| ≤ 5·δ_β,i`, k=5 heuristic scale); what remains open is its **evaluation**. Blocked on two measurements, neither landed: ⟨`DELTA_BETA_PER_PARAM`⟩ — per-parameter `δ_β,i` owed by the **floor node** (`scripts/k_noise_floor.py`, which today measures only the loss-space floor over the Ruling-1 identical-seed pair, not a per-parameter one) — and ⟨`GRADIENT_CENSUS`⟩ — per-parameter integrated `\|∂L/∂β_i\|` owed by the **β node** (`ceq/hf/modeling_ceq.py`, a new gradient accumulator; `beta_summary`'s `max_abs_grad` is a max over logged steps, not the needed integral). `BETA_FINAL_DIST` and `BRANCH_C_LOCATIONS` (layer-level only — no per-head `β` exists to locate) wait on the same two |
-| 3 | matched params | exact counts in every table header; one COSTS line | docs | **OPEN** — exact counts filed in every comparison-table header this node owns (§A3 below; `MODEL_CARD.md`). Blocked on the COSTS line landing in `COSTS.md` (another node's file; drafted paste-ready in `V17_R1_R3_R7_EDITS.md`) |
-| 4 | CPU cells | re-take on the certified 4060; journal supersede marks | re-take node | **CLOSED** by `V17_R4_RETAKE.md`. 24 cells on the 4060 in `results/v17k_r4_retake.jsonl`, **2.79 GPU-min** against the `~2 GPU-h` estimate (43x over-book, measured). No verdict moves: 0 sign-flips in 16, worst device delta `9.522e-03` on `arm_pl` seed 7 — **not** on the control as the probe's 6-cell sample suggested. `results/v15_r1.jsonl` 25 -> 26 lines, first 25 bytes identical, append-only supersede marker (L-G2) |
-| 5 | Q1 instrument | hash into identity manifest; one L-SCOPE check | manifest node | **CLOSED** by `V17_R5_INSTRUMENT.md`. Digest `77429cdb...35498` over **two** components (file bytes + a bytecode fingerprint of 15 reached callables), so a helper edit in another module moves it. L-SCOPE measured, not asserted: both mains run with a recording spy, tensors **bitwise identical** at the same seed. Every cell now carries `instrument_hash` automatically |
-| 6 | envelope text | six edits to `ceq/autopilot.py` and its tests | envelope node | **CLOSED** by `V17_R6_ENVELOPE.md`. 48 -> **62 tests**. 6a/6b/6e/6f needed code; **6c and 6d were already true** and were verified and covered rather than staged as fixes. Structural `note`-blindness survives, re-verified over the two new helpers |
+| 3 | matched params | exact counts in every table header; one COSTS line | docs | **OPEN** — exact counts filed in every comparison-table header this node owns (§A3 below; `MODEL_CARD.md`). Blocked on the COSTS line landing in `COSTS.md` (another node's file; drafted paste-ready in `99777ab:V17_R1_R3_R7_EDITS.md`) |
+| 4 | CPU cells | re-take on the certified 4060; journal supersede marks | re-take node | **CLOSED** by `99777ab:V17_R4_RETAKE.md`. 24 cells on the 4060 in `results/v17k_r4_retake.jsonl`, **2.79 GPU-min** against the `~2 GPU-h` estimate (43x over-book, measured). No verdict moves: 0 sign-flips in 16, worst device delta `9.522e-03` on `arm_pl` seed 7 — **not** on the control as the probe's 6-cell sample suggested. `results/v15_r1.jsonl` 25 -> 26 lines, first 25 bytes identical, append-only supersede marker (L-G2) |
+| 5 | Q1 instrument | hash into identity manifest; one L-SCOPE check | manifest node | **CLOSED** by `99777ab:V17_R5_INSTRUMENT.md`. Digest `77429cdb...35498` over **two** components (file bytes + a bytecode fingerprint of 15 reached callables), so a helper edit in another module moves it. L-SCOPE measured, not asserted: both mains run with a recording spy, tensors **bitwise identical** at the same seed. Every cell now carries `instrument_hash` automatically |
+| 6 | envelope text | six edits to `ceq/autopilot.py` and its tests | envelope node | **CLOSED** by `99777ab:V17_R6_ENVELOPE.md`. 48 -> **62 tests**. 6a/6b/6e/6f needed code; **6c and 6d were already true** and were verified and covered rather than staged as fixes. Structural `note`-blindness survives, re-verified over the two new helpers |
 | 7 | BED-M | generator+seed+hash regime; attach-list item 4 corrected | docs / notebook | **CLOSED** by `kaggle/README.md` ("Attach list — item 4, CORRECTED") and §A4 below. The regime was already carried by `kaggle/ceq_v17k.ipynb` cell 4 (`DATASET_PATHS`, nothing to attach for the three beds) and cell 6 (`ceq.kdata.bed_signature`, all three regenerated), over `results/k_data_manifest.json`'s `bed_m` `kind: generator`, `status: PINNED` |
 
 **State legend.** A row is CLOSED only when every half of its consequential
@@ -104,14 +104,14 @@ cited to the file that measured it, or written as a named slot marked
 `NOT MEASURED` with the node that owes it. A slot is not a prediction.
 
 Filed by the R1/R3/R7 documentary node at HEAD `ab5b485`. Deliverable and
-before/after quotations: `V17_R1_R3_R7_EDITS.md`.
+before/after quotations: `99777ab:V17_R1_R3_R7_EDITS.md`.
 
 ---
 
 ## A1 — L-TOL, AS AMENDED BY RULING 1
 
 **Where this lives, and why it is not in the contract.** L-TOL is listed among
-the STANDING LAWS at `CEQ_V16_CONTRACT.md:49`. That file is filed verbatim from
+the STANDING LAWS at `99777ab:CEQ_V16_CONTRACT.md:49`. That file is filed verbatim from
 the author's message of 2026-08-31 and is verbatim-of-record; **it was not
 edited.** This section is the amendment, and this text is what binds for round
 v17-K.
@@ -121,12 +121,12 @@ v17-K.
 
 The amendment is a consequence of Ruling 1's determinism regime — **CUDA with
 `torch.use_deterministic_algorithms(True, warn_only=True)`**, which is exit 2 of
-the three priced in `V16_DEVICE_CERT.md` §5.3.1, chosen there because it is the
+the three priced in `99777ab:V16_DEVICE_CERT.md` §5.3.1, chosen there because it is the
 only exit that leaves the bar's certification regime and the run's regime the
 same flag at the same setting, and because it is free: the `warn_only`/off ratio
 read `1.06/1.06/1.26`, `1.06/0.95/1.09`, `1.18/1.18/1.32` across three runs,
 **including a value below 1**, which a real cost cannot produce
-(`V16_DEVICE_CERT.md` §5.3.1) `[MEASURED]`. **CPU-strict is REFUSED** — it loses
+(`99777ab:V16_DEVICE_CERT.md` §5.3.1) `[MEASURED]`. **CPU-strict is REFUSED** — it loses
 the certified device, and that is a different round.
 
 ### A1.1 — HELD TO BITWISE (`torch.equal`, never `allclose`)
@@ -135,8 +135,8 @@ Two claim classes, and no others, are held to bitwise equality:
 
 | # | claim class | scope of the bitwise requirement | status today |
 |---|---|---|---|
-| **B1** | **resume / replay — G0.2 K-RESUME** | the resumed run reproduces the un-interrupted run on all four checkpointed components; and a checkpoint round-trip (`save_pretrained` → `from_pretrained`) reproduces the logits | **MET.** `V17_G02_G03_CHECKPOINT.md` §1 records G0.2 **GREEN** — bitwise on all four components, `k=2 → k+m=5`, CPU **and** CUDA, three planted negatives `[MEASURED]`. The arm's own checkpoint round-trip is bitwise under `torch.equal` at `operator="smprime"` (`V17_ARM_WIRING.md` verdict row (h)) `[MEASURED]` |
-| **B2** | **every deciding INFERENCE cell** | forward-only, **strict determinism ON** (`use_deterministic_algorithms(True)`, no `warn_only`), on the certified device | **EXECUTABLE, MEMBERSHIP NOT FROZEN.** The shipped arm's forward runs under strict mode and is bitwise there: `arm_smprime.operator` and `arm_smprime.path_product` read `OK` under `use_deterministic_algorithms(True)` on cuda, where `arm_phase.operator` and `arm_phase.scan_phase` **RAISE** (`V16_ARM_SMPRIME.md` §9) `[MEASURED]`; and `COSTS.md` §1.6 reads hop and full forward **bitwise, max\|Δ\| = 0.0, flag ON and OFF**, 8 repeats at reduction length 64 `[MEASURED]`. What is **not** settled is which cells are on the list — see the slot below — and whether each reproduces bitwise on the certified 4060 after Ruling 4's re-take |
+| **B1** | **resume / replay — G0.2 K-RESUME** | the resumed run reproduces the un-interrupted run on all four checkpointed components; and a checkpoint round-trip (`save_pretrained` → `from_pretrained`) reproduces the logits | **MET.** `99777ab:V17_G02_G03_CHECKPOINT.md` §1 records G0.2 **GREEN** — bitwise on all four components, `k=2 → k+m=5`, CPU **and** CUDA, three planted negatives `[MEASURED]`. The arm's own checkpoint round-trip is bitwise under `torch.equal` at `operator="smprime"` (`99777ab:V17_ARM_WIRING.md` verdict row (h)) `[MEASURED]` |
+| **B2** | **every deciding INFERENCE cell** | forward-only, **strict determinism ON** (`use_deterministic_algorithms(True)`, no `warn_only`), on the certified device | **EXECUTABLE, MEMBERSHIP NOT FROZEN.** The shipped arm's forward runs under strict mode and is bitwise there: `arm_smprime.operator` and `arm_smprime.path_product` read `OK` under `use_deterministic_algorithms(True)` on cuda, where `arm_phase.operator` and `arm_phase.scan_phase` **RAISE** (`99777ab:V16_ARM_SMPRIME.md` §9) `[MEASURED]`; and `COSTS.md` §1.6 reads hop and full forward **bitwise, max\|Δ\| = 0.0, flag ON and OFF**, 8 repeats at reduction length 64 `[MEASURED]`. What is **not** settled is which cells are on the list — see the slot below — and whether each reproduces bitwise on the certified 4060 after Ruling 4's re-take |
 
 **Why B2 is stated forward-only.** The hole is in **backward** (Ruling 1's own
 words). A deciding inference cell never takes a backward pass, so strict mode is
@@ -155,7 +155,7 @@ mid-flight, never grow.
 
 | claim class | regime | why it cannot be bitwise |
 |---|---|---|
-| **training between checkpoints** | `use_deterministic_algorithms(True, warn_only=True)`; the run is compared against the **measured noise floor**, never against `0` | It **inherits the CUDA backward hole, and the hole is now measured.** `COSTS.md` §1.6: the arm's **gradient is NOT EXECUTABLE with the flag ON** — `cumsum_cuda_kernel` has no deterministic implementation and autograd reaches it through the backward of `cumprod` `[MEASURED]`. So the round runs `warn_only=True`, where that kernel warns instead of raising (`V16_DEVICE_CERT.md` §5.3.1), and a claim of bitwise training under that regime would be a claim about kernels nobody selected |
+| **training between checkpoints** | `use_deterministic_algorithms(True, warn_only=True)`; the run is compared against the **measured noise floor**, never against `0` | It **inherits the CUDA backward hole, and the hole is now measured.** `COSTS.md` §1.6: the arm's **gradient is NOT EXECUTABLE with the flag ON** — `cumsum_cuda_kernel` has no deterministic implementation and autograd reaches it through the backward of `cumprod` `[MEASURED]`. So the round runs `warn_only=True`, where that kernel warns instead of raising (`99777ab:V16_DEVICE_CERT.md` §5.3.1), and a claim of bitwise training under that regime would be a claim about kernels nobody selected |
 
 **The floor's definition, from Ruling 1 verbatim:** MEASURED ONCE, as **two
 identical-seed chunks**, read as **`|Δ|` final loss**, and recorded in COSTS.
@@ -171,7 +171,7 @@ identical-seed chunks**, read as **`|Δ|` final loss**, and recorded in COSTS.
 > ⟨SLOT `FLOOR_CHUNK_SPEC`⟩ — **NOT MEASURED.** The chunk the floor is measured
 > on (steps, shape, seed, device, operator) travels with the number, or the
 > number is a constant validated on one shape and applied to another — the V-22
-> class `V16_DEVICE_CERT.md` §3.2 names. Owed by the same node.
+> class `99777ab:V16_DEVICE_CERT.md` §3.2 names. Owed by the same node.
 
 ### A1.3 — WHAT THIS AMENDMENT IMPLIES THAT NOBODY HAS MEASURED
 
@@ -204,7 +204,7 @@ in backward", and it is why B2 is forward-only and A1.2 is a floor.
 - It does not change the flag. `warn_only=True` is the regime for the whole run;
   the strict forward cells set strict mode **for themselves**, and that is the
   only place strict mode appears.
-- It does not touch `CEQ_V16_CONTRACT.md`.
+- It does not touch `99777ab:CEQ_V16_CONTRACT.md`.
 
 ---
 
@@ -214,7 +214,7 @@ The card's split sentence is built in `MODEL_CARD.md`, section **"v17-K — THE
 SHIPPED MODEL (Q3): CARD TEMPLATE, LIMITS FIRST"**, as a template with named
 slots and **both branches written** — the text if `β` moves off `1` and the text
 if `β` pins at `1`. The identity clause there cites the existing `β=0`
-certificate **unchanged**: `V16_ARM_SMPRIME.md` verdict rows (a)–(c) and the
+certificate **unchanged**: `99777ab:V16_ARM_SMPRIME.md` verdict rows (a)–(c) and the
 statements in `lean/CEQ/V16Domain.lean` they evaluate.
 
 The code half of Ruling 2 — `β` LEARNABLE, INIT 1, per-instance `β` logged as a
@@ -229,7 +229,7 @@ column — is the **β node's** and is not discharged here.
 
 ## A3 — RULING 3, THE EXACT COUNTS
 
-`V17_ARM_WIRING.md` §5 `[MEASURED]`, this box, CPU, float32:
+`99777ab:V17_ARM_WIRING.md` §5 `[MEASURED]`, this box, CPU, float32:
 
 | shape | `operator="smprime"` (arm) | `operator="sgate"` (softmax-shaped control) | difference |
 |---|---|---|---|
@@ -239,19 +239,19 @@ column — is the **β node's** and is not discharged here.
 Formula `n_layers · (2·(d+1) + 3)`: the arm's **two per-position heads**
 (`m_head`, `theta_head`, each a `[1,d]` weight plus a `[1]` bias) and **three
 scalar switches** (`beta`, `qk`, `g`) — named tensor by tensor in
-`V17_ARM_WIRING.md` §5, with the assertion that the control has **no** parameter
-the arm lacks. Cross-checks `V16_ARM_SMPRIME.md` §1: `4,806 − 4,769 = 37 =
+`99777ab:V17_ARM_WIRING.md` §5, with the assertion that the control has **no** parameter
+the arm lacks. Cross-checks `99777ab:V16_ARM_SMPRIME.md` §1: `4,806 − 4,769 = 37 =
 2·16 + 5` at `d_model = 16` `[MEASURED]`.
 
 **Which way it cuts, recorded because it is the caveat that matters:** the arm
 carries **more** parameters, so a reading favourable to the arm is the one that
-needs the caveat (`V17_ARM_WIRING.md` §5, FINDING FOR THE AUTHOR).
+needs the caveat (`99777ab:V17_ARM_WIRING.md` §5, FINDING FOR THE AUTHOR).
 
 The COSTS line Ruling 3 requires is **drafted, not landed** — `COSTS.md` belongs
 to another node and was being written while this was filed. That file's §4
 (“SLOTS OWNED BY OTHER NODES”) already carries the placeholder — *“RULING 3 —
 matched params … **☐ NOT YET WRITTEN.** Owner: docs”* — and the paste-ready text
-for it is in `V17_R1_R3_R7_EDITS.md`, section “COSTS LINES, PASTE-READY”.
+for it is in `99777ab:V17_R1_R3_R7_EDITS.md`, section “COSTS LINES, PASTE-READY”.
 **No edit to `COSTS.md` was made by this node.**
 
 ---
@@ -260,7 +260,7 @@ for it is in `V17_R1_R3_R7_EDITS.md`, section “COSTS LINES, PASTE-READY”.
 
 Attach-list item 4 asked for BED-M "as the intact **211,765-line** file (not
 regenerated; hash-pinned)". **That file does not exist and none was created**
-(`V17_G05_DATA.md` §6 `[MEASURED]`: every file in the working tree over 1 MB was
+(`99777ab:V17_G05_DATA.md` §6 `[MEASURED]`: every file in the working tree over 1 MB was
 line-counted; exactly one has 211,765 lines and it is `data/tinystories_20k.txt`,
 TinyStories, not a chain corpus). BED-M has no on-disk artifact at all — it is
 `ceq/corpus.py::build()`, named as BED-M by `ceq/beds/__init__.py:3`.
@@ -359,7 +359,7 @@ differentiates `cumprod` with `cumsum`). Ruling 1's two clauses — bitwise for
 replay+forward, measured floor for training — did not anticipate a *deciding*
 cell that trains.
 
-**The north star decides it** (`CEQ_V16_CONTRACT.md`, immutable):
+**The north star decides it** (`99777ab:CEQ_V16_CONTRACT.md`, immutable):
 
 > Attention that is **EQUAL to self-attention on its own ground**, built FROM
 > softmax and AdamW, and capable on ground they cannot occupy.
