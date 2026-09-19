@@ -4,6 +4,7 @@
   <img alt="sorry: 0" src="https://img.shields.io/badge/sorry-0-success?style=flat-square" />
   <img alt="corner tests: 69 passing" src="https://img.shields.io/badge/corner_tests-69_passing-success?style=flat-square" />
   <img alt="License: Apache-2.0" src="https://img.shields.io/badge/license-Apache--2.0-blue?style=flat-square" />
+  <a href="https://teerthsharma.github.io/resolvent/"><img alt="Docs: GitHub Pages" src="https://img.shields.io/badge/docs-GitHub_Pages-6ee7b7?style=flat-square" /></a>
 </p>
 
 <h1 align="center">resolvent</h1>
@@ -16,6 +17,7 @@
 </p>
 
 <p align="center">
+  <a href="https://teerthsharma.github.io/resolvent/"><b>Site</b></a>&nbsp;&nbsp;·&nbsp;&nbsp;
   <a href="#quick-start">Quick start</a>&nbsp;&nbsp;·&nbsp;&nbsp;
   <a href="#1-one-family-three-corners">The family</a>&nbsp;&nbsp;·&nbsp;&nbsp;
   <a href="#3-the-graded-read">The graded read</a>&nbsp;&nbsp;·&nbsp;&nbsp;

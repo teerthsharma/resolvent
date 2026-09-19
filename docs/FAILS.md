@@ -303,16 +303,16 @@ Claims with no producer located, stated as such rather than silently dropped.
 FAILS.md is the front door, not the whole house. Detail lives in dedicated,
 machine-checked ledgers:
 
-- **[MISTAKES.md](../MISTAKES.md)** — the failure-taxonomy proper: 74 failure
+- **[MISTAKES.md](https://github.com/teerthsharma/resolvent/blob/master/MISTAKES.md)** — the failure-taxonomy proper: 74 failure
   mechanisms across four classes (V — vacuous controls, 30; P — provenance
   failures, 16; M — measurement failures, 21; D — design-level failures, 7),
   each with an instance, a rule, and a check.
-- **[STRUCK.md](../STRUCK.md)** — every constant this project has withdrawn:
+- **[STRUCK.md](https://github.com/teerthsharma/resolvent/blob/master/STRUCK.md)** — every constant this project has withdrawn:
   12 entries, rendered from a module-level registry in
   `tests/loop/test_no_struck_constant_ships.py`, never hand-edited.
 - **[docs/canon/CORRECTIONS.md](canon/CORRECTIONS.md)** — the canon's own
   correction log; the only door through which the books 00–09 change.
-- **[V17K_RULINGS.md](../V17K_RULINGS.md)** — 3 open rulings out of 7 total
+- **[V17K_RULINGS.md](https://github.com/teerthsharma/resolvent/blob/master/V17K_RULINGS.md)** — 3 open rulings out of 7 total
   (rows 4-7 are CLOSED): determinism regime, the corner criterion, and matched
   parameter counts, each blocked on a specific named measurement or file, not
   on absence of effort.

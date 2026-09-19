@@ -1,0 +1,1 @@
+--8<-- "MODEL_CARD.md"

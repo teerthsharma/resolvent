@@ -75,3 +75,6 @@ NORTHSTAR_REPORT.md
 workdonecrazynew.md
 docs/ARCHITECTURE_OPTIONS.md
 docs/CEQ_JEPA_PLAN.md
+
+# MkDocs build output; the site is deployed to the gh-pages branch by `mkdocs gh-deploy`.
+site/
