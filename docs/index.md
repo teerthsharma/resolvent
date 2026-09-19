@@ -1,5 +1,5 @@
 ---
-title: resolvent
+title: One causal head, three switches
 hide:
   - navigation
   - toc
