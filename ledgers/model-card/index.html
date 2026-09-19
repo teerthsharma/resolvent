@@ -1,0 +1,3061 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="One causal head, three switches. Softmax attention, unnormalized-kernel attention and the exact path product of a Markov chain as settings of one operator, proved in Lean 4, with every failure kept on the record.">
+      
+      
+        <meta name="author" content="Teerth Sharma">
+      
+      
+        <link rel="canonical" href="https://teerthsharma.github.io/resolvent/ledgers/model-card/">
+      
+      
+        <link rel="prev" href="../mathematics/">
+      
+      
+        <link rel="next" href="../costs/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/logo.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Model card - resolvent</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/resolvent.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#ceq-a-signed-causal-path-sum-correction-for-attention" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="resolvent" class="md-header__button md-logo" aria-label="resolvent" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            resolvent
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Model card
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/teerthsharma/resolvent" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    teerthsharma/resolvent
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../FAILS/" class="md-tabs__link">
+          
+  
+  
+  The record
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../BED_H_PREREGISTRATION/" class="md-tabs__link">
+          
+  
+  
+  Pre-registrations
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../mistakes/" class="md-tabs__link">
+          
+  
+  
+  Ledgers
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../canon/CHARTER/" class="md-tabs__link">
+          
+  
+  
+  Canon
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../CEQ_SHAPE/" class="md-tabs__link">
+          
+  
+  
+  Paper
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="resolvent" class="md-nav__button md-logo" aria-label="resolvent" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    resolvent
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/teerthsharma/resolvent" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    teerthsharma/resolvent
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The record
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    The record
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../FAILS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Everything retracted, broken or open
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../COMPONENT_LEDGER/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Component ledger
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../PLAN/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Research plan
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CORNER_RULE_RETIREMENT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Corner rule retirement
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../PI_JEPA_KAGGLE_CARD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kaggle card
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../DR2_CARD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DR2 card
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pre-registrations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Pre-registrations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../BED_H_PREREGISTRATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BED-H
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../prereg/REMOVAL_ECHO_v1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    REMOVAL-ECHO v1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ledgers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Ledgers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mistakes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Failure mechanisms
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../struck/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Struck constants
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mathematics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mathematics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model card
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model card
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-operator-does-not-work-this-is-the-negative-result-and-the-harness-that-produced-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The operator does not work. This is the negative result and the harness that produced it.
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../costs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Costs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../v17k-rulings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    V17K rulings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../v16-calibration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    V16 calibration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Canon
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Canon
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../canon/CHARTER/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Charter
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../canon/01_THEORY_ACCURACY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01 Theory of accuracy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../canon/02_THEORY_TRAINING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    02 Theory of training
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../canon/03_KERNEL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03 Kernel
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../canon/04_BEDS_AND_INSTRUMENTS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    04 Beds and instruments
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../canon/05_REPAIRS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05 Repairs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../canon/06_PREDICTIONS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    06 Predictions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../canon/08_ARCHITECTURE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    08 Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../canon/09_CHESS_AND_MARKETS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    09 Chess and markets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../canon/CORRECTIONS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Corrections
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Paper
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Paper
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CEQ_SHAPE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The shape of CEQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Paper sources
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../BIB_AUDIT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bibliography audit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../BIB_ALIASES/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bibliography aliases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-operator-does-not-work-this-is-the-negative-result-and-the-harness-that-produced-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The operator does not work. This is the negative result and the harness that produced it.
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<hr />
+<p>license: mit
+library_name: transformers
+pipeline_tag: text-generation
+language:
+  - en
+datasets:
+  - roneneldan/TinyStories
+tags:
+  - attention
+  - custom_code
+  - negative-results
+  - research</p>
+<hr />
+<h1 id="ceq-a-signed-causal-path-sum-correction-for-attention">ceq — a signed causal path-sum correction for attention<a class="headerlink" href="#ceq-a-signed-causal-path-sum-correction-for-attention" title="Permanent link">#</a></h1>
+<blockquote>
+<h2 id="the-operator-does-not-work-this-is-the-negative-result-and-the-harness-that-produced-it">The operator does not work. This is the negative result and the harness that produced it.<a class="headerlink" href="#the-operator-does-not-work-this-is-the-negative-result-and-the-harness-that-produced-it" title="Permanent link">#</a></h2>
+<p><strong>The pre-registered kill fires on the operator the module ships.</strong> Measured,
+<code>PROTOCOL: SCALING</code>, <code>c</code> drawn from the pivot set: sign-flip rate
+<strong>0.16511 / 0.02732 / 0.00000 / 0.00000</strong> at s = 8/32/128/512, slope
+<strong>−1.298</strong> against a bar of <strong>−0.3</strong>. <strong>Zero flips at s ≥ 128.</strong> Pivot routing
+makes it <em>worse</em> than dense, not better (dense reads −1.088).</p>
+<p><strong>The measurement that once said otherwise was measuring a different
+operator.</strong> <code>_causal_tgate_operator</code> carried every headline — a flat
+<strong>+0.0270</strong> slope across a 256× context growth, a <strong>61×</strong> separation at
+s=1024 — and appears <strong>nowhere in the shipped path</strong>, which uses
+<code>ceq_operator</code> and <code>sgate_operator</code>. The arm names hid it:
+<code>scale/pivot_probe.py::ARMS</code> never contains the string <code>"tgate"</code>, because the
+arms are called <code>pivot_signed</code> and <code>dense_signed</code> and <code>build_arm</code> maps <strong>both</strong>
+to it. <em>The name describes a property, not an implementation.</em></p>
+<p><strong>The Lean core is sound; it does not certify what ships.</strong> <strong>134 theorems +
+41 lemmas</strong>, counted by <code>python scripts/lean_count.py</code> (comments stripped,
+<code>@[attr]</code> prefixes admitted), 2026-09-11.
+<code>lake build</code> exit 0, zero <code>sorry</code>, no <code>sorryAx</code>. <code>pow_card_eq_zero</code> is
+<strong>confirmed against the shipped tensor</strong> — <code>A^n = 0</code> at exactly
+<code>0.000000e+00</code> for s = 16/64/128/512. But <code>occupancy_is_exact_inverse</code> is
+stated at <strong>N = n</strong>, and the module truncates at <strong>hops = 2..4</strong> where
+<code>‖A^hops‖</code> is <strong>0.880500</strong> at s=128 (hops=2; <strong>0.882030</strong> at hops=4).
+<strong>The 1.471448 previously printed here was struck by the iteration-35 audit —
+not reproducible at any of 1,800 settings.</strong> <strong>The theorems certify a computation the
+module does not perform</strong>, and <code>truncation_bound</code> refuses at the shipped
+<code>rho = 1.5</code>, so no bound stands in either.</p>
+<p><strong>What is worth reading this repository for:</strong> the negative result, the Lean
+core as mathematics, and a falsification harness that caught <strong>seventeen</strong> of
+its own broken instruments — including the one that invalidated its own
+headline. Full verdict in <a href="https://github.com/teerthsharma/resolvent/blob/99777ab0f529702c62b49bf05d87a2eea3c116b5/PROGNOSIS.md"><code>99777ab:PROGNOSIS.md</code></a>.</p>
+</blockquote>
+<hr />
+<h1 id="v17-k-the-shipped-model-q3-card-template-limits-first">v17-K — THE SHIPPED MODEL (Q3): CARD TEMPLATE, LIMITS FIRST<a class="headerlink" href="#v17-k-the-shipped-model-q3-card-template-limits-first" title="Permanent link">#</a></h1>
+<blockquote>
+<p><strong>THIS IS A TEMPLATE, NOT A FINISHED CARD.</strong> Every <code>⟨SLOT …⟩</code> below is a hole a
+finished run fills with a measured number. <strong>A slot is not a prediction and
+must never be read as one</strong>, and this section is not publishable while any slot
+is unfilled. Filed as the documentary consequence of <strong>RULING 2</strong>
+(<code>V17K_RULINGS.md</code> §A2) and <strong>RULING 3</strong> (§A3).</p>
+<p><strong>Checked 2026-09-10: none of the twelve slots below are fillable yet.</strong> Every
+one of them is downstream of the Q3 training run or the floor measurement
+<code>V17K_RULINGS.md</code> §A1.2 owes, and neither has produced a number:
+<code>COSTS.md</code> §4 still carries RULING 1's training noise floor as "☐ NOT YET MEASURED",
+and the one Kaggle attempt on record
+(<code>results/kaggle_v17k_output/ceq-v17-k.log</code>) halted at
+<code>GATE FAILED: a code source is configured</code> before any training step ran. Slots
+stay <code>NOT MEASURED</code> rather than carrying an invented number.</p>
+</blockquote>
+<p><strong>Scope, before anything else.</strong> This section describes the <strong>§S-M′ arm</strong> —
+<code>ceq/arm_smprime.py</code>, wired into <code>CEQForCausalLM</code> as <code>operator="smprime"</code>
+(<code>99777ab:V17_ARM_WIRING.md</code>). <strong>That is a different object from the resolvent operator
+the rest of this card describes.</strong> No sentence from the sections below transfers
+into this one, and no sentence here transfers out.</p>
+<p><strong>The law of this section, from Ruling 2, verbatim: NO SENTENCE TRANSFERS ACROSS
+CORNERS WITHOUT A BIND AT THE CORNER IT DESCRIBES.</strong></p>
+<h2 id="limits-first-v17-k">Limits, first (v17-K)<a class="headerlink" href="#limits-first-v17-k" title="Permanent link">#</a></h2>
+<ul>
+<li><strong>There is no trained checkpoint for this v17-K Q3 arm (<code>CEQForCausalLM</code>,
+  <code>operator="smprime"</code>) yet — a separate fact from the probe-arm weights this
+  card ships elsewhere; see "Weights and checkpoints" below.</strong> The one Kaggle
+  attempt on record (<code>results/kaggle_v17k_output/ceq-v17-k.log</code>) halted at setup
+  — <code>GATE FAILED: a code source is configured</code> — before any step ran.
+  ⟨SLOT <code>Q3_CHECKPOINT</code>⟩ — <strong>NOT MEASURED</strong>, owed by the Q3 training node.
+  Everything below the identity clause is a template until it lands.</li>
+<li><strong>The parameter counts are NOT equal, and the arm carries MORE.</strong> Arm
+  <strong>25,736,232</strong> against control <strong>25,728,000</strong> at <code>ceq/hf/train.py::DEFAULTS</code> —
+  <strong>+8,232 = +0.03200 %</strong>. A reading favourable to the arm is the one that needs
+  the caveat (<code>99777ab:V17_ARM_WIRING.md</code> §5) <code>[MEASURED]</code>.</li>
+<li><strong>The corner the arm's bind is claimed at is not the corner the LM runs at.</strong>
+  The module docstring claims <code>β = 0, QK-off</code>; the LM runs at <code>β = 1, qk = 1,
+  g = 1</code>, which is <code>ArmSMPrime.__init__</code>'s own switch initialisation, because
+  <code>qk = 0</code> deletes the content term exactly and an LM at that corner has no
+  query-key channel (<code>99777ab:V17_ARM_WIRING.md</code> §3, third caveat) <code>[MEASURED]</code>.</li>
+<li><strong>Training here is not bitwise-reproducible and is not claimed to be.</strong> Under
+  L-TOL as amended (<code>V17K_RULINGS.md</code> §A1) training between checkpoints is held
+  to a measured noise floor, and <strong>that floor is not yet measured</strong>: ⟨SLOT
+  <code>FLOOR_TRAIN_ABS_DLOSS</code>⟩ — <strong>NOT MEASURED</strong>, owed by the floor node.</li>
+<li><strong>Nothing about the arm's quality is claimed anywhere in this section.</strong>
+  <code>99777ab:V17_ARM_WIRING.md</code>'s lead caveat governs everything it supplies: those numbers
+  say the arm can be selected, built, forwarded, checkpointed and stepped. They
+  do not say it is good, bad, or comparable to anything.</li>
+<li><strong>"PINNED" MEANS "INDISTINGUISHABLE AT THIS RESOLUTION", NEVER "EXACT", and
+  the resolution is a number printed beside every verdict.</strong> RULING 10′ decides
+  pinning by likelihood ratio against <code>3.841</code> (χ²₁ at 0.95) and <code>ln n</code>, and
+  ships each verdict with its minimum detectable departure
+  <code>|β − 1|_min ≈ √(3.841 / (n · I_β))</code> — <em>a verdict printed without it is a
+  defect</em> <code>[INHERITED]</code> <code>V17K_RULINGS.md</code>, RULING 10′. A departure smaller than
+  that number is not absent; it is <strong>below what this eval split can see</strong>. The
+  ruling's own worked case: <em>"a real 2 % departure is detected only 32 % of the
+  time at n = 4000"</em> <code>[INHERITED]</code>, which this card reproduces as a conditional
+  and not as a fact — see <code>99777ab:V17_R10P_LRT.md</code> §5, which recovers the <code>I_β ≈ 1.390</code>
+  the figure silently assumes.</li>
+<li><strong>RULING 2a's <code>5·δ_β</code> criterion is RETIRED, and <code>δ_β</code> is now a DIAGNOSTIC.</strong>
+  It broke on measurement: the re-take read the identical-seed pair <strong>bitwise</strong>
+  on the certified device, so the tolerance collapsed to exactly zero and every
+  run read the "moved" branch for a reason about the pair rather than about
+  training. RULING 10′ does not patch that floor — Wilks' randomness is over
+  the <strong>data</strong>, so a training pair is irrelevant to the test. <code>δ_β</code> is still
+  measured (<code>scripts/k_noise_floor.py</code>) and still printed, because a diagnostic
+  that <strong>contradicts</strong> the verdict is a finding; it no longer decides anything.</li>
+<li><strong>The gradient census still gates the word "preferred"</strong> (owed by the β node)
+  and RULING 10′ leaves it standing explicitly as the scientific payload. It
+  does not exist yet.</li>
+<li><strong>The Wald cross-check can contradict the likelihood ratio, and both are
+  printed.</strong> <code>(β − 1)²·I_β</code> against the same <code>3.841</code> is asymptotically the same
+  statistic, but the equivalence holds <strong>at the MLE</strong> and <code>β_final</code> is fit on
+  the training split, so it never is one. Measured locally at a 27,914-parameter
+  shape: <code>Λ = 7.21</code> (rejects) against <code>Wald = 1.15</code> (does not) — opposite sides
+  of the same constant on the same <code>β</code> (<code>99777ab:V17_R10P_LRT.md</code> §4 <code>[MEASURED]</code>).</li>
+</ul>
+<hr />
+<h2 id="the-split-sentence-ruling-2">The split sentence (RULING 2)<a class="headerlink" href="#the-split-sentence-ruling-2" title="Permanent link">#</a></h2>
+<p><strong>This card carried no sentence about the §S-M′ arm before now.</strong>
+<code>git show ab5b485:MODEL_CARD.md | grep -n "smprime\|S-M′\|corner"</code> returns
+<strong>zero lines</strong> <code>[MEASURED]</code>. So there is nothing to retire: what Ruling 2 splits
+is the sentence the finished run <strong>will</strong> carry, and it is filed here in advance
+as <strong>two clauses about two different objects</strong>, printed apart so that neither can
+be read as evidence for the other.</p>
+<h3 id="identity-clause-cites-the-0-certificate-unchanged">Identity clause — CITES THE <code>β = 0</code> CERTIFICATE, UNCHANGED<a class="headerlink" href="#identity-clause-cites-the-0-certificate-unchanged" title="Permanent link">#</a></h3>
+<p><strong>At <code>β = 0, QK-off</code> the arm's row weight is exactly the path product</strong>
+<code>G_ij = Π_{k=j+1}^{i} m_k e^{iθ_k}</code> (<code>99777ab:V16_ARM_SMPRIME.md</code> §1). This clause is
+<strong>not</strong> rewritten for v17-K; it cites the existing certificate as it stands.</p>
+<table>
+<thead>
+<tr>
+<th>row</th>
+<th>what it certifies</th>
+<th>reading</th>
+<th>source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>(a)</strong></td>
+<td>the oracle-gate bind holds on <strong>BED-M's real support</strong> <code>{−1, 0, +1}</code>, gates and drives read from <code>make_equilibrium_batch</code>, label recomputed by the bed's own <code>equilibrium_oracle</code> at float64</td>
+<td><code>residual = 5.919777e-16</code> at <code>n=64, s=64</code>; <code>7.550528e-16</code> at <code>n=512, s=64</code> and at <code>n=256, s=128</code>, against a bar of <code>1e-6</code>; <strong>real part exactly <code>0.000e+00</code></strong> — the whole residual is the <code>1.2246e-16</code> imaginary dust <code>polar(1, π)</code> injects</td>
+<td><code>99777ab:V16_ARM_SMPRIME.md</code> row (a) <code>[MEASURED]</code></td>
+</tr>
+<tr>
+<td><strong>(b)</strong></td>
+<td>the reachable parameters</td>
+<td><code>(u, θ) = (1, π) → −1.0 + 1.2246467991473532e-16j</code>, <code>(0, ·) → 0.0 + 0.0j</code>, <code>(1, 0) → 1.0 + 0.0j</code>; <strong>real part exact at all three, modulus exact at all three</strong> (<code>1.0</code>, <code>0.0</code>, <code>1.0</code>)</td>
+<td><code>99777ab:V16_ARM_SMPRIME.md</code> row (b) <code>[MEASURED]</code></td>
+</tr>
+<tr>
+<td><strong>(c)</strong></td>
+<td>the three corners</td>
+<td><code>β=1, g≡0, QK-on</code> <strong>bitwise</strong> against <code>#5a</code>'s own <code>softmaxAttn</code>; <code>β=0, g≡0, QK-on</code> <strong>bitwise</strong> against <code>exp(qk)</code>; <strong><code>β=0, QK-off</code> bitwise (cpu)</strong> against an independent double-loop path product</td>
+<td><code>99777ab:V16_ARM_SMPRIME.md</code> row (c) <code>[MEASURED]</code></td>
+</tr>
+</tbody>
+</table>
+<p>The statements these evaluate are proved in <strong><code>lean/CEQ/V16Domain.lean</code></strong> —
+<code>corner_softmax</code>, <code>corner_linear</code>, <code>corner_path_product</code>,
+<code>corner_path_product_is_the_gate_product</code>, <code>three_corners_containment</code>,
+<code>corners_are_distinct</code>, and the census theorem <code>bedM_gate_exact</code> (every value
+BED-M draws is an ordinary point of the gate) <code>[INHERITED]</code>, cited to that file.
+The line-by-line correspondence from module object to Lean statement is
+<code>99777ab:V16_ARM_SMPRIME.md</code> §2.</p>
+<p><strong>Two caveats that travel with this clause and may not be dropped:</strong></p>
+<ol>
+<li><strong><code>bitwise (cpu)</code>, and the device is part of the claim.</strong> <code>torch.cumprod</code> is
+   sequential on cpu and a parallel scan on cuda, so the vectorized route
+   re-associates: on cuda <code>11 / 64</code> entries move by at most <code>5.551115e-17</code>. The
+   claim was <strong>weakened to what is true and pinned per device</strong>, with the zeros —
+   the clause the label bind depends on — asserted equal on both
+   (<code>99777ab:V16_ARM_SMPRIME.md</code> §0) <code>[MEASURED]</code>.</li>
+<li><strong>This clause is about the <code>β = 0</code> corner and says nothing about any trained
+   checkpoint.</strong> It is a certificate about an operator at a setting of its
+   switches. It is not evidence about weights.</li>
+</ol>
+<h3 id="trained-model-clause-states-only-what-was-trained-ruling-2a-three-branches-census-gated-word">Trained-model clause — STATES ONLY WHAT WAS TRAINED (RULING 2a: THREE BRANCHES, CENSUS-GATED WORD)<a class="headerlink" href="#trained-model-clause-states-only-what-was-trained-ruling-2a-three-branches-census-gated-word" title="Permanent link">#</a></h3>
+<p>Ruling 2: Q3 trains with <strong><code>β</code> LEARNABLE, INIT 1</strong>, and the per-instance <code>β</code> is
+logged as a column. <strong>Ruling 2a</strong> ruled that the original two branches below
+("<code>β</code> moved off 1" / "<code>β</code> pinned at 1") were a <strong>FALSE DICHOTOMY</strong>, defined
+"pinned", and replaced them with three, plus a gradient census that decides
+which word the card is allowed to print. What follows is that ruling, filed as
+a template.</p>
+<h4 id="the-pin-criterion-ruling-10-and-the-resolution-that-must-travel-with-it-everywhere-it-appears">The pin criterion (RULING 10′), and the resolution that must travel with it everywhere it appears<a class="headerlink" href="#the-pin-criterion-ruling-10-and-the-resolution-that-must-travel-with-it-everywhere-it-appears" title="Permanent link">#</a></h4>
+<blockquote>
+<p><strong>"PINNED" MEANS "INDISTINGUISHABLE AT THIS RESOLUTION". IT DOES NOT MEAN
+"EXACT", AND THE RESOLUTION IS A NUMBER ON THIS CARD.</strong></p>
+<div class="highlight"><pre><span></span><code>|β − 1|_min  ≈  √( 3.841 / (n · I_β) )
+</code></pre></div>
+<p><code>n</code> is the eval count and <code>I_β</code> the observed Fisher information in <code>β</code>, per
+observation. A departure smaller than <code>|β − 1|_min</code> is <strong>not absent</strong> — it is
+below what this eval split can see. <strong>A verdict printed without this number is
+a defect</strong> (<code>V17K_RULINGS.md</code>, RULING 10′). The ruling's worked case:
+<em>"a real 2 % departure is detected only 32 % of the time at n = 4000"</em> — so
+even the ruling's own example sits below the resolution it prints.</p>
+</blockquote>
+<p><code>β_i</code> is decided by a <strong>1-dof nested-model comparison</strong> on the <strong>held-out eval
+split</strong>, from <strong>two deterministic forward passes</strong> — no training, no
+identical-seed pair, no floor:</p>
+<div class="highlight"><pre><span></span><code>Λ = 2·[ LL_eval(β_final) − LL_eval(β ≡ 1) ]
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th><code>Λ</code></th>
+<th>verdict</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>≤ 3.841</strong> (χ²₁ at 0.95, Wilks)</td>
+<td><strong>PINNED</strong> — the data cannot reject that the shipped model is the softmax-corner object</td>
+</tr>
+<tr>
+<td><strong>&gt; ln n</strong> (BIC, <code>n</code> = eval count)</td>
+<td><strong>MOVED</strong> — the dial buys its description length</td>
+</tr>
+<tr>
+<td><strong>3.841 &lt; Λ ≤ ln n</strong></td>
+<td><strong>"rejected at 0.95, below description-length"</strong> — both constants printed, no interpolation, no invented <code>k</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Both constants print beside every verdict, always</strong> (<code>V17K_RULINGS.md</code>,
+RULING 10′) <code>[INHERITED]</code>. Implemented at
+<code>ceq/hf/modeling_ceq.py::beta_lrt</code> / <code>lrt_report</code>; the formatter is what prints
+the two constants and the resolution together, so the defect above is
+unreachable rather than merely discouraged.</p>
+<p><strong>THE WALD CROSS-CHECK, AND THAT IT CAN CONTRADICT.</strong> <code>(β_final − 1)²·I_β</code>
+against the same <code>3.841</code> is the asymptotically equivalent parameter-space
+statement — Fisher information IS the converter between parameter displacement
+and likelihood displacement, which is how RULING 10′ closes the units objection
+rather than waiving it. The equivalence holds <strong>at the MLE</strong>, and <code>β_final</code> is
+fit on the <strong>training</strong> split, so it is never the eval split's maximiser.
+Measured on this box at a 27,914-parameter shape: <code>Λ = 7.206</code> <strong>rejects</strong> while
+<code>Wald = 1.150</code> <strong>does not</strong>, on the same <code>β</code> at the same <code>3.841</code>
+(<code>99777ab:V17_R10P_LRT.md</code> §4 <code>[MEASURED]</code>). <strong>Both are printed; neither is reported
+alone.</strong> <code>I_β</code> is the observed information, taken as an exact Hessian diagonal
+by double backward (<code>torch.autograd.grad(..., create_graph=True)</code> then one
+<code>grad</code> per parameter); where it measures <strong>non-positive</strong> — which it does at an
+untrained model, because observed information is only guaranteed non-negative at
+an MLE — the Wald and the resolution <strong>do not exist</strong> and are printed as
+<code>undefined</code> with the measured value, never clamped.</p>
+<h4 id="_-retired-as-the-criterion-by-ruling-10-kept-as-a-diagnostic"><code>δ_β</code> — RETIRED AS THE CRITERION BY RULING 10′, KEPT AS A DIAGNOSTIC<a class="headerlink" href="#_-retired-as-the-criterion-by-ruling-10-kept-as-a-diagnostic" title="Permanent link">#</a></h4>
+<p>RULING 2a defined PINNED as <code>|β_i,final − 1| ≤ 5·δ_β,i</code>, with <code>δ_β,i =
+|β_i⁽ᵃ⁾ − β_i⁽ᵇ⁾|</code> across the Ruling-1 identical-seed pair. <strong>That criterion
+broke on measurement.</strong> The re-take read the pair <strong>bitwise</strong> on the certified
+device (<code>δ_nrmse = 0.0</code>), so <code>5·δ_β</code> collapsed to exactly zero and every run
+read the "moved" branch for a reason about the <strong>pair's determinism</strong> rather
+than about training. RULING 10′ does not patch the floor: <strong>Wilks' randomness is
+over the DATA, not the optimizer</strong>, so a bitwise training pair is simply
+irrelevant to the test <code>[INHERITED]</code> <code>V17K_RULINGS.md</code>, RULING 10′.</p>
+<p><code>δ_β</code> <strong>survives as the diagnostic it always was.</strong>
+<code>scripts/k_noise_floor.py</code> keeps measuring it and that is correct;
+<code>ceq/hf/modeling_ceq.py::beta_summary</code> keeps computing <code>pinned</code> /
+<code>pinned_fraction</code> / <code>branch</code> / <code>n_degenerate_floor</code> off it, and its returned
+<code>criterion</code> field says in the artifact — not only here — that it is a
+diagnostic. <strong>It is printed beside the verdict for one reason: a diagnostic that
+CONTRADICTS the verdict is a finding, and it cannot contradict anything if it
+stops being computed.</strong> The two are not nested and will disagree by
+construction: a <code>β</code> far from 1 in a direction the data dislikes reads
+<strong>MOVED</strong> on the distance diagnostic and <strong>PINNED</strong> on the likelihood ratio,
+because it fits <em>worse</em> than <code>β = 1</code> and is therefore no evidence against
+<code>β = 1</code> (<code>tests/gate0/test_g16_lrt_pinned.py::
+test_a_beta_far_from_one_that_the_data_dislikes_reads_pinned_and_that_is_the_point</code>)
+<code>[MEASURED]</code>.</p>
+<p><strong>In this architecture, "per-parameter" and "per-layer" name the same index.</strong>
+<code>β</code> is one scalar <code>nn.Parameter</code> per attention layer, <strong>shared across all
+heads in that layer</strong> — <code>ceq/hf/modeling_ceq.py::CEQAttention.__init__</code>, and
+<code>beta_column</code>'s own docstring states the granularity rather than choosing it:
+<em>"a <code>[n_layers, n_heads]</code> beta would be a construction the arm does not
+have"</em> <code>[INHERITED]</code>. So <code>i</code> in <code>β_i</code> ranges over <strong>layers</strong>, not heads —
+noted here because it governs what Branch C below can and cannot report.</p>
+<blockquote>
+<p>⟨SLOT <code>LRT_VERDICT</code>⟩ — <strong>NOT MEASURED.</strong> Per layer <code>i</code>: <code>Λ_i</code>, its verdict
+against <code>3.841</code> and <code>ln n</code>, <code>I_β,i</code> (total and per-observation), the Wald
+statistic and whether it agrees, and <code>|β_i − 1|_min</code>. Plus <code>n</code> — the eval
+count — and the joint <code>Λ</code> with its dof. Owed by the <strong>Q3 training node</strong>,
+from <code>ceq/hf/modeling_ceq.py::beta_lrt</code> on the held-out split; the notebook's
+Q3 chunk cell already calls it and writes
+<code>/kaggle/working/lrt_verdict.json</code>. <strong>Requires no floor and no second run</strong>,
+which is why RULING 10′ unblocked what RULING 2a could not: the verdict now
+waits on the training run alone.</p>
+<p>⟨SLOT <code>EVAL_SPLIT_SPEC</code>⟩ — <strong>NOT MEASURED.</strong> Which bytes the eval split is,
+and the receipt that training never read them. <code>ceq/hf/train.py::ByteBatches</code>
+cuts 90/10 contiguously and <code>train()</code> draws only from <code>.train</code>; the Q3 cell
+draws from <code>.val</code> off the same object built from the same bytes, so the
+hold-out is by construction and not by an offset re-derived at read time. The
+spec still has to be printed, because <code>beta_lrt</code> scores whatever batch it is
+handed and cannot check the hold-out for the caller.</p>
+<p>⟨SLOT <code>DELTA_BETA_PER_PARAM</code>⟩ — <strong>NOT MEASURED, AND NO LONGER BLOCKING.</strong>
+<code>δ_β,i</code> for every layer <code>i</code>: <code>β_i</code>'s own spread across the Ruling-1
+identical-seed pair. Owed by the <strong>floor node</strong>, <code>scripts/k_noise_floor.py</code>.
+<strong>This is now a DIAGNOSTIC</strong> (RULING 10′): the verdict above does not wait on
+it, and its value is read for whether it contradicts the verdict. The
+re-take's bitwise pair means it may well land at <code>0</code>, which is exactly the
+measurement that retired it as a criterion.</p>
+<p>⟨SLOT <code>BETA_FINAL_DIST</code>⟩ — <strong>NOT MEASURED.</strong> <code>β_i,final</code> for every layer,
+printed as <code>min / median / max / n</code>, <strong>plus the fraction PINNED</strong> — where
+"pinned" is now ⟨<code>LRT_VERDICT</code>⟩'s per-layer verdict, not the retired
+<code>5·δ_β</code> test. Owed by the <strong>β node</strong>, out of the Q3 run, from the
+per-instance <code>β</code> column Ruling 2 requires
+(<code>ceq/hf/modeling_ceq.py::beta_column</code> / <code>beta_summary</code>, which compute
+<code>final_min</code> / <code>final_median</code> / <code>final_max</code> today). <strong>The fraction-pinned
+figure no longer waits on ⟨<code>DELTA_BETA_PER_PARAM</code>⟩; it waits on the Q3 run.</strong></p>
+<p>⟨SLOT <code>Q3_RUN_SPEC</code>⟩ — <strong>NOT MEASURED.</strong> data, steps, shape, seeds, optimizer,
+device, and the commit the run was made at. Owed by the Q3 training node.</p>
+<p>⟨SLOT <code>Q3_MEASUREMENTS</code>⟩ — <strong>NOT MEASURED.</strong> The trained run's readings, each
+beside the control's at the counts in the table below, each with the tolerance
+L-TOL-as-amended gives it (<code>V17K_RULINGS.md</code> §A1). Owed by the Q3 training node.</p>
+</blockquote>
+<h4 id="the-gradient-census-and-the-word-gate-it-controls">The gradient census, and the word-gate it controls<a class="headerlink" href="#the-gradient-census-and-the-word-gate-it-controls" title="Permanent link">#</a></h4>
+<p>Per pinned <code>β_i</code>, the <strong>integrated <code>|∂L/∂β_i|</code> over training</strong>, against the
+same statistic for moved <code>β</code>'s (<code>V17K_RULINGS.md</code>, RULING 2a). <strong>This is a
+different quantity from anything <code>ceq/hf/modeling_ceq.py</code> computes today</strong> —
+<code>beta_summary</code>'s <code>max_abs_grad</code> is a <strong>maximum over logged steps</strong>, not a
+<strong>running integral</strong>; the census needs an accumulator, not a max.</p>
+<ul>
+<li><strong>PINNED-WITH-SIGNAL</strong> — a gradient reached <code>β_i</code> and it returned to <code>1</code>.
+  Softmax is <strong>genuinely preferred</strong> there.</li>
+<li><strong>PINNED-WITHOUT-SIGNAL</strong> — the dial was never exercised. The claim
+  weakens to <strong>"unused"</strong>, and <strong>may never be written as "preferred."</strong></li>
+</ul>
+<blockquote>
+<p>⟨SLOT <code>GRADIENT_CENSUS</code>⟩ — <strong>NOT MEASURED.</strong> Per pinned <code>β_i</code>: the
+integrated <code>|∂L/∂β_i|</code> over training, and its PINNED-WITH-SIGNAL /
+PINNED-WITHOUT-SIGNAL classification. Owed by the <strong>β node</strong>,
+<code>ceq/hf/modeling_ceq.py</code> — a new per-parameter gradient accumulator, logged
+alongside the existing <code>beta_column</code>. No such accumulator exists in that
+file today.</p>
+</blockquote>
+<p><strong>THE WORD-GATE.</strong> The word <strong>"preferred"</strong>, applied to the softmax corner,
+may not be written anywhere in this clause from any source other than
+⟨SLOT <code>GRADIENT_CENSUS</code>⟩'s classification. It has exactly one point of entry —
+⟨SLOT <code>GRADIENT_CENSUS_WORD</code>⟩ below — and that slot has exactly two legal
+fills, chosen by table lookup and nothing else:</p>
+<table>
+<thead>
+<tr>
+<th>⟨<code>GRADIENT_CENSUS</code>⟩ over the pinned set</th>
+<th>the ONLY legal fill of ⟨<code>GRADIENT_CENSUS_WORD</code>⟩</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>unanimous</strong> PINNED-WITH-SIGNAL</td>
+<td><em>"a genuine preference — the gradient repeatedly returned <code>β</code> to the corner"</em></td>
+</tr>
+<tr>
+<td><strong>any</strong> PINNED-WITHOUT-SIGNAL present</td>
+<td><em>"not established as a preference — the dial was never exercised for at least one pinned layer, so the corner's word is 'unused'"</em></td>
+</tr>
+</tbody>
+</table>
+<p>The second row is the <strong>default when the two disagree</strong>. This extends RULING
+2a's own PRECEDENCE principle — <em>"the criterion that licenses the weaker
+sentence wins ties"</em> — from choosing between competing pin-criteria to
+choosing between competing readings of a mixed census; a mixed census over the
+pinned set is exactly such a tie, and this document is the one asserting the
+extension, not RULING 2a itself. <strong>A filled card that writes "preferred"
+without citing a unanimous ⟨<code>GRADIENT_CENSUS</code>⟩ has failed this template</strong>,
+regardless of which branch below it fills.</p>
+<blockquote>
+<p>⟨SLOT <code>GRADIENT_CENSUS_WORD</code>⟩ — <strong>NOT FILLABLE</strong> until ⟨<code>GRADIENT_CENSUS</code>⟩
+exists. No default value. No branch below may hard-code either row of the
+table above as prose in place of this slot.</p>
+</blockquote>
+<h4 id="the-quantifier-and-why-three-branches-replace-two">The quantifier, and why three branches replace two<a class="headerlink" href="#the-quantifier-and-why-three-branches-replace-two" title="Permanent link">#</a></h4>
+<p>"Pins" is <strong>per-parameter</strong> (here, per-layer). The card reports the
+<strong>distribution</strong>, never one number standing for all layers. The original two
+branches were a false dichotomy; RULING 2a's three:</p>
+<p><strong>BRANCH A — <code>≥ 95 %</code> of <code>β</code> parameters PINNED.</strong></p>
+<blockquote>
+<p>The shipped model is the softmax-corner object carrying an unused
+exact-propagation corner.</p>
+<p>This sentence carries two separate claims that must not be read as one:</p>
+<ol>
+<li><strong>Structural, and true regardless of the census.</strong> The parameters that
+   would reach the <code>β = 0, QK-off</code> corner are still in the checkpoint — the
+   identity clause above is a real certificate about that corner, and it is
+   <strong>not evidence about this checkpoint</strong>, whose <code>β</code> did not go there.
+   Nothing in the trained model reaches the exact-propagation corner; it is
+   carried and unused. This is the <em>"unused … corner"</em> in the sentence
+   above, and it does not depend on the gradient census.</li>
+<li><strong>Whether settling near the softmax corner was PREFERRED — census-gated,
+   and not this document's word to choose:</strong> ⟨SLOT <code>GRADIENT_CENSUS_WORD</code>⟩.</li>
+</ol>
+<p><strong>What "pinned" does NOT claim, and why the distinction matters.</strong> <code>≥ 95 %</code>
+pinned means <code>≥ 95 %</code> of layers read <code>Λ_i ≤ 3.841</code> — <strong>the data cannot
+reject <code>β_i = 1</code> at this eval split's resolution</strong>, which is not equality and
+is not a claim that <code>β_i</code> is 1. The resolution itself,
+<code>|β_i − 1|_min ≈ √(3.841 / (n · I_β,i))</code>, travels with the branch; a
+departure below it is invisible here, not absent. The bitwise and exact-row-sum
+properties measured for the <strong>operator at <code>β = 1</code> exactly</strong> —
+<code>corner_softmax</code>, <code>softmax_row_sum_one</code>; <code>Σ_j|W_ij| = 1.000000</code> on every row
+at <code>β = 1</code> against <code>[1.312192, 0.724290, 2.563817, 2.264559, 10.293107,
+2.721943, 3.096841, 1.337183]</code> at <code>β = 0</code>; bitwise against <code>#5a</code>'s own
+<code>softmaxAttn</code>, and <strong>not</strong> bitwise (<code>1.110223e-16</code> on <code>19/64</code> entries)
+against <code>ceq/lm.py</code>'s <code>Attention("softmax_x")</code> (<code>99777ab:V16_ARM_SMPRIME.md</code> rows
+(c), (e), §4.2) <code>[MEASURED]</code> — are properties of <strong>that corner</strong>, not of a
+layer the eval split merely fails to separate from it. <strong>This branch does not
+assert the trained layers are bitwise softmax</strong> — only that a <code>1</code>-dof
+likelihood ratio on the held-out split does not reject <code>β_i = 1</code> at the
+resolution printed beside it. Conflating "pinned" with "exactly at
+the corner" is exactly the transfer this section's own law forbids ("NO
+SENTENCE TRANSFERS ACROSS CORNERS WITHOUT A BIND AT THE CORNER IT
+DESCRIBES"); a non-rejection at <code>Λ ≤ 3.841</code> is its own, weaker bind — it is a
+statement about what this eval split can resolve, not about <code>β</code> — and the label
+bind's own failure at the exact corner (<code>1.335288</code> where the honest cell
+reads <code>1.110223e-16</code>, <code>99777ab:V16_ARM_SMPRIME.md</code> rows (f), (h) <code>[MEASURED]</code>) is
+Lean <code>#5a</code>'s content, not evidence against a layer merely sitting near it.
+The two per-position heads and three switches this corner's object still
+pays <strong>+8,232 parameters</strong> (<strong>+0.03200 %</strong>) to carry travel with the
+sentence regardless of branch (<code>99777ab:V17_ARM_WIRING.md</code> §5 <code>[MEASURED]</code>).</p>
+<p>Measurements: ⟨SLOT <code>Q3_RUN_SPEC</code>⟩, ⟨SLOT <code>BETA_FINAL_DIST</code>⟩ (fraction
+pinned <code>≥ 0.95</code>), ⟨SLOT <code>GRADIENT_CENSUS</code>⟩, ⟨SLOT <code>Q3_MEASUREMENTS</code>⟩.</p>
+</blockquote>
+<p><strong>BRANCH B — <code>≤ 5 %</code> of <code>β</code> parameters PINNED.</strong></p>
+<blockquote>
+<p>Training left the softmax corner; the model is the interpolated object, <code>β</code>
+distribution printed.</p>
+<p>The corners are provably distinct objects — <code>|c₁−c₂| = 4.472918</code>,
+<code>|c₁−c₃| = 1.144938</code>, <code>|c₂−c₃| = 5.335671</code> (<code>99777ab:V16_ARM_SMPRIME.md</code> row (d),
+<code>corners_are_distinct</code>) <code>[MEASURED]</code> — so a bind proved at one corner is not
+a bind at an interpolated point between them, and <strong>neither corner
+certificate applies to this branch's checkpoint</strong>: not the <code>β = 0</code> identity
+clause above, not <code>corner_softmax</code> at <code>β = 1</code>. No "preferred"/"unused"
+language applies here — RULING 2a does not attach the word-gate to this
+branch, and this card does not add one.</p>
+<p>Measurements: ⟨SLOT <code>Q3_RUN_SPEC</code>⟩, ⟨SLOT <code>BETA_FINAL_DIST</code>⟩ (fraction
+pinned <code>≤ 0.05</code>), ⟨SLOT <code>Q3_MEASUREMENTS</code>⟩.</p>
+</blockquote>
+<p><strong>BRANCH C — else: MIXED.</strong> <em>(RULING 2a calls this the likely outcome and the
+most informative one.)</em></p>
+<blockquote>
+<p>Some layers are pinned near <code>β = 1</code>, some are not, and the finding is
+<strong>WHERE</strong> the split falls — a model that leaves the corner only in some
+layers is a finding about where exactness pays. Neither corner certificate
+applies whole-cloth; print the full distribution and the locations of the
+moved <code>β</code>'s.</p>
+<p>⟨SLOT <code>BRANCH_C_LOCATIONS</code>⟩ — <strong>NOT MEASURED.</strong> Which <strong>layers</strong> carry a
+moved <code>β</code> (outside the pinned band) versus which are pinned. Owed by the
+<strong>β node</strong>, <code>ceq/hf/modeling_ceq.py</code>, out of ⟨<code>BETA_FINAL_DIST</code>⟩ once it
+exists. <strong>"Which heads" — RULING 2a's own phrasing — is not answerable
+under the current parametrization.</strong> <code>β</code> is one scalar per layer, shared
+across every attention head in that layer (<code>CEQAttention.__init__</code>,
+<code>beta_column</code>'s docstring, quoted above); there is no per-head <code>β</code> to
+locate. Reporting one would require widening the arm to a
+<code>[n_layers, n_heads]</code> <code>β</code>, which is exactly the construction
+<code>beta_column</code>'s own docstring already refuses as something "the arm does
+not have." <strong>This is a real gap between what RULING 2a asks for and what
+the shipped parametrization can report: layer-level locations are
+reachable, head-level locations are not, without a new construction this
+round's first law forbids.</strong> Flagged rather than papered over.</p>
+<p>Measurements: ⟨SLOT <code>Q3_RUN_SPEC</code>⟩, ⟨SLOT <code>BETA_FINAL_DIST</code>⟩ (fraction
+pinned strictly between <code>0.05</code> and <code>0.95</code>), ⟨SLOT <code>BRANCH_C_LOCATIONS</code>⟩,
+⟨SLOT <code>Q3_MEASUREMENTS</code>⟩.</p>
+<p>⟨SLOT <code>BRANCH_VERDICT</code>⟩ — <strong>NOT RULED, and not a free choice.</strong> Which of the
+three branches' text the finished card carries is selected by ⟨
+<code>BETA_FINAL_DIST</code>⟩'s fraction-pinned figure alone (<code>≥0.95</code> → A, <code>≤0.05</code> → B,
+else → C), once that figure exists. No other input selects the branch, and
+no branch may be filled before it does.</p>
+</blockquote>
+<hr />
+<h2 id="parameters-the-exact-counts-ruling-3">Parameters — the exact counts (RULING 3)<a class="headerlink" href="#parameters-the-exact-counts-ruling-3" title="Permanent link">#</a></h2>
+<p>Every comparison in this section is headed by the exact counts, so no reader has
+to take "matched" on trust. <code>99777ab:V17_ARM_WIRING.md</code> §5 <code>[MEASURED]</code>, CPU, float32.</p>
+<table>
+<thead>
+<tr>
+<th>shape</th>
+<th>arm — <code>operator="smprime"</code>: <strong>25,736,232 params</strong> (at <code>DEFAULTS</code>)</th>
+<th>control — <code>operator="sgate"</code>, softmax-shaped: <strong>25,728,000 params</strong> (at <code>DEFAULTS</code>)</th>
+<th>difference</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>d=32, L=2, H=4, V=32, S=16</code></td>
+<td><strong>27,914</strong></td>
+<td><strong>27,776</strong></td>
+<td><strong>+138</strong> = <code>2·(2·(32+1)+3)</code></td>
+</tr>
+<tr>
+<td><code>ceq/hf/train.py::DEFAULTS</code> — <code>d=512, L=8, H=8, V=256, seq=512</code></td>
+<td><strong>25,736,232</strong></td>
+<td><strong>25,728,000</strong></td>
+<td><strong>+8,232</strong> = <code>8·(2·(512+1)+3)</code> = <strong>+0.03200 %</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>The excess is <code>n_layers · (2·(d+1) + 3)</code>, and it is exactly these tensors, by
+name</strong> — <code>m_head.weight [1,d]</code>, <code>m_head.bias [1]</code>, <code>theta_head.weight [1,d]</code>,
+<code>theta_head.bias [1]</code>, <code>beta []</code>, <code>qk []</code>, <code>g []</code>, per layer — <strong>and the control
+has no parameter the arm lacks</strong> (<code>99777ab:V17_ARM_WIRING.md</code> §5). It cross-checks the
+same excess <code>99777ab:V16_ARM_SMPRIME.md</code> §1 recorded at <code>d_model = 16</code>:
+<code>4,806 − 4,769 = 37 = 2·16 + 5</code> <code>[MEASURED]</code>.</p>
+<p><strong>The residual is excluded as an explanation by magnitude, not closed.</strong> Ruling 3:
+<code>0.032 %</code> is MATCHED, and the arm is <strong>not</strong> to be re-architected to close it —
+that is how new constructions sneak in. Three ways to make it exact were priced
+and none taken: shrinking the arm's <code>d</code> breaks "same shape"; widening the
+control's <code>d</code> is not expressible (the excess is not a multiple of any control
+parameter block); deleting a head or a switch mutilates the arm
+(<code>99777ab:V17_ARM_WIRING.md</code> §5).</p>
+<p><strong>Result table for the trained comparison</strong> — headed with the same counts, filled
+by the Q3 run:</p>
+<table>
+<thead>
+<tr>
+<th>reading</th>
+<th>arm, <strong>25,736,232 params</strong></th>
+<th>control, <strong>25,728,000 params</strong></th>
+<th>Δ</th>
+<th>tolerance (L-TOL as amended)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>⟨SLOT <code>Q3_MEASUREMENTS</code>⟩</td>
+<td>⟨SLOT⟩</td>
+<td>⟨SLOT⟩</td>
+<td>⟨SLOT⟩</td>
+<td>⟨SLOT <code>FLOOR_TRAIN_ABS_DLOSS</code>⟩ for training-side readings; <strong>bitwise</strong> for forward-only deciding cells</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="model-details">Model Details<a class="headerlink" href="#model-details" title="Permanent link">#</a></h2>
+<ul>
+<li><strong>Type:</strong> a <code>transformers</code>-registerable attention function plus a small causal-LM
+  architecture (<code>CEQForCausalLM</code>), byte-level vocabulary. <strong>No language-model weights are
+  published here</strong> — what ships under <code>weights/</code> are 4,769-parameter trained task-probe arm
+  checkpoints (<code>scale.m3_quintuple.QuintArm</code>), a different and much smaller object. See
+  "Weights and checkpoints" below.</li>
+<li><strong>Operator:</strong> <code>out = stock_attention(q, k, v) + Σ_{h=1..K} (α A)^h v</code>, <code>A</code> strictly lower
+  triangular and signed; shipped default <code>sgate</code> at <code>rho=1.5, lam=0.10, hops=2</code>.</li>
+<li><strong>Sizes ever trained:</strong> 3.3M and 3.65M parameters. <strong>Nothing above 3.65M has ever run.</strong></li>
+<li><strong>Requires <code>trust_remote_code=True</code>.</strong> Loading executes Python from this repository on your
+  machine. Read <code>modeling_ceq.py</code> first and pin <code>revision=</code> to a commit hash so a later push
+  cannot change what runs.</li>
+<li><strong>License:</strong> MIT. <strong>Contact / issues:</strong> the source repository.</li>
+<li><strong>The headline result is a loss.</strong> Read "Limits, first" before anything else.</li>
+</ul>
+<p><strong>This card describes a MODULE; its language model is not a trained checkpoint.</strong> There are no weights here
+for <code>CEQForCausalLM</code>. What does ship, since the e3 ladder completed, is a set
+of trained task-probe arm tensors under <code>ceq/hf_artifact/weights/</code> — 4,769-parameter
+<code>QuintArm</code> modules trained by <code>scale/m3_quintuple.py</code>, each verified bit-exact against its
+journal row before export. The card remains measured against softmax rather than presented on
+its own, and the one capability comparison ever run at matched parameters went against it.</p>
+<div class="highlight"><pre><span></span><code>out = stock_attention(q, k, v) + Σ_{h=1..K} (α A)^h v      A strictly lower triangular, SIGNED
+</code></pre></div>
+<p>Every number below names the test that produces it. Reproduction commands are at the end.</p>
+<hr />
+<h2 id="limits-first">Limits, first<a class="headerlink" href="#limits-first" title="Permanent link">#</a></h2>
+<p><strong>THE e3 LADDER COMPLETED. ROW G FIRED AT t* ∈ {2, 8, 32}; THE t* = 1 RUNG IS
+UNDERPOWERED — NOT A KILL, AND NOT A WIN.</strong> The settled-vs-twin ladder over the chain-family
+equilibrium tasks (<code>e3_t*</code>, 60 units: {settled, twin, softmax} × seeds 0–4 × t* ∈
+{1, 2, 8, 32}, n_train=2048, n_eval=2048, journal keys <code>*_taske3_t{1,2,8,32}</code> in
+<code>results/m3_quintuple_v2.jsonl</code>, reading in <code>results/e_ladder_reading.txt</code>) closed today with
+three findings, stated in the pre-registration's own order:</p>
+<ul>
+<li><strong>Row G (pre-registered) fired on three of four rungs.</strong> At t* ∈ {2, 8, 32} a cell sits at
+  or above predict-the-mean — twin 0.996743 and settled 1.013958 at t*=2; settled 1.096009
+  and twin 1.091725 at t*=8; settled 1.103711 and twin 1.119745 at t*=32 (<code>results/e_ladder_reading.txt</code>,
+  per-cell means) — so those rungs <strong>credit nothing in either direction</strong>. This is a statement
+  about the arms' capacity budget at depth, not a settling kill.</li>
+<li><strong>t* = 1 is underpowered, not a kill.</strong> The settled−twin contrast reads <strong>−0.036025</strong>,
+  95% CI <strong>[−0.118936, +0.062209]</strong>, N=5 paired seeds, verdict NO DIFFERENCE (reading's own
+  convention: delta = NRMSE_twin − NRMSE_settled, positive favours settled). The interval
+  spans zero and five seeds cannot resolve gaps below roughly 0.05 NRMSE
+  (<code>99777ab:M3_QUINTUPLE_PREREGISTERED_READING.md</code> floor). The route owed is pre-registered:
+  <strong>seeds 5→13 at that rung</strong>, at which the realised resolution is 0.027260
+  (<code>results/e_ladder_reading.txt</code>). Until that run completes, no sentence about settling at
+  t* = 1 is licensed by this data.</li>
+<li><strong>The headline claim is unchanged and stays exactly what was earned, with its interval:</strong>
+  pivot-routed mixture attention (twin) beats the softmax baseline by <strong>+0.111396 NRMSE,
+  95% CI [+0.100873, +0.121920], 5/5 seeds</strong>, on <code>negation_scope</code> at n_train=8192
+  (<code>results/m3_quintuple_v2.jsonl</code>; contrast table in <a href="https://github.com/teerthsharma/resolvent/blob/master/ceq/hf_artifact/README.md"><code>ceq/hf_artifact/README.md</code></a>).
+  No superiority claim beyond that interval is made anywhere in this card.</li>
+</ul>
+<p>Scope caveat carried from the reading itself: every e3 task binds <code>equilibrium_oracle</code>, the
+signed path sum the ceq resolvent computes, so only the settled-vs-twin contrast is
+creditable on this ladder and a loss here is a statement about e3, not about the round's
+prediction.</p>
+<p><strong>THE CAPABILITY NUMBER CAME BACK AND THE OPERATOR LOST IT.</strong> COGS generalization, exact
+match, 512 items, <strong>3,652,096 parameters in both arms</strong>, identical steps / lr / batch / seed
+/ data / eval subsample, one seed:</p>
+<table>
+<thead>
+<tr>
+<th>arm</th>
+<th>COGS-gen</th>
+<th>in-distribution (gate)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>softmax control</td>
+<td><strong>0.0293</strong> (15/512)</td>
+<td><strong>0.9258</strong></td>
+</tr>
+<tr>
+<td><code>sgate</code></td>
+<td><strong>0.0000</strong> (0/512)</td>
+<td><strong>0.7734</strong></td>
+</tr>
+<tr>
+<td>published from-scratch encoder-decoder, arXiv:2010.05465</td>
+<td>0.35 ± 0.06</td>
+<td>0.96</td>
+</tr>
+</tbody>
+</table>
+<p>One-sided Fisher exact for softmax &gt; <code>sgate</code>: <strong>p = 2.7502788939e-05</strong> — recomputed exactly
+this round; earlier documents rounded it to 2.8e-05. Not a tie — a loss. And the
+deficit is already present <strong>in-distribution</strong>, on the split both arms trained on, so it is
+not a story about generalization; it is the same shape as the val-loss gap that widened with
+budget. Truncation ceiling at <code>max_new = 192</code> is 0.9512, identical for both arms.</p>
+<p>SCAN addprim_jump, 3 seeds, 4000 steps, 512 items, 3,183,104 parameters both arms: softmax
+median <strong>0.0000</strong> (0.0000 / 0.0000 / 0.0059), <code>sgate</code> median <strong>0.0000</strong> (0 / 0 / 0), against a
+published vanilla Transformer at <strong>0.034 ± 0.020 SEM</strong> (arXiv:2107.01366 Table 3). At n = 512
+a zero carries a 95% upper bound of 0.00583 and the published 0.034 would have shown ~17
+solved items, so both arms genuinely miss the published floor — and <strong>two arms at zero
+separate nothing from each other.</strong></p>
+<p><code>python -m ceq.capability</code> · <code>results/capability.json</code> · <code>tests/cameron/test_capability_result.py</code></p>
+<p><strong>A reference this project cited for four rounds is a different task.</strong> "Edge Transformer
+0.874 ± 0.004 against a Universal Transformer control at 0.784" is the <strong>graph-prediction</strong>
+reformulation of COGS (arXiv:2112.00578 Table 4, captioned "graph prediction accuracy"), not
+the sequence-generation task scored here; the 0.784 carries no ± and is quoted from Ontanón
+et al. 2021. The only altered-attention precedent on sequence-generation COGS is Csordás et
+al. 2021 at 0.81 ± 0.01 against 0.80 ± 0.00 — <strong>about four points.</strong></p>
+<p><strong>The distinguishing property DECAYS with context — and every rate in this repository is
+floor-sensitive, which no document said until now.</strong> Content-conditional sign was measured at
+the probe's default context of <strong>s = 8</strong> and never swept. <code>ceq/bench.sign_flip_rate</code> discards
+any draw whose gradient falls below an <strong>absolute</strong> <code>floor</code> (default <code>1e-6</code>), so that setting
+is part of every number it has ever produced. Swept, 1024 draws, relative positions held
+fixed, at both settings:</p>
+<table>
+<thead>
+<tr>
+<th>s</th>
+<th>8</th>
+<th>16</th>
+<th>32</th>
+<th>64</th>
+<th>128</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sgate</code>, <code>floor = 0</code></td>
+<td>0.181641</td>
+<td>0.098633</td>
+<td>0.050781</td>
+<td>0.026367</td>
+<td><strong>0.012695</strong></td>
+</tr>
+<tr>
+<td><code>sgate</code>, <code>floor = 1e-6</code> — every rate published before this round</td>
+<td>0.174805</td>
+<td>0.088867</td>
+<td>0.026367</td>
+<td>0.011719</td>
+<td><strong>0.003906</strong></td>
+</tr>
+<tr>
+<td>softmax control, either floor</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+</tr>
+</tbody>
+</table>
+<p>The floor discards more of the signal the further the context runs — ratio <strong>1.04 / 1.11 /
+1.93 / 2.25 / 3.25×</strong> over <code>s = 8…128</code> — which is exactly where the decay was being read.
+<strong>The decay is real</strong> (0.181641 → 0.012695 is 14.3× over a 16× growth in context) <strong>and the
+published exponent −1.389, R² 0.9938 is withdrawn as a <code>floor = 1e-6</code> artifact.</strong> No
+replacement exponent is published: least squares on the five <code>floor = 0</code> rates above gives
+<strong>−0.958 (R² 0.9990)</strong>, the audit that forced this correction reports <strong>−1.221 (R² 0.9662)</strong>,
+and those two do not agree. Extrapolating the −0.958 line reaches ~1.8e-3 at <code>s = 1024</code> and
+~9.3e-4 at <code>s = 2048</code> — arithmetic on a fitted line, <strong>never measured at <code>s ≥ 1024</code> on this
+probe</strong>, and no longer "below the resolution of 10,000 draws" as previously published.</p>
+<p><strong>The mechanism is that the property and its decay are the same fact.</strong> A third token <code>c</code>
+reaches the pair (i,j) only along a path <em>through</em> <code>c</code>, and the first term of <code>J = Σ A^k</code>
+containing one is <code>k = 2</code> — measured at hops=1: 0.0273, at hops=2: 0.1445. The two-hop term
+sums over ~<code>s</code> intermediates of which <code>c</code> is one, so its share is <strong>1/s by construction</strong>.
+Multi-hop is what <em>creates</em> the property and multi-hop is what <em>dilutes</em> it.</p>
+<p><strong>Round 4 corrects this.</strong> That sweep moved <code>j = s/4</code> and <code>c = s/2</code>, so the intermediate
+count and every softmax row normalizer grew with <code>s</code> together. Pinned at <code>j = i−4, c = i−2</code>
+the path count is a constant 3, and <code>sgate</code> on a global row <strong>still</strong> falls 0.021484 →
+0.001953 → 0.000000 over <code>s = 32/128/512</code>, while DeltaNet — signed entries, no row
+normalizer — reads 0.074219 / 0.076172 / 0.065430 and is bit-for-bit identical under a
+sliding window. The dilution is the <strong>softmax row denominator summing over <code>s</code> tokens</strong>, not
+the two-hop share. (These are <code>floor = 1e-6</code> rates and have not been re-measured at
+<code>floor = 0</code>. A bounded receptive field was once published here as a regime where the property
+survives; that is <strong>withdrawn</strong> — the rate decays in window width at −1.159, R² 0.9933, as
+fast as it decays in context.) <code>tests/foreman/test_paraformer_ratio_across_context.py::test_claim_the_context_decay_is_the_path_count_and_not_the_row_normalizer</code> — RED.</p>
+<p>Nothing arrests it: <code>lam</code> 0.05→2.00, <code>rho</code> 0.5/1.5/4.0, depth 2 and 3, and head width
+16/32/64/128 — all read <strong>0.00000 at s=128</strong> while holding 0.13–0.18 at s=8.</p>
+<p>Honest control: on the sign-unconstrained <em>input</em> path, softmax decays too (0.03125 /
+0.01172 / 0.00000). This is dilution of one token's leverage, common to attention. What is
+specific to the signed operator is only that it has the property on the <strong>value</strong> path where
+softmax is pinned at exactly zero — an infinite ratio over a vanishing absolute.</p>
+<p><strong>The headline was never reported with an interval.</strong> 0.1641 is 21/128; binomial 95%
+interval ≈ [0.10, 0.24]. Re-runs give 0.1719 and 0.1445.</p>
+<p><strong>A 3.34% val-loss gap is inside the band where loss stops predicting capability.</strong>
+arXiv:2605.20798 (verified by direct fetch): <em>"two significant failures converge to within
+2-3% of baseline validation loss yet drop 6-16 CLIMB-points"</em>, Spearman ρ = −0.27 between
+1.2B and 3B improver rank. The campaign's own win condition sits inside that band.</p>
+<p><strong>A leap was attempted and falsified.</strong> <code>A = ρ·sgn(w)·softmax(|w|)</code> — sign from an
+unnormalized pairwise quantity, magnitude from a normalized one — decays identically
+(0.0840 / 0.0332 / 0.0137 / 0.0039 / 0.0020). It is also Cog Attention's matrix
+(arXiv:2411.07176), published. The normalizer was never the problem.</p>
+<p><strong>PARITY was reached only after four operator knobs were tuned, and only at 3.3M
+parameters.</strong> The operator as originally shipped -- raw logits, row-L1 normalized -- loses
+to softmax and the gap WIDENS with training. The operator that reaches parity is a
+difference of two softmaxes (<code>rho=1.5, lam=0.10, hops=2</code>) at a learning rate swept for both
+arms: median ratio <strong>1.0334</strong>, spread 1.0199-1.0413, under the 1.05 bar on <strong>5/5 seeds</strong>,
+parameters exactly equal at 3,319,296, wall-clock <strong>1.32x</strong>. The signed arm had four knobs
+tuned (rho, lam, hops, lr); softmax had one (lr), because it has no operator knobs. That
+asymmetry is real and is stated rather than buried. Whether parity survives a longer budget
+is UNTESTED -- the widening measured below was on the original operator.</p>
+<p><strong>The ORIGINAL operator loses to softmax and the gap WIDENS with training.</strong> From scratch, byte-level TinyStories, identical
+parameter counts (3,319,296 each), identical initialization, data, steps and optimizer:</p>
+<table>
+<thead>
+<tr>
+<th>budget</th>
+<th>softmax val</th>
+<th>signed val</th>
+<th>ratio</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>250 steps, bs 16</td>
+<td>1.8838</td>
+<td>2.2965</td>
+<td><strong>1.2191×</strong></td>
+</tr>
+<tr>
+<td>600 steps, bs 32</td>
+<td><strong>1.5780</strong></td>
+<td><strong>2.1103</strong></td>
+<td><strong>1.337×</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Same architecture in both rows (d=256, 4 layers, seq 128); only the training budget differs.
+<strong>More training makes it worse, not better</strong> — softmax exploits its selectivity as budget
+grows while the flat operator saturates. The signed arm also spends ~54% more wall-clock
+(<code>hops=3</code> is three matmuls against one), so the gap is not an iso-FLOP artefact in its
+favour. Both beat uniform <code>ln(256) = 5.5452</code>, so both genuinely learned.
+<code>tests/w10/test_w10_from_scratch.py::test_pure_signed_operator_trains_to_parity_with_softmax</code></p>
+<p><strong>At α = 0 this IS stock attention, bitwise.</strong> Therefore the gate can never be superior to
+attention — it is attention <em>plus a term</em>. That is by construction, not an accident.
+<code>tests/w8/test_w8_real_model.py::test_alpha_zero_is_bitwise_stock_attention</code></p>
+<p><strong>Intervention generalization was NOT achieved.</strong> On a held-out composition of two sign
+flips: attention 5.8198, APPNP 4.2107, signed 2.6151 OOD NRMSE, median of 5 seeds. NRMSE
+1.0 is predict-the-mean, so <strong>all three arms are worse than a constant predictor</strong>. The
+signed operator fails 1.6× less badly. It does not generalize.
+<code>tests/w4/test_w4_intervention.py::test_signed_arm_generalizes_rather_than_merely_degrading_less</code></p>
+<p><strong>Five of six original requirements were deleted by their own falsifiers</strong> — R1, R2-as-max-plus,
+R3, R4, R6. Only R5 (multi-zoom) survived. <code>README.md</code> has the table.</p>
+<p><strong>The Triton kernel is forward-only.</strong> No backward pass exists; training must use the CPU
+reference, which is differentiable and gradcheck-clean.</p>
+<p><strong>Kernel memory is worse at every length</strong>, 1.31×–1.94× SDPA. It wins wall-clock only above
+seq 8192 (7.48× at 32768); at seq 1024 it is <strong>0.06×</strong>, far slower.</p>
+<p><strong>That 1.31×–1.94× is INFERENCE, forward-only, seq 128–512, and it is not the number a
+trainer pays.</strong> Training forward+backward against SDPA at identical parameters, fp32:</p>
+<table>
+<thead>
+<tr>
+<th>seq</th>
+<th>128</th>
+<th>256</th>
+<th>512</th>
+<th>1024</th>
+<th>2048</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>signed / SDPA peak memory</td>
+<td>1.44×</td>
+<td>1.74×</td>
+<td><strong>2.65×</strong></td>
+<td><strong>4.45×</strong></td>
+<td><strong>8.06×</strong></td>
+</tr>
+</tbody>
+</table>
+<p>A 0.5B model at seq 2048 batch 1 needs <strong>36.31 GiB</strong> against a 33.53 GiB A100-40GB budget and
+20.25 GiB on an L4, so gradient checkpointing (0.379×, 1287.5 → 487.7 MiB at seq 1024, loss
+identical to 1e-4) is a requirement rather than an option. The same table ships inside the
+package as <code>ceq.hf.modeling_ceq.COSTS</code>, because a cost recorded only in a markdown file does
+not reach the person who downloads the checkpoint.</p>
+<p><strong>α &gt; 0 cannot decode without the hop cache</strong>, and the hop cache is exact forward but lossy
+backward — eviction is bitwise only if nothing dependent has run yet.
+<code>tests/w9/test_w9_hopcache.py::test_eviction_is_not_retroactive</code></p>
+<p><strong>No scaling-law claim is made.</strong> No published ~30-architecture inversion study exists; the
+nearest real work is Tay et al. (<a href="https://arxiv.org/abs/2207.10551">arXiv:2207.10551</a>), ten
+architectures at 2.9B dense, no intercept-vs-slope decomposition.</p>
+<p><strong>Every number was measured on one machine</strong> — Windows, Python 3.11.9, torch 2.5.1+cu121,
+RTX 4060 Laptop, sm_89, 8.0 GiB, 24 SMs, triton 3.7.1. A utilization figure from a laptop
+part does not transfer to an A100.</p>
+<p><strong>What has never been done, stated so nobody has to ask.</strong> ARC-AGI has <strong>never been scored</strong>.
+A Turing-style evaluation has <strong>never been attempted — no file for one exists</strong>. Nothing has
+run above <strong>3.65M parameters</strong>. <code>python -m pytest tests/ -q</code> has never completed (~9% in 15
+minutes on CPU, estimated &gt;3 h), so <strong>no total pass/fail count exists — do not quote one</strong>;
+what is verified is that <strong>955 tests collect</strong> in 9.6 s (measured 2026-08-25; this count
+GROWS as tests are added, so re-measure rather than trusting it) and every test name cited in the
+README resolves against that collection, enforced by <code>tests/w11/test_w11_claims_resolve.py</code>.</p>
+<p><strong>This package requires <code>trust_remote_code=True</code>.</strong> Loading it executes Python from this
+repository on your machine. That is a real security decision and it is yours to make: read
+<code>modeling_ceq.py</code> before loading it, and pin a <code>revision=</code> so a later commit cannot change
+what runs.</p>
+<hr />
+<h2 id="what-it-adds-and-how-much-of-it-is-already-published">What it adds, and how much of it is already published<a class="headerlink" href="#what-it-adds-and-how-much-of-it-is-already-published" title="Permanent link">#</a></h2>
+<p><strong>A token can reduce another token's contribution.</strong></p>
+<table>
+<thead>
+<tr>
+<th>operator</th>
+<th>min influence Jacobian <code>∂out_i/∂v_j</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>softmax attention</td>
+<td><strong>+0.000000e+00 — exactly zero</strong></td>
+</tr>
+<tr>
+<td>APPNP</td>
+<td><strong>+0.000000e+00 — exactly zero</strong></td>
+</tr>
+<tr>
+<td>max-plus Kleene star</td>
+<td><strong>+0.000000e+00 — exactly zero</strong></td>
+</tr>
+<tr>
+<td><strong>this module</strong></td>
+<td><strong>−9.000000e-01</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Not a tuning difference. The Kleene star of a non-negative matrix has a non-negative
+influence Jacobian <strong>in any ordered semiring</strong> — measured exactly zero over 40 max-plus
+instances and 160 APPNP kernels. Softmax, APPNP and max-plus are all inside that class, so
+none of them can express a negation. Dropping non-negativity is the only escape.</p>
+<p><strong>Citation is stale — flagged rather than silently dropped.</strong> The row above was measured by
+two functions (<code>test signed operator reaches negative influence</code>, calibrated by
+<code>test the nonnegative control is stuck at exactly zero</code>) in a module named
+<code>test_w6_attention.py</code>, formerly under <code>tests/w6/</code>. That file was deleted from the live tree
+at <code>c71527a</code> ("Remove the round reports from the tree..."), after an earlier move from
+<code>tests/w6/</code> to <code>attic/tests/w6/</code> at <code>228a048</code> — <code>git log --follow -- attic/tests/w6/test_w6_attention.py</code>
+shows both moves, and neither path exists at HEAD (<code>git ls-files | grep w6</code> returns only
+<code>tests/w6/conftest.py</code>). The two functions survive only inside a Kaggle snapshot copy of this
+repository under <code>kaggle/snapshot/repo/</code>, which <code>pytest.ini</code>'s own
+<code>norecursedirs = attic kaggle ...</code> excludes from collection. <strong>No live, collected test
+currently reproduces this row</strong>; the numbers above are not re-verified by the reproduction
+commands at the end of this card until a replacement test is written.</p>
+<p><strong>Published attention is already outside that class.</strong> Reimplemented from their defining
+equations and measured on the same instrument: SimA (arXiv 2206.08898, 2022), which
+L1-normalizes Q and K instead of applying softmax, reaches <strong>−3.929583e-01</strong> and states the
+property in its own text; Differential Transformer (arXiv 2410.05258) is negative by
+subtraction; DeltaNet's UT transform (arXiv 2406.06484 Eq. 10) inverts a <strong>signed</strong> strictly
+lower triangular matrix, min entry <strong>−10.875878</strong>. Signedness alone is a rediscovery.</p>
+<p><strong>And this module's own matrix is published.</strong> Signed Dual Attention (arXiv:2606.04833,
+v1 3 Jun 2026) Eq. 1–2 is <code>A⁺ = softmax(QKᵀ/√d_k)</code>, <code>A⁻ = softmax(−QKᵀ/√d_k)</code>,
+<code>SDA = (A⁺ − A⁻)V</code> — the <code>sgate</code> matrix at <code>lam = 1</code>, single-hop.</p>
+<p><strong>The signed-and-multi-hop pairing is occupied too, and the number that said otherwise was
+an instrument bug.</strong> <code>ceq/bench.py::sign_flip_rate</code> built the hop-coefficient vector for its
+<code>paraformer</code> arm and never referenced it, so the arm ran plain single-hop softmax; round 3's
+"ParaFormer 0 of 2048 draws, Clopper-Pearson ceiling 0.00146, at least 84×" was a softmax
+number. Corrected — <code>Σ_k γ_k Â^k h</code>, arXiv:2512.14619 Eq. 9 — on <code>hops=2</code>, 2048 draws,
+seed 0, <code>i=s-1, j=s/4, c=s/2</code>, exact Clopper-Pearson 95%:</p>
+<table>
+<thead>
+<tr>
+<th>operator</th>
+<th>base matrix</th>
+<th>s = 8</th>
+<th>s = 16</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>this module, <code>Σ A^k</code>, <code>sgate</code></td>
+<td>signed, content-dependent</td>
+<td>0.166016 [0.150143, 0.182850]</td>
+<td>0.078613 [0.067323, 0.091127]</td>
+</tr>
+<tr>
+<td><strong>DeltaNet WY, arXiv 2406.06484 <code>eq:inverse</code></strong></td>
+<td><strong>signed, content-dependent</strong></td>
+<td>0.082031 [0.070507, 0.094768]</td>
+<td><strong>0.097656</strong> [0.085139, 0.111339]</td>
+</tr>
+<tr>
+<td>Cog Attention 2411.07176 / SignGT 2310.11025 matrix</td>
+<td>signed, content-dependent</td>
+<td>0.105469 [0.092494, 0.119585]</td>
+<td>0.035156 [0.027607, 0.044071]</td>
+</tr>
+<tr>
+<td>ParaFormer 2512.14619 Eq. 9, <code>Σ γ_k Â^k</code></td>
+<td>non-negative, signed γ</td>
+<td>0.029785 [0.022858, 0.038097]</td>
+<td>0.009277 [0.005595, 0.014450]</td>
+</tr>
+<tr>
+<td>softmax (control)</td>
+<td>non-negative</td>
+<td>0.000000 [0, 0.001800]</td>
+<td>0.000000 [0, 0.001800]</td>
+</tr>
+</tbody>
+</table>
+<p><code>T = (I + tril(diag(β) K Kᵀ, −1))⁻¹ diag(β)</code> is content-dependent, signed per entry, and
+strictly triangular hence nilpotent, so its exact inverse <strong>is</strong> a finite path sum. It ships
+in <code>fla/ops/utils/solve_tril.py</code> and sglang's <code>chunk_kda_fwd_kernel_inter_solve_fused</code>.</p>
+<p>It does not merely tie: DeltaNet reads at or above <code>sgate</code> at every <code>s ≥ 16</code> and is the only
+arm still nonzero at <code>s = 512</code>. <strong>The margins that used to be quoted here are WITHDRAWN.</strong>
+Every cell above is <code>floor = 1e-6</code> — an ABSOLUTE discard threshold — and the arms are not on
+the same scale: <code>sgate</code>'s row-L1 is pinned at <code>rho = 1.5</code> while DeltaNet's grows to 81.62 by
+<code>s = 512</code>, so one absolute floor discards far more of <code>sgate</code>. At <code>s = 32</code>:</p>
+<table>
+<thead>
+<tr>
+<th>floor</th>
+<th><code>sgate</code></th>
+<th>DeltaNet</th>
+<th>ratio</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1e-6 — as published</td>
+<td>0.026367</td>
+<td>0.054688</td>
+<td>2.07×</td>
+</tr>
+<tr>
+<td>1e-9</td>
+<td>0.045898</td>
+<td>0.054688</td>
+<td>1.19×</td>
+</tr>
+<tr>
+<td><strong>0</strong></td>
+<td><strong>0.050781</strong></td>
+<td><strong>0.054688</strong></td>
+<td><strong>1.08×, overlapping</strong></td>
+</tr>
+</tbody>
+</table>
+<p><code>sgate</code> moves <strong>1.93×</strong> across that sweep; DeltaNet does not move at all. The "non-overlapping
+1.39× at <code>s = 32</code>", the "conservative 1.92× at <code>s = 128</code>, 16,384 draws", and the log-log slopes
+(−1.107 against −1.437) are all <code>floor = 1e-6</code> readings and are withdrawn — not restated at a
+smaller value.</p>
+<p><strong>None of that restores a novelty claim.</strong> DeltaNet is still ≥ <code>sgate</code> at <code>floor = 0</code>, and the
+claim was never deleted on the size of a margin: Signed Dual Attention (arXiv:2606.04833)
+Eq. 1–2 <strong>is</strong> the <code>sgate</code> matrix, and prior art is indifferent to probe margins. <strong>There is no
+novel construction in this repository.</strong> What is left is a Lean-verified nilpotent resolvent, a
+kernel that runs, and a capability measurement that came back negative.</p>
+<p><code>tests/foreman/test_paraformer_ratio_across_context.py::test_claim_the_signed_content_dependent_path_sum_is_not_already_deltanet</code> (RED, cpu and cuda)
+<code>tests/foreman/test_paraformer_ratio_across_context.py::test_the_paraformer_arm_is_not_the_softmax_arm</code> (GREEN, cpu and cuda)</p>
+<p>The number <strong>−9.000000e-01 is −ρ exactly</strong>, reachable only at <code>A[1,0]</code>, the
+single-predecessor row where <code>A[1,0] = ±ρ</code> is a frozen constant with gradient exactly 0.0.
+Over 24 draws, 14 of 14 entries equal to −ρ sat at (1,0); the most negative entry elsewhere
+was −8.845515e-01.</p>
+<p><code>tests/foreman/test_signedness_is_not_new.py::test_claim_no_published_attention_reaches_a_negative_influence_jacobian</code>
+<code>tests/foreman/test_signedness_is_not_new.py::test_claim_an_influence_entry_of_exactly_minus_rho_can_come_from_a_free_row</code></p>
+<hr />
+<h2 id="measured-cost-on-a-real-checkpoint">Measured cost on a real checkpoint<a class="headerlink" href="#measured-cost-on-a-real-checkpoint" title="Permanent link">#</a></h2>
+<p><code>Qwen/Qwen2.5-0.5B</code>, fp32, GQA, 99-token technical passage:</p>
+<table>
+<thead>
+<tr>
+<th>α</th>
+<th>perplexity</th>
+<th>vs stock</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>stock</td>
+<td>9.2150</td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>0.00</strong></td>
+<td><strong>9.2149</strong></td>
+<td><strong>−0.00%</strong></td>
+</tr>
+<tr>
+<td>0.01</td>
+<td>9.1779</td>
+<td>−0.40%</td>
+</tr>
+<tr>
+<td>0.05</td>
+<td>9.0781</td>
+<td>−1.49%</td>
+</tr>
+<tr>
+<td>0.15</td>
+<td>9.1789</td>
+<td>−0.39%</td>
+</tr>
+<tr>
+<td>0.30</td>
+<td>10.7969</td>
+<td>+17.17%</td>
+</tr>
+</tbody>
+</table>
+<p>Greedy generation at α = 0 is character-identical to stock, on the decode path as well as
+the teacher-forced one. <strong>The −1.49% at α = 0.05 is one 99-token sample and is not a
+result</strong> — it is recorded because it is what was measured. Perplexity is a sanity check that
+the gate is wired correctly; it is not a win condition.</p>
+<p><code>tests/w8/test_w8_real_model.py::test_the_cost_of_the_operator_on_untuned_weights_is_measured</code></p>
+<hr />
+<h2 id="verified-core">Verified core<a class="headerlink" href="#verified-core" title="Permanent link">#</a></h2>
+<p>Lean 4.7.0 + mathlib, <code>lake build</code> exit 0, <strong>zero <code>sorry</code></strong>. <strong>134 theorems + 41 lemmas</strong>
+across the thirteen files in <code>lean/CEQ/</code> and <code>lean/CEQ.lean</code>, counted by
+<code>python scripts/lean_count.py</code> (comments stripped, <code>@[attr]</code> prefixes admitted),
+2026-09-11; re-run it to check for drift. A raw <code>grep -c '^\s*theorem\s'</code> reads 140 + 35
+instead: it counts six comment lines that open with the word "theorem" and misses six
+<code>@[simp] lemma</code> declarations. (An earlier count of <strong>39</strong> covered only the six earliest
+modules — <code>Contraction</code>, <code>Nilpotent</code>, <code>Occupancy</code>, <code>OracleSeparation</code>, <code>OrbitBound</code>,
+<code>Refcount</code> — and is still exact for them; <code>V15</code>, <code>V15Fork</code>, <code>V15Kernel</code>, <code>V15Phase</code>,
+<code>V15Source</code> and <code>V16Domain</code> came later.)
+The load-bearing one for the operator is <code>CEQ.Nilpotent.pow_card_eq_zero</code> — strictly
+lower-triangular ⇒ <code>A^n = 0</code> over any <code>CommRing</code>, with <strong>no sign hypothesis</strong>, which is what
+licenses dropping non-negativity for free. <code>CEQ.OracleSeparation.oracle_ne_resolvent</code> is
+the round-8 addition and it plays that nilpotency off against its negation: an operator
+that is entrywise non-negative, has symmetric support and has one positive entry — which
+is what a walk on an undirected graph gives — is never nilpotent, so the absorbing-chain
+oracle proposed for the <code>t*</code> ladder is not the arm's own forward. <code>CEQ.OracleSeparation.truncation_never_exact</code> is the operational half: the finite
+occupancy sum is not the inverse of <code>(1 − Q)</code> at ANY truncation, so every rung of the
+ladder leaves a real residual. <code>tests/w3b/</code> gates the build, checks for <code>sorry</code>
+with a calibrated detector, and greps the Python for <code>.tril(-1)</code> so proof and code cannot
+drift apart silently.</p>
+<p><strong><code>CEQ.Refcount</code> is the provenance module</strong>, and it is the only one whose two halves are both
+the author's own prior work: the indistinguishability floor of <code>caustic</code> Theorem 1
+(<a href="https://doi.org/10.5281/zenodo.21997746">10.5281/zenodo.21997746</a>, formalised here as
+<code>CEQ.OrbitBound</code>) and the refcount of <code>foliation</code>, a KV cache presented as a quotient by
+block-aligned prefix. <code>floor_add_orbits</code> proves the floor is not merely <em>bounded</em> by refcount
+data but <em>is</em> a sum over refcounts, <code>n − m = Σ_plaques (refcount − 1)</code>; <code>free_face_floor_unchanged</code>
+proves that evicting a refcount-1 plaque moves the floor by exactly zero, and
+<code>shared_plaque_floor_drops</code> proves the converse, without which "free faces are safe" would be
+consistent with everything being safe. Scoring a KV block by removing it and measuring the
+change is leave-one-out influence (Cook 1977, Koh–Liang 2017) and is externally owned; these
+theorems replace the forward pass with an integer the cache already maintains.</p>
+<p><strong>What that does and does not certify.</strong> <code>CEQ.Refcount.IsFreeFace</code> is <code>refcount f p = 1</code>, a
+fibre cardinality. The shipped <code>ceq/hopcache.py::HopCache.evict</code> admits on <strong>scope depth</strong>, not
+on a refcount — no refcount is maintained anywhere in the Python. So the theorems certify the
+criterion, not this implementation of it.
+<code>tests/chase/test_lean_refcount_binding.py</code> binds all of the above: it runs <code>#print axioms</code> on
+the five load-bearing theorems in one <code>lean</code> subprocess (a rename, a deletion, a broken build
+or a <code>sorry</code> each make it exit non-zero), calibrates that check against a deliberate <code>sorry</code> in
+the same process, re-derives the identity exhaustively over every map from 5 prefixes to 3
+plaques, and asserts the refcount predicate is still absent from the Python so this paragraph
+cannot go stale silently.</p>
+<hr />
+<h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">#</a></h2>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">ceq</span><span class="w"> </span><span class="kn">import</span> <span class="n">hybrid</span>
+
+<span class="n">hybrid</span><span class="o">.</span><span class="n">register</span><span class="p">()</span>                    <span class="c1"># registers BOTH the attention and its mask</span>
+<span class="n">model</span><span class="o">.</span><span class="n">set_attn_implementation</span><span class="p">(</span><span class="s2">&quot;ceq_hybrid&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>Registering the attention function <strong>without</strong> its mask makes <code>transformers</code> pass
+<code>attention_mask=None</code> and silently drop causal, padding, packing and sliding-window
+constraints. <code>hybrid.register()</code> does both.
+<strong>Citation is stale:</strong> the function <code>test both interfaces are registered</code>, formerly in
+<code>test_w6_attention.py</code> under <code>tests/w6/</code>, was deleted from the live tree at <code>c71527a</code>, after
+an earlier archive move to <code>attic/tests/w6/</code> at <code>228a048</code>; neither path exists at HEAD, and
+<code>pytest.ini</code> excludes <code>attic/</code> and <code>kaggle/</code> from collection, so the function is not currently
+collected anywhere this card's own reproduction commands reach. See the same note beside the
+influence-Jacobian
+table above for the git evidence.</p>
+<p>CPU works. <code>α = 0</code> is free and bitwise; raise <code>α</code> only with the cost curve above in view.</p>
+<hr />
+<h2 id="reproduce">Reproduce<a class="headerlink" href="#reproduce" title="Permanent link">#</a></h2>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>--collect-only<span class="w"> </span>-q<span class="w"> </span>tests/<span class="w">     </span><span class="c1"># 955 collect, 9.6 s (2026-08-25)</span>
+python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>tests/<span class="w"> </span>-q<span class="w">                    </span><span class="c1"># every falsifier -- &gt;3 h, has NEVER completed</span>
+python<span class="w"> </span>-m<span class="w"> </span>ceq.diagnose<span class="w">                        </span><span class="c1"># the CPU sign-flip diagnostic</span>
+python<span class="w"> </span>-m<span class="w"> </span>ceq.capability<span class="w">                      </span><span class="c1"># COGS + SCAN, both arms, published refs</span>
+python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>tests/w10/<span class="w"> </span>-q<span class="w"> </span>-m<span class="w"> </span>slow<span class="w">        </span><span class="c1"># from-scratch softmax vs signed</span>
+<span class="nb">cd</span><span class="w"> </span>lean<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>lake<span class="w"> </span>build<span class="w"> </span>CEQ<span class="w">                     </span><span class="c1"># the proofs</span>
+</code></pre></div>
+<p>Every test parametrizes over <code>cpu</code> and <code>cuda</code>, skipping cuda when unavailable.</p>
+<h2 id="uses">Uses<a class="headerlink" href="#uses" title="Permanent link">#</a></h2>
+<h3 id="direct-use">Direct use<a class="headerlink" href="#direct-use" title="Permanent link">#</a></h3>
+<p>Research on attention operators. Concretely: (1) run <code>python -m ceq.diagnose</code> against your own
+non-standard attention operator to find out whether it differs from softmax in
+content-conditional sign, with softmax printed beside it as a control reading exactly 0.0;
+(2) read the deletions — five of six original requirements and one 84× headline died here, each
+with the number that killed it, and each is a road nobody else has to walk; (3) reuse the
+<code>floor</code> warning below before trusting any gradient-sign probe of your own.</p>
+<p><strong>Read the softmax 0.0 correctly — it is a floor, not a small number.</strong> The diagnostic's read
+is <code>d(out_i)/d(v_j)</code> through <code>out = v + Av + A²v</code>, whose influence matrix is <code>I + A + A²</code>. For
+any entrywise non-negative <code>A</code> that matrix is non-negative, so the sign cannot be moved by any
+context and the rate is <strong>exactly 0 at every sequence length, by construction</strong>. Post-multiplying
+by a fixed <code>W_v</code> does not rescue it: a context-independent linear map cannot make a
+context-independent sign context-dependent. So a 0.0000 from your operator means "cannot
+represent a sign flip at all", never "flat".</p>
+<p><strong>And the flatness of that rate in context is a separate axis from the sign.</strong> The S2 selection
+ablation (<code>scale/s2_probe.py</code>, <code>tests/cameron/test_s2_ablation.py</code>, table in <code>99777ab:DONE.md</code>) measures
+both on a magnitude-matched pair — the signed operator against <code>|A|</code>, the same matrix with the
+sign stripped. Dilution-resistance, read as <code>E|term_c| / σ(background)</code>, comes out at
+<strong>slope -0.038 signed and -0.046 unsigned</strong> when hop 2 is routed through a fixed set of k
+pivots, and <strong>-0.913 signed and -0.930 unsigned</strong> when it is dense. Fixed path count carries
+that property and carries it identically with or without signs — an axis Star-Transformer
+(<a href="https://arxiv.org/abs/1902.09113">arXiv:1902.09113</a>, 2019) already occupies with a
+content-blind relay hub. Replacing content-selected pivots with <strong>uniformly random</strong> ones leaves
+the sign-flip rate flat at <strong>+0.081</strong>, so content selection is not what holds it up either.
+Signedness is the only axis on which the non-negative construction sits at the floor.</p>
+<h3 id="out-of-scope-use">Out-of-scope use<a class="headerlink" href="#out-of-scope-use" title="Permanent link">#</a></h3>
+<p><strong>As the operator the context-stability results describe.</strong> Those results are measured on
+<code>tgate</code>, a denominator-free matrix that lives in <code>ceq/bench.py</code> and <strong>is not in this
+release</strong>. This model ships <code>sgate</code>. Under the same routed measurement the shipped operator
+reads slope <strong>−1.826</strong> where <code>tgate</code> reads <strong>+0.027</strong> [RUN, n=1024, k=8, s=8..512] — the
+kill bar is −0.3, so the shipped operator fires it by a factor of six. Pivot routing fixes
+the path count; it does not remove the row denominator, which is the measured cause of the
+decay. Do not read any flat-influence claim as a property of these weights.</p>
+<p><strong>As a replacement for softmax attention.</strong> It measurably is not one: at 3,652,096 matched
+parameters it scored 0.0000 against softmax's 0.0293 on COGS generalization, one-sided Fisher
+<code>p = 2.7502788939e-05</code>, and it was behind in-distribution too. At <code>α = 0</code> the gate is bitwise
+stock attention by construction, so it is attention <em>plus a term</em> and can never exceed what it
+wraps.</p>
+<p><strong>As a long-context speedup below seq 8192</strong>, where the kernel is slower than SDPA and uses more
+memory — and the distinguishing property decays in context length <em>and</em> in window width, so it
+is a short-range property either way.</p>
+<p><strong>In production.</strong> There are no language-model weights (only the 4,769-parameter probe arms
+under <code>weights/</code>), no KV cache, no backward pass for the Triton kernel,
+and every number was measured on one laptop GPU.</p>
+<h2 id="what-this-is-for-and-which-niche-it-might-occupy">What this is for, and which niche it might occupy<a class="headerlink" href="#what-this-is-for-and-which-niche-it-might-occupy" title="Permanent link">#</a></h2>
+<p>This is <strong>a negative result shipped with the instrument that produced it and a machine-checked
+core.</strong> The novelty claims were withdrawn against prior art this project found itself — SimA
+(arXiv:2206.08898), Signed Dual Attention (arXiv:2606.04833, the <code>sgate</code> matrix itself),
+DeltaNet (arXiv:2406.06484), ParaFormer (arXiv:2512.14619), RetNet, SignGT. What is left that
+audits clean: a Lean core with zero <code>sorry</code> and no <code>sorryAx</code>; an instrument that reproduces
+itself bit-identically; a complete 84× retraction; every cited test name resolving against
+<code>pytest --collect-only</code>; the cost table shipping inside the package.</p>
+<p><strong>The separation is not a capability claim.</strong> For non-negative operators with <strong>linear</strong> value
+paths a third token cannot flip the sign of <code>∂out_i/∂v_j</code> — softmax reads exactly 0.0000 at
+depth 1 and 2. Put <strong>one GELU</strong> between two softmax layers and the flip returns. So the claim
+that survives is "softmax needs a nonlinearity and the depth to route through it, where this
+operator has it in one layer" — depth and parameter efficiency, not capability, and visible only
+where parameters are scarce.
+<code>tests/cameron/test_negation_is_the_axis.py::test_a_nonlinearity_between_softmax_layers_gives_the_sign_flip_back</code></p>
+<p><strong>The one candidate niche, untested:</strong> minimal-pair NPI licensing under negation — BLiMP's
+<code>sentential_negation_npi_scope</code> and <code>only_npi_scope</code> — inside the BabyLM strict-small regime
+(10M words), because it is scored on the model's own next-token probabilities, the licensor and
+the NPI sit inside one clause, and small from-scratch models are the norm there. Published
+accuracies on <code>sentential_negation_npi_scope</code> are 5-gram 45, LSTM 23, Transformer-XL 53, GPT-2
+95, human 81 (<a href="https://aclanthology.org/2020.tacl-1.25/">BLiMP, TACL 2020</a>), so the failure is
+not saturated and there is room to be measured. <strong>It has never been run here, and the prior is
+against it:</strong> the one matched-parameter capability comparison this project ever ran went to
+softmax. <code>README.md</code> carries the pre-registered kill.</p>
+<h2 id="weights-and-checkpoints">Weights and checkpoints<a class="headerlink" href="#weights-and-checkpoints" title="Permanent link">#</a></h2>
+<p><strong>What ships here are trained probe-arm tensors, not language-model weights.</strong> Five files
+under <a href="https://github.com/teerthsharma/resolvent/blob/master/ceq/hf_artifact/weights/MANIFEST.json"><code>ceq/hf_artifact/weights/</code></a>, one per seed, each
+a trained <code>QuintArm</code> — 4,769 parameters, module class <code>scale.m3_quintuple.QuintArm</code>
+(q/k projection + 2-layer MLP + scalar readout). <strong>The <code>CEQForCausalLM</code> model in
+<code>modeling_ceq.py</code> still has no published checkpoint</strong>, and no file in <code>weights/</code> is named
+<code>model.safetensors</code>, because none of them loads into it.</p>
+<p><strong>What is tracked in the repository, and how it breaks down.</strong> <code>git ls-files | grep -iE
+'\.(safetensors|pt|pth|bin|ckpt)$' | wc -l</code> counts <strong>171</strong> weight-shaped tracked files,
+2026-09-10. None of them is a <code>CEQForCausalLM</code> checkpoint; by directory
+(<code>... | sed -E 's#/[^/]+$##' | sort | uniq -c</code>): <strong>135</strong> under
+<code>results/m3_quintuple_v2_weights/</code> and <strong>23</strong> under <code>results/m3_quintuple_v2_cuda_weights/</code>
+(per-cell <code>QuintArm</code>/settled/softmax probe checkpoints from the same m3 journal), <strong>5</strong> under
+<code>ceq/hf_artifact/weights/</code> (the table below — the only ones packaged for HF export), <strong>4</strong>
+under <code>results/paired/</code> (signed/unsigned probe pairs) and <strong>3</strong> loose in <code>results/</code>
+(<code>phaseD_weights_*.pt</code>, a separate probe sweep); the remaining <strong>1</strong> is
+<code>tests/gate0/fixtures/enwik8_short.bin</code>, a test fixture that only matches the extension
+filter and is not a checkpoint at all. <strong><code>ceq/hf_artifact/</code> is a built HuggingFace package</strong>
+— <code>config.json</code>, <code>configuration_ceq.py</code>, <code>modeling_ceq.py</code>, <code>weights/MANIFEST.json</code> and the
+five <code>.safetensors</code> above — but the package it builds is the <code>QuintArm</code> probe, not a
+language model. <strong>What does not ship, anywhere in this repository, is a trained
+<code>CEQForCausalLM</code> weight file of any kind</strong> — not in <code>weights/</code>, not in the 166 other tracked
+tensors, and not the v17-K Q3 checkpoint described above, which has never been run to
+completion.</p>
+<table>
+<thead>
+<tr>
+<th>file (<code>ceq/hf_artifact/weights/</code>)</th>
+<th>task</th>
+<th>cell</th>
+<th>seed</th>
+<th>eval NRMSE (journal)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>twin_k8_s64_d24_st150_ntr2048_nev2048_b21_sd0_taske3_t1.safetensors</code></td>
+<td>e3_t1 (t*=1)</td>
+<td>twin</td>
+<td>0</td>
+<td>0.9231181827</td>
+</tr>
+<tr>
+<td><code>twin_k8_s64_d24_st150_ntr2048_nev2048_b21_sd1_taske3_t1.safetensors</code></td>
+<td>e3_t1 (t*=1)</td>
+<td>twin</td>
+<td>1</td>
+<td>1.0785056996</td>
+</tr>
+<tr>
+<td><code>twin_k8_s64_d24_st150_ntr2048_nev2048_b21_sd2_taske3_t1.safetensors</code></td>
+<td>e3_t1 (t*=1)</td>
+<td>twin</td>
+<td>2</td>
+<td>0.9293004878</td>
+</tr>
+<tr>
+<td><code>twin_k8_s64_d24_st150_ntr2048_nev2048_b21_sd3_taske3_t1.safetensors</code></td>
+<td>e3_t1 (t*=1)</td>
+<td>twin</td>
+<td>3</td>
+<td>0.9568415797</td>
+</tr>
+<tr>
+<td><code>twin_k8_s64_d24_st150_ntr2048_nev2048_b21_sd4_taske3_t1.safetensors</code></td>
+<td>e3_t1 (t*=1)</td>
+<td>twin</td>
+<td>4</td>
+<td>0.9041007794</td>
+</tr>
+</tbody>
+</table>
+<p>Seed mean <strong>0.958373</strong> (<code>results/e_ladder_reading.txt</code>), and note honestly: <strong>seed 1 sits
+above predict-the-mean (NRMSE &gt; 1.0)</strong>. These weights belong to the underpowered t* = 1 rung
+described at the top of Limits; they are the ship candidate's arm at the only rung where both
+cells beat the bar, and they carry no capability claim of their own.</p>
+<ul>
+<li><strong>Geometry string = journal key</strong>: <code>{cell}_k{k}_s{s}_d{d}_st{steps}_ntr{n_train}_nev{n_eval}_b{t_max}_sd{seed}_task{task}</code>
+  (<code>scale/m3_quintuple.py::_key</code>). Here: k=8 pivots, s=64, d=24 (task distance), d_model=16,
+  150 steps, n_train=2048, n_eval=2048, t_max=21.</li>
+<li><strong>Provenance.</strong> Metrics come from <code>results/m3_quintuple_v2.jsonl</code>, matched by key; the
+  journal's last commit is <code>1cc7900</code> and the export HEAD is <code>1c56985</code>. Both are stamped into
+  every safetensors metadata block and into <code>weights/MANIFEST.json</code>.</li>
+<li><strong>Verification, per file.</strong> Exported by <code>scripts/export_hf_weights.py</code>: tensors reloaded
+  from the safetensors file into a fresh <code>QuintArm</code>, forward re-run on the task's own eval
+  batch (rebuilt as <code>bfn(n_eval, s, d, d_model=16, seed=seed+12345)</code>, exactly as training
+  built it), recomputed NRMSE compared against the journal row. All five shipped files:
+  tensor round-trip drift exactly <strong>0.0</strong>, |Δ NRMSE vs journal| exactly <strong>0.000e+00</strong>
+  (bit-exact; acceptance bar was 1e-6). A checkpoint that fails is deleted and excluded from
+  the manifest rather than shipped with a caveat.</li>
+</ul>
+<h2 id="compute">Compute<a class="headerlink" href="#compute" title="Permanent link">#</a></h2>
+<ul>
+<li><strong>CPU lane (everything measured so far).</strong> The registered geometry pins
+  <code>torch.set_num_threads(2)</code> inside <code>scale/m3_quintuple.py:74</code>, before any unit runs, and the
+  export script above pins the same count before verifying — CPU matmul reduction order
+  depends on thread count, so an unpinned verifier could manufacture a phantom delta. Every
+  journalled number this card cites from m3 ran under that pin on one machine: Windows,
+  Python 3.11.9, torch 2.5.1+cu121, RTX 4060 Laptop (see the single-machine caveat below).</li>
+<li><strong>CUDA lane: opened, IN PROGRESS.</strong> A CUDA execution lane for the same registered geometry
+  exists as work in progress and has produced <strong>no journalled number yet</strong>. No figure in this
+  card is a CUDA figure, and none should be quoted as one until it appears in
+  <code>results/</code> with its own commit.</li>
+</ul>
+<h2 id="training-details">Training Details<a class="headerlink" href="#training-details" title="Permanent link">#</a></h2>
+<p>Byte-level, <code>roneneldan/TinyStories</code> streamed (or a local text file), 90/10 contiguous split so
+validation text is unseen. The published parity run is 600 steps, batch 32, seq 128, d=256,
+4 layers, 5 seeds, lr swept for both arms. The COGS/SCAN capability runs are in
+<code>ceq/capability.py</code> with results in <code>results/capability.json</code>. The Triton kernel has <strong>no
+backward pass</strong>; training uses the pure-torch path, which is why a free-tier T4 can run it.</p>
+<h2 id="environmental-impact">Environmental Impact<a class="headerlink" href="#environmental-impact" title="Permanent link">#</a></h2>
+<p>Every number in this card was produced on one RTX 4060 Laptop (8 GiB). No large run has been
+performed: <strong>nothing above 3.65M parameters has ever been trained.</strong> For scale, a 300M matched
+pair at a Chinchilla budget is priced in <code>README.md</code> at 41–47 A100-hours for the softmax control
+and 130–257 A100-hours for this operator, from <code>ceq/sizing.py</code> plus a measured step ratio — a
+cost worth knowing before it is spent rather than after.</p>
+<h2 id="citation">Citation<a class="headerlink" href="#citation" title="Permanent link">#</a></h2>
+<p>No paper. Cite the repository and the commit hash you loaded.</p>
+<h2 id="license">License<a class="headerlink" href="#license" title="Permanent link">#</a></h2>
+<p>MIT.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../mathematics/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Mathematics">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Mathematics
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../costs/" class="md-footer__link md-footer__link--next" aria-label="Next: Costs">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Costs
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Invented by <a href="https://teerthsharma.vercel.app/">Teerth Sharma</a> · Apache License 2.0
+    </div>
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/teerthsharma/resolvent" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://teerthsharma.vercel.app/" target="_blank" rel="noopener" title="teerthsharma.vercel.app" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M351.9 280H161c2.9 64.5 17.2 123.9 37.5 167.4 11.4 24.5 23.7 41.8 35.1 52.4 11.2 10.5 18.9 12.2 22.9 12.2s11.7-1.7 22.9-12.2c11.4-10.6 23.7-28 35.1-52.4 20.3-43.5 34.6-102.9 37.5-167.4zm-191-48h190.9c-2.8-64.5-17.1-123.9-37.4-167.4-11.4-24.4-23.7-41.8-35.1-52.4C268.1 1.7 260.4 0 256.4 0s-11.7 1.7-22.9 12.2c-11.4 10.6-23.7 28-35.1 52.4-20.3 43.5-34.6 102.9-37.5 167.4m-48 0c3.5-85.6 25.6-165.1 57.9-217.3C78.7 47.3 10.9 131.2 1.5 232zM1.5 280c9.4 100.8 77.2 184.7 169.3 217.3-32.3-52.2-54.4-131.7-57.9-217.3zm398.4 0c-3.5 85.6-25.6 165.1-57.9 217.3 92.1-32.7 159.9-116.5 169.3-217.3zm111.4-48C501.9 131.2 434.1 47.3 342 14.7c32.3 52.2 54.4 131.7 57.9 217.3z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

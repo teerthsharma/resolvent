@@ -1,0 +1,2432 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="One causal head, three switches. Softmax attention, unnormalized-kernel attention and the exact path product of a Markov chain as settings of one operator, proved in Lean 4, with every failure kept on the record.">
+      
+      
+        <meta name="author" content="Teerth Sharma">
+      
+      
+        <link rel="canonical" href="https://teerthsharma.github.io/resolvent/ledgers/v16-calibration/">
+      
+      
+        <link rel="prev" href="../v17k-rulings/">
+      
+      
+        <link rel="next" href="../../canon/CHARTER/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/logo.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>V16 calibration - resolvent</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/resolvent.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#v16_calibration-the-calibration-column" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="resolvent" class="md-header__button md-logo" aria-label="resolvent" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            resolvent
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              V16 calibration
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/teerthsharma/resolvent" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    teerthsharma/resolvent
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../FAILS/" class="md-tabs__link">
+          
+  
+  
+  The record
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../BED_H_PREREGISTRATION/" class="md-tabs__link">
+          
+  
+  
+  Pre-registrations
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../mistakes/" class="md-tabs__link">
+          
+  
+  
+  Ledgers
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../canon/CHARTER/" class="md-tabs__link">
+          
+  
+  
+  Canon
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../CEQ_SHAPE/" class="md-tabs__link">
+          
+  
+  
+  Paper
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="resolvent" class="md-nav__button md-logo" aria-label="resolvent" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    resolvent
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/teerthsharma/resolvent" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    teerthsharma/resolvent
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The record
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    The record
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../FAILS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Everything retracted, broken or open
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../COMPONENT_LEDGER/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Component ledger
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../PLAN/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Research plan
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CORNER_RULE_RETIREMENT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Corner rule retirement
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../PI_JEPA_KAGGLE_CARD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kaggle card
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../DR2_CARD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DR2 card
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pre-registrations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Pre-registrations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../BED_H_PREREGISTRATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BED-H
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../prereg/REMOVAL_ECHO_v1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    REMOVAL-ECHO v1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ledgers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Ledgers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mistakes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Failure mechanisms
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../struck/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Struck constants
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mathematics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mathematics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../model-card/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model card
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../costs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Costs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../v17k-rulings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    V17K rulings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    V16 calibration
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    V16 calibration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-the-column" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. THE COLUMN
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-r11s-nine-row-by-row" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. R11's NINE, ROW BY ROW
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-what-the-verification-found-that-the-summary-does-not-say" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. WHAT THE VERIFICATION FOUND THAT THE SUMMARY DOES NOT SAY
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. WHAT THE VERIFICATION FOUND THAT THE SUMMARY DOES NOT SAY">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-the-count-is-not-six-the-tables-own-nine-rows-are-nine-adverse-verdicts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 The count is not six. The table's own nine rows are nine adverse verdicts.
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-the-signs-are-not-all-one-way-row-3-goes-the-other-direction-row-8-has-none" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 The signs are not all one way. Row 3 goes the other direction, row 8 has none.
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-the-direction-is-real-and-the-round-entrys-own-six-does-not-establish-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 The direction is real, and the round entry's own six does not establish it.
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-the-denominator-was-chosen-after-the-audit-and-lists-no-confirmations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 The denominator was chosen after the audit and lists no confirmations.
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-the-discount-what-r12-does-with-this-operationally" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. THE DISCOUNT — what R12 does with this, operationally
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. THE DISCOUNT — what R12 does with this, operationally">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#d-calib-1-the-counter-is-the-point-estimate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D-CALIB-1 — the counter is the point estimate.
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d-calib-2-a-prediction-with-no-counter-is-not-read-at-all" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D-CALIB-2 — a prediction with no counter is not read at all.
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d-calib-3-sign-never-size-no-numeric-shrink-factor-is-authorised" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D-CALIB-3 — sign, never size. No numeric shrink factor is authorised.
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d-calib-4-order-the-round-so-the-optimistic-half-is-refuted-cheaply" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D-CALIB-4 — order the round so the optimistic half is refuted cheaply.
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d-calib-5-the-row-is-appended-whether-or-not-it-flatters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D-CALIB-5 — the row is appended whether or not it flatters.
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-limits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. LIMITS
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Canon
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Canon
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../canon/CHARTER/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Charter
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../canon/01_THEORY_ACCURACY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01 Theory of accuracy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../canon/02_THEORY_TRAINING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    02 Theory of training
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../canon/03_KERNEL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03 Kernel
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../canon/04_BEDS_AND_INSTRUMENTS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    04 Beds and instruments
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../canon/05_REPAIRS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05 Repairs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../canon/06_PREDICTIONS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    06 Predictions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../canon/08_ARCHITECTURE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    08 Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../canon/09_CHESS_AND_MARKETS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    09 Chess and markets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../canon/CORRECTIONS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Corrections
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Paper
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Paper
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CEQ_SHAPE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The shape of CEQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Paper sources
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../BIB_AUDIT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bibliography audit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../BIB_ALIASES/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bibliography aliases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-the-column" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. THE COLUMN
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-r11s-nine-row-by-row" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. R11's NINE, ROW BY ROW
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-what-the-verification-found-that-the-summary-does-not-say" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. WHAT THE VERIFICATION FOUND THAT THE SUMMARY DOES NOT SAY
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. WHAT THE VERIFICATION FOUND THAT THE SUMMARY DOES NOT SAY">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-the-count-is-not-six-the-tables-own-nine-rows-are-nine-adverse-verdicts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 The count is not six. The table's own nine rows are nine adverse verdicts.
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-the-signs-are-not-all-one-way-row-3-goes-the-other-direction-row-8-has-none" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 The signs are not all one way. Row 3 goes the other direction, row 8 has none.
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-the-direction-is-real-and-the-round-entrys-own-six-does-not-establish-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 The direction is real, and the round entry's own six does not establish it.
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-the-denominator-was-chosen-after-the-audit-and-lists-no-confirmations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 The denominator was chosen after the audit and lists no confirmations.
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-the-discount-what-r12-does-with-this-operationally" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. THE DISCOUNT — what R12 does with this, operationally
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. THE DISCOUNT — what R12 does with this, operationally">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#d-calib-1-the-counter-is-the-point-estimate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D-CALIB-1 — the counter is the point estimate.
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d-calib-2-a-prediction-with-no-counter-is-not-read-at-all" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D-CALIB-2 — a prediction with no counter is not read at all.
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d-calib-3-sign-never-size-no-numeric-shrink-factor-is-authorised" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D-CALIB-3 — sign, never size. No numeric shrink factor is authorised.
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d-calib-4-order-the-round-so-the-optimistic-half-is-refuted-cheaply" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D-CALIB-4 — order the round so the optimistic half is refuted cheaply.
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d-calib-5-the-row-is-appended-whether-or-not-it-flatters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D-CALIB-5 — the row is appended whether or not it flatters.
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-limits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. LIMITS
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="v16_calibration-the-calibration-column">V16_CALIBRATION — the calibration column<a class="headerlink" href="#v16_calibration-the-calibration-column" title="Permanent link">#</a></h1>
+<p><strong>D-CALIB</strong>, <code>99777ab:CEQ_V16_CONTRACT.md:251</code>, owner SATURN. Opened at R12 it.1.</p>
+<p>L-SIGN requires a calibration column <em>kept across rounds</em>: statements checked,
+how many were wrong, and the <strong>sign</strong> of the error. This file is that column. It
+is append-only: each round adds one summary row and one detail section, and no
+earlier row is edited after its round closes. A row whose numbers were
+transcribed from another document rather than re-read against the producing file
+is worthless for this purpose, so every cell below carries the file it was read
+from and the audit of the transcription is itself recorded (§3).</p>
+<hr />
+<h2 id="1-the-column">1. THE COLUMN<a class="headerlink" href="#1-the-column" title="Permanent link">#</a></h2>
+<table>
+<thead>
+<tr>
+<th>round</th>
+<th>statements checked</th>
+<th>wrong</th>
+<th>sign of error</th>
+<th>notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R11</td>
+<td><strong>9</strong> as filed (<code>99777ab:V15_LEDGER.md:649-661</code>); <strong>≥ 17</strong> with the confirmations that table omits</td>
+<td><strong>9 of 9</strong> filed rows; <strong>10 of ≥ 17</strong> with confirmations</td>
+<td><strong>7 <code>+</code>, 1 <code>−</code>, 1 unsigned.</strong> Direction holds: <code>7/8</code> signed rows optimistic, one-sided sign test <code>p = 0.0352</code></td>
+<td>The filed prose says <em>"six wrong, all six optimistic."</em> Both halves are off — see §2 and §3. Denominator was chosen after the audit and lists no confirmations, so <code>9/9</code> is a count, not a rate</td>
+</tr>
+<tr>
+<td>R12</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>to be filed at it.38 (<code>99777ab:CEQ_V16_CONTRACT.md:298</code>); every R12 prediction and counter scored, both halves</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Sign convention, fixed here and used in every later round.</strong></p>
+<ul>
+<li><code>+</code> — the statement, if believed, <strong>credits the project more</strong> than the
+  measurement supports (optimistic).</li>
+<li><code>−</code> — the statement <strong>understates</strong> the project relative to the measurement
+  (pessimistic).</li>
+<li><em>unsigned</em> — the error has no direction. An internal contradiction is the
+  canonical case: one half of it is right, so it cannot be one-sided.</li>
+</ul>
+<hr />
+<h2 id="2-r11s-nine-row-by-row">2. R11's NINE, ROW BY ROW<a class="headerlink" href="#2-r11s-nine-row-by-row" title="Permanent link">#</a></h2>
+<p>Source of the list: <code>99777ab:V15_LEDGER.md:649-661</code>. Each row was verified against its
+producing document, not against the ledger's summary.</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>claimed</th>
+<th>where</th>
+<th>measured</th>
+<th>producing file</th>
+<th>sign</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><em>"<code>g == 0</code> gives bitwise standard attention (Lean #5)"</em></td>
+<td><code>99777ab:CEQ_V15_CONTRACT.md:139-140</code></td>
+<td><strong>FALSE</strong>, three independent routes. At <code>g ≡ 0</code> the unnormalized causal hop's row <code>i</code> sums to <code>i + 1</code>, not <code>1</code></td>
+<td><code>lean/CEQ/V15.lean:221</code> <code>gate_zero_row_sum</code>; <code>MISTAKES.md</code> [[V-23]], [[V-24]]</td>
+<td><strong>+</strong></td>
+</tr>
+<tr>
+<td>2</td>
+<td><em>"two-thirds of the pre-v13 section-5 strikes were <code>[V]</code>-as-theorem"</em></td>
+<td><code>99777ab:CEQ_V15_CONTRACT.md:54</code></td>
+<td><strong><code>4/40 = 10%</code>.</strong> 44 rows, 4 record a claim that held, 40 genuine strikes, 4 are <code>[V]</code>-as-theorem. <code>66.7 / 10 = 6.67×</code> overstated</td>
+<td><code>MISTAKES.md</code> [[P-10]]; <code>99777ab:attic/workdonenew.pre-v13.md:160-211</code>; <code>99777ab:V15_N2_SATURN.md</code> Task B</td>
+<td><strong>+</strong></td>
+</tr>
+<tr>
+<td>3</td>
+<td><em>"the sizing model replaced by the calibrated one everywhere it was cited"</em> — filed as it.1-4 work</td>
+<td><code>99777ab:CEQ_V15_CONTRACT.md:251</code></td>
+<td><strong>Already satisfied.</strong> <code>ceq/sizing.py</code> was calibrated (<code>C_OPERATOR = 3.9</code> at <code>:48</code>; <code>bf16_autocast = (2.2, 3.4)</code> at <code>:68</code>). All 5 flagged sites are the <em>record</em> of the repair, not uses of the stale model</td>
+<td><code>MISTAKES.md</code> [[M-17]]; <code>99777ab:V15_N2B_SIZING_CITATIONS.md:25-33</code>, <code>:139</code></td>
+<td><strong>−</strong></td>
+</tr>
+<tr>
+<td>4</td>
+<td><em>"Ceiling approximately 38 from the current 22 percent."</em></td>
+<td><code>99777ab:CEQ_V15_CONTRACT.md:285</code></td>
+<td><strong>No live producer anywhere in the tree.</strong> The two <code>22%</code> hits in the repo are prose about a gap and a different quantity. Baseline under RUL-7 is <code>0 of 39 = 0%</code></td>
+<td><code>99777ab:V15_CONTRACT_ARITHMETIC_AUDIT.md:225-253</code> (A-4)</td>
+<td><strong>+</strong></td>
+</tr>
+<tr>
+<td>5</td>
+<td><em>"TOST retires to <code>N &gt;= 23</code> runs"</em></td>
+<td><code>99777ab:CEQ_V15_CONTRACT.md:140</code></td>
+<td><strong>Achieved power at <code>N = 23</code> is <code>0.0669</code>.</strong> The CI first <em>fits</em> at <code>N = 23</code> (confirmed) but power <code>0.80</code> first arrives at <code>N = 70</code> (confirmed). The clause licenses a verdict from a design with <code>6.7%</code> power</td>
+<td><code>99777ab:V15_CONTRACT_ARITHMETIC_AUDIT.md:76</code>, <code>:126</code> (A-1)</td>
+<td><strong>+</strong></td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>H-hat = alpha-hat + 1/2</code> as BED-K's recovery target</td>
+<td><code>99777ab:CEQ_V15_CONTRACT.md</code> PART III</td>
+<td><strong>Shipped without its stationarity hypothesis.</strong> ARFIMA(0,d,0) is stationary and invertible iff <code>\|d\| &lt; 0.5</code>, so the relation's domain is <code>α ∈ (0, 0.5)</code>, <code>H ∈ (0.5, 1.0)</code>. The contract gives a lower bound on <code>H</code> and no upper bound</td>
+<td><code>99777ab:V15_CONTRACT_ARITHMETIC_AUDIT.md:192-200</code> (A-3)</td>
+<td><strong>+</strong></td>
+</tr>
+<tr>
+<td>7</td>
+<td><code>[RUN: best first-order recurrence 0.990]</code> on the delay bed</td>
+<td><code>99777ab:CEQ_V15_CONTRACT.md:180</code></td>
+<td><strong>Matches neither bed at any tested <code>H</code>.</strong> Delay bed <code>R² = −0.000166</code> (<code>−0.000170</code> in the independent N4 run, agreeing to rounding); power-law bed <code>0.604</code> at <code>H = 0.75</code>, <code>0.755</code> at <code>H = 0.9</code></td>
+<td><code>99777ab:V15_JUPITER3_KERNEL.md:363</code>, <code>:371</code>, <code>:387</code>, <code>:556</code>; <code>99777ab:V15_N4_BEDK.md</code></td>
+<td><strong>+</strong></td>
+</tr>
+<tr>
+<td>8</td>
+<td>PART III <em>"attention-native, scan-blind"</em> vs PART IV R3 <em>"scan-only ≥ 0.95, attention near 0"</em></td>
+<td><code>99777ab:CEQ_V15_CONTRACT.md:180</code> and PART IV</td>
+<td><strong>Mutually inverse.</strong> The arms are transposed; whichever number the cell returns, one section is confirmed and the other refuted, so the registration constrains nothing. PART III is right for the delay bed; PART IV is the inverse of the truth</td>
+<td><code>MISTAKES.md</code> [[M-20]]; <code>99777ab:V15_JUPITER3_KERNEL.md</code></td>
+<td><strong>none</strong></td>
+</tr>
+<tr>
+<td>9</td>
+<td><em>"Carriers conserve mass to <code>1e-12</code>"</em></td>
+<td><code>99777ab:CEQ_V15_CONTRACT.md:125</code></td>
+<td><strong>False for the contract's own central carrier.</strong> §S-M's "ONE unnormalized causal hop" has row <code>i</code> summing to <code>i + 1</code> at <code>g ≡ 0</code>. Under the narrow reading it is true and silently omits the one carrier a reader needs</td>
+<td><code>MISTAKES.md</code> [[V-23]]; <code>lean/CEQ/V15.lean:221</code></td>
+<td><strong>+</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Totals: 9 rows, 9 adverse verdicts, 7 <code>+</code>, 1 <code>−</code>, 1 unsigned.</strong></p>
+<hr />
+<h2 id="3-what-the-verification-found-that-the-summary-does-not-say">3. WHAT THE VERIFICATION FOUND THAT THE SUMMARY DOES NOT SAY<a class="headerlink" href="#3-what-the-verification-found-that-the-summary-does-not-say" title="Permanent link">#</a></h2>
+<p>A calibration column that transcribes is worse than none, so this section records
+where the filed summary and the sources disagree. Three findings.</p>
+<h3 id="31-the-count-is-not-six-the-tables-own-nine-rows-are-nine-adverse-verdicts">3.1 The count is not six. The table's own nine rows are nine adverse verdicts.<a class="headerlink" href="#31-the-count-is-not-six-the-tables-own-nine-rows-are-nine-adverse-verdicts" title="Permanent link">#</a></h3>
+<p><code>99777ab:V15_LEDGER.md:649</code> reads <em>"Nine contract statements checked; six were wrong"</em> —
+and then lists <strong>nine</strong> rows, every one of which carries an adverse verdict. The
+R11 round entry (<code>MISTAKES.md</code>) enumerates six of them: rows 1, 2, 3, 4, 5 and 9.
+Rows <strong>6</strong> (<code>H = α + ½</code> without <code>|d| &lt; ½</code>), <strong>7</strong> (<code>[RUN: 0.990]</code> matching neither
+bed) and <strong>8</strong> (PART III against PART IV) are dropped from the prose list and
+appear nowhere in it as wrong.</p>
+<p>This is not a considered subset. All three are discussed elsewhere in the same
+round entry — §2 records <code>H = α + ½</code> entering v15 without its hypothesis, and §3
+records M-20 — so they were known and simply not carried into the six-item
+sentence. <strong>The correct filed number is nine wrong of nine listed.</strong></p>
+<h3 id="32-the-signs-are-not-all-one-way-row-3-goes-the-other-direction-row-8-has-none">3.2 The signs are not all one way. Row 3 goes the other direction, row 8 has none.<a class="headerlink" href="#32-the-signs-are-not-all-one-way-row-3-goes-the-other-direction-row-8-has-none" title="Permanent link">#</a></h3>
+<ul>
+<li><strong>Row 3 is <code>−</code>.</strong> The contract scheduled a repair that had already been made
+  (<code>ceq/sizing.py</code> was calibrated before the round opened). Believing the contract
+  makes the repo look <em>less</em> repaired than it is. That understates the project;
+  it does not over-credit it. The round entry lists it among "all six optimistic"
+  as <em>"a repair reported as outstanding that was already done"</em> — which is an
+  accurate description of the fact and the wrong sign for it.</li>
+<li><strong>Row 8 is unsigned.</strong> A pair of mutually inverse registrations cannot be
+  one-sided: PART III is right for the delay bed. An error whose two halves point
+  opposite ways contributes no direction.</li>
+<li><strong>Row 2 is <code>+</code> on the round's reading and the reading is worth stating.</strong>
+  Overstating one's own past defect rate is, read literally, self-critical. It is
+  scored <code>+</code> here because the statement's function in the document is to be the
+  evidence base for <strong>L-EQ</strong>, a law the same contract introduces: a <code>6.67×</code>
+  overstatement makes the new law look better founded than it is. Sign scored
+  against what the statement is <em>for</em>, and the ambiguity is recorded rather than
+  hidden.</li>
+</ul>
+<h3 id="33-the-direction-is-real-and-the-round-entrys-own-six-does-not-establish-it">3.3 The direction is real, and the round entry's own six does not establish it.<a class="headerlink" href="#33-the-direction-is-real-and-the-round-entrys-own-six-does-not-establish-it" title="Permanent link">#</a></h3>
+<p>One-sided sign test, <code>p = 0.5</code> under the null that error direction is chance:</p>
+<table>
+<thead>
+<tr>
+<th>set</th>
+<th>optimistic / signed</th>
+<th>one-sided <code>p</code></th>
+<th>verdict</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>all nine, honestly signed</td>
+<td><strong>7 / 8</strong></td>
+<td><strong><code>0.0352</code></strong></td>
+<td>direction established at <code>α = 0.05</code></td>
+</tr>
+<tr>
+<td>the round entry's six, honestly signed</td>
+<td><strong>5 / 6</strong></td>
+<td><code>0.1094</code></td>
+<td><strong>not significant</strong></td>
+</tr>
+<tr>
+<td>the round entry's six as filed ("all six")</td>
+<td>6 / 6</td>
+<td><code>0.0156</code></td>
+<td>the claim as written, and it is not what the rows say</td>
+</tr>
+</tbody>
+</table>
+<p><strong>R11's headline is right about the direction and wrong about the evidence it
+offers for it.</strong> The finding clears <code>0.05</code> only once the three rows the prose
+dropped are put back in. The paragraph the round entry actually needed is the one
+it did not write.</p>
+<h3 id="34-the-denominator-was-chosen-after-the-audit-and-lists-no-confirmations">3.4 The denominator was chosen after the audit and lists no confirmations.<a class="headerlink" href="#34-the-denominator-was-chosen-after-the-audit-and-lists-no-confirmations" title="Permanent link">#</a></h3>
+<p><code>9/9</code> is a count of adverse rows in a hand-assembled table. It is not an error
+rate, because nothing fixed the set of statements <em>before</em> the checking started
+and the table lists no statement that survived.</p>
+<p>One sub-census in R11 does have a stated denominator with confirmations in it —
+<code>99777ab:V15_CONTRACT_ARITHMETIC_AUDIT.md</code>, which re-derived each claim numerically:</p>
+<table>
+<thead>
+<tr>
+<th>sub-census</th>
+<th>checked</th>
+<th>wrong</th>
+<th>rate</th>
+<th>Wilson 95%</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>arithmetic audit (<code>A-0a</code>–<code>A-0g</code> CONFIRMED, <code>A-1</code>–<code>A-4</code> FINDING)</td>
+<td><strong>11</strong></td>
+<td><strong>4</strong></td>
+<td><code>36.4%</code></td>
+<td><code>[0.152, 0.646]</code></td>
+</tr>
+<tr>
+<td>ledger's nine (adverse rows only, no confirmations listed)</td>
+<td>9</td>
+<td>9</td>
+<td><code>100%</code></td>
+<td><code>[0.701, 1.000]</code></td>
+</tr>
+<tr>
+<td>union, de-duplicated (<code>A-1</code>, <code>A-3</code>, <code>A-4</code> appear in both)</td>
+<td><strong>≥ 17</strong></td>
+<td><strong>10</strong></td>
+<td><code>58.8%</code></td>
+<td><code>[0.360, 0.784]</code></td>
+</tr>
+</tbody>
+</table>
+<p>The union is <code>≥</code> because no node kept a full list of what it checked and passed.
+The audit also found a <strong>tenth</strong> contract defect the ledger's nine omits — <code>A-2</code>,
+the Grünwald–Letnikov weights <code>w_k = (−1)^k C(−α, k)</code> returning <strong>NaN</strong> at the
+contract's own <code>α = 1</code> bind under <code>scipy.special.binom</code>
+(<code>99777ab:V15_CONTRACT_ARITHMETIC_AUDIT.md:152-190</code>). So the nine is a selection from a
+larger set, in both directions.</p>
+<p><strong>For R12 this is a procedural requirement, not a caveat:</strong> the set of statements
+to be checked is listed <em>before</em> the checking, and confirmations are filed in the
+same table as findings. Otherwise the next round's row measures the auditor's
+appetite, not the author's calibration.</p>
+<hr />
+<h2 id="4-the-discount-what-r12-does-with-this-operationally">4. THE DISCOUNT — what R12 does with this, operationally<a class="headerlink" href="#4-the-discount-what-r12-does-with-this-operationally" title="Permanent link">#</a></h2>
+<p>L-SIGN says <em>"a one-sided sign discounts the author."</em> This is what discounting
+means as a rule a later node can apply without judgement. It is deliberately not
+a sentiment and deliberately not a multiplier.</p>
+<h3 id="d-calib-1-the-counter-is-the-point-estimate">D-CALIB-1 — the counter is the point estimate.<a class="headerlink" href="#d-calib-1-the-counter-is-the-point-estimate" title="Permanent link">#</a></h3>
+<p>Where <code>99777ab:CEQ_V16_CONTRACT.md</code> files a prediction and a counter-prediction, <strong>a node
+reading the pair before data treats the counter as the expected outcome and the
+prediction as the optimistic tail.</strong> The counter is by construction the
+pessimistic half, and <code>7 of 8</code> signed R11 misses were optimistic.</p>
+<p>Applied to the round's largest filing, PART IV R1′:</p>
+<table>
+<thead>
+<tr>
+<th>half</th>
+<th>statement</th>
+<th>how R12 reads it before data</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PREDICTION</td>
+<td>8/8 converge, interval no longer straddles, the 5/8 crossing <strong>banks</strong> (<code>+12</code>)</td>
+<td>the optimistic tail</td>
+</tr>
+<tr>
+<td>COUNTER (author, filed against himself)</td>
+<td>8/8 converge but the crossing <strong>shrinks to ≤ 3/8</strong>, the cap having removed gain the divergent seeds exploited</td>
+<td><strong>the expected outcome</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Concretely: <strong>the scoreboard may not carry <code>+12</code> as an expected value at any point
+before it.8.</strong> Planning, pricing and the it.8 branch text are written against
+"stability bought at capability's price" as the base case, and the <code>+12</code> banking
+is the upside branch. The same applies to R3's composed-arm prediction against
+its counter (<code>composed loses on (a), matches on (b)</code>).</p>
+<h3 id="d-calib-2-a-prediction-with-no-counter-is-not-read-at-all">D-CALIB-2 — a prediction with no counter is not read at all.<a class="headerlink" href="#d-calib-2-a-prediction-with-no-counter-is-not-read-at-all" title="Permanent link">#</a></h3>
+<p>Already a KILL (<code>99777ab:CEQ_V16_CONTRACT.md</code>: <em>"Prediction without counter-prediction ⇒
+not filed"</em>). The operational form: a node that encounters a bare directional
+prediction in a contract clause does <strong>not</strong> apply a discount to it and does not
+plan against it. It reports the missing counter and blocks the cell. Discounting
+an unpaired number is a judgement call, and judgement calls are what this column
+exists to remove.</p>
+<h3 id="d-calib-3-sign-never-size-no-numeric-shrink-factor-is-authorised">D-CALIB-3 — sign, never size. No numeric shrink factor is authorised.<a class="headerlink" href="#d-calib-3-sign-never-size-no-numeric-shrink-factor-is-authorised" title="Permanent link">#</a></h3>
+<p>Nine observations are enough to see a direction and not enough to estimate it.</p>
+<ul>
+<li>Direction: <code>7/8</code>, one-sided sign test <code>p = 0.0352</code>. <strong>Established.</strong></li>
+<li>Size: the Wilson 95% interval on the optimism fraction at <code>7/8</code> is
+  <code>[0.5291, 0.9776]</code>. It excludes <code>0.5</code> and fixes nothing else.</li>
+</ul>
+<p>So a rule of the form <em>"multiply every predicted gain by 0.6"</em> or <em>"halve every
+predicted crossing count"</em> is <strong>forbidden</strong> — the data cannot distinguish <code>0.53</code>
+from <code>0.98</code>, and a multiplier invented at this <code>N</code> would be exactly the kind of
+unsourced constant <code>P-1</code> catches. What the interval licenses is an <strong>ordering</strong>,
+not a scaling: where the prediction and the counter disagree, the counter is
+ranked first. Nothing more.</p>
+<h3 id="d-calib-4-order-the-round-so-the-optimistic-half-is-refuted-cheaply">D-CALIB-4 — order the round so the optimistic half is refuted cheaply.<a class="headerlink" href="#d-calib-4-order-the-round-so-the-optimistic-half-is-refuted-cheaply" title="Permanent link">#</a></h3>
+<p>A one-sided prior has one free consequence: <strong>the cheapest discriminating
+measurement of the optimistic half runs first.</strong> An optimistic prediction is
+refuted more cheaply than it is confirmed, so scheduling the refutation early
+converts the bias into saved wall-clock rather than into commentary. R12's it.7
+early-warning column is already this shape — <code>λ̂</code> and gate-<code>R²</code> from step 0 per
+seed, which reads on the divergence story before the loss curve does.</p>
+<h3 id="d-calib-5-the-row-is-appended-whether-or-not-it-flatters">D-CALIB-5 — the row is appended whether or not it flatters.<a class="headerlink" href="#d-calib-5-the-row-is-appended-whether-or-not-it-flatters" title="Permanent link">#</a></h3>
+<p>At it.38 R12 files its own row: statements checked (<strong>listed before the checking
+began</strong>), wrong, sign per statement, and the sign test. Confirmations are listed
+beside findings. The author's counters are scored as well as his predictions
+(<code>99777ab:CEQ_V16_CONTRACT.md:297</code>, VENUS's forecasting record) — a counter that was also
+wrong, and wrong pessimistically, is a <code>−</code> and goes in the column. Two rounds
+gives a second point; it does not give a size, and D-CALIB-3 stands until the
+column has enough rows to estimate one.</p>
+<hr />
+<h2 id="5-limits">5. LIMITS<a class="headerlink" href="#5-limits" title="Permanent link">#</a></h2>
+<p>Collected once, here.</p>
+<ul>
+<li><strong><code>n = 9</code> is the whole sample, and its denominator was chosen after the fact.</strong>
+  The rate <code>9/9</code> is a count of adverse rows in a hand-assembled table, not an
+  error rate. The union figure <code>10 of ≥ 17</code> is better founded but mixes one
+  sub-census with a stated denominator against a list that recorded only
+  failures; adding adverse-only items to a denominator biases it upward.</li>
+<li><strong>The sign convention is this file's, applied retrospectively.</strong> R11 signed its
+  six as a group and did not sign row by row, so §2's per-row signs are a reading
+  taken here from each row's measured verdict. Row 2's sign depends on whether
+  the statement is scored against the past it describes or the law it supports,
+  and §3.2 records both readings.</li>
+<li><strong><code>p = 0.0352</code> is a one-sided sign test on eight rows.</strong> It is not a test of
+  "the author is optimistic" in general; it is a test on eight statements from
+  one document in one round, selected by the people auditing it.</li>
+<li><strong>Rows 6, 7 and 8 were signed here for the first time.</strong> They were checked in
+  R11 and their verdicts stand on their producing files, but no R11 document
+  assigned them a direction, so their contribution to <code>7/8</code> is this file's
+  reading, not R11's finding.</li>
+<li><strong>The <code>−0.000166</code> / <code>−0.000170</code> pair in row 7 is two runs, not a discrepancy.</strong>
+  <code>99777ab:V15_JUPITER3_KERNEL.md:371</code> states the reproduction explicitly and uses the
+  agreement as the check that both numbers came from the same corpus.</li>
+<li><strong><code>99777ab:house-events.jsonl</code> was not consulted.</strong> It is never grepped; nothing in
+  this file needed the ledger, so no <code>scale/ledger.py</code> parse was run.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../v17k-rulings/" class="md-footer__link md-footer__link--prev" aria-label="Previous: V17K rulings">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                V17K rulings
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../../canon/CHARTER/" class="md-footer__link md-footer__link--next" aria-label="Next: Charter">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Charter
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Invented by <a href="https://teerthsharma.vercel.app/">Teerth Sharma</a> · Apache License 2.0
+    </div>
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/teerthsharma/resolvent" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://teerthsharma.vercel.app/" target="_blank" rel="noopener" title="teerthsharma.vercel.app" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M351.9 280H161c2.9 64.5 17.2 123.9 37.5 167.4 11.4 24.5 23.7 41.8 35.1 52.4 11.2 10.5 18.9 12.2 22.9 12.2s11.7-1.7 22.9-12.2c11.4-10.6 23.7-28 35.1-52.4 20.3-43.5 34.6-102.9 37.5-167.4zm-191-48h190.9c-2.8-64.5-17.1-123.9-37.4-167.4-11.4-24.4-23.7-41.8-35.1-52.4C268.1 1.7 260.4 0 256.4 0s-11.7 1.7-22.9 12.2c-11.4 10.6-23.7 28-35.1 52.4-20.3 43.5-34.6 102.9-37.5 167.4m-48 0c3.5-85.6 25.6-165.1 57.9-217.3C78.7 47.3 10.9 131.2 1.5 232zM1.5 280c9.4 100.8 77.2 184.7 169.3 217.3-32.3-52.2-54.4-131.7-57.9-217.3zm398.4 0c-3.5 85.6-25.6 165.1-57.9 217.3 92.1-32.7 159.9-116.5 169.3-217.3zm111.4-48C501.9 131.2 434.1 47.3 342 14.7c32.3 52.2 54.4 131.7 57.9 217.3z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

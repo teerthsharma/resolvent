@@ -1,0 +1,2512 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="One causal head, three switches. Softmax attention, unnormalized-kernel attention and the exact path product of a Markov chain as settings of one operator, proved in Lean 4, with every failure kept on the record.">
+      
+      
+        <meta name="author" content="Teerth Sharma">
+      
+      
+        <link rel="canonical" href="https://teerthsharma.github.io/resolvent/BED_H_PREREGISTRATION/">
+      
+      
+        <link rel="prev" href="../DR2_CARD/">
+      
+      
+        <link rel="next" href="../prereg/REMOVAL_ECHO_v1/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/logo.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>BED-H - resolvent</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../assets/resolvent.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#bed-h-the-belief-bed-pre-registered-2026-09-14-before-any-code-exists" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="resolvent" class="md-header__button md-logo" aria-label="resolvent" data-md-component="logo">
+      
+  <img src="../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            resolvent
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              BED-H
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/teerthsharma/resolvent" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    teerthsharma/resolvent
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../FAILS/" class="md-tabs__link">
+          
+  
+  
+  The record
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+  
+  Pre-registrations
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../ledgers/mistakes/" class="md-tabs__link">
+          
+  
+  
+  Ledgers
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../canon/CHARTER/" class="md-tabs__link">
+          
+  
+  
+  Canon
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../CEQ_SHAPE/" class="md-tabs__link">
+          
+  
+  
+  Paper
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="resolvent" class="md-nav__button md-logo" aria-label="resolvent" data-md-component="logo">
+      
+  <img src="../assets/logo.svg" alt="logo">
+
+    </a>
+    resolvent
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/teerthsharma/resolvent" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    teerthsharma/resolvent
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The record
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    The record
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../FAILS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Everything retracted, broken or open
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../COMPONENT_LEDGER/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Component ledger
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PLAN/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Research plan
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CORNER_RULE_RETIREMENT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Corner rule retirement
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PI_JEPA_KAGGLE_CARD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kaggle card
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DR2_CARD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DR2 card
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pre-registrations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Pre-registrations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BED-H
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BED-H
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#why-this-bed-exists" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why this bed exists
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-bed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The bed
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#must-fires-gates-not-decoration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Must-fires — gates, not decoration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-trap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The trap
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#l-simple-baselines-in-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        L-SIMPLE baselines, in order
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prior-art-rewritten-2026-09-14-after-an-audit-before-any-arm-ran" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prior art — REWRITTEN 2026-09-14 after an audit, before any arm ran
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Prior art — REWRITTEN 2026-09-14 after an audit, before any arm ran">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-substrate-is-published-twice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The substrate is published, twice
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-concession-was-inverted" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The concession was inverted
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#occupied-elsewhere-with-owners" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Occupied elsewhere, with owners
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-survives-and-it-is-one-sentence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What survives, and it is one sentence
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-corner-rule-adds-nothing-here-and-the-reason-is-internal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The corner rule adds nothing here, and the reason is internal
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gate-correction-must-fire-1-is-a-theorem-not-a-gate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Gate correction: must-fire 1 is a theorem, not a gate
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#skyline-correction-the-gru-as-specified-is-below-a-published-lower-bound" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Skyline correction: the GRU as specified is below a published lower bound
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-counter-prediction-is-itself-a-published-result-and-its-sign-flips" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The counter-prediction is itself a published result, and its sign flips
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#one-more-gate-from-the-audit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        One more gate, from the audit
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prediction-on-the-record" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prediction, on the record
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-would-make-this-bed-void" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What would make this bed void
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#corrections-from-a-theory-audit-2026-09-14-still-before-any-arm-ran" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Corrections from a theory audit, 2026-09-14 — still before any arm ran
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a-second-correction-pass-2026-09-14-after-the-bed-ran-before-any-arm-is-published" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A second correction pass, 2026-09-14 — after the bed ran, before any arm is published
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-counter-resolved-2026-09-14" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The counter, resolved — 2026-09-14
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../prereg/REMOVAL_ECHO_v1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    REMOVAL-ECHO v1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ledgers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Ledgers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ledgers/mistakes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Failure mechanisms
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ledgers/struck/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Struck constants
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ledgers/mathematics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mathematics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ledgers/model-card/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model card
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ledgers/costs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Costs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ledgers/v17k-rulings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    V17K rulings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ledgers/v16-calibration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    V16 calibration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Canon
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Canon
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../canon/CHARTER/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Charter
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../canon/01_THEORY_ACCURACY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01 Theory of accuracy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../canon/02_THEORY_TRAINING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    02 Theory of training
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../canon/03_KERNEL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03 Kernel
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../canon/04_BEDS_AND_INSTRUMENTS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    04 Beds and instruments
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../canon/05_REPAIRS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05 Repairs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../canon/06_PREDICTIONS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    06 Predictions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../canon/08_ARCHITECTURE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    08 Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../canon/09_CHESS_AND_MARKETS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    09 Chess and markets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../canon/CORRECTIONS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Corrections
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Paper
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Paper
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CEQ_SHAPE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The shape of CEQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sources/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Paper sources
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BIB_AUDIT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bibliography audit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BIB_ALIASES/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bibliography aliases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#why-this-bed-exists" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why this bed exists
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-bed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The bed
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#must-fires-gates-not-decoration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Must-fires — gates, not decoration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-trap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The trap
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#l-simple-baselines-in-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        L-SIMPLE baselines, in order
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prior-art-rewritten-2026-09-14-after-an-audit-before-any-arm-ran" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prior art — REWRITTEN 2026-09-14 after an audit, before any arm ran
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Prior art — REWRITTEN 2026-09-14 after an audit, before any arm ran">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-substrate-is-published-twice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The substrate is published, twice
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-concession-was-inverted" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The concession was inverted
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#occupied-elsewhere-with-owners" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Occupied elsewhere, with owners
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-survives-and-it-is-one-sentence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What survives, and it is one sentence
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-corner-rule-adds-nothing-here-and-the-reason-is-internal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The corner rule adds nothing here, and the reason is internal
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gate-correction-must-fire-1-is-a-theorem-not-a-gate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Gate correction: must-fire 1 is a theorem, not a gate
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#skyline-correction-the-gru-as-specified-is-below-a-published-lower-bound" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Skyline correction: the GRU as specified is below a published lower bound
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-counter-prediction-is-itself-a-published-result-and-its-sign-flips" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The counter-prediction is itself a published result, and its sign flips
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#one-more-gate-from-the-audit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        One more gate, from the audit
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prediction-on-the-record" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prediction, on the record
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-would-make-this-bed-void" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What would make this bed void
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#corrections-from-a-theory-audit-2026-09-14-still-before-any-arm-ran" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Corrections from a theory audit, 2026-09-14 — still before any arm ran
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a-second-correction-pass-2026-09-14-after-the-bed-ran-before-any-arm-is-published" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A second correction pass, 2026-09-14 — after the bed ran, before any arm is published
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-counter-resolved-2026-09-14" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The counter, resolved — 2026-09-14
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="bed-h-the-belief-bed-pre-registered-2026-09-14-before-any-code-exists">BED-H — the belief bed. Pre-registered 2026-09-14, before any code exists.<a class="headerlink" href="#bed-h-the-belief-bed-pre-registered-2026-09-14-before-any-code-exists" title="Permanent link">#</a></h1>
+<p>Hidden intents, observed statements, exact labels. This document is written
+<strong>before</strong> the bed is built and before any arm is run, so that the prediction and
+the counter-prediction below cannot move afterwards. Every later result on this
+bed is scored against this page.</p>
+<h2 id="why-this-bed-exists">Why this bed exists<a class="headerlink" href="#why-this-bed-exists" title="Permanent link">#</a></h2>
+<p>Three independent measurements on 2026-09-14 killed the same thing from three
+directions, and none of them was a bug:</p>
+<ul>
+<li>The committor at ply 15 is a function of the ply-15 <strong>position</strong>, so the walk
+  is Markov and the prefix is conditionally independent of the label.
+  Aggregation <strong>costs</strong> 0.0810 at the encoder output. Moving the label to ply 19
+  does not rescue it.</li>
+<li>K+Q-vs-K is a fully observed MDP, so conditioning on a move and forcing it are
+  the same operation and the interventional–observational divergence is
+  identically zero. That is the diagnosis of DCM-1's flat move-permutation
+  ablation, not a fault in it.</li>
+<li><code>CausalEncoder</code> PASSED on an i.i.d. EMA bed and its sign <strong>flipped</strong> on the
+  real target.</li>
+</ul>
+<p>On a fully observed Markov chain the future depends only on the present, so an
+attention operator over a context has provably nothing to do. Every bed this
+project owned was Markov in the current state. The method also depends on an
+<strong>exact oracle</strong> — the absence of one is what killed DCM-1, whose bed carried
+negative headroom nobody measured first. BED-H is the first bed that makes
+history necessary <em>and</em> keeps the label exact.</p>
+<h2 id="the-bed">The bed<a class="headerlink" href="#the-bed" title="Permanent link">#</a></h2>
+<p>Hidden chain <code>x_t</code> over <code>S = 8</code> states with a <strong>non-symmetric</strong> <code>P</code>. Emissions
+<code>y_t</code> at <code>snr ∈ [0.5, 0.7]</code>. Second eigenvalue <code>λ₂ ∈ [0.90, 0.97]</code>, giving a
+memory of roughly 10–30 steps — deliberately 2–3× the baseline's window, so a
+windowed reader is beaten by the physics rather than by tuning.</p>
+<p><strong>Oracle:</strong> the forward algorithm. Exact, <code>O(T·S²)</code>.</p>
+<p><strong>Labels.</strong> <code>b_t</code>, the belief, is <strong>intensive</strong> — the softmax corner.
+Cumulative expected hits <code>Σ_τ b_τ·h</code> is <strong>extensive</strong> — the linear corner.
+Consequences are absorption probabilities under the belief.</p>
+<p><strong>This is the first bed on which the corner rule has a referent.</strong> The rule
+<code>beta = 1 − alpha</code> was retired on 2026-09-14 (<code>docs/CORNER_RULE_RETIREMENT.md</code>)
+on three grounds, the first of which was that <code>pi_jepa</code>'s encoder is
+position-wise, so its scaling exponent is zero by construction and the mask
+reached its coordinates by index equality alone. Here the intensive and
+extensive classes are planted by the generator's physics, not by an integer.</p>
+<h2 id="must-fires-gates-not-decoration">Must-fires — gates, not decoration<a class="headerlink" href="#must-fires-gates-not-decoration" title="Permanent link">#</a></h2>
+<p>Printed per bed instance, and an instance outside the band is <strong>REFUSED</strong>:</p>
+<ol>
+<li><strong>History must be necessary.</strong> Window-<code>L</code> oracle error must <strong>decay</strong> with
+   <code>L</code>. A bed where it does not is a Markov bed wearing a hidden state, and it
+   cannot reward the thing under test.</li>
+<li><strong>The label must be alive.</strong> Label spread <code>≥ 0.1</code>.</li>
+</ol>
+<h2 id="the-trap">The trap<a class="headerlink" href="#the-trap" title="Permanent link">#</a></h2>
+<p><strong>Never hand the model <code>P</code>.</strong></p>
+<ul>
+<li><em>Weak form:</em> <code>P</code> fixed and unknown, learned implicitly.</li>
+<li><em>Strong form:</em> <code>P</code> drawn per instance and encoded in the prefix — in-context
+  system identification. That is the real target.</li>
+</ul>
+<h2 id="l-simple-baselines-in-order">L-SIMPLE baselines, in order<a class="headerlink" href="#l-simple-baselines-in-order" title="Permanent link">#</a></h2>
+<ol>
+<li><strong>Window-<code>L</code> forward algorithm</strong> — the oracle with amnesia, exact inside its
+   window. The arm must beat <strong>window-4's 0.16–0.22</strong>.</li>
+<li><strong>An EMA of one-hot observations.</strong></li>
+<li><strong>A GRU with <code>S</code> hidden units</strong> — the native primitive. This is the
+   <strong>SKYLINE, not a rival</strong>: a belief update is a first-order recurrence in
+   belief space, so a recurrence is the right tool and beating it is not the
+   claim.</li>
+</ol>
+<h2 id="prior-art-rewritten-2026-09-14-after-an-audit-before-any-arm-ran">Prior art — REWRITTEN 2026-09-14 after an audit, before any arm ran<a class="headerlink" href="#prior-art-rewritten-2026-09-14-after-an-audit-before-any-arm-ran" title="Permanent link">#</a></h2>
+<p>The section this replaces named two references and conceded the wrong half of
+one of them. An audit resolved 37 identifiers and found that <strong>three of the four
+things this bed would claim are already occupied, with numbers</strong>. The
+corrections are recorded here rather than in a later card, because the whole
+point of a pre-registration is that it is fixed before the result.</p>
+<h3 id="the-substrate-is-published-twice">The substrate is published, twice<a class="headerlink" href="#the-substrate-is-published-twice" title="Permanent link">#</a></h3>
+<ul>
+<li><strong>arXiv:2512.22471</strong> — <em>The Bayesian Geometry of Transformer Attention</em>.
+  "Bayesian wind tunnels — controlled environments where the true posterior is
+  known in closed form." Its HMM task draws a <strong>fresh Dirichlet HMM per
+  sequence</strong>, supervises on <code>p(s_t | o_1:t)</code> with forward-recursion ground
+  truth, and scores architectures: <strong>Transformer 0.049, Mamba 0.024 ± .009,
+  LSTM 0.411 ± .003 (marked fail), MLP 0.40</strong> in entropy MAE. That is this
+  bed's strong form, already executed.</li>
+<li><strong>arXiv:2605.20824</strong> — <em>Markovian Circuit Tracing for Transformer State
+  Dynamic</em>. Calls itself "a controlled benchmark and evaluation framework":
+  six HMM families × three seeds, exact latent states, transition matrices,
+  Bayesian belief vectors, Bayes-optimal predictions <strong>and forced-state
+  counterfactual targets</strong>, against four controls.</li>
+</ul>
+<h3 id="the-concession-was-inverted">The concession was inverted<a class="headerlink" href="#the-concession-was-inverted" title="Permanent link">#</a></h3>
+<p><strong>arXiv:2405.15943</strong> (Shai, Marzen, Teixeira, Gietelink Oldenziel, Riechers,
+NeurIPS 2024) is real and says what its title says. But it <strong>scores no
+architecture against anything</strong> — no baselines, no windowed oracle, no RNN
+comparison; belief is a <em>probing target</em> recovered by linear regression from
+residual activations after next-token training. So conceding "the bed does not
+claim the representation result" gave away ground that paper never held.</p>
+<p>And the delta this page kept — <strong>"exact oracle labels"</strong> — is that paper's own
+machinery, and is 35 years older than it: Rabiner 1989,
+<code>10.1109/5.18626</code>. <strong>It is struck from the delta.</strong></p>
+<p>Also named, and absent from the original section: <strong>arXiv:2502.01954</strong>
+(Piotrowski, Riechers, Filan, Shai), <em>Constrained belief updates explain
+geometric structures in transformer representations</em> — attention <strong>as</strong> the
+constrained Bayesian update, predicted analytically. That is closer to this
+project's operator claim than 2405.15943 is.</p>
+<p><strong>Frühwirth-Schnatter was miscategorised.</strong> Kalman is the continuous twin;
+Frühwirth-Schnatter (2006) is Markov <em>switching</em> — the same discrete-latent
+family in a Bayesian idiom, not a continuous analogue.</p>
+<h3 id="occupied-elsewhere-with-owners">Occupied elsewhere, with owners<a class="headerlink" href="#occupied-elsewhere-with-owners" title="Permanent link">#</a></h3>
+<table>
+<thead>
+<tr>
+<th>claim</th>
+<th>owner</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>in-context identification of an HMM</td>
+<td>2512.22471, 2506.07298, 2410.16546</td>
+</tr>
+<tr>
+<td>⊥ as an output symbol</td>
+<td>1907.00208; per-position in a structured output, <code>garcia18a</code> ICML 2018</td>
+</tr>
+<tr>
+<td>belief entropy as the uncertainty statistic, decomposed per position</td>
+<td>1202.6545 (Durand &amp; Guédon, 2012)</td>
+</tr>
+<tr>
+<td>the <code>Σ w·v / (Σ w)^α</code> family</td>
+<td><strong>arXiv:2607.22781</strong>, <em>What Softmax Throws Away: Mass-Aware Attention for Evidence Accumulation</em> (Yu &amp; Ha, 24 Jul 2026) — the extensivity argument for attention normalisation, arrived at independently, with a global <code>p</code></td>
+</tr>
+<tr>
+<td>softmax normalisation destroys the extensive read</td>
+<td><strong>arXiv:2310.08661</strong>, with the ablation, 2023</td>
+</tr>
+<tr>
+<td>extensive-vs-intensive selects the aggregator</td>
+<td>arXiv:2207.13779 — sum for extensive, mean for intensive, chosen by physics</td>
+</tr>
+</tbody>
+</table>
+<h3 id="what-survives-and-it-is-one-sentence">What survives, and it is one sentence<a class="headerlink" href="#what-survives-and-it-is-one-sentence" title="Permanent link">#</a></h3>
+<blockquote>
+<p>A protocol that scores a sequence architecture's <strong>⊥ emission</strong> against an
+exactly-known filter posterior, with the abstain threshold anchored at
+<code>ln S − δ</code> rather than tuned for coverage — on a bed carrying an extensive
+label alongside the intensive one, against a windowed-forward-algorithm
+baseline whose headroom is <strong>derived from <code>λ₂</code> in advance</strong>.</p>
+</blockquote>
+<p>Every <em>mechanism</em> in that sentence is borrowed and cited. What is new is the
+<strong>evaluation protocol</strong> and the <strong>maximum-entropy anchor</strong>. Nobody scores ⊥
+against a filter posterior — four phrasings found nothing. It is a much smaller
+claim than this page originally made.</p>
+<h3 id="the-corner-rule-adds-nothing-here-and-the-reason-is-internal">The corner rule adds nothing here, and the reason is internal<a class="headerlink" href="#the-corner-rule-adds-nothing-here-and-the-reason-is-internal" title="Permanent link">#</a></h3>
+<p>Its conjunction — an exponent chosen <strong>per output coordinate</strong> by dimensional
+analysis of what that coordinate reads — is genuinely unoccupied: every
+published exponent is indexed by model, head, layer or query, never by output
+coordinate. But <code>docs/CORNER_RULE_RETIREMENT.md</code> retired the rule on the same
+day this bed was pre-registered, on three measured grounds, and closed with
+"No third reroute is proposed." <strong>This bed would be a third reroute.</strong> The
+external gap does not reopen an internally closed question.</p>
+<h2 id="gate-correction-must-fire-1-is-a-theorem-not-a-gate">Gate correction: must-fire 1 is a theorem, not a gate<a class="headerlink" href="#gate-correction-must-fire-1-is-a-theorem-not-a-gate" title="Permanent link">#</a></h2>
+<p>"Window-<code>L</code> oracle error must decay with <code>L</code>" is guaranteed by filter stability
+— exponential forgetting of the initial condition, Le Gland &amp; Mevel,
+<em>Math. Control Signals Systems</em> 13:63–93, 2000 — with the rate in this bed's own
+<code>λ₂</code> given by arXiv:1710.06078 as <code>B = log(ε)/(λ₂ − λ₁)</code>. It <strong>fires by
+construction</strong> and discriminates nothing. It is retained as a sanity check on
+the generator: if it ever fails, the generator is broken, which is the only
+information it can carry.</p>
+<p>It follows that <strong>the window-4 band must be derived, not discovered.</strong> <code>0.16–0.22</code>
+was written as a bar; it is a function of <code>S</code>, <code>λ₂</code> and <code>snr</code> fixed at
+generation time and must be computed before it is measured, with any
+disagreement reported as the finding.</p>
+<h2 id="skyline-correction-the-gru-as-specified-is-below-a-published-lower-bound">Skyline correction: the GRU as specified is below a published lower bound<a class="headerlink" href="#skyline-correction-the-gru-as-specified-is-below-a-published-lower-bound" title="Permanent link">#</a></h2>
+<p><code>S</code> hidden units for <code>S = 8</code> states sits under the <code>Ω(N·|Σ|)</code> bound of
+arXiv:2310.05161, and arXiv:1805.04908 shows the GRU is strictly weaker than
+LSTM and ReLU-Elman in finite precision <strong>because it cannot count</strong> — while the
+extensive label <code>Σ_τ b_τ·h</code> <em>is</em> a count. The <code>S</code>-unit GRU is therefore a
+<strong>floor</strong>, not a skyline; a properly sized recurrent arm and an LSTM must run
+beside it.</p>
+<h2 id="the-counter-prediction-is-itself-a-published-result-and-its-sign-flips">The counter-prediction is itself a published result, and its sign flips<a class="headerlink" href="#the-counter-prediction-is-itself-a-published-result-and-its-sign-flips" title="Permanent link">#</a></h2>
+<p>"The GRU skyline wins outright" is arXiv:2406.04089 (June 2024): transformers
+consistently underperform RNNs across all tested HMMs — in the <strong>fixed</strong>-HMM
+regime. In the <strong>strong</strong> form this bed names as its real target, 2512.22471
+reports the opposite with numbers, LSTM failing at 0.411 against Transformer
+0.049. Whichever way this bed lands it replicates one published result and
+contradicts another, and the axis that decides which is exactly the weak/strong
+form of the trap.</p>
+<h2 id="one-more-gate-from-the-audit">One more gate, from the audit<a class="headerlink" href="#one-more-gate-from-the-audit" title="Permanent link">#</a></h2>
+<p>A near-singular <code>P</code> makes the bed unlearnable for every arm — learning HMMs
+without nonsingularity is at least as hard as noisy parity (<code>cs/0502076</code>). A
+conditioning gate is required, with its refusal fraction reported beside the
+other two.</p>
+<h2 id="prediction-on-the-record">Prediction, on the record<a class="headerlink" href="#prediction-on-the-record" title="Permanent link">#</a></h2>
+<p><strong>The author's:</strong> the read beats window-4 with a confidence interval, and
+matches the GRU skyline within resolution at horizon <code>≥ 16</code>.</p>
+<p><strong>The counter, point estimate:</strong> the GRU skyline <strong>wins outright</strong>. A belief
+update <em>is</em> a first-order recurrence in belief space, so the native primitive is
+a recurrence and attention only approximates it. On that reading the read's
+honest claim here is <strong>parity-with-skyline plus refusal</strong> — not a win.</p>
+<p>Both are recorded before the bed exists. If the read wins outright, the counter
+was wrong and says so; if the GRU wins, the prediction was wrong and the claim
+drops to parity-plus-refusal. Neither may be revised after the first number.</p>
+<h2 id="what-would-make-this-bed-void">What would make this bed void<a class="headerlink" href="#what-would-make-this-bed-void" title="Permanent link">#</a></h2>
+<p>Stated now so it cannot be decided later: if the window-<code>L</code> error does not decay
+with <code>L</code>, the bed is Markov and every result on it is uninterpretable. If label
+spread falls under 0.1, the bed is dead. If any arm is handed <code>P</code>, the trap is
+broken and the run measures nothing. Any of those three and the instance is
+refused rather than reported.</p>
+<h2 id="corrections-from-a-theory-audit-2026-09-14-still-before-any-arm-ran">Corrections from a theory audit, 2026-09-14 — still before any arm ran<a class="headerlink" href="#corrections-from-a-theory-audit-2026-09-14-still-before-any-arm-ran" title="Permanent link">#</a></h2>
+<p><strong>A citation on this page carried the wrong title.</strong> <code>arXiv:2607.22781</code> was
+written as <em>"Mass-Aware Attention"</em>, which is the mechanism name from the
+subtitle. The actual title is <em>What Softmax Throws Away: Mass-Aware Attention
+for Evidence Accumulation</em>. Real identifier, wrong title field — the exact
+pattern a citation audit exists to catch, committed here by the same session
+that runs the audits. Corrected above.</p>
+<p><strong>arXiv:1612.02526 does not transfer to this bed at all</strong>, and the earlier note
+that it "bounds next-observation prediction, not belief estimation" understated
+it. Full-text: <em>belief</em> appears <strong>once</strong>, non-technically; <em>posterior</em> appears
+only inside the proof of Lemma 1 as a submartingale potential, never as an
+output. Everything is <strong>doubly averaged</strong> — over a uniformly random <code>t</code> and over
+the process — and the authors themselves call Proposition 1 "a kind of negative
+result—that average error is not a good metric". This bed's label <strong>is</strong> the
+belief and its metric is per-position TV. <code>log n/ε</code> transfers to nothing here.
+For a short-memory claim the citation is <strong>Atar &amp; Zeitouni, SICON 35(1):36–55,
+Corollary 2.1</strong> for the rate, and Ye–Ma–Qian eq. (10) for the window length with
+its constant <code>C</code> flagged as never estimated by its own authors.</p>
+<p><strong>Le Gland &amp; Mevel do not own the Lyapunov-gap characterisation.</strong> They
+attribute it to Atar &amp; Zeitouni in their Introduction, p. 66. They remain the
+correct citation for forgetting.</p>
+<blockquote>
+<p>~~Their own Remark 2.4 attributes it to Atar &amp; Zeitouni; their contribution is
+a Birkhoff contraction coefficient under primitivity.~~ <strong>SUPERSEDED.</strong> This
+page invented a Remark 2.4 that does not exist in the paper, and attributed a
+Birkhoff contraction coefficient to authors whose text contains <strong>zero</strong>
+occurrences of <em>Birkhoff</em> — it is Atar &amp; Zeitouni who use Birkhoff. Real
+paper, real attribution, fabricated locator and fabricated contribution: the
+<code>P-16</code> shape, committed on the page that files <code>P-16</code>. The attribution itself
+survives at the corrected location.</p>
+</blockquote>
+<p><strong>The concession to arXiv:2405.15943 can be sharpened.</strong> Full-text grep of v3
+finds <strong>zero</strong> occurrences of <em>fractal dimension</em>, <em>box-count</em>, <em>Hausdorff</em>,
+<em>correlation dimension</em>, <em>Lyapunov</em> or <em>contraction</em>. It <strong>visualises</strong> the
+fractal and never measures it; its reported R² values are correlations of
+pairwise distances, on one generator, one trained configuration, no architecture
+comparison. Measuring the attractor's information dimension concedes nothing to
+that paper.</p>
+<p><strong>The fractal link is an upper bound with no matching lower bound.</strong>
+<code>dim_H(ν) ≤ h/χ</code> holds unconditionally for place-dependent IFS
+(Jaroszewska–Rams, arXiv:0707.3532 Thm 1), applied to the Blackwell measure by
+Bárány–Pollicott–Simon (J. Stat. Phys. 148:393–421, Prop. 14). Every <strong>equality</strong>
+theorem assumes <em>constant</em> probabilities; the filter's weights are
+place-dependent by construction, which is exactly the gap. Measured here: the
+bound holds 4/4 with 11–45% slack, and is <strong>vacuous by 23×</strong> in the overlap
+regime, where the attractor collapses to a point while <code>h/χ = 23.276</code>.</p>
+<p><strong>A trap for anyone reproducing this.</strong> Box-counting the <em>support</em> gives
+<code>d_box = 2.57–3.31</code>, which appears to violate <code>h/χ</code>. It does not: the theorem
+bounds the dimension of the <strong>measure</strong>, and <code>dim_H(μ) ≤ dim_B(supp μ)</code> always.
+Only the information dimension <code>D₁</code> is the comparable quantity. Box-counting the
+support here produces a <strong>false refutation</strong>.</p>
+<p><strong>One exact identity, worth asserting as a free correctness check.</strong> The top
+Lyapunov exponent of the filter's random product equals minus the entropy rate
+of the observation process, <code>λ₁ = −h(Y)</code>, identically — because the product's
+norm <em>is</em> the sequence likelihood. Measured residual <code>1.26e-05</code> on the weak
+draw and <code>1.41e-13</code> on a closed-form control.</p>
+<h2 id="a-second-correction-pass-2026-09-14-after-the-bed-ran-before-any-arm-is-published">A second correction pass, 2026-09-14 — after the bed ran, before any arm is published<a class="headerlink" href="#a-second-correction-pass-2026-09-14-after-the-bed-ran-before-any-arm-is-published" title="Permanent link">#</a></h2>
+<p><strong>Three citations on this page were misaddressed, and all three are corrected
+above or here.</strong> They were written by the same session that runs the citation
+audits, which is the point of recording them.</p>
+<ol>
+<li><strong>Le Gland &amp; Mevel "Remark 2.4" does not exist.</strong> Corrected in place above.</li>
+<li><strong>arXiv:2102.10487 Eq. (15) is the dimension formula, not the normaliser
+   identity.</strong> The identity this page needs is the prequel, <strong>arXiv:2008.12886
+   Eq. (16)</strong>. Cited to the wrong paper in the same series — an off-by-one-paper
+   error, which resolves cleanly and is therefore invisible to an identifier
+   check.</li>
+<li><strong>Ye-Ma-Qian eq. (10) gives a slope and no level.</strong> Its constant <code>C</code> is never
+   estimated by its own authors, so no absolute window length can be derived
+   from it. The derived-level figures this page carried were produced by
+   multiplying a <strong>quenched</strong> (geometric) rate onto an <strong>annealed</strong>
+   (arithmetic) level, and read <strong>2.5-17x too low on every draw</strong>. Both derived
+   levels are dropped. The slope is kept and verified: fitted on <code>L &gt;= 4</code>
+   against the geometric error, quenched slope over <code>exp(Lyapunov gap)</code> reads
+   <strong>1.0073</strong> weak and <strong>1.0142</strong> strong (1.65% / 2.75% mean error), while the
+   annealed form misses by <strong>40.6% / 52.5%</strong>. Jensen holds <strong>48/48</strong> in both
+   forms. <code>lambda_2</code> of <code>P</code> over-predicts the decay factor by <strong>2.1x</strong>.</li>
+</ol>
+<p><strong>The window-4 band was pre-registered wrong.</strong> Measured <strong>0.1423</strong> against the
+pre-registered <strong>0.16-0.22</strong>, with 26.6% of draws inside. The replacement is
+measured rather than preferred: the admissible region is a diagonal ridge,
+<code>snr = 1.181 * lambda_2 - 0.575</code>, not an interval in either coordinate alone.</p>
+<p><strong>The free identity holds.</strong> <code>lambda_1 = -h(Y)</code> verified to <strong>2.2e-04</strong> on the
+live draw — a correctness check on both the filter and the QR code, costing
+nothing.</p>
+<h2 id="the-counter-resolved-2026-09-14">The counter, resolved — 2026-09-14<a class="headerlink" href="#the-counter-resolved-2026-09-14" title="Permanent link">#</a></h2>
+<p><strong>The counter holds and the author's delta shrinks to what the counter said it
+would.</strong> A trained GRU-64, given nothing but its own predicted entropy and the
+same <code>ln S - delta</code> anchor every other arm gets, reaches <strong>recall 0.8959 at
+precision 0.8903</strong> at <code>delta = 0.10</code>, and <strong>0.9101 / 0.9028</strong> at <code>delta = 0.20</code>,
+on the same 64 draws with <code>delta</code> unchanged. Every untrained consumer reaches
+recall <strong>0.0000</strong>. Inside a planted noise stretch the GRU's mean entropy is
+<strong>1.9035</strong> against the oracle's <strong>2.0400</strong>, while window-4 sits at 1.1206 and EMA
+at 1.2340.</p>
+<p>The refusal channel is therefore real and it is <strong>not the read's</strong>. The surviving
+claim is exactly the pre-registered counter's sentence: <strong>abstention scored
+against an exact filter posterior — a metric, not an architecture.</strong> No
+architectural advantage is claimed for the resolvent read on this bed.</p>
+<p><strong>The one unborrowed finding: the two metrics come apart in opposite
+directions.</strong> The GRU skyline reads recall <strong>0.90</strong> with selective-risk dominance
+<strong>0.00</strong> — its entropy tracks what is <em>knowable</em> rather than its <em>own</em> error, so
+abstaining by it does not lower its risk on what remains. The EMA reads recall
+<strong>0.00</strong> with dominance <strong>0.86</strong> — it ranks its own errors well while never
+crossing the absolute anchor. Neither metric alone characterises a refusal
+channel, which is why both were demanded in advance. A scorer reporting only one
+of the two would have called each of these arms a success.</p>
+<p><strong>The real bar for any arm round is the prior-mean-P baseline at 0.0852</strong>, not
+window-4 at 0.1440. No baseline built here reaches it, so in-context
+identification on this bed is open rather than settled.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../DR2_CARD/" class="md-footer__link md-footer__link--prev" aria-label="Previous: DR2 card">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                DR2 card
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../prereg/REMOVAL_ECHO_v1/" class="md-footer__link md-footer__link--next" aria-label="Next: REMOVAL-ECHO v1">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                REMOVAL-ECHO v1
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Invented by <a href="https://teerthsharma.vercel.app/">Teerth Sharma</a> · Apache License 2.0
+    </div>
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/teerthsharma/resolvent" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://teerthsharma.vercel.app/" target="_blank" rel="noopener" title="teerthsharma.vercel.app" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M351.9 280H161c2.9 64.5 17.2 123.9 37.5 167.4 11.4 24.5 23.7 41.8 35.1 52.4 11.2 10.5 18.9 12.2 22.9 12.2s11.7-1.7 22.9-12.2c11.4-10.6 23.7-28 35.1-52.4 20.3-43.5 34.6-102.9 37.5-167.4zm-191-48h190.9c-2.8-64.5-17.1-123.9-37.4-167.4-11.4-24.4-23.7-41.8-35.1-52.4C268.1 1.7 260.4 0 256.4 0s-11.7 1.7-22.9 12.2c-11.4 10.6-23.7 28-35.1 52.4-20.3 43.5-34.6 102.9-37.5 167.4m-48 0c3.5-85.6 25.6-165.1 57.9-217.3C78.7 47.3 10.9 131.2 1.5 232zM1.5 280c9.4 100.8 77.2 184.7 169.3 217.3-32.3-52.2-54.4-131.7-57.9-217.3zm398.4 0c-3.5 85.6-25.6 165.1-57.9 217.3 92.1-32.7 159.9-116.5 169.3-217.3zm111.4-48C501.9 131.2 434.1 47.3 342 14.7c32.3 52.2 54.4 131.7 57.9 217.3z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

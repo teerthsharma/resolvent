@@ -1,0 +1,2296 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="One causal head, three switches. Softmax attention, unnormalized-kernel attention and the exact path product of a Markov chain as settings of one operator, proved in Lean 4, with every failure kept on the record.">
+      
+      
+        <meta name="author" content="Teerth Sharma">
+      
+      
+        <link rel="canonical" href="https://teerthsharma.github.io/resolvent/sources/sections/sec_state/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/logo.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>§S — WHERE ROUND 15 LEFT THE CAMPAIGN, AND WHAT BINDS THE NEW PROGRAMME - resolvent</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/resolvent.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#s-where-round-15-left-the-campaign-and-what-binds-the-new-programme" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="resolvent" class="md-header__button md-logo" aria-label="resolvent" data-md-component="logo">
+      
+  <img src="../../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            resolvent
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              §S — WHERE ROUND 15 LEFT THE CAMPAIGN, AND WHAT BINDS THE NEW PROGRAMME
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/teerthsharma/resolvent" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    teerthsharma/resolvent
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../FAILS/" class="md-tabs__link">
+          
+  
+  
+  The record
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../BED_H_PREREGISTRATION/" class="md-tabs__link">
+          
+  
+  
+  Pre-registrations
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../ledgers/mistakes/" class="md-tabs__link">
+          
+  
+  
+  Ledgers
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../canon/CHARTER/" class="md-tabs__link">
+          
+  
+  
+  Canon
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../CEQ_SHAPE/" class="md-tabs__link">
+          
+  
+  
+  Paper
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="resolvent" class="md-nav__button md-logo" aria-label="resolvent" data-md-component="logo">
+      
+  <img src="../../../assets/logo.svg" alt="logo">
+
+    </a>
+    resolvent
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/teerthsharma/resolvent" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    teerthsharma/resolvent
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The record
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    The record
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../FAILS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Everything retracted, broken or open
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../COMPONENT_LEDGER/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Component ledger
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../PLAN/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Research plan
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CORNER_RULE_RETIREMENT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Corner rule retirement
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../PI_JEPA_KAGGLE_CARD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kaggle card
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../DR2_CARD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DR2 card
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pre-registrations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Pre-registrations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../BED_H_PREREGISTRATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BED-H
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../prereg/REMOVAL_ECHO_v1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    REMOVAL-ECHO v1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ledgers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Ledgers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/mistakes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Failure mechanisms
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/struck/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Struck constants
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/mathematics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mathematics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/model-card/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model card
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/costs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Costs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/v17k-rulings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    V17K rulings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/v16-calibration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    V16 calibration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Canon
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Canon
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/CHARTER/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Charter
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/01_THEORY_ACCURACY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01 Theory of accuracy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/02_THEORY_TRAINING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    02 Theory of training
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/03_KERNEL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03 Kernel
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/04_BEDS_AND_INSTRUMENTS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    04 Beds and instruments
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/05_REPAIRS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05 Repairs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/06_PREDICTIONS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    06 Predictions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/08_ARCHITECTURE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    08 Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/09_CHESS_AND_MARKETS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    09 Chess and markets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/CORRECTIONS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Corrections
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Paper
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Paper
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CEQ_SHAPE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The shape of CEQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Paper sources
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../BIB_AUDIT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bibliography audit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../BIB_ALIASES/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bibliography aliases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#s1-the-scoreboard-and-the-phase-state-at-it35" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        S.1 THE SCOREBOARD AND THE PHASE STATE AT it.35
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#s2-the-frozen-wings-the-struck-wing-and-the-found-vs-named-discriminator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        S.2 THE FROZEN WINGS, THE STRUCK WING, AND THE FOUND-vs-NAMED DISCRIMINATOR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#s3-the-theory-table-and-the-eight-gate-cells-both-offices-verdicts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        S.3 THE THEORY TABLE AND THE EIGHT GATE CELLS, BOTH OFFICES' VERDICTS
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#s4-the-laws-in-force-one-line-each-with-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        S.4 THE LAWS IN FORCE — ONE LINE EACH, WITH SOURCE
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#s5-the-open-rulings-and-the-debts-carried" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        S.5 THE OPEN RULINGS AND THE DEBTS CARRIED
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#s6-the-kaggle-and-huggingface-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        S.6 THE KAGGLE AND HUGGINGFACE STATE
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#s7-the-records-own-leap-gate-prompt-and-the-authors-supersession" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        S.7 THE RECORD'S OWN LEAP-GATE PROMPT, AND THE AUTHOR'S SUPERSESSION
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#s8-limits-collected-once" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        S.8 LIMITS (collected once)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="s-where-round-15-left-the-campaign-and-what-binds-the-new-programme">§S — WHERE ROUND 15 LEFT THE CAMPAIGN, AND WHAT BINDS THE NEW PROGRAMME<a class="headerlink" href="#s-where-round-15-left-the-campaign-and-what-binds-the-new-programme" title="Permanent link">#</a></h1>
+<p><em>Prepared by the MERCURY/LESTRADE reader, 2026-09-03, against HEAD <code>207e7b9</code> on branch <code>v17k-gate0</code> <code>[RUN: git log -1]</code>. Every load-bearing sentence carries an evidence class: <code>[READ path:line]</code> quotes the record at HEAD; <code>[RUN]</code> was executed in this session; <code>[DERIVED]</code> shows its steps. No external source was fetched this session, so no claim below is <code>CITED</code>; every external identifier that appears is <code>READ</code> from the record and is inherited with the record's own tag.</em></p>
+<p><strong>Reading rule for this section.</strong> The round's own journal is append-only and its head block grows, so its line numbers drift (<code>V20_R15_JOURNAL.md:100</code>, <em>"headings are"</em> stable, lines are not). Journal citations below therefore carry both the line at HEAD and the heading; a reader who finds the line moved should search the heading. This is the record's own repair for <code>MISTAKES.md</code> P-6 (line-reference drift, <code>MISTAKES.md:364</code>) and it is adopted here rather than re-invented.</p>
+<hr />
+<h2 id="s1-the-scoreboard-and-the-phase-state-at-it35">S.1 THE SCOREBOARD AND THE PHASE STATE AT it.35<a class="headerlink" href="#s1-the-scoreboard-and-the-phase-state-at-it35" title="Permanent link">#</a></h2>
+<p><strong>The round.</strong> CEQ v20 Round 15 is a 45-iteration local tournament on the certified RTX 4060 with one scheduled leap call at it.35, five phases — A discovery it.1–5, B arming it.6–14, C arena it.15–30, D leap gate it.31–35, E strongest candidate it.36–45 — and a scoreboard ceiling of 48 <code>[READ CEQ_V20_R15_CONTRACT.md:34-37, :76-169, :275-283]</code>. The contract file is verbatim-of-record and is never edited; corrections live in the journal and in <code>MISTAKES.md</code> <code>[READ CEQ_V20_R15_CONTRACT.md:3-6]</code>. The leap model is Claude Fable 5.1, one call, dossier in, dossier out; a leap on anything older does not count <code>[READ CEQ_V20_R15_CONTRACT.md:39-43, :72-73]</code>.</p>
+<p><strong>Where the scoreboard stands.</strong> After thirty-five iterations the carried score is <strong>2 of 44</strong> <code>[READ V20_R15_JOURNAL.md:8242-8243, heading "## it.35 — THE EVALUATION-FOR-LEAP GATE"]</code>. The two points are the it.4 freeze (<em>wing list frozen, four citations each +2</em>) and nothing else has been banked <code>[READ V20_R15_JOURNAL.md:15]</code>. The denominator is 44, not the contract's 48, because VENUS's it.5 kill showed the <em>winner's cost ≤ 1/10 incumbent</em> bonus (+4) is unreachable by either surviving wing: on both timing bases W3 costs <strong>more</strong> than softmax, <code>1.078×</code> and <code>1.059×</code> <code>[READ V20_R15_JOURNAL.md:951-966, heading "### VENUS'S KILL — THE SCOREBOARD'S CEILING IS NOT 48"]</code>.</p>
+<p><strong>The <code>+6</code> outcome.</strong> The theory table (+6, <em>N×Q6 all graded</em>) was frozen at it.14 and <strong>ruled NOT FIT for the leap</strong>; the <code>+6</code> was refused at it.10, refused a second time at it.11, and is carried as <em>unclaimed</em> through it.35 <code>[READ V20_R15_JOURNAL.md:16, :1801, :2088, :8242]</code>. The <code>+12</code> (a winner crossing BED-M and surviving BED-K(a)) is gated on a single author ruling, <code>⟨CLAUSE_1_TAIL⟩</code>, <em>"free, 0 GPU-s, and it decides whether Phase C returns a winner at any price"</em> <code>[READ V20_R15_JOURNAL.md:8241-8242]</code>.</p>
+<p><strong>Distance to the north star, as the record states it.</strong> <em>"Unmoved by measurement for a twenty-fifth consecutive iteration."</em> <code>arm_pl</code> crosses <code>floor₁</code> on 8 of 9 paired against <code>softmax</code> 0 of 9 across three eval draws; <code>arm_smprime</code> seed 2 crosses on all three at <code>0.490590</code> below the floor with <code>n_cells = 1</code> <code>[READ V20_R15_JOURNAL.md:8228-8230]</code>. Since <code>floor₁</code> is a capability threshold and not an information floor (S.3 below), the sentence is a crossing count against a threshold, not a distance.</p>
+<p><strong>The phase state, exactly.</strong> Phases A and B closed (A at it.5, B at it.14). Phase C ran it.15–30 and returned no winner: the arena's four lexicographic clauses read, per wing, (1) scoreable but blocked on the tail ruling, (2) <strong>VOID</strong>, (3) not scoreable as written, (4) not scoreable <code>[READ V20_R15_THEORY_TABLE.md:235-240]</code>. Phase D ran it.31–35; the gate was graded twice, independently, at it.35 (S.3), and <strong>the leap was not called</strong>: <em>"calling it now would consume the round's single shot on a table whose header miscounts its own body, whose published grading rule contradicts its applied one, and three of whose cells the gate cannot read"</em> <code>[READ V20_R15_JOURNAL.md:8234-8238]</code>. Phase E has not begun. Iterations it.36–45 are unspent.</p>
+<p><strong>A stale table at the journal's head, flagged.</strong> The journal's PHASE SCHEDULE still reads <em>"it.15 DONE … it.16 next"</em> for Phase C and <em>"not started"</em> for Phases D and E <code>[READ V20_R15_JOURNAL.md:17-19]</code>, while the body carries entries through it.35 <code>[READ V20_R15_JOURNAL.md:8011]</code>. By the journal's own definition this is P-3, a stale claim never retracted (<code>MISTAKES.md:316</code>), sitting in the block built to catch P-3. The paper's programme must not read its start state from that table; it reads it from the it.35 entry.</p>
+<p><strong>The it.35 arena ticket, per clause and per wing</strong> (the numbers the next programme inherits, not re-derived here):</p>
+<table>
+<thead>
+<tr>
+<th>clause</th>
+<th>W1 <code>arm_smprime</code></th>
+<th>W3 <code>arm_pl</code></th>
+<th>status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>(1) BED-M CP-lower &gt; 0.5</td>
+<td><code>1/16</code>, rate <code>0.0625</code>, CP-lower <code>0.0016</code> two-sided / <code>0.0032</code> one-sided</td>
+<td><code>12/16</code>, rate <code>0.7500</code>, CP-lower <strong><code>0.4762</code> two-sided (fails by <code>0.0238</code>) / <code>0.5156</code> one-sided (clears)</strong></td>
+<td>blocked on <code>⟨CLAUSE_1_TAIL⟩</code></td>
+</tr>
+<tr>
+<td>(2) BED-K(a) within <code>1/d</code></td>
+<td>not scoreable</td>
+<td>not scoreable</td>
+<td><strong>VOID</strong> — zero cells of BED-K's shape have ever been run</td>
+</tr>
+<tr>
+<td>(3) lowest GPU-s-to-floor</td>
+<td>not scoreable as written</td>
+<td>not scoreable as written</td>
+<td>four instrument edits plus a fifth unpriced one; "floor" here means <code>floor₁</code></td>
+</tr>
+<tr>
+<td>(4) witness tiebreak</td>
+<td>not scoreable</td>
+<td>not scoreable</td>
+<td>no chess bed registered; eval-Δ oracle has 0 producers, behind a 34.4 GB Kaggle attach</td>
+</tr>
+</tbody>
+</table>
+<p><code>[READ V20_R15_THEORY_TABLE.md:235-240]</code>. Separation that does not depend on the tail: Fisher exact one-sided <code>arm_pl</code> vs <code>arm_smprime</code>, <code>p = 8.544e-05</code> <code>[READ V20_R15_THEORY_TABLE.md:277-278]</code>. The crossing counts pool cells whose control is incomplete — softmax exists only for seeds 0–7 <code>[READ V20_R15_THEORY_TABLE.md:438-440]</code>.</p>
+<p><strong>The corrections that void published numbers.</strong> The journal's CORRECTIONS INDEX runs <code>C1</code>–<code>C40</code>, contiguous, <code>INDEX-SHA256 = 12eaa9f53b452a199a3820ac9294f73ce9572b071818b5333dad1d3012e46e86</code>, with the recomputing one-liner printed beside it <code>[READ V20_R15_JOURNAL.md:94-98]</code>. The rows a reader of any earlier R15 document must apply before quoting it:</p>
+<table>
+<thead>
+<tr>
+<th>row</th>
+<th>the claim as filed</th>
+<th>what is true</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>C1</td>
+<td><em>no arm crosses BED-M's <code>floor₁</code></em></td>
+<td>6 of 24 cells cross <code>[READ V20_R15_JOURNAL.md:37]</code></td>
+</tr>
+<tr>
+<td>C13 / C14 / C16</td>
+<td><em>12 of 16</em> as the W3 crossing headline; <em>7 of 8 vs softmax 0/8, <code>p = 6.730e-04</code></em></td>
+<td>the file's own <code>agg</code> record says <code>crosses: false</code>; the flip is draw-invariant on seed 9; the <code>p</code> was unpaired — honest paired figure <code>p = 0.012821</code>, a factor of 19; repaired by measurement to 8 of 9 vs 0 of 9 paired <code>[READ V20_R15_JOURNAL.md:49-50, :52]</code></td>
+</tr>
+<tr>
+<td>C15</td>
+<td><em>distance to <code>floor₁</code></em> as an information floor</td>
+<td><code>floor₁</code> is a one-hop capability threshold; under L-FLOOR the honest distance is to the exact oracle at <code>0.0</code> <code>[READ V20_R15_JOURNAL.md:51]</code></td>
+</tr>
+<tr>
+<td>C17</td>
+<td>every GPU-second and cost ratio from it.3 onward (<code>0.3455</code> GPU-h, <code>10.17×</code>, <code>41.9×</code>)</td>
+<td>no <code>synchronize()</code> in the harness; run order is the strongest correlate of <code>secs</code> <code>[READ V20_R15_JOURNAL.md:53]</code></td>
+</tr>
+<tr>
+<td>C18</td>
+<td><em>N = 1 primitive, not 3</em></td>
+<td>STRUCK as UNBOUND — the only test asserting the algebra was the adversary's control; re-bound at it.4 as two arena entries, one primitive <code>[READ V20_R15_JOURNAL.md:54]</code></td>
+</tr>
+<tr>
+<td>C20</td>
+<td>M14 at F1 / F3 / F4 in three files</td>
+<td>M14 is <code>F4</code>, the only live grade (J-17d); the <code>≥12 at F0/F1</code> annex bonus is already forfeit <code>[READ V20_R15_JOURNAL.md:56; V20_R15_LEAP_LEDGER.md:367-372]</code></td>
+</tr>
+<tr>
+<td>C35</td>
+<td>the <code>overturns:</code> enforcement node, <code>8 passed</code></td>
+<td>the node could not fail (<code>live_hits()</code> short-circuited); V-16 inside a repair <code>[READ V20_R15_JOURNAL.md:71]</code></td>
+</tr>
+</tbody>
+</table>
+<p>Two rows were repaired by measurement rather than withdrawn (C14's pairing; the <code>n_eff = 1</code> objection, 54 scorings, zero flips) and are listed as corrections all the same <code>[READ V20_R15_JOURNAL.md:85-88]</code>. <strong>Design-against:</strong> the paper's own numbers ship with an index of this shape from the first draft, so a superseded figure is carried to its retraction (P-3, <code>MISTAKES.md:316</code>).</p>
+<hr />
+<h2 id="s2-the-frozen-wings-the-struck-wing-and-the-found-vs-named-discriminator">S.2 THE FROZEN WINGS, THE STRUCK WING, AND THE FOUND-vs-NAMED DISCRIMINATOR<a class="headerlink" href="#s2-the-frozen-wings-the-struck-wing-and-the-found-vs-named-discriminator" title="Permanent link">#</a></h2>
+<p><strong>Frozen at it.4.</strong> <code>FROZEN-N = 2</code>, <code>FREEZE-SHA256 = fbf17e07e6cab495bd1fdbb4392ab88e92f5b0610e40d2b8a283d8bcb9c542ff</code>, <code>RETIRED = arm_phase PRICE 5.114 s</code> <code>[READ V20_R15_WING_MANIFEST.md:11-13]</code>. The digest is <code>sha256</code> over the eight <code>wing|clause|path:line|anchor</code> rows, normalised and sorted; it covers which wings, which lines, which anchor strings, and does <strong>not</strong> cover the content of the cited files, which is why the anchor check is a separate node re-run at every HEAD <code>[READ V20_R15_WING_MANIFEST.md:134-146]</code>.</p>
+<table>
+<thead>
+<tr>
+<th>wing</th>
+<th>primitive</th>
+<th>(a) distinct primitive</th>
+<th>(b) journalled cell</th>
+<th>(c) accepted kill</th>
+<th>(d) cost footprint</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>W1</strong> ARM S-M′ <code>arm_smprime</code></td>
+<td>path product <code>G_ij = Π m_k e^{iθ_k}</code> with <code>β</code>/<code>QK</code>/<code>g</code> switches</td>
+<td><code>ceq/arm_smprime.py:144</code> <code>def path_product</code> <code>[RUN: sed]</code></td>
+<td><code>results/v17k_r4_retake.jsonl:161</code>, seed 0, <code>eval_nrmse 0.9260818361</code>, <code>secs 16.164</code></td>
+<td><code>V16_ARM_SMPRIME.md:529</code></td>
+<td><code>V17_R4_RETAKE_PRICE.md:194</code>, <code>15.970</code></td>
+</tr>
+<tr>
+<td><strong>W3</strong> ARM PL <code>arm_pl</code></td>
+<td>real prefix scan <code>C = scan(g)</code> key-side only over a value-zero BOS sink</td>
+<td><code>ceq/arm_pl.py:88</code> <code>def scan</code> <code>[RUN: sed]</code></td>
+<td><code>results/v17k_r4_retake.jsonl:25</code>, seed 0, <code>eval_nrmse 0.6446726192</code>, <code>secs 1.884</code></td>
+<td><code>V15_LEDGER.md:786</code></td>
+<td><code>V17_R4_RETAKE_PRICE.md:195</code>, <code>1.614</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>[READ V20_R15_WING_MANIFEST.md:20-48]</code>. Wing ids are held at their it.1 values so the strike of W2 is visible as a gap, not hidden by renumbering <code>[READ V20_R15_WING_MANIFEST.md:25-26]</code>. Clause (d) carries the it.1 reservation unchanged: these are GPU-seconds per cell at a matched 150-step budget, not GPU-seconds-to-floor, because no arm crosses the floor and criterion (3)'s statistic does not exist for any wing — K5, unrepaired <code>[READ V20_R15_WING_MANIFEST.md:50-53]</code>.</p>
+<p><strong>The discriminator, stated so it can be run.</strong> <em>A wing is FOUND iff <code>results/</code> holds at least one journalled record whose <code>kind</code> field is the wing's arm name. Otherwise it is NAMED — it exists in source and in prose, and the ledger has never seen it</em> <code>[READ V20_R15_WING_MANIFEST.md:59-63]</code>. That is clause (b) with the charity removed: (d) asks what a cell costs, (b) whether a cell was ever produced <code>[READ V20_R15_WING_MANIFEST.md:65-69]</code>.</p>
+<p><strong>The census that struck W2.</strong> Records by <code>kind</code> over every <code>results/**/*.jsonl</code>: <code>arm_pl</code> <strong>191</strong> (3 files), <code>softmax</code> 182 (4), <code>arm_smprime</code> <strong>182</strong> (2), <code>arm_phase</code> <strong>0</strong> (0) <code>[READ V20_R15_WING_MANIFEST.md:73-78]</code>. The counter is calibrated on both sides — it must read <code>0</code> for <code>arm_phase</code> and <code>&gt; 0</code> for <code>softmax</code> — so a zero is a measurement, not a broken search (V-7, <code>MISTAKES.md:117</code>) <code>[READ V20_R15_WING_MANIFEST.md:80-83]</code>. Four corroborating reads: <code>theta</code> drawn <code>U(−π,π]</code> and never fit; <code>make_arm</code> at <code>scripts/v15_r1.py:179-184</code> has branches for <code>arm_pl</code> and <code>arm_smprime</code> only, anything else dies at <code>ceq/bench.py:373 raise ValueError(kind)</code>; <code>GATED_ARMS</code> and <code>ARM_MODULES</code> at <code>:146</code>/<code>:149</code> exclude it; the module says of itself <em>"NOT TRAINED HERE … No optimizer, no gradient"</em> (<code>ceq/arm_phase.py:476</code>) <code>[READ V20_R15_WING_MANIFEST.md:88-100]</code>. <strong>W2 is STRUCK and RETIRED to UNPRODUCED — not refuted</strong> <code>[READ V20_R15_WING_MANIFEST.md:105-108]</code>.</p>
+<p><strong>The route back, priced.</strong> One W2 cell <code>5.114 s</code> on the <code>arm_pl</code> basis, <code>19.470 s</code> on the expensive basis; eight cells ≈ 130 GPU-s on the <code>arm_smprime</code> ceiling, ≈ 41 GPU-s on the <code>arm_pl</code> basis; a three-line <code>make_arm</code> branch, an optimizer path, a <code>PHASE_FIELDS</code> emit; the cell is <code>cumsum</code>-based and non-deterministic under <code>warn_only=False</code> <code>[READ V20_R15_WING_MANIFEST.md:115-123]</code>. <em>"The W2 gate is under half a minute of wall clock on this box. It was never a cost decision"</em> <code>[READ V20_R15_WING_MANIFEST.md:125-126]</code>.</p>
+<p><strong>Planted negative on the freeze.</strong> <code>test_moving_one_citation_by_one_line_fires_both_binds</code> adds <code>1</code> to the clause-(a) line and demands two failures — digest moves and <code>resolve()</code> raises; one without the other would show which check is asleep; GREEN <code>[READ V20_R15_WING_MANIFEST.md:148-152]</code>. All twelve it.1 citations, W2's four included, still resolve at HEAD <code>207e7b9</code>; zero P-6 drift <code>[READ V20_R15_WING_MANIFEST.md:154-159]</code>. <strong>Design-against for the new programme:</strong> any wing or arm the paper proposes enters under this discriminator (V-7 calibrated on both sides; L-FIND) — a <code>kind</code> in <code>results/</code> or it is NAMED.</p>
+<hr />
+<h2 id="s3-the-theory-table-and-the-eight-gate-cells-both-offices-verdicts">S.3 THE THEORY TABLE AND THE EIGHT GATE CELLS, BOTH OFFICES' VERDICTS<a class="headerlink" href="#s3-the-theory-table-and-the-eight-gate-cells-both-offices-verdicts" title="Permanent link">#</a></h2>
+<p><strong>At a glance</strong> — <code>N = 2 × Q1–Q6</code>, twelve cells, <code>1×F0 / 5×F1 / 1×F2 / 2×F3 / 3×F4</code> <code>[READ V20_R15_THEORY_TABLE.md:3]</code>:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>W1 <code>arm_smprime</code></th>
+<th>W3 <code>arm_pl</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Q1 exact class</td>
+<td><strong>F0</strong></td>
+<td>F1</td>
+</tr>
+<tr>
+<td>Q2 outside the class</td>
+<td><strong>F4</strong> (re-graded it.12)</td>
+<td>F1 + const</td>
+</tr>
+<tr>
+<td>Q3 learnability</td>
+<td>F2</td>
+<td>F1 + const</td>
+</tr>
+<tr>
+<td>Q4 cost law</td>
+<td>F3</td>
+<td>F3</td>
+</tr>
+<tr>
+<td>Q5 information floor</td>
+<td>F1 + const</td>
+<td>F1 + const</td>
+</tr>
+<tr>
+<td>Q6 state metric</td>
+<td><strong>F4</strong></td>
+<td><strong>F4</strong></td>
+</tr>
+</tbody>
+</table>
+<p><code>[READ V20_R15_THEORY_TABLE.md:115-122]</code>. Three facts precede any grade. (i) The F0–F4 scale has no canonical text; the rubric used is a reconstruction ruled BOUND to its own usage and to no other — F0 exact by machine-checked declaration, F1 a bound with its constant, F2 a direction with no constant, F3 a fact about the harness, F4 the theory's domain is empty for the graded wings; <code>F4</code> is overloaded three ways in the ledger and <code>F2</code>/<code>F3</code> are not ordered <code>[READ V20_R15_THEORY_TABLE.md:20-51]</code>. (ii) <code>floor₁ = √((t*−1)/t*) = 0.7071067811865476</code> is a one-hop capability threshold, violated by <strong>13 of 40</strong> deduplicated cells, and <em>of four candidate floors zero bind both frozen wings as information floors</em>; the real BED-M floor is the exact oracle at <code>0.0</code> and no annex theorem predicts either wing's distance to it <code>[READ V20_R15_THEORY_TABLE.md:71-91]</code>. (iii) Q4's two <code>F3</code>s are one fact about the harness: <code>S, D = 64, 24</code> is a module constant at <code>scripts/v15_r1.py:137</code> <code>[RUN: sed -n 137p]</code>, <code>s = 64</code> on 40 of 40, nine sibling argparse flags <code>[RUN: grep -c add_argument = 9]</code> and no override for <code>S</code> <code>[RUN: grep seq_len → no hit]</code> <code>[READ V20_R15_THEORY_TABLE.md:95-102]</code>.</p>
+<p><strong>The gate's population is eight, not nine.</strong> <code>§4.2</code> is headed <em>"THE NINE CELLS THAT DO REACH THE GATE"</em> and its ninth row is <code>Q1/W1</code>, <code>F0</code>, <em>"not a failure"</em> <code>[READ V20_R15_THEORY_TABLE.md:319-331]</code>; both graders measured eight <code>[READ V20_R15_IT35_JUPITER.md:61-64; V20_R15_IT35_MARS.md:14-16]</code>. JUPITER goes further: <code>§0.3</code> rules Q4's two <code>F3</code>s one fact, so the gate graded <em>seven distinct failures on eight cells</em> <code>[READ V20_R15_IT35_JUPITER.md:52-55]</code>.</p>
+<p><strong>The eight cells, both offices, no coordination</strong> (JUPITER: <em>"MARS's parallel filing exists on disk and was not opened"</em>; MARS: <em>"JUPITER's it.35 filing was not opened"</em> <code>[READ V20_R15_IT35_JUPITER.md:150-151; V20_R15_IT35_MARS.md:4]</code>):</p>
+<table>
+<thead>
+<tr>
+<th>cell</th>
+<th>grade</th>
+<th>JUPITER</th>
+<th>JUPITER's field / bound</th>
+<th>MARS</th>
+<th>MARS's field / bound + killer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Q1/W3</td>
+<td>F1</td>
+<td>LEAPABLE</td>
+<td>realization theory for LTI systems (Hankel/Kronecker)</td>
+<td>LEAPABLE</td>
+<td>formal verification of recurrence invariants — induction on a telescoping product (Lean 4 / Mathlib <code>Finset.prod_range_succ</code>) against <code>CEQ.V15.scan</code></td>
+</tr>
+<tr>
+<td>Q2/W3</td>
+<td>F1+c</td>
+<td>TERMINAL</td>
+<td>bound <code>err_i ≥ dist(t_i, hull)</code>: row-stochastic ⇒ convex combination for every <code>(g,s,q,k)</code>; a nonexistence, no <code>k</code> at any size</td>
+<td>TERMINAL</td>
+<td>same bound; killer: one <code>(g,s,q,k)</code> with <code>Z_i ≠ 1</code></td>
+</tr>
+<tr>
+<td>Q3/W1</td>
+<td>F2</td>
+<td>LEAPABLE</td>
+<td>transfer-operator / Koopman spectral theory</td>
+<td>LEAPABLE, conditional on an instrument swap</td>
+<td>same field, attached to <code>lambda_hat_live</code> @ <code>scripts/v15_r1.py:384</code>, not <code>lambda_hat</code> @ <code>:383</code> (one bit)</td>
+</tr>
+<tr>
+<td><strong>Q3/W3</strong></td>
+<td>F1+c</td>
+<td><strong>LEAPABLE</strong></td>
+<td>bifurcation theory / gradient-flow convergence</td>
+<td><strong>TERMINAL</strong></td>
+<td>causal direction unidentified from <code>n = 8</code>; killer: a declaration predicting <code>sign(λ̂)</code> from initialisation alone</td>
+</tr>
+<tr>
+<td>Q4/W1</td>
+<td>F3</td>
+<td>TERMINAL</td>
+<td>exponent in <code>S</code> unidentified, <code>n = 1</code>; no theorem supplies a slope from one point</td>
+<td>TERMINAL</td>
+<td>same; killer: clause (3) re-read as asymptotic rather than wall-clock</td>
+</tr>
+<tr>
+<td>Q4/W3</td>
+<td>F3</td>
+<td>TERMINAL</td>
+<td>same harness fact; <code>brute_force_path_sums</code> @ <code>ceq/arm_pl.py:304</code> is <code>O(2^S)</code> unguarded — an implementation guard, not a theorem</td>
+<td>TERMINAL</td>
+<td>same; the <code>O(2^S)</code> finding is not gate material in either direction</td>
+</tr>
+<tr>
+<td>Q5/W1</td>
+<td>F1+c</td>
+<td>LEAPABLE, <strong>field contested</strong></td>
+<td>approximation theory / Kolmogorov n-width — not <code>§4.2</code>'s rate–distortion</td>
+<td>LEAPABLE, <strong>field corrected</strong></td>
+<td>approximation theory / expressivity bounds — not rate–distortion</td>
+</tr>
+<tr>
+<td><strong>Q5/W3</strong></td>
+<td>F1+c</td>
+<td><strong>LEAPABLE</strong></td>
+<td>finite-mixture inference</td>
+<td><strong>TERMINAL</strong></td>
+<td>a mean over a bimodal population is not a statement about either mode; killer: a simultaneous component-wise coverage theorem from pooled bootstrap draws</td>
+</tr>
+</tbody>
+</table>
+<p><code>[READ V20_R15_IT35_JUPITER.md:41-48; V20_R15_IT35_MARS.md:27-34]</code>. JUPITER's tally: 5 LEAPABLE, 3 TERMINAL <code>[READ V20_R15_IT35_JUPITER.md:50]</code>. MARS's: 4 LEAPABLE (one conditional), 4 TERMINAL <code>[DERIVED from V20_R15_IT35_MARS.md:27-34]</code>. Agreement <code>6 of 8</code> on the token; both against the table on Q5/W1's field <code>[READ V20_R15_JOURNAL.md:8131-8166, heading "### THE TWO GRADINGS, SIDE BY SIDE"]</code>.</p>
+<p><strong>The two divergences and why they could occur at all.</strong> The two rows that diverge, <code>Q3/W3</code> and <code>Q5/W3</code>, are exactly the two MARS separately measured as having evaded RULING J-14b by moving the fork out of the verdict column: <code>§4.2</code> reads <em>"LEAPABLE, but ~6 GPU-s buys it outright"</em> and <em>"LEAPABLE — and it is a SCORING RULE, not a theorem"</em> — hybrids placed in the gate-class and FIELD columns where J-14b (<em>a hybrid verdict is not a verdict</em>, <code>V20_R15_THEORY_TABLE.md:358</code>) does not reach <code>[READ V20_R15_IT35_MARS.md:46-60, :68-76]</code>. JUPITER found the mechanism beneath the disagreement: the ledger publishes one rule — <em>LEAPABLE when the gap is a missing statement </em><em>or a missing measurement</em><strong> (<code>V20_R15_LEAP_LEDGER.md:11-14</code>) — while J-14b resolved <code>L-9</code> to TERMINAL against that rule at <code>V20_R15_THEORY_TABLE.md:353-356</code>; <em>"the round has published one grading rule and applied another — twenty-one iterations, it.14 to it.35"</em> <code>[READ V20_R15_IT35_JUPITER.md:23-30]</code>. Under JUPITER's stated rule (TERMINAL iff a bound </strong>or a datum the record never wrote<em><em>; LEAPABLE iff the measurements exist and a statement is missing) <code>Q3/W3</code> stays LEAPABLE; under MARS's application of the same rule a cell repaired by an experiment or a scoring rule </em>has no missing statement for a theorem to supply</em> and is TERMINAL <code>[READ V20_R15_IT35_JUPITER.md:14-21; V20_R15_IT35_MARS.md:57-60, :72-76]</code>. The divergence is a missing amendment, not a judgement call <code>[READ V20_R15_JOURNAL.md:8167-8184, heading "### AND JUPITER FOUND WHY THEY COULD DIVERGE AT ALL"]</code>.</p>
+<p><strong>The definitional strike on TERMINAL.</strong> Both Q4 cells satisfy <em>no theorem removes it</em> and both are removed by one <code>argparse</code> line, their own ROUTE. <em>"The round is using TERMINAL to mean not leap material, a predicate F4's NOT-PUT already occupies"</em> — carried to the author as <code>⟨TERMINAL_VS_NOT_PUT⟩</code> <code>[READ V20_R15_IT35_MARS.md:127-133]</code>. The contract's grammar has two tokens; the evidence has four states <code>[READ V20_R15_JOURNAL.md:8069-8080, heading "### A DEFINITIONAL STRIKE ON TERMINAL"]</code>.</p>
+<p><strong>The three cells the gate cannot see.</strong> Under RULING J-14 an <code>F4</code> is NOT-PUT — neither bound nor missing statement — and ships an ADMISSION CONDITION <code>[READ V20_R15_THEORY_TABLE.md:291-302]</code>: <code>Q2/W1</code> needs one cell of BED-K's shape run (<code>build_delay</code> @ <code>ceq/beds/bed_k.py:236</code>, whose only two callers under <code>scripts/</code> consume the kernel and never the bed's data); <code>Q6/W1</code> needs a distributional head — an arm change under a frozen wing list; <code>Q6/W3</code> needs the head <strong>plus</strong> a metric that is not permutation-blind, because marginal <code>W1</code> is REFUTED on this bed — a predictor returning the oracle's own values in the wrong order scores <code>W1 = 0.0</code> at <code>NRMSE = 1.421901019003236</code>, and metric and bed rank two predictors in opposite orders by <code>14.465410797679917×</code> <code>[READ V20_R15_THEORY_TABLE.md:304-308, :219-225]</code>. Both offices flag that filing <code>Q6/W3</code> NOT-PUT files a refutation off the board; <code>⟨F4_GATE⟩</code>, opened at <code>V20_R15_JOURNAL.md:3965</code>, is in its seventeenth iteration unruled <code>[READ V20_R15_IT35_JUPITER.md:130-140; V20_R15_IT35_MARS.md:139-151]</code>.</p>
+<p><strong>Two facts about the gate's own input, measured at it.35.</strong> The table has drifted off its frozen census at HEAD before the window opened — <code>133</code> occurrences against a frozen <code>131</code>, <code>119</code> scored against <code>118</code> — and the single unscored citation sits inside the <code>Q2/W1</code> admission row the gate is forbidden to grade, in a bare-pointer notation (<code>:462</code>, <code>:152</code>) no census in the round can parse <code>[READ V20_R15_IT35_JUPITER.md:229-233, :242-259]</code>. And the grader of the leap's input did not open it: MARS <em>"re-verified not one citation … <code>129 of 129</code> is taken on trust"</em> <code>[READ V20_R15_IT35_MARS.md:183-185]</code>. <strong>What the new programme inherits from S.3:</strong> Q5/W1's field is approximation theory on both readings; the <code>~6 GPU-s</code> capped run at seeds 2, 3, 7 has been priced at it.7, it.8, it.9 and it.35 and taken zero times <code>[READ V20_R15_IT35_JUPITER.md:157-159]</code>; the Q6 pair says the arms return one real per draw and no state axis exists — which is the D-1 diagnosis (<code>MISTAKES.md:677</code>) arriving from the metric's side.</p>
+<p><strong>The leap ledger's inventory.</strong> Opened at it.7 on the author's instruction <em>"if something fails, all that adds to the leap"</em>; rows are appended when the failure is produced <code>[READ V20_R15_LEAP_LEDGER.md:3-9]</code>. At HEAD it carries 24 digested units — <code>L-1</code>..<code>L-17</code>, <code>L-M1</code>..<code>L-M5</code>, <code>L-V1</code>, <code>V-it7</code> — each with a <code>sha256[:16]</code> row digest so an in-place edit is named, not merely noticed; the planted negative mutates <code>L-9</code> in memory and demands the instrument report <code>["L-9"]</code> <code>[READ V20_R15_LEAP_LEDGER.md:202-251]</code>. Seven F4 objects, six of them carrying a LEAPABLE/TERMINAL stamp the gate cannot consume (<code>L-3</code>, <code>L-4</code>, <code>L-7</code>, <code>L-8</code>, <code>L-13</code>, <code>L-14</code>); <code>L-16</code> is filed NOT-PUT and is the seventh <code>[READ V20_R15_LEAP_LEDGER.md:285-299, :431-436]</code>. The four hybrid verdicts that were JUPITER's own were resolved to single tokens at it.14 — <code>L-2</code> TERMINAL, <code>L-9</code> TERMINAL, <code>L-13</code> and <code>L-14</code> NOT-PUT with FIELD withdrawn <code>[READ V20_R15_THEORY_TABLE.md:364-369]</code>. The fields the ledger names for the new programme's benefit, discipline first: realization theory (L-1), Koopman spectral theory (L-5), bifurcation / gradient-flow convergence (L-6, L-12), structured-sparsity kernel scheduling for the certified banded-suffix mask (L-10), finite-mixture inference (L-15), anti-concentration / small-ball probability for the seed-2 crossing (L-M3), error-statistical severity for one-tailed falsifiers (L-M1), non-convex optimisation's implicit-bias branch for corner descent (L-V1) <code>[READ V20_R15_LEAP_LEDGER.md:22-29, :68-71, :85-89, :160, :181]</code>. The field-naming rule that governs them: <em>naming a field and then saying what you want from it is compliant; naming the want and calling it a field is not</em> <code>[READ V20_R15_THEORY_TABLE.md:335-336]</code>.</p>
+<p><strong>The annex M1–M16, as graded.</strong> The contract pre-registered sixteen items with <code>[RUN]</code> instances <code>[READ CEQ_V20_R15_CONTRACT.md:172-263]</code>. What the round did to them: M14 (Cheeger) is <code>F4</code>, struck by V-25 before its own sweep-cut condition was discharged, with the contract's pre-registered <code>F3</code> left standing under a <code>SUPERSEDED</code> pointer <code>[READ CEQ_V20_R15_CONTRACT.md:244-253]</code>; M11 Fano and M12 rate–distortion have <code>0 of 3</code> beds and <code>0</code> producing <code>.py</code> — prose <code>[READ V20_R15_THEORY_TABLE.md:87-90]</code>; M13 Wasserstein is cited by annex number only and has no producer in the tree, its <code>[RUN: 0.492 vs KL 0.519]</code> resolving to an unrelated quantity in <code>scale/foreman_consequence.py:12</code> <code>[READ V20_R15_THEORY_TABLE.md:214]</code>; M16 Hankel binds BED-K only, where nothing this round was graded <code>[READ V20_R15_THEORY_TABLE.md:152]</code>; M9's F1/F1′ machinery (Cantelli, Azuma, union bound) has <code>0</code> producing <code>.py</code> and is not needed on W1, whose zero-gate segmentation is F0-exact by <code>pathProd_eq_zero_iff</code> <code>[READ V20_R15_THEORY_TABLE.md:182]</code>; M1's transfer to W1 was struck (<code>ρ(β, nrmse) = −0.0324, p = 0.9053</code>) while M1 itself stands <code>[READ V20_R15_JOURNAL.md:47]</code>. The annex's <code>+4</code> (<em>≥12 at F0/F1 and M14 resolved</em>) is forfeit <code>[READ V20_R15_LEAP_LEDGER.md:367-372]</code>. For the new programme the annex items with a producer and an instance in the tree — M1 (<code>β</code>-gradient), M2 (gate landscape), M4 (identifiability from <code>do()</code> pairs, <code>a_i = Δz_i/δ</code> at <code>1e-9</code>), M9-F0 (exact segmentation), M10 (influence persistence <code>4096 → … → 1</code>) — are the ones that can be cited as <code>[V-eq]</code>; the rest re-enter only with a bed in their domain (L-DOM).</p>
+<hr />
+<h2 id="s4-the-laws-in-force-one-line-each-with-source">S.4 THE LAWS IN FORCE — ONE LINE EACH, WITH SOURCE<a class="headerlink" href="#s4-the-laws-in-force-one-line-each-with-source" title="Permanent link">#</a></h2>
+<p>The round-15 contract binds <em>all standing</em> laws plus its own two <code>[READ CEQ_V20_R15_CONTRACT.md:57-67]</code>. The ones the new programme must design under:</p>
+<table>
+<thead>
+<tr>
+<th>law</th>
+<th>one line</th>
+<th>source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>D-1</strong> dependency</td>
+<td>Work is a DAG; parallel dispatch only on nodes with no shared repository state; git is the shared state; dispatched agents never <code>git add</code>/<code>commit</code></td>
+<td><code>[READ CONTRACT.md:27-33]</code></td>
+</tr>
+<tr>
+<td><strong>D-2</strong> skills are modes</td>
+<td>Planet names label responsibilities inside documents, not concurrent processes</td>
+<td><code>[READ CONTRACT.md:35-38]</code></td>
+</tr>
+<tr>
+<td><strong>D-3</strong> loop gate</td>
+<td>No autonomous loop mounts until the deactivation commit, <code>MISTAKES.md</code> and the standing loop failures are read and the previous loop's cause of death is one sentence; the iteration count comes from the DAG's critical path, never chosen by an agent</td>
+<td><code>[READ CONTRACT.md:40-44]</code>; discharged for R15 at <code>[READ CEQ_V20_R15_CONTRACT.md:10-37]</code></td>
+</tr>
+<tr>
+<td><strong>D-4</strong> order</td>
+<td>Contracts that schedule work behind an unreached round are staged, not started</td>
+<td><code>[READ CONTRACT.md:55-57]</code></td>
+</tr>
+<tr>
+<td><strong>L-DOM</strong></td>
+<td>Every theorem that gates a run ships a domain census — the corpus's value support against the theorem's hypotheses; no overlap ⇒ decoration</td>
+<td><code>[READ CEQ_V16_CONTRACT.md:54-56]</code>; pays for V-25 <code>[READ MISTAKES.md:1954-1956]</code></td>
+</tr>
+<tr>
+<td><strong>L-SIGN</strong></td>
+<td>A counter-prediction of equal specificity beside every prediction; a calibration column across rounds; a one-sided sign discounts the author</td>
+<td><code>[READ CEQ_V16_CONTRACT.md:58-61]</code>; pays for D-7 <code>[READ MISTAKES.md:2037-2039]</code></td>
+</tr>
+<tr>
+<td><strong>L-DIAG</strong></td>
+<td>A contract prescribes what a diagnostic must distinguish, never which statistic does it</td>
+<td><code>[READ CEQ_V16_CONTRACT.md:63-66]</code>; M-18 <code>[READ MISTAKES.md:2103]</code></td>
+</tr>
+<tr>
+<td><strong>L-FLOOR</strong></td>
+<td>Every capability number ships beside its information floor (hop floor, Hankel ceiling, Fano, rate–distortion) so "how good" reads as distance-to-floor</td>
+<td><code>[READ CEQ_V20_R15_CONTRACT.md:60-63]</code>; consequence: <code>floor₁</code> is not one, C15 <code>[READ V20_R15_JOURNAL.md:51]</code></td>
+</tr>
+<tr>
+<td><strong>L-CERT</strong></td>
+<td>Every sparsity mask ships its certificate, F0 exact or F1 with δ printed; a mask without one is refused in the arena</td>
+<td><code>[READ CEQ_V20_R15_CONTRACT.md:64-67]</code></td>
+</tr>
+<tr>
+<td><strong>L-EQ</strong></td>
+<td><code>[V]</code> (page exists, intro matches) is inadmissible for any load-bearing statement; <code>[V-eq]</code> requires the theorem with hypotheses and one numeric instance run</td>
+<td><code>[READ CEQ_V15_CONTRACT.md:51-55]</code></td>
+</tr>
+<tr>
+<td><strong>L-LEAN</strong></td>
+<td>The arm may not be trained before its identity theorems are green; binds become theorems, tests confirm theorems</td>
+<td><code>[READ CEQ_V15_CONTRACT.md:57-58; CEQ_V16_CONTRACT.md:50-51]</code></td>
+</tr>
+<tr>
+<td><strong>L-FIRST</strong></td>
+<td>Listed as standing; usage: predictions and counters are filed before each run, "the correct order"</td>
+<td><code>[READ CEQ_V16_CONTRACT.md:49, :191; CEQ_V15_1_DELTA.md:115]</code> — <strong>definitional text not located this session</strong></td>
+</tr>
+<tr>
+<td><strong>L-G2</strong></td>
+<td>Journals never move and are never deleted; superseded cells stay with a supersede marker</td>
+<td><code>[READ V17K_RULINGS.md:62-64; attic/ATTIC_MANIFEST.md:16; AUDIT.md:44]</code></td>
+</tr>
+<tr>
+<td><strong>FOUND-not-NAMED</strong></td>
+<td>A wing named rather than found ⇒ struck; FOUND iff <code>results/</code> holds a record with the wing's <code>kind</code></td>
+<td><code>[READ CEQ_V20_R15_CONTRACT.md:49, :266; V20_R15_WING_MANIFEST.md:59-63]</code></td>
+</tr>
+<tr>
+<td><strong>R-SKY</strong></td>
+<td>The native (scan) skyline is read beside every bed; <code>Δ_sky</code> column mandatory; "beats softmax" is not licensed where softmax is a fellow approximator</td>
+<td><code>[READ CEQ_V16_CONTRACT.md:209]</code></td>
+</tr>
+<tr>
+<td><strong>Ruling 1</strong></td>
+<td>Determinism: CUDA with <code>warn_only=True</code>; bitwise for replay and every deciding forward cell; training compared to a measured noise floor; CPU-strict refused</td>
+<td><code>[READ V17K_RULINGS.md:39-45]</code></td>
+</tr>
+<tr>
+<td><strong>Ruling 2 / 2a</strong></td>
+<td>The corner: <code>β</code> learnable, init 1, per-instance <code>β</code> logged; the card sentence splits; no sentence transfers across corners without a bind at the corner it describes; "pinned" is per-parameter, three branches</td>
+<td><code>[READ V17K_RULINGS.md:47-54, :275-325]</code></td>
+</tr>
+<tr>
+<td><strong>Ruling 3</strong></td>
+<td>Matched params: <code>0.032 %</code> residual is matched; exact counts in every table header; do not re-architect to close it</td>
+<td><code>[READ V17K_RULINGS.md:56-59]</code></td>
+</tr>
+<tr>
+<td><strong>Ruling 4</strong></td>
+<td>CPU cells re-taken on the certified 4060, never widened; CLOSED, 24 cells, 2.79 GPU-min</td>
+<td><code>[READ V17K_RULINGS.md:61-64, :24]</code></td>
+</tr>
+<tr>
+<td><strong>Ruling 5</strong></td>
+<td><code>scripts/v15_r1.py</code> is the named Q1/Q2 instrument, hashed into the identity manifest; CLOSED</td>
+<td><code>[READ V17K_RULINGS.md:66-69, :25]</code></td>
+</tr>
+<tr>
+<td><strong>Ruling 6</strong></td>
+<td>Envelope text 6a–6f: stale = two polls, session time is Kaggle's, tier precedence, per-root lineage, OOM keyed per shape, deciding-cell list frozen at launch</td>
+<td><code>[READ V17K_RULINGS.md:71-81]</code></td>
+</tr>
+<tr>
+<td><strong>Ruling 7</strong></td>
+<td>BED-M carried as generator + seed + hash, regenerated in-notebook; the hash assertion is the provenance</td>
+<td><code>[READ V17K_RULINGS.md:83-86]</code></td>
+</tr>
+<tr>
+<td><strong>Ruling 8</strong></td>
+<td>Q2 (R2 reproduction, <code>t* = 8</code>, <code>n = 16,384</code>) DROPPED — <code>10.578 GiB</code> against the 4060's <code>7.996 GiB</code></td>
+<td><code>[READ V17K_RULINGS.md:328-339]</code></td>
+</tr>
+<tr>
+<td><strong>Ruling 9</strong></td>
+<td>R1′ cells fall under the measured-floor clause; no equality statement without its floor printed beside it</td>
+<td><code>[READ V17K_RULINGS.md:354-379]</code></td>
+</tr>
+<tr>
+<td><strong>Ruling 10′</strong></td>
+<td>"Pinned" by likelihood ratio: <code>Λ = 2[LL(β_final) − LL(β ≡ 1)]</code> on held-out; <code>≤ 3.841</code> PINNED, <code>&gt; ln n</code> MOVED, between prints the interval verdict; the minimum detectable departure printed; supersedes Ruling 10's ulp criterion</td>
+<td><code>[READ V17K_RULINGS.md:389-436]</code>; annex M15 <code>[READ CEQ_V20_R15_CONTRACT.md:254-256]</code></td>
+</tr>
+<tr>
+<td><strong>Rulings 11–12</strong></td>
+<td>Cited as binding (<em>"Rulings 1–12"</em>)</td>
+<td><code>[READ CEQ_V20_R15_CONTRACT.md:59]</code> — <strong>no Ruling 11 or 12 text exists in the tree</strong> <code>[RUN: grep -rniE "ruling 1[12]\b" *.md → 0 hits outside the two citing lines]</code></td>
+</tr>
+<tr>
+<td><strong>RULING J-14 / J-14b</strong></td>
+<td>An F4 is NOT-PUT with an admission condition; a hybrid verdict is not a verdict</td>
+<td><code>[READ V20_R15_THEORY_TABLE.md:291-302, :358-362]</code></td>
+</tr>
+<tr>
+<td><strong>RULING J-17d / J-17e</strong></td>
+<td>M14 is F4 and that is the only live grade; every citation repair is made in place so pointers do not move</td>
+<td><code>[READ V20_R15_LEAP_LEDGER.md:353-357; V20_R15_IT17_JUPITER.md:268]</code></td>
+</tr>
+<tr>
+<td><strong>The R15 kills</strong></td>
+<td>named-not-found ⇒ struck; theory exit without F-grade+gap ⇒ not filed; mask without certificate ⇒ refused; capability number without floor ⇒ not a number; second leap call ⇒ breach; leap output acted on before its instance runs ⇒ struck; absorbed component without licensing theorem ⇒ dropped; deletion without manifest commit first ⇒ breach</td>
+<td><code>[READ CEQ_V20_R15_CONTRACT.md:265-273]</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Two laws whose text is thinner than their citation.</strong> <code>L-GRADE (F0–F4 + HOW-BAD gap)</code> is cited once, on the standing side, and no rubric exists anywhere in the repository <code>[READ V20_R15_THEORY_TABLE.md:22-24]</code>; Rulings 11–12 are in the same condition (row above). The paper's programme must not cite either as if it had text; it states the rubric it uses and marks it a reconstruction, which is what the table did and was ruled BOUND for.</p>
+<hr />
+<h2 id="s5-the-open-rulings-and-the-debts-carried">S.5 THE OPEN RULINGS AND THE DEBTS CARRIED<a class="headerlink" href="#s5-the-open-rulings-and-the-debts-carried" title="Permanent link">#</a></h2>
+<p><strong>Five author rulings open at it.35</strong> <code>[READ V20_R15_JOURNAL.md:8225-8226, heading "### WHAT it.36 OWES", item 8]</code>:</p>
+<table>
+<thead>
+<tr>
+<th>ruling</th>
+<th>what it decides</th>
+<th>source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>⟨CLAUSE_1_TAIL⟩</code></td>
+<td>one- vs two-sided CP-lower on clause (1): one-sided, W3 clears alone and clause (2)'s void is latent; two-sided, no entrant clears, the order falls through to a void clause and Phase C returns no winner at any price</td>
+<td><code>[READ V20_R15_THEORY_TABLE.md:256-268]</code></td>
+</tr>
+<tr>
+<td><code>⟨L_GRADE_RUBRIC⟩</code></td>
+<td>the F0–F4 text that does not exist</td>
+<td><code>[READ V20_R15_THEORY_TABLE.md:22-29]</code></td>
+</tr>
+<tr>
+<td><code>⟨KAGGLE_ATTACH⟩</code></td>
+<td>the chess witness is stalled on a 34.4 GB Kaggle attach; no chess bed registered</td>
+<td><code>[READ V20_R15_JOURNAL.md:2418 heading; V20_R15_THEORY_TABLE.md:240]</code></td>
+</tr>
+<tr>
+<td><code>⟨F4_GATE⟩</code></td>
+<td>3 of 12 cells invisible to the gate; one of them carries a refutation inside a token meaning <em>unattempted</em></td>
+<td><code>[READ V20_R15_IT35_MARS.md:149-151]</code></td>
+</tr>
+<tr>
+<td><code>⟨TERMINAL_VS_NOT_PUT⟩</code></td>
+<td>two words for one predicate and no word for a bound an experiment removes</td>
+<td><code>[READ V20_R15_IT35_MARS.md:127-133]</code></td>
+</tr>
+</tbody>
+</table>
+<p>The table chose not to pick the tail because <em>choosing the tail that makes the round score is the catalogued failure of selecting a threshold after seeing the data it judges</em> (M-2, <code>MISTAKES.md:451</code>) <code>[READ V20_R15_THEORY_TABLE.md:265-268]</code>. The paper's programme fixes every threshold before its data for the same reason.</p>
+<p><strong>Debts inherited from v16/v17-K, still on the ledger</strong> <code>[READ workdonenewseal.md:508-515, §11; CEQ_V16_CONTRACT.md:245-252]</code>:</p>
+<table>
+<thead>
+<tr>
+<th>debt</th>
+<th>one line</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>D-APPROX</strong></td>
+<td>Lean #17 approximation bound. Lean #12 is an exact-identity result; the power-law bed is not scan-blind at <code>R² = 0.604</code> and that does not contradict it. <em>"Every 'X cannot represent Y' claim needs a bound before it reads as 'X cannot fit Y'"</em> — the largest unclosed gap in the round's own logic <code>[READ workdonenewseal.md:510]</code></td>
+</tr>
+<tr>
+<td><strong>D-R3</strong></td>
+<td>The two inverse registrations: PART III and PART IV of the v16 contract predict opposite outcomes for the same bed (M-20, <code>MISTAKES.md:1723</code>); the author picks one and the cell cannot run first <code>[READ workdonenewseal.md:511; CEQ_V16_CONTRACT.md:249]</code></td>
+</tr>
+<tr>
+<td><strong>R2's <code>n</code></strong></td>
+<td><code>32768</code> does not fit; <code>16,384</code> is the last power of two <code>[READ workdonenewseal.md:512]</code>; Ruling 8 then dropped the reproduction at <code>16,384</code> too (<code>10.578 GiB</code> vs <code>7.996 GiB</code>) and flagged that dropping the reproduction does not supply the reading <code>[READ V17K_RULINGS.md:330-348]</code></td>
+</tr>
+<tr>
+<td><strong><code>[0,1]</code> vs <code>[0,1)</code></strong></td>
+<td>Three nodes measured the closed endpoint as the defect; a fourth refuted that — <em>the endpoint is not the failure, <code>log</code> of it is</em>; <code>[0,1)</code> would cost reachability of <code>a = ±1</code>, two-thirds of BED-M's support. Filed two-sided for the author <code>[READ workdonenewseal.md:513]</code></td>
+</tr>
+<tr>
+<td><strong>the scan skyline</strong></td>
+<td>Refused in R11 as a new construction; legal now as the native control <code>[READ workdonenewseal.md:514]</code></td>
+</tr>
+<tr>
+<td><strong>HF package</strong></td>
+<td>Scheduled, unbuilt; no trained checkpoint ships <code>[READ workdonenewseal.md:515; MODEL_CARD.md:73-75]</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Harness debts the new programme must not inherit silently</strong> (all <code>[RUN]</code> this session against <code>scripts/v15_r1.py</code> at HEAD, corroborated by the record):</p>
+<ul>
+<li><code>S, D = 64, 24</code> is a module constant at <code>:137</code> <code>[RUN: sed -n 137p]</code>; <code>add_argument</code> appears <strong>9</strong> times <code>[RUN: grep -c]</code>; the strings <code>seq_len</code>/<code>seq-len</code> do not occur <code>[RUN: grep → no hit]</code>. So <code>s = 64</code> on 40 of 40 banked cells and the exponent of any cost law in <code>S</code> has <code>n = 1</code> <code>[READ V20_R15_THEORY_TABLE.md:95-99]</code>.</li>
+<li><code>torch.cuda.synchronize</code> does not occur in the file <code>[RUN: grep → no hit]</code>; the per-cell timer is <code>t0 = time.time()</code> at <code>:249</code> and <code>secs = time.time() − t0</code> at <code>:267</code> <code>[RUN: sed]</code> — un-synchronised host wall clock on CUDA <code>[READ V20_R15_THEORY_TABLE.md:99-101]</code>.</li>
+<li>The strongest correlate of <code>secs</code> is <strong>run order</strong>, <code>ρ = +0.7029, p = 0.0024</code>, above the gate correlation <code>+0.5197</code> that it would have to be separated from; every GPU-second and cost ratio quoted from it.3 onward is void (C17) <code>[READ V20_R15_JOURNAL.md:53]</code>. The priced repair — one <code>--seq-len</code> flag, one substitution, two <code>synchronize()</code> calls, <code>S ∈ {32,64,128}</code> — is <code>206–537 GPU-s</code>, <strong>band only, no point</strong>; the run-order confound <em>survives</em> it and the fifth edit (randomised or blocked execution order) has never been priced by any office <code>[READ V20_R15_THEORY_TABLE.md:104-109, :184]</code>.</li>
+<li><code>lambda_hat = float(lg.mean())</code> at <code>:383</code> averages <code>log m</code> over every position, so one <code>m_k == 0</code> sends it to <code>−inf</code> and it carries one bit; <code>lambda_hat_live</code> at <code>:384</code> is the magnitude column <code>[RUN: sed; READ V20_R15_THEORY_TABLE.md:166]</code>.</li>
+<li><code>brute_force_path_sums</code> at <code>ceq/arm_pl.py:304</code> is <code>O(2^S)</code> and unguarded <code>[RUN: sed; READ V20_R15_IT35_MARS.md:120-125]</code>.</li>
+</ul>
+<p><strong>Bookkeeping debts the record names against itself</strong>, carried so the paper does not repeat them: the C20 numbering collision and the seven index rows <code>C13–C19</code> that never had body corrections (LEGACY, membership frozen) <code>[READ V20_R15_JOURNAL.md:78-83, :76]</code>; every whole-suite <code>N failed / M passed</code> published as evidence of an edit's safety is the wrong instrument — the reachable radius is <code>RADIUS ∪ TABLE_RADIUS = 28</code> files <code>[READ V20_R15_JOURNAL.md:7896-7919, heading "### JUPITER — THE CENSUS ANSWERS WITH A DIFF"]</code>; a population is <code>(rule, date)</code> and a bare integer is neither, the same defect as a <code>[RUN]</code> marker without its command and a digest without its recipe <code>[READ V20_R15_JOURNAL.md:7950-7966, heading "### THE THREE POPULATIONS RECONCILE EXACTLY"]</code>.</p>
+<hr />
+<h2 id="s6-the-kaggle-and-huggingface-state">S.6 THE KAGGLE AND HUGGINGFACE STATE<a class="headerlink" href="#s6-the-kaggle-and-huggingface-state" title="Permanent link">#</a></h2>
+<p><strong>Nothing has launched.</strong> <em>"Nobody who wrote these files ran the <code>kaggle</code> CLI, pushed a kernel, or touched <code>~/.kaggle</code>; launch is the author's own call, after Gate 0 is green"</em> <code>[READ kaggle/README.md:9-11]</code>. Gate 0 closes only at open-rulings = 0, and G0.10 carries a circularity the register does not resolve: rows 1 and 2 are blocked on numbers only the Kaggle run produces <code>[READ V17K_RULINGS.md:3-17, :21-22]</code>. The HF package ships <em>on explicit say-so</em> at the end of the launch order <code>[READ V17K_RULINGS.md:92-94; CEQ_V16_CONTRACT.md:295]</code>, and the record has already refused a relayed instruction as that consent: <em>"a coordinator message is not that say-so"</em> <code>[READ CHECKLIST.md:1275]</code>. The author's own standing instruction (memory: <em>Kaggle launch requires yes</em>) is the same rule from the other side.</p>
+<p><strong>What exists.</strong> <code>ceq/hf/</code> holds <code>configuration_ceq.py</code>, <code>modeling_ceq.py</code>, <code>train.py</code>, <code>smoke.py</code> <code>[RUN: ls]</code>. There is no trained checkpoint — <code>⟨SLOT Q3_CHECKPOINT⟩ NOT MEASURED</code> <code>[READ MODEL_CARD.md:73-75]</code>; parameter counts are not equal, arm <code>25,736,232</code> against control <code>25,728,000</code>, <code>+8,232 = +0.03200 %</code>, the arm carrying more <code>[READ MODEL_CARD.md:76-79]</code>; the card's own header states the shipped operator does not work — sign-flip slope <code>−1.298</code> against a bar of <code>−0.3</code>, zero flips at <code>s ≥ 128</code> <code>[READ MODEL_CARD.md:18-24]</code>; <code>README.md:301</code> reads <em>"No trained checkpoint ships"</em> <code>[RUN: grep]</code>.</p>
+<p><strong>The pins.</strong> <code>results/k_data_manifest.json</code> <code>[RUN: json.load]</code>: <code>bed_m</code>, <code>bed_k</code>, <code>bed_1</code> are <code>kind: generator, status: PINNED</code>; <code>enwik8</code> is <code>kind: kaggle_attach_sliced, PINNED</code>; <code>lichess_chess_games</code>, <code>lichess_chess_evaluations</code>, <code>tinystories_cdla</code> are <code>UNPINNED_AWAITING_KAGGLE</code>. The bed digests, cited from the manifest rather than retyped <code>[READ kaggle/README.md:86-97]</code>:</p>
+<table>
+<thead>
+<tr>
+<th>bed</th>
+<th>generator</th>
+<th>kwargs</th>
+<th>sha256</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BED-M</td>
+<td><code>ceq.corpus.build</code></td>
+<td><code>n_train=384, n_test=128, seed=0</code></td>
+<td><code>2f282a5d0e9ac412b9644e19969590c0f855e5ccb3db73436364bcb925f7d24d</code></td>
+</tr>
+<tr>
+<td>BED-K</td>
+<td><code>ceq.beds.bed_k.build_delay</code></td>
+<td><code>n=500, d=4, seed=7</code></td>
+<td><code>15de94b47ba07e8b2d118deac26306689a7c55d0b243699e7d04e0881a5c56e4</code></td>
+</tr>
+<tr>
+<td>BED-1</td>
+<td><code>ceq.beds.bed_1.build</code></td>
+<td><code>T=0.25, jitter=0.05, seed=11</code></td>
+<td><code>f73ca0e60712dec446165131c07576d03173653b14cfdeec9ce1f581bb6881d2</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>enwik8</code> is the first <code>100,000,000</code> bytes of <code>jamesmcguigan/hutter-prize</code>'s <code>enwik9</code> (CC-BY-SA-3.0), hashing to <code>2b49720ec4d78c3c9fabaee6e4179a5e997302b3a70029f30f2d582218c024a8</code>, byte-identical to the existing pin; the 90/5/5 split lands at <code>90,042,869</code> / <code>95,000,818</code> <code>[READ kaggle/README.md:31-43]</code>. The three unpinned sources make the notebook's hash cell <strong>print</strong> and then <strong>raise</strong> <code>kdata.MissingPin</code>, never a silent skip <code>[READ kaggle/README.md:99-105]</code>. The notebook's code pin is <code>PINNED_SHA = "eea1aa25245c8a98f891a7f7e6bdae6aa26b4885"</code> <code>[RUN: grep on kaggle/ceq_v17k.ipynb]</code> — the code snapshot the run executes, which HEAD's own message says is allowed to differ from the branch tip <code>[RUN: git show 207e7b9]</code>. The certified-device laws <code>scripts/k_cert.py</code> refits: <code>arm_smprime</code> throughput <code>s/step = exp(−10.0187)·n^1.0026</code>, <code>R² = 1.000000</code>; the fit refused <code>n = 16384</code> and <code>32768</code>, where the allocator pages over PCIe <code>[READ README.md:288-297]</code>.</p>
+<p><strong>What this means for the paper's programme.</strong> Every Kaggle line in the plan is priced but not launchable by any agent; the author's explicit yes is a node on the critical path, not a formality. The chess witness — the one bed with a categorical state space — is behind an attach nobody has made and is not registered (<code>BED_SPECS</code> returns <code>['bed_m', 'bed_k', 'bed_1']</code>) <code>[READ V20_R15_THEORY_TABLE.md:224]</code>.</p>
+<hr />
+<h2 id="s7-the-records-own-leap-gate-prompt-and-the-authors-supersession">S.7 THE RECORD'S OWN LEAP-GATE PROMPT, AND THE AUTHOR'S SUPERSESSION<a class="headerlink" href="#s7-the-records-own-leap-gate-prompt-and-the-authors-supersession" title="Permanent link">#</a></h2>
+<p><strong>The prompt, as the contract fixes it</strong> <code>[READ CEQ_V20_R15_CONTRACT.md:142-151]</code>:</p>
+<blockquote>
+<p>it.35 EVALUATION-FOR-LEAP: JUPITER + MARS grade every F1/F2/F3 failure LEAPABLE (name the FIELD likely to hold the missing theorem, not the theorem) or TERMINAL (a bound; no theorem removes a bound). ONE call to the leap model with the fixed prompt (v19-Q, unchanged: repair graded failures with named theorems + runnable instances; compose ONE candidate from the winner's primitive plus licensed components; predictions AND counters; every untested claim with its cheapest killer; no new primitive that is not a repair). Output filed [LEAP-UNTESTED]; its instances RUN before anything else.</p>
+</blockquote>
+<p>Its consumer-side kills: <em>a second leap call ⇒ breach; leap output acted on before its instance runs ⇒ struck; an absorbed component without a licensing theorem ⇒ dropped</em> <code>[READ CEQ_V20_R15_CONTRACT.md:268-272]</code>. The theory table was written as the leap's primary input, <em>"gets ONE call, and cannot"</em> ask a follow-up <code>[READ V20_R15_THEORY_TABLE.md:8-12]</code>. No separate <code>v19-Q</code> document exists in the tree; the parenthetical above is the whole fixed text <code>[RUN: ls | grep -i v19 → none; grep v19-Q → only the two contract lines]</code>.</p>
+<p><strong>What the it.35 gate handed forward.</strong> The call was not spent <code>[READ V20_R15_JOURNAL.md:8234-8238]</code>. Had it been, the record's own grading says the leap would have received: seven distinct failures on eight cells, two of them with verdicts the two offices could not agree on under a rule that was published one way and applied another; a header miscounting its body; three cells it could not read, one carrying a refutation; a primary input drifted off its census with one citation no instrument can parse <code>[READ V20_R15_JOURNAL.md:8226-8238]</code>.</p>
+<p><strong>The supersession, stated where it matters.</strong> On 2026-09-03 the author licensed a new primitive — <em>"rethink the shape"</em> — and instructed <em>"do not write any code only docs"</em> <code>[READ BRIEF.md:11-30, :40-42]</code>. The contract's clause <em>no new primitive that is not a repair</em> is therefore superseded by the author for this document, and the paper says so here rather than by editing the contract, which is verbatim-of-record and never edited <code>[READ CEQ_V20_R15_CONTRACT.md:3-6]</code>. What the supersession does <strong>not</strong> lift, because the author did not lift it: the leap's remaining clauses — named theorems with runnable instances, predictions <strong>and</strong> counters (L-SIGN), every untested claim with its cheapest killer, instances RUN before anything is acted on — and the standing laws of S.4. What it changes in kind: the iteration count of the new programme is derived from its DAG's critical path (D-3), not inherited from the 45 the R15 schedule named, and its Phase-E-shaped work (candidate built with identity binds, manifests, certificates, param-matched, full arena, verdict by the same clauses, purge, prognosis) <code>[READ CEQ_V20_R15_CONTRACT.md:153-169]</code> is the template the plan inherits for the shape, with the beds and labels replaced.</p>
+<p><strong>Mechanisms this section is designed against</strong>, named per the brief's rule 6: P-3 stale claim never retracted (<code>MISTAKES.md:316</code>) — the stale phase table and the unspent call are stated, not inherited; P-6 line drift (<code>:364</code>) — journal cites carry headings; V-7 empty search read as absence (<code>:117</code>) — every <code>no hit</code> above names the command and the calibrating positive (<code>add_argument</code> = 9 on the same file); M-2 refitted threshold (<code>:451</code>) — the tail ruling is left to the author; D-1 racing a proven optimum (<code>:677</code>) and D-2 the arm's own resolvent as oracle (<code>:710</code>) — the Q6 pair and the BED-M label class are carried as the reason the arena could not return a winner, which is the paper's starting premise; V-20 cap in prose (<code>:987</code>) — the R15 count came from a literal flag read back; D-7 prediction without counter (<code>:2037</code>) — no prediction is made in this section.</p>
+<hr />
+<h2 id="s8-limits-collected-once">S.8 LIMITS (collected once)<a class="headerlink" href="#s8-limits-collected-once" title="Permanent link">#</a></h2>
+<p>This section reads the record at HEAD <code>207e7b9</code>; the Lean build was not re-run and its green at <code>V20_R15_THEORY_TABLE.md:397-400</code> is a cache hit <code>[READ]</code>. Every arena and cost figure is MERCURY's of the round, on an un-synchronised timer, and is reproduced as the record states it, not re-measured. Line numbers in <code>V20_R15_JOURNAL.md</code> are true at HEAD and will drift on the next head-block append; headings are given beside each. <code>L-FIRST</code>'s definitional text and Rulings 11–12 were not located; they are listed as cited by the record, not as read. The <code>MISTAKES.md</code> mechanism count is <strong>66</strong> <code>###</code> headings including <code>V-14a</code> <code>[RUN: grep -cE '^### (V|P|M|D)-[0-9]+']</code>, against the brief's <em>65</em>; the difference is the lettered sub-entry at <code>MISTAKES.md:770</code>. JUPITER's it.35 file says <em>35 of 35</em> citations land <code>[READ V20_R15_IT35_JUPITER.md:204]</code> while the journal's digest of it says <em>41/41</em> <code>[READ V20_R15_JOURNAL.md:8112, :8125-8126]</code>; the discrepancy is recorded, not resolved. No external source was fetched; the <code>[V]</code> tags on Wilks and BIC in Ruling 10′ are the record's, inherited. No number in this section was produced by new code; no code, git write, Kaggle contact or hardware run was made.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Invented by <a href="https://teerthsharma.vercel.app/">Teerth Sharma</a> · Apache License 2.0
+    </div>
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/teerthsharma/resolvent" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://teerthsharma.vercel.app/" target="_blank" rel="noopener" title="teerthsharma.vercel.app" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M351.9 280H161c2.9 64.5 17.2 123.9 37.5 167.4 11.4 24.5 23.7 41.8 35.1 52.4 11.2 10.5 18.9 12.2 22.9 12.2s11.7-1.7 22.9-12.2c11.4-10.6 23.7-28 35.1-52.4 20.3-43.5 34.6-102.9 37.5-167.4zm-191-48h190.9c-2.8-64.5-17.1-123.9-37.4-167.4-11.4-24.4-23.7-41.8-35.1-52.4C268.1 1.7 260.4 0 256.4 0s-11.7 1.7-22.9 12.2c-11.4 10.6-23.7 28-35.1 52.4-20.3 43.5-34.6 102.9-37.5 167.4m-48 0c3.5-85.6 25.6-165.1 57.9-217.3C78.7 47.3 10.9 131.2 1.5 232zM1.5 280c9.4 100.8 77.2 184.7 169.3 217.3-32.3-52.2-54.4-131.7-57.9-217.3zm398.4 0c-3.5 85.6-25.6 165.1-57.9 217.3 92.1-32.7 159.9-116.5 169.3-217.3zm111.4-48C501.9 131.2 434.1 47.3 342 14.7c32.3 52.2 54.4 131.7 57.9 217.3z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

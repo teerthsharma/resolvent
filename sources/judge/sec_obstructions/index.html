@@ -1,0 +1,1943 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="One causal head, three switches. Softmax attention, unnormalized-kernel attention and the exact path product of a Markov chain as settings of one operator, proved in Lean 4, with every failure kept on the record.">
+      
+      
+        <meta name="author" content="Teerth Sharma">
+      
+      
+        <link rel="canonical" href="https://teerthsharma.github.io/resolvent/sources/judge/sec_obstructions/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/logo.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>3. Why softmax cannot occupy this ground — exactly as the theorems license it - resolvent</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/resolvent.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#3-why-softmax-cannot-occupy-this-ground-exactly-as-the-theorems-license-it" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="resolvent" class="md-header__button md-logo" aria-label="resolvent" data-md-component="logo">
+      
+  <img src="../../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            resolvent
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              3. Why softmax cannot occupy this ground — exactly as the theorems license it
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/teerthsharma/resolvent" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    teerthsharma/resolvent
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../FAILS/" class="md-tabs__link">
+          
+  
+  
+  The record
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../BED_H_PREREGISTRATION/" class="md-tabs__link">
+          
+  
+  
+  Pre-registrations
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../ledgers/mistakes/" class="md-tabs__link">
+          
+  
+  
+  Ledgers
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../canon/CHARTER/" class="md-tabs__link">
+          
+  
+  
+  Canon
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../CEQ_SHAPE/" class="md-tabs__link">
+          
+  
+  
+  Paper
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="resolvent" class="md-nav__button md-logo" aria-label="resolvent" data-md-component="logo">
+      
+  <img src="../../../assets/logo.svg" alt="logo">
+
+    </a>
+    resolvent
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/teerthsharma/resolvent" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    teerthsharma/resolvent
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The record
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    The record
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../FAILS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Everything retracted, broken or open
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../COMPONENT_LEDGER/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Component ledger
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../PLAN/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Research plan
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CORNER_RULE_RETIREMENT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Corner rule retirement
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../PI_JEPA_KAGGLE_CARD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kaggle card
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../DR2_CARD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DR2 card
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pre-registrations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Pre-registrations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../BED_H_PREREGISTRATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BED-H
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../prereg/REMOVAL_ECHO_v1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    REMOVAL-ECHO v1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ledgers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Ledgers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/mistakes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Failure mechanisms
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/struck/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Struck constants
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/mathematics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mathematics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/model-card/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model card
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/costs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Costs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/v17k-rulings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    V17K rulings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/v16-calibration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    V16 calibration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Canon
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Canon
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/CHARTER/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Charter
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/01_THEORY_ACCURACY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01 Theory of accuracy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/02_THEORY_TRAINING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    02 Theory of training
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/03_KERNEL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03 Kernel
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/04_BEDS_AND_INSTRUMENTS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    04 Beds and instruments
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/05_REPAIRS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05 Repairs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/06_PREDICTIONS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    06 Predictions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/08_ARCHITECTURE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    08 Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/09_CHESS_AND_MARKETS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    09 Chess and markets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/CORRECTIONS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Corrections
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Paper
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Paper
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CEQ_SHAPE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The shape of CEQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Paper sources
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../BIB_AUDIT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bibliography audit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../BIB_ALIASES/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bibliography aliases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#31-obstruction-1-per-row-independence-definitional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Obstruction 1 — per-row independence (definitional)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#32-obstruction-2-hops-need-depth-skyline-unconditional-lower-bounds-conditional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Obstruction 2 — hops need depth (skyline unconditional, lower bounds conditional)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#33-the-det-class-relocation-what-one-operator-may-claim" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 The DET-class relocation — what "one operator" may claim
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#34-obstruction-3-composition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 Obstruction 3 — composition
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#35-obstruction-4-non-negativity-withdrawn-as-written" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 Obstruction 4 — non-negativity, WITHDRAWN as written
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#36-d-1-stated-with-the-right-predictor-and-the-right-census" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.6 D-1, stated with the right predictor and the right census
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#37-the-skyline-table-the-only-place-a-cannot-sentence-may-stand" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.7 The skyline table — the only place a "cannot" sentence may stand
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#38-the-honest-sentence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.8 The honest sentence
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#39-limits-carried-to-8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.9 Limits carried to §8
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="3-why-softmax-cannot-occupy-this-ground-exactly-as-the-theorems-license-it">3. Why softmax cannot occupy this ground — exactly as the theorems license it<a class="headerlink" href="#3-why-softmax-cannot-occupy-this-ground-exactly-as-the-theorems-license-it" title="Permanent link">#</a></h1>
+<p>JUPITER (MYCROFT), 2026-09-03, HEAD <code>207e7b9</code>. Evidence classes as in <code>judge/sec_shape.md</code>.
+Every obstruction sentence below carries a theorem number, the model class it is stated for, its
+hypotheses as a predicate on the geometry the record ran (<span class="arithmatex">\(s=64\)</span>, <span class="arithmatex">\(d=16\)</span>, <span class="arithmatex">\(h=1\)</span>, float32 so
+<span class="arithmatex">\(p=32\)</span>), and the fraction of that geometry it admits. A "cannot" sentence outside the skyline
+table of §3.7 is refused. Mechanism throughout: P-10 (a source's intro cited as its theorem),
+V-25 (a theorem whose hypothesis no draw satisfies), P-3 / P-11 (a conditional bound stated as
+settled), P-8 / V-17 ("depth" in two units).</p>
+<h2 id="31-obstruction-1-per-row-independence-definitional">3.1 Obstruction 1 — per-row independence (definitional)<a class="headerlink" href="#31-obstruction-1-per-row-independence-definitional" title="Permanent link">#</a></h2>
+<p>One softmax step is <span class="arithmatex">\(O_i=f(P_{i\cdot},V)\)</span>: the read at <span class="arithmatex">\(i\)</span> never depends on the read at <span class="arithmatex">\(j\)</span>. The
+shape's <span class="arithmatex">\(z\)</span> is the unique fixed point of the <span class="arithmatex">\(\gamma\)</span>-contraction <span class="arithmatex">\(z=V+\gamma Pz\)</span> in
+<span class="arithmatex">\(\|\cdot\|_\infty\)</span> (<code>Contraction.rowStochastic_perron</code> <code>:118</code>, <code>weighted_contraction</code> <code>:72</code>), so the
+reads are mutually constrained. No citation licenses more than this; the nearest published fixed
+points are per-query (<code>ramsauer-2021-hopfield</code>), and the sharpness failure of the row mixture is
+<code>velickovic-2025-softmaxnotenough</code>. What makes it measurable is the harmonic residual
+<span class="arithmatex">\(r(\hat z)\)</span> of Proposition 7 with its two unit factors printed — a <span class="arithmatex">\(10\times\)</span> ratio at equal
+marginal error is possible only if one arm's error lies in the slow mode, which is a statement
+about what the control mislearns, not "joint consistency" (<code>refute_falsify_occvac</code> §3.12). The
+claim "joint determination in one read" is UNTESTED (<code>READ MATHEMATICS.md:106-127</code>) and stays a
+prediction with the counter "<span class="arithmatex">\(r_{\rm softmax}/r_{\rm shape}\le2\)</span>" (SPLIT in <span class="arithmatex">\((2,10)\)</span>).
+Mechanism: V-26, V-17, D-7.</p>
+<h2 id="32-obstruction-2-hops-need-depth-skyline-unconditional-lower-bounds-conditional">3.2 Obstruction 2 — hops need depth (skyline unconditional, lower bounds conditional)<a class="headerlink" href="#32-obstruction-2-hops-need-depth-skyline-unconditional-lower-bounds-conditional" title="Permanent link">#</a></h2>
+<p><em>Skyline (unconditional).</em> <code>sanford-2024-logdepth</code> Thm 4.2: a causally masked transformer computes
+<span class="arithmatex">\(\mathrm{hop}_k\)</span> at depth <span class="arithmatex">\(\lfloor\log_2k\rfloor+2\)</span>, <span class="arithmatex">\(m=O(1)\)</span>, <span class="arithmatex">\(H=1\)</span> — <span class="arithmatex">\(3/5/7\)</span> at <span class="arithmatex">\(t^\star=2/8/32\)</span>.
+<code>merrill-2025-littledepth</code> Thm 2: connectivity at <span class="arithmatex">\(\lceil\log_2n\rceil\)</span> unrolls of a uniform block.
+<code>fagnou-2024-chacal</code> Thm 1: <span class="arithmatex">\(\lceil\log_2(\mathrm{depth}(G)+1)\rceil\)</span> layers for entity tracking —
+the same law with different constants, cited together. <em>Lower bounds.</em> <code>sanford-2024-logdepth</code>
+Cor. 4.3, <span class="arithmatex">\(\Omega(\log k)\)</span>, <strong>conditional</strong> on the one-vs-two-cycle conjecture, <span class="arithmatex">\(k=\Theta(N^\xi)\)</span>,
+<span class="arithmatex">\(mH=O(k^{1-\varepsilon})\)</span>; <code>sanford-2024-graph-algorithms</code> Thm 3/19, same conjecture;
+<code>chen-2024-multilayer</code> Thm 1.1, <strong>unconditional</strong> for decoder-only softmax at depth <span class="arithmatex">\(L\)</span> against
+<span class="arithmatex">\(L\)</span>-sequential composition, hypothesis <span class="arithmatex">\(H\,d\,p\le n^{2^{-4L}}\)</span>: at <span class="arithmatex">\(L=1\)</span>, <span class="arithmatex">\(n=64\)</span>,
+<span class="arithmatex">\(64^{1/16}=1.2968\)</span> against <span class="arithmatex">\(H\,d\,p=512\)</span> — vacuous at every geometry the record ran;
+<code>sanford-2024-inductionheads</code> Thm 1, unconditional at <span class="arithmatex">\(t^\star=2\)</span>, hypothesis <span class="arithmatex">\(h\,m\,p=\Omega(n)\)</span>:
+<span class="arithmatex">\(512\ge64\)</span>, not violated, silent here. <em>Width.</em> <code>yehudai-2025-depthwidth</code>: depth is not necessary
+at linear width; the matched control fixes width as well as depth, and at the record's geometry
+<span class="arithmatex">\(d_{\rm model}=16&lt;s=64\)</span> the wide skyline is not instantiated at matched parameters — said, not
+left blank. <em>Circuit class.</em> <code>merrill-2023-parallelism</code> Thm 2: log-precision constant depth
+<span class="arithmatex">\(\subseteq\)</span> uniform <span class="arithmatex">\(TC^0\)</span>; connectivity L-complete; consequences conditional on class separations.
+The clause "linear systems P-complete" is dropped: rational linear systems are in
+<span class="arithmatex">\(DET\subseteq NC^2\)</span> (<code>cook-1985-taxonomy</code>); P-completeness is linear <em>inequalities</em>
+(<code>refute_theory_math</code> item 13). <em>What the four license together:</em> an asymptotic, lineage argument
+that one softmax parameter set cannot compose <span class="arithmatex">\(t^\star\ge2\)</span> content-dependent hops — and nothing at
+the record's geometry. <em>The missing reduction.</em> <span class="arithmatex">\(\mathrm{hop}_k\)</span> is pointer chasing in a
+token-defined graph; the shape's reachability is in the graph <span class="arithmatex">\(P\)</span> <em>the layer computes</em>; "every
+<span class="arithmatex">\(\mathrm{hop}_k\)</span> instance is a committor instance of some <span class="arithmatex">\(P\)</span>" is plausible and NOT FOUND
+(<code>sweep_expressivity.md</code> §3.5). Until written, obstruction 2 is a lineage argument, and the
+skyline depth <span class="arithmatex">\(\lfloor\log_2t^\star\rfloor+2\)</span> for BED-S is a choice <strong>by analogy</strong> with Thm 4.2,
+which does not cover BED-S's task. Mechanism: P-10, V-25, P-3, P-4.</p>
+<h2 id="33-the-det-class-relocation-what-one-operator-may-claim">3.3 The DET-class relocation — what "one operator" may claim<a class="headerlink" href="#33-the-det-class-relocation-what-one-operator-may-claim" title="Permanent link">#</a></h2>
+<p>The exact committor solves <span class="arithmatex">\((I-Q)q=R\mathbb 1\)</span>; the exact <span class="arithmatex">\(z\)</span> is <span class="arithmatex">\((I-\gamma P)^{-1}V\)</span>. Inversion and
+iterated product are DET-complete, <span class="arithmatex">\(NL\subseteq DET\subseteq NC^2\)</span> (<code>cook-1985-taxonomy</code>), and a
+triangular inverse is DET-hard (iterated product embeds in <span class="arithmatex">\((I-A)^{-1}\)</span> for block sub-diagonal
+<span class="arithmatex">\(A\)</span>). So the resolvent as a circuit sits at or above the class the conditional bounds place
+reachability in: <strong>the shape relocates the log-depth from the parameter stack into the linear
+solve</strong> — <span class="arithmatex">\(O(s)\)</span> sequential rounds by substitution, or recursive block inversion at
+<span class="arithmatex">\(O(\log^2 s)\)</span> circuit depth / <span class="arithmatex">\(O(\log s)\)</span> matmul rounds with <span class="arithmatex">\(O(s^3)\)</span>-class work, exact in regime N
+and a certified Neumann truncation at <span class="arithmatex">\(K=2^k-1\)</span> in regime S (<code>refute_theory_math</code> item 14,
+<code>refute_instrument_math</code> row 24; <code>NOT MEASURED — needs a parallel-prefix kernel timing</code>).
+"Depth-1" in this paper means <strong>one attention parameter set</strong> (<span class="arithmatex">\(P\)</span>, <span class="arithmatex">\(\gamma\)</span>); the circuit-depth
+reading is disclaimed in this paragraph. Mechanism: P-8, V-17.</p>
+<h2 id="34-obstruction-3-composition">3.4 Obstruction 3 — composition<a class="headerlink" href="#34-obstruction-3-composition" title="Permanent link">#</a></h2>
+<p><code>peng-2024-transformer-limitations</code> Thm 1 (identifier confirmed; unconditional, communication
+complexity): a single <span class="arithmatex">\(H\)</span>-head softmax layer at <span class="arithmatex">\(p\)</span> bits errs on <span class="arithmatex">\(f(g(x))\)</span> with probability
+<span class="arithmatex">\(\ge R/(3n\log n)\)</span>, <span class="arithmatex">\(R=n\log n-H(d+1)p&gt;0\)</span>. At <span class="arithmatex">\(n=64\)</span>: <span class="arithmatex">\(64\cdot6=384\)</span> against <span class="arithmatex">\(1\cdot17\cdot32=544\)</span>
+— not satisfied, vacuous at <span class="arithmatex">\(s=64\)</span>, <span class="arithmatex">\(d=16\)</span>, float32; it bites at <span class="arithmatex">\(n\gtrsim100\)</span> or <span class="arithmatex">\(p=16\)</span>.
+<code>kozachinskiy-2025-strassen</code> Thm 3.4 removes precision (infinite precision, asymptotic <span class="arithmatex">\(n^{\Omega(1)}\)</span>).
+"A consequence <em>is</em> a composition" (<span class="arithmatex">\(z'=R(P')V'\)</span> after <span class="arithmatex">\(P'=S(P,a)\)</span>) is a reduction sketch, not
+a theorem about the committor. Strassen attention is a NEAR-MISS: two hops per layer by arity,
+not all hops by inversion. Mechanism: V-25, P-10.</p>
+<h2 id="35-obstruction-4-non-negativity-withdrawn-as-written">3.5 Obstruction 4 — non-negativity, WITHDRAWN as written<a class="headerlink" href="#35-obstruction-4-non-negativity-withdrawn-as-written" title="Permanent link">#</a></h2>
+<p>For row-stochastic <span class="arithmatex">\(P\)</span> the mixing matrix <span class="arithmatex">\(\Pi_\gamma\)</span> is non-negative and stays non-negative under
+absorbing rows (Proposition 5b), so <span class="arithmatex">\(\partial O_i/\partial V_j\ge0\)</span> survives the resolvent and
+<code>ceq/attention.py</code>'s min-entry test reads exactly <span class="arithmatex">\(0\)</span> on the shape — by the identity rows and the
+mask, a theorem instance, not a reading (<code>RUN[F]</code>: <span class="arithmatex">\(151\)</span> exact zeros from the identity rows,
+lower-triangle min <span class="arithmatex">\(2.6\times10^{-4}\)</span> without them). Absorption <strong>redirects</strong> mass: a walk that
+hits <span class="arithmatex">\(a\in\mathcal A_k\)</span> stays at <span class="arithmatex">\(a\)</span>, so the weight on every earlier token the walk would have
+reached through <span class="arithmatex">\(a\)</span> goes to <span class="arithmatex">\(a\)</span> instead; on a dense causal softmax the <em>support</em> of <span class="arithmatex">\(\Pi_\gamma\)</span>
+does not change (Proposition 5c), only the weights on rows downstream of <span class="arithmatex">\(a\)</span>. The paper writes
+"a boundary row captures the mass that would have reached earlier positions", never "veto",
+"subtract" or "negative influence"; the signed programme is not revived (<code>RESEARCH.md</code>,
+<code>PROGNOSIS.md</code>); DoFormer's single fixed row is the NEAR-MISS named beside "boundary rows".
+Mechanism: P-7, V-23, V-3.</p>
+<h2 id="36-d-1-stated-with-the-right-predictor-and-the-right-census">3.6 D-1, stated with the right predictor and the right census<a class="headerlink" href="#36-d-1-stated-with-the-right-predictor-and-the-right-census" title="Permanent link">#</a></h2>
+<p><code>marion-2025-single-location</code> Cor. 2 (erf predictor, <span class="arithmatex">\(d\to\infty\)</span>, <span class="arithmatex">\(L=o(d)\)</span>) and
+<code>duranthon-2026-softmax-advantage</code> Prop. 4.2 (softmax proper): one layer is Bayes-optimal on
+single-location regression <span class="arithmatex">\(Y=X_{J_0}^\top v^\star+\xi\)</span>. The record ran <span class="arithmatex">\(L/d=4.00\)</span>
+(<code>READ MATHEMATICS.md:1044-1057</code>), the wrong direction; and the theorems' label model admits
+<strong>0 of 3</strong> record beds — BED-M's label is a product <span class="arithmatex">\(a_{s-1}\cdots a_{s-t^\star}\,b_{s-1-t^\star}\)</span> of
+<span class="arithmatex">\(t^\star+1\)</span> features at <span class="arithmatex">\(t^\star+1\)</span> positions, not single-location regression for any <span class="arithmatex">\(t^\star\ge1\)</span>
+(<code>refute_theory_occvac</code> §1.2). D-1 is therefore a <em>mechanism</em>: no bed in the record leaves the
+scalar-readout class (<span class="arithmatex">\(\mathrm{out}[:,s-1]\)</span>, <code>READ MISTAKES.md:677-708</code>), and the SLR theorems are
+the nearest owned regime, cited as such. No bed in this paper scores a scalar at one position:
+the labels are <span class="arithmatex">\(z\)</span>, <span class="arithmatex">\(\Delta z\)</span>, the reach-avoid tensor, the argmin. Single-effect estimation is
+also softmax's ground (<code>zhang-2023-cina</code>), which is why the sign column of Proposition 7 is kept
+and not claimed. Mechanism: D-1, P-10, V-25.</p>
+<h2 id="37-the-skyline-table-the-only-place-a-cannot-sentence-may-stand">3.7 The skyline table — the only place a "cannot" sentence may stand<a class="headerlink" href="#37-the-skyline-table-the-only-place-a-cannot-sentence-may-stand" title="Permanent link">#</a></h2>
+<p>Every bed carries every row; a claim is at matched depth and parameters (<span class="arithmatex">\(4{,}769\)</span>, recounted per
+arm because a <span class="arithmatex">\([m,K+1]\)</span> head or a vector readout changes it — Ruling 3) against the fellow
+approximators, and the skylines at unmatched depth/width/decode length are read beside it
+(R-SKY, <code>READ CEQ_V16_CONTRACT.md:209</code>).</p>
+<table>
+<thead>
+<tr>
+<th>arm</th>
+<th>class</th>
+<th>setting to fix before the arena</th>
+<th>what it decides</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>depth-1 softmax, same head</td>
+<td>matched</td>
+<td><span class="arithmatex">\(4{,}769\)</span> params, same readout</td>
+<td>the per-row control; D-1</td>
+</tr>
+<tr>
+<td>ChaCAL-diag (the shape with <span class="arithmatex">\(\mathcal A=\emptyset\)</span>, diagonal kept)</td>
+<td>matched</td>
+<td>same <span class="arithmatex">\(\hat\gamma\)</span></td>
+<td>the boundary-row mechanism; identity half of B-E1</td>
+</tr>
+<tr>
+<td>ChaCAL-published (diagonal removed in the inverse, sub-stochastic read)</td>
+<td>matched</td>
+<td>same <span class="arithmatex">\(\hat\gamma\)</span></td>
+<td>the published object; a planted negative for bitwise parity at <span class="arithmatex">\(\gamma&gt;0\)</span></td>
+</tr>
+<tr>
+<td>ChaCAL-diag + sink token</td>
+<td>matched</td>
+<td>same <span class="arithmatex">\(\hat\gamma\)</span></td>
+<td>the C2 kill: boundary rows vs a column sink</td>
+</tr>
+<tr>
+<td>InfSA-style Neumann read, no boundaries</td>
+<td>matched</td>
+<td><span class="arithmatex">\(K=16\)</span>; cell <span class="arithmatex">\(\approx5.1\)</span> s</td>
+<td>exactness vs truncation</td>
+</tr>
+<tr>
+<td>cached-mixture <span class="arithmatex">\(O=\hat P_{\rm base}(I-\gamma\hat P_{\rm base})^{-1}V_{\rm int}\)</span></td>
+<td>matched</td>
+<td><span class="arithmatex">\(\hat P\)</span> frozen from the un-intervened context</td>
+<td>whether the re-solve is needed (<code>momennejad-2017-sr</code>)</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\lfloor\log_2t^\star\rfloor+2\)</span> softmax stack</td>
+<td>skyline</td>
+<td>depth <span class="arithmatex">\(3/5/7\)</span>; <span class="arithmatex">\(\approx7.6\)</span> s per cell [ASSUMED]</td>
+<td>Thm 4.2 by analogy</td>
+</tr>
+<tr>
+<td>wide constant-depth stack</td>
+<td>skyline</td>
+<td>width <span class="arithmatex">\(=n\)</span> (<code>yehudai-2025-depthwidth</code>); NOT MEASURED</td>
+<td>depth is not necessary</td>
+</tr>
+<tr>
+<td>chain-of-thought decoder</td>
+<td>skyline</td>
+<td>step count fixed (<code>merrill-2024-cot</code>); NOT MEASURED</td>
+<td>the autoregressive route</td>
+</tr>
+<tr>
+<td>MuZero-style value head</td>
+<td>skyline (consequence beds)</td>
+<td>return, not state</td>
+<td>a planner need not predict the state</td>
+</tr>
+</tbody>
+</table>
+<p><code>wang-2024-incontext-td</code> and <code>xie-2026-softmax-rl</code> [V] (abstract level; theorem numbers not read,
+[U]) show linear-then-softmax transformers implement TD policy evaluation layer by layer, so the
+deeper stack computes the <em>same</em> resolvent by iteration: the looped block <span class="arithmatex">\(z^{(t+1)}=V+\gamma Pz^{(t)}\)</span>
+run <span class="arithmatex">\(K\)</span> times is the truncated Neumann sum with matrix-residual <span class="arithmatex">\(\infty\)</span>-norm exactly
+<span class="arithmatex">\(\gamma^{K+1}/(1-\gamma)\)</span> and vector error at most <span class="arithmatex">\(\gamma^{K+1}\|V\|_\infty/(1-\gamma)\)</span>
+(Proposition 4; <code>yang-2024-looped</code>, <code>gasteiger-2019-appnp</code> power iteration). A nonlinear loop is a
+DEQ (<code>bai-2019-deq</code>) and out of scope. "Beats softmax" and "beats native" (<code>yang-2024-deltanet</code>,
+<code>dao-2024-ssd</code> on the linear corner) are banned sentences; the shape's separate claims are
+exactness with a printed <span class="arithmatex">\(\delta\|V\|_\infty\)</span>, one-read consistency as a <strong>cost</strong> statement (one
+solve, depth <span class="arithmatex">\(s\)</span>), and the boundary-row mechanism, each stated as a property with its
+counter-prediction. Mechanism: D-1, R-SKY, D-7, V-17, P-4.</p>
+<h2 id="38-the-honest-sentence">3.8 The honest sentence<a class="headerlink" href="#38-the-honest-sentence" title="Permanent link">#</a></h2>
+<p>One <em>parameterised</em> operator (one <span class="arithmatex">\(P\)</span>, one <span class="arithmatex">\(\gamma\)</span>), not one parallel round; its hops are exact
+and certified (Propositions 2, 4) rather than learned layer by layer; on a bed whose environment
+chain is inside the arm's class the contrast against softmax is a reproduction-vs-non-reproduction
+contrast and is pre-registered VOID as a capability number (Proposition 8); what is creditable is
+the boundary mechanism against ChaCAL-diag-with-sink, exactness against the Neumann read, and the
+identification <span class="arithmatex">\(\|\hat P-P_{\rm env}\|_\infty\)</span>. Under the record's calibration (7 of 8 optimistic,
+<code>READ V16_CALIBRATION.md:96-100</code>) the counter is the point estimate for every row above.</p>
+<h2 id="39-limits-carried-to-8">3.9 Limits carried to §8<a class="headerlink" href="#39-limits-carried-to-8" title="Permanent link">#</a></h2>
+<p>Every obstruction clause is asymptotic, and every unconditional one is vacuous at <span class="arithmatex">\(s=64\)</span>, <span class="arithmatex">\(d=16\)</span>,
+float32; the inequalities are printed so a reader sees it. The <span class="arithmatex">\(\mathrm{hop}_k\to\)</span> committor
+reduction is unwritten. The TD-policy-evaluation skyline claim rests on two abstracts. The skyline
+depths are by analogy, the skyline prices are assumed or unmeasured, and the two non-depth
+skylines have no cell. No sentence here is a result.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Invented by <a href="https://teerthsharma.vercel.app/">Teerth Sharma</a> · Apache License 2.0
+    </div>
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/teerthsharma/resolvent" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://teerthsharma.vercel.app/" target="_blank" rel="noopener" title="teerthsharma.vercel.app" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M351.9 280H161c2.9 64.5 17.2 123.9 37.5 167.4 11.4 24.5 23.7 41.8 35.1 52.4 11.2 10.5 18.9 12.2 22.9 12.2s11.7-1.7 22.9-12.2c11.4-10.6 23.7-28 35.1-52.4 20.3-43.5 34.6-102.9 37.5-167.4zm-191-48h190.9c-2.8-64.5-17.1-123.9-37.4-167.4-11.4-24.4-23.7-41.8-35.1-52.4C268.1 1.7 260.4 0 256.4 0s-11.7 1.7-22.9 12.2c-11.4 10.6-23.7 28-35.1 52.4-20.3 43.5-34.6 102.9-37.5 167.4m-48 0c3.5-85.6 25.6-165.1 57.9-217.3C78.7 47.3 10.9 131.2 1.5 232zM1.5 280c9.4 100.8 77.2 184.7 169.3 217.3-32.3-52.2-54.4-131.7-57.9-217.3zm398.4 0c-3.5 85.6-25.6 165.1-57.9 217.3 92.1-32.7 159.9-116.5 169.3-217.3zm111.4-48C501.9 131.2 434.1 47.3 342 14.7c32.3 52.2 54.4 131.7 57.9 217.3z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

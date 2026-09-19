@@ -1,0 +1,3464 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="One causal head, three switches. Softmax attention, unnormalized-kernel attention and the exact path product of a Markov chain as settings of one operator, proved in Lean 4, with every failure kept on the record.">
+      
+      
+        <meta name="author" content="Teerth Sharma">
+      
+      
+        <link rel="canonical" href="https://teerthsharma.github.io/resolvent/sources/sections/sec_measured/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/logo.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Section M — The inventory of measured facts, with provenance - resolvent</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/resolvent.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#section-m-the-inventory-of-measured-facts-with-provenance" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="resolvent" class="md-header__button md-logo" aria-label="resolvent" data-md-component="logo">
+      
+  <img src="../../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            resolvent
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Section M — The inventory of measured facts, with provenance
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/teerthsharma/resolvent" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    teerthsharma/resolvent
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../FAILS/" class="md-tabs__link">
+          
+  
+  
+  The record
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../BED_H_PREREGISTRATION/" class="md-tabs__link">
+          
+  
+  
+  Pre-registrations
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../ledgers/mistakes/" class="md-tabs__link">
+          
+  
+  
+  Ledgers
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../canon/CHARTER/" class="md-tabs__link">
+          
+  
+  
+  Canon
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../CEQ_SHAPE/" class="md-tabs__link">
+          
+  
+  
+  Paper
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="resolvent" class="md-nav__button md-logo" aria-label="resolvent" data-md-component="logo">
+      
+  <img src="../../../assets/logo.svg" alt="logo">
+
+    </a>
+    resolvent
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/teerthsharma/resolvent" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    teerthsharma/resolvent
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The record
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    The record
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../FAILS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Everything retracted, broken or open
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../COMPONENT_LEDGER/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Component ledger
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../PLAN/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Research plan
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CORNER_RULE_RETIREMENT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Corner rule retirement
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../PI_JEPA_KAGGLE_CARD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kaggle card
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../DR2_CARD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DR2 card
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pre-registrations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Pre-registrations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../BED_H_PREREGISTRATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BED-H
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../prereg/REMOVAL_ECHO_v1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    REMOVAL-ECHO v1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ledgers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Ledgers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/mistakes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Failure mechanisms
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/struck/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Struck constants
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/mathematics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mathematics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/model-card/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model card
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/costs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Costs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/v17k-rulings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    V17K rulings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/v16-calibration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    V16 calibration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Canon
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Canon
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/CHARTER/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Charter
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/01_THEORY_ACCURACY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01 Theory of accuracy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/02_THEORY_TRAINING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    02 Theory of training
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/03_KERNEL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03 Kernel
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/04_BEDS_AND_INSTRUMENTS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    04 Beds and instruments
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/05_REPAIRS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05 Repairs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/06_PREDICTIONS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    06 Predictions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/08_ARCHITECTURE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    08 Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/09_CHESS_AND_MARKETS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    09 Chess and markets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/CORRECTIONS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Corrections
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Paper
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Paper
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CEQ_SHAPE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The shape of CEQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Paper sources
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../BIB_AUDIT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bibliography audit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../BIB_ALIASES/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bibliography aliases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#m1-identity-binds-residual-bar-planted-negatives-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        M.1 Identity binds — residual, bar, planted negatives, file
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#m2-the-deciding-measurement-r1-and-its-re-take-on-the-certified-device" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        M.2 The deciding measurement R1, and its re-take on the certified device
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="M.2 The deciding measurement R1, and its re-take on the certified device">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#m21-r1-as-taken-cpu-resultsv15_r1jsonl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        M.2.1 R1 as taken (CPU) — results/v15_r1.jsonl
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#m22-the-re-take-on-the-certified-rtx-4060-resultsv17k_r4_retakejsonl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        M.2.2 The re-take on the certified RTX 4060 — results/v17k_r4_retake.jsonl
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#m23-the-round-15-extension-sixteen-arm_pl-cells-and-the-paired-contrast" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        M.2.3 The round-15 extension: sixteen arm_pl cells and the paired contrast
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#m3-the-three-corners-measured-distinct" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        M.3 The three corners, measured distinct
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#m4-the-device-certificate-rtx-4060-laptop-sm_89" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        M.4 The device certificate — RTX 4060 Laptop, sm_89
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="M.4 The device certificate — RTX 4060 Laptop, sm_89">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#m41-throughput-laws-forward-backward-adamstep-s64-d_model16" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        M.4.1 Throughput laws (forward + backward + Adam.step, s=64, d_model=16)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#m42-memory-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        M.4.2 Memory model
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#m43-determinism" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        M.4.3 Determinism
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#m44-bar-re-certification-and-the-0-step-gate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        M.4.4 Bar re-certification and the 0-step gate
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#m45-the-58-wall-clock-gap-refuted" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        M.4.5 The 5.8× wall-clock gap — refuted
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#m5-the-calibration-column-r11-9-checked-9-adverse-sign-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        M.5 The calibration column — R11: 9 checked, 9 adverse, sign test
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#m6-the-floors-as-measured" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        M.6 The floors as measured
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#m7-bed-k-and-bed-1-measured-facts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        M.7 BED-K and BED-1 — measured facts
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="M.7 BED-K and BED-1 — measured facts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#m71-bed-k-ceqbedsbed_kpy-15-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        M.7.1 BED-K (ceq/beds/bed_k.py; 15 tests)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#m72-bed-1-ceqbedsbed_1py-13-tests-28-in-the-beds-suite" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        M.7.2 BED-1 (ceq/beds/bed_1.py; 13 tests, 28 in the beds suite)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#m8-x35-and-x37-instrument-facts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        M.8 X₃₅′ and X₃₇ — instrument facts
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="M.8 X₃₅′ and X₃₇ — instrument facts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#m81-x35-hidden-cause-detection-testsx35-14-tests-testsx35p-29-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        M.8.1 X₃₅′ — hidden-cause detection (tests/x35, 14 tests; tests/x35p, 29 tests)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#m82-x37-topological-certificates-ceqcertstopologicalpy-testscerts-36-tests-8-mutants-killed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        M.8.2 X₃₇ — topological certificates (ceq/certs/topological.py; tests/certs, 36 tests, 8 mutants killed)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#m9-test-state-the-invariant-is-the-failure-set-not-the-pass-count" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        M.9 Test state (the invariant is the failure set, not the pass count)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#m10-numbers-the-paper-must-not-use" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        M.10 Numbers the paper must NOT use
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="M.10 Numbers the paper must NOT use">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#m101-struck-constants-the-registry-struckmd-rendered-from-testslooptest_no_struck_constant_shipspy47-at-aa82df7-12-entries-read-struckmd18-33" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        M.10.1 Struck constants — the registry (STRUCK.md, rendered from tests/loop/test_no_struck_constant_ships.py:47 at aa82df7, 12 entries; READ STRUCK.md:18-33)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#m102-stale-traps-the-record-names-each-carries-the-corrected-figure-above" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        M.10.2 Stale traps the record names (each carries the corrected figure above)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#m11-mechanism-map-what-each-table-is-designed-against" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        M.11 Mechanism map — what each table is designed against
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#m12-limits-of-this-inventory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        M.12 Limits of this inventory
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="section-m-the-inventory-of-measured-facts-with-provenance">Section M — The inventory of measured facts, with provenance<a class="headerlink" href="#section-m-the-inventory-of-measured-facts-with-provenance" title="Permanent link">#</a></h1>
+<p><em>Role: WATSON (instruments, the journal). Repository HEAD <code>207e7b9</code>, branch <code>v17k-gate0</code>,
+2026-09-03. Evidence classes: <code>RUN</code> = parsed or executed this session from <code>results/*.jsonl</code>
+or <code>results/*.json</code> with read-only python one-liners; <code>READ path:line</code> = quoted from the
+named file; <code>DERIVED</code> = arithmetic written out; <code>CITED</code> = external source (none are needed
+in this section; every number here has a producer inside the tree or is marked NOT
+MEASURED). No <code>house-events.jsonl</code> grep was run; nothing was written outside this file.</em></p>
+<p>This section exists so the paper never writes a number it cannot point at. Every row
+carries: the number, the producing file and line (or journal path), the seed count, the
+device, and the control it was compared against. Where the round-15 corrections index
+(<code>V20_R15_JOURNAL.md</code> C1–C40, <code>READ V20_R15_JOURNAL.md:24-76</code>) overturned a figure, the
+corrected figure is carried and the row is cited. The mechanism each table is designed
+against is named from <code>MISTAKES.md</code> (66 <code>###</code> mechanism headings including <code>V-14a</code>,
+<code>RUN grep -c '^### [VPMD]-' MISTAKES.md</code>; the record's own count is 65,
+<code>READ workdonenewseal.md:359</code>).</p>
+<hr />
+<h2 id="m1-identity-binds-residual-bar-planted-negatives-file">M.1 Identity binds — residual, bar, planted negatives, file<a class="headerlink" href="#m1-identity-binds-residual-bar-planted-negatives-file" title="Permanent link">#</a></h2>
+<p>Design mechanism: <strong>V-24</strong> (an identity bind whose rejection region is empty,
+<code>READ MISTAKES.md:1658</code>) — every bind below ships a planted mutilation that fails at O(1);
+<strong>V-25</strong> (a theorem whose hypothesis no draw satisfies, <code>READ MISTAKES.md:1954</code>) — the
+bind is measured on BED-M's <em>real</em> support <code>{−1, 0, +1}</code>, not on a toy draw.</p>
+<table>
+<thead>
+<tr>
+<th>bind</th>
+<th>residual</th>
+<th>bar</th>
+<th>shape / draws</th>
+<th>device</th>
+<th>control (planted negative → residual)</th>
+<th>source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>oracle gates ⇒ label, <code>arm_smprime</code>, path-product corner (<code>β=0</code>, QK off, <code>V=b</code> unrescaled)</td>
+<td><code>5.919777e-16</code> (real part exactly <code>0.000e+00</code>, all of it <code>polar(1,π)</code> imaginary dust)</td>
+<td><code>1e-6</code></td>
+<td><code>n=64, s=64</code>, zero-hop fraction <code>0.967788</code>; <code>n=512, s=64</code> and <code>n=256, s=128</code> both <code>7.550528e-16</code></td>
+<td>cpu &amp; cuda, float64/complex128</td>
+<td><code>drop_phase 1.934830</code>, <code>drop_magnitude 0.466267</code>, <code>beta_one 1.335288</code>, <code>exp_scan nan</code> (133,120/133,120 NaN); honest cell <code>1.110223e-16</code>; manifest hash moves under all four</td>
+<td><code>READ V16_ARM_SMPRIME.md:25,195-199,238-244</code>; <code>READ workdonenewseal.md:91-94,113-122</code></td>
+</tr>
+<tr>
+<td>label bind, <code>arm_pl</code> (the telescope head, <code>l_ij = q_ij − C_j + s_j</code>, value-zero BOS)</td>
+<td><code>6.661338147750939e-16</code> at <code>s=8</code>; <code>7.549516567451064e-15</code> at <code>s=64</code></td>
+<td><code>1e-6</code></td>
+<td>one draw per <code>s</code>, <code>np.random.default_rng(15)</code>, gates on <code>(0.15, 0.85)</code></td>
+<td>cpu</td>
+<td><code>drop_key_bias 0.97494590151405114</code>, <code>drop_value_rescale 0.9165274652308163</code>, <code>drop_bos_sink 1</code>, <code>half_key_bias 0.48449311856985267</code> — four for four</td>
+<td><code>RUN results/v15_r1.jsonl t="bind"</code>; <code>READ V15_ARM_PL.md:183-200</code></td>
+</tr>
+<tr>
+<td>label bind, <code>arm_phase</code> (complex chain)</td>
+<td><code>9.155133597044475e-16</code> at <code>s=8</code>; <code>5.2510145522368515e-15</code> at <code>s=64</code>; <strong><code>nan</code> on BED-M's band</strong> (<code>|a|=1</code> ⇒ <code>log(1−1) = −inf</code>)</td>
+<td><code>1e-6</code></td>
+<td>one draw per <code>s</code></td>
+<td>cpu &amp; cuda bitwise-identical</td>
+<td>the band failure is the planted negative and is not adjusted away</td>
+<td><code>READ V15_ARM_PHASE.md:36</code>; <code>READ workdonenewseal.md:97-98</code></td>
+</tr>
+<tr>
+<td>softmax corner, <code>arm_smprime</code> (<code>β=1, g≡0, QK-on</code>)</td>
+<td><strong>bitwise</strong> against <code>#5a</code>'s own <code>softmaxAttn</code>; <code>1.110223e-16</code> on 19/64 entries against <code>ceq/lm.py::Attention("softmax_x")</code> (fused kernel subtracts the row max; not a tolerance, a named mechanism)</td>
+<td>bitwise</td>
+<td><code>q,k ~ N(0,1)</code> at <code>[8,4]</code>, seed 3, float64</td>
+<td>cpu</td>
+<td>wrong switch: <code>β=0</code> at the softmax corner <code>max|gap| &gt; 0.5</code>; gate left on at <code>β=1</code> <code>&gt; 0.1</code></td>
+<td><code>READ V16_ARM_SMPRIME.md:27,266-293,336-339</code></td>
+</tr>
+<tr>
+<td>row sums at the softmax corner</td>
+<td><code>Σ_j Re W_ij = 2.220446e-16</code> from 1 at <code>β=1</code>, every row; at <code>β=0</code> rows read <code>1.312192 … 10.293107</code></td>
+<td>exact</td>
+<td>8 rows</td>
+<td>cpu</td>
+<td>the earlier statistic <code>Σ_j |W_ij| = 1.000000</code> was <strong>struck</strong> — it equals <code>Z_i^{1−β}</code> and is blind to <code>g</code> (read <code>4.440892e-16</code> with <code>g</code> fully on in a configuration whose real row sum is off by <code>1.750255</code>)</td>
+<td><code>READ README.md:261-275</code> (§4.7); <code>READ V16_ARM_SMPRIME.md:29</code></td>
+</tr>
+<tr>
+<td>standard-attention identity, <code>arm_phase</code> (<code>m=1, θ=0, s=0</code>)</td>
+<td><code>torch.equal(op.real, lm softmax_x) = True</code>; <code>op.imag</code> exactly 0; complex-gemm read-out <strong>not</strong> bitwise: <code>1.1102230246251565e-16</code></td>
+<td>bitwise</td>
+<td>one probe</td>
+<td>cpu</td>
+<td>the read-out gap is named, not rounded</td>
+<td><code>READ V15_ARM_PHASE.md:35,241-243</code></td>
+</tr>
+<tr>
+<td><code>|a| ≤ 1</code> by construction, <code>arm_phase</code></td>
+<td>worst <code>|a| = 1.0</code> exactly (the repr), <code>count(|a|&gt;1) = 0</code></td>
+<td>exact</td>
+<td>2,200,000 draws (200,000 log-uniform <code>|u|</code> on <code>[3.78e-11, 2.65e10]</code>, 2,000,000 pinned at <code>m=1</code>); also at <code>u=±inf</code>, <code>±1e308</code>, and R1's own eight <code>â_max</code> including <code>285.0719</code></td>
+<td>cpu</td>
+<td>none needed — an upper endpoint attained is the demonstration</td>
+<td><code>READ V15_ARM_PHASE.md:32</code></td>
+</tr>
+<tr>
+<td>band modulus <code>|Π e^{iθ}|</code></td>
+<td><code>1.000000000000</code>; <code>9767/10⁴</code> prefixes exactly <code>1.0</code>, <code>233</code> one ulp low, <code>0</code> above</td>
+<td>exact</td>
+<td><code>1e4</code> phases, <code>s=64</code></td>
+<td>cpu (cuda reads <code>7713</code> exactly-one — a summation-order split)</td>
+<td>independent cumulative-product route <code>0.9999999999999843</code></td>
+<td><code>READ V15_ARM_PHASE.md:33,169-172</code>; <code>READ V16_ARM_SMPRIME.md:315</code></td>
+</tr>
+<tr>
+<td>parity mask = <code>Z₂</code> winding</td>
+<td><code>torch.equal</code>, <code>0/4096</code> disagreements with <code>V15.lean::parity_sign</code>; integrality residual <code>2.131628e-14</code></td>
+<td>exact</td>
+<td><code>θ ∈ {0,π}</code>, <code>s=64</code></td>
+<td>cpu</td>
+<td>continuous route <code>exp(i(Φ_i−Φ_j))</code> agrees only to <code>6.762526e-14</code> — reported beside</td>
+<td><code>READ V15_ARM_PHASE.md:34,203</code></td>
+</tr>
+<tr>
+<td>DAG resolvent vs brute-force path sums</td>
+<td>light gates <code>(0.05,0.45)</code>, <code>p=0.6</code>: <code>2.7755575615628914e-17</code> abs (19 edges); heavy gates <code>(0.30,0.90)</code>, <code>p=1.0</code>: <code>3.5527136788005009e-15</code> abs, <code>2.1572667249528595e-16</code> relative, entries to <code>16.468587948382389</code> (36 edges)</td>
+<td><code>1.1e-16</code> inherited, re-measured</td>
+<td>one draw per regime</td>
+<td>cpu</td>
+<td>the two routes share no code — dense LU vs enumeration of increasing vertex sequences (V-3 guard)</td>
+<td><code>READ V15_ARM_PL.md:153-177</code></td>
+</tr>
+<tr>
+<td>path-product corner, cpu vs cuda</td>
+<td>cpu <code>0/64</code> entries moved; cuda <code>11/64</code> moved by <code>≤ 5.551115e-17</code> (<code>cumprod</code> is a parallel scan on cuda); <strong>zeros identical on both devices</strong></td>
+<td>bitwise (cpu), reported (cuda)</td>
+<td><code>[8,4]</code> probe</td>
+<td>both</td>
+<td>on BED-M's own support <code>{−1,0,+1}</code> the association order does not matter: <code>0/289</code> entries move, <code>max|gap| = 0.000000e+00</code></td>
+<td><code>READ V16_ARM_SMPRIME.md:308-329</code></td>
+</tr>
+<tr>
+<td>corners distinct (<code>corners_are_distinct</code> in float64)</td>
+<td><code>|c₁−c₂| = 4.472918</code>, <code>|c₁−c₃| = 1.144938</code>, <code>|c₂−c₃| = 5.335671</code></td>
+<td><code>&gt; 0</code></td>
+<td>one probe</td>
+<td>cpu</td>
+<td>a containment whose corners coincide is decoration</td>
+<td><code>READ V16_ARM_SMPRIME.md:331-334</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>What the binds do not claim.</strong> The two-branch form <code>softmax(q)@V₁ + λ·X@V₂</code> passes
+parity bitwise for the honest gate, for Gaussian noise, and for the label itself — an
+empty rejection region, filed V-24 (<code>READ workdonenewseal.md:124-126</code>). The parity row
+must read "the modification enters only through the key logit, additively, and vanishes
+at zero", never "bitwise standard attention" unqualified (<code>READ workdonenew.md:137-146</code>).</p>
+<hr />
+<h2 id="m2-the-deciding-measurement-r1-and-its-re-take-on-the-certified-device">M.2 The deciding measurement R1, and its re-take on the certified device<a class="headerlink" href="#m2-the-deciding-measurement-r1-and-its-re-take-on-the-certified-device" title="Permanent link">#</a></h2>
+<p>Design mechanism: <strong>M-10</strong> thread-count floor (a cell's identity includes its thread
+count, <code>READ workdonenew.md:363-366</code>), <strong>M-16</strong> thread lane, <strong>V-26</strong> (a marginal standing
+in for a joint claim — the bimodal split is reported, not the mean alone), <strong>P-3</strong> (the CPU
+journal is superseded by an append-only marker, never edited).</p>
+<h3 id="m21-r1-as-taken-cpu-resultsv15_r1jsonl">M.2.1 R1 as taken (CPU) — <code>results/v15_r1.jsonl</code><a class="headerlink" href="#m21-r1-as-taken-cpu-resultsv15_r1jsonl" title="Permanent link">#</a></h3>
+<p>BED-M, <code>task=e3_t2</code>, <code>t*=2</code>, <code>s=64</code>, <code>d=24</code>, <code>d_model=16</code>, <code>n_train=2048</code>, <code>n_eval=4096</code>,
+<code>steps=150</code>, <code>threads=8</code>, N=8 seeds per arm, device <code>cpu</code>; the CPU file keeps its 25
+original lines plus one appended <code>t="supersede"</code> marker (26 lines, <code>RUN</code>; md5 of the first
+25 lines <code>3559fd5f24ba0dfb67ac176c4584f58e</code>, <code>READ V17_R4_RETAKE.md:324-326</code>).</p>
+<table>
+<thead>
+<tr>
+<th>quantity</th>
+<th>value</th>
+<th>source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>floor₁ = √((t*−1)/t*)</code></td>
+<td><code>0.7071067811865476</code> (a value no line of <code>scripts/v15_r1.py</code> contains; identity at <code>:17</code>, computed at <code>:586</code>)</td>
+<td><code>READ V20_R15_THEORY_TABLE.md:71-72</code></td>
+</tr>
+<tr>
+<td><code>arm_pl</code> per seed, <code>eval_nrmse</code></td>
+<td>0: <code>0.645614</code>, 1: <code>0.644454</code>, 2: <code>1.152430</code>, 3: <code>1.113403</code>, 4: <code>0.634002</code>, 5: <code>0.641881</code>, 6: <code>0.662021</code>, 7: <code>1.139404</code></td>
+<td><code>RUN results/v15_r1.jsonl</code></td>
+</tr>
+<tr>
+<td><code>arm_pl</code> aggregate</td>
+<td>mean <code>0.829151</code>, sd <code>0.253673</code>, 95 % CI <code>[0.617075, 1.041227]</code>, <code>ĥ = 0.625017</code>, <code>crosses = False</code>, achieved power <code>0.232077</code>, <code>â_max = 285.0719</code></td>
+<td><code>RUN</code> (<code>t="agg"</code>)</td>
+</tr>
+<tr>
+<td><code>softmax</code> per seed</td>
+<td>0: <code>0.971432</code>, 1: <code>0.933802</code>, 2: <code>0.945523</code>, 3: <code>0.951174</code>, 4: <code>0.960759</code>, 5: <code>0.945679</code>, 6: <code>0.960282</code>, 7: <code>0.945482</code></td>
+<td><code>RUN</code></td>
+</tr>
+<tr>
+<td><code>softmax</code> aggregate</td>
+<td>mean <code>0.951767</code>, sd <code>0.011824</code>, CI <code>[0.941881, 0.961652]</code>, <code>ĥ = 0.188</code></td>
+<td><code>RUN</code></td>
+</tr>
+<tr>
+<td><strong>bimodal split</strong></td>
+<td>crossed 5/8 (<code>0.634002 … 0.662021</code>, <code>ĥ 1.1235 … 1.1961</code>, gate-<code>R²</code> <code>0.97 … 0.99</code>, <code>â_max 1.10 … 1.51</code>); NO READING 3/8 (<code>1.113403 / 1.139404 / 1.152430</code>, gate-<code>R²</code> <code>0.011 / 0.627 / 0.047</code>, <code>â_max 20.31 / 49.66 / 285.07</code>); <strong>nothing between <code>0.663</code> and <code>1.113</code></strong> — the reported mean is a value no seed produced</td>
+<td><code>READ V15_R1.md:177-188</code>; <code>READ README.md:166-173</code></td>
+</tr>
+<tr>
+<td>paired contrast (PL − softmax)</td>
+<td>mean <code>−0.122616</code>, sd <code>0.257560</code>, resolution <code>Δ = t(.975,7)·sd/√8 = 0.215326</code> — "excludes a difference beyond Δ and nothing smaller"</td>
+<td><code>RUN</code> (<code>t="contrast"</code>)</td>
+</tr>
+<tr>
+<td>the improvement against the noise floors</td>
+<td><code>0.122616 / 2.345e-3 = 52.3×</code> the thread-count floor; <code>0.122616 / 0.005051 = 24.3×</code> the equivalence margin <code>Δ_eq = 0.5σ_seed</code></td>
+<td><code>DERIVED</code> from <code>RUN</code> and <code>READ workdonenew.md:391</code></td>
+</tr>
+<tr>
+<td><code>sign(a)</code> probe</td>
+<td>trained <code>0.917953</code> vs zero-step <code>0.943741</code> — <strong>negative</strong> trained gain; gate-<code>R²</code> <code>0.699299</code> trained vs <code>0.371839</code> zero-step; <code>loga_sst = 0.0</code></td>
+<td><code>RUN</code> (<code>t="probe"</code>)</td>
+</tr>
+<tr>
+<td>bar at this cell</td>
+<td><code>BAR CALIBRATED</code>: <code>predict_the_mean 1.0</code>, <code>payload_only 1.2272241529888959</code>, <code>oracle 0.0</code>, <code>flipper_dependence 1.4012436552018552</code>, <code>trained_two_feature 0.013981593578261986</code></td>
+<td><code>RUN</code> (<code>t="bar"</code>)</td>
+</tr>
+<tr>
+<td>wall clock</td>
+<td><code>1358.3225734233856 s</code> total for 16 cells; <code>arm_pl 91.633625 s</code>/150 steps; softmax <code>71.32 s</code></td>
+<td><code>RUN</code> (<code>t="wall"</code>); <code>READ V15_R1.md:482-484</code></td>
+</tr>
+<tr>
+<td>seed-0 softmax reproduces the journal</td>
+<td><code>0.971432426855954</code> at <code>threads=8</code>, all fifteen digits, against <code>MISTAKES.md</code> M-10's recorded value</td>
+<td><code>READ V15_R1.md:193-198</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Verdict as recorded:</strong> NOT CROSSED; the CI straddles <code>floor₁</code>; <code>C-CAP</code> not earned
+(<code>READ workdonenewseal.md:136-154</code>). Two campaign firsts inside the negative verdict:
+<code>ĥ = 0.625</code> against the nine-cell ceiling <code>0.389</code>, and five seeds below a floor no prior
+arm had crossed at any cell (<code>READ workdonenew.md:220-233</code> for the nine-cell census).</p>
+<h3 id="m22-the-re-take-on-the-certified-rtx-4060-resultsv17k_r4_retakejsonl">M.2.2 The re-take on the certified RTX 4060 — <code>results/v17k_r4_retake.jsonl</code><a class="headerlink" href="#m22-the-re-take-on-the-certified-rtx-4060-resultsv17k_r4_retakejsonl" title="Permanent link">#</a></h3>
+<p>24 cells, one invocation, <code>device="cuda"</code>, <code>threads=8</code>, <code>steps=150</code>, instrument hash
+<code>5d41a63d57671725384b33249693d884ec17d0dcca11be7b3e58d6619bb9a309</code> on all 24,
+<code>deterministic_algorithms: True</code>, <code>deterministic_warn_only: True</code>,
+<code>CUBLAS_WORKSPACE_CONFIG=":4096:8"</code> (<code>RUN</code>, header record; <code>READ V17_R4_RETAKE.md:14-16</code>).</p>
+<table>
+<thead>
+<tr>
+<th>arm</th>
+<th>N</th>
+<th>mean</th>
+<th>sd</th>
+<th>CI95</th>
+<th><code>ĥ</code></th>
+<th>below <code>floor₁</code></th>
+<th><code>crosses</code></th>
+<th>source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>arm_pl</code></td>
+<td>8</td>
+<td><code>0.830200</code></td>
+<td><code>0.255414</code></td>
+<td><code>[0.616669, 1.043731]</code></td>
+<td><code>0.621535</code></td>
+<td>5/8 (seeds 0,1,4,5,6)</td>
+<td><code>False</code></td>
+<td><code>RUN</code></td>
+</tr>
+<tr>
+<td><code>arm_smprime</code> (R1′, first-ever readings, no CPU counterpart)</td>
+<td>8</td>
+<td><code>0.822193</code></td>
+<td><code>0.250321</code></td>
+<td><code>[0.612920, 1.031467]</code></td>
+<td><code>0.647997</code></td>
+<td><strong>1/8</strong> (seed 2 at <code>0.20391993939877656</code>)</td>
+<td><code>False</code></td>
+<td><code>RUN</code>; <code>READ V17_R4_RETAKE.md:113-120</code></td>
+</tr>
+<tr>
+<td><code>softmax</code></td>
+<td>8</td>
+<td><code>0.952561</code></td>
+<td><code>0.011452</code></td>
+<td><code>[0.942987, 0.962135]</code></td>
+<td><code>0.185256</code></td>
+<td>0/8</td>
+<td><code>False</code></td>
+<td><code>RUN</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>quantity</th>
+<th>value</th>
+<th>control</th>
+<th>source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>paired contrast <code>arm_pl − softmax</code> (cuda)</td>
+<td><code>−0.122360</code>, sd <code>0.260159</code>, <code>Δ = 0.217498</code></td>
+<td>CPU <code>−0.122616</code>, <code>Δ = 0.215326</code>; move <code>+2.56e-04</code>, <code>+1.0 %</code></td>
+<td><code>RUN</code>; <code>READ V17_R4_RETAKE.md:200-207</code></td>
+</tr>
+<tr>
+<td>paired contrast <code>arm_smprime − softmax</code></td>
+<td><code>−0.130367</code>, sd <code>0.247507</code>, <code>Δ = 0.206921</code></td>
+<td>none (no CPU record exists)</td>
+<td><code>RUN</code></td>
+</tr>
+<tr>
+<td>verdicts moved across the device</td>
+<td><strong>zero</strong> sign flips in 16 paired cells; seeds 0/1/4/5/6 stay below, 2/3/7 stay above, all 8 softmax stay above</td>
+<td>per-cell <code>dist_to_floor</code> sign</td>
+<td><code>READ V17_R4_RETAKE.md:194-196</code></td>
+</tr>
+<tr>
+<td>worst CPU↔CUDA delta</td>
+<td><code>9.522e-03</code> at <code>arm_pl</code> seed 7 (<code>1.139404 → 1.148927</code>); <code>4.06×</code> the thread floor <code>2.345e-03</code>; <code>4.42 %</code> of the resolution statement; <code>2.20 %</code> of the tightest crossing margin</td>
+<td>two other non-learning seeds read <code>1.505e-04</code> (seed 2) and <code>6.329e-05</code> (seed 3) — "did not learn" is not the mechanism</td>
+<td><code>READ V17_R4_RETAKE.md:129-165,187-192</code></td>
+</tr>
+<tr>
+<td>what moved on seed 7</td>
+<td><code>a_hat_max 285.0719 → 116.0061</code> (<code>2.5×</code>), <code>sign_acc</code> bitwise identical (<code>0.6905517578125</code>), <code>gate_r2</code> moves <code>1.5e-04</code>, <code>v_max</code> bitwise</td>
+<td>the device changes how far an unbounded quantity ran, not what the seed does</td>
+<td><code>READ V17_R4_RETAKE.md:167-172</code></td>
+</tr>
+<tr>
+<td>identical-seed floor <code>δ_nrmse</code></td>
+<td><code>0.0</code>, bitwise, 6 of 6 pairs (seeds 0,1 × three arms), <code>results/v17k_r4_floor.jsonl</code>, <code>44.7 s</code></td>
+<td>seed-to-seed spread <code>0.2554 / 0.2503 / 0.0115</code> is <code>≥ 10⁴×</code> larger and is a property of the task, not the instrument</td>
+<td><code>RUN results/v17k_r4_floor.jsonl</code> (six values equal to 16 digits); <code>READ V17_R4_RETAKE.md:259-286</code></td>
+</tr>
+<tr>
+<td><code>warn_only</code> flag</td>
+<td>changed no value: 6/6 flag-OFF cells (<code>results/r4_price_probe.json</code>) reproduce flag-ON bitwise</td>
+<td><code>==</code> on the float, not <code>allclose</code></td>
+<td><code>READ V17_R4_RETAKE.md:225-238</code></td>
+</tr>
+<tr>
+<td>cost</td>
+<td><code>2.79 GPU-min</code> measured against <code>2.65</code> projected (+5.3 %); the ruling's <code>~2 GPU-h</code> was a <code>43×</code> over-book; peak <code>0.9739 GiB</code> = <code>12.2 %</code> of <code>7.996 GiB</code>; process wall <code>170.99 s</code>; CPU run this supersedes <code>1358.3 s</code> for 16 cells</td>
+<td><code>arm_smprime 16.161 s</code>/150 steps, <code>arm_pl 1.780</code>, <code>softmax 1.681</code> (means of 8)</td>
+<td><code>RUN</code> (<code>t="wall"</code>: <code>167.171 s</code>, <code>0.97388 GiB</code>); <code>READ V17_R4_RETAKE.md:292-313</code></td>
+</tr>
+<tr>
+<td>field coverage</td>
+<td>CPU cell records carry 42 fields, CUDA 60; the 18 gate columns (<code>lambda_hat</code>, <code>unit_root</code>, <code>z_winding_*</code>, <code>frac_gate_annihilated</code>, <code>_0step</code> controls) and <code>instrument_hash</code> cannot be diffed across the device move</td>
+<td><code>RUN</code> (60 keys in the cuda cell record)</td>
+<td><code>READ V17_R4_RETAKE.md:174-179</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="m23-the-round-15-extension-sixteen-arm_pl-cells-and-the-paired-contrast">M.2.3 The round-15 extension: sixteen <code>arm_pl</code> cells and the paired contrast<a class="headerlink" href="#m23-the-round-15-extension-sixteen-arm_pl-cells-and-the-paired-contrast" title="Permanent link">#</a></h3>
+<table>
+<thead>
+<tr>
+<th>claim as filed</th>
+<th>overturned / corrected figure</th>
+<th>source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>"no arm crosses BED-M's <code>floor₁</code>" (it.1)</td>
+<td><strong>6 of 24 cells cross</strong> at it.2; the it.1 citations were about other quantities</td>
+<td><code>READ V20_R15_JOURNAL.md:37</code> (C1)</td>
+</tr>
+<tr>
+<td>"12 of 16" as the crossing headline (it.8)</td>
+<td>the it.8 file's own <code>t="agg"</code> says <code>crosses: false</code>; pooled sd <code>0.2125</code> vs eight-cell <code>0.0203</code> — <code>10.5×</code>, all of it seed 9; the flip <code>n=9 → False</code>, <code>n=8 ex-seed-9 → True</code> is draw-invariant; the headline turns on an exclusion nobody has ruled</td>
+<td><code>READ V20_R15_JOURNAL.md:49</code> (C13)</td>
+</tr>
+<tr>
+<td>"7 of 8 fresh vs <code>softmax</code> 0/8, <code>p = 6.730e-04</code>"</td>
+<td><strong>unpaired</strong> — softmax had never run past seed 7; the honest paired figure on the banked record is <code>5/8 vs 0/8, p = 0.012821</code> (a factor of 19); repaired by measurement at it.10: <strong>8 of 9 <code>arm_pl</code> vs 0 of 9 <code>softmax</code>, paired, three draws</strong>; gap between worst crossing <code>arm_pl</code> (<code>0.686874</code>) and best fresh <code>softmax</code> (<code>0.922856</code>) is <code>0.2360</code> with <code>floor₁</code> inside it; two fresh softmax cells read above <code>1.0</code></td>
+<td><code>READ V20_R15_JOURNAL.md:50</code> (C14); <code>READ V20_R15_JOURNAL.md:1854-1873</code></td>
+</tr>
+<tr>
+<td>the sixteen <code>arm_pl</code> cells, deduplicated on <code>(kind, seed)</code> across <code>results/v17k_r4_retake.jsonl</code>, <code>results/v20_r15_it6_seeds8_15.jsonl</code>, <code>results/v20_r15_it8_armpl_b.jsonl</code></td>
+<td>16 unique <code>arm_pl</code>: mean <code>0.778403</code>, sd <code>0.238706</code>, <strong>12 of 16 below <code>floor₁</code></strong> (seeds 0,1,4,5,6,8,10,11,12,13,14,15; range <code>0.624869 … 0.680579</code>); the pooled verdict is <code>crosses: false</code> because four divergent cells drag the mean to <code>0.7784</code> before variance is considered</td>
+<td><code>RUN</code> (this session, 43 rows → 40 unique); <code>READ V20_R15_THEORY_TABLE.md:205-207</code></td>
+</tr>
+<tr>
+<td><code>arm_smprime</code> seed 2</td>
+<td>crosses on all three eval draws: <code>0.203920 / 0.208055 / 0.216517</code>; worst reading <code>0.490590</code> below the floor; the only <code>arm_smprime</code> cell with <code>frac_gate_annihilated = 0.000000</code> and the only one that crosses; the other fifteen fail on all three draws (closest seed 8, <code>0.144954</code> above)</td>
+<td><code>READ V20_R15_JOURNAL.md:2113-2130</code></td>
+</tr>
+<tr>
+<td>every GPU-second and cost ratio quoted from it.3 onward (<code>0.3455 GPU-h</code>, <code>10.17×</code>, <code>41.9×</code>, the EXIT A table)</td>
+<td><strong>struck</strong>: <code>scripts/v15_r1.py</code> has no <code>torch.cuda.synchronize()</code>; <code>secs</code> is un-synchronised host wall clock whose strongest correlate is run order (<code>ρ = +0.7029, p = 0.0024</code>) above the gate correlation (<code>+0.5197</code>)</td>
+<td><code>READ V20_R15_JOURNAL.md:53</code> (C17); <code>READ V20_R15_THEORY_TABLE.md:99-102</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Caveat carried in the cell:</strong> the eight new <code>arm_pl</code> cells (seeds 8–15) are uncontrolled
+at the it.8 stage — softmax existed only for seeds 0–7 until the it.10 paired run
+(<code>READ V20_R15_THEORY_TABLE.md:175,207</code>). The capped run at seeds 2, 3, 7 (<code>~6 GPU-s</code>)
+that would settle Q3/W3 causality was priced three times and taken zero times
+(<code>READ V20_R15_THEORY_TABLE.md:176</code>).</p>
+<hr />
+<h2 id="m3-the-three-corners-measured-distinct">M.3 The three corners, measured distinct<a class="headerlink" href="#m3-the-three-corners-measured-distinct" title="Permanent link">#</a></h2>
+<p>Design mechanism: <strong>V-2</strong> (a hand-built example where right and wrong coincide) and the
+in-file refusal <code>corners_are_distinct</code> — a containment whose corners coincide is decoration
+(<code>READ workdonenewseal.md:81</code>).</p>
+<table>
+<thead>
+<tr>
+<th>corner</th>
+<th>setting on <code>arm_smprime</code></th>
+<th>reference written from the theorem</th>
+<th>result</th>
+<th>source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>c₁ softmax</td>
+<td><code>β=1, g≡0, QK-on</code></td>
+<td><code>exp(w_ij) / Σ_{j'≤i} exp(w_ij')</code></td>
+<td>bitwise, <code>imag ≡ 0</code> bitwise</td>
+<td><code>READ V16_ARM_SMPRIME.md:268</code></td>
+</tr>
+<tr>
+<td>c₂ linear attention</td>
+<td><code>β=0, g≡0, QK-on</code></td>
+<td><code>exp(w_ij)</code> (no normalizer)</td>
+<td>bitwise, <code>imag ≡ 0</code> bitwise</td>
+<td><code>READ V16_ARM_SMPRIME.md:269</code></td>
+</tr>
+<tr>
+<td>c₃ path product</td>
+<td><code>β=0, QK-off</code></td>
+<td>explicit double loop, stated order (<code>k = i</code> down to <code>j+1</code>)</td>
+<td>bitwise on cpu; cuda <code>11/64</code> at <code>≤ 5.551115e-17</code>, zeros identical</td>
+<td><code>READ V16_ARM_SMPRIME.md:270,308-317</code></td>
+</tr>
+<tr>
+<td>pairwise distances (float64)</td>
+<td>—</td>
+<td>—</td>
+<td><code>|c₁−c₂| = 4.472918</code>, <code>|c₁−c₃| = 1.144938</code>, <code>|c₂−c₃| = 5.335671</code></td>
+<td><code>READ V16_ARM_SMPRIME.md:333</code></td>
+</tr>
+<tr>
+<td>switch effect sizes</td>
+<td><code>g</code>: <code>max|g=1 − g=0| = 0.673101</code>; <code>QK</code>: <code>max|qk=1 − qk=0| = 3.522037</code>; all three (<code>β, g, QK</code>) are <code>nn.Parameter</code>s on the shipped module</td>
+<td>—</td>
+<td>—</td>
+<td><code>READ V16_ARM_SMPRIME.md:29</code></td>
+</tr>
+<tr>
+<td>the <code>g ≡ 0</code> corner of the <em>original</em> v15 operator</td>
+<td>row <code>i</code> sums to <code>i+1</code>, never <code>1</code>; smallest witness <code>i=1</code>, row <code>(1,1)</code>, sum <code>2</code>; normalized it is uniform <code>1/(i+1)</code>, which is attention only with constant QK logits — so <code>g ≡ 0</code> lands on <strong>linear</strong> attention, not softmax</td>
+<td>Lean <code>gate_zero_row_sum</code>, <code>gate_zero_not_stochastic</code> (<code>lean/CEQ/V15.lean:221</code>)</td>
+<td>refuted three ways</td>
+<td><code>READ workdonenew.md:54-74</code>; <code>READ README.md:198-201</code></td>
+</tr>
+<tr>
+<td>round-15 separation at trained settings</td>
+<td>the "<code>≥ 0.30</code> on every pair" claim was withdrawn: the gate was drawn from W3's range and clamped, <code>99.109 %</code> at exactly <code>1.0</code>; re-drawn per cell <code>s=8</code> W1/W2 reads <code>2.623589e-01</code>; weakest reading still <code>2.6e11×</code> the tolerance, so <code>N ≥ 2</code> distinct primitives stands</td>
+<td>—</td>
+<td>corrected</td>
+<td><code>READ V20_R15_JOURNAL.md:55</code> (C19)</td>
+</tr>
+</tbody>
+</table>
+<p>The corners are theorems (<code>V16Domain.three_corners_containment</code>, <code>corners_are_distinct</code>,
+<code>gate_zero_beta_zero_is_linear_attention</code>, <code>READ workdonenewseal.md:63-64</code>); the rows above
+are their measured instances.</p>
+<hr />
+<h2 id="m4-the-device-certificate-rtx-4060-laptop-sm_89">M.4 The device certificate — RTX 4060 Laptop, sm_89<a class="headerlink" href="#m4-the-device-certificate-rtx-4060-laptop-sm_89" title="Permanent link">#</a></h2>
+<p>Design mechanism: <strong>M-8</strong> (pricing every arm at one arm's rate), <strong>V-22</strong> (a constant
+certified under conditions the reading does not reproduce — the flag regime is journalled
+on the header), <strong>P-8</strong> (an upper bound stated as a price — the R² gate refuses points that
+paged over PCIe).</p>
+<p>Box: <code>NVIDIA GeForce RTX 4060 Laptop GPU</code>, capability <code>8.9</code>, <code>8,585,216,000 B</code> total
+(<code>7.996 GiB</code>), <code>torch 2.5.1+cu121</code>, Python <code>3.11.9</code>, <code>Windows-10-10.0.26200</code>,
+<code>set_num_threads(8)</code>, <code>allow_tf32</code> matmul <code>False</code> / cudnn <code>True</code>,
+<code>CUBLAS_WORKSPACE_CONFIG=:4096:8</code>, run of record <code>2026-08-31 22:26:39</code>, git HEAD
+<code>ab5b48547884e04258276e6e808d5a71ea65f917</code> (<code>RUN results/k_cert_local.json</code>;
+<code>READ COSTS.md:55-63</code>).</p>
+<h3 id="m41-throughput-laws-forward-backward-adamstep-s64-d_model16">M.4.1 Throughput laws (forward + backward + <code>Adam.step</code>, <code>s=64</code>, <code>d_model=16</code>)<a class="headerlink" href="#m41-throughput-laws-forward-backward-adamstep-s64-d_model16" title="Permanent link">#</a></h3>
+<table>
+<thead>
+<tr>
+<th>arm</th>
+<th>law</th>
+<th>R²</th>
+<th>fitted over</th>
+<th>statistic</th>
+<th>source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>softmax</code></td>
+<td><code>s/step = exp(−12.18515596) · n^0.99625107</code></td>
+<td><code>0.9999975</code></td>
+<td><code>n ∈ {2048, 4096, 8192, 16384, 32768}</code> (5 points; <code>y = 0.010142 … 0.160665 s</code>)</td>
+<td>median over 3 child processes of the median of ≥12 timed steps and ≥3.0 s of work, 2 warm-ups discarded</td>
+<td><code>RUN results/k_cert_local.json /throughput/laws/softmax</code></td>
+</tr>
+<tr>
+<td><code>arm_smprime</code></td>
+<td><code>s/step = exp(−10.01874582) · n^1.00258069</code></td>
+<td><code>0.99999987</code></td>
+<td><code>n ∈ {2048, 4096, 8192}</code> (3 points; <code>y = 0.093052 / 0.186518 / 0.373543 s</code>)</td>
+<td>same</td>
+<td><code>RUN /throughput/laws/arm_smprime</code></td>
+</tr>
+<tr>
+<td>why three points</td>
+<td>at <code>n = 16384</code> and <code>32768</code> the caching allocator reserves <code>10.578</code> and <code>13.969 GiB</code> from a <code>7.996 GiB</code> card and pages over PCIe; admitting them bends the exponent to <code>1.2341</code> at R² <code>0.976933</code> — "a throughput law fitted through swap is not a throughput law"</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td><code>READ COSTS.md:76-79</code>; <code>READ README.md:297-300</code></td>
+</tr>
+<tr>
+<td>the earlier CUDA law (V16 device round, <code>arm_phase</code>-era)</td>
+<td><code>s/step = exp(−11.9670) · n^0.9734</code>, R² <code>0.999384</code>; 40-iteration plan <code>68.35 GPU-h</code> at the 9,600-step ladder, <code>1.07 GPU-h</code> at the 150-step floor, against <code>815.88 / 12.75 CPU-h</code>; the decision <code>11.94×</code> at the point estimate, <code>29.0×</code> at the pessimistic end (CPU spread <code>2.55×</code>, CUDA <code>1.05×</code>); the contract's cited <code>13.6×</code> is the optimistic reading</td>
+<td><code>READ V16_DEVICE_CERT.md:474,804-806,856-864</code>; <code>READ workdonenewseal.md:277-282</code></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>arm cost ratio at one length (<code>s=64</code> only, so <strong>not a cost law</strong>)</td>
+<td><code>arm_pl / softmax = 1.0589×</code>, range <code>0.987×–1.154×</code>; <code>arm_smprime ≈ 9.6×</code> softmax at 150 steps (<code>16.161 / 1.681</code>)</td>
+<td><code>READ V20_R15_THEORY_TABLE.md:189-190</code>; <code>DERIVED</code> from <code>READ V17_R4_RETAKE.md:299-301</code></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="m42-memory-model">M.4.2 Memory model<a class="headerlink" href="#m42-memory-model" title="Permanent link">#</a></h3>
+<table>
+<thead>
+<tr>
+<th>constant</th>
+<th><code>ceq/sizing.py</code></th>
+<th>re-solved on the card</th>
+<th>R²</th>
+<th>verdict</th>
+<th>source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>C_RESIDUAL</code> (fp32)</td>
+<td>18</td>
+<td><code>17.874</code></td>
+<td><code>0.996373</code></td>
+<td>CONFIRMED, −0.7 %</td>
+<td><code>RUN /memory/law/c_residual_at_4B</code>; <code>READ COSTS.md:89</code></td>
+</tr>
+<tr>
+<td><code>C_OPERATOR</code> (fp32)</td>
+<td>3.9</td>
+<td><code>3.823</code></td>
+<td><code>0.996373</code></td>
+<td>CONFIRMED, −2.0 %</td>
+<td><code>RUN /memory/law/c_operator_at_4B</code></td>
+</tr>
+<tr>
+<td>bf16-autocast operator B/element</td>
+<td>3.4</td>
+<td><code>3.341</code></td>
+<td><code>0.999830</code></td>
+<td>CONFIRMED, −1.7 %</td>
+<td><code>RUN /memory/law_bf16_autocast/c_operator_at_module_count</code></td>
+</tr>
+<tr>
+<td>bf16-autocast residual B/element</td>
+<td>2.2</td>
+<td><code>2.383</code></td>
+<td><code>0.999830</code></td>
+<td><strong>WRONG, +8.3 %, optimistic</strong> (under-predicts); at the Q3 chunk shape <code>2.715</code> vs <code>2.738 GiB</code> (+0.85 %), <code>max_batch</code> 45 either way — no decision moves</td>
+<td><code>RUN /memory/law_bf16_autocast/c_residual_at_module_count</code>; <code>READ COSTS.md:92-100</code></td>
+</tr>
+<tr>
+<td><code>measured/predicted</code>, real-valued arms</td>
+<td><code>0.950</code> for softmax and <code>arm_pl</code> across a 16× span in <code>n</code></td>
+<td>—</td>
+<td>holds</td>
+<td><code>READ V16_DEVICE_CERT.md:279-286</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>measured/predicted</code>, complex arm (<code>arm_phase</code>)</td>
+<td><code>1.842</code> — the module under-predicts; <code>C_OPERATOR = 7.50</code> at 8 B/element, <code>4.29×</code> softmax's, not the <code>2×</code> a complex-is-two-floats argument gives; <code>C_RESIDUAL</code> NOT IDENTIFIED at <code>s=64</code></td>
+<td>—</td>
+<td>breaks where it is new</td>
+<td><code>READ V16_DEVICE_CERT.md:281,318-334</code></td>
+<td></td>
+</tr>
+<tr>
+<td>residency, <code>arm_smprime</code></td>
+<td><code>n=2048</code>: alloc <code>0.814</code>, reserved <code>0.988 GiB</code>; <code>4096</code>: <code>1.597 / 1.908</code>; <code>8192</code>: <code>3.163 / 3.777</code>; <code>16384</code>: <code>6.296 / 7.504</code> (<code>10.578</code> under a training loop — NOT resident); <code>32768</code>: <code>12.559 / 13.951</code> — NOT resident; operator <code>complex64</code> at 8 B</td>
+<td>—</td>
+<td>—</td>
+<td><code>RUN /memory/cells</code> (peak bytes <code>874,290,688 … 13,484,888,576</code>); <code>READ COSTS.md:109-116</code></td>
+<td></td>
+</tr>
+<tr>
+<td>the R2 cell at <code>n = 32768</code> for the phase arm</td>
+<td><code>7.893 GiB</code> against <code>6.939 GiB</code> free — REFUSED, not attempted; does not fit on CPU either; cap <code>22,106</code> at 20 % headroom, <code>27,633</code> at zero; last usable power of two <code>16,384</code>, where it is also cheaper (<code>5.29 h</code> vs <code>10.38 h</code>)</td>
+<td>—</td>
+<td>four contract cells affected</td>
+<td><code>READ V16_DEVICE_CERT.md:351-395</code>; <code>READ workdonenewseal.md:321-324</code></td>
+<td></td>
+</tr>
+<tr>
+<td>the peak-activation formula <code>4·n·s·d·heads</code></td>
+<td>wrong tensor, <code>64×</code> low — the peak is the <code>[n,s,s]</code> operator; at batch 8192, <code>s=1024</code>: <code>512 MiB</code> claimed, <code>32,768 MiB</code> real</td>
+<td>—</td>
+<td>struck</td>
+<td><code>READ workdonenew.md:386</code></td>
+<td></td>
+</tr>
+<tr>
+<td>"attention activation is <code>2·n·s²·heads</code> bytes bf16"</td>
+<td><code>6.63×</code> low (<code>3.9 × 3.4/2.0</code>); at <code>n=32, s=512, h=4</code>: <code>0.0671</code> vs <code>0.4449 GB/layer</code></td>
+<td>—</td>
+<td>struck</td>
+<td><code>READ workdonenew.md:397</code></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="m43-determinism">M.4.3 Determinism<a class="headerlink" href="#m43-determinism" title="Permanent link">#</a></h3>
+<table>
+<thead>
+<tr>
+<th>finding</th>
+<th>value</th>
+<th>source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cumsum</code> has no deterministic CUDA kernel in torch 2.5.1 and is the whole of the scan arms (<code>arm_pl</code>, <code>arm_phase</code>); <code>cumprod</code> <strong>has</strong> one, so <code>arm_smprime</code>'s forward runs under <code>use_deterministic_algorithms(True)</code></td>
+<td>forward <code>hop</code> and full forward bitwise, <code>max|Δ| = 0.0</code>, 8 repeats, <code>n=512</code>, reduction 64, both flag regimes</td>
+<td><code>RUN /determinism</code> (<code>flag_on.hop.bitwise = true</code>, <code>flag_on.forward.bitwise = true</code>)</td>
+</tr>
+<tr>
+<td>the hole moved, not closed</td>
+<td><code>arm_smprime</code>'s <strong>backward</strong> raises under the strict flag: autograd differentiates <code>cumprod</code> with <code>cumsum</code> (<code>RuntimeError: cumsum_cuda_kernel does not have a deterministic implementation</code>); gradient bitwise (<code>0.0</code>, 8 repeats) only with the flag off</td>
+<td><code>RUN /determinism/flag_on/gradient.executable = false</code>; <code>READ COSTS.md:149-154</code>; <code>READ README.md:305-314</code></td>
+</tr>
+<tr>
+<td>the hazard follows reduction length, not launch size</td>
+<td><code>cumsum(dim=-1)</code> bitwise at <code>[2048,64]</code>, at R2's <code>[32768,64]</code>, at <code>[262144,64]</code> (16.8 M elements), at <code>[512,4096]</code>; drifts only at a 1-D reduction of <code>1e6</code> (<code>6.82e-13</code> / <code>1.82e-12</code>); the arms reduce over 64</td>
+<td><code>READ V16_DEVICE_CERT.md:625-645,658-659</code></td>
+</tr>
+<tr>
+<td>TF32</td>
+<td>asserted off and measured: enabling it moves the shipped arm's operator by <code>3.184e-04</code> relative (forward <code>3.064e-04</code>) against <code>3.237e-07</code> with it off on the bare product; two levels of the stack agree within 8 %</td>
+<td><code>READ V16_DEVICE_CERT.md:427-432</code></td>
+</tr>
+<tr>
+<td>run-to-run on the certified device</td>
+<td><code>δ_nrmse = 0.0</code> on 6 of 6 identical-seed pairs under <code>warn_only=True</code> (M.2.2)</td>
+<td><code>RUN results/v17k_r4_floor.jsonl</code></td>
+</tr>
+<tr>
+<td>cpu vs cuda <code>cumprod</code></td>
+<td>sequential on cpu, parallel scan on cuda: <code>11/64</code> entries move by <code>≤ 5.551115e-17</code>; <code>n_exactly_one</code> on the band splits <code>9767</code> cpu / <code>7713</code> cuda</td>
+<td><code>READ V16_ARM_SMPRIME.md:313-317</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="m44-bar-re-certification-and-the-0-step-gate">M.4.4 Bar re-certification and the 0-step gate<a class="headerlink" href="#m44-bar-re-certification-and-the-0-step-gate" title="Permanent link">#</a></h3>
+<table>
+<thead>
+<tr>
+<th>clause</th>
+<th>worst δ (cpu vs cuda)</th>
+<th>tolerance</th>
+<th>δ/tol</th>
+<th>source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>predict_the_mean</code> (<code>e3_t8</code>)</td>
+<td><code>8.580024779547557e-08</code></td>
+<td><code>1e-6</code></td>
+<td><strong>8.58 %</strong> against a 50 % HALT line, headroom <code>5.83×</code></td>
+<td><code>RUN /bar/worst</code>; <code>READ COSTS.md:127-133</code></td>
+</tr>
+<tr>
+<td><code>flipper_dependence</code></td>
+<td><code>1.053e-07</code></td>
+<td><code>0.05</code></td>
+<td><code>2.1e-06</code></td>
+<td><code>READ workdonenewseal.md:345</code></td>
+</tr>
+<tr>
+<td><code>payload_only</code></td>
+<td><code>9.130e-08</code></td>
+<td>margin <code>6.41e-02</code></td>
+<td><code>1.4e-06</code></td>
+<td><code>READ workdonenewseal.md:346</code></td>
+</tr>
+<tr>
+<td><code>trained_two_feature</code></td>
+<td><code>3.689e-08</code></td>
+<td>margin <code>9.86e-01</code></td>
+<td><code>3.7e-08</code></td>
+<td><code>READ workdonenewseal.md:347</code></td>
+</tr>
+<tr>
+<td><code>oracle</code></td>
+<td><code>0</code> exact on both devices, all four rungs</td>
+<td><code>1e-6</code></td>
+<td><code>0</code></td>
+<td><code>RUN /bar/cpu/e3_t*/cal/oracle = 0.0</code></td>
+</tr>
+<tr>
+<td>all four rungs × both devices</td>
+<td><code>BAR CALIBRATED</code>, HALT none; tolerances quoted from <code>bar_verdict</code>'s own body, text predating the node; 30 doubles bit-identical in IEEE-754 hex against the previous revision</td>
+<td>—</td>
+<td>—</td>
+<td><code>RUN /bar/verdict_cpu, /bar/verdict_cuda</code>; <code>READ workdonenewseal.md:350-352</code></td>
+</tr>
+<tr>
+<td>0-step RED gate at R1′'s shapes (V16)</td>
+<td>32 cells (4 arms × 8 seeds), all PASS both devices; max <code>|cpu−cuda| = 1.678926e-07</code>; smallest margin <code>9.703933e-04</code> — <code>5,780×</code> the gap; binding cell <code>windowed_signed</code> seed 2</td>
+<td><code>GATE_TOL = 1e-3</code></td>
+<td>—</td>
+<td><code>READ V16_BAR_RECERT.md:302-339</code></td>
+</tr>
+<tr>
+<td>0-step RED gate in the K-cert run</td>
+<td>2 arms × 5 <code>n_train</code> × 3 seeds = 30 shapes, 30 reachable, 30 pass; worst margin <code>1.957e-03</code> = <code>1.96×</code> the tolerance</td>
+<td><code>GATE_TOL = 1e-3</code></td>
+<td>—</td>
+<td><code>READ COSTS.md:137-139</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="m45-the-58-wall-clock-gap-refuted">M.4.5 The <code>5.8×</code> wall-clock gap — refuted<a class="headerlink" href="#m45-the-58-wall-clock-gap-refuted" title="Permanent link">#</a></h3>
+<table>
+<thead>
+<tr>
+<th>step</th>
+<th>measured</th>
+<th>source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R1's softmax cell filed <code>71.32 s</code>/150 steps; the same arm, corpus, thread pin, steps and statistic re-read <code>12.3–13.6 s</code></td>
+<td>the <code>5.8×</code> does not reproduce</td>
+<td><code>READ V16_DEVICE_CERT.md:137-164</code>; <code>READ workdonenewseal.md:285-288</code></td>
+</tr>
+<tr>
+<td>eliminated by measurement</td>
+<td>thread count (<code>0.99–1.26</code>), data source (<code>1.01×</code>), the arm (<code>1.06–1.11×</code> vs R1's <code>1.285</code>), the statistic (<code>1.012×</code>), thermal (wrong sign), dtype and shape (identical by construction)</td>
+<td><code>READ workdonenewseal.md:290-293</code></td>
+</tr>
+<tr>
+<td>what survives</td>
+<td>i7-14700HX with 8 P + 12 E cores; <code>set_num_threads(8)</code> names a count, never a placement; E-cores alone <code>1.44×</code>, host contention alone <code>2.55×</code>, their cross <code>2.0×–4.0×</code> across six measurements; a <code>lake build</code> wrote <code>V15Source.olean</code> at <code>17:43:35</code> inside R1's softmax seed-3 window and the four cells after it are <code>13.1 %</code> cheaper</td>
+<td><code>41–83 %</code> of the gap in log terms; the residual is unexplained</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="m5-the-calibration-column-r11-9-checked-9-adverse-sign-test">M.5 The calibration column — R11: 9 checked, 9 adverse, sign test<a class="headerlink" href="#m5-the-calibration-column-r11-9-checked-9-adverse-sign-test" title="Permanent link">#</a></h2>
+<p>Design mechanism: <strong>D-7</strong> (a prediction filed without its counter, in a document whose
+errors have a sign, <code>READ MISTAKES.md:2037</code>), <strong>L-SIGN</strong>, <strong>M-2</strong> (no numeric shrink factor
+is fitted to nine rows).</p>
+<table>
+<thead>
+<tr>
+<th>round</th>
+<th>checked</th>
+<th>adverse</th>
+<th>signs</th>
+<th>one-sided sign test</th>
+<th>source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R11</td>
+<td>9 (<code>V15_LEDGER.md:649-661</code>); <code>≥ 17</code> with the confirmations that table omits</td>
+<td>9 of 9 filed rows; 10 of <code>≥ 17</code></td>
+<td>7 <code>+</code> (optimistic), 1 <code>−</code> (row 3: a sizing repair already made, reported as outstanding), 1 unsigned (row 8: two mutually inverse registrations)</td>
+<td><code>7/8</code>, <code>p = 0.0352</code> — direction established at <code>α = 0.05</code></td>
+<td><code>READ V16_CALIBRATION.md:17-19,38-50,96-100</code></td>
+</tr>
+<tr>
+<td>the round entry's own "six wrong, all six optimistic"</td>
+<td>the six honestly signed give <code>5/6</code>, <code>p = 0.1094</code> — <strong>not</strong> significant; "6/6" as filed gives <code>0.0156</code> but is not what the rows say</td>
+<td>—</td>
+<td>—</td>
+<td>the headline was right about the direction and wrong about its evidence</td>
+<td><code>READ V16_CALIBRATION.md:98-105</code>; <code>READ workdonenewseal.md:434-436</code></td>
+</tr>
+<tr>
+<td>the one sub-census with a real denominator (<code>V15_CONTRACT_ARITHMETIC_AUDIT.md</code>, <code>A-0a…A-0g</code> confirmed, <code>A-1…A-4</code> findings)</td>
+<td>11 checked, 4 wrong, <code>36.4 %</code>, Wilson 95 % <code>[0.152, 0.646]</code></td>
+<td>—</td>
+<td>—</td>
+<td><code>9/9</code> is a count, not a rate — the denominator was chosen after the audit and lists no confirmations</td>
+<td><code>READ V16_CALIBRATION.md:116-120</code></td>
+</tr>
+<tr>
+<td>size of the bias</td>
+<td>Wilson 95 % on the optimism fraction at <code>7/8</code>: <code>[0.5291, 0.9776]</code> — excludes <code>0.5</code>, fixes nothing else; <strong>no numeric shrink factor is authorised</strong> (<code>D-CALIB-3</code>)</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td><code>READ V16_CALIBRATION.md:171-184</code></td>
+</tr>
+<tr>
+<td>the discount rule</td>
+<td><code>D-CALIB-1</code> the counter is the point estimate; <code>-2</code> a bare prediction is blocked, not discounted; <code>-3</code> sign, never size; <code>-4</code> the cheapest refutation of the optimistic half runs first; <code>-5</code> the row is appended whether or not it flatters</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td><code>READ V16_CALIBRATION.md:142-203</code></td>
+</tr>
+<tr>
+<td>R12 row</td>
+<td>to be filed at it.38 — <strong>NOT MEASURED</strong> in the record read here</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td><code>READ V16_CALIBRATION.md:20</code></td>
+</tr>
+</tbody>
+</table>
+<p>The nine rows, briefly (<code>READ V16_CALIBRATION.md:40-48</code>): (1) "<code>g == 0</code> gives bitwise
+standard attention" — FALSE, row sums <code>i+1</code>; (2) "two-thirds of section-5 strikes were
+<code>[V]</code>-as-theorem" — <code>4/40 = 10 %</code>, <code>6.67×</code> overstated; (3) sizing model "to be replaced" —
+already calibrated (<code>−</code>); (4) "ceiling ≈ 38 from 22 %" — no live producer; (5) "TOST
+retires to <code>N ≥ 23</code>" — power at <code>N = 23</code> is <code>0.0669</code>, <code>0.80</code> first at <code>N = 70</code>;
+(6) <code>H = α + ½</code> shipped without <code>|d| &lt; ½</code>; (7) <code>[RUN: 0.990]</code> best first-order recurrence —
+matches neither bed (delay <code>R² = −0.000166/−0.000170</code>, power-law <code>0.604</code>/<code>0.755</code>);
+(8) PART III vs PART IV mutually inverse registrations (M-20); (9) "carriers conserve mass
+to <code>1e-12</code>" — false for the central carrier.</p>
+<hr />
+<h2 id="m6-the-floors-as-measured">M.6 The floors as measured<a class="headerlink" href="#m6-the-floors-as-measured" title="Permanent link">#</a></h2>
+<p>Design mechanism: <strong>L-FLOOR</strong> (an information floor beside every capability number),
+<strong>C15</strong> of the corrections index (<code>floor₁</code> used as an information floor throughout,
+<code>READ V20_R15_JOURNAL.md:51</code>), <strong>V-10</strong> (a gate satisfied by construction — the Hankel
+<code>1/d</code> block is <code>I_d</code> with a zero row, and the node says so).</p>
+<table>
+<thead>
+<tr>
+<th>floor</th>
+<th>what it is</th>
+<th>measured</th>
+<th>source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>floor₁ = √((t*−1)/t*)</code></td>
+<td>a <strong>one-hop capability threshold</strong>, defined by <code>ĥ = t*(1 − NRMSE²) = 1</code>; not an information floor — a lower bound is never violated and this one is</td>
+<td><strong>13 of 40</strong> unique banked cells violate it (12 <code>arm_pl</code>, 1 <code>arm_smprime</code>); <code>s = 64</code> on 40/40; <code>dist_to_skyline</code> populated on 0/40; the published <code>6 of 34</code> is stale (it.8)</td>
+<td><code>RUN</code> this session over the three journals (43 rows, 40 unique on <code>(kind, seed)</code>, 13 with <code>eval_nrmse &lt; 0.7071067811865476</code>, 13 with <code>eval_h_hat &gt; 1.0</code>); <code>READ V20_R15_THEORY_TABLE.md:69-91</code></td>
+</tr>
+<tr>
+<td><code>floor₁</code> at other <code>t*</code></td>
+<td><code>t*=8</code>: <code>0.935414</code>; <code>t*=32</code>: <code>0.984251</code>; the nine pre-R11 N=8 cells never crossed any of them, <code>ĥ ≤ 0.389</code></td>
+<td><code>READ workdonenew.md:220-233</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>floor₂ = √((t*−2)/t*)</code></td>
+<td><code>0.866025</code> at <code>t*=8</code>; <code>pivot_unsigned</code> at <code>t*=8, n=32768</code> sits <code>0.110462</code> above it (<code>proven_hops = 0</code>)</td>
+<td><code>READ workdonenew.md:258-259</code></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>the exact oracle at <code>0.0</code></strong> — the real information floor on BED-M</td>
+<td><code>equilibrium_oracle</code> (<code>scale/negation_scope.py:286-304</code>) returns <code>z*_{s−1}</code> exactly; the bar clause <code>oracle</code> reads <code>0.0</code> on both devices, all rungs; distance from the banked wings to it is <code>0.203920</code> at best (<code>arm_smprime</code> seed 2) and <code>~0.85</code> modally; <strong>no annex theorem predicts either wing's distance to it</strong></td>
+<td><code>RUN results/k_cert_local.json /bar/*/cal/oracle</code>; <code>READ V20_R15_THEORY_TABLE.md:87-91,197</code></td>
+<td></td>
+</tr>
+<tr>
+<td>candidate floors that do not bind either frozen wing</td>
+<td>M11 Fano and M12 rate–distortion: 0 of 3 beds, 0 producing <code>.py</code> (prose); M16 Hankel: BED-K only, both wings are BED-M</td>
+<td><code>READ V20_R15_THEORY_TABLE.md:87-90,199</code></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>the Hankel <code>1/d</code> law</strong> (BED-K, delay <code>d</code>)</td>
+<td><code>R²₁ = 1/d</code> exact on <code>d ∈ {5,10,20}</code>: max−min of <code>R²₁·d = 0.000e+00</code>; <code>err_₁ = √(1 − R²₁) = 0.9746794345</code> at <code>d = 20</code>, bound to <code>5e-11</code>; domain hole at <code>d = 0</code> (<code>delay_zero_is_first_order</code>); the block is <code>I_d</code> with a zero row — "arithmetic, not evidence"; the AAK/Glover attribution was refused (correct source: Eckart–Young–Mirsky)</td>
+<td><code>READ V20_R15_IT6_JUPITER.md:450-465</code>; <code>READ V20_R15_THEORY_TABLE.md:149-152</code></td>
+<td></td>
+</tr>
+<tr>
+<td>the thread-count floor</td>
+<td><code>2.345e-3</code> NRMSE drift across thread counts on CPU; <code>Δ_eq = 0.5σ_seed = 0.005051</code> at <code>t*=2, n=2048</code>, so the floor is <code>0.464</code> of the margin — any equivalence margin below <code>~4.7e-3</code> is indefensible</td>
+<td><code>READ workdonenew.md:391</code></td>
+<td></td>
+</tr>
+<tr>
+<td>the TOST parity floor</td>
+<td>90 % CI half-width <code>0.8807σ</code> at N=8 against a <code>0.5σ</code> margin; CI first fits at N=23 (power <code>0.0669</code>); power <code>0.80</code> first at <strong>N=70</strong> (<code>8.8×</code> the registered count); two bit-identical arms return NO VERDICT at N=8</td>
+<td><code>READ workdonenew.md:400</code>; <code>READ workdonenewseal.md:31</code></td>
+<td></td>
+</tr>
+<tr>
+<td>the N=8 sign floor</td>
+<td><code>0.0078125</code> (<code>2⁻⁷</code>); the X₂₆ lead-time CI <code>[−13.88, +1.50]</code> includes zero, so the item was struck</td>
+<td><code>READ workdonenew.md:388</code></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="m7-bed-k-and-bed-1-measured-facts">M.7 BED-K and BED-1 — measured facts<a class="headerlink" href="#m7-bed-k-and-bed-1-measured-facts" title="Permanent link">#</a></h2>
+<p>Design mechanism: <strong>V-11</strong> (a precondition satisfied at every real draw — BED-K's delay bed
+is the first corpus whose label carries a delayed cause), <strong>M-19</strong> (an invariant estimated
+on a collapsed orbit — the Pesin arithmetic is stated), <strong>V-3</strong> (an identity checked against
+itself — the committor is cross-checked by Kirchhoff and by the dynamics), <strong>D-2</strong> (the
+oracle must not be the arm's own resolvent — BED-1's committor runs on the latent chain).</p>
+<h3 id="m71-bed-k-ceqbedsbed_kpy-15-tests">M.7.1 BED-K (<code>ceq/beds/bed_k.py</code>; 15 tests)<a class="headerlink" href="#m71-bed-k-ceqbedsbed_kpy-15-tests" title="Permanent link">#</a></h3>
+<table>
+<thead>
+<tr>
+<th>fact</th>
+<th>measured</th>
+<th>control</th>
+<th>source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>delay bed is scan-blind</td>
+<td>best first-order fit using the label's own true previous value: <code>α = −0.0109, β = −0.0216, R² = −0.000170</code> (<code>−0.000166</code> in the sibling run; two runs, not a discrepancy); 30-seed sweep at <code>d=4, n=2048</code>: <code>R² ∈ [−0.0027, 0.0028]</code></td>
+<td>the <strong>same fitting code</strong> recovers AR(1) at <code>α = 0.8000, β = 1.0000, R² = 1.000000</code></td>
+<td><code>READ V15_N4_BEDK.md:194-199</code>; <code>READ V16_CALIBRATION.md:228-230</code></td>
+</tr>
+<tr>
+<td>delay bed is attention-reachable</td>
+<td>hand-set head reproduces the label over <code>i ≥ d</code> to <code>8.67e-19</code></td>
+<td>bar <code>≤ 1e-12</code></td>
+<td><code>READ V15_N4_BEDK.md:204,291-293</code></td>
+</tr>
+<tr>
+<td><strong>power-law bed is NOT scan-blind</strong></td>
+<td>first-order fit <code>R² = 0.604</code> at <code>H = 0.75</code>, <code>0.755</code> at <code>H = 0.9</code></td>
+<td>the Lean result <code>first_order_cannot_powerlaw</code> is an exact-identity theorem, not an approximation bound — a recurrence that cannot reproduce a kernel exactly may still fit 60 % of its variance, and does (debt D-APPROX)</td>
+<td><code>READ workdonenewseal.md:189,194-196,510</code></td>
+</tr>
+<tr>
+<td>Jacobian oracle</td>
+<td>delay max err <code>2.88e-11</code>, power-law <code>4.88e-10</code></td>
+<td>both <code>≤ 1e-9</code></td>
+<td><code>READ V15_N4_BEDK.md:211</code></td>
+</tr>
+<tr>
+<td>Hurst estimator (DFA, not R/S)</td>
+<td>white noise <code>≈ 0.478</code>, AR(0.5) <code>≈ 0.486</code>; R/S's biased reading is <code>0.75</code>; recovery at <code>H_true = 0.75</code> reads <code>0.8121</code> (bias <code>+0.062</code>), <code>0.812 → 0.818</code> after the FARIMA correction — it did not shrink the bias, reported as such</td>
+<td>—</td>
+<td><code>READ V15_N4_BEDK.md:223-258</code>; <code>READ workdonenewseal.md:191-192</code></td>
+</tr>
+<tr>
+<td>scan-blindness by theorem</td>
+<td><code>V15Kernel.first_order_cannot_delay</code> (arbitrary <code>f</code>: zero drive <code>0 = f(0)(0)</code>, impulse <code>1 = f(0)(0)</code>), <code>delay_forces_state_injective</code>, <code>linear_first_order_cannot_delay_beyond_state_dim</code>, <code>first_order_cannot_powerlaw</code>; the trivial reading <code>delay_realizable_at_dimension_d</code> refused in-file</td>
+<td>—</td>
+<td><code>READ workdonenewseal.md:68,77-78</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="m72-bed-1-ceqbedsbed_1py-13-tests-28-in-the-beds-suite">M.7.2 BED-1 (<code>ceq/beds/bed_1.py</code>; 13 tests, 28 in the beds suite)<a class="headerlink" href="#m72-bed-1-ceqbedsbed_1py-13-tests-28-in-the-beds-suite" title="Permanent link">#</a></h3>
+<table>
+<thead>
+<tr>
+<th>fact</th>
+<th>measured</th>
+<th>control</th>
+<th>source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>committor is harmonic</td>
+<td><code>max|Lq| = 0.000000e+00</code> at <code>jitter = 0.0</code> (interior <code>q ∈ {0, ¼, ½, ¾, 1}</code>); <code>1.040834e-17</code> at <code>jitter = 0.05</code>, seed 11 (<code>q(C) = 0.3356422966</code>, <code>q(S_ac) = 0.1678211483</code>, <code>q(S_cb) = 0.6678211483</code>)</td>
+<td>must-fire perturbation drives it to <code>1.000000e-06</code> — 11 orders (ratio <code>9.608e+10</code>)</td>
+<td><code>READ V15_BED1.md:123-124</code>; <code>READ workdonenewseal.md:214-215</code></td>
+</tr>
+<tr>
+<td>barrier-height vs committor labels disagree</td>
+<td><code>T* = ΔΔE‡/ln m = 0.62133493455961186</code>; at <code>0.9 T*</code> both say <code>lo</code>; at <code>1.1 T*</code> barrier says <code>lo</code>, committor says <strong><code>hi</code></strong> (rates <code>1.672502e-01 / 2.315116e-01</code> low-barrier, <code>1.398632e-01 / 2.679881e-01</code> for the <code>m</code>-fold bundle)</td>
+<td>bisected crossover from committor flux <code>0.62133493455961175</code>, <code>|diff| = 1.110e-16</code>; third route from the dynamics: empirical <code>lo:hi = 0.86679 &lt; 1</code> at <code>1.1 T*</code> (232,957 / 268,759 / 111,354 events), agreeing with the committor ratio to <code>0.34 %</code></td>
+<td><code>READ V15_BED1.md:42,175-177,349</code>; <code>READ workdonenewseal.md:199-212</code></td>
+</tr>
+<tr>
+<td>the <code>a*</code> lowest-barrier-exit claim</td>
+<td>FALSE on legal instances: one saddle at <code>E = 2.00</code> to B, four parallel at <code>E = 2.20</code> to C gives <code>q_C/q_B = 4e^{−0.2/T}</code> exact to <code>2.351e-15</code>; at <code>T = 0.50</code> the higher-barrier channel is <code>2.68×</code> faster (<code>q_B = 0.271644632</code>, <code>q_C = 0.728355368</code>); crossover <code>T* = 0.144269504088897</code> vs predicted <code>…896</code> (agreement <code>6.384e-16</code>); ranking flips back at <code>T = 0.10</code> (<code>q_B = 0.648786</code>)</td>
+<td>independently reproduced in-session at the time</td>
+<td><code>READ workdonenew.md:390</code></td>
+</tr>
+<tr>
+<td>Chapman–Kolmogorov</td>
+<td><code>τ = 1</code> fails (<code>0.22702</code>), <code>τ = 64</code> passes (<code>0.00400</code>), factor 57</td>
+<td>both vacuity ends guarded at the passing lag: <code>‖T̂(64) − I‖ = 0.9482 &gt; 0.5</code>, <code>‖T̂(128) − Π‖ = 0.1280 &gt; 0.05</code></td>
+<td><code>READ V15_BED1.md:196-211</code></td>
+</tr>
+<tr>
+<td>Pesin deficit (<code>T = 0.25</code>, <code>h = 0.081275</code> nats/step, exact)</td>
+<td>generating (state) partition, 3 symbols: entropy <code>0.081042</code>, deficit <strong><code>0.000233</code></strong> (<code>0.29 %</code> of <code>h</code>); wrong guards <code>0.029889 / 0.030616 / 0.029915</code> — factor 128</td>
+<td>the contract's <code>q = ½</code> guard partition (8 symbols) has its own deficit <code>0.009654</code> = <code>11.9 %</code> of <code>h</code> — <strong>not</strong> near zero, so the contract's guards are not a generating partition; guards were not selected by an argmin over the deficit</td>
+<td><code>READ V15_BED1.md:248-272</code></td>
+</tr>
+<tr>
+<td>conservation census</td>
+<td>7 conserve (committor harmonicity <code>0.000000e+00</code>, reactive flux divergence-free <code>0.000000e+00</code>, both at <code>1e-12</code>), <strong>2 do not</strong>: guard-crossing balance (21 net on 65,481 events, <code>0.08 %</code>) and trap-channel share (<code>0.11005</code> vs <code>0.05837</code>, off by <code>1.885×</code>, because a channel with a metastable interior recrosses its own guard)</td>
+<td>printed with mechanism</td>
+<td><code>READ V15_BED1.md:310-326</code></td>
+</tr>
+<tr>
+<td>Morse census (lower-link criterion on the 1-complex, 11 nodes, 16 edges)</td>
+<td><code>m₀ = 3, m₁ = 8, χ = V − E = −5 = m₀ − m₁, b₀ = 1, b₁ = 6</code>; Morse inequalities hold</td>
+<td>must-fire <code>V(C) → 2.5</code> moves the classifier to <code>(2, 7)</code> with 2 regular points and leaves <code>χ = −5</code> unchanged</td>
+<td><code>READ V15_BED1.md:359-378</code></td>
+</tr>
+<tr>
+<td>mutation check</td>
+<td>five mutants killed on the stated ground that 13/13 green on a first implementation run is not evidence</td>
+<td>—</td>
+<td><code>READ V15_BED1.md:99</code>; <code>READ workdonenewseal.md:234-235</code></td>
+</tr>
+<tr>
+<td>what BED-1 has <strong>not</strong> produced</td>
+<td>no arm has been trained on it; <code>C-TS</code> reads "BED BUILT, NOT RUN"; the state-metric cells Q6/W1 and Q6/W3 are F4 because the frozen wings return a scalar <code>[n]</code> and 0 of 40 banked cells journal a distributional object</td>
+<td>—</td>
+<td><code>READ workdonenewseal.md:33</code>; <code>READ V20_R15_THEORY_TABLE.md:211-225</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="m8-x35-and-x37-instrument-facts">M.8 X₃₅′ and X₃₇ — instrument facts<a class="headerlink" href="#m8-x35-and-x37-instrument-facts" title="Permanent link">#</a></h2>
+<p>Design mechanism: <strong>V-10</strong> (the flatness gate has a demonstrated rejection region),
+<strong>M-2</strong> (the persistence threshold was frozen before the run), <strong>V-16</strong> (the Z-winding
+guard refuses aliased input rather than returning a plausible wrong integer), <strong>M-15</strong>
+(every order-parameter reading is printed beside its null).</p>
+<h3 id="m81-x35-hidden-cause-detection-testsx35-14-tests-testsx35p-29-tests">M.8.1 X₃₅′ — hidden-cause detection (<code>tests/x35</code>, 14 tests; <code>tests/x35p</code>, 29 tests)<a class="headerlink" href="#m81-x35-hidden-cause-detection-testsx35-14-tests-testsx35p-29-tests" title="Permanent link">#</a></h3>
+<table>
+<thead>
+<tr>
+<th>instrument</th>
+<th>measured</th>
+<th>control / must-fire</th>
+<th>source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Shewhart onset on the residual <code>r = z_obs − z_model(visible)</code></td>
+<td>onset <code>36</code> at <code>sd = 0</code> and <code>sd = 0.05</code>, true <code>36</code>, <code>mag_hat = 0.9809</code> (<code>m_true = 1.0</code>); 500 seeds at <code>sd = 0.05</code>: offsets <code>{0: 421, 1: 74, 2: 5}</code>, misses 0, <strong><code>0.9900</code> within ±1</strong> against a pre-registered <code>0.95</code> (analytic prediction <code>~0.976</code>, bar not recomputed from the realised figure)</td>
+<td>superposition, 200 seeds, sources at 36 and 80: first onset within ±1 of 36 at <code>0.9900</code> — the detector can only ever call the earliest source</td>
+<td><code>READ V15_X35A_RESIDUAL.md:144-146,184-186,205-213</code></td>
+</tr>
+<tr>
+<td>scope control — no plant ⇒ no onset</td>
+<td>measured FAR <code>0.0120</code> (24/2000) vs calibrated <code>α = 0.01</code>; calibrated on <code>[0, 2000)</code>, scored out of sample on <code>[1e6, 1e6+2000)</code>; in-sample <code>0.0095</code> printed beside</td>
+<td>truncated model at lag 64: FAR <strong><code>0.2667</code></strong> (<code>27×α</code>, corr <code>+0.8988</code>); lag 8: <code>1.0000</code> (<code>100×α</code>) — the flatness gate has a rejection region</td>
+<td><code>READ V15_X35A_RESIDUAL.md:147-151,234,273-274</code></td>
+</tr>
+<tr>
+<td>exact source solve through <code>(I − A)</code></td>
+<td><code>8.882e-16</code>, two planted sources — the delta's cited <code>8.9e-16</code></td>
+<td>Lean <code>source_is_first_order_difference</code>, <code>two_sources_recovered</code></td>
+<td><code>READ workdonenewseal.md:67,244</code></td>
+</tr>
+<tr>
+<td>exact inverse vs adjoint (<code>Wᵀr</code>)</td>
+<td>crossover at <code>sd = 0.15</code>; by <code>sd = 0.50</code> it is 9 vs 266 with 67 exact misses against 5 — the exact solve is <strong>retired to the noiseless regime</strong></td>
+<td>—</td>
+<td><code>READ V15_X35P_SOURCE.md:44,380,490</code>; <code>READ workdonenewseal.md:245</code></td>
+</tr>
+<tr>
+<td>Kramers–Kronig causality residual</td>
+<td>planted anticipating kernel <code>a√2 = 0.7 × 1.41421356 = 0.98994949366116647</code>; closed form <code>√2·‖anticausal‖₂</code>, independent route agrees to <code>1.11e-16</code>; no threshold, no tuning knob</td>
+<td>null: 256 random 24-tap causal kernels, worst <code>1.3670e-15</code> (float64 FFT round-off); <strong>margin <code>7.24e14</code></strong></td>
+<td><code>READ V15_X35P_KK_CRB.md:61-67,81-90</code></td>
+</tr>
+<tr>
+<td>why the original KK probe read <code>0.000</code></td>
+<td>all four candidate mechanisms run: origin-forgetting <code>1.657e-16</code> (zero on every input), residual on <code>|H|</code> <code>3.269e-16</code> (zero by construction), no zero-padding <code>0.000000e+00</code> (conditionally), <code>1/M</code> normalisation eliminated (shrinks as <code>1/√M</code>; an exact zero would need <code>M &gt; 1.3e7</code>)</td>
+<td>—</td>
+<td><code>READ V15_X35P_KK_CRB.md:128-189</code>; <code>READ workdonenewseal.md:251-255</code></td>
+</tr>
+<tr>
+<td>Cramér–Rao floor on the onset</td>
+<td><strong>DOES NOT EXIST</strong> — the onset is an integer; embedding with the jump abrupt gives <code>I = 0</code> and a bound of <code>+∞</code>; smoothing makes the bound a property of the smoothing: <code>1/I</code> spans <code>0.18 … 443</code> (<code>2462×</code>) over ramp widths, and <code>1.08e7×</code> from sub-sample phase alone</td>
+<td>—</td>
+<td><code>READ V15_X35P_KK_CRB.md:273-342,578</code></td>
+</tr>
+<tr>
+<td>Ziv–Zakai bound (ships instead)</td>
+<td>calibrated exactly: <code>0.00e+00</code> difference at <code>n = 32/64/128</code> (<code>85.25 / 341.25 / 1365.25</code>); the Bayes-optimal detector tracks it across a <code>4096×</code> SNR span, ratio <code>[0.998, 1.329]</code></td>
+<td>—</td>
+<td><code>READ V15_X35P_KK_CRB.md:393-395,417-431</code></td>
+</tr>
+<tr>
+<td>prior-art status</td>
+<td>X₃₅ is Basseville &amp; Nikiforov 1993 §7.2.4 in closed form, equation for equation; the learned-model form is arXiv:2604.25655 Thm 3.1 — <strong>occupied</strong>, not novel</td>
+<td>—</td>
+<td><code>READ workdonenewseal.md:463-464</code>; <code>READ README.md:216-220</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="m82-x37-topological-certificates-ceqcertstopologicalpy-testscerts-36-tests-8-mutants-killed">M.8.2 X₃₇ — topological certificates (<code>ceq/certs/topological.py</code>; <code>tests/certs</code>, 36 tests, 8 mutants killed)<a class="headerlink" href="#m82-x37-topological-certificates-ceqcertstopologicalpy-testscerts-36-tests-8-mutants-killed" title="Permanent link">#</a></h3>
+<table>
+<thead>
+<tr>
+<th>certificate</th>
+<th>measured</th>
+<th>control / must-fire</th>
+<th>source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Z</code> winding, per instance</td>
+<td>correct on <code>k ∈ {−3, −1, 0, 1, 2, 5, 15}</code>, worst departure from an integer <code>4.4e-16</code> (at <code>k = 2</code>) against <code>INTEGRALITY_TOL = 1e-9</code></td>
+<td>refuses aliased input where the unguarded path (<code>max_step = π</code>) returns a plausible but wrong <code>−2</code> against true <code>k = 3</code>; the step guard is necessary and <strong>not sufficient</strong> — 63 turns in 64 samples has a wrapped step of <code>0.031π</code>, the healthiest reading in the file, and returns <code>−1</code>; a refinement check was added</td>
+<td><code>READ V15_X37_CERTS.md:155-169,184</code>; <code>READ workdonenewseal.md:261-262</code></td>
+</tr>
+<tr>
+<td>persistent <code>β₁</code> of a carrier trajectory (Rips)</td>
+<td>RPS cyclic dominance: one <code>H₁</code> bar <code>(0.045414, 0.551497)</code>, persistence <code>0.506083</code>, count <code>1</code>, <code>True</code>; threshold frozen before the run (M-2)</td>
+<td>coordination control: no finite <code>H₁</code> bar at any radius (<code>[RUN: 1 vs 0]</code>)</td>
+<td><code>READ V15_X37_CERTS.md:229-264,252</code></td>
+</tr>
+<tr>
+<td>stability of the persistence reading</td>
+<td><code>1.26e-3 / 1.07e-2 / 5.48e-2</code> against the <code>2ε</code> bound <code>2e-3 / 2e-2 / 1e-1</code> (ratios <code>0.534, 0.548</code>)</td>
+<td>—</td>
+<td><code>READ V15_X37_CERTS.md:291-292</code>; <code>READ workdonenewseal.md:264</code></td>
+</tr>
+<tr>
+<td>Euler–Poincaré vs BED-1's Morse census</td>
+<td><code>Σ(−1)^k β_k = 1 − 6 = −5</code> = <code>m₀ − m₁ = −5</code> on both landscapes (default <code>(3,8)</code>, must-fire <code>(2,7)</code>) — AGREE</td>
+<td><strong>half of it cannot fail</strong>: on a 1-complex <code>β₀ − β₁ = V − E</code> identically; only the Poincaré–Hopf half carries content; on a Hopf normal form with a complete census <code>Σι = 1 = χ(D²)</code> while the Rips carrier reads <code>Σ(−1)^k β_k = 0</code> — the cross-check fires falsely where it can</td>
+<td><code>READ V15_X37_CERTS.md:362-366,425-436</code>; <code>READ workdonenewseal.md:265-266</code></td>
+</tr>
+<tr>
+<td>Kuramoto order parameter <code>r = |N⁻¹ Σ e^{iθ_j}|</code></td>
+<td>wrapped normal <code>σ = 0.02</code> (<code>N = 65536</code>): <code>0.999800</code> vs <code>exp(−σ²/2) = 0.999800</code> (<code>2.24e-07</code>); <code>σ = 0.05</code>: <code>0.998743</code> vs <code>0.998751</code>; <code>σ = 0.20</code>: <code>0.980110</code> vs <code>0.980199</code>; <code>N = 4096</code> equispaced → <code>5.55e-17</code></td>
+<td><code>N = 4096</code> uniform, 8 seeds: <code>0.007794 – 0.022456</code>, mean <code>0.012916</code> vs the Rayleigh prediction <code>E[r] = √π/(2√N) = 0.013847</code></td>
+<td><code>READ V15_X37_CERTS.md:478-491</code></td>
+</tr>
+<tr>
+<td><code>bed_1.morse_census</code> returns <code>betti_0</code> and <code>betti_1</code> as constants</td>
+<td>recorded as a weakness of the census, not of BED-1's answer</td>
+<td>—</td>
+<td><code>READ V15_X37_CERTS.md:443</code></td>
+</tr>
+<tr>
+<td>the S² Rips corpus (<code>ceq/rips.py</code>)</td>
+<td>exists in the tree (mujoco#3396); <strong>NOT MEASURED</strong> here — no journal row for it was located in the files this section reads</td>
+<td>—</td>
+<td><code>READ BRIEF.md:195</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="m9-test-state-the-invariant-is-the-failure-set-not-the-pass-count">M.9 Test state (the invariant is the failure set, not the pass count)<a class="headerlink" href="#m9-test-state-the-invariant-is-the-failure-set-not-the-pass-count" title="Permanent link">#</a></h2>
+<table>
+<thead>
+<tr>
+<th>suite</th>
+<th>state</th>
+<th>source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tests/loop</code></td>
+<td>15 failed / 523 passed — the same 15 by name across five snapshots; the pass count moved <code>501 → 515 → 517 → 518 → 522 → 523</code> because two repo tests parametrize over every module</td>
+<td><code>READ workdonenewseal.md:487,498-502</code></td>
+</tr>
+<tr>
+<td><code>tests/arm_smprime</code></td>
+<td>35 passed CPU, 35 passed CUDA, same ids</td>
+<td><code>READ V16_ARM_SMPRIME.md:35,74-105</code></td>
+</tr>
+<tr>
+<td><code>tests/arm_phase</code> / <code>tests/arm_pl</code></td>
+<td>~~30 / 30 (CPU / CUDA); 17~~ <strong>SUPERSEDED</strong> (old cell kept: a count that moved is evidence). CPU at <code>03adf7f</code> + the V-29 <code>arm_phase</code> repair: <strong>37 collected, 36 passed / 1 failed</strong>, <code>python -m pytest tests/arm_phase -q</code>, <code>WIN-16QAL06O9GB</code>, python 3.11.9, torch 2.14.0+cpu, exit 1. Two separate moves: <code>+7</code> from the new gradient guard <code>test_the_shipped_init_has_a_live_gradient_everywhere.py</code> (all 7 pass), and <code>-1</code> from <code>test_bind2_the_band_path_product_has_modulus_one_over_1e4_phases</code>, which <strong>fails at <code>03adf7f</code> unmodified</strong> (29 passed / 1 failed with the repair stashed) and is therefore stale in the <code>30</code> above independently of this round. CUDA and <code>tests/arm_pl</code> not re-run — this box has no cuda</td>
+<td><code>READ workdonenewseal.md:489-490</code>; <code>READ MISTAKES.md</code> V-29</td>
+</tr>
+<tr>
+<td><code>tests/beds</code> (BED-K 15 + BED-1 13), <code>tests/certs</code>, <code>tests/x35</code>, <code>tests/x35p</code>, <code>tests/mars_v15</code></td>
+<td>28; 36 (8 mutants killed); 14; 29; 21 passed / 4 skipped (every skip must-fired)</td>
+<td><code>READ workdonenewseal.md:491-495</code></td>
+</tr>
+<tr>
+<td>Lean</td>
+<td>12 files, <code>lake build</code> exit 0 at <code>[1530/1531]</code>, 0 <code>sorry</code>, 0 <code>sorryAx</code>; every theorem through <code>#print axioms</code>: <code>[propext, Classical.choice, Quot.sound]</code> only; 169 <code>theorem</code>/<code>lemma</code> declarations (coordinator's grep, 2026-09-03)</td>
+<td><code>READ workdonenewseal.md:41-45</code>; <code>READ BRIEF.md:125-128</code></td>
+</tr>
+</tbody>
+</table>
+<p>These counts are as of <code>91b862d</code> (2026-08-31, <code>READ workdonenewseal.md:6</code>) and were <strong>not
+re-run this session</strong>; the paper should re-run <code>python -m pytest tests/loop -q</code> at its
+assembly HEAD before quoting them.</p>
+<hr />
+<h2 id="m10-numbers-the-paper-must-not-use">M.10 Numbers the paper must NOT use<a class="headerlink" href="#m10-numbers-the-paper-must-not-use" title="Permanent link">#</a></h2>
+<h3 id="m101-struck-constants-the-registry-struckmd-rendered-from-testslooptest_no_struck_constant_shipspy47-at-aa82df7-12-entries-read-struckmd18-33">M.10.1 Struck constants — the registry (<code>STRUCK.md</code>, rendered from <code>tests/loop/test_no_struck_constant_ships.py:47</code> at <code>aa82df7</code>, 12 entries; <code>READ STRUCK.md:18-33</code>)<a class="headerlink" href="#m101-struck-constants-the-registry-struckmd-rendered-from-testslooptest_no_struck_constant_shipspy47-at-aa82df7-12-entries-read-struckmd18-33" title="Permanent link">#</a></h3>
+<table>
+<thead>
+<tr>
+<th>constant</th>
+<th>why it is struck</th>
+<th>what to write instead</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>−1.389</code> (R² <code>0.9938</code>)</td>
+<td>M2 decay exponent, a <code>floor = 1e-6</code> artifact; least squares on <code>floor = 0</code> gives <code>−0.958</code> (R² <code>0.9990</code>) while the forcing audit reports <code>−1.221</code> (R² <code>0.9662</code>) — they disagree</td>
+<td><strong>delete the claim</strong>; no replacement is published</td>
+</tr>
+<tr>
+<td><code>−0.5173</code>, <code>−0.4160</code>, <code>−0.4654</code></td>
+<td>"live rows only" K1 slope interval and point — no producer exists in any <code>.py/.json/.jsonl/.txt</code></td>
+<td>the as-computed slope <code>−0.4137 [−0.4579, −0.3704]</code>, which reproduces from <code>scale/arm_a_k1.py</code></td>
+</tr>
+<tr>
+<td><code>−1.826</code></td>
+<td>M2 slope as first reported; the shipped operator reads <code>−1.298</code></td>
+<td><code>−1.298</code> (<code>READ RESEARCH.md</code>; brief §3)</td>
+</tr>
+<tr>
+<td><code>1.471448</code>, <code>1.343174</code></td>
+<td>M5 tail norms at <code>s = 128 / 512</code> — FABRICATED; a 1,800-setting sweep produced neither</td>
+<td>measured <code>0.880500</code> (hops=2) / <code>0.882030</code> (hops=4) at 128; <code>1.292741</code> at 512</td>
+</tr>
+<tr>
+<td><code>0.743864</code> (CI <code>0.656532 … 0.816955</code>)</td>
+<td>U1/N3 pilot Spearman ρ — NO PRODUCER HAS EVER EXISTED; nine named functions never defined in any commit</td>
+<td>nothing; the item is void</td>
+</tr>
+<tr>
+<td><code>5.4944e-13</code></td>
+<td>Karcher residual in float64 — asserted <code>[RUN]</code> from a throwaway script whose own output was <code>nan</code></td>
+<td><code>7.481e-09 / 8.155e-09 / 8.405e-09</code> at published settings; <code>7.307e-13 / 7.958e-13 / 8.405e-13</code> at <code>--tol 1e-15 --steps 400</code></td>
+</tr>
+</tbody>
+</table>
+<p>The test scans the shipped code and the lead documents for every entry; a struck constant
+that reappears fails <code>tests/loop/test_no_struck_constant_ships.py</code>
+(<code>READ STRUCK.md:6-10</code>).</p>
+<h3 id="m102-stale-traps-the-record-names-each-carries-the-corrected-figure-above">M.10.2 Stale traps the record names (each carries the corrected figure above)<a class="headerlink" href="#m102-stale-traps-the-record-names-each-carries-the-corrected-figure-above" title="Permanent link">#</a></h3>
+<table>
+<thead>
+<tr>
+<th>do not write</th>
+<th>because</th>
+<th>write instead</th>
+<th>where corrected</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>"no arm crosses <code>floor₁</code>"</td>
+<td>6 of 24 crossed at it.2; 13 of 40 at it.14</td>
+<td>M.6 row 1</td>
+<td><code>V20_R15_JOURNAL.md:37</code> (C1), <code>:51</code> (C15)</td>
+</tr>
+<tr>
+<td>"6 of 34 cells violate <code>floor₁</code>"</td>
+<td>stale it.8 count</td>
+<td><code>13 of 40</code> (<code>RUN</code>)</td>
+<td><code>V20_R15_THEORY_TABLE.md:80-86</code></td>
+</tr>
+<tr>
+<td>"12 of 16 cross" as a verdict</td>
+<td>the <code>t="agg"</code> record says <code>crosses: false</code>; the flip turns on seed 9</td>
+<td>"12 of 16 cells sit below <code>floor₁</code>; the pooled verdict is <code>False</code>"</td>
+<td><code>V20_R15_JOURNAL.md:49</code> (C13)</td>
+</tr>
+<tr>
+<td><code>p = 6.730e-04</code></td>
+<td>unpaired</td>
+<td>paired <code>p = 0.012821</code> on the banked record; <code>8/9 vs 0/9</code> on three draws at it.10</td>
+<td><code>V20_R15_JOURNAL.md:50</code> (C14)</td>
+</tr>
+<tr>
+<td>any GPU-second or cost ratio from <code>scripts/v15_r1.py</code>'s <code>secs</code> (<code>0.3455 GPU-h</code>, <code>10.17×</code>, <code>41.9×</code>, <code>2.85 / 118.8</code>, the EXIT A table)</td>
+<td>un-synchronised host clock, run-order confound <code>ρ = +0.7029</code></td>
+<td>the K-cert laws (M.4.1), which use a separate timing statistic; and <code>arm_pl / softmax = 1.0589×</code> only as a ratio at <code>s = 64</code></td>
+<td><code>V20_R15_JOURNAL.md:53</code> (C17)</td>
+</tr>
+<tr>
+<td>"the <code>5.8×</code> wall-clock gap" / softmax <code>71.32 s</code> as a per-step cost</td>
+<td>does not reproduce; <code>12.3–13.6 s</code> on a quiet host</td>
+<td>M.4.5</td>
+<td><code>V16_DEVICE_CERT.md:132-265</code></td>
+</tr>
+<tr>
+<td>"<code>13.6×</code> CPU→GPU decision"</td>
+<td>the optimistic reading</td>
+<td><code>11.94×</code> point, <code>29.0×</code> pessimistic</td>
+<td><code>V16_DEVICE_CERT.md:804-806</code></td>
+</tr>
+<tr>
+<td><code>Σ_j |W_ij| = 1.000000</code> as the softmax-corner certificate</td>
+<td>equals <code>Z_i^{1−β}</code>, blind to <code>g</code></td>
+<td><code>Σ_j Re W_ij</code> (<code>2.220446e-16</code>)</td>
+<td><code>README.md:261-275</code></td>
+</tr>
+<tr>
+<td><code>label_cell = 1.440495</code> on BED-M</td>
+<td>scored slot 0, a term no setting of the arm can move</td>
+<td><code>2.965913655728132e-16</code></td>
+<td><code>README.md:244-259</code></td>
+</tr>
+<tr>
+<td>"a pole precisely on the unit circle" (<code>a_hat_max == 1.0</code>)</td>
+<td><code>torch.clamp(u, 0, 1)</code> at <code>ceq/arm_smprime.py:113</code> — a ceiling, not a converged pole; 6 of 16 cells are there at step 0; pre-clamp <code>u</code> exceeds <code>1.0</code> on 6 of 6 zero-step cells (margins <code>0.0129–0.1843</code>) and the driver is unknown</td>
+<td>—</td>
+<td><code>V20_R15_JOURNAL.md:45</code> (C9)</td>
+</tr>
+<tr>
+<td>"live-band decay under 3 % per position"</td>
+<td>up to <code>4.76 %</code> (<code>−0.0476 … −0.0010</code>)</td>
+<td>—</td>
+<td><code>V20_R15_JOURNAL.md:46</code> (C10)</td>
+</tr>
+<tr>
+<td><code>1.084523</code> (Q2/W3 excess)</td>
+<td>a prose constant formed by arithmetic on another prose constant</td>
+<td><code>1.0845223424</code>, bound to <code>5e-10</code></td>
+<td><code>V20_R15_THEORY_TABLE.md:158</code></td>
+</tr>
+<tr>
+<td>"<code>lambda_hat</code> as a magnitude"</td>
+<td>mean of <code>log m</code> over every position — one <code>m_k = 0</code> sends it to <code>−inf</code>; it carries one bit</td>
+<td><code>lambda_hat_live</code></td>
+<td><code>V20_R15_THEORY_TABLE.md:166</code></td>
+</tr>
+<tr>
+<td>"<code>N = 1</code> primitive, not 3"</td>
+<td>struck as UNBOUND; re-bound at it.4 as two arena entries, one primitive</td>
+<td>—</td>
+<td><code>V20_R15_JOURNAL.md:54</code> (C18)</td>
+</tr>
+<tr>
+<td>"M14 at F1, HOW-BAD 108×"</td>
+<td>M14 is <code>F4</code> (RULING J-17d); the <code>F1</code> was a scoreboard line</td>
+<td>—</td>
+<td><code>V20_R15_JOURNAL.md:56</code> (C20)</td>
+</tr>
+<tr>
+<td>"every pair separates by <code>≥ 0.30</code>"</td>
+<td>withdrawn; <code>2.623589e-01</code> at <code>s = 8</code> W1/W2</td>
+<td>"weakest reading <code>2.6e11×</code> the tolerance"</td>
+<td><code>V20_R15_JOURNAL.md:55</code> (C19)</td>
+</tr>
+<tr>
+<td>the <code>0.4899</code> K=8 common-mode share; "common-mode swamping"</td>
+<td>does not reproduce (<code>0.7535 / 0.6517 / 0.6532</code>); the <code>0.7549</code> figure has <code>z = −0.30</code> against its null</td>
+<td>withdrawn</td>
+<td><code>workdonenew.md:407,419</code></td>
+</tr>
+<tr>
+<td>"the label is <code>N(0, t*+1)</code>"</td>
+<td><code>N(0, t*)</code>; <code>b[s−1] = 0</code> kills the <code>m = 0</code> term; measured <code>Var(y) = 2.002719 / 7.984942 / 32.069818</code></td>
+<td><code>N(0, t*)</code></td>
+<td><code>workdonenew.md:381</code></td>
+</tr>
+<tr>
+<td>"<code>err(t) ≤ λ₂ᵗ</code>" in <code>l_∞</code></td>
+<td>violated 6 of 12, worst <code>1.290631</code></td>
+<td>true and tight in the degree-weighted 2-norm (12/12, worst slack <code>7.00e-04</code>)</td>
+<td><code>workdonenew.md:382</code></td>
+</tr>
+<tr>
+<td>"C-F fails 12/12"</td>
+<td><code>δ = 0.5</code> imported from another task's clause; ten of twelve cannot reach it by construction</td>
+<td><code>1/12</code></td>
+<td><code>workdonenew.md:384</code></td>
+</tr>
+<tr>
+<td>"<code>ρ_P = √2</code> for a planted antisymmetric A"</td>
+<td><code>2.000000</code> exactly; <code>√2</code> is the random-matrix value (<code>1.411720</code> at <code>n = 256</code>)</td>
+<td><code>2</code></td>
+<td><code>workdonenew.md:412</code></td>
+</tr>
+<tr>
+<td>"the corpus covers the λ₂ band <code>[0.90, 0.95]</code>"</td>
+<td>12 accepted rungs read <code>0.9435 … 0.9499</code>, <code>12.9 %</code> of the band</td>
+<td>—</td>
+<td><code>workdonenew.md:396</code></td>
+</tr>
+<tr>
+<td>"the arms return a state distribution"</td>
+<td>0 of 40 banked cells journal one; both wings return <code>[n]</code> scalars; the chess witness is NOT a registered bed (<code>kdata.BED_SPECS = ['bed_m','bed_k','bed_1']</code>)</td>
+<td>—</td>
+<td><code>V20_R15_THEORY_TABLE.md:213-224</code></td>
+</tr>
+<tr>
+<td>"S² Rips corpus measured", "Mapper cover measured", "isocommittor surfaces measured"</td>
+<td>no journal row located in the files this section reads</td>
+<td><code>NOT MEASURED — needs &lt;instrument&gt;</code></td>
+<td>this section, M.8.2 last row</td>
+</tr>
+<tr>
+<td>"beats softmax" on any BED-M cell</td>
+<td>the deciding measurement's CI straddles; softmax is a fellow approximator on a bed that asks for a selective scan (<code>R-SKY</code>)</td>
+<td>the paired contrast with its resolution statement (M.2)</td>
+<td><code>workdonenew.md:287-293</code>; <code>CEQ_V16_CONTRACT.md</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="m11-mechanism-map-what-each-table-is-designed-against">M.11 Mechanism map — what each table is designed against<a class="headerlink" href="#m11-mechanism-map-what-each-table-is-designed-against" title="Permanent link">#</a></h2>
+<table>
+<thead>
+<tr>
+<th>table</th>
+<th><code>MISTAKES.md</code> mechanism (<code>READ</code> line)</th>
+<th>how the table discharges it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>M.1 binds</td>
+<td>V-24 (<code>:1658</code>), V-25 (<code>:1954</code>), V-3 (<code>:72</code>)</td>
+<td>every bind row carries a planted negative at O(1) and is measured on BED-M's real support; the two routes of the resolvent check share no code</td>
+</tr>
+<tr>
+<td>M.2 R1</td>
+<td>M-10 (<code>:1072</code>), M-16 (<code>:1346</code>), V-26 (<code>:2190</code>), P-3 (<code>:316</code>), M-6 (<code>:518</code>)</td>
+<td>thread count and device are part of every cell's identity; the bimodal split is printed beside the mean; the CPU journal is superseded by an append-only marker; the N=8 adjudicator refuses below N=8</td>
+</tr>
+<tr>
+<td>M.3 corners</td>
+<td>V-2 (<code>:58</code>)</td>
+<td>distinctness is a measured distance, not a hand-built coincidence</td>
+</tr>
+<tr>
+<td>M.4 device</td>
+<td>M-8 (<code>:544</code>), V-22 (<code>:1140</code>), P-8 (<code>:387</code>)</td>
+<td>one law per arm with its R²; the flag regime is journalled on the header; the R² gate refuses paged points</td>
+</tr>
+<tr>
+<td>M.5 calibration</td>
+<td>D-7 (<code>:2037</code>), M-2 (<code>:451</code>), P-1 (<code>:289</code>)</td>
+<td>every prediction carries a counter; no shrink factor is fitted; every row cites its producing file</td>
+</tr>
+<tr>
+<td>M.6 floors</td>
+<td>C15, V-10 (<code>:168</code>), M-13 (<code>:1210</code>)</td>
+<td>the capability threshold is named as such; the exact oracle at <code>0.0</code> is the floor; the equivalence margin is checked against the thread floor</td>
+</tr>
+<tr>
+<td>M.7 beds</td>
+<td>V-11 (<code>:178</code>), M-19 (<code>:1564</code>), D-2 (<code>:710</code>)</td>
+<td>a label with a delayed cause; the Pesin arithmetic is stated; the committor is cross-checked by three routes</td>
+</tr>
+<tr>
+<td>M.8 instruments</td>
+<td>V-10 (<code>:168</code>), M-2 (<code>:451</code>), V-16 (<code>:828</code>), M-15 (<code>:1289</code>)</td>
+<td>rejection regions demonstrated; thresholds frozen before data; the guard refuses rather than returns; every reading beside its null</td>
+</tr>
+<tr>
+<td>M.10 struck</td>
+<td>P-1 (<code>:289</code>), P-3 (<code>:316</code>), P-6 (<code>:364</code>)</td>
+<td>the registry test fails on reappearance; every stale claim points at its correction row</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="m12-limits-of-this-inventory">M.12 Limits of this inventory<a class="headerlink" href="#m12-limits-of-this-inventory" title="Permanent link">#</a></h2>
+<ul>
+<li>Journal parses this session covered <code>results/v15_r1.jsonl</code>, <code>results/v17k_r4_retake.jsonl</code>,
+  <code>results/v17k_r4_floor.jsonl</code>, <code>results/v20_r15_it6_seeds8_15.jsonl</code>,
+  <code>results/v20_r15_it8_armpl_b.jsonl</code> and <code>results/k_cert_local.json</code>. Every other number
+  is <code>READ</code> from a signed report and was <strong>not</strong> re-executed; the bed and instrument
+  numbers (M.7, M.8) in particular rest on <code>V15_*.md</code> reports at <code>91b862d</code>.</li>
+<li>The <code>13 of 40</code> recount reproduces the theory table's figure exactly, including the three
+  exact re-emissions (43 rows → 40 unique), but the dedupe key <code>(kind, seed)</code> is this
+  session's reading of the table's recipe, not the table's own script.</li>
+<li><code>RUN</code> on the throughput laws reproduces <code>COSTS.md</code> to the printed digits; the memory-law
+  constants reproduce; the <code>arm_phase</code> complex-arm constants (<code>1.842</code>, <code>7.50</code>) are <code>READ</code>
+  from <code>V16_DEVICE_CERT.md</code> and have no entry in <code>results/k_cert_local.json</code>.</li>
+<li>The test-state counts (M.9) are as of <code>91b862d</code> and were not re-run.</li>
+<li>No <code>CITED</code> rows: this section deliberately carries no external source; prior-art
+  occupancy is another planet's table.</li>
+<li><code>house-events.jsonl</code> was not opened.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Invented by <a href="https://teerthsharma.vercel.app/">Teerth Sharma</a> · Apache License 2.0
+    </div>
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/teerthsharma/resolvent" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://teerthsharma.vercel.app/" target="_blank" rel="noopener" title="teerthsharma.vercel.app" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M351.9 280H161c2.9 64.5 17.2 123.9 37.5 167.4 11.4 24.5 23.7 41.8 35.1 52.4 11.2 10.5 18.9 12.2 22.9 12.2s11.7-1.7 22.9-12.2c11.4-10.6 23.7-28 35.1-52.4 20.3-43.5 34.6-102.9 37.5-167.4zm-191-48h190.9c-2.8-64.5-17.1-123.9-37.4-167.4-11.4-24.4-23.7-41.8-35.1-52.4C268.1 1.7 260.4 0 256.4 0s-11.7 1.7-22.9 12.2c-11.4 10.6-23.7 28-35.1 52.4-20.3 43.5-34.6 102.9-37.5 167.4m-48 0c3.5-85.6 25.6-165.1 57.9-217.3C78.7 47.3 10.9 131.2 1.5 232zM1.5 280c9.4 100.8 77.2 184.7 169.3 217.3-32.3-52.2-54.4-131.7-57.9-217.3zm398.4 0c-3.5 85.6-25.6 165.1-57.9 217.3 92.1-32.7 159.9-116.5 169.3-217.3zm111.4-48C501.9 131.2 434.1 47.3 342 14.7c32.3 52.2 54.4 131.7 57.9 217.3z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

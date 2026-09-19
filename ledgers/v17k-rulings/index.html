@@ -1,0 +1,2307 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="One causal head, three switches. Softmax attention, unnormalized-kernel attention and the exact path product of a Markov chain as settings of one operator, proved in Lean 4, with every failure kept on the record.">
+      
+      
+        <meta name="author" content="Teerth Sharma">
+      
+      
+        <link rel="canonical" href="https://teerthsharma.github.io/resolvent/ledgers/v17k-rulings/">
+      
+      
+        <link rel="prev" href="../costs/">
+      
+      
+        <link rel="next" href="../v16-calibration/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/logo.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>V17K rulings - resolvent</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/resolvent.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#ceq-v17-k-g010-ruling-ledger" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="resolvent" class="md-header__button md-logo" aria-label="resolvent" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            resolvent
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              V17K rulings
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/teerthsharma/resolvent" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    teerthsharma/resolvent
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../FAILS/" class="md-tabs__link">
+          
+  
+  
+  The record
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../BED_H_PREREGISTRATION/" class="md-tabs__link">
+          
+  
+  
+  Pre-registrations
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../mistakes/" class="md-tabs__link">
+          
+  
+  
+  Ledgers
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../canon/CHARTER/" class="md-tabs__link">
+          
+  
+  
+  Canon
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../CEQ_SHAPE/" class="md-tabs__link">
+          
+  
+  
+  Paper
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="resolvent" class="md-nav__button md-logo" aria-label="resolvent" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    resolvent
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/teerthsharma/resolvent" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    teerthsharma/resolvent
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The record
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    The record
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../FAILS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Everything retracted, broken or open
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../COMPONENT_LEDGER/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Component ledger
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../PLAN/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Research plan
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CORNER_RULE_RETIREMENT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Corner rule retirement
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../PI_JEPA_KAGGLE_CARD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kaggle card
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../DR2_CARD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DR2 card
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pre-registrations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Pre-registrations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../BED_H_PREREGISTRATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BED-H
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../prereg/REMOVAL_ECHO_v1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    REMOVAL-ECHO v1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ledgers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Ledgers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mistakes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Failure mechanisms
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../struck/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Struck constants
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mathematics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mathematics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../model-card/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model card
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../costs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Costs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    V17K rulings
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    V17K rulings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#open-items-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OPEN-ITEMS TABLE
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-rulings-verbatim" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        THE RULINGS, VERBATIM
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#launch-order-unchanged" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LAUNCH ORDER (unchanged)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../v16-calibration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    V16 calibration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Canon
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Canon
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../canon/CHARTER/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Charter
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../canon/01_THEORY_ACCURACY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01 Theory of accuracy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../canon/02_THEORY_TRAINING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    02 Theory of training
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../canon/03_KERNEL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03 Kernel
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../canon/04_BEDS_AND_INSTRUMENTS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    04 Beds and instruments
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../canon/05_REPAIRS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05 Repairs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../canon/06_PREDICTIONS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    06 Predictions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../canon/08_ARCHITECTURE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    08 Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../canon/09_CHESS_AND_MARKETS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    09 Chess and markets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../canon/CORRECTIONS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Corrections
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Paper
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Paper
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CEQ_SHAPE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The shape of CEQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Paper sources
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../BIB_AUDIT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bibliography audit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../BIB_ALIASES/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bibliography aliases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#open-items-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OPEN-ITEMS TABLE
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-rulings-verbatim" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        THE RULINGS, VERBATIM
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#launch-order-unchanged" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LAUNCH ORDER (unchanged)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="ceq-v17-k-g010-ruling-ledger">CEQ v17-K — G0.10 RULING LEDGER<a class="headerlink" href="#ceq-v17-k-g010-ruling-ledger" title="Permanent link">#</a></h1>
+<p>Filed verbatim from the author's adjudication of the seven questions raised by
+the Gate-0 nodes. <strong>Gate 0 closes only at open-rulings = 0.</strong> This file is the
+register; each ruling's consequential edit is owned by a named node and is not
+discharged until its row reads CLOSED with the file that closed it.</p>
+<h2 id="open-items-table">OPEN-ITEMS TABLE<a class="headerlink" href="#open-items-table" title="Permanent link">#</a></h2>
+<p><strong>G0.10 CONTAINS A CIRCULARITY AND IT IS NOT RESOLVED HERE.</strong> Gate 0 closes at
+open-rulings = 0, and nothing launches until Gate 0 is green. But rows 1 and 2
+are blocked on numbers that <strong>only the Kaggle run produces</strong> — the training
+noise floor (measured on the device the training runs on) and the beta
+distribution of a <strong>trained</strong> model. As written, Gate 0 blocks the run that
+would close it. The rows are marked with which half is pre-launch and which is
+post-run; <strong>whether that split is legitimate, or whether the gate's text should
+change, is the author's ruling and it is not taken here.</strong></p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>ruling</th>
+<th>consequential edit</th>
+<th>owner</th>
+<th>state</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>determinism regime</td>
+<td>L-TOL amendment; training noise floor measured once; COSTS line</td>
+<td>docs / floor node</td>
+<td><strong>OPEN</strong> — amendment FILED (§A1 below). Blocked on ⟨<code>FLOOR_TRAIN_ABS_DLOSS</code>⟩, owed by the floor node, and on the COSTS line landing in <code>COSTS.md</code> (another node's file; drafted paste-ready in <code>99777ab:V17_R1_R3_R7_EDITS.md</code>)</td>
+</tr>
+<tr>
+<td>2</td>
+<td>the corner (criterion now <strong>RULING 10'</strong>, not 2a's <code>5*delta_beta</code>)</td>
+<td>beta LEARNABLE init 1, logged per instance; card template SPLIT</td>
+<td>beta node / docs</td>
+<td><strong>OPEN</strong> — card template rebuilt to RULING 2a's THREE branches + census word-gate, all three written (<code>MODEL_CARD.md</code>, §A2 below). <code>BETA_PIN_CRITERION</code> is now SPECIFIED by RULING 2a itself (<code>\|β_i,final − 1\| ≤ 5·δ_β,i</code>, k=5 heuristic scale); what remains open is its <strong>evaluation</strong>. Blocked on two measurements, neither landed: ⟨<code>DELTA_BETA_PER_PARAM</code>⟩ — per-parameter <code>δ_β,i</code> owed by the <strong>floor node</strong> (<code>scripts/k_noise_floor.py</code>, which today measures only the loss-space floor over the Ruling-1 identical-seed pair, not a per-parameter one) — and ⟨<code>GRADIENT_CENSUS</code>⟩ — per-parameter integrated <code>\|∂L/∂β_i\|</code> owed by the <strong>β node</strong> (<code>ceq/hf/modeling_ceq.py</code>, a new gradient accumulator; <code>beta_summary</code>'s <code>max_abs_grad</code> is a max over logged steps, not the needed integral). <code>BETA_FINAL_DIST</code> and <code>BRANCH_C_LOCATIONS</code> (layer-level only — no per-head <code>β</code> exists to locate) wait on the same two</td>
+</tr>
+<tr>
+<td>3</td>
+<td>matched params</td>
+<td>exact counts in every table header; one COSTS line</td>
+<td>docs</td>
+<td><strong>OPEN</strong> — exact counts filed in every comparison-table header this node owns (§A3 below; <code>MODEL_CARD.md</code>). Blocked on the COSTS line landing in <code>COSTS.md</code> (another node's file; drafted paste-ready in <code>99777ab:V17_R1_R3_R7_EDITS.md</code>)</td>
+</tr>
+<tr>
+<td>4</td>
+<td>CPU cells</td>
+<td>re-take on the certified 4060; journal supersede marks</td>
+<td>re-take node</td>
+<td><strong>CLOSED</strong> by <code>99777ab:V17_R4_RETAKE.md</code>. 24 cells on the 4060 in <code>results/v17k_r4_retake.jsonl</code>, <strong>2.79 GPU-min</strong> against the <code>~2 GPU-h</code> estimate (43x over-book, measured). No verdict moves: 0 sign-flips in 16, worst device delta <code>9.522e-03</code> on <code>arm_pl</code> seed 7 — <strong>not</strong> on the control as the probe's 6-cell sample suggested. <code>results/v15_r1.jsonl</code> 25 -&gt; 26 lines, first 25 bytes identical, append-only supersede marker (L-G2)</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Q1 instrument</td>
+<td>hash into identity manifest; one L-SCOPE check</td>
+<td>manifest node</td>
+<td><strong>CLOSED</strong> by <code>99777ab:V17_R5_INSTRUMENT.md</code>. Digest <code>77429cdb...35498</code> over <strong>two</strong> components (file bytes + a bytecode fingerprint of 15 reached callables), so a helper edit in another module moves it. L-SCOPE measured, not asserted: both mains run with a recording spy, tensors <strong>bitwise identical</strong> at the same seed. Every cell now carries <code>instrument_hash</code> automatically</td>
+</tr>
+<tr>
+<td>6</td>
+<td>envelope text</td>
+<td>six edits to <code>ceq/autopilot.py</code> and its tests</td>
+<td>envelope node</td>
+<td><strong>CLOSED</strong> by <code>99777ab:V17_R6_ENVELOPE.md</code>. 48 -&gt; <strong>62 tests</strong>. 6a/6b/6e/6f needed code; <strong>6c and 6d were already true</strong> and were verified and covered rather than staged as fixes. Structural <code>note</code>-blindness survives, re-verified over the two new helpers</td>
+</tr>
+<tr>
+<td>7</td>
+<td>BED-M</td>
+<td>generator+seed+hash regime; attach-list item 4 corrected</td>
+<td>docs / notebook</td>
+<td><strong>CLOSED</strong> by <code>kaggle/README.md</code> ("Attach list — item 4, CORRECTED") and §A4 below. The regime was already carried by <code>kaggle/ceq_v17k.ipynb</code> cell 4 (<code>DATASET_PATHS</code>, nothing to attach for the three beds) and cell 6 (<code>ceq.kdata.bed_signature</code>, all three regenerated), over <code>results/k_data_manifest.json</code>'s <code>bed_m</code> <code>kind: generator</code>, <code>status: PINNED</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>State legend.</strong> A row is CLOSED only when every half of its consequential
+edit is landed in a file. A row whose edit waits on a number another node is
+still measuring, or on a file another node owns, stays OPEN with the
+dependency named. Amendments and the slots they leave open are in
+"AMENDMENTS" at the foot of this file.</p>
+<hr />
+<h2 id="the-rulings-verbatim">THE RULINGS, VERBATIM<a class="headerlink" href="#the-rulings-verbatim" title="Permanent link">#</a></h2>
+<p><strong>RULING 1 — DETERMINISM REGIME: CUDA with warn_only=True.</strong> Bitwise is
+REQUIRED for: resume/replay (G0.2) and every deciding INFERENCE cell
+(forward-only, strict mode ON — the hole is in backward). Training between
+checkpoints inherits the hole; its noise floor is MEASURED ONCE (two
+identical-seed chunks, |Δ| final loss) and recorded in COSTS. L-TOL amended:
+bitwise for replay+forward; the measured floor for training. CPU-strict is
+REFUSED (loses the certified device; that is a different round).</p>
+<p><strong>RULING 2 — THE CORNER:</strong> the β=1 label-bind failure (1.335288) is Lean #5a's
+content, not a bug — corners are distinct objects. Q3 trains with β LEARNABLE,
+INIT 1, per-instance β logged as a column. The card sentence SPLITS: identity
+clause cites the β=0 certificate (unchanged, real); trained-model clause states
+only what was trained, with the final β distribution printed. If β pins at 1:
+the shipped model is the softmax-corner object carrying an unused
+exact-propagation corner — say exactly that. NO sentence transfers across
+corners without a bind at the corner it describes.</p>
+<p><strong>RULING 3 — MATCHED PARAMS:</strong> 0.032% residual is MATCHED. Print exact counts
+in every table header + one COSTS line ("residual excluded as explanation by
+magnitude"). Do NOT re-architect to close 1.5k params — that is how new
+constructions sneak in.</p>
+<p><strong>RULING 4 — CPU CELLS: RE-TAKE, never widen.</strong> R1′ and every deciding cell
+re-run on the certified 4060 before launch (~2 GPU-h). CPU cells stay in the
+journal as <code>device:cpu</code>, superseded — never deleted (L-G2). Tolerance widening
+to absorb an unmeasured CPU↔CUDA delta is REFUSED.</p>
+<p><strong>RULING 5 — Q1/Q2 INSTRUMENT:</strong> <code>scripts/v15_r1.py</code> is ADOPTED as the named
+instrument. Hash into the identity manifest; one L-SCOPE check (its batch path
+== production path); Q1/Q2 cite it by hash. Optional rename
+<code>scripts/q1_r1prime.py</code>; the hash is the identity either way.</p>
+<p><strong>RULING 6 — ENVELOPE TEXT</strong> (six ambiguities, now law):
+- <strong>6a</strong> stale journal = no write for 2 CONSECUTIVE POLLS.
+- <strong>6b</strong> "session &lt;20 min" = KAGGLE'S reported remaining time.
+- <strong>6c</strong> simultaneous triggers: highest tier wins; within tier, table order.
+  Tier-3 co-firing with a Tier-1 fix ⇒ HALT, not fix.
+- <strong>6d</strong> Tier-2 lineage scoped PER ROOT CELL: two Tier-2 on any cell descended
+  from one root ⇒ Tier 3 (no laundering via chains).
+- <strong>6e</strong> OOM keyed per (cell, shape): second OOM at same shape after halving ⇒
+  Tier 3, not a second halving.
+- <strong>6f</strong> deciding-cell membership = explicit cell-id list, FROZEN at launch; may
+  shrink mid-flight, never grow.</p>
+<p><strong>RULING 7 — BED-M:</strong> generator + seed + expected hash, regenerated and
+asserted in-notebook (same regime as BED-K/BED-1). Attach-list item 4's "intact
+file" language corrected in the same commit; the hash assertion IS the
+provenance on Kaggle.</p>
+<hr />
+<h2 id="launch-order-unchanged">LAUNCH ORDER (unchanged)<a class="headerlink" href="#launch-order-unchanged" title="Permanent link">#</a></h2>
+<p>G0.1–G0.10 green → K-CERT first on Kaggle (δ/tol &lt; 50% or HALT) → Q1 → Q2 →
+Q3 (β learnable, init 1) → Q4 → cross-device table → HF package on explicit
+say-so.</p>
+<hr />
+<h1 id="amendments-the-consequential-edits-as-filed">AMENDMENTS — THE CONSEQUENTIAL EDITS, AS FILED<a class="headerlink" href="#amendments-the-consequential-edits-as-filed" title="Permanent link">#</a></h1>
+<p>Each section below is a consequential edit of a ruling above, written down here
+rather than in the file the ruling is about, wherever that file is
+verbatim-of-record. <strong>Nothing in this part is a new claim.</strong> Every figure is
+cited to the file that measured it, or written as a named slot marked
+<code>NOT MEASURED</code> with the node that owes it. A slot is not a prediction.</p>
+<p>Filed by the R1/R3/R7 documentary node at HEAD <code>ab5b485</code>. Deliverable and
+before/after quotations: <code>99777ab:V17_R1_R3_R7_EDITS.md</code>.</p>
+<hr />
+<h2 id="a1-l-tol-as-amended-by-ruling-1">A1 — L-TOL, AS AMENDED BY RULING 1<a class="headerlink" href="#a1-l-tol-as-amended-by-ruling-1" title="Permanent link">#</a></h2>
+<p><strong>Where this lives, and why it is not in the contract.</strong> L-TOL is listed among
+the STANDING LAWS at <code>99777ab:CEQ_V16_CONTRACT.md:49</code>. That file is filed verbatim from
+the author's message of 2026-08-31 and is verbatim-of-record; <strong>it was not
+edited.</strong> This section is the amendment, and this text is what binds for round
+v17-K.</p>
+<blockquote>
+<p><strong>L-TOL, AS AMENDED:</strong> <em>bitwise for replay + forward; the measured floor for
+training.</em></p>
+</blockquote>
+<p>The amendment is a consequence of Ruling 1's determinism regime — <strong>CUDA with
+<code>torch.use_deterministic_algorithms(True, warn_only=True)</code></strong>, which is exit 2 of
+the three priced in <code>99777ab:V16_DEVICE_CERT.md</code> §5.3.1, chosen there because it is the
+only exit that leaves the bar's certification regime and the run's regime the
+same flag at the same setting, and because it is free: the <code>warn_only</code>/off ratio
+read <code>1.06/1.06/1.26</code>, <code>1.06/0.95/1.09</code>, <code>1.18/1.18/1.32</code> across three runs,
+<strong>including a value below 1</strong>, which a real cost cannot produce
+(<code>99777ab:V16_DEVICE_CERT.md</code> §5.3.1) <code>[MEASURED]</code>. <strong>CPU-strict is REFUSED</strong> — it loses
+the certified device, and that is a different round.</p>
+<h3 id="a11-held-to-bitwise-torchequal-never-allclose">A1.1 — HELD TO BITWISE (<code>torch.equal</code>, never <code>allclose</code>)<a class="headerlink" href="#a11-held-to-bitwise-torchequal-never-allclose" title="Permanent link">#</a></h3>
+<p>Two claim classes, and no others, are held to bitwise equality:</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>claim class</th>
+<th>scope of the bitwise requirement</th>
+<th>status today</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>B1</strong></td>
+<td><strong>resume / replay — G0.2 K-RESUME</strong></td>
+<td>the resumed run reproduces the un-interrupted run on all four checkpointed components; and a checkpoint round-trip (<code>save_pretrained</code> → <code>from_pretrained</code>) reproduces the logits</td>
+<td><strong>MET.</strong> <code>99777ab:V17_G02_G03_CHECKPOINT.md</code> §1 records G0.2 <strong>GREEN</strong> — bitwise on all four components, <code>k=2 → k+m=5</code>, CPU <strong>and</strong> CUDA, three planted negatives <code>[MEASURED]</code>. The arm's own checkpoint round-trip is bitwise under <code>torch.equal</code> at <code>operator="smprime"</code> (<code>99777ab:V17_ARM_WIRING.md</code> verdict row (h)) <code>[MEASURED]</code></td>
+</tr>
+<tr>
+<td><strong>B2</strong></td>
+<td><strong>every deciding INFERENCE cell</strong></td>
+<td>forward-only, <strong>strict determinism ON</strong> (<code>use_deterministic_algorithms(True)</code>, no <code>warn_only</code>), on the certified device</td>
+<td><strong>EXECUTABLE, MEMBERSHIP NOT FROZEN.</strong> The shipped arm's forward runs under strict mode and is bitwise there: <code>arm_smprime.operator</code> and <code>arm_smprime.path_product</code> read <code>OK</code> under <code>use_deterministic_algorithms(True)</code> on cuda, where <code>arm_phase.operator</code> and <code>arm_phase.scan_phase</code> <strong>RAISE</strong> (<code>99777ab:V16_ARM_SMPRIME.md</code> §9) <code>[MEASURED]</code>; and <code>COSTS.md</code> §1.6 reads hop and full forward <strong>bitwise, max|Δ| = 0.0, flag ON and OFF</strong>, 8 repeats at reduction length 64 <code>[MEASURED]</code>. What is <strong>not</strong> settled is which cells are on the list — see the slot below — and whether each reproduces bitwise on the certified 4060 after Ruling 4's re-take</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Why B2 is stated forward-only.</strong> The hole is in <strong>backward</strong> (Ruling 1's own
+words). A deciding inference cell never takes a backward pass, so strict mode is
+both affordable and executable for it; a training step is not, which is A1.2.</p>
+<p><strong>B2's membership is a list, not a description.</strong> Ruling 6f: deciding-cell
+membership is an <strong>explicit cell-id list, FROZEN at launch</strong>, and may shrink
+mid-flight, never grow.</p>
+<blockquote>
+<p>⟨SLOT <code>DECIDING_CELL_IDS</code>⟩ — <strong>NOT MEASURED / NOT FROZEN.</strong> The explicit
+cell-id list frozen at launch under Ruling 6f. Owed by the envelope node
+(ledger row 6) together with the author's launch call. Until it exists, B2
+names a requirement and not a set.</p>
+</blockquote>
+<h3 id="a12-held-to-the-measured-floor">A1.2 — HELD TO THE MEASURED FLOOR<a class="headerlink" href="#a12-held-to-the-measured-floor" title="Permanent link">#</a></h3>
+<table>
+<thead>
+<tr>
+<th>claim class</th>
+<th>regime</th>
+<th>why it cannot be bitwise</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>training between checkpoints</strong></td>
+<td><code>use_deterministic_algorithms(True, warn_only=True)</code>; the run is compared against the <strong>measured noise floor</strong>, never against <code>0</code></td>
+<td>It <strong>inherits the CUDA backward hole, and the hole is now measured.</strong> <code>COSTS.md</code> §1.6: the arm's <strong>gradient is NOT EXECUTABLE with the flag ON</strong> — <code>cumsum_cuda_kernel</code> has no deterministic implementation and autograd reaches it through the backward of <code>cumprod</code> <code>[MEASURED]</code>. So the round runs <code>warn_only=True</code>, where that kernel warns instead of raising (<code>99777ab:V16_DEVICE_CERT.md</code> §5.3.1), and a claim of bitwise training under that regime would be a claim about kernels nobody selected</td>
+</tr>
+</tbody>
+</table>
+<p><strong>The floor's definition, from Ruling 1 verbatim:</strong> MEASURED ONCE, as <strong>two
+identical-seed chunks</strong>, read as <strong><code>|Δ|</code> final loss</strong>, and recorded in COSTS.</p>
+<blockquote>
+<p>⟨SLOT <code>FLOOR_TRAIN_ABS_DLOSS</code>⟩ — <strong>NOT MEASURED.</strong> <code>|Δ|</code> final loss between
+two identical-seed training chunks on the certified RTX 4060 under
+<code>warn_only=True</code>. Owed by the <strong>floor node</strong> (ledger row 1 owner). It is being
+measured as this is written; <strong>no number is written here, and none is
+guessed.</strong> Until it lands, every training-side tolerance in round v17-K is
+undefined and no training comparison is licensed. <code>COSTS.md</code> §4 already holds
+the placeholder this number lands in (“<strong>☐ NOT YET MEASURED</strong>”).</p>
+<p>⟨SLOT <code>FLOOR_CHUNK_SPEC</code>⟩ — <strong>NOT MEASURED.</strong> The chunk the floor is measured
+on (steps, shape, seed, device, operator) travels with the number, or the
+number is a constant validated on one shape and applied to another — the V-22
+class <code>99777ab:V16_DEVICE_CERT.md</code> §3.2 names. Owed by the same node.</p>
+</blockquote>
+<h3 id="a13-what-this-amendment-implies-that-nobody-has-measured">A1.3 — WHAT THIS AMENDMENT IMPLIES THAT NOBODY HAS MEASURED<a class="headerlink" href="#a13-what-this-amendment-implies-that-nobody-has-measured" title="Permanent link">#</a></h3>
+<p>Written as slots, not as claims, per this round's first law.</p>
+<p>~~⟨SLOT <code>SMPRIME_BACKWARD_UNDER_STRICT</code>⟩~~ — <strong>FILLED WHILE THIS SECTION WAS
+BEING WRITTEN, by the COSTS node.</strong> <code>COSTS.md</code> §1.6 measures the workhorse arm
+<code>ceq/arm_smprime.py</code> at the arms' reduction length 64, 8 repeats, both regimes:
+hop and full forward <strong>bitwise, max|Δ| = 0.0, under the flag ON as well as OFF</strong>;
+<strong>gradient bitwise with the flag OFF and NOT EXECUTABLE with the flag ON</strong> —
+<code>RuntimeError: cumsum_cuda_kernel does not have a deterministic implementation</code>,
+raised by the <strong>backward</strong> of <code>cumprod</code>, which autograd computes with <code>cumsum</code>
+<code>[MEASURED]</code>. <strong>Moving the arm from a prefix scan to a path product did not
+escape the missing kernel; it moved it from the forward to the backward</strong>
+(<code>COSTS.md</code> §1.6). This is the direct measurement behind Ruling 1's "the hole is
+in backward", and it is why B2 is forward-only and A1.2 is a floor.</p>
+<blockquote>
+<p>⟨SLOT <code>DECIDING_CELL_BITWISE_RETAKE</code>⟩ — <strong>NOT MEASURED.</strong> Whether each cell on
+the frozen list actually reproduces bitwise under strict mode on the certified
+4060. Owed by the <strong>re-take node</strong> (ledger row 4): R1′ and every deciding cell
+re-run on the certified device before launch. CPU cells stay in the journal as
+<code>device:cpu</code>, superseded, never deleted (L-G2); tolerance widening to absorb an
+unmeasured CPU↔CUDA delta is REFUSED.</p>
+</blockquote>
+<h3 id="a14-what-the-amendment-does-not-do">A1.4 — WHAT THE AMENDMENT DOES NOT DO<a class="headerlink" href="#a14-what-the-amendment-does-not-do" title="Permanent link">#</a></h3>
+<ul>
+<li>It does not widen any tolerance. The floor is a <strong>measurement</strong>, not a bar
+  chosen to admit a reading.</li>
+<li>It does not license <code>allclose</code> anywhere in B1 or B2.</li>
+<li>It does not change the flag. <code>warn_only=True</code> is the regime for the whole run;
+  the strict forward cells set strict mode <strong>for themselves</strong>, and that is the
+  only place strict mode appears.</li>
+<li>It does not touch <code>99777ab:CEQ_V16_CONTRACT.md</code>.</li>
+</ul>
+<hr />
+<h2 id="a2-ruling-2-the-documentary-half-where-the-card-split-lives">A2 — RULING 2, THE DOCUMENTARY HALF: WHERE THE CARD SPLIT LIVES<a class="headerlink" href="#a2-ruling-2-the-documentary-half-where-the-card-split-lives" title="Permanent link">#</a></h2>
+<p>The card's split sentence is built in <code>MODEL_CARD.md</code>, section <strong>"v17-K — THE
+SHIPPED MODEL (Q3): CARD TEMPLATE, LIMITS FIRST"</strong>, as a template with named
+slots and <strong>both branches written</strong> — the text if <code>β</code> moves off <code>1</code> and the text
+if <code>β</code> pins at <code>1</code>. The identity clause there cites the existing <code>β=0</code>
+certificate <strong>unchanged</strong>: <code>99777ab:V16_ARM_SMPRIME.md</code> verdict rows (a)–(c) and the
+statements in <code>lean/CEQ/V16Domain.lean</code> they evaluate.</p>
+<p>The code half of Ruling 2 — <code>β</code> LEARNABLE, INIT 1, per-instance <code>β</code> logged as a
+column — is the <strong>β node's</strong> and is not discharged here.</p>
+<blockquote>
+<p>⟨SLOT <code>BETA_PIN_CRITERION</code>⟩ — <strong>NOT SPECIFIED.</strong> Ruling 2 branches on whether
+<code>β</code> "pins at 1", and <strong>states no test for it</strong>. The card's two branches are
+both written; which one ships is a decision nobody has defined a rule for.
+Owed by the author / the β node, before Q3's card is finalised.</p>
+</blockquote>
+<hr />
+<h2 id="a3-ruling-3-the-exact-counts">A3 — RULING 3, THE EXACT COUNTS<a class="headerlink" href="#a3-ruling-3-the-exact-counts" title="Permanent link">#</a></h2>
+<p><code>99777ab:V17_ARM_WIRING.md</code> §5 <code>[MEASURED]</code>, this box, CPU, float32:</p>
+<table>
+<thead>
+<tr>
+<th>shape</th>
+<th><code>operator="smprime"</code> (arm)</th>
+<th><code>operator="sgate"</code> (softmax-shaped control)</th>
+<th>difference</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>d=32, L=2, H=4, V=32, S=16</code></td>
+<td><strong>27,914</strong></td>
+<td><strong>27,776</strong></td>
+<td><strong>+138</strong> = <code>2·(2·(32+1)+3)</code></td>
+</tr>
+<tr>
+<td><code>ceq/hf/train.py::DEFAULTS</code> — <code>d=512, L=8, H=8, V=256, seq=512</code></td>
+<td><strong>25,736,232</strong></td>
+<td><strong>25,728,000</strong></td>
+<td><strong>+8,232</strong> = <code>8·(2·(512+1)+3)</code> = <strong>+0.03200 %</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Formula <code>n_layers · (2·(d+1) + 3)</code>: the arm's <strong>two per-position heads</strong>
+(<code>m_head</code>, <code>theta_head</code>, each a <code>[1,d]</code> weight plus a <code>[1]</code> bias) and <strong>three
+scalar switches</strong> (<code>beta</code>, <code>qk</code>, <code>g</code>) — named tensor by tensor in
+<code>99777ab:V17_ARM_WIRING.md</code> §5, with the assertion that the control has <strong>no</strong> parameter
+the arm lacks. Cross-checks <code>99777ab:V16_ARM_SMPRIME.md</code> §1: <code>4,806 − 4,769 = 37 =
+2·16 + 5</code> at <code>d_model = 16</code> <code>[MEASURED]</code>.</p>
+<p><strong>Which way it cuts, recorded because it is the caveat that matters:</strong> the arm
+carries <strong>more</strong> parameters, so a reading favourable to the arm is the one that
+needs the caveat (<code>99777ab:V17_ARM_WIRING.md</code> §5, FINDING FOR THE AUTHOR).</p>
+<p>The COSTS line Ruling 3 requires is <strong>drafted, not landed</strong> — <code>COSTS.md</code> belongs
+to another node and was being written while this was filed. That file's §4
+(“SLOTS OWNED BY OTHER NODES”) already carries the placeholder — <em>“RULING 3 —
+matched params … </em><em>☐ NOT YET WRITTEN.</em><em> Owner: docs”</em> — and the paste-ready text
+for it is in <code>99777ab:V17_R1_R3_R7_EDITS.md</code>, section “COSTS LINES, PASTE-READY”.
+<strong>No edit to <code>COSTS.md</code> was made by this node.</strong></p>
+<hr />
+<h2 id="a4-ruling-7-attach-list-item-4">A4 — RULING 7, ATTACH-LIST ITEM 4<a class="headerlink" href="#a4-ruling-7-attach-list-item-4" title="Permanent link">#</a></h2>
+<p>Attach-list item 4 asked for BED-M "as the intact <strong>211,765-line</strong> file (not
+regenerated; hash-pinned)". <strong>That file does not exist and none was created</strong>
+(<code>99777ab:V17_G05_DATA.md</code> §6 <code>[MEASURED]</code>: every file in the working tree over 1 MB was
+line-counted; exactly one has 211,765 lines and it is <code>data/tinystories_20k.txt</code>,
+TinyStories, not a chain corpus). BED-M has no on-disk artifact at all — it is
+<code>ceq/corpus.py::build()</code>, named as BED-M by <code>ceq/beds/__init__.py:3</code>.</p>
+<p><strong>Regime, per Ruling 7:</strong> generator + seed + expected hash, regenerated and
+asserted in-notebook, <strong>same as BED-K and BED-1</strong>. On Kaggle <strong>the hash
+assertion IS the provenance.</strong> Digests cited from <code>results/k_data_manifest.json</code>,
+not retyped from memory; corrected language filed in <code>kaggle/README.md</code>.</p>
+<hr />
+<h1 id="ruling-2a-pinned-defined-closes-the-ruling-2-hole">RULING 2a — "PINNED" DEFINED (closes the Ruling-2 hole)<a class="headerlink" href="#ruling-2a-pinned-defined-closes-the-ruling-2-hole" title="Permanent link">#</a></h1>
+<p>Filed after the docs node reported that Ruling 2 branched on "β pins at 1" and
+never defined it. Ledger row 2 stays OPEN until the β node and the floor node
+land the two measurements below.</p>
+<p><strong>BASIS.</strong> The Ruling-1 identical-seed pair yields <code>δ_β = |β⁽ᵃ⁾ − β⁽ᵇ⁾|</code> <strong>per
+β-parameter</strong> at end of training — the noise floor measured in β's OWN units,
+from runs already paid for. The loss-space floor was one instance of a general
+rule, now stated:</p>
+<blockquote>
+<p><strong>A QUANTITY'S NOISE FLOOR IS MEASURED IN THAT QUANTITY'S UNITS FROM THE
+IDENTICAL-SEED PAIR.</strong></p>
+</blockquote>
+<p>The unit-transfer weakness raised against the loss-floor proposal is thereby
+<strong>dissolved, not answered</strong>.</p>
+<p><strong>CRITERION.</strong> <code>β_i</code> is PINNED iff <code>|β_i,final − 1| ≤ 5·δ_β,i</code>. <strong><code>k = 5</code> is
+labeled HEURISTIC SCALE, not a CI</strong> — one pair is one draw of the noise, and
+the label says so on the card.</p>
+<p><strong>QUANTIFIER</strong> (the second hole the first was hiding). "β pins" is
+<strong>per-parameter</strong>; the card reports the DISTRIBUTION (min, median, max,
+fraction pinned). The original two branches were a <strong>false dichotomy</strong>. Three:</p>
+<table>
+<thead>
+<tr>
+<th>branch</th>
+<th>condition</th>
+<th>card says</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A</td>
+<td><strong>≥95 % pinned</strong></td>
+<td>"the shipped model is the softmax-corner object carrying an unused exact-propagation corner"</td>
+</tr>
+<tr>
+<td>B</td>
+<td><strong>≤5 % pinned</strong></td>
+<td>"training left the softmax corner; the model is the interpolated object, β distribution printed"</td>
+</tr>
+<tr>
+<td>C</td>
+<td><strong>else — MIXED</strong></td>
+<td>the likely outcome and the most informative one: print the distribution <strong>and WHERE the moved β's live</strong> (which layers / heads), because a model that leaves the corner only in some heads is a finding about <strong>where exactness pays</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>GRADIENT CENSUS</strong> (distinguishes two meanings of "pinned"). Per pinned <code>β_i</code>,
+the <strong>integrated <code>|∂L/∂β_i|</code> over training</strong>, against the same statistic for
+moved β's.</p>
+<ul>
+<li><strong>PINNED-WITH-SIGNAL</strong> — gradient arrived and β returned to 1; softmax is
+  genuinely preferred there.</li>
+<li><strong>PINNED-WITHOUT-SIGNAL</strong> — the dial was never exercised; the claim weakens to
+  <strong>"unused"</strong>, never <strong>"preferred"</strong>.</li>
+</ul>
+<p><strong>The card sentence must use the census's word, not the flattering one.</strong></p>
+<p><strong>PRECEDENCE.</strong> This is the DEFAULT criterion. If the β node's proposal arrives
+with a defensible basis that differs, it is adjudicated against this one by
+<strong>which claims less</strong> — the criterion that licenses the weaker sentence wins
+ties. (L-SIGN's direction, applied to definitions.)</p>
+<p><strong>COST.</strong> Zero new runs (the pair exists); one extra logged tensor (β trajectory
++ its gradient accumulator); one card template edit (two branches → three, plus
+the census word).</p>
+<hr />
+<h1 id="ruling-8-q2-dropped">RULING 8 — Q2 DROPPED<a class="headerlink" href="#ruling-8-q2-dropped" title="Permanent link">#</a></h1>
+<p><strong>Q2 (R2 reproduction, <code>t*=8</code>, <code>n=16,384</code>) is DROPPED.</strong></p>
+<p>The finding that forced it: <code>arm_smprime</code> at <code>n=16,384</code> reserves <strong>10.578 GiB</strong>
+under a training loop against the 4060's <strong>7.996 GiB</strong>, so the shape <strong>does not
+fit the certified device</strong>. The same shape is 59 % of a T4's budget, so it fits
+Kaggle — which places Q2's deciding cell exactly where the KILL clause strikes
+it: <em>local decides, and local cannot run it.</em> There was no re-take to price
+because there was nothing to re-take.
+(Secondary, and not the reason: <code>T_STAR = 2</code> is a module constant at
+<code>scripts/v15_r1.py:124</code> with no <code>--t-star</code> flag.)</p>
+<p><strong>Queue after this ruling:</strong> K-CERT → <strong>Q1</strong> → <strong>Q3</strong> → <strong>Q4</strong> → cross-device
+table → HF package on explicit say-so.</p>
+<p><strong>CONSEQUENCE, FLAGGED NOT DECIDED.</strong> R2's deciding cell cannot run on the
+certified device either, by the same memory fact. Dropping the <em>reproduction</em>
+does not supply the <em>reading</em>. Whether the round carries an R2 row at all is a
+separate question this ruling does not answer, and it should not be answered by
+silence.</p>
+<p><strong>CONSEQUENTIAL EDIT OWED:</strong> <code>kaggle/ceq_v17k.ipynb</code> still carries a Q2 cell.</p>
+<hr />
+<h1 id="ruling-9-the-regime-for-r1-cells-derived-from-the-north-star">RULING 9 — THE REGIME FOR R1′ CELLS, DERIVED FROM THE NORTH STAR<a class="headerlink" href="#ruling-9-the-regime-for-r1-cells-derived-from-the-north-star" title="Permanent link">#</a></h1>
+<p><strong>The question.</strong> An R1′ cell takes <strong>150 gradient steps</strong>, so it is not
+forward-only and strict determinism is <strong>not executable</strong> on it (autograd
+differentiates <code>cumprod</code> with <code>cumsum</code>). Ruling 1's two clauses — bitwise for
+replay+forward, measured floor for training — did not anticipate a <em>deciding</em>
+cell that trains.</p>
+<p><strong>The north star decides it</strong> (<code>99777ab:CEQ_V16_CONTRACT.md</code>, immutable):</p>
+<blockquote>
+<p>Attention that is <strong>EQUAL to self-attention on its own ground</strong>, built FROM
+softmax and AdamW, and capable on ground they cannot occupy.</p>
+</blockquote>
+<p>R1′ exists to adjudicate an <strong>equality claim</strong>. An equality claim is only as
+strong as the noise it is read against: <em>equal to within a tolerance nobody
+measured is not a result.</em> So R1′ cells fall under the <strong>measured-floor
+clause</strong>, and the floor is not optional decoration — <strong>no equality or
+non-equality statement may be made about an R1′ cell without its floor printed
+beside it.</strong></p>
+<p><strong>The floor for these cells, by Ruling 2a's general rule</strong> (<em>a quantity's noise
+floor is measured in that quantity's units from the identical-seed pair</em>):
+<code>δ_nrmse</code> = <code>|eval_nrmse⁽ᵃ⁾ − eval_nrmse⁽ᵇ⁾|</code> over an <strong>identical-seed repeat on
+the certified device under the ruled regime</strong> (<code>warn_only=True</code>). It is NOT the
+seed-to-seed spread, which is a different quantity answering a different
+question.</p>
+<p><strong>Note for the measurement:</strong> a flag-OFF identical-seed repeat during pricing
+came back <strong>bitwise identical</strong> on <code>eval_nrmse</code>. If that survives under
+<code>warn_only=True</code>, the floor is ~0 and the equality claims are held very tight —
+which is the outcome the north star wants, and is exactly why it must be
+measured rather than assumed.</p>
+<hr />
+<h1 id="ruling-10-pinned-by-likelihood-ratio">RULING 10′ — "PINNED" BY LIKELIHOOD RATIO<a class="headerlink" href="#ruling-10-pinned-by-likelihood-ratio" title="Permanent link">#</a></h1>
+<p><strong>Supersedes Ruling 10. The ulp criterion is STRUCK as engineering wearing a
+ruling's hat.</strong> Ruling 2a's <code>5·δ_β</code> threshold retires from the criterion with
+it; <code>δ_β</code> survives as the diagnostic it always was.</p>
+<p><strong>THE CRITERION.</strong> Pinned is a <strong>1-dof nested-model comparison</strong>, decided by the
+canonical constants:</p>
+<pre><code>Λ = 2·[ LL_eval(β_final) − LL_eval(β ≡ 1) ]
+</code></pre>
+<p>computed by <strong>two deterministic forward passes on the held-out eval split</strong> — no
+training, no pairs, no floors.</p>
+<table>
+<thead>
+<tr>
+<th>Λ</th>
+<th>verdict</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>≤ 3.841</strong> (χ²₁ at 0.95, Wilks <code>[V]</code>)</td>
+<td><strong>PINNED</strong> — the data cannot reject that the shipped model is the softmax-corner object</td>
+</tr>
+<tr>
+<td><strong>&gt; ln n</strong> (BIC <code>[V]</code>, <code>n</code> = eval count; <code>[RUN: 8.29 at n = 4000]</code>)</td>
+<td><strong>MOVED</strong> — the dial buys its description length</td>
+</tr>
+<tr>
+<td><strong>3.841 &lt; Λ ≤ ln n</strong></td>
+<td>the card prints the <strong>interval verdict</strong> — <em>"rejected at 0.95, below description-length"</em> — both constants, no interpolation, no invented <code>k</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>WHY THE DEGENERATE FLOOR DISSOLVES RATHER THAN NEEDING A PATCH.</strong> Wilks'
+randomness is over the <strong>DATA</strong>, not the optimizer. A bitwise training pair is
+simply <strong>irrelevant</strong> to the test. (The measured <code>δ_nrmse = 0.0</code> on the certified
+device, which broke the <code>5·δ_β</code> criterion by making its tolerance exactly zero,
+therefore stops mattering rather than needing a floor-of-the-floor.)</p>
+<p><strong>THE UNITS OBJECTION, CLOSED BY THE METRIC.</strong> The Wald form
+<code>(β_final − 1)²·I_β ≷ 3.841</code>, with <code>I_β</code> the observed Fisher information in β, is
+the asymptotically equivalent parameter-space statement. <strong>Fisher information IS
+the converter between parameter displacement and likelihood displacement.</strong> The β
+node's original objection was correct and is <strong>answered by the metric, not
+waived</strong>.</p>
+<p><strong>HONEST POWER, PRINTED.</strong> The verdict ships with its minimum detectable
+departure:</p>
+<pre><code>|β − 1|_min  ≈  √( 3.841 / (n · I_β) )
+</code></pre>
+<p><code>[RUN: a real 2 % departure is detected only 32 % of the time at n = 4000]</code> — so
+<strong>"PINNED" means "indistinguishable at this resolution", and the resolution is a
+number on the card, never an implication of exactness.</strong></p>
+<p><strong>UNCHANGED:</strong> the three-branch card (2a's quantifier), the <strong>gradient census</strong>
+(pinned-with-signal vs pinned-without-signal — still the scientific payload),
+per-parameter reporting.</p>
+<p><strong>COST.</strong> Two forward passes and one Hessian-diagonal read. Zero new runs, zero
+invented constants — <code>3.841</code>, <code>ln n</code> and <code>2</code> were on the shelf the whole time.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../costs/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Costs">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Costs
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../v16-calibration/" class="md-footer__link md-footer__link--next" aria-label="Next: V16 calibration">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                V16 calibration
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Invented by <a href="https://teerthsharma.vercel.app/">Teerth Sharma</a> · Apache License 2.0
+    </div>
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/teerthsharma/resolvent" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://teerthsharma.vercel.app/" target="_blank" rel="noopener" title="teerthsharma.vercel.app" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M351.9 280H161c2.9 64.5 17.2 123.9 37.5 167.4 11.4 24.5 23.7 41.8 35.1 52.4 11.2 10.5 18.9 12.2 22.9 12.2s11.7-1.7 22.9-12.2c11.4-10.6 23.7-28 35.1-52.4 20.3-43.5 34.6-102.9 37.5-167.4zm-191-48h190.9c-2.8-64.5-17.1-123.9-37.4-167.4-11.4-24.4-23.7-41.8-35.1-52.4C268.1 1.7 260.4 0 256.4 0s-11.7 1.7-22.9 12.2c-11.4 10.6-23.7 28-35.1 52.4-20.3 43.5-34.6 102.9-37.5 167.4m-48 0c3.5-85.6 25.6-165.1 57.9-217.3C78.7 47.3 10.9 131.2 1.5 232zM1.5 280c9.4 100.8 77.2 184.7 169.3 217.3-32.3-52.2-54.4-131.7-57.9-217.3zm398.4 0c-3.5 85.6-25.6 165.1-57.9 217.3 92.1-32.7 159.9-116.5 169.3-217.3zm111.4-48C501.9 131.2 434.1 47.3 342 14.7c32.3 52.2 54.4 131.7 57.9 217.3z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

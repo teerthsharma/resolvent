@@ -1,0 +1,2338 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="One causal head, three switches. Softmax attention, unnormalized-kernel attention and the exact path product of a Markov chain as settings of one operator, proved in Lean 4, with every failure kept on the record.">
+      
+      
+        <meta name="author" content="Teerth Sharma">
+      
+      
+        <link rel="canonical" href="https://teerthsharma.github.io/resolvent/sources/sweep/sweep_methods/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/logo.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>SWEEP — lineage S8: statistics and classical mathematics the paper cites - resolvent</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/resolvent.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#sweep-lineage-s8-statistics-and-classical-mathematics-the-paper-cites" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="resolvent" class="md-header__button md-logo" aria-label="resolvent" data-md-component="logo">
+      
+  <img src="../../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            resolvent
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              SWEEP — lineage S8: statistics and classical mathematics the paper cites
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/teerthsharma/resolvent" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    teerthsharma/resolvent
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../FAILS/" class="md-tabs__link">
+          
+  
+  
+  The record
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../BED_H_PREREGISTRATION/" class="md-tabs__link">
+          
+  
+  
+  Pre-registrations
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../ledgers/mistakes/" class="md-tabs__link">
+          
+  
+  
+  Ledgers
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../canon/CHARTER/" class="md-tabs__link">
+          
+  
+  
+  Canon
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../CEQ_SHAPE/" class="md-tabs__link">
+          
+  
+  
+  Paper
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="resolvent" class="md-nav__button md-logo" aria-label="resolvent" data-md-component="logo">
+      
+  <img src="../../../assets/logo.svg" alt="logo">
+
+    </a>
+    resolvent
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/teerthsharma/resolvent" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    teerthsharma/resolvent
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The record
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    The record
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../FAILS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Everything retracted, broken or open
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../COMPONENT_LEDGER/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Component ledger
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../PLAN/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Research plan
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CORNER_RULE_RETIREMENT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Corner rule retirement
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../PI_JEPA_KAGGLE_CARD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kaggle card
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../DR2_CARD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DR2 card
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pre-registrations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Pre-registrations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../BED_H_PREREGISTRATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BED-H
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../prereg/REMOVAL_ECHO_v1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    REMOVAL-ECHO v1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ledgers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Ledgers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/mistakes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Failure mechanisms
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/struck/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Struck constants
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/mathematics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mathematics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/model-card/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model card
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/costs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Costs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/v17k-rulings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    V17K rulings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/v16-calibration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    V16 calibration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Canon
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Canon
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/CHARTER/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Charter
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/01_THEORY_ACCURACY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01 Theory of accuracy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/02_THEORY_TRAINING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    02 Theory of training
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/03_KERNEL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03 Kernel
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/04_BEDS_AND_INSTRUMENTS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    04 Beds and instruments
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/05_REPAIRS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05 Repairs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/06_PREDICTIONS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    06 Predictions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/08_ARCHITECTURE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    08 Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/09_CHESS_AND_MARKETS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    09 Chess and markets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/CORRECTIONS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Corrections
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Paper
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Paper
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CEQ_SHAPE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The shape of CEQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Paper sources
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../BIB_AUDIT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bibliography audit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../BIB_ALIASES/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bibliography aliases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#0-method-and-evidence-classes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0. Method and evidence classes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-sources-by-group" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Sources, by group
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Sources, by group">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1a-sequential-and-classical-statistics-instruments-for-the-beds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.A Sequential and classical statistics (instruments for the beds)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1b-information-theory-and-approximation-floors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.B Information theory and approximation (floors)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1c-markov-chains-resolvents-harmonic-functions-electrical-networks-the-shapes-operator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.C Markov chains, resolvents, harmonic functions, electrical networks — the shape's operator
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1d-operator-theory-and-combinatorial-optimisation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.D Operator theory and combinatorial optimisation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1e-dynamics-memory-kernels-symbolic-dynamics-transfer-operators" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.E Dynamics, memory kernels, symbolic dynamics, transfer operators
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f-the-signed-anti-concentration-lineage-dead-programme-carried-as-negatives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.F The signed / anti-concentration lineage (dead programme, carried as negatives)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1g-transformer-obstructions-and-intervention-in-attention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.G Transformer obstructions and intervention in attention
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-searches-run" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Searches run
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-verdict" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Verdict
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-corrections-and-upgrades-to-the-records-own-citations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Corrections and upgrades to the record's own citations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-what-each-proposal-in-this-sweep-is-designed-against-mistakesmd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. What each proposal in this sweep is designed against (MISTAKES.md)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-open-items" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Open items
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="sweep-lineage-s8-statistics-and-classical-mathematics-the-paper-cites">SWEEP — lineage S8: statistics and classical mathematics the paper cites<a class="headerlink" href="#sweep-lineage-s8-statistics-and-classical-mathematics-the-paper-cites" title="Permanent link">#</a></h1>
+<p>MERCURY-S8, 2026-09-03. Companion file: <code>bib_methods.bib</code> (same directory; every key below
+is a key there). Repository read at branch <code>v17k-gate0</code>, HEAD <code>207e7b9</code>. No code written; no
+git writes. Sixteen repository files were read for locators (<code>READ path:line</code> throughout).</p>
+<h2 id="0-method-and-evidence-classes">0. Method and evidence classes<a class="headerlink" href="#0-method-and-evidence-classes" title="Permanent link">#</a></h2>
+<p><strong>What "owns" means.</strong> A source <em>owns</em> a component of the shape when it states, in print,
+the equation or mechanism the shape uses, with the same object on both sides — not a
+neighbouring idea. Where a source states a neighbouring idea it is a NEAR-MISS and the
+sweep says what is missing.</p>
+<p><strong>Routes to [V].</strong> For each source one of four pages was fetched this session and the
+title compared with the record's claim: (i) the arXiv abs page; (ii) the DOI registry
+record at <code>api.crossref.org/works/&lt;doi&gt;</code> — the identifier's own resolution, which returns
+the registered title, authors, container, volume, issue, pages and year; (iii) the
+publisher's landing page; (iv) a library catalogue record (numdam, Google Books by ISBN,
+an author's laboratory publication list). Route (ii) carried most of the load: on the
+first pass the publisher landing pages returned HTTP 403 or a login redirect for <strong>17 of
+the 24</strong> DOIs tried (Springer 3, Taylor &amp; Francis 3, Elsevier 3, SIAM 2, IEEE 2, AMS 1,
+PNAS 1, AIP 1, OUP 1), while the registry record resolved every one of them. A registry
+record verifies the <em>identifier–title pairing</em>, which is exactly the fabrication pattern
+that must be excluded (a real DOI with an invented title); it does not verify a theorem
+number inside a book. <strong>Theorem locators therefore carry their own class</strong>: [V] only when
+the theorem statement was read from the body this session (one case: Levin–Peres Theorem
+13.10), otherwise [U] with the record's locator quoted.</p>
+<p><strong>Counts</strong> (from <code>bib_methods.bib</code>, grep on <code>note = {[V]</code> / <code>note = {[U]</code>): <strong>80 entries
+[V]</strong>, <strong>9 entries [U]</strong> (Cantelli 1928, Bonferroni 1936, Frobenius 1912, Neumann 1877,
+Kantorovich–Rubinstein 1958, Grünwald 1867, Letnikov 1868, Kramers 1927, Littlewood–Offord
+1943). A further 11 entries are [V] on the title but carry one field marked [U] (an ISBN,
+a page range, a year) — each says which field.</p>
+<p><strong>Quotation rule.</strong> At most one quotation per source, under 15 words; the only quotation
+in this file is the Theorem 13.10 inequality.</p>
+<hr />
+<h2 id="1-sources-by-group">1. Sources, by group<a class="headerlink" href="#1-sources-by-group" title="Permanent link">#</a></h2>
+<p>Format per source: <strong>key</strong> — class — <em>owns</em> — <em>leaves open relative to the shape</em> — <em>found by</em>.</p>
+<h3 id="1a-sequential-and-classical-statistics-instruments-for-the-beds">1.A Sequential and classical statistics (instruments for the beds)<a class="headerlink" href="#1a-sequential-and-classical-statistics-instruments-for-the-beds" title="Permanent link">#</a></h3>
+<ul>
+<li><strong>ville-1939-collectif</strong> — [V] numdam record — <em>owns</em> the maximal inequality for a
+  nonnegative martingale, <code>P[sup M_n ≥ C] ≤ E[M_0]/C</code> (the record's METHODS.md:343
+  locates it at Théorème 1 p. 84, [U]) — <em>leaves open</em> nothing about the shape; it is the
+  type-I guarantee of the record's e-process (METHODS.md:16-41) — <em>found by</em> seed.</li>
+<li><strong>wang-2023-extended-ville</strong> — [V] arXiv abs — <em>owns</em> the supermartingale form of
+  Ville's inequality the record actually uses (METHODS.md:344 cites §2.1 eq. (3), [U]) and
+  its extension to nonintegrable supermartingales — <em>leaves open</em> nothing — <em>found by</em> seed.
+  Correction: the record carried this id as [U]; the title is now matched.</li>
+<li><strong>ramdas-2023-game-theoretic</strong> — [V] arXiv abs + Crossref (Statistical Science 38(4), 2023)
+  — <em>owns</em> the e-value / e-process framework and safe anytime-valid inference — <em>leaves
+  open</em> nothing; it is the umbrella for the record's sequential verdicts — <em>found by</em> seed.</li>
+<li><strong>robbins-1971-almost-supermartingales</strong> — [V] Crossref — <em>owns</em> the almost-supermartingale
+  convergence theorem (the record's backstop, METHODS.md:165-172) — <em>leaves open</em> nothing.
+  Correction: PRIOR_ART.md:519 and METHODS.md:346 mark the original NOT REACHED; the DOI
+  record now resolves and pairs with the title (full text still unread) — <em>found by</em> seed.</li>
+<li><strong>durrett-2019-probability</strong> — [V] Crossref (5th ed.) — <em>owns</em> the textbook statements the
+  record cites (Thm 4.2.12, Ex. 4.8.2, both [U]) — <em>found by</em> seed.</li>
+<li><strong>schuirmann-1987-tost</strong> — [V] Crossref — <em>owns</em> the two one-sided tests procedure for
+  equivalence — <em>leaves open</em> the sequential (anytime-valid) form; widening search S8
+  found 2026 preprints on anytime-valid and post-hoc-margin equivalence testing but none
+  was fetched, so <strong>the sequential TOST the brief's "TOST N = 70" would want is NOT FOUND
+  at [V]</strong> — <em>found by</em> seed.</li>
+<li><strong>clopper-1934-binomial</strong> — [V] OUP landing — <em>owns</em> the exact binomial interval
+  (MATHEMATICS.md:393) — <em>found by</em> seed.</li>
+<li><strong>mcnemar-1947-correlated</strong> — [V] Cambridge landing — <em>owns</em> the paired-proportions test
+  (MATHEMATICS.md:394,408) — <em>found by</em> seed.</li>
+<li><strong>wilson-1927-probable</strong> — [V] Crossref — <em>owns</em> the score interval — <em>found by</em> seed.</li>
+<li><strong>page-1963-ordered</strong> — [V] Crossref — <em>owns</em> Page's L and its use for ordered
+  alternatives (MATHEMATICS.md:619-626 derives the exact null by convolution; that exact
+  enumeration is the record's, Page gives tables and the normal approximation — [U] on
+  what Page's body contains) — <em>found by</em> seed.</li>
+<li><strong>ayer-1955-empirical</strong> — [V] Crossref — <em>owns</em> the pool-adjacent-violators algorithm
+  (the origin) — <em>leaves open</em> nothing; <strong>provenance note:</strong> MATHEMATICS.md §12 attributes
+  PAVA to "isotonic regression" generally; the citable origin is Ayer et al. 1955, the
+  textbooks are Barlow et al. 1972 and Robertson–Wright–Dykstra 1988 — <em>found by</em> S7.</li>
+<li><strong>barlow-1972-order</strong> — [V] via JRSS-A review record; ISBN [U] — <em>owns</em> the textbook
+  theory of isotonic regression — <em>found by</em> seed + S7.</li>
+<li><strong>robertson-1988-order</strong> — [V] via J. Appl. Econometrics review record (ISBN in the
+  review's title string) — <em>owns</em> the second textbook — <em>found by</em> seed + S7.</li>
+<li><strong>hoeffding-1963-probability</strong>, <strong>azuma-1967-weighted</strong> — [V] Crossref (Azuma pages [U])
+  — <em>own</em> the bounded-increment concentration inequalities the contract's M9 F1/F1′ use
+  (CEQ_V20_R15_CONTRACT.md:213-217) — <em>found by</em> seed.</li>
+<li><strong>cantelli-1928-confini</strong>, <strong>bonferroni-1936-classi</strong> — <strong>[U] NOT FETCHED</strong> — the
+  contract marks Cantelli and Boole/Bonferroni [V] (CEQ_V20_R15_CONTRACT.md:213-214)
+  without a locator; this sweep found no fetchable primary page for either and records
+  them as bibliographic-only. Any paper sentence resting on them should cite a textbook
+  statement instead (Durrett, [V]) — <em>found by</em> seed.</li>
+<li><strong>sander-2023-topk</strong> — [V] arXiv abs — <em>owns</em> the reduction of a differentiable sparse
+  top-k to isotonic optimisation (results/r9_maths_survey.md:269) — <em>leaves open</em> nothing
+  for the shape — <em>found by</em> a search to repair the record's missing id (a first guess,
+  2302.11294, resolved to an unrelated paper and was discarded).</li>
+</ul>
+<h3 id="1b-information-theory-and-approximation-floors">1.B Information theory and approximation (floors)<a class="headerlink" href="#1b-information-theory-and-approximation-floors" title="Permanent link">#</a></h3>
+<ul>
+<li><strong>cover-2006-elements</strong> — [V] Crossref + publisher sample PDF (ISBN and TOC read) —
+  <em>owns</em> Fano's inequality (§2.10) and the Gaussian rate–distortion function (§10.3.2),
+  the contract's M11 and M12 floors (CEQ_V20_R15_CONTRACT.md:226-234). <strong>Theorem numbers
+  2.10.1 and 10.3.2 are [U]</strong> — the sample shows section headings, not theorem numbers —
+  <em>found by</em> seed.</li>
+<li><strong>welch-1974-lower</strong> — [V] Crossref — <em>owns</em> the Welch bound (MATHEMATICS.md:812).</li>
+<li><strong>ziv-1969-lower</strong>, <strong>bell-1997-extended</strong> — [V] Crossref — <em>own</em> the Ziv–Zakai bound
+  and its vector extension; the record ships the scalar one (<code>ceq/x35p/crb.py:48,178</code>).
+  Correction: a first DOI guess for Bell et al. resolved to a different paper and was
+  discarded; the bib carries the matched DOI.</li>
+<li><strong>johnson-1984-extensions</strong> — [V] Crossref — <em>owns</em> the JL lemma.</li>
+<li><strong>eckart-1936-approximation</strong>, <strong>mirsky-1960-symmetric</strong> — [V] Crossref — <em>own</em> the
+  low-rank approximation theorem (Frobenius norm; every unitarily invariant norm).</li>
+<li><strong>adamjan-1971-analytic</strong>, <strong>glover-1984-hankel</strong> — [V] Crossref — <em>own</em> Hankel-norm
+  model reduction and the L∞ error bounds behind the contract's M16 Hankel bound
+  (CEQ_V20_R15_CONTRACT.md:257-259). Correction: the contract carried AAK/Glover as
+  <code>[U → V-eq at it.6]</code>; both are now title-matched at the registry.</li>
+</ul>
+<h3 id="1c-markov-chains-resolvents-harmonic-functions-electrical-networks-the-shapes-operator">1.C Markov chains, resolvents, harmonic functions, electrical networks — the shape's operator<a class="headerlink" href="#1c-markov-chains-resolvents-harmonic-functions-electrical-networks-the-shapes-operator" title="Permanent link">#</a></h3>
+<ul>
+<li><strong>levin-2017-markov</strong> — [V] Crossref + the authors' second-edition PDF read — <em>owns</em>
+  Theorem 13.10, read this session at printed p. 183 of that PDF: for <code>λ₂</code> the second
+  largest eigenvalue of a <strong>reversible</strong> <code>P</code> and <code>γ = 1 − λ₂</code>,
+  "Φ⋆²/2 ≤ γ ≤ 2Φ⋆" (eq. 13.6), attributed there to Sinclair–Jerrum (1989) and
+  Lawler–Sokal (1988). This confirms PRIOR_ART.md:691-700 verbatim and the two caveats
+  filed there (ergodic chain, not the transient block; one cut bounds only the upper
+  half) stand. Bibliographic correction: the AMS record lists <strong>Levin and Peres</strong> as
+  authors, Wilmer as contributor — PRIOR_ART.md:693 and the brief write "Levin, Peres,
+  Wilmer"; the bib follows the record. <em>Leaves open</em> the transient-block quantity the
+  ladder actually truncates (<code>scale/foreman_lambda2.py</code> per PRIOR_ART.md:702-707) —
+  <em>found by</em> seed + S5.</li>
+<li><strong>sinclair-1989-approximate</strong>, <strong>lawler-1988-bounds</strong>, <strong>cheeger-1970-lower</strong> — [V]
+  Crossref — <em>own</em> the chain Cheeger inequality (two proofs) and the manifold original.</li>
+<li><strong>kemeny-1976-finite</strong> — [V] Google Books catalogue (year field [U]: catalogue says
+  1983, booksellers 1976; first edition Van Nostrand 1960 attested by two Crossref review
+  records) — <em>owns</em> the fundamental matrix <code>N = (I − Q)^{-1}</code> and the absorption
+  probabilities <code>B = N R</code> of an absorbing chain — which is <strong>identity I3 of the brief
+  exactly</strong> (<code>q = (I − Q)^{-1} R 1_B</code>). <em>Leaves open</em> learning <code>Q</code>, learning the absorbing
+  set, and reading <code>B</code> as a head — <em>found by</em> seed. <strong>Caution recorded in the bib:</strong> the
+  Springer DOI <code>10.1007/978-1-4684-9455-6</code> is <em>Denumerable Markov Chains</em> (Kemeny, Snell,
+  Knapp), a different book; the first fetch of this sweep resolved to it and it was not
+  attached.</li>
+<li><strong>doyle-1984-random</strong> — [V] arXiv abs — <em>owns</em> the harmonic-function / escape-probability
+  reading of the committor and the electrical analogy behind <code>scale/kirchhoff.py</code>.</li>
+<li><strong>kirchhoff-1847-auflosung</strong>, <strong>chaiken-1982-combinatorial</strong> — [V] Crossref — <em>own</em> the
+  matrix-tree theorem and its all-minors form (MATHEMATICS.md §11).</li>
+<li><strong>perron-1907-matrices</strong> — [V]; <strong>frobenius-1912-matrizen</strong> — [U] NOT FETCHED; <strong>meyer-2000-matrix</strong>,
+  <strong>horn-2013-matrix</strong> — [V] Crossref — <em>own</em> Perron–Frobenius and the textbook Neumann
+  series with its geometric tail. <strong>The brief's identity I4</strong> (<code>‖(I−γP)^{-1} − Σ_{k≤K}(γP)^k‖_∞
+  ≤ γ^{K+1}/(1−γ)</code> for row-stochastic <code>P</code>) is the textbook tail bound with <code>‖P‖_∞ = 1</code>
+  substituted; it is DERIVED, owned by the Neumann-series literature, and widening search
+  S4 found no paper stating it as an <em>attention-mask certificate</em> — that packaging is NOT
+  FOUND, the mathematics is OCCUPIED.</li>
+<li><strong>banach-1922-operations</strong> — [V]; <strong>neumann-1877-potential</strong> — [U] — <em>own</em> the fixed
+  point and the series.</li>
+<li><strong>sherman-1950-adjustment</strong>, <strong>hager-1989-updating</strong> — [V] Crossref — <em>own</em> the rank-one
+  (and rank-k) update of an inverse. <strong>This is the algebra of the brief's <code>do(a)</code>
+  displacement</strong>: if an intervention changes <code>P</code> (or <code>V</code>) in one row, <code>Δz = z(do a) − z</code> is
+  a Sherman–Morrison correction of the <em>same</em> factorisation, at <code>O(s·d)</code> after the first
+  solve — DERIVED, and the owner is 1950 — <em>found by</em> the sweep's own derivation, then
+  fetched.</li>
+<li><strong>kolmogorov-1931-analytischen</strong>, <strong>chapman-1928-brownian</strong>, <strong>prinz-2011-markov</strong> — [V]
+  Crossref — <em>own</em> the Chapman–Kolmogorov equation and its use as a Markov-state-model
+  validation test (the CK test in <code>ceq/beds/bed_1.py</code>, CEQ_V16_CONTRACT.md:177).</li>
+<li><strong>e-2006-transition</strong>, <strong>metzner-2009-transition</strong> — [V] Crossref — <em>own</em> the committor
+  as the solution of the discrete Dirichlet problem with two absorbing sets, plus reactive
+  flux and dominant pathways — <em>leaves open</em> <code>K ≥ 2</code> constraint sets scored against
+  candidate moves, and any learning of the chain from context — <em>found by</em> S2.</li>
+<li><strong>zhu-2003-harmonic</strong> — [V] author's laboratory listing — <em>owns</em> the harmonic
+  extension <code>f_u = (I − P_uu)^{-1} P_ul f_l</code> with labelled nodes clamped (absorbing) — as a
+  <strong>learning layer</strong>. This is the committor read with boundary conditions, in machine
+  learning, 2003. <em>Leaves open</em> the causal (triangular) <code>P</code>, the softmax parity, the use
+  inside attention, and <code>K ≥ 2</code> sets scored per candidate move — <em>found by</em> S11.</li>
+<li><strong>katz-1953-status</strong> — [V]; <strong>brin-1998-anatomy</strong> — [V]; <strong>gasteiger-2019-appnp</strong> — [V];
+  <strong>gasteiger-2019-diffusion</strong> — [V]; <strong>yuan-2025-paraformer</strong> — [V] — <em>own</em>, in
+  chronological order, the resolvent of an adjacency matrix as an index (1953), the
+  resolvent of a row-stochastic matrix as PageRank / personalized PageRank (1998), the
+  <strong>exact</strong> propagation <code>α(I − (1−α)Â)^{-1} H</code> and its truncated power iteration as a
+  neural-network layer (ICLR 2019), the same as a diffusion kernel (NeurIPS 2019), and a
+  generalized-PageRank <em>polynomial</em> inside a graph transformer's attention (WSDM 2026).
+  <em>Leave open</em> causality (strict triangularity), the softmax logits as the source of <code>P</code>,
+  the <code>γ = 0</code> bitwise parity, absorbing sets, and the LM setting — <em>found by</em> S9.</li>
+<li><strong>dayan-1993-successor</strong>, <strong>bellman-1957-markovian</strong>, <strong>altman-1999-constrained</strong>,
+  <strong>wang-2024-incontext-td</strong>, <strong>xie-2026-softmax-rl</strong>, <strong>bai-2019-deq</strong> — [V] — see the
+  SURPRISE in §3. Bellman owns <code>v = (I − γP)^{-1} r</code> and the argmin over actions; Dayan
+  owns <code>M = (I − γP)^{-1}</code> as a <em>representation</em>; Altman owns the decision problem with
+  several constraint functionals; Wang et al. and Xie et al. own the statement that a
+  (linear, then softmax) transformer's forward pass implements TD policy evaluation
+  in-context; Bai et al. own the fixed-point-as-layer framing — <em>found by</em> S1, S3, S12.</li>
+<li><strong>villani-2009-optimal</strong> — [V] Crossref; <strong>kantorovich-1958-space</strong> — [U] NOT FETCHED —
+  <em>own</em> Kantorovich–Rubinstein duality for <code>W₁</code> (contract M13, CEQ_V20_R15_CONTRACT.md:235;
+  the contract's [V] on Kantorovich–Rubinstein has no fetched primary behind it in this
+  sweep — Villani's textbook statement is the citable [V]).</li>
+</ul>
+<h3 id="1d-operator-theory-and-combinatorial-optimisation">1.D Operator theory and combinatorial optimisation<a class="headerlink" href="#1d-operator-theory-and-combinatorial-optimisation" title="Permanent link">#</a></h3>
+<ul>
+<li><strong>pearcy-1966-power</strong> — [V] Crossref (pages [U]) — <em>owns</em> the citable proof of Berger's
+  power inequality <code>w(Aⁿ) ≤ w(A)ⁿ</code>; Berger's own proof is unpublished per S6 — <em>found by</em>
+  seed + S6.</li>
+<li><strong>crouzeix-2017-numerical</strong> — [V] Crossref — <em>owns</em> the <code>(1+√2)</code> spectral-set constant.</li>
+<li><strong>nemhauser-1978-submodular</strong> — [V] Crossref — <em>owns</em> the <code>1 − 1/e</code> greedy guarantee
+  (MATHEMATICS.md:1107; results/r9_maths_survey.md:376-409, which also records that the
+  captured-mass objective is <em>supermodular</em> and the guarantee does not apply there).</li>
+</ul>
+<h3 id="1e-dynamics-memory-kernels-symbolic-dynamics-transfer-operators">1.E Dynamics, memory kernels, symbolic dynamics, transfer operators<a class="headerlink" href="#1e-dynamics-memory-kernels-symbolic-dynamics-transfer-operators" title="Permanent link">#</a></h3>
+<ul>
+<li><strong>hosking-1981-fractional</strong> — [V] OUP landing; <strong>granger-1980-long-memory</strong> — [V];
+  <strong>grunwald-1867-derivationen</strong>, <strong>letnikov-1868-theory</strong> — [U] NOT FETCHED — <em>own</em>
+  fractional differencing and the GL weights (CEQ_V15_CONTRACT.md:109-110).</li>
+<li><strong>zwanzig-1961-memory</strong>, <strong>mori-1965-transport</strong>, <strong>zwanzig-2001-nonequilibrium</strong> (Google
+  Books catalogue, [V]), <strong>chorin-2000-optimal</strong> — [V] — <em>own</em> the projection-operator
+  memory kernel the contract's M7 uses (CEQ_V20_R15_CONTRACT.md:203-206). <em>Leaves open</em>:
+  M7's claim "K ≡ 0 on the chain" is a statement about the record's own construction,
+  not a theorem in these sources — DERIVED there, and the paper should say so.</li>
+<li><strong>bollt-2000-validity</strong>, <strong>bollt-2001-misplaced</strong> — [V] Crossref — <em>own</em> the misplaced-
+  partition result on symbolic dynamics.</li>
+<li><strong>pesin-1977-characteristic</strong> — [V] mathnet landing — <em>owns</em> the Pesin identity.</li>
+<li><strong>koopman-1931-hamiltonian</strong>, <strong>mezic-2005-spectral</strong>, <strong>brunton-2022-koopman</strong> — [V] —
+  <em>own</em> the Koopman/transfer-operator lineage (V20_R15_THEORY_TABLE.md:325 names it as the
+  leap for Q3/W1).</li>
+<li><strong>kronig-1926-dispersion</strong> — [V] (last page [U]); <strong>kramers-1927-diffusion</strong> — [U] NOT
+  FETCHED — <em>own</em> the causality–analyticity relation shipped in <code>ceq/x35p/kk.py</code>.</li>
+</ul>
+<h3 id="1f-the-signed-anti-concentration-lineage-dead-programme-carried-as-negatives">1.F The signed / anti-concentration lineage (dead programme, carried as negatives)<a class="headerlink" href="#1f-the-signed-anti-concentration-lineage-dead-programme-carried-as-negatives" title="Permanent link">#</a></h3>
+<ul>
+<li><strong>littlewood-1943-number</strong> — [U]; <strong>erdos-1945-lemma</strong> — [V]; <strong>tikhomirov-2020-singularity</strong>
+  — [V] arXiv + Crossref (pages [U]); <strong>brualdi-1995-sign</strong> — [V] Cambridge landing;
+  <strong>zaslavsky-1982-signed</strong> — [V] Crossref. Corrections: CONTRACT.md:177,185 carried
+  Brualdi–Shader and Zaslavsky as [U]; both now title-matched.</li>
+</ul>
+<h3 id="1g-transformer-obstructions-and-intervention-in-attention">1.G Transformer obstructions and intervention in attention<a class="headerlink" href="#1g-transformer-obstructions-and-intervention-in-attention" title="Permanent link">#</a></h3>
+<ul>
+<li><strong>sanford-2024-logdepth</strong> — [V] arXiv abs (theorem numbers per the brief, [U]).</li>
+<li><strong>peng-2024-limitations</strong> — [V] arXiv abs — the brief flagged this id as "VERIFY"; the
+  title is <em>On Limitations of the Transformer Architecture</em>, primary class stat.ML.</li>
+<li><strong>karbalayghareh-2026-doformer</strong> — [V] bioRxiv landing — <em>owns</em> a do-operator <em>inside
+  attention</em>: the intervened token's value is fixed and it is forbidden from attending.
+  That is an absorbing row in an attention operator. <em>Leaves open</em> the resolvent, the
+  displacement read, several constraint sets, the LM setting — <em>found by</em> S10.</li>
+</ul>
+<hr />
+<h2 id="2-searches-run">2. Searches run<a class="headerlink" href="#2-searches-run" title="Permanent link">#</a></h2>
+<p><strong>Seeds</strong> (the lineage list in the task; every name resolved or recorded [U] above).</p>
+<p><strong>Widening searches beyond the seeds — thirteen, each with query and outcome:</strong></p>
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th>query (verbatim)</th>
+<th>outcome</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>S1</td>
+<td><code>successor representation (I - gamma P)^{-1} attention transformer resolvent</code></td>
+<td>SR closed form <code>M = (I − γP)^{-1}</code> confirmed across RL sources; no transformer paper surfaced; Dayan 1993 fetched [V]</td>
+</tr>
+<tr>
+<td>S2</td>
+<td><code>committor function transition path theory absorbing Markov chain Dirichlet problem Metzner Schütte Vanden-Eijnden</code></td>
+<td>E–Vanden-Eijnden 2006 and Metzner et al. 2009 fetched [V]</td>
+</tr>
+<tr>
+<td>S3</td>
+<td><code>constrained Markov decision process minimize maximum probability of reaching unsafe set multiple constraints safety reachability</code></td>
+<td>CMDP and reach-avoid formulations; Altman 1999 fetched [V]; the reach-avoid LP papers (arXiv:1209.2883, 1507.01585) NOT FETCHED</td>
+</tr>
+<tr>
+<td>S4</td>
+<td><code>Neumann series truncation error bound row-stochastic matrix geometric tail gamma^(K+1)/(1-gamma)</code></td>
+<td>generic Neumann-series pages only; <strong>NOT FOUND</strong> as an attention certificate</td>
+</tr>
+<tr>
+<td>S5</td>
+<td><code>Levin Peres Wilmer "Markov Chains and Mixing Times" second edition Theorem 13.10 Cheeger conductance bottleneck ratio</code></td>
+<td>authors' PDF located and read; Theorem 13.10 confirmed</td>
+</tr>
+<tr>
+<td>S6</td>
+<td><code>Berger power inequality numerical radius w(A^n) ≤ w(A)^n Pearcy 1966 elementary proof</code></td>
+<td>Pearcy 1966 fetched [V]; Berger unpublished</td>
+</tr>
+<tr>
+<td>S7</td>
+<td><code>Barlow Bartholomew Bremner Brunk 1972 "Statistical Inference under Order Restrictions" Wiley ISBN pool adjacent violators</code></td>
+<td>review records for both isotonic textbooks; Ayer 1955 fetched as PAVA origin</td>
+</tr>
+<tr>
+<td>S8</td>
+<td><code>anytime-valid equivalence testing e-process TOST two one-sided tests sequential</code></td>
+<td>2026 preprints on anytime-valid equivalence tests exist (arXiv:2606.00878, 2603.16213) — <strong>NOT FETCHED</strong>, so sequential TOST is NOT FOUND at [V]</td>
+</tr>
+<tr>
+<td>S9</td>
+<td><code>personalized PageRank resolvent (I - alpha P)^{-1} attention mechanism transformer "attention"</code></td>
+<td>ParaFormer (WSDM 2026) fetched [V]; APPNP and GDC fetched [V]</td>
+</tr>
+<tr>
+<td>S10</td>
+<td><code>interventional attention do-operator transformer causal intervention consequence displacement fixed point re-solve</code></td>
+<td>DoFormer fetched [V]; attention-head-intervention interpretability papers not fetched (not a mechanism)</td>
+</tr>
+<tr>
+<td>S11</td>
+<td><code>absorbing states boundary conditions attention mechanism transformer Dirichlet problem harmonic attention "absorbing"</code></td>
+<td>only attention <em>sinks</em> and "Transformer Meets Boundary Value Inverse Problems" (arXiv:2209.14977, NOT FETCHED); <strong>NOT FOUND</strong> for absorbing constraint sets inside attention. Zhu 2003 was then searched directly and fetched [V]</td>
+</tr>
+<tr>
+<td>S12</td>
+<td><code>transformer attention implements policy evaluation Bellman resolvent in-context temporal difference learning "(I - \gamma P)^{-1}"</code></td>
+<td>Wang et al. 2024 and Xie et al. 2026 fetched [V]</td>
+</tr>
+<tr>
+<td>S13</td>
+<td><code>Zwanzig "Nonequilibrium Statistical Mechanics" Oxford University Press 2001 ISBN 0195140184</code></td>
+<td>catalogue record then fetched [V]</td>
+</tr>
+</tbody>
+</table>
+<p>Plus four bibliographic-repair searches (Kemeny–Snell reprint; Cover–Thomas theorem
+numbers ×2; Sander et al. id) and one for Kantorovich–Rubinstein (no primary page).</p>
+<hr />
+<h2 id="3-verdict">3. Verdict<a class="headerlink" href="#3-verdict" title="Permanent link">#</a></h2>
+<p>Component by component against the shape spine in BRIEF.md §1.</p>
+<p><strong>OCCUPIED (owner named).</strong></p>
+<ol>
+<li><code>z = (I − γP)^{-1} V</code> with row-stochastic <code>P</code>, <code>γ ∈ [0,1)</code> — owned four times over:
+   Katz 1953 (resolvent index), Bellman 1957 (policy evaluation <code>v = (I − γP)^{-1} r</code>),
+   Dayan 1993 (successor representation <code>M = (I − γP)^{-1}</code>, so <code>z = M V</code>), Brin–Page 1998
+   / Gasteiger et al. 2019 (personalized PageRank as an <strong>exact neural propagation layer</strong>,
+   <code>α(I − (1−α)Â)^{-1} H</code>). The learnable <code>γ</code> is APPNP's teleport <code>α</code> and Bellman's discount.</li>
+<li><code>O = P z</code> — one more propagation step on the same object; APPNP's "predict then
+   propagate" is the same family with the read on the other side. Trivially occupied.</li>
+<li><code>q^{(k)} = (I − Q)^{-1} R_k 1</code> — Kemeny–Snell <code>B = N R</code> (1960); Doyle–Snell harmonic
+   reading (1984); E–Vanden-Eijnden 2006 / Metzner–Schütte–Vanden-Eijnden 2009 (the
+   committor as the Dirichlet problem); <strong>Zhu–Ghahramani–Lafferty 2003</strong> (the same solve
+   with clamped labelled nodes, as a learning layer). Identity I3 of the brief is a
+   restatement of Kemeny–Snell.</li>
+<li>The Neumann certificate (I4) — the textbook geometric tail (Meyer; Banach's a-priori
+   estimate) with <code>‖P‖_∞ = 1</code>; the planted non-stochastic negative is the record's own.</li>
+<li>The triangular solve (I5) and corner-3-is-a-resolvent (I2) — nilpotent strictly
+   triangular ⇒ finite Neumann sum; classical; the record's Lean owns the machine check.</li>
+<li><code>do(a)</code> displacement <em>as algebra</em> — Sherman–Morrison 1950 / Hager 1989: a rank-one
+   change of <code>P</code> or <code>V</code> updates <code>(I − γP)^{-1}</code> without re-solving.</li>
+<li>Safest move <code>argmin_a max_k q^{(k)}(do a)</code> <em>as a decision object</em> — Bellman 1957
+   (argmin over actions on evaluated values); Altman 1999 (several constraint
+   functionals on one chain, LP-solvable); the reach-avoid literature (S3, not fetched).</li>
+<li>Cheeger stratification (contract M14) — Levin–Peres Theorem 13.10, confirmed verbatim;
+   the record's two caveats stand.</li>
+<li>Every statistical instrument (TOST, Clopper–Pearson, McNemar, Page's L, PAVA, Wilson,
+   e-processes, Azuma/Hoeffding), every floor (Fano, Gaussian rate–distortion, Ziv–Zakai,
+   Welch, Hankel/AAK–Glover, JL, Eckart–Young–Mirsky), and every dynamics instrument
+   (Mori–Zwanzig kernel, CK test, Bollt partitions, Pesin, Koopman) — occupied; the paper
+   uses them and claims nothing on them.</li>
+</ol>
+<p><strong>NEAR-MISS (what is missing named).</strong></p>
+<ul>
+<li><em>Resolvent inside attention</em>: ParaFormer 2026 puts a generalized-PageRank <strong>polynomial</strong>
+  in a graph transformer's attention — truncated, undirected, not causal, not built from
+  the LM's own softmax logits, no <code>γ = 0</code> bitwise parity, no certificate.</li>
+<li><em>Intervention inside attention</em>: DoFormer 2026 fixes an intervened token and forbids it
+  from attending (an absorbing row) — for gene perturbation, one intervention at a time,
+  no resolvent, no displacement read, no constraint sets.</li>
+<li><em>Sequential equivalence testing</em>: exists in 2026 preprints (S8), not fetched; the
+  brief's "TOST N = 70" is fixed-N Schuirmann and is fine as such.</li>
+<li><em>Safest move with candidate moves in the context</em>: CMDPs solve for a policy; the shape
+  scores <strong>candidate moves that are tokens in the context</strong> against <code>K</code> committors — the
+  in-context packaging of the CMDP object is not in any fetched source.</li>
+</ul>
+<p><strong>NOT FOUND (queries recorded in §2).</strong></p>
+<ul>
+<li>Learnable absorbing constraint sets <code>𝒜_k</code> inside a causal attention operator, with the
+  committor into each set read as a head output (S11).</li>
+<li>The Neumann tail <code>γ^{K+1}/(1−γ)</code> printed as a per-mask certificate of an attention
+  truncation, with a planted non-stochastic negative (S4).</li>
+<li>The displacement <code>Δz</code> of a resolvent fixed point under an in-context intervention,
+  read as "the consequence", as an attention output (S10).</li>
+<li>The <code>γ = 0</code> bitwise-parity clause making a resolvent layer a strict superset of softmax
+  by construction (S1, S9, S12 — none of the resolvent-layer owners has it, because none
+  builds <code>P</code> from softmax logits over a causal prefix).</li>
+</ul>
+<p><strong>SURPRISE — flagged loudly.</strong> Three fetched sources, taken together, could occupy the
+whole delta unless the delta is stated narrowly:</p>
+<ul>
+<li><strong>Bellman 1957 + Dayan 1993 + Gasteiger et al. 2019.</strong> The shape's <code>z</code> is <em>policy
+  evaluation of <code>V</code> under the chain <code>P</code> with discount <code>γ</code></em> — the successor representation
+  applied to <code>V</code> — and APPNP already ships the exact resolvent as a neural layer. The
+  paper cannot present <code>(I − γP)^{-1} V</code> as its object; it must present <em>which <code>P</code></em>
+  (causal, row-stochastic, the softmax corner of the record's three-corner family with
+  <code>γ = 0</code> parity bitwise, Lean-carried), <em>which read</em> (one triangular solve, certificate
+  printed), and <em>which boundaries</em>.</li>
+<li><strong>Zhu–Ghahramani–Lafferty 2003.</strong> The committor-with-absorbing-boundary as a learning
+  layer is twenty-three years old. "A third token can veto through a boundary condition"
+  is harmonic label propagation with the labelled node as the veto. The narrow delta is
+  <code>K ≥ 2</code> learnable sets inside a <em>causal</em> operator, scored per candidate move.</li>
+<li><strong>Wang et al. 2024 and Xie et al. 2026.</strong> A linear-attention transformer, and then a
+  softmax transformer, implement TD policy evaluation in the forward pass, layer by
+  layer. This is the "deeper softmax skyline" of BRIEF.md §1 made precise: softmax at
+  depth computes the <em>same resolvent by iteration</em>. The paper's claim against softmax must
+  therefore be stated at matched depth and parameters exactly as the brief demands, and
+  the four obstructions must be read as <em>one-layer</em> obstructions (Peng et al. 2024 is a
+  one-layer result; Sanford et al. 2024 is a depth law) — never as "softmax cannot
+  compute this".</li>
+</ul>
+<p><strong>What survives as the delta, narrowly:</strong> (a) <code>P</code> is the record's causal softmax corner
+and the layer is bitwise softmax at <code>γ = 0</code> (I1, Lean <code>three_corners_containment</code>);
+(b) the resolvent is <em>exact</em> in one triangular solve with a printed Neumann δ and a
+planted negative; (c) <code>K ≥ 2</code> absorbing constraint sets live inside the operator and the
+committors are head outputs; (d) <code>do(a)</code> is a Sherman–Morrison displacement of the same
+factorisation and the displacement is the consequence label; (e) the bed / floor /
+control / counter-prediction discipline of the record. Items (a)–(d) are NEAR-MISS-to-
+NOT-FOUND in this lineage; none is "novel"; each is a <em>composition</em> of owned parts, and
+the paper should say exactly that.</p>
+<hr />
+<h2 id="4-corrections-and-upgrades-to-the-records-own-citations">4. Corrections and upgrades to the record's own citations<a class="headerlink" href="#4-corrections-and-upgrades-to-the-records-own-citations" title="Permanent link">#</a></h2>
+<table>
+<thead>
+<tr>
+<th>record locator</th>
+<th>as written</th>
+<th>this sweep</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>METHODS.md:344</td>
+<td>Wang &amp; Ramdas 2304.01163 <code>[U]</code></td>
+<td>title matched at arXiv abs: <em>The extended Ville's inequality for nonintegrable nonnegative supermartingales</em> → [V]</td>
+</tr>
+<tr>
+<td>PRIOR_ART.md:519, METHODS.md:346</td>
+<td>Robbins–Siegmund 1971 ORIGINAL NOT REACHED</td>
+<td>DOI registry record resolves and pairs with the title; full text still unread</td>
+</tr>
+<tr>
+<td>CEQ_V20_R15_CONTRACT.md:258</td>
+<td>AAK/Glover <code>[U → V-eq at it.6]</code></td>
+<td>both title-matched at the registry → [V]</td>
+</tr>
+<tr>
+<td>CONTRACT.md:177,185</td>
+<td>Brualdi–Shader <code>[U]</code>, Zaslavsky <code>[U]</code></td>
+<td>Cambridge landing page and registry record → [V]</td>
+</tr>
+<tr>
+<td>CEQ_V20_R15_CONTRACT.md:213-214</td>
+<td>Cantelli <code>[V]</code>, Boole/Bonferroni <code>[V]</code></td>
+<td>no fetchable primary found; recorded [U] NOT FETCHED; cite a textbook statement instead</td>
+</tr>
+<tr>
+<td>CEQ_V20_R15_CONTRACT.md:235</td>
+<td>Kantorovich–Rubinstein <code>[V]</code></td>
+<td>1958 original not reachable; Villani 2009 is the [V] carrier</td>
+</tr>
+<tr>
+<td>PRIOR_ART.md:693-700</td>
+<td>Levin, Peres, Wilmer 2nd ed. Thm 13.10</td>
+<td>confirmed verbatim, p. 183 of the authors' PDF; AMS record lists authors Levin and Peres, Wilmer as contributor</td>
+</tr>
+<tr>
+<td>MATHEMATICS.md §12</td>
+<td>PAVA under "isotonic regression"</td>
+<td>origin is Ayer et al. 1955 [V]; textbooks Barlow 1972, Robertson–Wright–Dykstra 1988</td>
+</tr>
+<tr>
+<td>results/r9_maths_survey.md:269</td>
+<td>Sander et al. ICML 2023, no id</td>
+<td>arXiv:2302.01425 [V]</td>
+</tr>
+<tr>
+<td>BRIEF.md §1 item 3</td>
+<td>Peng–Narayanan–Papadimitriou 2402.08164 "VERIFY"</td>
+<td>verified: <em>On Limitations of the Transformer Architecture</em>, stat.ML</td>
+</tr>
+<tr>
+<td>BRIEF.md §1 item 2</td>
+<td>Sanford–Hsu–Telgarsky 2402.09268</td>
+<td>title matched; theorem numbers not read</td>
+</tr>
+<tr>
+<td>CEQ_V20_R15_CONTRACT.md:203-206 (M7)</td>
+<td>"K ≡ 0 on the chain" attributed to Mori–Zwanzig</td>
+<td>the sources own the projection formalism; the vanishing kernel on the record's chain is the record's own DERIVED claim</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="5-what-each-proposal-in-this-sweep-is-designed-against-mistakesmd">5. What each proposal in this sweep is designed against (MISTAKES.md)<a class="headerlink" href="#5-what-each-proposal-in-this-sweep-is-designed-against-mistakesmd" title="Permanent link">#</a></h2>
+<ul>
+<li><strong>Owners cited before components are named</strong> (§3, every OCCUPIED line) — against <strong>P-7</strong>
+  (vocabulary with no referent) and BRIEF.md §5 rule 7.</li>
+<li><strong>Theorem 13.10 quoted from the theorem statement in the body, not from the record's
+  paraphrase</strong> — against <strong>P-10</strong> (a source's intro cited as its theorem).</li>
+<li><strong>Registry-record route with the route named on every entry, and [U] on every field
+  not read</strong> — against <strong>P-1</strong>'s citation analogue (a claim with no live producer) and
+  <strong>P-6</strong> (line-reference drift: each locator carries the file:line and the session date).</li>
+<li><strong>Theorem numbers held at [U] until read (Cover–Thomas 2.10.1 / 10.3.2; Durrett
+  4.2.12; Ville Thm 1 p. 84)</strong> — against <strong>P-3</strong> (a stale claim never retracted) and
+  <strong>P-11</strong> (a contract citing its own tagged theorem as settled).</li>
+<li><strong>The SURPRISE on Bellman/Dayan/APPNP</strong> — against <strong>D-1</strong> (racing a baseline at its
+  proven optimum): the shape's operator <em>is</em> policy evaluation, whose proven estimators
+  are TD/LSTD; any arena that lets a bed collapse to scalar policy evaluation races LSTD
+  on its own ground and repeats D-1. The paper's beds must ask for the vector <code>z</code>, the
+  committor vector, or the argmin — never a scalar value at one state.</li>
+<li><strong>The SURPRISE on Wang 2024 / Xie 2026</strong> — against <strong>D-2</strong> (an oracle equal to the arm's
+  own resolvent) and the brief's R-SKY: the deeper-softmax skyline computes the same
+  resolvent by iteration, so "beats softmax" is banned exactly where the brief bans it,
+  and the oracle must run on the latent environment chain, never on the arm's <code>P</code>.</li>
+<li><strong>The Zhu 2003 occupancy</strong> — against <strong>V-12</strong> (a single absorbing target makes the label
+  constant) and <strong>V-25</strong> (a hypothesis no draw satisfies): BED-S needs <code>K ≥ 2</code> constraint
+  sets and a domain census showing both are reachable from the query in the corpus.</li>
+<li><strong>The Neumann certificate as OCCUPIED-mathematics / NOT-FOUND-packaging</strong> — against
+  <strong>V-24</strong> (an identity bind whose rejection region is empty) and <strong>V-15</strong> (a condemning
+  rule with no planted negative): the record's planted non-stochastic <code>P</code> (err 119.37 vs
+  bound 1.143, BRIEF.md I4, RUN by the coordinator) is the rejection region and must ship
+  with every printed δ.</li>
+<li><strong>The Cheeger caveat carried forward</strong> — against <strong>V-17</strong> (a threshold imported out of
+  its units): the ergodic-chain <code>γ</code> of Theorem 13.10 is not the transient-block Perron
+  root the ladder truncates.</li>
+<li><strong>Sequential TOST recorded NOT FOUND at [V]</strong> — against <strong>M-13</strong> (an equivalence margin
+  registered without a reachability check) and <strong>M-2</strong> (a threshold refitted): the paper
+  keeps fixed-N Schuirmann with the margin fixed before data.</li>
+<li><strong>Cantelli/Bonferroni/Kantorovich–Rubinstein downgraded to [U]</strong> — against <strong>P-11</strong> and
+  the brief's one fatal defect (a citation with no fetched identifier).</li>
+</ul>
+<hr />
+<h2 id="6-open-items">6. Open items<a class="headerlink" href="#6-open-items" title="Permanent link">#</a></h2>
+<ul>
+<li>NOT MEASURED — needs new code: none required by this sweep; all numbers above are READ
+  or RUN by the coordinator.</li>
+<li>NOT FETCHED (bibliographic only, listed [U] in the bib): Cantelli 1928; Bonferroni 1936;
+  Frobenius 1912; Neumann 1877; Kantorovich–Rubinstein 1958; Grünwald 1867; Letnikov 1868;
+  Kramers 1927; Littlewood–Offord 1943.</li>
+<li>Theorem locators still [U]: Cover–Thomas Theorems 2.10.1 and 10.3.2; Durrett Theorem
+  4.2.12 and Exercise 4.8.2; Ville Théorème 1 p. 84; Wang–Ramdas §2.1 eq. (3); Villani
+  Theorem 5.10; Meyer §7.10; Kemeny–Snell Chapter III; Sanford et al. Thm 4.2 / Cor. 4.3.</li>
+<li>Not fetched but bearing on NEAR-MISS lines: the 2026 anytime-valid equivalence-testing
+  preprints (S8); the reach-avoid LP papers (S3); "Transformer Meets Boundary Value
+  Inverse Problems" (S11). A second pass should fetch these three before the paper's §7
+  table is frozen.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Invented by <a href="https://teerthsharma.vercel.app/">Teerth Sharma</a> · Apache License 2.0
+    </div>
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/teerthsharma/resolvent" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://teerthsharma.vercel.app/" target="_blank" rel="noopener" title="teerthsharma.vercel.app" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M351.9 280H161c2.9 64.5 17.2 123.9 37.5 167.4 11.4 24.5 23.7 41.8 35.1 52.4 11.2 10.5 18.9 12.2 22.9 12.2s11.7-1.7 22.9-12.2c11.4-10.6 23.7-28 35.1-52.4 20.3-43.5 34.6-102.9 37.5-167.4zm-191-48h190.9c-2.8-64.5-17.1-123.9-37.4-167.4-11.4-24.4-23.7-41.8-35.1-52.4C268.1 1.7 260.4 0 256.4 0s-11.7 1.7-22.9 12.2c-11.4 10.6-23.7 28-35.1 52.4-20.3 43.5-34.6 102.9-37.5 167.4m-48 0c3.5-85.6 25.6-165.1 57.9-217.3C78.7 47.3 10.9 131.2 1.5 232zM1.5 280c9.4 100.8 77.2 184.7 169.3 217.3-32.3-52.2-54.4-131.7-57.9-217.3zm398.4 0c-3.5 85.6-25.6 165.1-57.9 217.3 92.1-32.7 159.9-116.5 169.3-217.3zm111.4-48C501.9 131.2 434.1 47.3 342 14.7c32.3 52.2 54.4 131.7 57.9 217.3z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

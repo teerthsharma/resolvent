@@ -1,0 +1,3488 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="One causal head, three switches. Softmax attention, unnormalized-kernel attention and the exact path product of a Markov chain as settings of one operator, proved in Lean 4, with every failure kept on the record.">
+      
+      
+        <meta name="author" content="Teerth Sharma">
+      
+      
+        <link rel="canonical" href="https://teerthsharma.github.io/resolvent/ledgers/mathematics/">
+      
+      
+        <link rel="prev" href="../struck/">
+      
+      
+        <link rel="next" href="../model-card/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/logo.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Mathematics - resolvent</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/resolvent.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#mathematicsmd-the-theory-of-record" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="resolvent" class="md-header__button md-logo" aria-label="resolvent" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            resolvent
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Mathematics
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/teerthsharma/resolvent" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    teerthsharma/resolvent
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../FAILS/" class="md-tabs__link">
+          
+  
+  
+  The record
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../BED_H_PREREGISTRATION/" class="md-tabs__link">
+          
+  
+  
+  Pre-registrations
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../mistakes/" class="md-tabs__link">
+          
+  
+  
+  Ledgers
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../canon/CHARTER/" class="md-tabs__link">
+          
+  
+  
+  Canon
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../CEQ_SHAPE/" class="md-tabs__link">
+          
+  
+  
+  Paper
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="resolvent" class="md-nav__button md-logo" aria-label="resolvent" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    resolvent
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/teerthsharma/resolvent" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    teerthsharma/resolvent
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The record
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    The record
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../FAILS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Everything retracted, broken or open
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../COMPONENT_LEDGER/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Component ledger
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../PLAN/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Research plan
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CORNER_RULE_RETIREMENT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Corner rule retirement
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../PI_JEPA_KAGGLE_CARD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kaggle card
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../DR2_CARD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DR2 card
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pre-registrations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Pre-registrations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../BED_H_PREREGISTRATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BED-H
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../prereg/REMOVAL_ECHO_v1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    REMOVAL-ECHO v1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ledgers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Ledgers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mistakes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Failure mechanisms
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../struck/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Struck constants
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mathematics
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mathematics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#0-the-thesis-what-the-module-is-supposed-to-predict" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0. THE THESIS — WHAT THE MODULE IS SUPPOSED TO PREDICT
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0. THE THESIS — WHAT THE MODULE IS SUPPOSED TO PREDICT">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#01-this-project-has-not-been-testing-that-read-and-it-is-the-central-defect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.1 THIS PROJECT HAS NOT BEEN TESTING THAT. READ, AND IT IS THE CENTRAL DEFECT.
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#02-what-the-thesis-requires-instead" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.2 WHAT THE THESIS REQUIRES INSTEAD
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#03-where-softmax-cannot-follow-the-novelty-claim-stated-narrowly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.3 WHERE SOFTMAX CANNOT FOLLOW — the novelty claim, stated narrowly
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#035-the-use-case-and-it-is-why-joint-determination-is-not-a-metaphor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.35 THE USE CASE, AND IT IS WHY JOINT DETERMINATION IS NOT A METAPHOR
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#04-the-architectural-position-that-follows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.4 THE ARCHITECTURAL POSITION THAT FOLLOWS
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-the-equilibrium-task-family" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. THE EQUILIBRIUM TASK FAMILY
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. THE EQUILIBRIUM TASK FAMILY">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-why-the-previous-corpus-could-not-test-anything" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 Why the previous corpus could not test anything
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-the-chain-family-and-the-closed-form-that-makes-it-admissible" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 The chain family, and the closed form that makes it admissible
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-the-consequence-family" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 The consequence family
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-the-depth-law-why-the-shortfall-is-not-about-settling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. THE DEPTH LAW — WHY THE SHORTFALL IS NOT ABOUT SETTLING
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-the-contraction-and-its-certificate-what-survived" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. THE CONTRACTION AND ITS CERTIFICATE — WHAT SURVIVED
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-the-confound-and-it-supersedes-the-arm-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. THE CONFOUND — AND IT SUPERSEDES THE ARM COMPARISON
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-the-settled-arm-iterates-the-wrong-unknown" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. THE SETTLED ARM ITERATES THE WRONG UNKNOWN
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-consequence-fidelity-the-capability-metric-of-record" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. CONSEQUENCE FIDELITY — THE CAPABILITY METRIC OF RECORD
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-the-absorbing-chain-oracle-and-its-rate-law" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. THE ABSORBING-CHAIN ORACLE AND ITS RATE LAW
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-the-formal-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. THE FORMAL RESULTS
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-the-novelty-position-bounded" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. THE NOVELTY POSITION, BOUNDED
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-limits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. LIMITS
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-the-second-exact-oracle-kirchhoff-against-the-absorbing-chain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. THE SECOND EXACT ORACLE — KIRCHHOFF AGAINST THE ABSORBING CHAIN
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-the-ladder-verdict-as-a-named-statistic-pages-l-and-isotonic-regression" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. THE LADDER VERDICT AS A NAMED STATISTIC — PAGE'S L AND ISOTONIC REGRESSION
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13-the-attribution-claims-sample-complexity-line" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13. THE ATTRIBUTION CLAIM'S SAMPLE-COMPLEXITY LINE
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#14-the-coherence-floor-and-the-calibrated-scramble-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14. THE COHERENCE FLOOR AND THE CALIBRATED SCRAMBLE CONTROL
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#15-a-coverage-tool-that-scanned-nothing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15. A COVERAGE TOOL THAT SCANNED NOTHING
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#16-limits-added-by-sections-1115" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16. LIMITS ADDED BY SECTIONS 11–15
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#17-what-the-ste-result-actually-shows-and-what-it-prices-out" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        17. WHAT THE STE RESULT ACTUALLY SHOWS, AND WHAT IT PRICES OUT
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="17. WHAT THE STE RESULT ACTUALLY SHOWS, AND WHAT IT PRICES OUT">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#171-two-discrete-stages-and-only-one-of-them-is-trained" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        17.1 Two discrete stages, and only one of them is trained
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#172-the-gradient-is-the-effect-the-mechanism-is-not" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        17.2 The gradient is the effect; the mechanism is not
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#173-the-pricing-rule-what-this-instrument-can-and-cannot-falsify" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        17.3 The pricing rule: what this instrument can and cannot falsify
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#174-why-the-one-stage-a-ablation-on-record-could-not-have-said-anything" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        17.4 Why the one stage-A ablation on record could not have said anything
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#175-a-correction-to-c-of-findingsmd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        17.5 A correction to §C of FINDINGS.md
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#176-the-nashpy-shared-tau-defect-is-real-and-too-small-to-be-the-cause" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        17.6 The nash.py shared-tau defect is real and too small to be the cause
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#177-the-pivot-objectives-set-structure-and-where-the-greedy-bound-dies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        17.7 The pivot objective's set structure, and where the greedy bound dies
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../model-card/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model card
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../costs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Costs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../v17k-rulings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    V17K rulings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../v16-calibration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    V16 calibration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Canon
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Canon
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../canon/CHARTER/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Charter
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../canon/01_THEORY_ACCURACY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01 Theory of accuracy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../canon/02_THEORY_TRAINING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    02 Theory of training
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../canon/03_KERNEL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03 Kernel
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../canon/04_BEDS_AND_INSTRUMENTS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    04 Beds and instruments
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../canon/05_REPAIRS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05 Repairs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../canon/06_PREDICTIONS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    06 Predictions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../canon/08_ARCHITECTURE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    08 Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../canon/09_CHESS_AND_MARKETS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    09 Chess and markets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../canon/CORRECTIONS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Corrections
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Paper
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Paper
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CEQ_SHAPE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The shape of CEQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Paper sources
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../BIB_AUDIT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bibliography audit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../BIB_ALIASES/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bibliography aliases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#0-the-thesis-what-the-module-is-supposed-to-predict" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0. THE THESIS — WHAT THE MODULE IS SUPPOSED TO PREDICT
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0. THE THESIS — WHAT THE MODULE IS SUPPOSED TO PREDICT">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#01-this-project-has-not-been-testing-that-read-and-it-is-the-central-defect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.1 THIS PROJECT HAS NOT BEEN TESTING THAT. READ, AND IT IS THE CENTRAL DEFECT.
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#02-what-the-thesis-requires-instead" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.2 WHAT THE THESIS REQUIRES INSTEAD
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#03-where-softmax-cannot-follow-the-novelty-claim-stated-narrowly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.3 WHERE SOFTMAX CANNOT FOLLOW — the novelty claim, stated narrowly
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#035-the-use-case-and-it-is-why-joint-determination-is-not-a-metaphor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.35 THE USE CASE, AND IT IS WHY JOINT DETERMINATION IS NOT A METAPHOR
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#04-the-architectural-position-that-follows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.4 THE ARCHITECTURAL POSITION THAT FOLLOWS
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-the-equilibrium-task-family" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. THE EQUILIBRIUM TASK FAMILY
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. THE EQUILIBRIUM TASK FAMILY">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-why-the-previous-corpus-could-not-test-anything" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 Why the previous corpus could not test anything
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-the-chain-family-and-the-closed-form-that-makes-it-admissible" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 The chain family, and the closed form that makes it admissible
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-the-consequence-family" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 The consequence family
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-the-depth-law-why-the-shortfall-is-not-about-settling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. THE DEPTH LAW — WHY THE SHORTFALL IS NOT ABOUT SETTLING
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-the-contraction-and-its-certificate-what-survived" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. THE CONTRACTION AND ITS CERTIFICATE — WHAT SURVIVED
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-the-confound-and-it-supersedes-the-arm-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. THE CONFOUND — AND IT SUPERSEDES THE ARM COMPARISON
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-the-settled-arm-iterates-the-wrong-unknown" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. THE SETTLED ARM ITERATES THE WRONG UNKNOWN
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-consequence-fidelity-the-capability-metric-of-record" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. CONSEQUENCE FIDELITY — THE CAPABILITY METRIC OF RECORD
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-the-absorbing-chain-oracle-and-its-rate-law" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. THE ABSORBING-CHAIN ORACLE AND ITS RATE LAW
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-the-formal-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. THE FORMAL RESULTS
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-the-novelty-position-bounded" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. THE NOVELTY POSITION, BOUNDED
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-limits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. LIMITS
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-the-second-exact-oracle-kirchhoff-against-the-absorbing-chain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. THE SECOND EXACT ORACLE — KIRCHHOFF AGAINST THE ABSORBING CHAIN
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-the-ladder-verdict-as-a-named-statistic-pages-l-and-isotonic-regression" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. THE LADDER VERDICT AS A NAMED STATISTIC — PAGE'S L AND ISOTONIC REGRESSION
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13-the-attribution-claims-sample-complexity-line" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13. THE ATTRIBUTION CLAIM'S SAMPLE-COMPLEXITY LINE
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#14-the-coherence-floor-and-the-calibrated-scramble-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14. THE COHERENCE FLOOR AND THE CALIBRATED SCRAMBLE CONTROL
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#15-a-coverage-tool-that-scanned-nothing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15. A COVERAGE TOOL THAT SCANNED NOTHING
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#16-limits-added-by-sections-1115" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16. LIMITS ADDED BY SECTIONS 11–15
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#17-what-the-ste-result-actually-shows-and-what-it-prices-out" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        17. WHAT THE STE RESULT ACTUALLY SHOWS, AND WHAT IT PRICES OUT
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="17. WHAT THE STE RESULT ACTUALLY SHOWS, AND WHAT IT PRICES OUT">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#171-two-discrete-stages-and-only-one-of-them-is-trained" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        17.1 Two discrete stages, and only one of them is trained
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#172-the-gradient-is-the-effect-the-mechanism-is-not" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        17.2 The gradient is the effect; the mechanism is not
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#173-the-pricing-rule-what-this-instrument-can-and-cannot-falsify" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        17.3 The pricing rule: what this instrument can and cannot falsify
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#174-why-the-one-stage-a-ablation-on-record-could-not-have-said-anything" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        17.4 Why the one stage-A ablation on record could not have said anything
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#175-a-correction-to-c-of-findingsmd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        17.5 A correction to §C of FINDINGS.md
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#176-the-nashpy-shared-tau-defect-is-real-and-too-small-to-be-the-cause" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        17.6 The nash.py shared-tau defect is real and too small to be the cause
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#177-the-pivot-objectives-set-structure-and-where-the-greedy-bound-dies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        17.7 The pivot objective's set structure, and where the greedy bound dies
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="mathematicsmd-the-theory-of-record">MATHEMATICS.md — the theory of record<a class="headerlink" href="#mathematicsmd-the-theory-of-record" title="Permanent link">#</a></h1>
+<p>Every claim carries an evidence class. <code>RUN</code> means executed this session and the output
+read. <code>READ</code> means a file and line was opened and quoted. <code>CITED</code> means an external
+source was resolved and its title matched. <code>DERIVED</code> means it follows from <code>RUN</code>/<code>READ</code>
+by steps that are written out. Anything that would be <code>GUESS</code> is either labelled or
+absent.</p>
+<p>Numbers carry provenance: which journal, which seed count, and what they were compared
+against.</p>
+<hr />
+<h2 id="0-the-thesis-what-the-module-is-supposed-to-predict">0. THE THESIS — WHAT THE MODULE IS SUPPOSED TO PREDICT<a class="headerlink" href="#0-the-thesis-what-the-module-is-supposed-to-predict" title="Permanent link">#</a></h2>
+<p>Self-attention is called a next-token predictor, and that description is accurate: it
+guesses the next best symbol. <strong>This module is meant to guess the next best SHAPE</strong> — the
+configuration the sequence settles into — so that the next equilibrium can be reached
+rather than the next word emitted.</p>
+<p>Concretely, and in the author's framing: it does not predict <em>a</em> word. Given the words
+already present, it predicts <strong>several at once</strong>, jointly, because their values are
+determined together. And the way it decides which existing tokens matter is causal:
+<strong>inject an existing token, and observe how the whole shape moves</strong> — read through the
+embedding geometry and the topology of the sequence, not through a similarity score.</p>
+<h3 id="01-this-project-has-not-been-testing-that-read-and-it-is-the-central-defect">0.1 THIS PROJECT HAS NOT BEEN TESTING THAT. <code>READ</code>, AND IT IS THE CENTRAL DEFECT.<a class="headerlink" href="#01-this-project-has-not-been-testing-that-read-and-it-is-the-central-defect" title="Permanent link">#</a></h3>
+<p><code>scale/negation_scope.py:274</code>, <code>equilibrium_oracle</code>:</p>
+<blockquote>
+<p><em>"<code>z*_{s-1}</code>, the last coordinate of <code>(I - A)^{-1} b</code>."</em></p>
+</blockquote>
+<p><strong>The label is one coordinate. <code>z*</code> is the shape; <code>z*_{s-1}</code> is a single point on it.</strong>
+And <code>nrmse</code> at <code>scale/negation_scope.py:672</code> is a root-mean-square error on that scalar.</p>
+<p>So every task in this repository — the static ones <strong>and</strong> the equilibrium ones —
+<strong>asks for a point prediction.</strong></p>
+<p><strong>That is why softmax wins, and the reason is a theorem rather than an accident.</strong>
+Predicting one scalar from a sequence, where the answer is a payload at a latent
+location times a query-side transform, <strong>is exactly the single-location regression
+problem on which one softmax layer is provably Bayes-optimal</strong> (<code>arXiv:2410.01537</code>).
+<strong>The corpus was built as the one task softmax cannot lose.</strong></p>
+<h3 id="02-what-the-thesis-requires-instead">0.2 WHAT THE THESIS REQUIRES INSTEAD<a class="headerlink" href="#02-what-the-thesis-requires-instead" title="Permanent link">#</a></h3>
+<p>Three changes, each of which is a build rather than an argument:</p>
+<p><strong>(a) The label becomes the shape.</strong> Predict <code>z*</code> — the whole fixed point, a vector of
+length <code>s</code> — not <code>z*_{s-1}</code>. The oracle already computes the entire vector and then
+discards all but one entry.</p>
+<p><strong>(b) The readout must not be flat — but only where the target is not flat, and that
+was measured rather than assumed.</strong> A root-mean-square error over a configuration
+weights every coordinate independently and identically, which is the assumption a shape
+violates: the coordinates of a fixed point are <strong>coupled</strong>, and a prediction right in
+aggregate but wrong in arrangement is not a good prediction of a shape. Candidate
+readouts that respect the coupling are Hilbert projective distance on the positive part,
+Fisher–Rao or total variation where the object is a distribution, and a Procrustes or
+optimal-transport cost where only arrangement matters.</p>
+<p><strong>A QUALIFICATION THAT SURVIVED A CHECK, AND IT NARROWS THE RULE CORRECTLY.</strong> The
+objection <strong>does not bite on the chain family</strong>: <code>equilibrium_oracle</code> returns
+<code>z*_{s-1}</code>, which is exactly <code>N(0, t*)</code> on the real line — <strong>the target's own geometry
+is flat, so a root-mean-square error is the right readout there</strong> and every reading
+already taken under it stands.</p>
+<p><strong>It bites on the absorbing-chain corpus</strong>, whose label is a probability. The
+lightweight non-flat readout is one transform and no new scoring code:</p>
+<div class="highlight"><pre><span></span><code>    phi(p) = 2 * arcsin( sqrt(p) )
+</code></pre></div>
+<p>the exact Fisher–Rao geodesic coordinate on the binary simplex, since
+<code>ds = dp / sqrt(p(1-p))</code>.</p>
+<p><strong>RULE 8 was applied to it before it was measured.</strong> <code>phi</code> is smooth and strictly
+monotone, so near the fixed point it acts as a diagonal scaling and <strong>cannot move the
+leading eigenvalue</strong> — both readouts must therefore share an asymptotic rate. Confirmed
+to <code>6.319e-07</code> and <code>4.610e-04</code>.</p>
+<p><strong>But the price at the rungs is not zero</strong>, which is what makes the choice
+load-bearing:</p>
+<table>
+<thead>
+<tr>
+<th><code>t</code></th>
+<th>Euclidean</th>
+<th>Fisher–Rao</th>
+<th>ratio</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>8 (<code>_64</code>)</td>
+<td>0.1815582640</td>
+<td>0.2576242379</td>
+<td><strong>1.418962</strong></td>
+</tr>
+<tr>
+<td>32 (<code>_1024</code>)</td>
+<td>0.0481326124</td>
+<td>0.0582150553</td>
+<td><strong>1.209472</strong></td>
+</tr>
+</tbody>
+</table>
+<p>The cause is measured: <code>_1024</code>'s conditional label puts <strong><code>0.7666</code> of its mass within
+one hundredth of a boundary</strong> (<code>0.3333</code> below <code>0.01</code>, <code>0.4333</code> above <code>0.99</code>), which is
+exactly where the two metrics diverge.</p>
+<p><strong>So the readout is load-bearing where the round reads and inert where it does not, and
+it must be DECLARED BEFORE the corpus run.</strong> A 42 % swing at a rung, chosen after the
+curve is visible, would be choosing the answer. The assertion in <code>demo()</code> requires
+<strong>both</strong> rate agreement below <code>1e-3</code> <strong>and</strong> a rung ratio above <code>1.15</code>, so a readout
+that changed nothing would fail the test that says it needs declaring.</p>
+<p><strong>(c) The consequence test becomes vector-valued.</strong> The existing fidelity metric asks
+whether <code>sign(Δŷ)</code> matches <code>sign(Δy)</code> for a scalar. Under the thesis it should ask <strong>how
+the whole shape moves</strong> under an intervention — a displacement field, compared by
+direction and magnitude across all coordinates, not a sign on one.</p>
+<h3 id="03-where-softmax-cannot-follow-the-novelty-claim-stated-narrowly">0.3 WHERE SOFTMAX CANNOT FOLLOW — the novelty claim, stated narrowly<a class="headerlink" href="#03-where-softmax-cannot-follow-the-novelty-claim-stated-narrowly" title="Permanent link">#</a></h3>
+<p><strong>One softmax step computes a convex mixture per query row, and each row is computed
+independently of the others.</strong> There is no mechanism in that step by which the value
+assigned to position <code>i</code> constrains the value assigned to position <code>j</code>. A jointly
+determined configuration — where the coordinates must be mutually consistent because
+they solve a fixed point together — <strong>is not what a single independent-per-row mixture
+computes.</strong></p>
+<p>That is the sharpest available statement of what this module could do that softmax
+cannot, and it is <strong>narrow on purpose</strong>:</p>
+<ul>
+<li>It is <strong>not</strong> a claim that softmax cannot predict any single coordinate — the theorem
+  says it can, optimally.</li>
+<li>It is <strong>not</strong> a claim about depth — depth composition is separately governed by
+  <code>L = floor(log2 k) + 2</code> (§2), and stacked softmax layers get that too.</li>
+<li>It <strong>is</strong> a claim about <strong>joint determination in one read</strong>, which is the only place
+  the fixed point is doing work a mixture is not.</li>
+</ul>
+<p><strong>And it is currently UNTESTED, because no vector-valued label exists in the
+repository.</strong> Recorded as the open claim rather than as a result.</p>
+<hr />
+<h3 id="035-the-use-case-and-it-is-why-joint-determination-is-not-a-metaphor">0.35 THE USE CASE, AND IT IS WHY JOINT DETERMINATION IS NOT A METAPHOR<a class="headerlink" href="#035-the-use-case-and-it-is-why-joint-determination-is-not-a-metaphor" title="Permanent link">#</a></h3>
+<p>The target application is <strong>embodied systems — robots and anything else that must
+understand causality, consequence, pattern and link</strong> rather than emit plausible
+continuations. That is not a marketing frame; it is the setting in which the thesis of
+§0.3 stops being a preference and becomes a requirement.</p>
+<p><strong>A language model predicting the next token is well served by per-row independence.</strong>
+Each position's continuation can be scored against the context on its own, and softmax's
+independent-per-query mixture is exactly the right shape for that — which is why it is
+Bayes-optimal on the single-location problem and why it has been so hard to beat here.</p>
+<p><strong>A robot predicting what happens next is not.</strong> Joint angles, contact forces and body
+positions are <strong>coupled by constraints</strong>, so they are determined <em>together</em> or not at
+all: moving one joint changes the reachable set of every other, a contact that makes or
+breaks reconfigures the whole kinematic chain, and a force applied at one point
+propagates through the linkage. <strong>There is no ordering in which these can be read off
+independently, because the constraint is simultaneous.</strong> That is a fixed point in the
+literal sense, and it is the thing a per-row mixture cannot represent in one read.</p>
+<p><strong>The intervention test of §0.2(c) is the robot's own question, stated exactly.</strong> <em>"If I
+move this, what else moves?"</em> is a displacement field over a configuration under a
+<code>do()</code> operation — which is the consequence-fidelity metric of §6 generalised from a
+sign on one scalar to a vector over the whole shape. <strong>An embodied system needs the
+vector answer; the scalar answer is not a weaker version of it but a different
+question.</strong></p>
+<p><strong>And the provenance is not a coincidence.</strong> This project's own recovered graph corpus
+comes from a physics engine, where the merged upstream contribution computes connected
+components over <strong>constraint/tree incidence</strong> — which is precisely the coupling
+structure above, expressed as a graph. Bodies joined by constraints form islands that
+must be solved together; bodies in different islands do not interact. <strong>The corpus and
+the use case are the same object seen twice</strong>, which is why an absorbing-chain label on
+that substrate is the natural test rather than an arbitrary one.</p>
+<p><strong>A SECOND SETTING, AND IT SHARES THE STRUCTURE RATHER THAN MERELY THE SPIRIT.</strong>
+Retrieval-augmented generation, where a model must understand <strong>the consequence of a
+false report</strong>. A retrieved passage is not a token to be attended to on its own merits;
+it is an <strong>intervention on the context</strong>, and the question that matters is what the rest
+of the answer does when that passage is wrong. That is a <code>do()</code> operation followed by a
+displacement over the whole output — <strong>the same vector-valued consequence measure of
+§0.2(c), applied to evidence rather than to joints.</strong></p>
+<p><strong>And the failure mode there is the one a per-row mixture is worst at.</strong> A retrieved
+falsehood does not corrupt one position; it propagates, because downstream claims are
+<strong>conditioned on it</strong> and must be mutually consistent with it. Scoring each output
+position independently against the context cannot represent that propagation, which is
+why a system built on independent-per-row attention can produce an answer that is locally
+plausible at every position and globally wrong. <strong>Detecting that requires reading the
+shape, not the tokens.</strong></p>
+<p><strong>What this does NOT license.</strong> No claim is made here about robotic performance, about
+retrieval accuracy, about
+control, or about any embodied or retrieval benchmark — nothing in this repository has been run on
+one. <strong>This section states why the target shape is what it is, and nothing more.</strong></p>
+<h2 id="04-the-architectural-position-that-follows">0.4 THE ARCHITECTURAL POSITION THAT FOLLOWS<a class="headerlink" href="#04-the-architectural-position-that-follows" title="Permanent link">#</a></h2>
+<p><strong>Softmax attention is not the opponent. It is the base case, and the module must
+contain it.</strong></p>
+<p>That is a reversal, and the evidence forced it. Three independent results say the same
+thing:</p>
+<ul>
+<li><strong>Softmax is Bayes-optimal on the single-location task shape.</strong> For a target that is a
+  payload at one latent location times a query-side transform, one softmax attention
+  layer provably attains Bayes risk while linear attention provably falls short.
+  <code>CITED</code>: Marion, Berthier, Biau, Boyer, ICLR 2025, <a href="https://arxiv.org/abs/2410.01537">arXiv:2410.01537</a>;
+  Duranthon et al., <a href="https://arxiv.org/abs/2509.21936">arXiv:2509.21936</a>.</li>
+<li><strong>Softmax's single step is already a converged fixed-point step.</strong> The attention update
+  is the update rule of a modern Hopfield network, which <em>"converges with one update"</em>
+  with exponentially small retrieval error. <code>CITED</code>: Ramsauer et al., ICLR 2021,
+  <a href="https://arxiv.org/abs/2008.02217">arXiv:2008.02217</a>.</li>
+<li><strong>Iterating the normalisation to a fixed point is published and buys little.</strong>
+  Sinkformer runs Sinkhorn iterations to a doubly-stochastic fixed point in 3–5 steps
+  for small accuracy gains. <code>CITED</code>: Sander, Ablin, Blondel, Peyré, AISTATS 2022,
+  <a href="https://arxiv.org/abs/2110.11773">arXiv:2110.11773</a>.</li>
+</ul>
+<p><strong>The consequence for design is precise.</strong> If softmax lies <em>inside</em> the module's
+function class, the module is bounded below by softmax and any equilibrium machinery is
+a strict addition. If softmax lies <em>outside</em> it — which is what was actually built, see
+§4 — then the comparison measures the exclusion rather than the idea.</p>
+<p><strong>Where iteration is known to pay, the iterated object is the representation, not the
+mixture weights.</strong> Weight-tied looped transformers with input injection match standard
+transformers on algorithmic tasks at under 10 % of the parameters. <code>CITED</code>: Yang, Lee,
+Nowak, Papailiopoulos, ICLR 2024, <a href="https://arxiv.org/abs/2311.12424">arXiv:2311.12424</a>.</p>
+<hr />
+<h2 id="1-the-equilibrium-task-family">1. THE EQUILIBRIUM TASK FAMILY<a class="headerlink" href="#1-the-equilibrium-task-family" title="Permanent link">#</a></h2>
+<h3 id="11-why-the-previous-corpus-could-not-test-anything">1.1 Why the previous corpus could not test anything<a class="headerlink" href="#11-why-the-previous-corpus-could-not-test-anything" title="Permanent link">#</a></h3>
+<p>Both originally registered oracles are closed-form functions of their input.
+<code>READ</code>, <code>scale/negation_scope.py</code>:</p>
+<div class="highlight"><pre><span></span><code>negation_scope    x[:, p, CH_PAYLOAD] * x[:, f, CH_FLIP]      a product of two entries
+counter_squared   x[:, :, CH_FLIP].sum(dim=1) ** 2            a sum, squared
+</code></pre></div>
+<p>Neither has a fixed point. An arm that iterates to convergence and then predicts a
+product of two numbers is doing the same work as an arm that does not iterate. <strong>The
+deciding contrast on that corpus was therefore correct and uninformative.</strong></p>
+<h3 id="12-the-chain-family-and-the-closed-form-that-makes-it-admissible">1.2 The chain family, and the closed form that makes it admissible<a class="headerlink" href="#12-the-chain-family-and-the-closed-form-that-makes-it-admissible" title="Permanent link">#</a></h3>
+<p>The chain label is the <code>t*</code>-step iterate of an affine recursion <code>z' = a·z + b</code> with <code>a</code>
+strictly lower triangular, hence nilpotent, so <code>t*</code> is <strong>exact rather than a
+tolerance</strong>.</p>
+<p><strong>The truncation law.</strong> A reading that uses only <code>k</code> hops has normalised error</p>
+<div class="highlight"><pre><span></span><code>    ceiling(t*, k) = sqrt( max(0, t* − k) / t* )
+</code></pre></div>
+<p><code>RUN</code>, this session:</p>
+<table>
+<thead>
+<tr>
+<th><code>t*</code></th>
+<th><code>k=0</code></th>
+<th><code>k=1</code></th>
+<th><code>k=2</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2</td>
+<td>1.000000</td>
+<td>0.707107</td>
+<td>0.000000</td>
+</tr>
+<tr>
+<td>8</td>
+<td>1.000000</td>
+<td>0.935414</td>
+<td>0.866025</td>
+</tr>
+<tr>
+<td>32</td>
+<td>1.000000</td>
+<td>0.984251</td>
+<td>0.968246</td>
+</tr>
+</tbody>
+</table>
+<p><strong><code>k = 0</code> is exactly 1.000000, which is the mean-predictor bar.</strong> That is what makes the
+family admissible: a zero-hop reading is worth nothing, so the label cannot be obtained
+without iterating.</p>
+<p><strong>It had to be earned.</strong> <code>READ</code>: an earlier encoding gave the query token a driver, so
+<code>1/(t*+1)</code> of the label was legible at zero hops and the harness's own 0-step gate
+aborted <code>INSTRUMENT BROKEN</code> on three of five rungs. Setting <code>b[s-1] = 0</code> restores the
+property. <strong>A third static task was avoided by a gate firing, not by care.</strong></p>
+<p>The formula was checked against drawn batches rather than assumed: max deviation
+<code>+0.012088</code> at <code>n = 2048</code>.</p>
+<h3 id="13-the-consequence-family">1.3 The consequence family<a class="headerlink" href="#13-the-consequence-family" title="Permanent link">#</a></h3>
+<p><code>E2</code> labels a coordinate of the <strong>new</strong> fixed point after a one-token <code>do()</code> shock,
+under a contraction with Lipschitz constant <code>0.800000</code> exactly on every draw, enforced
+at generation with a raise rather than a warning.</p>
+<p>Its truncation decays geometrically, bounded by <code>L^k × (k=0 error)</code>:
+<code>1.000067 / 0.410387 / 0.203305 / 0.070732 / 0.013666 / 0.001017</code>.</p>
+<p><strong>Its first design was killed by its own control.</strong> The raw new-fixed-point coordinate
+let a shock-blind reading score <code>0.194150</code> — <strong>96 % of that label was the un-intervened
+game.</strong> The mirror-intervention contrast that replaced it has shock-blind error
+identically <code>sqrt(1 + mean²/var) ≥ 1.0</code>; measured <code>1.000067</code>.</p>
+<hr />
+<h2 id="2-the-depth-law-why-the-shortfall-is-not-about-settling">2. THE DEPTH LAW — WHY THE SHORTFALL IS NOT ABOUT SETTLING<a class="headerlink" href="#2-the-depth-law-why-the-shortfall-is-not-about-settling" title="Permanent link">#</a></h2>
+<p><code>hop_k</code> composition requires depth logarithmic in <code>k</code>:</p>
+<div class="highlight"><pre><span></span><code>    L = floor(log2 k) + 2          width O(1)
+</code></pre></div>
+<p><code>CITED</code>: Sanford, Hsu, Telgarsky, ICML 2024,
+<a href="https://arxiv.org/abs/2402.09268">arXiv:2402.09268</a>, Theorem 4.2; Corollary 4.3 gives
+an <code>Ω(log k)</code> lower bound <strong>conditional on the 1-vs-2-cycle conjecture</strong> — conditional,
+and it must be cited as such.</p>
+<p><code>RUN</code>: <code>hop_2 → 3</code>, <code>hop_4 → 4</code>, <code>hop_8 → 5</code>, <code>hop_16 → 6</code>.</p>
+<p><strong>The arms in this project are depth 1.</strong> At <code>t* = 8</code> the required depth is about 5.</p>
+<p><strong>And the measured behaviour matches.</strong> At <code>t* = 8</code> an arm trains to <code>0.860972</code> —
+<strong>sitting on its own two-hop ceiling of <code>0.866025</code></strong> — and evaluates at <code>1.112208</code>. It
+is not failing to settle; <strong>it is memorising, because the term it needs is a three-way
+product <code>a[s-1]·a[s-2]·b[s-3]</code> that depth-one mixing cannot form.</strong></p>
+<hr />
+<h2 id="3-the-contraction-and-its-certificate-what-survived">3. THE CONTRACTION AND ITS CERTIFICATE — WHAT SURVIVED<a class="headerlink" href="#3-the-contraction-and-its-certificate-what-survived" title="Permanent link">#</a></h2>
+<p>Three contraction certificates were attempted and all three died: the sphere metric on
+an identity (<code>θ = arcsin(√TV)</code> exactly on a one-token mask), Birkhoff on <code>T</code> (the
+theorem requires a positive <strong>linear</strong> map and the map is not linear), and Birkhoff on
+<code>G</code> (failed its own per-seed bind).</p>
+<p><strong>What holds is <code>κ = β</code> — chosen, not derived — and it holds in 142/142 journal rows.</strong>
+<code>READ</code>: <code>results/hilbert.jsonl</code>, field <code>bound_respected</code>.</p>
+<p><strong>Two numerical facts that were load-bearing and are easy to get wrong:</strong></p>
+<ul>
+<li><code>tanh(Δ/4)</code> reads <strong>exactly 1.0</strong> in float64 for <code>Δ ≥ 76.246190</code>. The representable
+  form is <code>1 − κ = 2/(e^{Δ/2} + 1)</code>, which stays finite to <code>Δ ≈ 1400</code>.</li>
+<li><code>d_H(softmax u, softmax v) = osc(u − v)</code> <strong>exactly</strong> — the log-partition cancels in an
+  oscillation, so the Hilbert distance between two softmax outputs needs no <code>exp</code>.</li>
+</ul>
+<hr />
+<h2 id="4-the-confound-and-it-supersedes-the-arm-comparison">4. THE CONFOUND — AND IT SUPERSEDES THE ARM COMPARISON<a class="headerlink" href="#4-the-confound-and-it-supersedes-the-arm-comparison" title="Permanent link">#</a></h2>
+<p><strong>The pivot family structurally cannot place the deciding token on the value path.</strong></p>
+<p><code>READ</code>, <code>scale/arm_s.py:107</code>: <code>select_pivots(kk, min(k_piv, s - 2), exclude=(s - 1,))</code>,
+then <code>return piv[piv &gt; 0]</code>. <code>READ</code>, <code>scale/m3_quintuple.py:129</code>: the same set via
+<code>exclude=(0, s - 1)</code>.</p>
+<p><strong>So the largest legal pivot is <code>s − 2</code>.</strong> Every operator row is <code>tril(-1)</code>-strict, so
+row <code>s − 2</code> reads only <code>j ≤ s − 3</code>. <strong>Therefore <code>v[s-2]</code> is invisible to every pivot
+row</strong>, while softmax's own row <code>s − 1</code> reads <code>j ≤ s − 2</code> and sees it directly.</p>
+<p><strong>And the <code>t* = 1</code> label is <code>a[s-1] · b[s-2]</code></strong> — concentrated on exactly the hidden
+position. Measured, perturbing that token by <code>+100</code>: the softmax reading moves
+<code>101.6983</code> (direct value pass-through) while the pivot value path moves <code>3.263746</code>.</p>
+<p><strong>Consequence, stated plainly: any arm-versus-softmax number on this corpus measures the
+exclusion at least as much as it measures the idea.</strong> The root cause is a documented
+rationale rather than a defect — <em>"a pivot reading of the row being settled is not an
+independent reading of it"</em> — a defensible independence property that became a
+capability ceiling.</p>
+<p><strong>The repair is the same as the architectural position in §0:</strong> lift the exclusion so
+that <code>p = s − 1</code> is legal, at which point <code>av[s-1]</code> <strong>is</strong> the softmax row and softmax
+becomes an interior point of the family.</p>
+<hr />
+<h2 id="5-the-settled-arm-iterates-the-wrong-unknown">5. THE SETTLED ARM ITERATES THE WRONG UNKNOWN<a class="headerlink" href="#5-the-settled-arm-iterates-the-wrong-unknown" title="Permanent link">#</a></h2>
+<p>The settled cell iterates <code>α</code> on a simplex over <code>{α @ av}</code> — <strong>a reparameterisation
+inside the unsettled twin's own family.</strong> It can reallocate weight; it cannot add a
+function the twin could not already express.</p>
+<p><strong>That is a structural account of the measured result</strong>, rather than a post-hoc one:</p>
+<div class="highlight"><pre><span></span><code>settled − twin = −0.002959     exact 95% CI [−0.042903, +0.031557]     covers zero
+</code></pre></div>
+<p><code>RUN</code>, this session: exact enumeration over all <code>5**5 = 3125</code> paired resamples, 126
+distinct values — <strong>cheaper than <code>B = 10000</code> Monte-Carlo by 3.2× and with no sampling
+error at all.</strong></p>
+<p>And the variance tells the same story: <code>sd 0.064106</code> for settled against <code>0.016547</code> for
+the twin, <strong>3.874×</strong>, on the same batches, the same initialisation and the same
+parameter count. <strong>Settling widens the distribution without moving the mean.</strong></p>
+<p><strong>The one-hot control separates the two claims.</strong> <code>argmax − softmax = −0.118456</code>, CI
+<code>[−0.134115, −0.102786]</code>, 0/5 seeds — <strong>collapsing the mixture to a lookup is worse than
+plain softmax.</strong> So the mixture is worth something and the fixed point over it is not.
+Gradient descent on softmax attention converges to the max-margin separator of optimal
+tokens (<code>CITED</code>: Tarzanagh et al., <a href="https://arxiv.org/abs/2306.13596">arXiv:2306.13596</a>),
+which is why hard selection kills the training signal that soft selection keeps.</p>
+<hr />
+<h2 id="6-consequence-fidelity-the-capability-metric-of-record">6. CONSEQUENCE FIDELITY — THE CAPABILITY METRIC OF RECORD<a class="headerlink" href="#6-consequence-fidelity-the-capability-metric-of-record" title="Permanent link">#</a></h2>
+<p>For an arm at trained weights, over drawn <code>do()</code> interventions with closed-form oracle
+effects:</p>
+<div class="highlight"><pre><span></span><code>    fidelity  =  fraction of interventions where  sign(Δŷ_model) = sign(Δy_oracle)
+</code></pre></div>
+<p>reported with a <strong>Clopper–Pearson exact</strong> interval, alongside the slope of <code>Δŷ</code> on <code>Δy</code>,
+and compared against softmax by <strong>exact McNemar on the same interventions with
+byte-identical draws.</strong></p>
+<p><strong>It is computable for softmax too, which is what makes it a table column rather than a
+plea.</strong> Measured at <code>s=64 d=24 n_train=8192</code>, <strong>seed 0 only — the file requests five
+seeds and contains one</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>arm</th>
+<th>eval NRMSE</th>
+<th>fidelity</th>
+<th>CP interval</th>
+<th>slope</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>softmax</code></td>
+<td>0.877168</td>
+<td>0.807843</td>
+<td>[0.754044, 0.854329]</td>
+<td>0.319032</td>
+</tr>
+<tr>
+<td><code>pivot_signed</code></td>
+<td>0.673762</td>
+<td>0.854902</td>
+<td>[0.805590, 0.895735]</td>
+<td>0.565631</td>
+</tr>
+<tr>
+<td><code>pivot_unsigned</code></td>
+<td>0.747528</td>
+<td>0.835294</td>
+<td>[0.783958, 0.878642]</td>
+<td>0.469549</td>
+</tr>
+<tr>
+<td><code>windowed_signed</code></td>
+<td>1.075830</td>
+<td>0.360784</td>
+<td>[0.301809, 0.423038]</td>
+<td>0.021058</td>
+</tr>
+</tbody>
+</table>
+<p>Paired exact McNemar against softmax: <code>pivot_signed</code> <code>b=28 c=40 p=0.18181</code> <strong>no
+reject</strong>; <code>pivot_unsigned</code> <code>p=0.348889</code> <strong>no reject</strong>; <code>windowed_signed</code>
+<code>p=5.45054e-23</code> <strong>REJECT, in the wrong direction</strong> — its fidelity is <em>below</em> chance and
+it scores <code>flipper 0.000000 (0/72)</code>, never once recovering the flipper token's sign.</p>
+<p><strong>Two readings, and both matter.</strong> Softmax <strong>already has consequence fidelity at
+<code>0.807843</code></strong>, well clear of chance — causal awareness is not the thing that
+distinguishes the arms. And the signed arm's apparent advantage <strong>does not survive the
+paired test</strong>.</p>
+<hr />
+<h2 id="7-the-absorbing-chain-oracle-and-its-rate-law">7. THE ABSORBING-CHAIN ORACLE AND ITS RATE LAW<a class="headerlink" href="#7-the-absorbing-chain-oracle-and-its-rate-law" title="Permanent link">#</a></h2>
+<p>The label is a coordinate of the absorption probabilities of a Markov chain:
+<code>N = (I − Q)^{-1}</code>, <code>B = N R</code>, the fixed point of <code>z ← Q z + R</code>.</p>
+<p><strong><code>λ₂</code> is defined, not assumed.</strong> <code>P = [[Q, R], [0, I]]</code> is block-triangular, so the
+literal second eigenvalue of <code>P</code> is <code>1</code> and says nothing. <strong><code>λ₂ := ρ(Q)</code>.</strong></p>
+<p><strong>The engineered dial is exact.</strong> Setting <code>Q := α · P_TT</code> gives <code>ρ(αP_TT) = α·ρ(P_TT)</code>,
+so <code>α = target / ρ(P_TT)</code> lands <code>λ₂ = 0.9250000000</code> on both graphs, <code>t_rel = 13.3333</code>.</p>
+<p><strong>The committor residual has a closed form.</strong> With <code>u − u_t = Q^t u</code> and
+<code>v − v_t = Q^t v</code>:</p>
+<div class="highlight"><pre><span></span><code>    q_t − q  =  ( u ⊙ (Q^t s)  −  s ⊙ (Q^t u) )  /  ( s ⊙ s_t )
+</code></pre></div>
+<p>verified to <code>1.082467e-15</code> and <code>4.583348e-13</code>. Both tails carry the same Perron mode, so
+the leading term is <code>λ₂^t · w ⊙ (c(s)u − c(u)s)</code> over a converging denominator, and
+therefore <strong><code>f := decay/λ₂ → 1</code> exactly</strong>: measured <code>1.00000063</code> and <code>1.00158689</code> at
+<code>t = 320</code>.</p>
+<p><strong>But only the limit is derived.</strong> A placement sweep on a fixed graph gives
+<code>f(160) = 0.99034549</code> — <strong>below one</strong> — which no account of late sub-dominant modes
+permits. The leading amplitude <code>c(s)u − c(u)s</code> is a property of the two boundary
+columns, so <strong>the excess is set by both spectrum and geometry, and geometry can flip its
+sign.</strong></p>
+<p><strong>And the operational consequence is the important part.</strong> Every ladder rung
+<code>t* ∈ {1,2,8,32}</code> sits <strong>below</strong> the mode time (<code>20.5615</code>, <code>169.3116</code>). <strong>The ladder is
+entirely pre-asymptotic, so <code>λ₂^{t*}</code> is the wrong predictor at the rungs even though
+<code>λ₂</code> is the right asymptotic rate.</strong> The closed form above is the right predictor and
+costs one solve.</p>
+<p><strong>A Cheeger obstruction bounds what any one-edge bridge can do.</strong> <code>g ≤ 2φ</code> with
+<code>φ = 1/vol(S)</code> gives <code>t_rel ≥ vol(S)/2 = 1372.50</code> against a target band of <code>[10, 20]</code>;
+landing in band would need <code>vol(S) ≤ 40</code>, making every label a 3-hop function. <strong>The
+α-scaling construction relocates the obstruction rather than evading it</strong> — a radius-3
+ball retains <code>0.7951152826</code> of the walk's weight and <code>0.1090161839</code> survives past the
+graph's diameter, so the reach ceiling moves from 3 hops to about 13. <strong>A ceiling at 13
+is still a ceiling.</strong></p>
+<hr />
+<h2 id="8-the-formal-results">8. THE FORMAL RESULTS<a class="headerlink" href="#8-the-formal-results" title="Permanent link">#</a></h2>
+<p><code>lake build CEQ</code> exits 0. <strong>134 theorems + 41 lemmas across the thirteen files in
+<code>lean/CEQ/</code> and <code>lean/CEQ.lean</code></strong>, counted by <code>python scripts/lean_count.py</code>, 2026-09-11.
+A raw <code>grep -c '^\s*theorem\s'</code> reads 140 + 35 instead: it counts six comment lines that
+open with the word "theorem" and misses six <code>@[simp] lemma</code> declarations. (The earlier
+count of <strong>39</strong> covered only the six earliest modules — <code>Contraction</code>, <code>Nilpotent</code>,
+<code>Occupancy</code>, <code>OracleSeparation</code>, <code>OrbitBound</code>, <code>Refcount</code> — and is still exact for them;
+<code>V15</code>, <code>V15Fork</code>, <code>V15Kernel</code>, <code>V15Phase</code>, <code>V15Source</code> and <code>V16Domain</code> came later.)</p>
+<p><strong><code>oracle_ne_resolvent</code>.</strong> The arm's operator is strictly lower triangular, hence
+<code>A^n = 0</code>. The oracle's transient block <code>Q</code> is non-negative with symmetric support and
+at least one positive entry, hence <strong>never nilpotent</strong>. So the two cannot coincide, and
+the ladder's creditability does not rest on an assumption.</p>
+<p><strong><code>truncation_never_exact</code>.</strong> The partial sum <code>Σ_{k&lt;N} Q^k</code> is not the inverse of
+<code>(I − Q)</code> at <strong>any</strong> <code>N</code> — whereas for the arm's own operator it becomes an equality at
+<code>N = n</code>. <strong>Every rung therefore leaves a real residual.</strong></p>
+<p><code>SymmSupport</code> is deliberately weaker than symmetry, because <code>D^{-1}W</code> is not symmetric
+at unequal degrees.</p>
+<p>Both are bound to the shipped object rather than to a paper statement: reachability from
+the root module, <code>#print axioms</code> on five names <strong>with a planted <code>sorryAx</code> seen to fire</strong>,
+the three hypotheses checked entrywise on the actual matrix, and a must-fire in which the
+arm's own <code>.tril(-1)</code> operator is <strong>rejected</strong> by the support check.</p>
+<hr />
+<h2 id="9-the-novelty-position-bounded">9. THE NOVELTY POSITION, BOUNDED<a class="headerlink" href="#9-the-novelty-position-bounded" title="Permanent link">#</a></h2>
+<p>Most of <code>equilibrium-labels-as-attention-capability-bar</code> is occupied: CLRS
+(<a href="https://arxiv.org/abs/2205.15659">arXiv:2205.15659</a>) and CLRS-Text
+(<a href="https://arxiv.org/abs/2406.04229">arXiv:2406.04229</a>) for equilibrium labels as a bar;
+Sanford et al. NeurIPS 2024 (OpenReview <code>AfzbDw6DSp</code>) for an attention capability
+hierarchy; deep-equilibrium algorithmic reasoners
+(<a href="https://arxiv.org/abs/2402.06445">arXiv:2402.06445</a>,
+<a href="https://arxiv.org/abs/2410.15059">arXiv:2410.15059</a>) for equilibrium-solving arms.</p>
+<p><strong>The nearest contender was checked directly and does not occupy what remains.</strong>
+<a href="https://arxiv.org/abs/2607.21607">arXiv:2607.21607</a>, <em>"Spectral Flow Certificates for
+Depth-Aware Long-Range Propagation in Graph Neural Networks"</em>, is real — verified via
+the arXiv API, title matched, formula <code>SFC(G,k) = 1 − (1 − γ(G))^k</code> and all three
+<code>R² = 0.910 / 0.881 / 0.863</code> byte-exact as attributed. <strong>Its date/identifier mismatch is
+block-wide across five neighbouring identifiers and does not impeach it.</strong></p>
+<p><strong>But:</strong> it is a fixed-graph GCN with <code>Transformer</code>, <code>GAT</code>, <code>GIN</code> and <code>GraphSAGE</code> each
+appearing <strong>zero</strong> times; its headline fits are on <strong>engineered</strong> graphs while its
+surveyed graphs fall to <code>R² = 0.440</code>; and its label is <strong>trained accuracy</strong> on a
+sign-of-sum readout, with <code>equilibrium</code> and <code>fixed point</code> each appearing <strong>zero</strong> times.</p>
+<p><strong>And its own Proposition 1 (iii) states that at fixed depth <code>SFC</code> and <code>γ</code> induce
+identical rankings</strong> — so the headline values are <code>λ₂</code>'s numbers relabelled, and the
+paper's real gain is pooled-depth <code>R² 0.884</code> against <code>0.858</code>.</p>
+<p><strong>What remains unoccupied, stated narrowly:</strong> attention rather than message-passing, and
+<strong>the equilibrium itself as the label</strong> rather than an accuracy. Three further absences
+are recorded as <code>NOT FOUND</code> rather than assumed: no prior work iterating a routed
+mixture-weight vector over content-selected, Gram-coupled pivots to a fixed point as the
+attention read; none on the signed row-L1 normalisation <code>ρ·w/‖w‖₁</code> as attention; and <strong>no
+unconditional lower bound</strong> against one-layer softmax on this product chain.</p>
+<hr />
+<h2 id="10-limits">10. LIMITS<a class="headerlink" href="#10-limits" title="Permanent link">#</a></h2>
+<p>Collected here rather than scattered.</p>
+<p>Every task in the original corpus is static, so no reading taken on it bears on
+settling. The arm comparison on the equilibrium corpus is confounded by the pivot
+exclusion of §4 and must not be reported as evidence about settling until that exclusion
+is lifted. The consequence-fidelity table of §6 is <strong>one seed of a requested five</strong>, and
+its companion at <code>d = 256</code> covers <strong>two of four arms</strong>. The ladder is pre-asymptotic at
+every rung, so any curve read against <code>λ₂^{t*}</code> will look wrong for arithmetic reasons.
+Five seeds cannot decide anything anytime-validly — the attainable evidence ceiling at
+five seeds is <code>3.80169140625</code> against a threshold of <code>40</code>. No weights have been
+published. The depth lower bound of §2 is conditional on the 1-vs-2-cycle conjecture.
+And <code>results/m3_capability.txt:1212</code> is a <strong>stale trap</strong>: it records
+<code>e3_t8 k=2 NRMSE=0.815162</code> from before <code>b[s-1] = 0</code> and describes a corpus that no
+longer exists.</p>
+<hr />
+<h2 id="11-the-second-exact-oracle-kirchhoff-against-the-absorbing-chain">11. THE SECOND EXACT ORACLE — KIRCHHOFF AGAINST THE ABSORBING CHAIN<a class="headerlink" href="#11-the-second-exact-oracle-kirchhoff-against-the-absorbing-chain" title="Permanent link">#</a></h2>
+<p>§7's label is one computation of the harmonic measure <code>ω_v = P_v(τ_a &lt; τ_b)</code>. The
+matrix-tree theorem gives a second, and the two agreeing is now an instrument law
+rather than an unstated hope. <code>scale/kirchhoff.py</code>, <code>RUN</code>.</p>
+<p><strong>The chain.</strong> <code>L = D − A</code> on the merged component, <code>τ(G)</code> its spanning-tree count,
+<code>F(x | y)</code> the number of spanning 2-forests separating <code>x</code> from <code>y</code>.</p>
+<ol>
+<li><strong>Kirchhoff.</strong> <code>det(L_g) = τ(G)</code> for <code>L_g</code> the Laplacian with row and column <code>g</code>
+   deleted. Every cofactor is the same number.</li>
+<li><strong>All-minors.</strong> <code>det(L_{xy}) = F(x | y)</code>.</li>
+<li><strong>Resistance.</strong> Ground at <code>x</code>, so <code>M := (L_x)^{-1}</code> has <code>M_xx = M_xy = 0</code> and, by
+   Cramer, <code>M_yy = det(L_{xy}) / det(L_x)</code>. Since
+   <code>R(x,y) = (e_x − e_y)ᵀ L⁺ (e_x − e_y)</code> and <code>M</code> differs from <code>L⁺</code> only along the
+   all-ones direction, which cancels in the difference,
+   <strong><code>R(x, y) = F(x | y) / τ(G)</code></strong> — effective resistance is a ratio of forest counts.</li>
+<li><strong>Harmonic measure.</strong> Unit current <code>a → b</code> gives <code>v = L⁺(e_a − e_b)</code>, and
+   polarisation on <code>(e_x − e_b) − (e_a − e_b) = e_x − e_a</code> gives
+   <code>v(x) − v(b) = ( R(x,b) + R(a,b) − R(x,a) ) / 2</code>. Normalising by
+   <code>v(a) − v(b) = R(a,b)</code> yields the harmonic function with boundary values 1 at <code>a</code>
+   and 0 at <code>b</code>, which is <code>ω</code>. <strong>Now ground at <code>b</code></strong>: <code>R(x,b) = M_xx</code>,
+   <code>R(a,b) = M_aa</code>, <code>R(x,a) = M_xx + M_aa − 2M_xa</code>, and the three-term expression
+   collapses to</li>
+</ol>
+<div class="highlight"><pre><span></span><code>    ω_x  =  M_xa / M_aa  =  F(x, a | b) / F(a | b)
+</code></pre></div>
+<p><strong>with no cancellation of large resistances, and one solve — <code>L_b z = e_a</code> — rather
+than an inverse.</strong></p>
+<p><strong>It is independent of §7's solve, and that is structural rather than asserted.</strong> The
+chain path inverts <code>I − Q</code> with <code>Q = D^{-1}A</code> restricted to the nodes that are neither
+endpoint. The Kirchhoff path solves a symmetric unnormalised <code>D − A</code> on the whole
+component, in which <code>a</code> is an ordinary interior column and only <code>b</code> is removed. The
+two differ in matrix, normalisation, right-hand side and index map. <strong><code>L_T</code> and
+<code>I − Q</code> are diagonally related — <code>I − Q = D^{-1} L_T</code> — which is exactly why the
+Kirchhoff route does not form <code>L_T</code>.</strong></p>
+<p><strong>Both ends of the derivation are checked against brute force, not assumed.</strong> Steps 1
+and 2 are compared to enumeration of spanning trees and separating 2-forests over
+every edge subset on drawn 7-node graphs; step 4's forest ratio is compared to the
+grounded solve node by node. <code>tests/jupiter/test_kirchhoff_agreement.py</code>, 11 tests.</p>
+<p><strong>The law, and its measured margin.</strong> <code>max |ω_kirchhoff − ω_chain| &lt; 1e-10</code>, enforced
+in <code>e4_harmonic.measure()</code> before any number is read off an instance. Measured gaps,
+float64, this machine:</p>
+<div class="highlight"><pre><span></span><code>    six drawn Erdős–Rényi instances, n = 9              2.220446e-16
+    SMALL_CASE,     62 merged nodes,   60 transient     8.992806e-15
+    SHIPPED_CASE, 1202 merged nodes, 1200 transient     9.636736e-14
+</code></pre></div>
+<p><strong>The tolerance sits three orders above the largest clean gap and nine below the
+smallest defect.</strong> A scratch copy of the chain carrying one off-by-one — dividing by
+<code>len(neighbours) + 1</code>, the bug you get by counting a node among its own neighbours —
+moves <code>ω</code> by between <code>1.749951e-01</code> and <code>3.156170e-01</code> over the same six drawn
+instances, and the check rejects it on <strong>6 of 6</strong>. The defect is survivable by
+construction: every row stays strictly sub-stochastic, so the solve succeeds and
+returns plausible numbers in <code>[0,1]</code>, and nothing downstream would have noticed.</p>
+<p><strong>Scope.</strong> The forest identity is the identity for the <strong>undamped</strong> walk. At
+<code>kill &gt; 0</code> the operator is not a random walk on <code>G</code> and the law raises rather than
+comparing two different objects and reporting the difference as a defect.</p>
+<hr />
+<h2 id="12-the-ladder-verdict-as-a-named-statistic-pages-l-and-isotonic-regression">12. THE LADDER VERDICT AS A NAMED STATISTIC — PAGE'S L AND ISOTONIC REGRESSION<a class="headerlink" href="#12-the-ladder-verdict-as-a-named-statistic-pages-l-and-isotonic-regression" title="Permanent link">#</a></h2>
+<p><code>scale/e_ladder.py:217</code> decides row A against row B by
+<code>mono = all(b &gt;= a for a, b in zip(deltas, deltas[1:]))</code>. <strong>That is a monotonicity
+check on four numbers, and it has no null, so it has no error rate</strong>: four
+independent noisy numbers land in non-decreasing order by chance one time in
+twenty-four. <code>scale/page_trend.py</code> supplies the null. <code>RUN</code>.</p>
+<p><strong>Page's L.</strong> Rank the <code>k</code> conditions within each of the <code>n</code> blocks, sum ranks per
+condition into <code>R_j</code>, take <code>L = Σ_j j · R_j</code>. Under exchangeability within a block
+every one of the <code>k!</code> rank assignments is equally likely and blocks are independent,
+so <strong>the null distribution of <code>L</code> is the <code>n</code>-fold convolution of the <code>k!</code>-point
+distribution of <code>Σ_j j·r_j</code></strong> — exact, no table, no normal approximation. At <code>k = 4</code>,
+<code>n = 5</code> that enumerates <code>24⁵ = 7 962 624</code> assignments; the support is <code>[100, 150]</code>,
+the mean <code>125</code>, and the distribution is symmetric, which is what makes the
+one-sidedness a choice rather than an artefact.</p>
+<p><strong>The pre-registration, exhaustive before the data.</strong></p>
+<div class="highlight"><pre><span></span><code>    RISES := page_p &lt; 0.05  AND  isotonic top rung &gt; 0 with CI excluding zero
+    FLAT  := neither clause fires
+    SPLIT := exactly one clause fires
+</code></pre></div>
+<p><code>SPLIT</code> exists because "both / neither" leaves a hole, and this repo has already paid
+for one: row H was added to <code>99777ab:E_LADDER_PREREGISTERED_READING.md</code> because rows A–G all
+conditioned on settled winning somewhere. <strong>Neither clause can pick a rung</strong>: <code>L</code>
+quantifies over every rung by construction and the size clause reads the last rung,
+fixed by the ladder's definition.</p>
+<p><strong>THE READING, on the complete CPU ladder — five seeds, four rungs.</strong></p>
+<div class="highlight"><pre><span></span><code>    rank sums R_j       8.0   12.0   13.0   17.0
+    L = Σ_j j·R_j       139        support [100,150], null mean 125
+    exact p             0.016724
+    permutation p       0.016255   (se 0.000283, 200 000 draws, seed 0)
+    isotonic fit        −0.036025  −0.017215  −0.004284  +0.016035
+    top rung            +0.016035  CI [+0.002826, +0.033167]
+</code></pre></div>
+<p><strong>The pre-registered branch returns <code>RISES</code>.</strong> Two independent p-value paths — an
+exact convolution and a permutation draw — agree to <code>4.7e-4</code>, inside <code>1.7</code> standard
+errors.</p>
+<p><strong>Two things that verdict rests on, both measured, neither softened.</strong></p>
+<p><strong>The size clause is carried by the constraint, not by the data.</strong> The same bootstrap
+without the monotone constraint gives the top rung at <code>+0.016035</code> with CI
+<code>[−0.004711, +0.033167]</code>, which <strong>covers zero</strong> — and whose lower bound reproduces
+<code>results/e_ladder_reading.txt</code>'s shipped <code>ci_lo</code> of <code>−0.004711</code> <strong>exactly</strong>, so the
+two bootstraps are the same bootstrap. PAVA pooled the top rung in <code>13.07%</code> of
+resamples and lifted the lower bound by <code>+0.007537</code>. <strong>Pooling only ever raises a low
+top, never lowers a high one</strong>, so that lift is a property of the estimator under a
+flat truth.</p>
+<p><strong>The trend clause survives 2 of 5 single-seed deletions.</strong> Dropping seed 1 leaves
+<code>p = 0.003864</code> and seed 2 leaves <code>p = 0.021741</code>; dropping seed 0 or 4 leaves
+<code>p = 0.050411</code> and seed 3 leaves <code>p = 0.072401</code>.</p>
+<p><strong>But the conjunction is calibrated even though one of its clauses is not, and that
+is the argument for requiring both.</strong> Over 200 drawn tables per arm (<code>5×4</code>,
+<code>sd = 0.03</code>, seed 11, <code>n_boot = 300</code>):</p>
+<div class="highlight"><pre><span></span><code>    flat truth      trend 0.065   size 0.325   RISES 0.040
+    rising truth    trend 0.810   size 1.000   RISES 0.810
+</code></pre></div>
+<p><strong>The isotonic clause alone fires on a third of flat tables — six times nominal. The
+conjunction reads <code>0.040</code> against a nominal <code>0.05</code>, because the trend clause gates
+the miscalibrated one.</strong> Both arms are drawn from the same generator and the verdict
+separates them, so the branch is not vacuous.</p>
+<p><strong>THE GRANULARITY QUESTION, AND THE TWO CLAUSES ANSWER IT DIFFERENTLY.</strong> At five
+seeds a sign-pattern statistic can express no two-sided p finer than
+<code>2/2^5 = 0.0625</code>, which is <strong>above</strong> the <code>0.05</code> this project quotes; measured on
+the shipped <code>contrast()</code> over 1000 samples, a 5-0 unanimity excludes zero
+<code>385/385</code> times, a 4-1 split 20-44% and a 3-2 split 0-3.7%, so "the CI excludes
+zero" at <code>N = 5</code> is very nearly "all five seeds agreed". That floor is real, and
+it lands on <strong>one</strong> of the two clauses.</p>
+<p><strong>The trend clause clears it.</strong> Page's <code>L</code> ranks <code>k</code> conditions within each block
+instead of reading one sign, so the outcome space is <code>(k!)^n = 24^5 = 7 962 624</code>
+rather than <code>2^n = 32</code> — a factor of <code>12^5 = 248 832</code>, or <code>log2 24 = 4.585</code> bits
+per block against 1, <code>22.925</code> bits against <code>5</code>. The consequences are exact:</p>
+<div class="highlight"><pre><span></span><code>    achievable p-values on the whole support        51
+    finest non-zero achievable p                    1 / 24^5 = 1.2558674e-07
+    achievable p-values at or below alpha = 0.05    14   (L = 137 .. 150)
+    critical value at alpha = 0.05                  L = 137
+    TRUE size of the test at that critical value    0.037002877
+    next coarser rung, L = 136                      0.052384114  (above alpha)
+</code></pre></div>
+<p><strong><code>alpha = 0.05</code> is reachable, and <code>p = 0.016724386</code> is an exact atom sum of the
+discrete null</strong> — the cumulative count <code>133 170 / 7 962 624</code> at <code>L = 139</code> — not
+an interpolation onto it. Being discrete the test is conservative: its true size
+is <code>0.037002877</code>, not <code>0.05</code>. By contrast the sign lattice at <code>N = 5</code> has six
+achievable one-sided p-values of which exactly <strong>one</strong> clears <code>0.05</code> (unanimity,
+<code>1/32 = 0.03125</code>), and <strong>none</strong> of their two-sided partners does.</p>
+<p>Three routes to the null, sharing no arithmetic: float probabilities through
+<code>np.convolve</code>, integer polynomials through Python big integers, and literal
+enumeration of every one of the <code>(k!)^n</code> rank assignments with <code>L</code> rebuilt from
+whole tables. The first two agree to <code>1.388e-17</code> at <code>k=4, n=5</code>; all three agree
+<strong>exactly</strong> at <code>(3,3)</code>, <code>(4,3)</code> and <code>(3,4)</code>, where enumeration is tractable.</p>
+<p><strong>The size clause does not clear it, and cannot.</strong> It IS a paired percentile
+bootstrap over five seeds, so <code>0.0625</code> is its floor and no interval it prints is
+a <code>0.05</code>-level statement at this seed count. The ladder's top rung is a <strong>4-1
+split</strong> — the regime Venus measured at 20-44% — and its unconstrained interval
+duly covers zero at <code>[-0.004711, +0.033167]</code>. Only the one-sided PAVA lift
+carries it across. <strong>The granularity floor and the estimator bias are two
+independent reasons to distrust the same clause, and they push the same way.</strong>
+The pre-registered branch is not refitted after the fact: <code>RISES</code> stands as
+written, with the trend clause sound at its own level and the size clause now
+known to be incapable of the level it was written at.</p>
+<p><strong>AND ROW G OUTRANKS ALL OF IT.</strong> <code>99777ab:E_LADDER_PREREGISTERED_READING.md</code> credits a rung
+nothing in either direction when either cell sits at or above predict-the-mean, and
+it fires on <strong>three of the four rungs this statistic is computed on</strong>:</p>
+<div class="highlight"><pre><span></span><code>    rung      settled       twin    credited
+    e3_t1    0.994399   0.958373    yes
+    e3_t2    1.013958   0.996743    no
+    e3_t8    1.096009   1.091725    no
+    e3_t32   1.103711   1.119745    no
+</code></pre></div>
+<p><strong>A trend in the difference between two arms that both lose to predict-the-mean is an
+ordering, not a capability.</strong> <code>RISES</code> is a statement about the contrast as a number.
+<strong>It is not a claim that settling bought anything at depth</strong>, and <code>page_trend.report()</code>
+prints these cell means beside the verdict so that it cannot be read as one. Replacing
+an eyeball with a statistic sharpens the reading of a quantity the ladder's own
+pre-registration had already declined to credit.</p>
+<hr />
+<h2 id="13-the-attribution-claims-sample-complexity-line">13. THE ATTRIBUTION CLAIM'S SAMPLE-COMPLEXITY LINE<a class="headerlink" href="#13-the-attribution-claims-sample-complexity-line" title="Permanent link">#</a></h2>
+<p><code>impact_attribution</code> regresses the query row <code>B[query, :]</code> of length <code>N</code> against
+<code>n_samples</code> news vectors — the noiseless system <code>y = A b</code>
+(<code>scale/impact.py:1013-1021</code>, <code>READ</code>). Each row of the planted <code>B</code> carries
+<code>SUPPLIERS_PER_NODE + COMPETITORS_PER_NODE = 4</code> nonzeros
+(<code>scale/impact.py:88-89, 405-410</code>, <code>READ</code>). <strong>The fixed sparsity is in the ROW, not
+the column</strong> — a column's nonzero count is however many rows chose it and is
+unbounded — so the line below is stated for the row the recovery actually reads.</p>
+<p><strong>The line.</strong> Recovering an <code>s</code>-sparse vector in <code>R^n</code> from <code>m</code> noiseless linear
+measurements is possible at all only in the RIP regime</p>
+<div class="highlight"><pre><span></span><code>    m  ≥  C · s · ln(n / s)
+</code></pre></div>
+<p><strong>Below it an arm's attribution failure carries no information about the arm</strong>: there
+is provably no procedure separating the planted <code>B</code> from an adversarial one
+consistent with the same undersampled measurements. <code>scale/rip_line.py:verdict</code>
+returns the exact string <code>UNDER-SAMPLED</code> there and <code>ADMISSIBLE</code> at or above, so a
+cell prints a regime rather than a loss.</p>
+<p><strong><code>C</code> is measured, and the oracle transitions across the line.</strong> Gaussian <code>A</code>, signed
+<code>s</code>-sparse <code>b</code> with uniform support and Rademacher signs, drawn not built; recovery
+by L1 basis pursuit (<code>scipy.optimize.linprog</code>) and, independently, by orthogonal
+matching pursuit. <strong>Every grid reads <code>0.00</code> at its bottom and at least <code>0.96</code> at its
+top for basis pursuit</strong> — the sweep is non-degenerate at both ends, which is the
+whole requirement.</p>
+<div class="highlight"><pre><span></span><code>    n     s    n/s    ln(n/s)     m_50 (BP)   C (BP)     m_50 (OMP)  C (OMP)
+     64    4    16    2.772589       16       1.44270       24       2.16404
+    128    8    16    2.772589       32       1.44270       48       2.16404
+    256    4    64    4.158883       24       1.44270       28       1.68314
+     64   16     4    1.386294       40       1.80337       64       2.88539
+</code></pre></div>
+<p><strong><code>C</code> IS NOT BED-INVARIANT, AND THE FIRST TWO BEDS COULD NOT HAVE SHOWN THAT IT WAS.</strong>
+They share <code>n/s = 16</code>, so <code>ln(n/s)</code> is the same number in both and <code>m_50</code> tracking
+<code>s</code> <strong>forces</strong> <code>C</code> to repeat whatever the truth is. Varying the ratio instead:
+<code>C = 1.44270</code> holds at <code>n/s = 16</code> and <code>n/s = 64</code>, and rises to <code>1.80337</code> at
+<code>n/s = 4</code> — 25% higher. <code>s·ln(n/s)</code> is the asymptotic scaling and its constant creeps
+as <code>n/s</code> falls toward 1. <strong>The operational consequence is that <code>C</code> must be re-swept
+per bed; reusing <code>1.44270</code> elsewhere is a guess.</strong> The two solvers likewise disagree
+by a factor of 1.2 to 1.6 depending on the bed, which is two solvers failing
+differently and a second reason <code>C</code> is a per-bed measurement.</p>
+<p><strong>Where the shipped corpus sits.</strong> <code>impact_attribution</code> defaults to <code>n_samples = 256</code>
+against <code>N = 1024</code>, <code>s = 4</code> (<code>scale/impact.py:973</code>, <code>READ</code>), and
+<code>rip_line(1024, 4, 1.44270) = 32.01</code>, so the default oversamples the floor by roughly
+<code>8×</code>. <strong>The floor is the deliverable, not a claim that today's default sits on it.</strong></p>
+<hr />
+<h2 id="14-the-coherence-floor-and-the-calibrated-scramble-control">14. THE COHERENCE FLOOR AND THE CALIBRATED SCRAMBLE CONTROL<a class="headerlink" href="#14-the-coherence-floor-and-the-calibrated-scramble-control" title="Permanent link">#</a></h2>
+<p>Stated as functions of <code>(d, k)</code> so the arithmetic survives any change to either.</p>
+<p><strong>The Welch bound.</strong> Any <code>k</code> unit vectors in <code>R^d</code> obey</p>
+<div class="highlight"><pre><span></span><code>    max_{i&lt;j} |⟨u_i, u_j⟩|  ≥  sqrt( (k − d) / (d (k − 1)) )
+</code></pre></div>
+<p>which is <strong>exactly 0 for <code>k ≤ d</code></strong>, because an orthonormal set of <code>k ≤ d</code> vectors
+exists and attains it. Above the dimension it is the real constraint and it is tight:
+at <code>d = 2</code>, <code>k = 3</code> the bound reads <code>0.5</code> and three unit vectors at 120° attain
+<code>|cos 120°| = 0.5</code> exactly, agreeing to <code>1e-12</code>.</p>
+<p><strong>M1, at <code>d = 256</code>, <code>k = 16</code>.</strong> <code>k ≤ d</code>, so <strong>the floor is exactly 0</strong>, while random
+role vectors carry a max coherence of <code>0.174795</code>. <strong>A crosstalk-shaped failure at
+<code>k = 16</code> roles in 256 dimensions is therefore a training or design defect, not
+dimension starvation</strong> — the geometry permits perfect separation and nothing in the
+dimension count obstructs it.</p>
+<p><strong>M5, and the author's figure is 15.8% low.</strong> The amendment states the random
+coherence as <code>sqrt(2 ln k / d) = 0.147176</code>. That closed form is a union bound over
+<code>k</code> events, but the maximum runs over <code>C(k,2) = 120</code> <strong>pairs</strong>, not over 16 vectors.
+Four routes, of which two fail differently from the sampling:</p>
+<div class="highlight"><pre><span></span><code>    sqrt(2 ln k / d)              0.147176   author&#39;s form, union over k
+    sqrt(2 ln(k(k−1)/2) / d)      0.193397   union over C(k,2) pairs — an upper bound
+    Monte Carlo, 20 000 trials    0.174795   95% CI [0.174460, 0.175131]
+    order-statistic quadrature    0.174499   ∫₀¹ (1 − F(x)¹²⁰) dx, F the exact
+                                             |⟨u,v⟩| CDF from (1−t²)^((d−3)/2)
+</code></pre></div>
+<p><strong>The quadrature lands inside the Monte Carlo interval and both closed forms land
+outside it.</strong> The union bound is above, as a bound must be; the author's form is
+below, because it counts the wrong number of events. The mean overlap, by contrast,
+is confirmed on both paths: the exact <code>Γ(d/2) / (√π Γ((d+1)/2)) = 0.049917</code> matches
+the Monte Carlo <code>0.049917</code> (CI <code>[0.049869, 0.049964]</code>) and its
+<code>sqrt(2/(πd)) = 0.049868</code> limit to <code>4.9e-5</code>.</p>
+<p><strong>The consequence, and the error is in the safe direction.</strong> Scrambled roles at
+<code>d = 256</code>, <code>k = 16</code> carry an expected mean overlap of <code>0.049917</code> and an expected
+worst-case overlap of <code>0.174795</code>, <strong>both by chance and both computable before the
+control runs</strong>. A scramble control calibrated to expect zero residual separation is
+vacuous before it runs, and it is <strong>more</strong> vacuous than the amendment's own figure
+implies, not less. That is the fifteenth pattern, killed pre-birth.</p>
+<hr />
+<h2 id="15-a-coverage-tool-that-scanned-nothing">15. A COVERAGE TOOL THAT SCANNED NOTHING<a class="headerlink" href="#15-a-coverage-tool-that-scanned-nothing" title="Permanent link">#</a></h2>
+<p><code>99777ab:scale/chase_struck_coverage.py</code> walks every <code>.md</code> and <code>.py</code> the shipped
+struck-constant test does not cover, and reports any struck constant asserted
+without a strike marker in its paragraph. It printed
+<code>SCANNING 0 PATHS THE SHIPPED CHECK DOES NOT COVER</code>, <code>uncovered .md: 0,
+uncovered .py: 0</code>, and <strong>exited 0</strong>. <code>RUN</code>.</p>
+<p><strong>The root cause is a scope error in one expression.</strong> The exclusion list
+<code>(".git", "__pycache__", ".pytest_cache", ".claude", ".benchmarks")</code> was tested
+against <code>p.parts</code> — the components of the <strong>absolute</strong> path. Every agent
+worktree in this project is checked out under <code>&lt;repo&gt;/.claude/worktrees/&lt;name&gt;/</code>,
+so <code>.claude</code> was a component of the absolute path of <strong>every file in the tree</strong>
+and the filter dropped all of them. Measured on this checkout: <code>366</code> candidate
+files, <code>0</code> surviving the absolute filter, <code>365</code> surviving the same filter applied
+to <code>p.relative_to(ROOT).parts</code>.</p>
+<p><strong>Its own must-fire kept passing throughout</strong>, because that control feeds text
+directly to <code>scan_text</code> and never exercises target selection. <strong>A matcher control
+is not a coverage control</strong>, and this is the cleanest available example of the
+difference: the assertion that fired was true and the instrument was blind.</p>
+<p><strong>The fix is the scope correction plus a refusal.</strong> <code>collect_targets</code> filters on
+the path relative to the scan root, and <code>main</code> returns 1 rather than 0 on an
+empty target list — a tool that walks zero paths passes every input and must not
+report success. <code>tests/jupiter/test_struck_coverage_scans.py</code> — <strong>deleted from the
+live tree at <code>c71527a</code></strong> as one of the 53 test files removed with the round-report
+cleanup that commit describes; readable at <code>git show 99777ab:tests/jupiter/test_struck_coverage_scans.py</code>,
+not at HEAD — plants a struck
+constant in a file on disk that target selection must reach, requires it to be
+found, requires the same text carrying a strike marker <strong>not</strong> to be found, and
+requires a file with no struck constant to be silent — three arms, because two
+would pass for a scanner that flagged everything. <strong>6 of its 8 tests fail against
+the unfixed scanner; the 8th states the root cause without reference to the
+refactor so a later rewrite cannot make it vacuous.</strong> (This paragraph narrates
+what that test demonstrated when it ran; the fix and the <code>27</code>-candidate finding
+below it are unaffected by the file's later removal.)</p>
+<p><strong>What the fix exposed.</strong> With <code>346</code> paths now scanned the tool exits 1 on <code>27</code>
+candidates. They split into two classes, and the file's own docstring already
+warns that layer 2 is a text scan and text scans cry wolf. Prose <strong>about</strong> a
+strike whose paragraph carries no marker: the scanner's own docstring quoting
+<code>1.471448</code> in its must-fire description, <code>MISTAKES.md:206</code> discussing
+<code>5.4944e-13</code>, <code>99777ab:PREREGISTRATION_HOLE_AUDIT.md:424</code> running a
+<code>git log -S "0.743864"</code> forensic. Live assertions: <code>−1.389</code> with <code>R² 0.9938</code> in
+a <code>99777ab:RESEARCH.md</code> table row, and the three newly struck U1/N3 constants
+<code>0.743864</code>, <code>0.656532</code>, <code>0.816955</code> asserted in
+<code>tests/cameron/test_harmonic_attribution.py:123-124</code> and mirrored in
+<code>tests/deimos/</code>. <strong><code>−1.389</code> alone accounts for 17 of the 27</strong> and is a short
+enough string to match inside longer numbers, so the tally is a candidate list
+and not a finding. Adjudicating it is not this section's business; surfacing it
+at all required the scanner to look at a file first.</p>
+<hr />
+<h2 id="16-limits-added-by-sections-1115">16. LIMITS ADDED BY SECTIONS 11–15<a class="headerlink" href="#16-limits-added-by-sections-1115" title="Permanent link">#</a></h2>
+<p>§10 predates these sections and does not cover them.</p>
+<p>The instrument law of §11 is enforced only where <code>e4_harmonic.measure()</code> is the entry
+point; <code>absorbing_chain</code> and <code>fixed_point</code> remain callable directly and are not
+guarded, and the law is defined only for the undamped walk. Its agreement margin is
+measured at three graph sizes on one machine in float64 and no conditioning bound is
+proved. §12's verdict is <code>RISES</code> under a branch that was fixed before the statistic
+ran, but its size clause fires on the strength of a one-sided estimator bias AND
+cannot express a p finer than <code>2/2^5 = 0.0625</code> at five seeds, so it is structurally
+incapable of the <code>0.05</code> level it was written at; its
+trend clause survives only 2 of 5 single-seed deletions, and the percentile bootstrap
+behind both has <code>5⁵ = 3125</code> distinct atoms at five seeds; the calibration sweep is
+200 tables per arm under Gaussian noise at one scale and does not establish the error
+rate under the ladder's real noise, and the trend clause's own TRUE size is
+<code>0.037002877</code> rather than <code>0.05</code>, so power quoted against a nominal <code>0.05</code>
+overstates it. §13's <code>C</code> is fit at four beds with coarse <code>m</code>
+grids — <code>m_50</code> for the <code>n/s = 4</code> bed is bounded only to <code>(32, 40]</code> — under a Gaussian
+measurement ensemble, and <code>news_mat</code> in <code>scale/impact.py</code> has not been shown to be
+one; the line is a necessary condition, never a sufficient one, and nothing here
+wires <code>UNDER-SAMPLED</code> into an IMPACT cell. §15's fix is verified on this checkout and on
+synthetic roots; it is not verified on a checkout whose absolute path contains
+none of the skipped names, where the old and new filters agree and the test
+falls through to an equality branch. The 27 candidates the fix exposed are
+unadjudicated, and <code>−1.389</code> is short enough to match inside longer numerals, so
+the count is an upper bound on real hits rather than a finding. §14 is arithmetic about independent
+uniform unit vectors and says nothing about the vectors any trained arm actually
+holds; the order-statistic quadrature treats the <code>C(k,2)</code> pairwise products as
+independent, which they are not, and is corroboration for the sampled figure rather
+than a proof of it.</p>
+<hr />
+<h2 id="17-what-the-ste-result-actually-shows-and-what-it-prices-out">17. WHAT THE STE RESULT ACTUALLY SHOWS, AND WHAT IT PRICES OUT<a class="headerlink" href="#17-what-the-ste-result-actually-shows-and-what-it-prices-out" title="Permanent link">#</a></h2>
+<p>The full candidate catalogue is <code>results/r9_maths_survey.md</code>. This section records
+only the derivations it rests on. <strong>No wall-clock measurement was taken for it.</strong></p>
+<h3 id="171-two-discrete-stages-and-only-one-of-them-is-trained">17.1 Two discrete stages, and only one of them is trained<a class="headerlink" href="#171-two-discrete-stages-and-only-one-of-them-is-trained" title="Permanent link">#</a></h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>discrete object</th>
+<th>site</th>
+<th>trained</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Stage A</strong></td>
+<td>which <code>k</code> rows are pivots</td>
+<td><code>m3_quintuple.py:169</code> → <code>pivot_probe.py:80</code>, <code>topk(key.norm(dim=-1), k)</code></td>
+<td><strong>never, in any arm</strong></td>
+</tr>
+<tr>
+<td><strong>Stage B</strong></td>
+<td>mixture weights <code>α</code> over the chosen <code>k</code></td>
+<td><code>m3_quintuple.py:440</code></td>
+<td>yes</td>
+</tr>
+</tbody>
+</table>
+<p><code>argmaxste</code> estimates <strong>stage B</strong>. Its forward is bitwise <code>argmax</code>'s:
+<code>soft − soft.detach()</code> is elementwise exactly <code>+0.0</code>, and <code>soft ∈ [0,1]</code> admits no
+inf/nan path — checked over 200 drawn gates in float64. <strong>Stage A is byte-identical
+across <code>argmax</code>, <code>softmax</code>, <code>argmaxste</code>, <code>settled</code> and <code>twin</code>.</strong> Nothing measured
+this round bears on stage A.</p>
+<h3 id="172-the-gradient-is-the-effect-the-mechanism-is-not">17.2 The gradient is the effect; the mechanism is not<a class="headerlink" href="#172-the-gradient-is-the-effect-the-mechanism-is-not" title="Permanent link">#</a></h3>
+<p>Recomputed from <code>results/m3_quintuple_v2.jsonl</code> at <code>ntr8192_nev512</code>, 5 seeds, via
+<code>m3_synthetic_settled.contrast</code>. Positive = second cell lower.</p>
+<div class="highlight"><pre><span></span><code>    argmax    -&gt; argmaxste   +0.225760  CI [+0.212433, +0.245886]  5/5
+    softmax   -&gt; argmaxste   +0.107304  CI [+0.082879, +0.140870]  5/5
+    argmaxste -&gt; twin        +0.004092  CI [-0.023107, +0.029187]  3/5
+    settled   -&gt; twin        +0.002959  CI [-0.031557, +0.048587]  2/5
+    argmaxste -&gt; settled     +0.001133  CI [-0.069616, +0.057312]  3/5
+</code></pre></div>
+<p><strong>Three structurally different stage-B mechanisms — a Neumann-settled fixed point,
+a straight-through one-hot, and a full softmax mixture — lie within <code>0.004092</code> of
+each other with every CI covering zero.</strong> The only contrast excluding zero at 5/5
+is the presence of a gradient.</p>
+<h3 id="173-the-pricing-rule-what-this-instrument-can-and-cannot-falsify">17.3 The pricing rule: what this instrument can and cannot falsify<a class="headerlink" href="#173-the-pricing-rule-what-this-instrument-can-and-cannot-falsify" title="Permanent link">#</a></h3>
+<p>Minimum detectable effect, paired, <code>α=0.05</code> two-sided, power <code>0.80</code>. Two paths: the
+normal approximation, and an exact noncentral-<code>t</code> solve. (<code>scipy.stats.nct</code> returns
+<code>nan</code> at large noncentrality; an unguarded bisection converges upward and returns a
+non-monotone answer — the guard is load-bearing.)</p>
+<div class="highlight"><pre><span></span><code>    paired sd   n=5 normal   n=5 exact   n=10      n=20
+    0.022345    0.027996     0.037584    0.022256  0.014758
+    0.034451    0.043164     0.057946    0.034313  0.022753
+    0.050146    0.062828     0.084345    0.049945  0.033119
+    0.082152    0.102929     0.138179    0.081824  0.054257
+</code></pre></div>
+<p>Seeds required, and their cost at <code>settledrow</code>'s <code>4.560600 s/step</code>
+(<code>scale/m3_flops.py:107</code>, wall clock, one step including backward and Adam,
+<code>s=64 n=2048</code>) × 150 steps = <code>684.09 s</code>:</p>
+<div class="highlight"><pre><span></span><code>    contrast                seeds (normal / exact t)   runs    lower-bound clock
+    argmax vs argmaxste          0.1 /      3             6         1.1 h
+    argmaxste vs twin          556.3 /    559         1 118         8.85 days
+    settled vs twin           2254.1 /   2257         4 514        35.74 days
+    argmaxste vs settled     41263.5 /  41266        82 532       653.46 days
+</code></pre></div>
+<p><strong>The seed counts are exact. The day counts are PROVISIONAL</strong>: <code>m3_flops.py:117-120</code>
+records the same <code>settled</code> unit reading <code>2.0775</code> against <code>3.4372 s/step</code> in two
+sessions on identical code, <code>1.65×</code> apart, which is why every clock in this
+repository carries that label. They are also lower bounds — the compared cells ran
+at <code>ntr8192</code>, four times the batch the rate was measured at.</p>
+<blockquote>
+<p><strong>PRICING RULE.</strong> At 5 seeds this instrument resolves <code>0.057946</code> or larger. The
+stage-B mechanism differences are <code>14×</code>, <code>20×</code> and <code>51×</code> below that floor; the
+gradient effect is <code>3.9×</code> above it. <strong>Any candidate whose contribution is a
+better relaxation of stage B is unfalsifiable here</strong>, and an unfalsifiable
+improvement is inadmissible under this project's own evidence rule.</p>
+</blockquote>
+<h3 id="174-why-the-one-stage-a-ablation-on-record-could-not-have-said-anything">17.4 Why the one stage-A ablation on record could not have said anything<a class="headerlink" href="#174-why-the-one-stage-a-ablation-on-record-could-not-have-said-anything" title="Permanent link">#</a></h3>
+<p><code>99777ab:DONE_ARCHIVE_ROUND1.md:4707</code> records K4: <code>randpivot_signed</code>, <code>k=8</code> content-blind
+pivots, slope <code>+0.081</code>, CP intervals overlapping the content-selected arm, and the
+pre-registered consequence that content selection is <em>"not load-bearing for M2"</em>.</p>
+<p>That null was <strong>forced</strong>. <code>aa82df7:scale/recall_probe.py:3-7</code> states the identity: for any
+content-blind schedule of size <code>k</code>,</p>
+<div class="highlight"><pre><span></span><code>    P(c reachable) × (share | reachable)  =  (k/s) × (1/k)  =  1/s
+</code></pre></div>
+<p>bit-for-bit the dense rate, <strong>independent of <code>k</code></strong>. M2 draws <code>c</code> <em>from</em> <code>P</code>, so it
+measures the second factor and conditions the first away. Verified on two paths
+that fail differently — the symbolic factorisation, and a 200 000-draw Monte Carlo
+over 12 <code>(s,k)</code> pairs (at <code>s=1024, k=8</code>: symbolic <code>0.00097656</code>, sampled
+<code>0.00099187</code>). A content-blind schedule reproduces the dense rate exactly, so K4
+was structurally incapable of reading anything else.</p>
+<p><code>recall_probe.py:9-11</code> names the quantity that is not an artefact: whether
+<code>P(c selected)</code> stays <code>Θ(1)</code> as <code>s</code> grows under <strong>content-conditional</strong> selection.
+<strong>That file is imported by zero Python files, has no <code>results/</code> artifact, and
+<code>99777ab:DONE_ARCHIVE_ROUND1.md:5833</code> calls it "already sitting unrun".</strong> Stage A's search
+space is <code>C(62,8) = 3 381 098 545</code> sets, of which <code>topk</code> explores exactly one.</p>
+<h3 id="175-a-correction-to-c-of-findingsmd">17.5 A correction to §C of <code>FINDINGS.md</code><a class="headerlink" href="#175-a-correction-to-c-of-findingsmd" title="Permanent link">#</a></h3>
+<p><code>arXiv:2410.01537</code> (Marion, Berthier, Biau, Boyer, ICLR 2025) is cited there as
+<em>"softmax is provably Bayes-optimal"</em> against <em>"linear attention"</em>. Equations
+fetched from <code>ar5iv.labs.arxiv.org/html/2410.01537</code>: the predictor is
+<code>T_λ^{k,v}(𝕏) = erf(λ𝕏k)ᵀ𝕏v</code> — <strong><code>erf</code>, not softmax</strong>; Corollary 2 gives
+<strong>asymptotic</strong> optimality under <em>"<code>d→∞</code> and <code>L=o(d)</code>"</em>; and Proposition 3 refutes
+<strong>linear regression</strong>, <code>ℛ(β⋆) → ε²+γ²</code>, not linear attention. The label shape does
+match (<code>Y = X_{J₀}ᵀv⋆ + ξ</code>, scalar, latent informative position), so the worry is
+sound — but this repo runs <code>L = s = 64</code> against <code>D_MODEL = 16</code>
+(<code>m3_capability.py:79</code>; the <code>d24</code> in journal keys is <code>make_batch</code>'s flipper offset,
+<code>negation_scope.py:84-86</code>). <code>L/d = 4.00</code>, the opposite of <code>L = o(d)</code>. <strong>"Provably"
+is not earned at this geometry.</strong> Single-source: the ICLR proceedings PDF returned
+compressed streams and the second path failed.</p>
+<h3 id="176-the-nashpy-shared-tau-defect-is-real-and-too-small-to-be-the-cause">17.6 The <code>nash.py</code> shared-<code>tau</code> defect is real and too small to be the cause<a class="headerlink" href="#176-the-nashpy-shared-tau-defect-is-real-and-too-small-to-be-the-cause" title="Permanent link">#</a></h3>
+<p><code>ceq/nash.py:64</code> returns <code>margin * float(matrix_norm(m, ord=2).max()) / 4.0</code> — one
+Python float for the batch, from the worst-conditioned instance, applied at <code>:146</code>.
+Since <code>stance = 2σ(z/τ) − 1 ≈ z/(2τ)</code> for small <code>z/τ</code>, an instance run at <code>τ_batch</code>
+is attenuated by <code>τ_i/τ_batch</code>. On games built exactly as <code>nash.py:138-144</code> builds
+them, Gaussian <code>q,k</code>: median shrink <code>0.877526</code> at <code>n=64</code>, <code>0.851143</code> at <code>256</code>,
+<strong><code>0.789701</code> at <code>2048</code></strong> (min <code>0.690213</code>). Two paths — the small-signal ratio and
+the exact sigmoid amplitude (<code>0.50 → 0.547752</code>, <code>0.25 → 0.281624</code>,
+<code>0.10 → 0.113593</code>).</p>
+<p><strong>A <code>1.27×</code> attenuation cannot produce the recorded OOD NRMSE of <code>2.6151</code> to
+<code>5.8198</code></strong>, which is 2.6× to 5.8× worse than predicting the mean. Before the fix
+and the rerun, one line settles it: measure <code>matrix_norm(game, ord=2).max()/median</code>
+on a real batch. Near <code>1.27</code> and the bug cannot be the cause. The Gaussian draw is
+a surrogate, so this is a lower bound on the attenuation, not the corpus's value.</p>
+<h3 id="177-the-pivot-objectives-set-structure-and-where-the-greedy-bound-dies">17.7 The pivot objective's set structure, and where the greedy bound dies<a class="headerlink" href="#177-the-pivot-objectives-set-structure-and-where-the-greedy-bound-dies" title="Permanent link">#</a></h3>
+<p>Derived here, not cited. <code>pivot_probe.pivot_hop2</code> uses the pivot set as
+<code>B_P = A[:,P]A[P,:] = Σ_{p∈P} u_p v_pᵀ</code> with <code>u_p = A[:,p]</code>, <code>v_p = A[p,:]</code> — a
+sum of rank-1 outer products, <strong>one per pivot, each independent of the rest of
+<code>P</code></strong>. That independence is the whole reason set-function structure exists here.
+With <code>M_pq := (u_p·u_q)(v_p·v_q)</code>, captured mass is a quadratic form in the
+indicator,</p>
+<div class="highlight"><pre><span></span><code>    f(P) := ‖B_P‖_F²  =  1_Pᵀ M 1_P ,
+    f(S∪{a,b}) − f(S∪{a}) − f(S∪{b}) + f(S)  =  2 M_ab   — constant in S
+</code></pre></div>
+<p><strong>Captured mass is SUPERMODULAR on a nonnegative operator.</strong> A softmax attention
+matrix is nonnegative, so every inner product is <code>≥ 0</code>, <code>M_ab ≥ 0</code>, and the
+second difference is <code>≥ 0</code>: <em>increasing</em> returns. Greedy has no <code>1−1/e</code> on it.
+The intuition that pivot selection is obviously a diminishing-returns problem is
+<strong>wrong on the obvious objective</strong>.</p>
+<p><strong>Reconstruction is monotone submodular, and there the bound is real.</strong>
+<code>h(P) := ‖A²‖_F² − ‖A² − B_P‖_F²</code> has second difference <code>−2M_ab ≤ 0</code>, and
+monotonicity is derived rather than assumed: with <code>R = A² − B_S</code> and <code>a ∉ S</code>,</p>
+<div class="highlight"><pre><span></span><code>    h(S∪{a}) − h(S) = 2⟨R, u_a v_aᵀ⟩ − ‖u_a v_aᵀ‖²  ≥  ‖u_a v_aᵀ‖²  &gt;  0
+</code></pre></div>
+<p>since <code>R ≥ u_a v_aᵀ</code> elementwise for <code>A ≥ 0</code>, <code>a ∉ S</code>. Checked over <strong>21 936
+<code>(S,a)</code> pairs</strong>: <code>min(gain − ‖u_a v_aᵀ‖²) = −3.55e−15</code>, zero to float precision
+and tight, the bound being attained when <code>S</code> holds every other pivot. With
+<code>h(∅)=0</code> and <code>h ≥ 0</code>, Nemhauser–Wolsey–Fisher gives greedy
+<strong><code>1 − 1/e = 0.632121</code></strong>. (NWF 1978 is classical, cited from standard knowledge
+and <strong>not fetched</strong> — flagged.)</p>
+<p><strong>The signed arm voids it.</strong> <code>M_ab ≥ 0</code> needs <code>A ≥ 0</code>. On signed operators <code>M</code>
+carried a negative entry in <code>297/300</code> draws at <code>n ∈ {4,5,6}</code> and <code>300/300</code> at
+fixed <code>n = 6</code>, so neither objective is submodular there.</p>
+<p><strong>A prediction of mine that was wrong, recorded.</strong> I expected <code>h</code> to be
+non-monotone, reasoning that <code>B_P</code> is a fixed sum rather than a projection so an
+added pivot could raise the residual. It cannot, for <code>A ≥ 0</code>: <code>0</code> of 21 936
+checked pairs decreased <code>h</code>. The derivation above is the corrected version.</p>
+<p>Two paths throughout: the closed form <code>±2M_ab</code>, and direct evaluation of <code>f</code> and
+<code>h</code> on all four sets, agreeing on every checked subset. <code>scale/pivot_selection_theory.py</code>
+holds both, with <code>demo()</code> asserting them.</p>
+<p><strong>What it is worth.</strong> It bounds greedy against the <em>best</em> pivot set under a
+reconstruction objective. It says nothing about whether a better pivot set lowers
+NRMSE — that is §17.4's question, and <code>aa82df7:scale/recall_probe.py</code> was written to
+answer it and never run. <strong>A provable guarantee on an objective nobody has shown
+to matter is still a guarantee about nothing.</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../struck/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Struck constants">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Struck constants
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../model-card/" class="md-footer__link md-footer__link--next" aria-label="Next: Model card">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Model card
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Invented by <a href="https://teerthsharma.vercel.app/">Teerth Sharma</a> · Apache License 2.0
+    </div>
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/teerthsharma/resolvent" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://teerthsharma.vercel.app/" target="_blank" rel="noopener" title="teerthsharma.vercel.app" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M351.9 280H161c2.9 64.5 17.2 123.9 37.5 167.4 11.4 24.5 23.7 41.8 35.1 52.4 11.2 10.5 18.9 12.2 22.9 12.2s11.7-1.7 22.9-12.2c11.4-10.6 23.7-28 35.1-52.4 20.3-43.5 34.6-102.9 37.5-167.4zm-191-48h190.9c-2.8-64.5-17.1-123.9-37.4-167.4-11.4-24.4-23.7-41.8-35.1-52.4C268.1 1.7 260.4 0 256.4 0s-11.7 1.7-22.9 12.2c-11.4 10.6-23.7 28-35.1 52.4-20.3 43.5-34.6 102.9-37.5 167.4m-48 0c3.5-85.6 25.6-165.1 57.9-217.3C78.7 47.3 10.9 131.2 1.5 232zM1.5 280c9.4 100.8 77.2 184.7 169.3 217.3-32.3-52.2-54.4-131.7-57.9-217.3zm398.4 0c-3.5 85.6-25.6 165.1-57.9 217.3 92.1-32.7 159.9-116.5 169.3-217.3zm111.4-48C501.9 131.2 434.1 47.3 342 14.7c32.3 52.2 54.4 131.7 57.9 217.3z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,2010 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="One causal head, three switches. Softmax attention, unnormalized-kernel attention and the exact path product of a Markov chain as settings of one operator, proved in Lean 4, with every failure kept on the record.">
+      
+      
+        <meta name="author" content="Teerth Sharma">
+      
+      
+        <link rel="canonical" href="https://teerthsharma.github.io/resolvent/sources/THESIS_NOTES/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/logo.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>THESIS NOTES — the propositions the shape rests on, with proof sketches - resolvent</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/resolvent.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#thesis-notes-the-propositions-the-shape-rests-on-with-proof-sketches" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="resolvent" class="md-header__button md-logo" aria-label="resolvent" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            resolvent
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              THESIS NOTES — the propositions the shape rests on, with proof sketches
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/teerthsharma/resolvent" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    teerthsharma/resolvent
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../FAILS/" class="md-tabs__link">
+          
+  
+  
+  The record
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../BED_H_PREREGISTRATION/" class="md-tabs__link">
+          
+  
+  
+  Pre-registrations
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../ledgers/mistakes/" class="md-tabs__link">
+          
+  
+  
+  Ledgers
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../canon/CHARTER/" class="md-tabs__link">
+          
+  
+  
+  Canon
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../CEQ_SHAPE/" class="md-tabs__link">
+          
+  
+  
+  Paper
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="resolvent" class="md-nav__button md-logo" aria-label="resolvent" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    resolvent
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/teerthsharma/resolvent" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    teerthsharma/resolvent
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The record
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    The record
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../FAILS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Everything retracted, broken or open
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../COMPONENT_LEDGER/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Component ledger
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../PLAN/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Research plan
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CORNER_RULE_RETIREMENT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Corner rule retirement
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../PI_JEPA_KAGGLE_CARD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kaggle card
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../DR2_CARD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DR2 card
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pre-registrations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Pre-registrations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../BED_H_PREREGISTRATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BED-H
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../prereg/REMOVAL_ECHO_v1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    REMOVAL-ECHO v1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ledgers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Ledgers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ledgers/mistakes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Failure mechanisms
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ledgers/struck/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Struck constants
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ledgers/mathematics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mathematics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ledgers/model-card/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model card
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ledgers/costs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Costs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ledgers/v17k-rulings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    V17K rulings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ledgers/v16-calibration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    V16 calibration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Canon
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Canon
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../canon/CHARTER/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Charter
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../canon/01_THEORY_ACCURACY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01 Theory of accuracy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../canon/02_THEORY_TRAINING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    02 Theory of training
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../canon/03_KERNEL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03 Kernel
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../canon/04_BEDS_AND_INSTRUMENTS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    04 Beds and instruments
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../canon/05_REPAIRS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05 Repairs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../canon/06_PREDICTIONS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    06 Predictions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../canon/08_ARCHITECTURE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    08 Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../canon/09_CHESS_AND_MARKETS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    09 Chess and markets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../canon/CORRECTIONS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Corrections
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Paper
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Paper
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CEQ_SHAPE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The shape of CEQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Paper sources
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../BIB_AUDIT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bibliography audit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../BIB_ALIASES/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bibliography aliases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-family-two-regimes-one-solve" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        THE FAMILY (two regimes, one solve)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#p1-parity-at-0-bitwise-with-a-rejection-region" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        P1 — PARITY AT γ = 0 (bitwise, with a rejection region)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#p2-the-records-corner-3-is-a-resolvent-regime-n" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        P2 — THE RECORD'S CORNER 3 IS A RESOLVENT (regime N)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#p3-the-committor-is-the-resolvent-read-with-absorbing-rows-regime-s" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        P3 — THE COMMITTOR IS THE RESOLVENT READ WITH ABSORBING ROWS (regime S)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#p4-the-neumann-certificate-is-exact-and-has-no-sum-over-s" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        P4 — THE NEUMANN CERTIFICATE IS EXACT AND HAS NO SUM OVER s
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#p5-the-read-is-one-triangular-solve-and-_-is-still-a-mixture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        P5 — THE READ IS ONE TRIANGULAR SOLVE, AND Π_γ IS STILL A MIXTURE
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#p6-segmentation-is-exact-and-splits-the-solve" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        P6 — SEGMENTATION IS EXACT AND SPLITS THE SOLVE
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#p7-what-depth-1-softmax-cannot-do-stated-narrowly-each-clause-cited" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        P7 — WHAT DEPTH-1 SOFTMAX CANNOT DO, STATED NARROWLY (each clause cited)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#p8-the-safest-move-under-k-constraints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        P8 — THE SAFEST MOVE UNDER K CONSTRAINTS
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#p9-consequence-as-a-displacement-field" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        P9 — CONSEQUENCE AS A DISPLACEMENT FIELD
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#p10-the-horizon-dial-next-token-next-transient-state-equilibrium" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        P10 — THE HORIZON DIAL (next token → next transient state → equilibrium)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-is-not-claimed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        WHAT IS NOT CLAIMED
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="thesis-notes-the-propositions-the-shape-rests-on-with-proof-sketches">THESIS NOTES — the propositions the shape rests on, with proof sketches<a class="headerlink" href="#thesis-notes-the-propositions-the-shape-rests-on-with-proof-sketches" title="Permanent link">#</a></h1>
+<p>Coordinator's notes for the design panel, 2026-09-03. Every proposition below is
+either (a) a one-line corollary of an existing Lean theorem, (b) elementary and proved
+here in full, or (c) RUN on this box (<code>$SCRATCH/shape_identities.py</code>, float64). The
+panel's job is to formalise, attack, and either keep or kill each one. Nothing here is
+to be softened into prose; each becomes a numbered Proposition in the paper with its
+evidence class.</p>
+<p>Notation. <code>s</code> positions, <code>d</code> value width. <code>P ∈ ℝ^{s×s}</code> causal (<code>P_ij = 0</code> for
+<code>j &gt; i</code>). <code>V ∈ ℝ^{s×d}</code>. <code>γ ∈ [0, 1)</code> unless stated. <code>𝒜 = 𝒜_1 ⊔ … ⊔ 𝒜_K ⊂ [s]</code> the
+absorbing (constraint) positions; <code>T = [s] \ 𝒜</code> the transient positions. For an
+absorbing chain <code>P</code> has <code>P_ii = 1</code> and <code>P_ij = 0</code> (<code>j ≠ i</code>) for <code>i ∈ 𝒜</code>; <code>Q = P_TT</code>,
+<code>R_k = P_{T 𝒜_k}</code>. <code>1_S</code> the indicator vector of <code>S</code>.</p>
+<h2 id="the-family-two-regimes-one-solve">THE FAMILY (two regimes, one solve)<a class="headerlink" href="#the-family-two-regimes-one-solve" title="Permanent link">#</a></h2>
+<div class="highlight"><pre><span></span><code>  base operator   W_{β,qk,g}   = the record&#39;s three-corner family (ceq/arm_smprime.py):
+                                 W_ij = G_ij · exp(qk · q_i·k_j) / Z_i^β,  j ≤ i
+  state           z(γ)          = (I − γ W)^{-1} V                       (the shape)
+  mixing matrix   Π_γ           = (1 − γ) W (I − γ W)^{-1}
+  read            O(γ)          = Π_γ V  =  (1 − γ) W z(γ)
+</code></pre></div>
+<p>Regime S (softmax regime): <code>β = 1</code>, so <code>W = P</code> is row-stochastic with the diagonal
+included; <code>γ &lt; 1</code>; convergence by <code>‖γP‖_∞ = γ &lt; 1</code> (Neumann); certificate P4.</p>
+<p>Regime N (nilpotent regime): <code>W</code> strictly causal (diagonal excluded) — the record's
+sub-diagonal chain <code>A</code>; any <code>γ</code>, in particular <code>γ = 1</code>; convergence by nilpotency
+(<code>lean/CEQ/Nilpotent.lean pow_card_eq_zero</code>, <code>Occupancy.lean occupancy_is_exact_inverse</code>);
+the sum is exact in <code>s</code> terms.</p>
+<p>The record's corner 3 lives in regime N (P2). The author's north star lives in regime S
+with boundary rows (P3, P8). Both are the same triangular solve (P5).</p>
+<h2 id="p1-parity-at-0-bitwise-with-a-rejection-region">P1 — PARITY AT γ = 0 (bitwise, with a rejection region)<a class="headerlink" href="#p1-parity-at-0-bitwise-with-a-rejection-region" title="Permanent link">#</a></h2>
+<p>Statement. For every <code>W</code>, <code>V</code>: <code>O(0) = W V</code>. In IEEE-754 forward substitution with
+<code>γ = 0</code> computes <code>z_i = v_i − Σ_{j&lt;i} (0 · W_ij) z_j = v_i</code> exactly (for finite entries
+<code>0·x = 0</code> and <code>v − 0 = v</code> are exact), and <code>(1 − 0) · (W z) = W V</code> is the same matmul as
+attention. So at <code>β = 1, g ≡ 0, qk</code> on the read is <strong>bitwise</strong> softmax attention.</p>
+<p>Evidence. RUN: <code>torch.equal(O(0), P V) = True</code> at <code>n=4, s=64, d=16</code>. Rejection region:
+<code>max|O(0.5) − O(0)| = 2.3003</code> on the same draw (V-24: an identity bind must have a
+non-empty rejection region). Lean: <code>V16Domain.three_corners_containment</code> gives the
+<code>β = 1</code> corner; the <code>γ = 0</code> clause is a one-line corollary (<code>(I − 0·W)^{-1} = I</code>) —
+target <code>gamma_zero_is_softmax</code> [M].</p>
+<p>Design-against. V-24 (planted mutilations: <code>γ ≠ 0</code>, a non-causal <code>W</code>, a wrong
+normaliser must each break the bind at O(1)); the record's own V-24 instance (the
+two-branch escape that passed bitwise for the label itself) is the reason the read is
+defined as a <em>single</em> mixture <code>Π_γ V</code> and not as <code>softmax(q)@V₁ + λ·X@V₂</code>.</p>
+<h2 id="p2-the-records-corner-3-is-a-resolvent-regime-n">P2 — THE RECORD'S CORNER 3 IS A RESOLVENT (regime N)<a class="headerlink" href="#p2-the-records-corner-3-is-a-resolvent-regime-n" title="Permanent link">#</a></h2>
+<p>Statement. Let <code>A</code> be strictly lower bidiagonal, <code>A_{i,i−1} = a_i</code>. Then
+<code>[(I − A)^{-1}]_{ij} = Π_{k=j+1}^{i} a_k</code> for <code>j ≤ i</code> and <code>0</code> above the diagonal — i.e.
+<code>(I − A)^{-1} = G</code>, the record's path product (<code>ceq/arm_smprime.py:144 path_product</code>,
+<code>lean/CEQ/V16Domain.lean pathProd</code>).</p>
+<p>Proof. <code>(A^m)_{ij}</code> sums products of entries along walks of length <code>m</code> from <code>i</code> to <code>j</code>;
+the only walk on a sub-diagonal is <code>i → i−1 → … → j</code>, of length <code>i − j</code>, with product
+<code>Π_{k=j+1}^{i} a_k</code>; <code>A^m = 0</code> for <code>m ≥ s</code> (nilpotent), so <code>Σ_{m&lt;s} A^m = (I − A)^{-1}</code>
+exactly (<code>occupancy_is_exact_inverse</code>), entry <code>(i,j)</code> receiving exactly the <code>m = i−j</code>
+term. ∎</p>
+<p>Consequences. (i) BED-M's label <code>y_{s−1} = ((I − A)^{-1} b)_{s−1}</code> (<code>equilibrium_oracle</code>,
+<code>scale/negation_scope.py:286</code>) is the shape's state <code>z(1)_{s−1}</code> with <code>W = A</code>, <code>V = b</code>;
+and because BED-M sets <code>b_{s−1} = 0</code> (the earned admissibility fix, <code>MATHEMATICS.md</code>
+§1.2), it is also the read <code>(W z)_{s−1}</code>. (ii) Every corner-3 certificate the record
+banked transfers to the shape unchanged. (iii) The zero-gate theorem
+(<code>pathProd_eq_zero_iff</code>) is a statement about this resolvent's support: a zero at <code>k</code>
+cuts <code>(I − A)^{-1}</code> into two independent blocks (P6).</p>
+<p>Evidence. RUN: <code>max|G − (I − A)^{-1}| = 0.0</code> (exact), <code>max|z(1)_{s−1} − y| = 6.2e-15</code>,
+<code>A^s = 0</code> exactly, on BED-M's own draw (<code>make_equilibrium_batch(8, 64, 24, seed=0)</code>).
+Lean target <code>pathprod_is_chain_resolvent</code> [M] (induction on <code>i − j</code>).</p>
+<h2 id="p3-the-committor-is-the-resolvent-read-with-absorbing-rows-regime-s">P3 — THE COMMITTOR IS THE RESOLVENT READ WITH ABSORBING ROWS (regime S)<a class="headerlink" href="#p3-the-committor-is-the-resolvent-read-with-absorbing-rows-regime-s" title="Permanent link">#</a></h2>
+<p>Statement. Let <code>P</code> be row-stochastic with <code>𝒜 = ⊔_k 𝒜_k</code> absorbing and absorption
+almost sure from <code>T</code> (<code>ρ(Q) &lt; 1</code>). Take <code>V = 1_{𝒜_k}</code>. Then for <code>i ∈ T</code>:</p>
+<div class="highlight"><pre><span></span><code>  (1 − γ) z(γ)_i  =  E_i[ γ^{τ_k} ]           τ_k = hitting time of 𝒜_k (γ^∞ := 0)
+  O(γ)_i          =  E_i[ γ^{τ_k − 1} ]
+  lim_{γ↑1} O(γ)_i =  P_i(τ_k &lt; ∞)  =  q^{(k)}_i =  [(I − Q)^{-1} R_k 1]_i
+</code></pre></div>
+<p>and <code>Σ_k q^{(k)} = 1</code> on <code>T</code>. For <code>K = 2</code> this is the committor (splitting
+probability); for general <code>K</code> the absorption-probability vector <code>B = N R</code> of the
+fundamental matrix <code>N = (I − Q)^{-1}</code> (Kemeny–Snell).</p>
+<p>Proof. <code>z_i = Σ_{t≥0} γ^t (P^t 1_{𝒜_k})_i = Σ_t γ^t P_i(X_t ∈ 𝒜_k) = Σ_t γ^t P_i(τ_k ≤ t)</code>
+because <code>𝒜_k</code> is absorbing. Exchange sums: <code>Σ_u P_i(τ_k = u) Σ_{t≥u} γ^t =
+E_i[γ^{τ_k}]/(1 − γ)</code>. The read: <code>O_i = (1−γ) Σ_j P_ij z_j = Σ_j P_ij E_j[γ^{τ_k}] =
+E_i[γ^{τ_k − 1}]</code> by first-step analysis (<code>τ_k ≥ 1</code> from <code>i ∈ T</code>). Monotone convergence
+in <code>γ ↑ 1</code> gives <code>P_i(τ_k &lt; ∞)</code>; first-step analysis <code>q = R_k 1 + Q q</code> gives the
+<code>(I − Q)^{-1} R_k 1</code> form, invertible since <code>ρ(Q) &lt; 1</code>. ∎</p>
+<p>Reading. <code>γ</code> is the <strong>horizon dial</strong>: <code>γ = 0</code> reads the next step (softmax), <code>γ ↑ 1</code>
+reads the equilibrium (which basin), and in between the read is the hitting-time
+transform <code>E[γ^τ]</code>, which weights <em>sooner</em> absorption more — the "next transient
+state" the author asked for, with urgency built in. Multi-constraint: <code>K</code> value
+channels <code>1_{𝒜_1}, …, 1_{𝒜_K}</code> through <strong>one</strong> solve give all <code>K</code> committors (one
+triangular solve, <code>K</code> right-hand sides).</p>
+<p>Evidence. READ: <code>ceq/beds/bed_1.py:188-198 committor</code> solves exactly the Dirichlet form
+(interior harmonic, <code>q = 0</code> on <code>A</code>, <code>q = 1</code> on <code>B</code>); <code>harmonic_residual</code> reads
+<code>0.000000e+00</code> (<code>workdonenewseal.md</code> §5.2); <code>MATHEMATICS.md</code> §7 (<code>N = (I − Q)^{-1}</code>,
+<code>B = N R</code>) and §11 (Kirchhoff cross-check to <code>1e-10</code>). Lean target
+<code>committor_is_resolvent_read</code> — the record's #14 <code>committor_eq_harmonic</code> [S]; the
+<code>E[γ^τ]</code> identity is new, [S].</p>
+<p>Design-against. D-2 (an oracle that is the arm's own resolvent): the oracle's <code>P</code> is
+the <em>latent environment chain</em>; the arm's <code>P</code> is computed from the context tokens by
+<code>q, k</code>; the two coincide only if the arm learns the chain, and that coincidence is the
+capability being tested, not a tautology. Leak guard: the transition probabilities
+never appear as input channels (MARS attack 2 in <code>sec_refuted.md</code>).</p>
+<h2 id="p4-the-neumann-certificate-is-exact-and-has-no-sum-over-s">P4 — THE NEUMANN CERTIFICATE IS EXACT AND HAS NO SUM OVER s<a class="headerlink" href="#p4-the-neumann-certificate-is-exact-and-has-no-sum-over-s" title="Permanent link">#</a></h2>
+<p>Statement. <code>P ≥ 0</code> row-stochastic, <code>γ ∈ [0,1)</code>, <code>K ≥ 0</code>:</p>
+<div class="highlight"><pre><span></span><code>  ‖ (I − γP)^{-1} − Σ_{k=0}^{K} (γP)^k ‖_∞  =  γ^{K+1} / (1 − γ)      (equality)
+</code></pre></div>
+<p>For a general (signed or non-stochastic) <code>P</code> with <code>‖P‖_∞ ≤ 1</code> the same quantity is
+<code>≤ γ^{K+1}/(1 − γ)</code>; for <code>‖P‖_∞ &gt; 1</code> no such bound holds.</p>
+<p>Proof. <code>‖γP‖_∞ = γ &lt; 1</code> so <code>(I − γP)^{-1} = Σ_{k≥0} (γP)^k</code>; the tail
+<code>Σ_{k&gt;K} γ^k P^k</code> is a nonnegative matrix whose every row sums to <code>Σ_{k&gt;K} γ^k</code>
+(<code>P^k</code> is row-stochastic), so its <code>∞</code>-norm equals <code>γ^{K+1}/(1 − γ)</code>. The inequality for
+<code>‖P‖_∞ ≤ 1</code> is the triangle inequality on the same tail. ∎</p>
+<p>Evidence. RUN: err = bound to <code>1e-15</code> at <code>K ∈ {1,2,4,8,16}</code>, <code>γ = 0.7</code>, <code>s = 64</code>;
+planted negative (rows summing to <code>1.5</code>): err <code>119.37</code> vs bound <code>1.143</code> — the
+certificate can fail, so it is a certificate (V-24). Lean target
+<code>neumann_truncation_bound</code> [M] (Mathlib has geometric series and matrix norms).</p>
+<p>Why it matters. <code>IMPOSSIBLE.md</code> I1 asked for a magnitude certificate with <em>no sum over
+<code>s</code></em> and no per-row normaliser, for a <em>signed</em> operator, and conjectured it impossible
+because the absent normaliser was the mechanism of the signed arm's context-stable
+sign influence. P4 is the resolution: <strong>the normaliser pays for the certificate</strong>
+(<code>‖P‖_∞ = 1</code> independent of <code>s</code>), and the veto a third token can exercise is moved from
+the <em>sign</em> of an entry to a <strong>boundary condition</strong> (an absorbing constraint set). The
+signed programme is not revived; its one live want (a certificate) is met by the thing
+it threw away.</p>
+<h2 id="p5-the-read-is-one-triangular-solve-and-_-is-still-a-mixture">P5 — THE READ IS ONE TRIANGULAR SOLVE, AND <code>Π_γ</code> IS STILL A MIXTURE<a class="headerlink" href="#p5-the-read-is-one-triangular-solve-and-_-is-still-a-mixture" title="Permanent link">#</a></h2>
+<p>Statement. (a) For causal <code>W</code>, <code>I − γW</code> is lower-triangular with diagonal <code>1 − γW_ii</code>;
+in regime S the diagonal lies in <code>(1−γ, 1]</code>, in regime N it is <code>1</code>; so <code>z</code> is a
+forward substitution, <code>≈ s²d/2</code> multiply-adds per head, against <code>2s²d</code> for <code>QKᵀ</code> and
+<code>PV</code> together. (b) In regime S, <code>Π_γ = (1−γ)Σ_{t≥0} γ^t P^{t+1}</code> is row-stochastic and
+nonnegative; hence <code>O_i</code> lies in the convex hull of <code>{V_j : j ≤ i}</code> for every <code>γ</code>.</p>
+<p>Proof. (a) triangular structure is inherited from <code>W</code>; the diagonal entry of
+<code>(I − γW)</code> is <code>1 − γW_ii</code>; substitution cost <code>Σ_i i·d</code>. (b) <code>(1−γ)Σ γ^t = 1</code> and
+products of row-stochastic matrices are row-stochastic. ∎</p>
+<p>Evidence. RUN: <code>solve_triangular</code> vs dense inverse <code>1.8e-15</code>.</p>
+<p>The limitation this exposes (state it in Limits and in §4, not buried). Because <code>Π_γ</code>
+is a mixture, the shape's expressivity gain over softmax is entirely in the <strong>mixing
+weights</strong> — the support of <code>Π_γ</code> is the transitive closure of <code>P</code>'s support, every hop
+at once — and <strong>not in the value range</strong>. The record's Q2/W3 bound (a row-stochastic
+read cannot leave the hull of the values; <code>V20_R15_THEORY_TABLE.md</code> cell Q2/W3) applies
+to the shape in regime S verbatim. Labels that leave the hull (BED-M's chain label with
+raw drives) need either the value rescale the record already proved
+(<code>V15Fork.Asink_computes_chain</code>, <code>V_j = b_j/(1 − a_j)</code> with the BOS sink) or regime N.
+Committors live in <code>[0,1] = hull{0,1}</code>, so the safest-move label is inside the class.</p>
+<h2 id="p6-segmentation-is-exact-and-splits-the-solve">P6 — SEGMENTATION IS EXACT AND SPLITS THE SOLVE<a class="headerlink" href="#p6-segmentation-is-exact-and-splits-the-solve" title="Permanent link">#</a></h2>
+<p>Statement. In the three-corner base with the path-product gate, a zero magnitude
+<code>m_k = 0</code> gives <code>W_ij = 0</code> for all <code>j &lt; k ≤ i</code> (<code>pathProd_eq_zero_iff</code>, hypothesis-free).
+Then <code>I − γW</code> is block lower-triangular with a <strong>zero</strong> sub-block, i.e. block-diagonal
+across the cut, and the resolvent factorises into independent per-segment solves. Cost
+falls from <code>s²d/2</code> to <code>Σ_seg |seg|² d/2</code>. Pure softmax has no exact zeros (<code>exp &gt; 0</code>), so
+this F0 certificate is a property of the family the record built and not of softmax —
+it is <code>CEQ_V20_R15_CONTRACT.md</code> M9's F0 sparsity, now with a cost meaning.</p>
+<p>Proof. Block structure from the zero pattern; a block lower-triangular matrix with a
+zero off-diagonal block inverts blockwise. ∎ (Lean target <code>segmentation_blockdiag</code> [M].)</p>
+<p>Evidence. RUN in the record: BED-M's causal triangle is <code>96.78 %</code> zero-hop
+(<code>workdonenewseal.md</code> §3); <code>133,120/133,120 NaN</code> for the prefix-scan route
+(<code>no_prefix_scan_represents_a_zero_gate</code>).</p>
+<h2 id="p7-what-depth-1-softmax-cannot-do-stated-narrowly-each-clause-cited">P7 — WHAT DEPTH-1 SOFTMAX CANNOT DO, STATED NARROWLY (each clause cited)<a class="headerlink" href="#p7-what-depth-1-softmax-cannot-do-stated-narrowly-each-clause-cited" title="Permanent link">#</a></h2>
+<p>(a) <em>Per-row form.</em> <code>O_i = f(P_{i·}, V)</code>: the read at <code>i</code> never depends on the read at
+<code>j</code>. <code>z</code> in the shape solves <code>z = V + γPz</code>, the unique fixed point of a
+<code>γ</code>-contraction in <code>‖·‖_∞</code>; the reads are mutually constrained. (Definition; no citation
+needed; the record states it at <code>MATHEMATICS.md</code> §0.3.)</p>
+<p>(b) <em>Hops need depth.</em> Composing <code>k</code> content-dependent hops needs depth
+<code>⌊log₂ k⌋ + 2</code> in a transformer (Sanford–Hsu–Telgarsky 2024 Thm 4.2, upper bound); the
+matching lower bound is <strong>conditional</strong> on the 1-vs-2-cycle conjecture (Cor. 4.3).
+Graph connectivity needs logarithmic depth (Sanford et al. NeurIPS 2024). The shape
+computes all hops in one operator. — The sweep S3 fixes the exact statements.</p>
+<p>(c) <em>Composition.</em> A single attention layer cannot compose two functions on a large
+domain (Peng–Narayanan–Papadimitriou 2024, communication-complexity argument) — [U]
+until S3 verifies the id and statement. A consequence <em>is</em> a composition (state ↦ next
+state ↦ …).</p>
+<p>(d) <em>Optimality on the wrong ground.</em> One attention layer is (asymptotically, <code>L = o(d)</code>)
+Bayes-optimal for single-location regression (Marion et al. ICLR 2025, with the
+record's three caveats at <code>MATHEMATICS.md</code> §17.5). Every bed in the record was that
+task. <code>MISTAKES.md</code> D-1.</p>
+<p>The honest control (skyline). A <strong>looped</strong> softmax block with input injection,
+<code>z^{(t+1)} = V + γ P z^{(t)}</code>, <code>P</code> fixed from the input, run <code>K</code> times, computes the
+truncated Neumann sum; by P4 its error against the shape is <strong>exactly</strong>
+<code>γ^{K+1}/(1−γ)</code> in <code>‖·‖_∞</code> on the mixing matrix. So the shape is the <code>K → ∞</code> limit of a
+looped softmax layer, computed exactly at the cost of one attention. Claims against
+softmax are therefore made at <strong>matched depth and parameters</strong>; a deeper or looped
+stack is the skyline, cited (Yang et al. 2024 looped transformers; APPNP's power
+iteration), never beaten in a sentence. A nonlinear loop (<code>P</code> recomputed from <code>z</code>) is a
+DEQ (Bai et al. 2019) and is out of scope.</p>
+<h2 id="p8-the-safest-move-under-k-constraints">P8 — THE SAFEST MOVE UNDER K CONSTRAINTS<a class="headerlink" href="#p8-the-safest-move-under-k-constraints" title="Permanent link">#</a></h2>
+<p>Statement. Context = a state description plus <code>m</code> candidate moves <code>a_1..a_m</code>, each
+realised as an intervention <code>do(a)</code> that rewrites the tokens it controls. For each
+move the <code>K</code> reads <code>q^{(k)}(a)</code> (P3) are the constraint-violation probabilities. The
+safest move is</p>
+<div class="highlight"><pre><span></span><code>  a*  =  argmin_a  max_k  q^{(k)}(a)          (minimax over constraints)
+</code></pre></div>
+<p>equivalently the move maximising the reach-avoid safety probability when the <code>𝒜_k</code> are
+unsafe sets; the weighted form <code>Σ_k λ_k q^{(k)}</code> is the Lagrangian/CMDP relaxation and
+the lexicographic form the priority variant. The label is exact from the oracle chain
+(the Dirichlet solve the record owns); the information floor on the argmin is Fano over
+<code>m</code> moves (<code>CEQ_V20_R15_CONTRACT.md</code> M11), and the floor on the committor vector is the
+exact oracle at <code>0</code>. Cost: one solve with <code>K</code> right-hand sides per candidate, or one
+solve with <code>mK</code> right-hand sides when moves only change values.</p>
+<p>Why softmax cannot: at depth 1 it reads one step of consequence (<code>P V</code>); a constraint
+reached in <code>t* ≥ 2</code> steps is outside its class unless the hop structure is leaked into
+the input (the leak attack, guarded). The deeper skyline can; the claim is at matched
+depth (P7).</p>
+<p>Design-against. V-8 (constant label: print committor sd, class balance over moves,
+discard count at construction); the zero-hop control (the argmin must not be readable
+from the move token alone — <code>t* = 0</code> control must read chance); D-3 (the dial <code>t*</code>, <code>K</code>,
+<code>m</code> must vary); M-2 (the minimax rule is fixed before data).</p>
+<h2 id="p9-consequence-as-a-displacement-field">P9 — CONSEQUENCE AS A DISPLACEMENT FIELD<a class="headerlink" href="#p9-consequence-as-a-displacement-field" title="Permanent link">#</a></h2>
+<p>Statement. For an intervention that changes the values by <code>ΔV</code> and leaves <code>P</code> fixed,
+<code>Δz = (I − γP)^{-1} ΔV</code> — the resolvent column(s) of the intervened position(s) are the
+displacement of every other position; with <code>P</code> also changed (the intervened token's
+<code>q,k</code> move), <code>Δz</code> is the difference of two solves. In the linear-SCM reading
+(<code>X = (I − B)^{-1} Z</code>, graph surgery), this is the interventional effect matrix; the
+record's <code>bed_k.bump / rebuild</code> pair is the exact Jacobian oracle
+(<code>ceq/beds/bed_k.py</code>), and its consequence-fidelity metric (<code>MATHEMATICS.md</code> §6)
+generalises from a sign on one scalar to sign agreement per coordinate plus a
+position-matched state metric (per-coordinate NRMSE vector; Procrustes/OT with
+position matching where only arrangement matters), paired against softmax by McNemar
+on byte-identical draws.</p>
+<h2 id="p10-the-horizon-dial-next-token-next-transient-state-equilibrium">P10 — THE HORIZON DIAL (next token → next transient state → equilibrium)<a class="headerlink" href="#p10-the-horizon-dial-next-token-next-transient-state-equilibrium" title="Permanent link">#</a></h2>
+<p><code>γ = 0</code>: next step, softmax bitwise (P1). <code>0 &lt; γ &lt; 1</code>: the hitting-time transform
+<code>E[γ^{τ−1}]</code> — the transient regime, with time-scale weighting (P3). <code>γ ↑ 1</code>: the
+equilibrium — absorption probabilities, basin membership <code>argmax_k q^{(k)}</code>, and the
+decision surface where the top two <code>q</code>'s tie (the isocommittor <code>q = ½</code> for <code>K = 2</code>,
+<code>ceq/beds/bed_1.py</code> guards). The record's corner 3 is <code>γ = 1</code> on a nilpotent chain (P2).
+One learnable scalar carries the whole interpolation; the LR-test pinning discipline
+(Ruling 10′) decides whether a trained <code>γ</code> is distinguishable from <code>0</code>.</p>
+<h2 id="what-is-not-claimed">WHAT IS NOT CLAIMED<a class="headerlink" href="#what-is-not-claimed" title="Permanent link">#</a></h2>
+<ul>
+<li>No claim that the shape beats softmax on any bed where softmax is a fellow
+  approximator (BED-M), nor against the looped/deeper skyline at any depth.</li>
+<li>No claim of novelty for any single component: the resolvent of a stochastic matrix
+  is the successor representation / personalised PageRank (APPNP owns it on fixed
+  graphs); the committor is transition-path theory; the chunked triangular solve is
+  DeltaNet's kernel pattern; the horizon dial is the discount factor. The sweep decides
+  what, if anything, is unoccupied in the <em>composition</em>: a content-dependent causal
+  attention matrix, absorbing constraint rows, bitwise softmax at <code>γ = 0</code>, the
+  committor/safest-move label class, and machine-checked identities.</li>
+<li>No trained number exists for the shape. Every capability sentence in the paper is a
+  prediction with a counter and a price, never a result.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Invented by <a href="https://teerthsharma.vercel.app/">Teerth Sharma</a> · Apache License 2.0
+    </div>
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/teerthsharma/resolvent" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://teerthsharma.vercel.app/" target="_blank" rel="noopener" title="teerthsharma.vercel.app" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M351.9 280H161c2.9 64.5 17.2 123.9 37.5 167.4 11.4 24.5 23.7 41.8 35.1 52.4 11.2 10.5 18.9 12.2 22.9 12.2s11.7-1.7 22.9-12.2c11.4-10.6 23.7-28 35.1-52.4 20.3-43.5 34.6-102.9 37.5-167.4zm-191-48h190.9c-2.8-64.5-17.1-123.9-37.4-167.4-11.4-24.4-23.7-41.8-35.1-52.4C268.1 1.7 260.4 0 256.4 0s-11.7 1.7-22.9 12.2c-11.4 10.6-23.7 28-35.1 52.4-20.3 43.5-34.6 102.9-37.5 167.4m-48 0c3.5-85.6 25.6-165.1 57.9-217.3C78.7 47.3 10.9 131.2 1.5 232zM1.5 280c9.4 100.8 77.2 184.7 169.3 217.3-32.3-52.2-54.4-131.7-57.9-217.3zm398.4 0c-3.5 85.6-25.6 165.1-57.9 217.3 92.1-32.7 159.9-116.5 169.3-217.3zm111.4-48C501.9 131.2 434.1 47.3 342 14.7c32.3 52.2 54.4 131.7 57.9 217.3z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

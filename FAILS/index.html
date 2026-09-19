@@ -1,0 +1,2252 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="One causal head, three switches. Softmax attention, unnormalized-kernel attention and the exact path product of a Markov chain as settings of one operator, proved in Lean 4, with every failure kept on the record.">
+      
+      
+        <meta name="author" content="Teerth Sharma">
+      
+      
+        <link rel="canonical" href="https://teerthsharma.github.io/resolvent/FAILS/">
+      
+      
+        <link rel="prev" href="..">
+      
+      
+        <link rel="next" href="../COMPONENT_LEDGER/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/logo.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Everything retracted, broken or open - resolvent</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../assets/resolvent.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#fails-everything-retracted-broken-or-unresolved" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="resolvent" class="md-header__button md-logo" aria-label="resolvent" data-md-component="logo">
+      
+  <img src="../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            resolvent
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Everything retracted, broken or open
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/teerthsharma/resolvent" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    teerthsharma/resolvent
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+  
+  The record
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../BED_H_PREREGISTRATION/" class="md-tabs__link">
+          
+  
+  
+  Pre-registrations
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../ledgers/mistakes/" class="md-tabs__link">
+          
+  
+  
+  Ledgers
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../canon/CHARTER/" class="md-tabs__link">
+          
+  
+  
+  Canon
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../CEQ_SHAPE/" class="md-tabs__link">
+          
+  
+  
+  Paper
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="resolvent" class="md-nav__button md-logo" aria-label="resolvent" data-md-component="logo">
+      
+  <img src="../assets/logo.svg" alt="logo">
+
+    </a>
+    resolvent
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/teerthsharma/resolvent" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    teerthsharma/resolvent
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The record
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    The record
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Everything retracted, broken or open
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Everything retracted, broken or open
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-retracted-claims" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Retracted claims
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-currently-broken" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Currently broken
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-measured-negative-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Measured negative results
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-known-defects-not-yet-fixed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Known defects not yet fixed
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-never-verified" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Never verified
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-the-other-ledgers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. The other ledgers
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../COMPONENT_LEDGER/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Component ledger
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PLAN/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Research plan
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CORNER_RULE_RETIREMENT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Corner rule retirement
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PI_JEPA_KAGGLE_CARD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kaggle card
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DR2_CARD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DR2 card
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pre-registrations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Pre-registrations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BED_H_PREREGISTRATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BED-H
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../prereg/REMOVAL_ECHO_v1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    REMOVAL-ECHO v1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ledgers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Ledgers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ledgers/mistakes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Failure mechanisms
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ledgers/struck/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Struck constants
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ledgers/mathematics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mathematics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ledgers/model-card/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model card
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ledgers/costs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Costs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ledgers/v17k-rulings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    V17K rulings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ledgers/v16-calibration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    V16 calibration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Canon
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Canon
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../canon/CHARTER/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Charter
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../canon/01_THEORY_ACCURACY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01 Theory of accuracy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../canon/02_THEORY_TRAINING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    02 Theory of training
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../canon/03_KERNEL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03 Kernel
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../canon/04_BEDS_AND_INSTRUMENTS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    04 Beds and instruments
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../canon/05_REPAIRS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05 Repairs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../canon/06_PREDICTIONS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    06 Predictions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../canon/08_ARCHITECTURE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    08 Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../canon/09_CHESS_AND_MARKETS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    09 Chess and markets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../canon/CORRECTIONS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Corrections
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Paper
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Paper
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CEQ_SHAPE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The shape of CEQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sources/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Paper sources
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BIB_AUDIT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bibliography audit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BIB_ALIASES/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bibliography aliases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-retracted-claims" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Retracted claims
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-currently-broken" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Currently broken
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-measured-negative-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Measured negative results
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-known-defects-not-yet-fixed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Known defects not yet fixed
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-never-verified" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Never verified
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-the-other-ledgers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. The other ledgers
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="fails-everything-retracted-broken-or-unresolved">FAILS — everything retracted, broken, or unresolved<a class="headerlink" href="#fails-everything-retracted-broken-or-unresolved" title="Permanent link">#</a></h1>
+<p>A result nobody can check is worth nothing. The README carries what works; this
+file carries the rest, in the same clear words, complete. It is not an apology
+and not a confession — it is the evidence trail that makes the rest of the
+repository trustworthy. Every item below was found by the project's own
+instruments: its tests, its docstrings, its audits, or a command run directly
+against this tree while writing this file.</p>
+<p>Paths under <code>ceqjepa/</code> name files from the author's local experiment tree. Six
+of them are published: <code>__init__.py</code>, <code>operator.py</code>, <code>dr1.py</code>,
+<code>removal_echo.py</code>, <code>d1_norman.py</code> and <code>d2_nba.py</code>. An entry citing any other
+<code>ceqjepa/</code> path records what that file measured; the file itself is not in this
+repository.</p>
+<hr />
+<h2 id="1-retracted-claims">1. Retracted claims<a class="headerlink" href="#1-retracted-claims" title="Permanent link">#</a></h2>
+<p>Assertions this repository made and then withdrew, with what killed each one.</p>
+<ul>
+<li>
+<p><strong>"Theorem 4 gives a depth separation between a resolvent read and a
+  fixed-depth stack." RETIRED.</strong> Theorem 4's residual <code>Q^{L+1}(I-Q)^{-1}R</code>
+  fixes every polynomial coefficient at 1 (the Neumann truncation). With
+  FITTED coefficients a degree-8 polynomial reaches <code>1.448e-02%</code> of the
+  committor's range where the truncation reads <code>112.6157%</code>, at <code>kappa=94.08</code> —
+  a factor of <code>7,780</code>. Cayley-Hamilton makes degree <code>n-1</code> exact outright
+  (measured <code>5.809e-07</code> at degree 63, <code>n=64</code>), so the separation is capped at
+  <code>n</code>, and <code>ceqjepa/v2.py</code> trains <code>n=32</code>. The hypothesis "composes L
+  data-dependent linear maps, each degree-1 in Q" also describes a linear
+  message-passing GNN, not a JEPA predictor (which reads <code>s</code>, not <code>Q</code>) and not
+  a transformer. Theorem 4 remains TRUE as a bound on linear message-passing
+  readers; it is not a separation from JEPAs. See <code>ceqjepa/ood_kappa.py</code> and
+  <code>ceqjepa/rank1_field.py</code>, both of which carry the same correction in their
+  module docstrings.</p>
+</li>
+<li>
+<p><strong>"kappa of the bed exceeds <code>1/TELEPORT = 80</code>, so the architecture cannot
+  represent it." RETIRED, a category error.</strong> <code>q</code> is harmonic, so a model
+  reproduces the committor and not the chain. An operator built by
+  <code>operator.build_operator</code> at <code>kappa_model = 1.000000</code> fits a target field
+  whose true chain reads <code>kappa = 300.8</code>, to <code>1.110e-16</code> (the float64 floor).
+  See <code>ceqjepa/beds/gridworld.py:119-140</code>.</p>
+</li>
+<li>
+<p><strong>"kappa = 164.25 on the demo's 14×14 grid." WITHDRAWN AS FABRICATED</strong> — a
+  hardcoded string literal in a <code>print()</code> and a docstring; nothing ever
+  computed it. Struck in <code>ceqjepa/beds/gridworld.py</code>'s own module docstring
+  alongside the <code>1/TELEPORT</code> retraction above.</p>
+</li>
+<li>
+<p><strong>"Every cell's counterfactual is a rank-1 edit sharing one solve", asserted
+  for <code>do(BLOCK a cell)</code>. WITHDRAWN.</strong> Blocking rewrites the cell's own row and
+  rescales its ≤4 neighbours', so rank ≤5, and the grid operator is not lower
+  triangular — <code>ceqjepa/intervene.py:54-66</code> refuses it outright with "the
+  operator would stop being lower triangular". The claim IS true for
+  <code>do(CLAMP one cell's outgoing row)</code>, which is rank exactly 1
+  (<code>sigma_2/sigma_1</code> measured, <code>RANK1_TOL</code>-bounded) — see
+  <code>ceqjepa/rank1_field.py</code>, which is its producer and exists specifically
+  because the original <code>BLOCK</code> claim's supporting measurement had no producer
+  anywhere in the tree.</p>
+</li>
+<li>
+<p><strong>"Sum q = 1 prevents encoder collapse." Struck earlier.</strong> A collapsed
+  encoder satisfies it BETTER (<code>7.772e-16</code> vs <code>2.290e-13</code>). Recorded in
+  <code>docs/ARCHITECTURE_OPTIONS.md:288-289</code>, which is untracked.</p>
+</li>
+</ul>
+<hr />
+<h2 id="2-currently-broken">2. Currently broken<a class="headerlink" href="#2-currently-broken" title="Permanent link">#</a></h2>
+<p>Reproduced directly against this tree while writing this file. Commands,
+exact exit codes, and causes below; nothing here is copied from an older run.</p>
+<ul>
+<li>
+<p><strong><code>python -m pytest tests/gate0 -q -p no:randomly</code></strong> → exit <code>2</code>, zero tests
+  run: <code>Interrupted: 6 errors during collection</code>. All six collection errors
+  are the same <code>ModuleNotFoundError: Could not import module 'PreTrainedModel'</code>
+  from <code>from transformers import PreTrainedModel</code> at
+  <code>ceq/hf/modeling_ceq.py:93</code>, which <code>ceq/hf/train.py:41</code> imports. The cause is
+  the environment, not the code: <code>requirements.txt</code> pins <code>torch==2.5.1</code>, the
+  installed torch has drifted to <code>2.14.0</code>, and the installed
+  <code>torchvision 0.20.1+cu121</code> was built for 2.5.1, so <code>import torchvision</code> raises
+  <code>RuntimeError: operator torchvision::nms does not exist</code>, which
+  <code>transformers 5.3.0</code> reports as the missing <code>PreTrainedModel</code>.
+  <code>tests/loop/test_no_struck_constant_ships.py::test_no_struck_value_is_reachable_in_the_shipped_costs_dict</code>
+  fails on the same import.</p>
+</li>
+<li>
+<p><strong><code>python -m pytest tests/loop -q -p no:randomly</code></strong> → exit <code>1</code>: <code>15 failed,
+  466 passed, 8 skipped, 3 warnings in 46.33s</code> (2026-09-11, with the strike
+  registry restored; the reading before the restore was <code>16 failed, 451 passed,
+  8 skipped</code>). Two of the 16 failures are the
+  repo's own README-consistency guards —
+  <code>test_corpus_is_recoverable_and_verifiable.py::test_some_countable_unit_of_the_corpus_equals_the_readme_figure</code>
+  and <code>::test_the_readme_derivation_matches_the_corpus_it_describes</code> — which is
+  the alarm working, not a new defect. The remaining failures span conftest
+  import ordering, the struck-constant costs dict (the same torchvision import
+  as above), boundary-node propagation, a weight record's identity field, and
+  out-of-sample scoring; see the full names in the run output.</p>
+</li>
+<li>
+<p><strong><code>python -m pytest tests/w11/test_w11_claims_resolve.py</code></strong> → 4 of its 8 README
+  guards fail by construction after the 2026-09-11 README rewrite. They assert the
+  pre-rewrite document's shape: a <code>## Limits, first</code> heading positioned before a
+  <code>## The signed influence property, and who already had it</code> section, an R1-R6
+  requirements table marked <code>DELETED</code>/<code>ALIVE</code>, and the failed intervention's
+  <code>2.6151</code> / <code>4.2107</code> inside that limits section. The current README has none of
+  those sections, by the owner's decision that the failure record lives in this
+  file instead. Two of the six were repaired rather than retired: the README now
+  cites tests by full node id and carries the exact reproduce commands the guard
+  names, so <code>test_every_test_name_in_the_readme_resolves</code> and
+  <code>test_the_reproduce_commands_are_real</code> pass (RUN 2026-09-11, <code>2 passed</code>). The
+  fourth failure, <code>test_the_collector_actually_finds_known_tests</code>, needs
+  <code>test_signed_operator_reaches_negative_influence</code>, deleted at <code>c71527a</code>.</p>
+</li>
+<li>
+<p><strong><code>python -m pytest tests/mars_v20/test_p12_absence_proof_falsified_by_recording_it.py</code></strong>
+  → <code>2 failed, 4 passed</code> (2026-09-11; <code>3 failed, 3 passed</code> at <code>6aef750</code>). The one
+  repaired is <code>test_the_repaired_invocation_is_the_one_struck_md_publishes</code>:
+  STRUCK.md's <code>0.743864</code> row now publishes the path-excluded search and the control
+  symbol the same search must still find. The two that remain assert what no text
+  edit can restore — that the bare <code>git log -S "def absorbing_boundary_kernel"</code>
+  across all refs returns zero (it returns 5 commits, each one a document quoting
+  the search), and that nothing recording the strike sits inside the search's own
+  reach (STRUCK.md, the guard itself and two test files do). They keep the P-12
+  mechanism visible on purpose.</p>
+</li>
+<li>
+<p><strong><code>python scripts/k_cost.py</code></strong> → exit <code>1</code>, same root cause as gate0: the
+  import chain <code>scripts/k_cost.py:109</code> → <code>ceq/hf/train.py:41</code> →
+  <code>ceq/hf/modeling_ceq.py:93</code> → <code>ModuleNotFoundError</code> on <code>PreTrainedModel</code>.</p>
+</li>
+<li>
+<p><strong><code>python scripts/k_cert.py</code></strong> → exit <code>124</code>, times out on CPU, no
+  certificate produced. Not re-run here (expensive; recorded).</p>
+</li>
+<li>
+<p><strong><code>python inspector.py</code></strong> → exit <code>1</code>,
+  <code>FileNotFoundError: [Errno 2] No such file or directory: 'STATE.md'</code> at
+  <code>inspector.py:562</code>. <code>STATE.md</code> was deleted at <code>c71527a</code> ("Remove the round
+  reports from the tree, and commit the paper's sources beside it") and never
+  restored; <code>git show --stat c71527a</code> confirms the delete.</p>
+</li>
+<li>
+<p><strong>The whole suite has never completed.</strong> <code>python -m pytest tests/ -q</code> runs
+  at roughly 9% in 15 minutes on CPU, estimated &gt;3h, so no total pass/fail
+  count exists — <code>MODEL_CARD.md:732-734</code> says so explicitly and instructs readers
+  not to quote one. What is verified instead: 955 tests collect in 9.6s
+  (measured 2026-08-25, and stated in <code>MODEL_CARD.md</code> to grow as tests are
+  added — re-measure rather than trust it).</p>
+</li>
+<li>
+<p><strong>Of 19 <code>ceqjepa</code> modules run as <code>python -m</code>, 11 reach a terminal pass
+  line; 6 do not terminate within 300-480s</strong>: <code>chess_policy</code>,
+  <code>bed_headroom</code>, <code>curriculum</code>, <code>positive_control</code>, <code>run_causal_test</code>,
+  <code>move_ablation</code>. Not re-run here — six modules at up to 480s each is
+  expensive; recorded from this session's own measurement.</p>
+</li>
+</ul>
+<hr />
+<h2 id="3-measured-negative-results">3. Measured negative results<a class="headerlink" href="#3-measured-negative-results" title="Permanent link">#</a></h2>
+<p>Experiments that ran correctly, under a pre-registered kill condition, and
+returned "no."</p>
+<ul>
+<li>
+<p><strong>The OOD-kappa experiment</strong>, <code>ceqjepa/ood_kappa.py</code> (its docstring carries
+  the full table). Claim on trial: under an operator intervention, a resolvent
+  read's committor error is kappa-invariant while a learned direct read's
+  grows. <strong>DEAD on the pre-registered kill condition, 5/5 seeds, wrong sign.</strong>
+  MAE: constant <code>0.0774</code>/<code>0.0774</code>, operator(solve) <code>0.0620</code> id / <code>0.0741</code> ood,
+  direct(MLP) <code>0.0416</code> id / <code>0.0718</code> ood, operator(trunc L=8) <code>0.0618</code>/<code>0.0735</code>.
+  The direct read wins both in- and out-of-distribution. The truncation
+  control ties the exact solve to <code>0.0006</code> at both ends — the solve
+  contributes nothing — because the trained Q-head emits <code>kappa 1.34</code> against
+  a true <code>93.51</code> at OOD inputs, off by 70×, having never seen a self-loop in
+  training. Shuffled-label controls both land at the constant predictor
+  (<code>0.0777</code>/<code>0.0778</code>); both live arms beat the constant in-distribution. Extra
+  training does not rescue it: at 3× the steps the operator arm's
+  in-distribution error improves <code>0.0620 → 0.0548</code> while OOD stays pinned at
+  <code>0.0740</code>. The surviving statement: an exact solve downstream of a <em>learned</em>
+  operator head does not inherit the solve's exactness, because the head is
+  the distribution-bounded component. Also worth keeping: kappa-invariance is
+  FREE on a time-change bed — the constant predictor is exactly invariant
+  while predicting nothing — so invariance alone is never evidence.</p>
+</li>
+<li>
+<p><strong>The operator did not separate from a 2,556-parameter MLP</strong> on the
+  synthetic bed: <code>+0.0264</code>, sd <code>0.0358</code>, 4/5 seeds, against a frozen bar of
+  <code>&gt;= +0.020 AND 5/5</code>. The docstring explanation that "the bed's kappa was too
+  small" is itself a misdiagnosis: that MLP reads <code>s</code>, not <code>Q</code>, so it was
+  never a polynomial in <code>Q</code> at any kappa.</p>
+</li>
+<li>
+<p><strong>The T4 causal-arm run</strong> (kernel <code>ceq-jepa-dcm-1-causal-arm-t4</code>, 4h43m, 3
+  seeds × 12,000 steps): held-out perplexity ROSE in 15 of 15 intervals while
+  training loss fell to <code>0.03-0.14</code> nats, 257 parameters per training label.
+  Best checkpoint at step 2,000; the run saved step 12,000 — <code>wasted/useful =
+  10000/2000 = 5.00</code>. The sharpness margin was <code>I_q - J(q) - KL = 0.1196 -
+  (1.3967 + 0.0025) = -1.2796</code>, three times more negative than a deliberately
+  temperature-sabotaged control.</p>
+</li>
+<li>
+<p><strong>The teleport that keeps Sherman-Morrison's denominator safe attenuates
+  the interventional signal the do-arm trains on by 43.1%</strong> (1,859
+  blocked-cell solves, <code>G=9 gap=3</code>: mean <code>|dq|</code> <code>0.021501</code> true vs <code>0.012590</code>
+  teleported; 7 sign flips among the 724 solves clearing <code>0.01</code>). At <code>c=0</code> the
+  same path is exact to <code>1.887e-15</code>. Invisible to every check that runs,
+  because the teleport is row-stochastic so committor rows still sum to 1.
+  See <code>ceqjepa/beds/gridworld.py:119-140</code>.</p>
+</li>
+<li>
+<p><strong>The logit-Nash stance, <code>ceq/nash.py</code> (GitHub issue #2).</strong> Claim on trial: a
+  stance solved as a quantal-response equilibrium composes two sign flips seen
+  only separately, where the learned stance of the <code>signed</code> arm does not.
+  <strong>DEAD on both pre-registered kill conditions, 5/5 seeds, in every
+  configuration.</strong> OOD NRMSE on W7's held-out composition, corpus seed 0,
+  training seeds 0-4, 400 steps, from <code>python scripts/nash_repairs.py</code>:</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>arm</th>
+<th>mean ± sd</th>
+<th>range</th>
+<th>beats <code>signed</code></th>
+<th>below 1.0</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>signed</code>, the learned stance</td>
+<td>2.7333 ± 1.0235</td>
+<td>1.6122 – 3.9058</td>
+<td>—</td>
+<td>0/5</td>
+</tr>
+<tr>
+<td><code>nash</code> as shipped</td>
+<td>5.2888 ± 0.6041</td>
+<td>4.6051 – 6.2479</td>
+<td>0/5</td>
+<td>0/5</td>
+</tr>
+<tr>
+<td>+ learned game bias</td>
+<td>5.0808 ± 0.3683</td>
+<td>4.6539 – 5.6255</td>
+<td>0/5</td>
+<td>0/5</td>
+</tr>
+<tr>
+<td>+ per-example <code>tau</code></td>
+<td>4.8480 ± 0.7695</td>
+<td>3.9224 – 5.4408</td>
+<td>0/5</td>
+<td>0/5</td>
+</tr>
+<tr>
+<td>+ both</td>
+<td>4.6142 ± 0.7440</td>
+<td>3.6929 – 5.2668</td>
+<td>0/5</td>
+<td>0/5</td>
+</tr>
+</tbody>
+</table>
+<p>The two repairs are the arm's two defects known before the run, each with its
+  fix already stated: the learned game bias <code>ceq/arms.py</code> built and never read
+  (MISTAKES.md P-4, second instance; now deleted), and the batch-shared
+  temperature that <code>tests/deimos/test_deimos_r9_iteration1.py</code> measured at 2.2×
+  the median per-example value. Together they close 26% of the gap to <code>signed</code>
+  and win no seed. The issue's single run put the gap at 38%; over five seeds the shipped
+  arm is 93% worse, and its best seed is worse than the learned stance's worst.
+  The equilibrium machinery itself is sound (the seven structural tests pass: a
+  genuine fixed point, non-affine at every probe radius, signed, L1-bounded by
+  <code>rho</code>, nilpotent), so the module stays as an instrument and the two kill tests
+  are <code>xfail(strict=True)</code>, which fails the run the day either bar is earned.</p>
+<hr />
+<h2 id="4-known-defects-not-yet-fixed">4. Known defects not yet fixed<a class="headerlink" href="#4-known-defects-not-yet-fixed" title="Permanent link">#</a></h2>
+<ul>
+<li>
+<p><strong>The counterfactual-field demo page's <code>computeField()</code> reads the wrong
+  row.</strong> <code>buildChain(b)</code> does not remove <code>b</code> from <code>tList</code>, so <code>nT</code> is
+  unchanged and <code>b</code>'s own row survives, but <code>computeField</code> recomputes the
+  cursor's index as its position in <code>tList</code> <em>with <code>b</code> skipped</em>. Every blocked
+  cell preceding the cursor in raster order reads one row early. Measured on
+  the demo's frame-0 grid, cursor at <code>r7c7</code>: 92 of 168 blocked cells report a
+  wrong delta-q, mean absolute error <code>0.0313</code>, worst <code>0.0908</code> — against a mean
+  true <code>|delta q|</code> of <code>0.0087</code> and a largest true <code>|delta q|</code> of <code>0.0552</code>.
+  Fix is one line: <code>qb[tIdx[target]*2]</code>; delete the <code>ti</code> loop. Documented at
+  <code>ceqjepa/beds/gridworld.py:39-49</code>; the page itself lives outside the
+  tracked tree at <code>scratchpad/counterfactual-field.html</code>. A second, unrelated
+  defect on the same page: it claims a Sherman-Morrison rank-1 update verified
+  against a dense re-solve, but the shipped <code>computeField()</code> performs a full
+  <code>buildChain</code> + <code>solveCommittor</code> per candidate — there is no rank-1 update in
+  the file. Neither bug is inherited by <code>ceqjepa/beds/gridworld.py</code>, which
+  blocks a cell by writing a wall into a copy of the grid.</p>
+</li>
+<li>
+<p><strong><code>ceqjepa/intervene.py</code> refuses non-triangular operators</strong>, which is the
+  exact object <code>ceqjepa/rank1_field.py</code>'s claim lives on (see §1). A Woodbury
+  path was measured exact to <code>1.07e-14</code> with a matching NaN mask but was never
+  landed.</p>
+</li>
+<li>
+<p><strong><code>ceqjepa/v2.py</code>'s variance hinge is at its maximum (<code>32.0 = d</code>) at exactly
+  the collapsed state while its gradient is exactly zero there</strong> — a
+  stationary point of the same shape as the zero-init LoRA death this project
+  already ate once. Escape force returns at any asymmetry (<code>1.115e+00</code> at
+  <code>1e-6</code>, measured against an assertion of <code>&gt; 0.1</code>). Recorded and asserted in
+  the module itself (<code>ceqjepa/v2.py</code>, the <code>THE MUST-FIRE</code> block); the standing
+  mitigation is never zero-init the encoder output.</p>
+</li>
+<li>
+<p><strong>One cursor cell in thirteen has a counterfactual field entirely below
+  <code>1e-9</code></strong> (measured by <code>ceqjepa/rank1_field.py</code>, <code>DEGENERATE_FLOOR = 1e-9</code>)
+  — the clamp changes nothing measurable there, the rank statistic reads
+  noise over noise (<code>~1e-1</code>), and the demo must render something at those
+  pixels regardless.</p>
+</li>
+</ul>
+<hr />
+<h2 id="5-never-verified">5. Never verified<a class="headerlink" href="#5-never-verified" title="Permanent link">#</a></h2>
+<p>Claims with no producer located, stated as such rather than silently dropped.</p>
+<ul>
+<li>
+<p><strong>The pre-rewrite README's corner floats <code>4.472918</code> / <code>1.144938</code> / <code>5.335671</code>.</strong> A
+  tree-wide search of <code>.py</code>, <code>.lean</code>, <code>.json</code>, <code>.jsonl</code>, <code>.txt</code> (re-run while
+  writing this file) returns <strong>zero hits</strong>. They existed only in prose and left <code>README.md</code> in the 2026-09-11 rewrite
+  (the earlier text: <code>git show 6aef750:README.md</code>).</p>
+</li>
+<li>
+<p><strong>The pre-rewrite README's §3.1 identity-bind numbers, §3.2's R1 table
+  (<code>README.md:185-205</code> at <code>6aef750</code>, the <code>crossed</code> / <code>NO READING</code> populations and the
+  <code>0.634-0.662</code> / <code>1.113-1.152</code> NRMSE bands), and every §5 device-round number
+  (<code>README.md:302-392</code> at <code>6aef750</code>).</strong> No producer was located for these figures, and the
+  pinned stack (<code>torch 2.5.1+cu121</code>) is not installed on the author's box, so
+  none of them can be regenerated here to check. They left <code>README.md</code> in the
+  same rewrite.</p>
+</li>
+<li>
+<p><strong><code>#print axioms</code> is absent from 10 of the 13 project Lean files.</strong> Of the
+  13 files under <code>lean/</code> (12 in <code>lean/CEQ/</code> plus <code>lean/CEQ.lean</code>; the
+  dependency tree under <code>lean/.lake/packages/</code> is not part of this count),
+  only <code>V15Phase.lean</code>, <code>V15Source.lean</code>, and <code>V16Domain.lean</code> carry
+  <code>#print axioms</code>, though the pre-rewrite README asserted every theorem runs through it. Zero
+  <code>sorry</code> across the same 13 files IS verified — a tree-wide search finds none
+  outside prose comments asserting their absence.</p>
+</li>
+<li>
+<p><strong>The pre-rewrite README's <code>lake build</code> job count <code>[1530/1531]</code>.</strong> The build is cached and emits
+  no count when run. Exit <code>0</code> on the cached build is verified.</p>
+</li>
+<li>
+<p><strong><code>ceqjepa/dr1.py</code>'s docstring figure of 7,966 clamp interventions</strong> (100%
+  agreement between the refusal rule and graph reachability) comes from the grid
+  bed, whose producer is not in this repository. The published self-check,
+  <code>python -m ceqjepa.dr1</code>, prints its own 400-case table (138 undefined, 262
+  defined) instead, and that table is the one the README cites.</p>
+</li>
+</ul>
+<hr />
+<h2 id="6-the-other-ledgers">6. The other ledgers<a class="headerlink" href="#6-the-other-ledgers" title="Permanent link">#</a></h2>
+<p>FAILS.md is the front door, not the whole house. Detail lives in dedicated,
+machine-checked ledgers:</p>
+<ul>
+<li><strong><a href="https://github.com/teerthsharma/resolvent/blob/master/MISTAKES.md">MISTAKES.md</a></strong> — the failure-taxonomy proper: 74 failure
+  mechanisms across four classes (V — vacuous controls, 30; P — provenance
+  failures, 16; M — measurement failures, 21; D — design-level failures, 7),
+  each with an instance, a rule, and a check.</li>
+<li><strong><a href="https://github.com/teerthsharma/resolvent/blob/master/STRUCK.md">STRUCK.md</a></strong> — every constant this project has withdrawn:
+  12 entries, rendered from a module-level registry in
+  <code>tests/loop/test_no_struck_constant_ships.py</code>, never hand-edited.</li>
+<li><strong><a href="../canon/CORRECTIONS/">docs/canon/CORRECTIONS.md</a></strong> — the canon's own
+  correction log; the only door through which the books 00–09 change.</li>
+<li><strong><a href="https://github.com/teerthsharma/resolvent/blob/master/V17K_RULINGS.md">V17K_RULINGS.md</a></strong> — 3 open rulings out of 7 total
+  (rows 4-7 are CLOSED): determinism regime, the corner criterion, and matched
+  parameter counts, each blocked on a specific named measurement or file, not
+  on absence of effort.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href=".." class="md-footer__link md-footer__link--prev" aria-label="Previous: Home">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Home
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../COMPONENT_LEDGER/" class="md-footer__link md-footer__link--next" aria-label="Next: Component ledger">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Component ledger
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Invented by <a href="https://teerthsharma.vercel.app/">Teerth Sharma</a> · Apache License 2.0
+    </div>
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/teerthsharma/resolvent" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://teerthsharma.vercel.app/" target="_blank" rel="noopener" title="teerthsharma.vercel.app" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M351.9 280H161c2.9 64.5 17.2 123.9 37.5 167.4 11.4 24.5 23.7 41.8 35.1 52.4 11.2 10.5 18.9 12.2 22.9 12.2s11.7-1.7 22.9-12.2c11.4-10.6 23.7-28 35.1-52.4 20.3-43.5 34.6-102.9 37.5-167.4zm-191-48h190.9c-2.8-64.5-17.1-123.9-37.4-167.4-11.4-24.4-23.7-41.8-35.1-52.4C268.1 1.7 260.4 0 256.4 0s-11.7 1.7-22.9 12.2c-11.4 10.6-23.7 28-35.1 52.4-20.3 43.5-34.6 102.9-37.5 167.4m-48 0c3.5-85.6 25.6-165.1 57.9-217.3C78.7 47.3 10.9 131.2 1.5 232zM1.5 280c9.4 100.8 77.2 184.7 169.3 217.3-32.3-52.2-54.4-131.7-57.9-217.3zm398.4 0c-3.5 85.6-25.6 165.1-57.9 217.3 92.1-32.7 159.9-116.5 169.3-217.3zm111.4-48C501.9 131.2 434.1 47.3 342 14.7c32.3 52.2 54.4 131.7 57.9 217.3z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

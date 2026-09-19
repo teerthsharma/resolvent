@@ -1,0 +1,3178 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="One causal head, three switches. Softmax attention, unnormalized-kernel attention and the exact path product of a Markov chain as settings of one operator, proved in Lean 4, with every failure kept on the record.">
+      
+      
+        <meta name="author" content="Teerth Sharma">
+      
+      
+        <link rel="canonical" href="https://teerthsharma.github.io/resolvent/sources/sweep/sweep_resolvent/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/logo.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>SWEEP — resolvent / propagation / equilibrium attention (JUPITER-S1, 2026-09-03) - resolvent</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/resolvent.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#sweep-resolvent-propagation-equilibrium-attention-jupiter-s1-2026-09-03" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="resolvent" class="md-header__button md-logo" aria-label="resolvent" data-md-component="logo">
+      
+  <img src="../../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            resolvent
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              SWEEP — resolvent / propagation / equilibrium attention (JUPITER-S1, 2026-09-03)
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/teerthsharma/resolvent" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    teerthsharma/resolvent
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../FAILS/" class="md-tabs__link">
+          
+  
+  
+  The record
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../BED_H_PREREGISTRATION/" class="md-tabs__link">
+          
+  
+  
+  Pre-registrations
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../ledgers/mistakes/" class="md-tabs__link">
+          
+  
+  
+  Ledgers
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../canon/CHARTER/" class="md-tabs__link">
+          
+  
+  
+  Canon
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../CEQ_SHAPE/" class="md-tabs__link">
+          
+  
+  
+  Paper
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="resolvent" class="md-nav__button md-logo" aria-label="resolvent" data-md-component="logo">
+      
+  <img src="../../../assets/logo.svg" alt="logo">
+
+    </a>
+    resolvent
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/teerthsharma/resolvent" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    teerthsharma/resolvent
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The record
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    The record
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../FAILS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Everything retracted, broken or open
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../COMPONENT_LEDGER/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Component ledger
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../PLAN/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Research plan
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CORNER_RULE_RETIREMENT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Corner rule retirement
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../PI_JEPA_KAGGLE_CARD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kaggle card
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../DR2_CARD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DR2 card
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pre-registrations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Pre-registrations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../BED_H_PREREGISTRATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BED-H
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../prereg/REMOVAL_ECHO_v1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    REMOVAL-ECHO v1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ledgers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Ledgers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/mistakes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Failure mechanisms
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/struck/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Struck constants
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/mathematics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mathematics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/model-card/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model card
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/costs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Costs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/v17k-rulings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    V17K rulings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/v16-calibration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    V16 calibration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Canon
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Canon
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/CHARTER/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Charter
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/01_THEORY_ACCURACY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01 Theory of accuracy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/02_THEORY_TRAINING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    02 Theory of training
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/03_KERNEL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03 Kernel
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/04_BEDS_AND_INSTRUMENTS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    04 Beds and instruments
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/05_REPAIRS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05 Repairs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/06_PREDICTIONS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    06 Predictions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/08_ARCHITECTURE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    08 Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/09_CHESS_AND_MARKETS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    09 Chess and markets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/CORRECTIONS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Corrections
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Paper
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Paper
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CEQ_SHAPE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The shape of CEQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Paper sources
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../BIB_AUDIT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bibliography audit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../BIB_ALIASES/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bibliography aliases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#0-the-question-and-the-rubric-fixed-before-any-paper-was-scored" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0. The question, and the rubric fixed before any paper was scored
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-the-seeds-thirteen-scored" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. The seeds (thirteen), scored
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. The seeds (thirteen), scored">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-gasteiger-2019-appnp-arxiv181005997-iclr-2019-v" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 gasteiger-2019-appnp — arXiv:1810.05997, ICLR 2019 — [V]
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-yuan-2025-paraformer-arxiv251214619-v-abs-html" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 yuan-2025-paraformer — arXiv:2512.14619 — [V] (abs + HTML)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-chamberlain-2021-grand-arxiv210610934-v-abs-ar5iv-html" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 chamberlain-2021-grand — arXiv:2106.10934 — [V] (abs + ar5iv HTML)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-gu-2020-ignn-arxiv200906211-v" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 gu-2020-ignn — arXiv:2009.06211 — [V]
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#15-bai-2019-deq-arxiv190901377-neurips-2019-v" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.5 bai-2019-deq — arXiv:1909.01377, NeurIPS 2019 — [V]
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#16-georgiev-2024-dear-georgiev-2024-dearneurips-arxiv240206445-241015059-v" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.6 georgiev-2024-dear / georgiev-2024-dearneurips — arXiv:2402.06445, 2410.15059 — [V]
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#17-fan-2020-feedback-arxiv200209402-v" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.7 fan-2020-feedback — arXiv:2002.09402 — [V]
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#18-yang-2023-looped-arxiv231112424-v" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.8 yang-2023-looped — arXiv:2311.12424 — [V]
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#19-dehghani-2018-universal-arxiv180703819-iclr-2019-v" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.9 dehghani-2018-universal — arXiv:1807.03819, ICLR 2019 — [V]
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#110-sander-2021-sinkformer-arxiv211011773-aistats-v" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.10 sander-2021-sinkformer — arXiv:2110.11773, AISTATS — [V]
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#111-ramsauer-2020-hopfield-arxiv200802217-v" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.11 ramsauer-2020-hopfield — arXiv:2008.02217 — [V]
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#112-dayan-1993-successor-neural-computation-54613624-v-crossref" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.12 dayan-1993-successor — Neural Computation 5(4):613–624 — [V] (Crossref)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#113-barreto-2017-successorfeatures-arxiv160605312-nips-2017-v" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.13 barreto-2017-successorfeatures — arXiv:1606.05312, NIPS 2017 — [V]
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-widening-what-the-twenty-two-searches-found-recorded-in-6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Widening — what the twenty-two searches found (recorded in §6)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Widening — what the twenty-two searches found (recorded in §6)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-surprise-fagnou-2024-chacal-arxiv241005565-emnlp-2024-main-v-abs-html" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 SURPRISE — fagnou-2024-chacal — arXiv:2410.05565, EMNLP 2024 Main — [V] (abs + HTML)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-zhao-2026-structuredsparse-arxiv260522476-v-abs-html" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 zhao-2026-structuredsparse — arXiv:2605.22476 — [V] (abs + HTML)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-roffo-2026-infsa-arxiv260300175-v-abs-html" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 roffo-2026-infsa — arXiv:2603.00175 — [V] (abs + HTML)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-wang-2021-magna-arxiv200914332-ijcai-2021-v-abs-ar5iv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 wang-2021-magna — arXiv:2009.14332, IJCAI 2021 — [V] (abs + ar5iv)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-feng-2022-diffuser-arxiv221011794-v-abs-html" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5 feng-2022-diffuser — arXiv:2210.11794 — [V] (abs + HTML)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#26-erel-2025-attentionchains-arxiv250717657-neurips-2025-v-abs-html" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6 erel-2025-attentionchains — arXiv:2507.17657, NeurIPS 2025 — [V] (abs + HTML)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#27-candanedo-2026-diffusionattention-arxiv260409560-v" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.7 candanedo-2026-diffusionattention — arXiv:2604.09560 — [V]
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#28-liu-2021-eignn-arxiv220210720-neurips-2021-v-abs-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.8 liu-2021-eignn — arXiv:2202.10720, NeurIPS 2021 — [V] (abs only)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#29-wu-2023-difformer-arxiv230109474-iclr-2023-v" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.9 wu-2023-difformer — arXiv:2301.09474, ICLR 2023 — [V]
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#210-chien-2020-gprgnn-arxiv200607988-iclr-2021-v" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.10 chien-2020-gprgnn — arXiv:2006.07988, ICLR 2021 — [V]
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#211-gasteiger-2019-gdc-arxiv191105485-neurips-2019-v" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.11 gasteiger-2019-gdc — arXiv:1911.05485, NeurIPS 2019 — [V]
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#212-gilton-2019-neumann-arxiv190103707-v" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.12 gilton-2019-neumann — arXiv:1901.03707 — [V]
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#213-tamar-2016-vin-arxiv160202867-nips-2016-v" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.13 tamar-2016-vin — arXiv:1602.02867, NIPS 2016 — [V]
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#214-xiao-2023-attentionsinks-iclr-2024-gu-2024-sinkemerges-iclr-2025-lee-2026-asap-v" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.14 xiao-2023-attentionsinks (ICLR 2024), gu-2024-sinkemerges (ICLR 2025), lee-2026-asap — [V]
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#215-abnar-2020-attentionflow-arxiv200500928-v" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.15 abnar-2020-attentionflow — arXiv:2005.00928 — [V]
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#216-zhao-2020-transformerxh-iclr-2020-v-microsoft-research-page-openreview-was" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.16 zhao-2020-transformerxh — ICLR 2020 — [V] (Microsoft Research page; OpenReview was
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#217-whittington-2021-hippocampus-arxiv211204035-v" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.17 whittington-2021-hippocampus — arXiv:2112.04035 — [V]
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#218-geshkovski-2023-mathperspective-arxiv231210794-v" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.18 geshkovski-2023-mathperspective — arXiv:2312.10794 — [V]
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#219-yang-2024-deltanet-dao-2024-ssd-arxiv240606484-240521060-icml-2024-v" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.19 yang-2024-deltanet, dao-2024-ssd — arXiv:2406.06484, 2405.21060 (ICML 2024) — [V]
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-the-classical-owners-of-the-boundary-condition-read-fixed-chain-no-attention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. The classical owners of the boundary-condition read (fixed chain, no attention)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. The classical owners of the boundary-condition read (fixed chain, no attention)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-kemeny-1976-finitemarkov-open-library-isbn-9780387901923-v-record-formulas-u" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 kemeny-1976-finitemarkov — Open Library ISBN 9780387901923 — [V] (record), formulas [U]
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-zhu-2003-harmonic-icml-2003-dblp-record-v-aaai-abstract-page-v" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 zhu-2003-harmonic — ICML 2003 (DBLP record [V]; AAAI abstract page [V])
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-zhou-2003-consistency-nips-2003-v-proceedings-page" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 zhou-2003-consistency — NIPS 2003 — [V] (proceedings page)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-de-2014-absorbingtransduction-arxiv14024566-v-abs-page-carries-a-withdrawal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 de-2014-absorbingtransduction — arXiv:1402.4566 — [V] (abs; page carries a withdrawal)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-baier-2008-modelchecking-open-library-isbn-9780262026499-v-record-author-names-u" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 baier-2008-modelchecking — Open Library ISBN 9780262026499 — [V] (record; author names [U])
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#36-todorov-2006-lmdp-nips-19-v-and-todorov-2009-efficient-pnas-1062811478-v-crossref-europe-pmc-abstract" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.6 todorov-2006-lmdp (NIPS 19, [V]) and todorov-2009-efficient (PNAS 106(28):11478, [V] Crossref + Europe PMC abstract)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#37-piray-2021-linearrl-nature-communications-124942-v-crossref-europe-pmc-full-text-pmc8368103" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.7 piray-2021-linearrl — Nature Communications 12:4942 — [V] (Crossref + Europe PMC full text PMC8368103)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#38-esterhuysen-2026-terminal-arxiv260531289-v" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.8 esterhuysen-2026-terminal — arXiv:2605.31289 — [V]
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#39-katz-1953-status-psychometrika-1813943-v-crossref" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.9 katz-1953-status — Psychometrika 18(1):39–43 — [V] (Crossref)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#310-khoo-2018-committor-li-2019-committor-v" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.10 khoo-2018-committor, li-2019-committor — [V]
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#311-pagebrinmotwaniwinograd-1999-not-entered-in-the-bib-the-stanford-infolab-url" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.11 Page–Brin–Motwani–Winograd 1999 — NOT ENTERED IN THE BIB. The Stanford InfoLab URL
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-occupancy-matrix-ticked-on-a-content-dependent-attention-operator-ticked-on-a-fixed-graph-non-attention-chain-absent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Occupancy matrix (✓ ticked on a content-dependent attention operator; ○ ticked on a fixed graph / non-attention chain; · absent)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-derived-notes-collected-each-with-its-steps-above" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. DERIVED notes collected (each with its steps above)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-searches-run-22-beyond-the-seeds-the-brief-asked-for-at-least-six-with-what-each-returned" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Searches run (22 beyond the seeds; the brief asked for at least six), with what each returned
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-not-found-with-the-queries-that-would-have-found-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. NOT FOUND (with the queries that would have found it)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-verdict" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. VERDICT
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-design-against-the-taxonomy-what-this-sweep-obliges-the-paper-and-the-plan-to-do" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Design against the taxonomy — what this sweep obliges the paper and the plan to do
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-open-gaps-handed-to-the-coordinator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Open gaps handed to the coordinator
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="sweep-resolvent-propagation-equilibrium-attention-jupiter-s1-2026-09-03">SWEEP — resolvent / propagation / equilibrium attention (JUPITER-S1, 2026-09-03)<a class="headerlink" href="#sweep-resolvent-propagation-equilibrium-attention-jupiter-s1-2026-09-03" title="Permanent link">#</a></h1>
+<p>Companion BibTeX: <code>$SCRATCH/sweep/bib_resolvent.bib</code> (48 entries, every one resolved this session;
+the <code>note</code> field of each entry records the resolution route and marks any field supplied from
+memory as <code>[U]</code>). Repository root <code>&lt;repo root&gt;</code>, HEAD <code>207e7b9</code>.</p>
+<p>Evidence classes used below (BRIEF.md §5.3): <code>RUN</code> (executed this session), <code>READ path:line</code>,
+<code>CITED [V]</code> (abs/DOI/ISBN/DBLP record fetched this session, title matched), <code>CITED [U]</code> (search
+index, secondary paper, or memory only), <code>DERIVED</code> (steps written out). Every number carries one.</p>
+<h2 id="0-the-question-and-the-rubric-fixed-before-any-paper-was-scored">0. The question, and the rubric fixed before any paper was scored<a class="headerlink" href="#0-the-question-and-the-rubric-fixed-before-any-paper-was-scored" title="Permanent link">#</a></h2>
+<p>The question the coordinator set: <em>does anyone put the resolvent of a content-dependent, causal,
+row-stochastic attention matrix, with absorbing boundary rows, as the attention read, containing
+softmax at γ = 0?</em></p>
+<p>To keep the answer from being refitted to whatever the search returned (MISTAKES.md <code>M-2</code>, a
+threshold refitted to the data it judges; <code>V-26</code>, a marginal assertion standing in for a joint
+claim), the shape of BRIEF.md §1 was decomposed into ten boxes <strong>before</strong> the first fetch, and each
+source is scored on all ten. A component is OCCUPIED only if one named source ticks the box on a
+content-dependent attention operator; NEAR-MISS if the box is ticked on a fixed graph or a
+non-attention chain, or ticked with one of (a)–(c) missing; NOT FOUND otherwise.</p>
+<table>
+<thead>
+<tr>
+<th>box</th>
+<th>component of the shape (BRIEF.md §1)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>(a)</td>
+<td>the propagated operator <code>P</code> is <strong>content-dependent</strong> (built from <code>QKᵀ</code> of the input)</td>
+</tr>
+<tr>
+<td>(b)</td>
+<td><code>P</code> is <strong>causally masked</strong> (lower triangular)</td>
+</tr>
+<tr>
+<td>(c)</td>
+<td><code>P</code> is <strong>row-stochastic softmax</strong> (the β = 1 corner)</td>
+</tr>
+<tr>
+<td>(d)</td>
+<td>the read uses the <strong>exact resolvent</strong> <code>(I − γP)^{-1}</code> (a solve), not a truncated hop sum</td>
+</tr>
+<tr>
+<td>(e)</td>
+<td><strong>absorbing rows</strong>: constraint sets <code>𝒜_k</code> whose rows of <code>P</code> are identity — boundary conditions inside the operator</td>
+</tr>
+<tr>
+<td>(f)</td>
+<td><strong>parity at γ = 0</strong>: the read is softmax attention bitwise</td>
+</tr>
+<tr>
+<td>(g)</td>
+<td>the <strong>interventional channel</strong> <code>do(a)</code>: re-solve, read the displacement <code>Δz</code></td>
+</tr>
+<tr>
+<td>(h)</td>
+<td>the <strong>safest-move decision</strong> <code>argmin_a max_k q^{(k)}(do a)</code> from committors into several sets</td>
+</tr>
+<tr>
+<td>(i)</td>
+<td>a <strong>printed truncation certificate</strong> <code>γ^{K+1}/(1−γ)</code> beside any Neumann approximation (I4)</td>
+</tr>
+<tr>
+<td>(j)</td>
+<td><strong>learnable γ</strong></td>
+</tr>
+</tbody>
+</table>
+<p>What the record already knew before this sweep (so the delta is stated against it, not against a
+blank page — <code>P-3</code>, a stale claim never retracted, and <code>M-10</code>, filed without grepping for what
+already existed):</p>
+<ul>
+<li><code>THEORY.md:47-48</code> (READ): the solve <code>z = (I − A)^{-1} b</code> and the successor representation
+  <code>M = (I − γP)^{-1}</code> are "the same algebraic object"; <code>THEORY.md:234</code> lists Dayan 1993 as
+  unverified. <strong>Now [V]</strong> (Crossref, this session).</li>
+<li><code>THEORY.md:225-235</code> (READ): Ramsauer 2020, Bai–Kolter–Koltun 2019 listed as unverified. <strong>Now [V].</strong></li>
+<li><code>RESEARCH.md:48</code> (READ): ParaFormer 2512.14619 recorded as "Nearest published multi-hop
+  construction". <code>DONE_ARCHIVE_ROUND1.md:1321-1324</code> (READ): its <code>γ_k</code> is a scalar per hop, <code>K = 10</code>.</li>
+<li><code>DONE_ARCHIVE_ROUND1.md:677-681</code> (READ): APPNP, GDC, MAGNA "require a non-negative matrix";
+  DeltaNet named "the near miss — signed, strictly triangular, exactly inverted".</li>
+<li><code>DONE_ARCHIVE_ROUND1.md:1317-1318</code> (READ): InfSA 2603.00175 recorded as a content-adaptive
+  Neumann series with <code>A = ReLU(QKᵀ)</code> normalised, non-negative. The record read it as a <em>signed</em>
+  near-miss and did not read its absorbing-chain paragraph; this sweep does (§2.3).</li>
+<li><code>PRIOR_ART.md:567-713</code> (READ): the round-8 sweep already owns DEAR (2402.06445, 2410.15059),
+  the committor-regression papers (Khoo–Lu–Ying, Li–Lin–Ren), Diffusion-Jump GNNs (absorbing
+  random walks), Azad 2022 (node classification as a Dirichlet problem), Garrousian–Nouranizadeh
+  (Dirichlet/Neumann boundary conditions on graphs). Those are not re-argued here; they are
+  cross-referenced.</li>
+<li><strong>Absent from every <code>.md</code> in the tree</strong> (RUN, <code>grep -rlE --include='*.md'</code>, 2026-09-03, <code>lake/</code>
+  excluded): <code>ChaCAL</code>, <code>2410.05565</code>, <code>Fagnou</code>, <code>2605.22476</code>, <code>Diffuser</code>, <code>2210.11794</code>, <code>Piray</code>,
+  <code>Todorov</code>, <code>Katz</code>, <code>Kemeny</code>, <code>2507.17657</code>, <code>EIGNN</code>, <code>GRAND</code>, <code>Zhu.*Ghahramani</code>, <code>Woodbury</code> — each
+  <code>0 files</code>. The record has never seen the paper that occupies its read (§2.1).</li>
+</ul>
+<h2 id="1-the-seeds-thirteen-scored">1. The seeds (thirteen), scored<a class="headerlink" href="#1-the-seeds-thirteen-scored" title="Permanent link">#</a></h2>
+<p>Format per source: <strong>id — status — what it owns — what it leaves open relative to the shape —
+query/route that found it.</strong></p>
+<h3 id="11-gasteiger-2019-appnp-arxiv181005997-iclr-2019-v">1.1 <code>gasteiger-2019-appnp</code> — arXiv:1810.05997, ICLR 2019 — [V]<a class="headerlink" href="#11-gasteiger-2019-appnp-arxiv181005997-iclr-2019-v" title="Permanent link">#</a></h3>
+<p>Owns: propagation of a <em>fixed</em> prediction by personalised PageRank on the <em>graph adjacency</em>,
+<code>Z = α(I − (1−α)Â)^{-1} H</code> in the limit, run as <code>K</code> power-iteration steps (DERIVED from the
+abstract's "personalized PageRank" + memory of the body [U] for the closed form).
+Leaves open: (a) — <code>Â</code> is the adjacency, not content; (b) no order; (e) no boundary rows;
+(f) α → 1 gives the MLP, not softmax; (g)(h)(i) absent. Boxes ticked: (c) row-normalised
+adjacency, (d) as a limit.
+Route: seed; abs page fetched. First author's arXiv listing is "Gasteiger" (formerly Klicpera).</p>
+<h3 id="12-yuan-2025-paraformer-arxiv251214619-v-abs-html">1.2 <code>yuan-2025-paraformer</code> — arXiv:2512.14619 — [V] (abs + HTML)<a class="headerlink" href="#12-yuan-2025-paraformer-arxiv251214619-v-abs-html" title="Permanent link">#</a></h3>
+<p>Owns: <code>Z = Σ_{k=0}^{K} γ_k (Softmax(QKᵀ))^k V</code> with learnable, sign-free-to-negative scalar
+<code>γ_k</code>, on graphs, no causal mask; the generalized-PageRank family of Chien et al. put on a
+content-dependent softmax base.
+Leaves open: (b) causal; (d) exact solve — the HTML states the sum is truncated to a hyper-parameter
+<code>K</code> in practice; (e); (f) — at <code>K = 0</code> it is <code>γ_0 V</code>, at <code>γ_k = γ^k</code>, <code>K → ∞</code> it is the resolvent;
+so the shape's read is the geometric, infinite-<code>K</code> corner of ParaFormer's family (DERIVED);
+(g)(h)(i) absent. Ticks (a)(c)(j).
+Numbers (HTML, [V]): 3.4 % average relative gain over message-passing GNNs; 1.9 % over other graph
+transformers; 7 node and 2 graph datasets.
+Route: seed; already <code>RESEARCH.md:48</code>.</p>
+<h3 id="13-chamberlain-2021-grand-arxiv210610934-v-abs-ar5iv-html">1.3 <code>chamberlain-2021-grand</code> — arXiv:2106.10934 — [V] (abs + ar5iv HTML)<a class="headerlink" href="#13-chamberlain-2021-grand-arxiv210610934-v-abs-ar5iv-html" title="Permanent link">#</a></h3>
+<p>Owns: <code>∂X/∂t = (A(X) − I)X</code> with <code>A</code> the softmax attention (the body calls it right-stochastic),
+and the <strong>implicit Euler step <code>(I − τĀ(x^{(k)})) x^{(k+1)} = x^{(k)}</code>, <code>Ā = A − I</code></strong> — one linear solve
+against the content-dependent attention operator per step; GRAND-l freezes <code>A</code>, GRAND-nl
+recomputes it.
+DERIVED: <code>(I − τ(A − I))^{-1} = (1+τ)^{-1} (I − γ_τ A)^{-1}</code> with <code>γ_τ = τ/(1+τ)</code>. So one implicit
+GRAND-l step <strong>is</strong> the shape's <code>z</code> up to the scalar <code>1/(1+τ)</code>, on an undirected, non-causal graph.
+Further, <code>∫_0^∞ e^{-λt} e^{t(A−I)} dt = (λI − (A − I))^{-1} = (1+λ)^{-1}(I − (1+λ)^{-1}A)^{-1}</code>: the
+shape's resolvent at <code>γ = 1/(1+λ)</code> is the Laplace transform of GRAND's frozen flow at rate
+<code>λ = (1−γ)/γ</code> — the read is the discounted time-integral of the diffusion, not its endpoint.
+Leaves open: (b) causal; (e) boundary rows (the body assumes undirected graphs, no self-edges,
+no Dirichlet discussion); (f) <code>τ → 0</code> gives the identity, not softmax; (g)(h)(i)(j) absent.
+Route: seed.</p>
+<h3 id="14-gu-2020-ignn-arxiv200906211-v">1.4 <code>gu-2020-ignn</code> — arXiv:2009.06211 — [V]<a class="headerlink" href="#14-gu-2020-ignn-arxiv200906211-v" title="Permanent link">#</a></h3>
+<p>Owns: the fixed-point layer <code>X = φ(WXA + bΩ(U))</code> with Perron–Frobenius well-posedness conditions
+(abstract). Nonlinear, fixed <code>A</code>.
+Leaves open: (a)(b)(e)(f)(g)(h)(i); the equilibrium is of a nonlinear map, not a linear resolvent.
+Route: seed.</p>
+<h3 id="15-bai-2019-deq-arxiv190901377-neurips-2019-v">1.5 <code>bai-2019-deq</code> — arXiv:1909.01377, NeurIPS 2019 — [V]<a class="headerlink" href="#15-bai-2019-deq-arxiv190901377-neurips-2019-v" title="Permanent link">#</a></h3>
+<p>Owns: the equilibrium <code>z* = f_θ(z*; x)</code> of a weight-tied block found by root-finding, implicit
+differentiation through <code>(I − J_f)^{-1}</code>, constant memory; instantiated on a Transformer-XL block
+with input injection (search result, torchdeq zoo, [U] for the injection detail).
+Leaves open: the equilibrium is of the whole block (attention + MLP), nonlinear; the shape's <code>z</code> is
+the <em>linear</em> equilibrium <code>z = γPz + V</code> of one attention operator, solved exactly, not iterated.
+DEQ owns the <em>training</em> mechanism the shape would use if <code>P</code> were made to depend on <code>z</code>; the
+shape as written keeps <code>P</code> a function of the input only, so the solve is one triangular pass (I5)
+and no root-finder is needed. <code>THEORY.md:203-206</code> risk 1 ("nested fixed points") is exactly this
+distinction and should be carried into the paper as a design choice, not a risk.
+Route: seed.</p>
+<h3 id="16-georgiev-2024-dear-georgiev-2024-dearneurips-arxiv240206445-241015059-v">1.6 <code>georgiev-2024-dear</code> / <code>georgiev-2024-dearneurips</code> — arXiv:2402.06445, 2410.15059 — [V]<a class="headerlink" href="#16-georgiev-2024-dear-georgiev-2024-dearneurips-arxiv240206445-241015059-v" title="Permanent link">#</a></h3>
+<p>Own: algorithmic-reasoning targets treated as equilibria of a GNN, no ground-truth step count
+needed, evaluated on CLRS-30 tasks. Already <code>PRIOR_ART.md:598-602</code>.
+Leave open: attention (they are message passing); (b)(e)(f)(g)(h)(i).
+Route: seed.</p>
+<h3 id="17-fan-2020-feedback-arxiv200209402-v">1.7 <code>fan-2020-feedback</code> — arXiv:2002.09402 — [V]<a class="headerlink" href="#17-fan-2020-feedback-arxiv200209402-v" title="Permanent link">#</a></h3>
+<p>Owns: sequential feedback memory — every past position's top-layer state is visible to every
+layer of the next position. This is depth-in-time recurrence, not a resolvent; it buys unbounded
+composition at the price of sequential decoding.
+Leaves open: everything in (d)–(j); the shape gets the same composition in one parallel solve.
+Route: seed.</p>
+<h3 id="18-yang-2023-looped-arxiv231112424-v">1.8 <code>yang-2023-looped</code> — arXiv:2311.12424 — [V]<a class="headerlink" href="#18-yang-2023-looped-arxiv231112424-v" title="Permanent link">#</a></h3>
+<p>Owns: looped (weight-tied, input-injected) transformers emulating iterative algorithms with under
+10 % of the parameters (abstract). Iteration, not a solve; no fixed-point claim in the abstract.
+Leaves open: (d)–(j).
+Route: seed.</p>
+<h3 id="19-dehghani-2018-universal-arxiv180703819-iclr-2019-v">1.9 <code>dehghani-2018-universal</code> — arXiv:1807.03819, ICLR 2019 — [V]<a class="headerlink" href="#19-dehghani-2018-universal-arxiv180703819-iclr-2019-v" title="Permanent link">#</a></h3>
+<p>Owns: recurrence in depth with per-position ACT halting. Same class as 1.8.
+Route: seed.</p>
+<h3 id="110-sander-2021-sinkformer-arxiv211011773-aistats-v">1.10 <code>sander-2021-sinkformer</code> — arXiv:2110.11773, AISTATS — [V]<a class="headerlink" href="#110-sander-2021-sinkformer-arxiv211011773-aistats-v" title="Permanent link">#</a></h3>
+<p>Owns: doubly-stochastic attention by Sinkhorn; in the infinite-depth/sample limit the network
+runs a heat diffusion. Already <code>MATHEMATICS.md:204</code>.
+Leaves open: it changes the <em>normaliser</em> of one step; no resolvent, no boundary rows, no causal
+mask (Sinkhorn needs the full matrix). Relevant only as the diffusion reading whose Laplace
+transform is the resolvent (§1.3 DERIVED).
+Route: seed.</p>
+<h3 id="111-ramsauer-2020-hopfield-arxiv200802217-v">1.11 <code>ramsauer-2020-hopfield</code> — arXiv:2008.02217 — [V]<a class="headerlink" href="#111-ramsauer-2020-hopfield-arxiv200802217-v" title="Permanent link">#</a></h3>
+<p>Owns: softmax attention as one update of a modern Hopfield energy, converging in one step.
+Already <code>MATHEMATICS.md:200</code>.
+Leaves open: the Hopfield fixed point is <strong>per query</strong> — each query's retrieval is independent of
+the others' — so it is exactly the per-row-independence that BRIEF.md §1 obstruction 1 names.
+It is the wrong equilibrium for the shape and the paper should say so in one sentence.
+Route: seed.</p>
+<h3 id="112-dayan-1993-successor-neural-computation-54613624-v-crossref">1.12 <code>dayan-1993-successor</code> — Neural Computation 5(4):613–624 — [V] (Crossref)<a class="headerlink" href="#112-dayan-1993-successor-neural-computation-54613624-v-crossref" title="Permanent link">#</a></h3>
+<p>Owns: the successor representation <code>M = (I − γP)^{-1}</code> as expected discounted future occupancy,
+learned by TD (formula from memory [U]; the record <code>THEORY.md:47-48</code> states it the same way).
+Leaves open: <code>P</code> is the environment's chain, not content; no attention, no boundary rows as
+constraint sets (SR is on the ergodic/discounted chain), no read of <code>V</code> through it in the
+attention sense.
+Route: seed; MIT Press landing page returned 403, Crossref record used.</p>
+<h3 id="113-barreto-2017-successorfeatures-arxiv160605312-nips-2017-v">1.13 <code>barreto-2017-successorfeatures</code> — arXiv:1606.05312, NIPS 2017 — [V]<a class="headerlink" href="#113-barreto-2017-successorfeatures-arxiv160605312-nips-2017-v" title="Permanent link">#</a></h3>
+<p>Owns: successor features <code>ψ^π = E[Σ γ^t φ_t]</code> and generalised policy improvement across reward
+functions. This is the SR read through a feature map — the closest RL analogue of <code>(I−γP)^{-1}V</code>
+with <code>V = Φ</code>.
+Leaves open: as 1.12; and GPI evaluates several <em>policies</em>, not several <em>constraint sets</em> — the
+shape's <code>max_k q^{(k)}</code> is over absorbing sets, a different index.
+Route: seed.</p>
+<h2 id="2-widening-what-the-twenty-two-searches-found-recorded-in-6">2. Widening — what the twenty-two searches found (recorded in §6)<a class="headerlink" href="#2-widening-what-the-twenty-two-searches-found-recorded-in-6" title="Permanent link">#</a></h2>
+<h3 id="21-surprise-fagnou-2024-chacal-arxiv241005565-emnlp-2024-main-v-abs-html">2.1 SURPRISE — <code>fagnou-2024-chacal</code> — arXiv:2410.05565, EMNLP 2024 Main — [V] (abs + HTML)<a class="headerlink" href="#21-surprise-fagnou-2024-chacal-arxiv241005565-emnlp-2024-main-v-abs-html" title="Permanent link">#</a></h3>
+<p><strong>Owns the read.</strong> The ChaCAL layer is, in its own equation,</p>
+<pre><code>Y = (1 − γ) · A (I − γA)^{-1} V,   A = causal softmax attention,  γ ∈ [0, 1)
+</code></pre>
+<p>solved as the triangular system <code>(I − γA) Y' = V</code> — the HTML body states it does not require
+computing the inverse explicitly — with <code>γ = 0.9</code> fixed (Appendix C: 0.8–1 works), and the body
+states that <code>γ = 0</code> reverts to standard attention. Motivation in the body: the series
+<code>A + γA² + γ²A³ + …</code> counts paths of every length in the attention graph.</p>
+<p>Scored: (a) ✓ (b) ✓ (c) ✓ (d) ✓ (f) ✓ — <strong>five of the six structural boxes.</strong> (e) ✗ (no absorbing
+rows, sinks, Markov chains, boundary conditions anywhere — the body was queried for each term);
+(g) ✗ (h) ✗ (i) ✗ (the series is motivation, no truncation bound is printed); (j) ✗ (fixed γ).</p>
+<p>DERIVED, the exact relation to BRIEF.md §1: with <code>A = P</code>,
+<code>O_shape = P (I − γP)^{-1} V = Y_ChaCAL / (1 − γ)</code>. <strong>The shape's read is ChaCAL up to the scalar
+<code>1/(1−γ)</code>, and identical at γ = 0.</strong> Identities I1 (parity at γ = 0) and I5 (triangular solve) of
+the brief are therefore re-derivations of ChaCAL's Eq. and its solver; I2 (corner 3 is a resolvent)
+is the record's own and is not in ChaCAL.</p>
+<p>DERIVED, a consequence the design panel must carry: for row-stochastic <code>A ≥ 0</code>,
+<code>(I − γA)^{-1} 1 = Σ_k γ^k A^k 1 = 1/(1−γ) · 1</code>, so <code>(1−γ) A (I − γA)^{-1}</code> is itself
+<strong>row-stochastic and entrywise non-negative</strong> — ChaCAL's read is a per-row <em>convex mixture</em> of <code>V</code>
+with multi-hop weights, and so is the shape's read at any γ without boundary rows (up to the
+scalar). Hence the influence Jacobian <code>∂O_i/∂V_j ≥ 0</code> still holds: <strong>the resolvent alone does not
+lift obstruction 4 of BRIEF.md §1</strong> (a third token cannot subtract). Absorbing rows do not make it
+signed either — <code>(I − γP)^{-1}</code> is a Neumann series of a non-negative matrix for any non-negative
+<code>P</code> — they <em>redirect</em> mass (a walk that hits <code>a ∈ 𝒜_k</code> stays at <code>a</code>, so the weight on every token
+the walk would have reached through <code>a</code> goes to zero). The paper should write "redirects", never
+"subtracts"; the mechanism is the same family as the record's F0 zero-gate segmentation
+(<code>V16Domain.pathProd_eq_zero_iff</code>), applied by boundary rows instead of by gates.</p>
+<p>Numbers (HTML, [V]): toy entity tracking 100 % with 1 layer against 4–5 standard layers; Boxes
+(advanced) 99.1 % vs 97.0 % with 2 layers; language-model perplexity 21.46 vs 20.15 (worse).
+The abstract's theoretical constraint: transformers need at least <code>log₂(n+1)</code> layers for <code>n</code> state
+changes — the same depth law the brief cites from Sanford–Hsu–Telgarsky, arrived at independently
+(the two must be cited together and the constants compared by whoever holds the depth lineage).</p>
+<p>Route: search 2 ("resolvent" attention … "(I − " inverse …) surfaced it through the follow-up
+2605.22476; abs and HTML fetched; ACL Anthology id 2024.emnlp-main.731 seen in a search index only.</p>
+<h3 id="22-zhao-2026-structuredsparse-arxiv260522476-v-abs-html">2.2 <code>zhao-2026-structuredsparse</code> — arXiv:2605.22476 — [V] (abs + HTML)<a class="headerlink" href="#22-zhao-2026-structuredsparse-arxiv260522476-v-abs-html" title="Permanent link">#</a></h3>
+<p>Owns: the same operator, named <code>𝒮_γ(A) := (1−γ)A(I−γA)^{-1}</code>, evaluated blockwise — exact on
+diagonal tiles, cross-block interactions routed through a fixed row down-sampler
+<code>Ã_res = P A_res Pᵀ ∈ ℝ^{k×k}</code> — in <code>O(n^{4/3} d)</code>; causal (the body states <code>A</code> is lower
+triangular under the mask); 12–29 % wall-clock reduction against the dense operator at accuracy
+parity on Boxes; up to 2.4× faster than a compact Transformer at comparable exact match (HTML, [V]).
+Leaves open: (e)(g)(h)(i)(j); no truncation bound is printed for the reduced system.
+Relevance to the brief's cost law (§6 of the paper): this is the existing kernel path for the
+resolvent read; the record's <code>ceq/multizoom.py</code> fine-near/coarse-far construction is the same
+block idea with a bound — the two must be cited side by side (the multizoom bound is the delta, if
+its bound survives the coordinator's check).
+Route: search 2.</p>
+<h3 id="23-roffo-2026-infsa-arxiv260300175-v-abs-html">2.3 <code>roffo-2026-infsa</code> — arXiv:2603.00175 — [V] (abs + HTML)<a class="headerlink" href="#23-roffo-2026-infsa-arxiv260300175-v-abs-html" title="Permanent link">#</a></h3>
+<p>Owns: the <strong>Neumann closure</strong> <code>Č = (I − γÂ)^{-1} − I = Σ_{t≥1}(γÂ)^t</code> over a content-adaptive
+attention, and — verbatim in its abstract — the reading that the Neumann kernel is the fundamental
+matrix of an absorbing Markov chain, a token's centrality being its expected number of visits
+before absorption. The chain is <code>M = γÂ</code> with per-step absorption <code>R_i = 1 − γΣ_j Â_ij</code>;
+<code>N = (I − γÂ)^{-1}</code>; centrality <code>č(i) = [(I − γÂ)^{-1} e]_i − 1</code>. γ is learned per head (sigmoid).
+Base: <code>Â = A_+ / (‖A_+‖_F + ε)</code> with <code>A_+ = ReLU(QKᵀ)</code> — <strong>sub-stochastic by Frobenius
+normalisation, not row-stochastic softmax</strong>; no causal mask (vision); Linear-InfSA broadcasts a
+rank-1 context from the principal eigenvector.
+DERIVED: <code>č = (I − γÂ)^{-1}1 − 1</code> is Katz's 1953 index on the attention graph, exactly.
+Scored: (a) ✓ (d) ✓ (closure; the linear variant approximates) (j) ✓; (b) ✗ (c) ✗ (e) ✗ —
+absorption is <em>probabilistic and uniform per row</em>, there are no identity rows and no target sets,
+so no committor; (f) ✗ — at γ = 0 the closure is the zero matrix, the layer degenerates (HTML);
+(g)(h)(i) ✗ (the geometric bound is implicit in ρ(Â) &lt; 1 but never printed as a certificate).
+Numbers (HTML, [V]): 84.7 % ImageNet-1K top-1 (+3.2 pp); 231 img/s at 0.87 J/img, "13×" against
+standard ViT.
+Route: search 3 ("Neumann series" attention …). The record's line
+<code>DONE_ARCHIVE_ROUND1.md:1317</code> read it as a signed near-miss only.</p>
+<h3 id="24-wang-2021-magna-arxiv200914332-ijcai-2021-v-abs-ar5iv">2.4 <code>wang-2021-magna</code> — arXiv:2009.14332, IJCAI 2021 — [V] (abs + ar5iv)<a class="headerlink" href="#24-wang-2021-magna-arxiv200914332-ijcai-2021-v-abs-ar5iv" title="Permanent link">#</a></h3>
+<p>Owns: the first personalised PageRank <strong>on a content-dependent attention matrix</strong>:
+<code>𝒜 = Σ_{i≥0} θ_i A^i, θ_i = α(1−α)^i</code>, <code>A</code> the row-softmaxed GAT scores, stated in the body as a
+personalised PageRank on the graph with transition matrix <code>A</code>; computed by truncated power
+iteration <code>Z^{(k+1)} = (1−α)AZ^{(k)} + αZ^{(0)}</code>, <code>K ∈ [3,10]</code>; a low-pass reading on the Laplacian
+spectrum. Up to 5.7 % relative error reduction on Cora/Citeseer/Pubmed (abs, [V]).
+Scored: (a) ✓ (c) ✓; (b) ✗ (d) ✗ truncated (e) ✗ (f) ✗ (g)(h)(i)(j) ✗.
+Route: search 1 and search 4. Already <code>DONE_ARCHIVE_ROUND1.md:677</code> as "non-negative".</p>
+<h3 id="25-feng-2022-diffuser-arxiv221011794-v-abs-html">2.5 <code>feng-2022-diffuser</code> — arXiv:2210.11794 — [V] (abs + HTML)<a class="headerlink" href="#25-feng-2022-diffuser-arxiv221011794-v-abs-html" title="Permanent link">#</a></h3>
+<p>Owns: MAGNA's construction on <strong>sequences</strong>: <code>𝒜 = Σ_k α(1−α)^k A^k</code> over a <em>sparse</em> softmax
+attention (attention restricted to a sparsity pattern's edges), power-iterated <code>K</code> steps,
+bidirectional (language pretraining, classification, QA, images, LRA); Proposition 4 in the body:
+<code>lim_{K→∞} Z^{(K)} = 𝒜V</code>; no truncation bound. 1.67× memory saving, +2.30 % LRA average,
++0.94 % text classification (HTML, [V]).
+Scored: (a) ✓ (c) ✓; (b) ✗ (d) ✗ (e)–(j) ✗.
+Route: search 1.</p>
+<h3 id="26-erel-2025-attentionchains-arxiv250717657-neurips-2025-v-abs-html">2.6 <code>erel-2025-attentionchains</code> — arXiv:2507.17657, NeurIPS 2025 — [V] (abs + HTML)<a class="headerlink" href="#26-erel-2025-attentionchains-arxiv250717657-neurips-2025-v-abs-html" title="Permanent link">#</a></h3>
+<p>Owns: the reading of one attention matrix as a discrete-time Markov chain; indirect attention by
+power iteration <code>v_{n+1}ᵀ = v_nᵀ A</code>; TokenRank as the damped stationary vector with
+<code>P' = αP + (1−α) 11ᵀ/n</code>; metastable token regions; post hoc, vision only.
+Scored: (a) ✓ (c) ✓ as an <em>interpretation</em>; none of (b)(d)–(j) as a layer.
+Route: search 5.</p>
+<h3 id="27-candanedo-2026-diffusionattention-arxiv260409560-v">2.7 <code>candanedo-2026-diffusionattention</code> — arXiv:2604.09560 — [V]<a class="headerlink" href="#27-candanedo-2026-diffusionattention-arxiv260409560-v" title="Permanent link">#</a></h3>
+<p>Owns: softmax attention as the row-normalised operator of a diffusion map (Coifman–Lafon), with
+a metric / node-potential / circulating decomposition of the score. No resolvent.
+Route: search 5.</p>
+<h3 id="28-liu-2021-eignn-arxiv220210720-neurips-2021-v-abs-only">2.8 <code>liu-2021-eignn</code> — arXiv:2202.10720, NeurIPS 2021 — [V] (abs only)<a class="headerlink" href="#28-liu-2021-eignn-arxiv220210720-neurips-2021-v-abs-only" title="Permanent link">#</a></h3>
+<p>Owns: the closed-form infinite-depth linear GNN with eigendecomposition on a <strong>fixed</strong> propagation
+matrix. The body's formula was not readable this session (PDF binary; ar5iv conversion failed) —
+recorded as [U] for the formula, [V] for the record. Ticks (d) on a fixed graph only.
+Route: search 9.</p>
+<h3 id="29-wu-2023-difformer-arxiv230109474-iclr-2023-v">2.9 <code>wu-2023-difformer</code> — arXiv:2301.09474, ICLR 2023 — [V]<a class="headerlink" href="#29-wu-2023-difformer-arxiv230109474-iclr-2023-v" title="Permanent link">#</a></h3>
+<p>Owns: attention as the pairwise diffusivity of an energy-constrained diffusion, closed-form
+optimal diffusion strength per step; a step-wise scheme, not a resolvent.
+Route: search 11.</p>
+<h3 id="210-chien-2020-gprgnn-arxiv200607988-iclr-2021-v">2.10 <code>chien-2020-gprgnn</code> — arXiv:2006.07988, ICLR 2021 — [V]<a class="headerlink" href="#210-chien-2020-gprgnn-arxiv200607988-iclr-2021-v" title="Permanent link">#</a></h3>
+<p>Owns: generalised PageRank with learnable (signed) hop weights on a fixed graph — the family
+ParaFormer lifts to attention. Route: follow-up of 1.2.</p>
+<h3 id="211-gasteiger-2019-gdc-arxiv191105485-neurips-2019-v">2.11 <code>gasteiger-2019-gdc</code> — arXiv:1911.05485, NeurIPS 2019 — [V]<a class="headerlink" href="#211-gasteiger-2019-gdc-arxiv191105485-neurips-2019-v" title="Permanent link">#</a></h3>
+<p>Owns: graph diffusion convolution — PPR / heat-kernel diffusion of the fixed adjacency, sparsified,
+as a drop-in preprocessing. Route: search 16. Already <code>DONE_ARCHIVE_ROUND1.md:677</code>.</p>
+<h3 id="212-gilton-2019-neumann-arxiv190103707-v">2.12 <code>gilton-2019-neumann</code> — arXiv:1901.03707 — [V]<a class="headerlink" href="#212-gilton-2019-neumann-arxiv190103707-v" title="Permanent link">#</a></h3>
+<p>Owns: a truncated Neumann series of <code>(I − ηXᵀX)^{-1}</code> with a learned regulariser as the network
+itself (inverse problems). The precedent for "Neumann series as layers"; no attention, no chain.
+Route: search 12.</p>
+<h3 id="213-tamar-2016-vin-arxiv160202867-nips-2016-v">2.13 <code>tamar-2016-vin</code> — arXiv:1602.02867, NIPS 2016 — [V]<a class="headerlink" href="#213-tamar-2016-vin-arxiv160202867-nips-2016-v" title="Permanent link">#</a></h3>
+<p>Owns: differentiable value iteration as a CNN planning module. The nearest neural owner of "plan
+by a fixed-point solve inside the network" for a <em>decision</em>; the shape's committor solve is the
+linear (policy-evaluation, absorbing) special case of what VIN iterates.
+Route: search 13.</p>
+<h3 id="214-xiao-2023-attentionsinks-iclr-2024-gu-2024-sinkemerges-iclr-2025-lee-2026-asap-v">2.14 <code>xiao-2023-attentionsinks</code> (ICLR 2024), <code>gu-2024-sinkemerges</code> (ICLR 2025), <code>lee-2026-asap</code> — [V]<a class="headerlink" href="#214-xiao-2023-attentionsinks-iclr-2024-gu-2024-sinkemerges-iclr-2025-lee-2026-asap-v" title="Permanent link">#</a></h3>
+<p>Own: the attention <em>sink</em> — a token (BOS / placeholder) that receives excess mass; Gu et al.:
+sinks act as key biases storing non-informative scores, born of softmax's row normalisation; ASAP:
+a ViT information flow as a lazy random walk with the sink as the dominant accumulator (the "relaxed
+analog of an absorbing state" phrasing is from a search snippet of the body, [U]).
+DERIVED, the distinction the paper must draw: a sink is a <strong>column</strong> phenomenon (every row
+attends to it); the shape's absorbing set is a <strong>row</strong> condition (<code>P_{a,·} = e_a</code>, the constraint
+token attends only to itself). The record's own value-zero BOS sink
+(<code>V15Fork.Asink_row_sum</code>, <code>workdonenew.md</code> §1) is a column sink used to make the normaliser a
+change of units; it is not an absorbing row. The two coexist and must not be conflated
+(<code>P-7</code>, vocabulary with no referent).
+Route: searches 15, 17, 22.</p>
+<h3 id="215-abnar-2020-attentionflow-arxiv200500928-v">2.15 <code>abnar-2020-attentionflow</code> — arXiv:2005.00928 — [V]<a class="headerlink" href="#215-abnar-2020-attentionflow-arxiv200500928-v" title="Permanent link">#</a></h3>
+<p>Owns: attention rollout — the product of per-layer attention matrices as a path count across
+depth — the depth-wise analogue of the within-layer hop sum. Route: memory, then abs fetched.</p>
+<h3 id="216-zhao-2020-transformerxh-iclr-2020-v-microsoft-research-page-openreview-was">2.16 <code>zhao-2020-transformerxh</code> — ICLR 2020 — [V] (Microsoft Research page; OpenReview was<a class="headerlink" href="#216-zhao-2020-transformerxh-iclr-2020-v-microsoft-research-page-openreview-was" title="Permanent link">#</a></h3>
+<p>behind a bot check)
+Owns: "eXtra hop" attention across linked documents — iterated hops, not a resolvent. Route:
+search 3.</p>
+<h3 id="217-whittington-2021-hippocampus-arxiv211204035-v">2.17 <code>whittington-2021-hippocampus</code> — arXiv:2112.04035 — [V]<a class="headerlink" href="#217-whittington-2021-hippocampus-arxiv211204035-v" title="Permanent link">#</a></h3>
+<p>Owns: transformers with recurrent positional encodings reproduce place/grid representations and
+map onto hippocampal models — the published bridge between attention and the SR-like predictive
+map; no resolvent read. Route: search 10 (the query returned only neuroscience SR papers; this one
+from memory, abs fetched).</p>
+<h3 id="218-geshkovski-2023-mathperspective-arxiv231210794-v">2.18 <code>geshkovski-2023-mathperspective</code> — arXiv:2312.10794 — [V]<a class="headerlink" href="#218-geshkovski-2023-mathperspective-arxiv231210794-v" title="Permanent link">#</a></h3>
+<p>Owns: attention as an interacting particle system, clustering in long time. The continuous-depth
+flow whose Laplace transform is the resolvent (§1.3 DERIVED); no resolvent in the paper itself.</p>
+<h3 id="219-yang-2024-deltanet-dao-2024-ssd-arxiv240606484-240521060-icml-2024-v">2.19 <code>yang-2024-deltanet</code>, <code>dao-2024-ssd</code> — arXiv:2406.06484, 2405.21060 (ICML 2024) — [V]<a class="headerlink" href="#219-yang-2024-deltanet-dao-2024-ssd-arxiv240606484-240521060-icml-2024-v" title="Permanent link">#</a></h3>
+<p>Own: the causal triangular solve as a <em>parallelisation device</em> for content-dependent recurrences
+— DeltaNet's WY / Householder-product representation, Mamba-2's semiseparable-matrix duality
+(the cumulative product is the 1-semiseparable case). This is the lineage of the record's corner 3
+(I2, <code>ceq/arm_smprime.py:144</code>), already named at <code>DONE_ARCHIVE_ROUND1.md:679-681</code>. They tick
+(a)(b)(d) on the <em>linear-attention</em> corner, not on softmax; no (e)–(j).</p>
+<h2 id="3-the-classical-owners-of-the-boundary-condition-read-fixed-chain-no-attention">3. The classical owners of the boundary-condition read (fixed chain, no attention)<a class="headerlink" href="#3-the-classical-owners-of-the-boundary-condition-read-fixed-chain-no-attention" title="Permanent link">#</a></h2>
+<p>These are the sources that own box (e) — the absorbing-row / committor read — and box (g)/(h)
+outside attention. They are cited so that the paper never writes "novel" beside a linear-algebra
+fact that is a 1960 chapter.</p>
+<h3 id="31-kemeny-1976-finitemarkov-open-library-isbn-9780387901923-v-record-formulas-u">3.1 <code>kemeny-1976-finitemarkov</code> — Open Library ISBN 9780387901923 — [V] (record), formulas [U]<a class="headerlink" href="#31-kemeny-1976-finitemarkov-open-library-isbn-9780387901923-v-record-formulas-u" title="Permanent link">#</a></h3>
+<p>Owns: the fundamental matrix <code>N = (I − Q)^{-1}</code> of an absorbing chain and the absorption
+probabilities <code>B = N R</code> — BRIEF.md I3 verbatim. The record's <code>ceq/beds/bed_1.py:188-198 committor</code>
+solves this Dirichlet problem (<code>READ</code> via BRIEF.md I3).</p>
+<h3 id="32-zhu-2003-harmonic-icml-2003-dblp-record-v-aaai-abstract-page-v">3.2 <code>zhu-2003-harmonic</code> — ICML 2003 (DBLP record [V]; AAAI abstract page [V])<a class="headerlink" href="#32-zhu-2003-harmonic-icml-2003-dblp-record-v-aaai-abstract-page-v" title="Permanent link">#</a></h3>
+<p>Owns: labelled nodes as clamped boundary, the harmonic extension over unlabelled nodes obtained by
+matrix methods, with — in the abstract's words — connections to random walks and electric networks;
+the body's solution <code>f_u = (I − P_uu)^{-1} P_ul f_l</code> and its absorbing-walk reading are from memory
+[U]. This is box (e) + (d) on a fixed similarity graph: <strong>the committor as the read, with the
+labelled set as the absorbing rows.</strong></p>
+<h3 id="33-zhou-2003-consistency-nips-2003-v-proceedings-page">3.3 <code>zhou-2003-consistency</code> — NIPS 2003 — [V] (proceedings page)<a class="headerlink" href="#33-zhou-2003-consistency-nips-2003-v-proceedings-page" title="Permanent link">#</a></h3>
+<p>Owns: <code>F* = (I − αS)^{-1} Y</code> (memory [U]) — the resolvent of a <em>fixed</em> normalised similarity
+applied to a label matrix, i.e. <code>(I − γP)^{-1} V</code> with <code>V = Y</code>.</p>
+<h3 id="34-de-2014-absorbingtransduction-arxiv14024566-v-abs-page-carries-a-withdrawal">3.4 <code>de-2014-absorbingtransduction</code> — arXiv:1402.4566 — [V] (abs; page carries a withdrawal)<a class="headerlink" href="#34-de-2014-absorbingtransduction-arxiv14024566-v-abs-page-carries-a-withdrawal" title="Permanent link">#</a></h3>
+<p>Owns the vocabulary "labelled nodes as absorbing states" for transduction on directed graphs.
+Cited only for the vocabulary; the withdrawal is recorded.</p>
+<h3 id="35-baier-2008-modelchecking-open-library-isbn-9780262026499-v-record-author-names-u">3.5 <code>baier-2008-modelchecking</code> — Open Library ISBN 9780262026499 — [V] (record; author names [U])<a class="headerlink" href="#35-baier-2008-modelchecking-open-library-isbn-9780262026499-v-record-author-names-u" title="Permanent link">#</a></h3>
+<p>Owns: reachability probabilities of a DTMC as the unique solution of a linear system after making
+the target set absorbing (Ch. 10, memory [U]); a search snippet (Journal of Automated Reasoning
+2025, [U]) states that several target sets are handled by one linear system. This is box (h)'s
+<code>q^{(k)}</code> for <code>k = 1..K</code>, computed and used as a safety verdict, in probabilistic model checking.</p>
+<h3 id="36-todorov-2006-lmdp-nips-19-v-and-todorov-2009-efficient-pnas-1062811478-v-crossref-europe-pmc-abstract">3.6 <code>todorov-2006-lmdp</code> (NIPS 19, [V]) and <code>todorov-2009-efficient</code> (PNAS 106(28):11478, [V] Crossref + Europe PMC abstract)<a class="headerlink" href="#36-todorov-2006-lmdp-nips-19-v-and-todorov-2009-efficient-pnas-1062811478-v-crossref-europe-pmc-abstract" title="Permanent link">#</a></h3>
+<p>Own: the linearly-solvable MDP — the exponentiated value ("desirability") satisfies a <em>linear</em>
+Bellman equation; the first-exit form fixes <code>z</code> on terminal states and solves a linear system on
+the non-terminal block (the first-exit definition with terminal states is standard and was
+confirmed only through a secondary abs, Jonsson–Gómez arXiv:1603.03267 [V], whose abstract speaks
+of the linear Bellman equation; the boundary-value form itself is [U] this session); the optimal
+policy is <code>u*(x'|x) ∝ p(x'|x) z(x')</code> (memory [U]). This is the nearest owner of <strong>box (h)</strong>: a move
+chosen through a linear absorbing-chain solve. It has one cost, not <code>K</code> constraint sets, and the
+decision is a softmax over <code>z</code>, not <code>argmin max_k</code>.</p>
+<h3 id="37-piray-2021-linearrl-nature-communications-124942-v-crossref-europe-pmc-full-text-pmc8368103">3.7 <code>piray-2021-linearrl</code> — Nature Communications 12:4942 — [V] (Crossref + Europe PMC full text PMC8368103)<a class="headerlink" href="#37-piray-2021-linearrl-nature-communications-124942-v-crossref-europe-pmc-full-text-pmc8368103" title="Permanent link">#</a></h3>
+<p>Owns: the <strong>default representation</strong> — Eq. 4 of the body, <code>exp(v*) = M P exp(r)</code>, with <code>M</code> "the
+key matrix" over the nonterminal states and terminal states distinguished as absorbing; the body
+says it is similar to the SR except that it is for optimal rather than on-policy values; and
+<strong>Eq. 5, <code>M = M_old + M_B</code></strong>, the low-rank correction when a barrier is inserted, computable from
+<code>M_old</code>. A citing paper (DROGO, arXiv:2602.00403, search snippet [U]) writes the DR as
+<code>Z = [diag(exp(−r/λ)) − P]^{-1}</code>.
+DERIVED: Eq. 5 is the Woodbury identity for a change of <code>r</code> rows of the chain, rank ≤ <code>r</code>. The
+shape's <code>do(a)</code> — intervene on the context, re-solve, read <code>Δz</code> — is this identity on an
+attention-built <code>P</code>: if a candidate move changes <code>r</code> rows of <code>P</code>, <code>(I − γP')^{-1}</code> is
+<code>(I − γP)^{-1}</code> plus a rank-≤<code>r</code> correction. <strong>Box (g) is therefore OCCUPIED on a fixed
+environment chain by Piray–Daw</strong> and the paper's interventional channel must be stated as
+"Piray–Daw's barrier update, with the chain built from content and the boundary sets from the
+prompt".</p>
+<h3 id="38-esterhuysen-2026-terminal-arxiv260531289-v">3.8 <code>esterhuysen-2026-terminal</code> — arXiv:2605.31289 — [V]<a class="headerlink" href="#38-esterhuysen-2026-terminal-arxiv260531289-v" title="Permanent link">#</a></h3>
+<p>Owns: the terminal representation — the DR's information without eigendecomposition, embedded in
+the top DR eigenvector; option discovery, shaping, transfer. Recent evidence that the
+absorbing-chain resolvent is an active RL object; no attention.</p>
+<h3 id="39-katz-1953-status-psychometrika-1813943-v-crossref">3.9 <code>katz-1953-status</code> — Psychometrika 18(1):39–43 — [V] (Crossref)<a class="headerlink" href="#39-katz-1953-status-psychometrika-1813943-v-crossref" title="Permanent link">#</a></h3>
+<p>Owns the object itself: <code>(I − αA)^{-1} 1 − 1</code> as a status index. InfSA's centrality is this
+(§2.3 DERIVED).</p>
+<h3 id="310-khoo-2018-committor-li-2019-committor-v">3.10 <code>khoo-2018-committor</code>, <code>li-2019-committor</code> — [V]<a class="headerlink" href="#310-khoo-2018-committor-li-2019-committor-v" title="Permanent link">#</a></h3>
+<p>Own the committor as a regression target for neural networks (already <code>PRIOR_ART.md:625-630</code>).
+Not attention; the committor is the label, not the read.</p>
+<h3 id="311-pagebrinmotwaniwinograd-1999-not-entered-in-the-bib-the-stanford-infolab-url">3.11 Page–Brin–Motwani–Winograd 1999 — <strong>NOT ENTERED IN THE BIB.</strong> The Stanford InfoLab URL<a class="headerlink" href="#311-pagebrinmotwaniwinograd-1999-not-entered-in-the-bib-the-stanford-infolab-url" title="Permanent link">#</a></h3>
+<p>failed (SSL error) and DBLP returned zero hits; the tech report is reached by memory only [U].
+BRIEF.md §5.3 forbids a citation without a fetched identifier; APPNP and Katz carry the lineage.</p>
+<h2 id="4-occupancy-matrix-ticked-on-a-content-dependent-attention-operator-ticked-on-a-fixed-graph-non-attention-chain-absent">4. Occupancy matrix (✓ ticked on a content-dependent attention operator; ○ ticked on a fixed graph / non-attention chain; · absent)<a class="headerlink" href="#4-occupancy-matrix-ticked-on-a-content-dependent-attention-operator-ticked-on-a-fixed-graph-non-attention-chain-absent" title="Permanent link">#</a></h2>
+<table>
+<thead>
+<tr>
+<th>source</th>
+<th>(a) content</th>
+<th>(b) causal</th>
+<th>(c) softmax</th>
+<th>(d) exact solve</th>
+<th>(e) absorbing rows</th>
+<th>(f) γ=0 parity</th>
+<th>(g) do(a) re-solve</th>
+<th>(h) safest move</th>
+<th>(i) certificate</th>
+<th>(j) learn γ</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ChaCAL 2024</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>·</td>
+<td>✓</td>
+<td>·</td>
+<td>·</td>
+<td>·</td>
+<td>· (0.9)</td>
+</tr>
+<tr>
+<td>Structured-sparse 2026</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓ tiles / reduced</td>
+<td>·</td>
+<td>✓</td>
+<td>·</td>
+<td>·</td>
+<td>·</td>
+<td>·</td>
+</tr>
+<tr>
+<td>InfSA 2026</td>
+<td>✓</td>
+<td>·</td>
+<td>· sub-stoch.</td>
+<td>✓</td>
+<td>· uniform absorption</td>
+<td>· degenerate</td>
+<td>·</td>
+<td>·</td>
+<td>implicit</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>MAGNA 2021</td>
+<td>✓</td>
+<td>·</td>
+<td>✓</td>
+<td>· K∈[3,10]</td>
+<td>·</td>
+<td>·</td>
+<td>·</td>
+<td>·</td>
+<td>·</td>
+<td>·</td>
+</tr>
+<tr>
+<td>Diffuser 2022</td>
+<td>✓</td>
+<td>·</td>
+<td>✓ sparse</td>
+<td>· K</td>
+<td>·</td>
+<td>·</td>
+<td>·</td>
+<td>·</td>
+<td>·</td>
+<td>·</td>
+</tr>
+<tr>
+<td>ParaFormer 2025</td>
+<td>✓</td>
+<td>·</td>
+<td>✓</td>
+<td>· K=10, signed</td>
+<td>·</td>
+<td>·</td>
+<td>·</td>
+<td>·</td>
+<td>·</td>
+<td>✓ per hop</td>
+</tr>
+<tr>
+<td>GRAND-l implicit 2021</td>
+<td>✓</td>
+<td>·</td>
+<td>✓</td>
+<td>✓ per step</td>
+<td>·</td>
+<td>·</td>
+<td>·</td>
+<td>·</td>
+<td>·</td>
+<td>·</td>
+</tr>
+<tr>
+<td>Attention-as-DTMC 2025</td>
+<td>✓ post hoc</td>
+<td>·</td>
+<td>✓</td>
+<td>· powers</td>
+<td>·</td>
+<td>–</td>
+<td>·</td>
+<td>·</td>
+<td>·</td>
+<td>·</td>
+</tr>
+<tr>
+<td>DEQ 2019 / IGNN 2020 / EIGNN 2021 / DEAR 2024</td>
+<td>·</td>
+<td>·</td>
+<td>·</td>
+<td>○ nonlinear / fixed S</td>
+<td>·</td>
+<td>·</td>
+<td>·</td>
+<td>·</td>
+<td>·</td>
+<td>·</td>
+</tr>
+<tr>
+<td>APPNP 2019 / GDC 2019 / GPR-GNN 2021</td>
+<td>·</td>
+<td>·</td>
+<td>○</td>
+<td>○ limit</td>
+<td>·</td>
+<td>·</td>
+<td>·</td>
+<td>·</td>
+<td>·</td>
+<td>GPR ✓</td>
+</tr>
+<tr>
+<td>DeltaNet 2024 / Mamba-2 2024</td>
+<td>✓ linear corner</td>
+<td>✓</td>
+<td>·</td>
+<td>✓</td>
+<td>·</td>
+<td>·</td>
+<td>·</td>
+<td>·</td>
+<td>·</td>
+<td>·</td>
+</tr>
+<tr>
+<td>Zhu 2003 / Zhou 2003 / Kemeny–Snell</td>
+<td>·</td>
+<td>·</td>
+<td>○</td>
+<td>○</td>
+<td>○</td>
+<td>·</td>
+<td>·</td>
+<td>·</td>
+<td>·</td>
+<td>·</td>
+</tr>
+<tr>
+<td>Piray–Daw 2021</td>
+<td>·</td>
+<td>·</td>
+<td>○</td>
+<td>○</td>
+<td>○ terminal</td>
+<td>·</td>
+<td>○ Eq. 5</td>
+<td>·</td>
+<td>·</td>
+<td>·</td>
+</tr>
+<tr>
+<td>Todorov 2006/2009</td>
+<td>·</td>
+<td>·</td>
+<td>○</td>
+<td>○</td>
+<td>○ terminal</td>
+<td>·</td>
+<td>·</td>
+<td>○ one cost</td>
+<td>·</td>
+<td>·</td>
+</tr>
+<tr>
+<td>Baier–Katoen 2008</td>
+<td>·</td>
+<td>·</td>
+<td>○</td>
+<td>○</td>
+<td>○ target sets</td>
+<td>·</td>
+<td>·</td>
+<td>○ verdict</td>
+<td>·</td>
+<td>·</td>
+</tr>
+<tr>
+<td>Attention sinks 2023–26</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>·</td>
+<td>· column, not row</td>
+<td>–</td>
+<td>·</td>
+<td>·</td>
+<td>·</td>
+<td>·</td>
+</tr>
+<tr>
+<td>Dayan 1993 / Barreto 2017</td>
+<td>·</td>
+<td>·</td>
+<td>○</td>
+<td>○</td>
+<td>·</td>
+<td>·</td>
+<td>·</td>
+<td>○ GPI over policies</td>
+<td>·</td>
+<td>·</td>
+</tr>
+</tbody>
+</table>
+<p>The <strong>conjunction</strong> (a)(b)(c)(d)(f) is held by ChaCAL. The conjunction (a)(b)(c)(d)(e) — the
+question as the coordinator set it — is held by no source found. (i) as a printed instrument is
+held by no attention source found. (g) and (h) are held only on fixed chains.</p>
+<h2 id="5-derived-notes-collected-each-with-its-steps-above">5. DERIVED notes collected (each with its steps above)<a class="headerlink" href="#5-derived-notes-collected-each-with-its-steps-above" title="Permanent link">#</a></h2>
+<ol>
+<li><code>O_shape = Y_ChaCAL / (1−γ)</code>; equal at γ = 0 (§2.1).</li>
+<li><code>(1−γ)A(I−γA)^{-1}</code> is row-stochastic for row-stochastic <code>A</code>; the resolvent read is a convex
+   mixture; non-negativity of the influence Jacobian survives the resolvent and survives absorbing
+   rows; absorption redirects, it does not subtract (§2.1).</li>
+<li>One implicit GRAND-l step is the shape's <code>z</code> at <code>γ = τ/(1+τ)</code> up to <code>1/(1+τ)</code>; the resolvent is
+   the Laplace transform of the frozen attention flow at rate <code>(1−γ)/γ</code> (§1.3).</li>
+<li>InfSA's centrality is Katz's index on the attention graph (§2.3).</li>
+<li>Piray–Daw Eq. 5 is Woodbury for <code>r</code> changed rows, rank ≤ <code>r</code>; the shape's <code>do(a)</code> is that
+   update on a content-built chain (§3.7).</li>
+<li>ParaFormer's family contains the resolvent read as its geometric, infinite-<code>K</code> corner (§1.2).</li>
+</ol>
+<h2 id="6-searches-run-22-beyond-the-seeds-the-brief-asked-for-at-least-six-with-what-each-returned">6. Searches run (22 beyond the seeds; the brief asked for at least six), with what each returned<a class="headerlink" href="#6-searches-run-22-beyond-the-seeds-the-brief-asked-for-at-least-six-with-what-each-returned" title="Permanent link">#</a></h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>query (verbatim or abbreviated)</th>
+<th>yield</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><code>"personalized PageRank" attention transformer sequence multi-hop attention diffusion</code></td>
+<td>Diffuser 2210.11794, MAGNA 2009.14332, Graph4MM 2510.16990 (hop-diffused attention, not fetched)</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>"resolvent" attention mechanism transformer "(I - " inverse attention matrix infinite depth</code></td>
+<td>Shaped Transformer 2306.17759 (not relevant), <strong>2605.22476 → ChaCAL 2410.05565</strong></td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>"Neumann series" attention transformer multi-hop propagation truncation</code></td>
+<td><strong>InfSA 2603.00175</strong>, Diffuser, Transformer-XH</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>"Multi-hop Attention Graph Neural Network" MAGNA attention diffusion personalized PageRank arXiv</code></td>
+<td>MAGNA abs/IJCAI page</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>softmax attention row-stochastic Markov chain random walk over tokens interpretation absorbing state transformer</code></td>
+<td>Attention-as-DTMC 2507.17657, Diffusion–Attention Connection 2604.09560, Sinkhorn rank decay 2604.07925 (not fetched), "Transformers learning random walks" NeurIPS 2025 (not fetched)</td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>committor function neural network absorbing Markov chain linear system Dirichlet problem deep learning</code></td>
+<td>ocean-model committor papers (not fetched), Wikipedia; nothing on attention</td>
+</tr>
+<tr>
+<td>7</td>
+<td><code>Todorov linearly solvable MDP desirability function terminal states linear system "efficient computation of optimal actions"</code></td>
+<td>NIPS 2006 page, hierarchical LMDP 1603.03267, Terminal Representation 2605.31289</td>
+</tr>
+<tr>
+<td>8</td>
+<td><code>Piray Daw "default representation" linear reinforcement learning terminal states matrix inverse Nature Communications 2021</code></td>
+<td>Nature landing (IDP redirect), PubMed 34400622 (timeout), DROGO 2602.00403 snippet with the DR formula</td>
+</tr>
+<tr>
+<td>9</td>
+<td><code>EIGNN efficient infinite-depth graph neural networks closed-form fixed point eigendecomposition NeurIPS 2021</code></td>
+<td>EIGNN 2202.10720; IGNN-Solver 2410.08524 (not fetched)</td>
+</tr>
+<tr>
+<td>10</td>
+<td><code>successor representation transformer attention in-context "successor" attention head predictive map</code></td>
+<td>neuroscience SR papers only; Learning Cognitive Maps from Transformer Representations 2401.05946 (not fetched)</td>
+</tr>
+<tr>
+<td>11</td>
+<td><code>DIFFormer energy constrained diffusion transformer attention as diffusion step Wu ICLR 2023 arXiv</code></td>
+<td>DIFFormer 2301.09474</td>
+</tr>
+<tr>
+<td>12</td>
+<td><code>"Neumann networks" inverse problems Gilton Ongie Willett truncated Neumann series learned</code></td>
+<td>1901.03707</td>
+</tr>
+<tr>
+<td>13</td>
+<td><code>"value iteration networks" Tamar 2016 arXiv planning module differentiable</code></td>
+<td>1602.02867</td>
+</tr>
+<tr>
+<td>14</td>
+<td><code>reachability probabilities discrete-time Markov chain linear equation system Baier Katoen "Principles of Model Checking" absorbing</code></td>
+<td>JAR 2025 snippet (several target sets, one linear system), MIT Press confirmation</td>
+</tr>
+<tr>
+<td>15</td>
+<td><code>attention sink BOS token absorbs attention mass StreamingLLM arXiv 2309.17453</code></td>
+<td>2309.17453; When Attention Sink Emerges (ICLR 2025)</td>
+</tr>
+<tr>
+<td>16</td>
+<td><code>"Diffusion Improves Graph Learning" graph diffusion convolution personalized PageRank Gasteiger NeurIPS 2019 arXiv</code></td>
+<td>1911.05485</td>
+</tr>
+<tr>
+<td>17</td>
+<td><code>attention layer absorbing tokens fixed boundary condition Dirichlet "boundary" tokens harmonic extension transformer attention "absorbing"</code></td>
+<td>only sink/boundary-token interpretability hits; <strong>no absorbing-row attention layer</strong></td>
+</tr>
+<tr>
+<td>18</td>
+<td><code>"chain and causal attention" ChaCAL citing papers resolvent attention entity tracking follow-up 2025 2026</code></td>
+<td>ChaCAL pages only; the 2026 follow-up was found by search 2, not by this one</td>
+</tr>
+<tr>
+<td>19</td>
+<td><code>interventional attention do-operator intervene on context tokens re-solve fixed point counterfactual transformer "intervention" consequence prediction attention mechanism</code></td>
+<td>interpretability interventions on heads/activations only; <strong>no re-solve-and-read-displacement layer</strong></td>
+</tr>
+<tr>
+<td>20</td>
+<td><code>deep equilibrium transformer attention fixed point implicit layer "DEQ" transformer language model equilibrium attention input injection</code></td>
+<td>DEQ, TorchDEQ zoo (input injection detail)</td>
+</tr>
+<tr>
+<td>21</td>
+<td><code>safest action multiple unsafe sets reachability probability minimax absorbing Markov chain "probabilistic safety" planning linear system constraint sets</code></td>
+<td>reach-avoid / probabilistic safe sets (make target and avoid sets absorbing); <strong>no attention</strong></td>
+</tr>
+<tr>
+<td>22</td>
+<td><code>"absorbing random walk" OR "absorbing Markov chain" "attention" transformer layer "fundamental matrix" attention matrix tokens</code> (and the sibling <code>"absorption probability" OR "hitting probability" attention transformer …</code>)</td>
+<td>InfSA again; ASAP 2605.22372; De et al. 1402.4566; nothing with identity rows in an attention layer</td>
+</tr>
+</tbody>
+</table>
+<p>Routes that could not see (recorded so absence is not over-read — <code>V-7</code>): MIT Press (403, Dayan),
+Nature (IDP redirect, Piray–Daw), PNAS (redirect; Europe PMC full text 404 for PMC2705278),
+PubMed (DNS timeout), Semantic Scholar API (429 ×2), Scholar Sidekick verifyCitation (rate-limited /
+unsubscribed ×6), OpenReview (bot check, Transformer-XH), Stanford InfoLab (SSL), two PDFs returned
+as binary (MAGNA — recovered via ar5iv; Zhu 2003 — recovered via DBLP + AAAI abstract), ar5iv
+conversion failure (EIGNN — not recovered). The arXiv HTML fetches are summaries produced by a
+reading model over the page, not the page itself; every load-bearing equation from them was
+cross-checked against a second route where one existed (ChaCAL: abs + HTML + the 2026 follow-up's
+restatement; InfSA: abs + HTML + search-22 snippet; MAGNA: abs + ar5iv + search-1 snippet).</p>
+<h2 id="7-not-found-with-the-queries-that-would-have-found-it">7. NOT FOUND (with the queries that would have found it)<a class="headerlink" href="#7-not-found-with-the-queries-that-would-have-found-it" title="Permanent link">#</a></h2>
+<ul>
+<li><strong>An attention layer whose operator carries absorbing rows</strong> (identity rows for a constraint set)
+  inside a content-dependent resolvent — searches 17, 22, and the boundary/committor terms queried
+  inside the ChaCAL, structured-sparse and InfSA bodies (each returned "not mentioned").</li>
+<li><strong>The committor <code>q^{(k)} = (I − Q)^{-1} R_k 1</code> as an attention read</strong> (as opposed to a regression
+  label, which <code>PRIOR_ART.md:625-630</code> owns) — searches 6, 22, and <code>"committor" transformer
+  attention …</code> (which returned Decision/Trajectory Transformer noise only).</li>
+<li><strong>An interventional channel on an attention resolvent</strong> — intervene on context rows, re-solve,
+  read <code>Δz</code> as the consequence label — search 19 (interpretability interventions on heads and
+  activations only). The same operation on a fixed chain is Piray–Daw Eq. 5.</li>
+<li><strong><code>argmin_a max_k q^{(k)}(do a)</code> as an attention read</strong> — search 21 (probabilistic safety owns
+  it as a verifier's verdict, not as a layer).</li>
+<li><strong>A printed Neumann truncation certificate <code>γ^{K+1}/(1−γ)</code> in any attention paper</strong> — the series
+  appears as motivation in ChaCAL, Diffuser (Prop. 4 is a limit, not a rate), MAGNA and the 2026
+  follow-up; none prints a bound with a δ. The bound itself is a textbook inequality and cannot be
+  claimed as mathematics — only as an <em>instrument</em> (<code>L-CERT</code>).</li>
+<li><strong>A sequence (language) model with the resolvent read AND learnable γ</strong> — ChaCAL fixes γ = 0.9;
+  InfSA learns γ but is non-causal vision. Search 2 and search 3.</li>
+<li><strong>"Next-equilibrium prediction" / "equilibrium labels as a capability bar" in any ML sense</strong> —
+  already NOT FOUND at <code>PRIOR_ART.md:653-655</code>; unchanged.</li>
+<li>Page et al. 1999 as a resolvable record — not found by DBLP; the lineage is carried by Katz 1953
+  and APPNP.</li>
+</ul>
+<h2 id="8-verdict">8. VERDICT<a class="headerlink" href="#8-verdict" title="Permanent link">#</a></h2>
+<p><strong>OCCUPIED.</strong> The read <code>O = P(I − γP)^{-1}V</code> on a content-dependent, causally masked,
+row-stochastic softmax <code>P</code>, solved exactly by a triangular solve, reducing to softmax at γ = 0, is
+<strong>owned by Fagnou, Caillon, Delattre and Allauzen, ChaCAL, EMNLP 2024 (arXiv:2410.05565)</strong> up to the
+scalar <code>1/(1−γ)</code>; its subquadratic blockwise evaluation is owned by Zhao, Caillon, Fagnou and
+Allauzen (arXiv:2605.22476). Identities I1 and I5 of BRIEF.md are re-derivations of that paper.
+The multi-hop PPR sum on a content-dependent softmax attention is owned earlier, truncated and
+non-causal, by MAGNA (IJCAI 2021) on graphs and Diffuser (2022) on sequences, and generalised with
+learnable signed hop weights by ParaFormer (2025). The fundamental-matrix / absorbing-chain
+<em>reading</em> of <code>(I − γA)^{-1}</code> for attention, with learnable per-head γ, is owned by InfSA
+(arXiv:2603.00175), on a sub-stochastic non-causal operator. The equilibrium framing (a fixed
+point as the layer's output, implicit differentiation) is owned by DEQ (2019), IGNN (2020), EIGNN
+(2021), DEAR (2024); the per-step resolvent of a content-dependent attention operator is owned by
+GRAND's implicit scheme (2021). The successor / discounted-occupancy reading of the resolvent is
+owned by Dayan (1993) and Barreto et al. (2017); the absorbing-boundary resolvent with a low-rank
+re-solve after an intervention is owned, on a fixed environment chain, by Piray and Daw (2021,
+Eq. 4–5); the linear first-exit solve that yields a move is owned by Todorov (2006, 2009); the
+committor as <code>(I − Q)^{-1}R1</code> is Kemeny–Snell (1960/1976); clamped labels as absorbing rows with a
+harmonic read is Zhu–Ghahramani–Lafferty (2003) and Zhou et al. (2003); several target sets in one
+linear system with a safety verdict is probabilistic model checking (Baier–Katoen 2008).</p>
+<p><strong>NEAR-MISS.</strong> (i) InfSA's per-row uniform absorption <code>R_i = 1 − γΣ_jÂ_ij</code> is a <em>probabilistic</em>
+boundary, one step short of identity rows on named sets; (ii) attention sinks (Xiao 2023, Gu 2025,
+ASAP 2026) are column absorbers, the dual of the shape's row condition; (iii) GRAND-l's implicit
+step is the shape's <code>z</code> on an undirected graph without a mask; (iv) ParaFormer's family contains
+the resolvent read as a corner it never takes to <code>K = ∞</code>; (v) DeltaNet / Mamba-2 hold the causal
+triangular solve on the linear-attention corner (the record's corner 3), which the shape lifts to
+the softmax corner — but ChaCAL already did that lift.</p>
+<p><strong>NOT FOUND.</strong> Absorbing constraint rows inside a content-dependent causal attention resolvent;
+the committor into <code>K</code> prompt-named sets as an attention read; the interventional re-solve with
+<code>Δz</code> as the label on such an operator; the <code>argmin_a max_k q^{(k)}</code> decision as a read; a printed
+Neumann certificate as an instrument in an attention paper; learnable γ on a causal language-model
+resolvent. Each with the queries of §7.</p>
+<p><strong>SURPRISE — flagged loudly.</strong> ChaCAL occupies the <em>whole</em> of the shape's read as written in
+BRIEF.md §1 lines 64–65, and the record has never cited it (<code>0 files</code>, RUN). What survives of the
+delta is exactly and only boxes (e)(g)(h)(i)(j) in conjunction with (a)(b)(c)(d)(f): the shape is
+<strong>"ChaCAL with boundary conditions, an interventional channel, a multi-constraint committor
+decision, a certificate, and a learnable γ"</strong> — and each of (e)(g)(h) is separately owned on fixed
+chains (Kemeny–Snell, Zhu et al., Piray–Daw, Todorov, Baier–Katoen). A second, smaller surprise:
+InfSA has already put the words "fundamental matrix of an absorbing Markov chain" in an attention
+abstract, so the paper cannot claim the <em>reading</em>, only the <em>rows</em>. A third: Piray–Daw's Eq. 5 is
+the interventional channel, published in 2021 in a neuroscience journal the ML sweeps do not index.</p>
+<h2 id="9-design-against-the-taxonomy-what-this-sweep-obliges-the-paper-and-the-plan-to-do">9. Design against the taxonomy — what this sweep obliges the paper and the plan to do<a class="headerlink" href="#9-design-against-the-taxonomy-what-this-sweep-obliges-the-paper-and-the-plan-to-do" title="Permanent link">#</a></h2>
+<p>Each item names the <code>MISTAKES.md</code> mechanism it is designed against (BRIEF.md §5.6).</p>
+<ol>
+<li><strong>ChaCAL becomes a mandatory control arm on every bed where γ &gt; 0 matters</strong> — the fellow
+   approximator, not the skyline. Any sentence of the form "the shape beats softmax at matched
+   depth" on a bed ChaCAL can also solve is <code>D-1</code> (racing a proven optimum — here the <em>published</em>
+   solver of the same operator) and <code>R-SKY</code> (<code>CEQ_V16_CONTRACT.md</code>, READ via BRIEF.md §1). The
+   deeper-softmax skyline of BRIEF.md §1 stays; ChaCAL is added beside it.</li>
+<li><strong>The identity bind I1 (γ = 0 parity) has an empty rejection region against ChaCAL</strong> — both
+   reduce to softmax at γ = 0, so I1 cannot separate the shape from ChaCAL (<code>V-24</code>, an identity
+   bind whose rejection region is empty). The bind that separates them must plant the boundary
+   rows: a bed where a constraint set <code>𝒜_k</code> is present in the context and the label is the
+   committor or its <code>argmin max</code> — ChaCAL has no <code>𝒜_k</code> and must fail by construction, and the
+   planted negative is "ChaCAL with the same γ". I4's non-stochastic <code>P</code> (rows sum 1.5) stays as
+   the certificate's planted negative.</li>
+<li><strong>The committor oracle must run on the latent environment chain, never on the arm's <code>P</code></strong>
+   (<code>D-2</code>). Kemeny–Snell and Piray–Daw compute the same object from the <em>true</em> chain; the arm's
+   <code>P</code> is content-built. If the bed's chain is handed to the arm as <code>P</code>, the arm is the oracle and
+   the bed measures nothing.</li>
+<li><strong>The paper's obstruction 4 sentence must be rewritten</strong> (<code>P-7</code>, vocabulary with no referent;
+   <code>V-23</code>, a plural claim whose central member is the counterexample): the resolvent read with
+   row-stochastic <code>P</code> is a non-negative, row-normalised mixture (DERIVED §5.2); "a third token can
+   veto" is licensed only as <em>redirection by absorption</em>, which is F0's zero-gate mechanism in
+   boundary form, and the influence-Jacobian test of <code>ceq/attention.py</code> (min entry exactly 0) will
+   read 0 on the shape too. State it, do not discover it later.</li>
+<li><strong>Every hop-sum comparison names its truncation and prints δ</strong> (<code>L-CERT</code>; <code>P-8</code>, an upper bound
+   stated as a price). MAGNA <code>K ∈ [3,10]</code>, Diffuser <code>K</code>, ParaFormer <code>K = 10</code>, the 2026 follow-up's
+   reduced system — none prints a bound. I4 is the instrument; its planted negative already exists.</li>
+<li><strong>The prior-art section cites ChaCAL, InfSA, MAGNA, Diffuser, ParaFormer, GRAND and Piray–Daw
+   before naming any component</strong> (<code>BRIEF.md</code> §5.7; <code>M-10</code>, filed without grepping for what existed;
+   <code>P-3</code>, stale claim — <code>THEORY.md:225-235</code> must be updated from "unverified" to the [V] records in
+   the bib).</li>
+<li><strong>The ACL Anthology id, the NeurIPS 2020 venue of IGNN, the ICML 2021 venue of GRAND, the
+   AISTATS 2022 year of Sinkformer, the NeurIPS 2024 venue of DeltaNet and the ICLR 2022 venue of
+   Whittington are [U]</strong> and are so marked in the bib <code>note</code> fields; the assembler either resolves
+   them or prints them as arXiv only (<code>P-10</code>, a source's intro cited as its theorem — here, a
+   venue cited from memory).</li>
+<li><strong>The <code>γ_k</code> signed-coefficient family (ParaFormer, GPR-GNN) must not be re-argued as a signed
+   operator</strong> — the record already closed that programme (<code>RESEARCH.md</code>, <code>PROGNOSIS.md</code>, READ via
+   BRIEF.md §3); ParaFormer's base is non-negative and <code>DONE_ARCHIVE_ROUND1.md:1321-1324</code> records
+   that no signed-base variant exists there. Design against <code>M-17</code> (classifying the correction
+   record as the defect).</li>
+<li><strong>Attention sinks vs absorbing rows</strong> get one displayed definition each, with the record's own
+   value-zero BOS sink placed on the sink side (<code>P-7</code>).</li>
+<li><strong>What dies if what.</strong> If a bed with prompt-named constraint sets shows ChaCAL-with-a-sink-token
+    matching the shape's committor read within the TOST margin, box (e) is not a capability and
+    the shape collapses to ChaCAL + certificate; the paper must pre-register that kill
+    (<code>M-7</code>, pre-registration with a hole; <code>D-7</code>, prediction without its counter).</li>
+</ol>
+<h2 id="10-open-gaps-handed-to-the-coordinator">10. Open gaps handed to the coordinator<a class="headerlink" href="#10-open-gaps-handed-to-the-coordinator" title="Permanent link">#</a></h2>
+<ul>
+<li>EIGNN's closed-form equation was not read from the primary (all three routes failed); the
+  assembler should either fetch the NeurIPS PDF by another route or cite EIGNN for the <em>claim</em> of
+  a closed form only.</li>
+<li>Todorov's first-exit boundary-value statement is [U] from the 2009 body; the 2006 NIPS abstract
+  [V] carries the linear-Bellman claim. A fetch of the PMC full text (PMC2705278) by another route
+  would close it.</li>
+<li>Zhu 2003's formula and Zhou 2003's closed form are [U] from the bodies; the records are [V].</li>
+<li>Kemeny–Snell's edition year (1960 Van Nostrand / 1976 Springer) is [U]; the Open Library record
+  lists a 1983 printing under the ISBN used.</li>
+<li>ChaCAL's <code>log₂(n+1)</code> depth bound and Sanford–Hsu–Telgarsky's <code>⌊log₂ k⌋ + 2</code> must be reconciled
+  by the depth-lineage planet (same law, different constants and problems).</li>
+<li>The multizoom bound (<code>ceq/multizoom.py</code>) versus the 2026 structured-sparse reduced system is the
+  one place in this lineage where the record may hold something the literature lacks (a printed
+  block-approximation bound); it was not checked this session and should be by whoever holds the
+  cost lineage.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Invented by <a href="https://teerthsharma.vercel.app/">Teerth Sharma</a> · Apache License 2.0
+    </div>
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/teerthsharma/resolvent" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://teerthsharma.vercel.app/" target="_blank" rel="noopener" title="teerthsharma.vercel.app" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M351.9 280H161c2.9 64.5 17.2 123.9 37.5 167.4 11.4 24.5 23.7 41.8 35.1 52.4 11.2 10.5 18.9 12.2 22.9 12.2s11.7-1.7 22.9-12.2c11.4-10.6 23.7-28 35.1-52.4 20.3-43.5 34.6-102.9 37.5-167.4zm-191-48h190.9c-2.8-64.5-17.1-123.9-37.4-167.4-11.4-24.4-23.7-41.8-35.1-52.4C268.1 1.7 260.4 0 256.4 0s-11.7 1.7-22.9 12.2c-11.4 10.6-23.7 28-35.1 52.4-20.3 43.5-34.6 102.9-37.5 167.4m-48 0c3.5-85.6 25.6-165.1 57.9-217.3C78.7 47.3 10.9 131.2 1.5 232zM1.5 280c9.4 100.8 77.2 184.7 169.3 217.3-32.3-52.2-54.4-131.7-57.9-217.3zm398.4 0c-3.5 85.6-25.6 165.1-57.9 217.3 92.1-32.7 159.9-116.5 169.3-217.3zm111.4-48C501.9 131.2 434.1 47.3 342 14.7c32.3 52.2 54.4 131.7 57.9 217.3z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

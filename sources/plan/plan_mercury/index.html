@@ -1,0 +1,2271 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="One causal head, three switches. Softmax attention, unnormalized-kernel attention and the exact path product of a Markov chain as settings of one operator, proved in Lean 4, with every failure kept on the record.">
+      
+      
+        <meta name="author" content="Teerth Sharma">
+      
+      
+        <link rel="canonical" href="https://teerthsharma.github.io/resolvent/sources/plan/plan_mercury/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/logo.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>The price and schedule roadmap — every cell the programme runs, as milestone cards - resolvent</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/resolvent.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#the-price-and-schedule-roadmap-every-cell-the-programme-runs-as-milestone-cards" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="resolvent" class="md-header__button md-logo" aria-label="resolvent" data-md-component="logo">
+      
+  <img src="../../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            resolvent
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              The price and schedule roadmap — every cell the programme runs, as milestone cards
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/teerthsharma/resolvent" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    teerthsharma/resolvent
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../FAILS/" class="md-tabs__link">
+          
+  
+  
+  The record
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../BED_H_PREREGISTRATION/" class="md-tabs__link">
+          
+  
+  
+  Pre-registrations
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../ledgers/mistakes/" class="md-tabs__link">
+          
+  
+  
+  Ledgers
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../canon/CHARTER/" class="md-tabs__link">
+          
+  
+  
+  Canon
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../CEQ_SHAPE/" class="md-tabs__link">
+          
+  
+  
+  Paper
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="resolvent" class="md-nav__button md-logo" aria-label="resolvent" data-md-component="logo">
+      
+  <img src="../../../assets/logo.svg" alt="logo">
+
+    </a>
+    resolvent
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/teerthsharma/resolvent" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    teerthsharma/resolvent
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The record
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    The record
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../FAILS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Everything retracted, broken or open
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../COMPONENT_LEDGER/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Component ledger
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../PLAN/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Research plan
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CORNER_RULE_RETIREMENT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Corner rule retirement
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../PI_JEPA_KAGGLE_CARD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kaggle card
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../DR2_CARD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DR2 card
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pre-registrations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Pre-registrations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../BED_H_PREREGISTRATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BED-H
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../prereg/REMOVAL_ECHO_v1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    REMOVAL-ECHO v1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ledgers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Ledgers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/mistakes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Failure mechanisms
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/struck/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Struck constants
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/mathematics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mathematics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/model-card/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model card
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/costs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Costs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/v17k-rulings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    V17K rulings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/v16-calibration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    V16 calibration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Canon
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Canon
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/CHARTER/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Charter
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/01_THEORY_ACCURACY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01 Theory of accuracy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/02_THEORY_TRAINING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    02 Theory of training
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/03_KERNEL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03 Kernel
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/04_BEDS_AND_INSTRUMENTS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    04 Beds and instruments
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/05_REPAIRS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05 Repairs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/06_PREDICTIONS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    06 Predictions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/08_ARCHITECTURE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    08 Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/09_CHESS_AND_MARKETS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    09 Chess and markets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/CORRECTIONS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Corrections
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Paper
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Paper
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CEQ_SHAPE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The shape of CEQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Paper sources
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../BIB_AUDIT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bibliography audit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../BIB_ALIASES/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bibliography aliases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#0-the-price-basis-read-this-before-any-card" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0. The price basis — read this before any card
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0. The price basis — read this before any card">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#01-the-laws-in-force-fitted-read-costsmd73-74-r2-re-read-run-from-resultsk_cert_localjson-throughputlaws" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.1 The laws in force ([FITTED], READ COSTS.md:73-74; R² re-read RUN from results/k_cert_local.json /throughput/laws)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#02-the-unit-prices-run-arithmetic-on-the-laws-the-one-discrepancy-with-the-record-is-named" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.2 The unit prices (RUN arithmetic on the laws; the one discrepancy with the record is named)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#03-seed-counts-and-the-statistics-the-cards-use-run-this-session-reproducing-venusmars-to-the-printed-digits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.3 Seed counts and the statistics the cards use (RUN this session, reproducing VENUS/MARS to the printed digits)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#04-what-fits-in-7996-gib-and-what-does-not-read-costsmd109-116-derived-model-in-50" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.4 What fits in 7.996 GiB and what does not (READ COSTS.md:109-116; DERIVED model in §5.0)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-phase-0-free-0-gpu-s-theorems-manifests-the-price-ledger" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Phase 0 — free (0 GPU-s): theorems, manifests, the price ledger
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-phase-1-bed-s-construction-and-census-0-gpu-s-cpu-seconds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Phase 1 — BED-S construction and census (0 GPU-s; CPU seconds)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-phase-2-the-arm-the-smoke-tests-the-front-door-binds-seconds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Phase 2 — the arm, the smoke tests, the front-door binds (seconds)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-phase-3-the-arena-on-bed-s-t-8-m-8-k-2-n-8-4769-params-150-steps-one-thread-lane" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Phase 3 — the arena on BED-S (t* = 8, m = 8, K = 2, N = 8, 4,769 params, 150 steps, one thread lane)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-phase-4-verdicts-journal-reads-two-priced-runs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Phase 4 — verdicts (journal reads; two priced runs)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-phase-5-the-cost-law-and-the-memory-ceiling-the-s-sweep-is-the-precondition-for-any-cost-law" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Phase 5 — the cost law and the memory ceiling (the s-sweep is the precondition for any cost law)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Phase 5 — the cost law and the memory ceiling (the s-sweep is the precondition for any cost law)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#50-the-residency-model-that-sets-n-per-s-derived-assumed-band-on-c_operator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.0 The residency model that sets n per s (DERIVED; [ASSUMED] band on C_OPERATOR)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-phase-6-deferred-instruments-and-the-kaggle-gate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Phase 6 — deferred instruments and the Kaggle gate
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-totals-the-order-and-what-dies-if-what" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Totals, the order, and what dies if what
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Totals, the order, and what dies if what">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#81-gpu-by-phase-point-estimates-on-the-02-unit-prices-assumed-where-a-row-is" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.1 GPU by phase (point estimates on the §0.2 unit prices; [ASSUMED] where a row is)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#82-the-order-cheapest-decisive-first-d-1-dependency-law-the-critical-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.2 The order (cheapest decisive first; D-1 dependency law; the critical path)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#83-what-dies-if-what-each-kill-names-its-card-and-its-survivor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.3 What dies if what (each kill names its card and its survivor)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-limits-collected-once" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Limits (collected once)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="the-price-and-schedule-roadmap-every-cell-the-programme-runs-as-milestone-cards">The price and schedule roadmap — every cell the programme runs, as milestone cards<a class="headerlink" href="#the-price-and-schedule-roadmap-every-cell-the-programme-runs-as-milestone-cards" title="Permanent link">#</a></h1>
+<p><em>MERCURY (LESTRADE), 2026-09-03, HEAD <code>207e7b9</code>, branch <code>v17k-gate0</code>. Format binding: <code>THESIS_CORRECTIONS_2.md</code> §0 — the author develops alone, slowly, on the certified RTX 4060 Laptop (<code>7.996 GiB</code>, torch <code>2.5.1+cu121</code>, <code>READ COSTS.md:55-63</code>), in any order the DAG allows. Evidence classes: <code>RUN</code> (this session, read-only python; the four one-liners are in §0.3), <code>READ path:line</code>, <code>CITED [V]/[U]</code> by canonical <code>references.bib</code> key, <code>DERIVED</code> (steps shown), and the cost tags of <code>READ COSTS.md:16-20</code> — <code>[MEASURED]</code>, <code>[FITTED]</code> with R², <code>[ASSUMED]</code> with the reason. The judged sections (<code>judge/sec_shape.md</code>, <code>sec_obstructions.md</code>, <code>proposition_ledger.md</code>, <code>sec_apparatus.md</code>, <code>bind_ledger.md</code>) outrank the designs where they differ; where this file differs from them on a price it says so and shows the arithmetic. Nothing here is a result; every card is a specification with its pass number, its kill number and its price. No card launches on Kaggle: the author's explicit yes is a node (§6, memory rule </em>Kaggle launch requires yes<em>; <code>READ kaggle/README.md:9-11</code>).</em></p>
+<h2 id="0-the-price-basis-read-this-before-any-card">0. The price basis — read this before any card<a class="headerlink" href="#0-the-price-basis-read-this-before-any-card" title="Permanent link">#</a></h2>
+<h3 id="01-the-laws-in-force-fitted-read-costsmd73-74-r2-re-read-run-from-resultsk_cert_localjson-throughputlaws">0.1 The laws in force (<code>[FITTED]</code>, <code>READ COSTS.md:73-74</code>; R² re-read <code>RUN</code> from <code>results/k_cert_local.json /throughput/laws</code>)<a class="headerlink" href="#01-the-laws-in-force-fitted-read-costsmd73-74-r2-re-read-run-from-resultsk_cert_localjson-throughputlaws" title="Permanent link">#</a></h3>
+<table>
+<thead>
+<tr>
+<th>arm</th>
+<th><code>s/step</code> law (<code>s = 64</code>, <code>d_model = 16</code>, fwd + bwd + <code>Adam.step</code>)</th>
+<th>R²</th>
+<th>fitted over</th>
+<th>at <code>n = 2048</code> (<code>RUN</code>)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>softmax</code></td>
+<td><code>exp(−12.18515596) · n^0.99625107</code></td>
+<td><code>0.9999975</code></td>
+<td><code>n ∈ {2048 … 32768}</code>, 5 points</td>
+<td><code>0.010165 s</code></td>
+</tr>
+<tr>
+<td><code>arm_smprime</code> (corner-3 base)</td>
+<td><code>exp(−10.01874582) · n^1.00258069</code></td>
+<td><code>0.99999987</code></td>
+<td><code>n ∈ {2048, 4096, 8192}</code>, 3 points; <code>16384</code>/<code>32768</code> refused (paged over PCIe, <code>READ COSTS.md:76-79</code>)</td>
+<td><code>0.093084 s</code></td>
+</tr>
+<tr>
+<td>shape on the softmax corner</td>
+<td>softmax law <strong>+ solve increment</strong> <code>1.041 ms/step</code> (<code>RUN[NEPTUNE]</code>, <code>sec_cost.md</code> §4.x.3: solve+<code>Pz</code> <code>2.514 ms</code> − <code>PV</code> <code>1.473 ms</code>, fwd+bwd, no Adam, float32, <code>n = 2048</code>)</td>
+<td>—</td>
+<td>increment at <code>n ∈ {2048, 4096, 8192}</code> only (<code>1.041 / 2.312 / 4.542 ms</code>)</td>
+<td><code>0.011206 s</code></td>
+</tr>
+</tbody>
+</table>
+<p>Rules the prices obey. <strong>M-8</strong> (<code>READ MISTAKES.md:544</code>): each arm at its own law; the solve is an <em>increment</em>, never a cross-arm ratio. <strong>M-3</strong> (<code>:464</code>): the increment was measured at the shipped <code>s = 64</code>, never scaled from a smaller <code>s</code>. <strong>P-8</strong> (<code>:387</code>): the increment is a per-op floor under a <code>2.0×–6.6×</code> dispatch gap (<code>READ scale/m3_flops.py:101-121</code>), so every shape price below is a floor with direction <code>≥</code> until check 7 of <code>sec_cost.md</code> §4.x.9 (cell within the law-vs-measured band <code>−1.8 % … +14.4 %</code>, <code>READ V17_R4_RETAKE_PRICE.md:228-229</code>) is run. <strong>V-22</strong> (<code>:1140</code>): no price crosses the device boundary; the Kaggle certificate slot is empty (<code>READ COSTS.md</code> §2). Clock non-stationarity <code>±12 %</code> (<code>READ V17_R4_RETAKE_PRICE.md:143-150</code>): prices are quoted in GPU-minutes to two decimals, seconds only where the number is under a minute. <strong>C17</strong> of the round-15 journal (<code>READ V20_R15_JOURNAL.md:53</code>): no <code>secs</code> from <code>scripts/v15_r1.py</code> is a price — its timer is un-synchronised and run order is its strongest correlate (<code>ρ = +0.7029</code>); every cell below is timed with <code>torch.cuda.synchronize()</code> bracketing and the run order randomised (D-3, P-8), which is the fifth harness edit the record never priced (<code>READ V20_R15_THEORY_TABLE.md:104-109</code>).</p>
+<h3 id="02-the-unit-prices-run-arithmetic-on-the-laws-the-one-discrepancy-with-the-record-is-named">0.2 The unit prices (<code>RUN</code> arithmetic on the laws; the one discrepancy with the record is named)<a class="headerlink" href="#02-the-unit-prices-run-arithmetic-on-the-laws-the-one-discrepancy-with-the-record-is-named" title="Permanent link">#</a></h3>
+<table>
+<thead>
+<tr>
+<th>item</th>
+<th>price</th>
+<th>class and derivation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>one 150-step cell, softmax control, <code>n = 2048, s = 64</code></td>
+<td><code>1.525 s</code></td>
+<td>FITTED <code>150 × 0.010165</code></td>
+</tr>
+<tr>
+<td>one 150-step cell, shape on the softmax corner</td>
+<td><code>1.681 s</code></td>
+<td>FITTED + RUN <code>150 × 0.011206</code></td>
+</tr>
+<tr>
+<td>one 150-step cell, corner-3 base + solve</td>
+<td><code>14.12 s</code></td>
+<td>FITTED + RUN; measured control <code>15.970 s</code> (<code>+14.4 %</code>, <code>READ V17_R4_RETAKE_PRICE.md:194</code>)</td>
+</tr>
+<tr>
+<td>fixed cost per invocation</td>
+<td><code>4.0 s</code></td>
+<td>READ <code>V17_R4_RETAKE_PRICE.md:198-201, 328-331</code></td>
+</tr>
+<tr>
+<td><strong>one bed-cell pair</strong> (shape + softmax, <code>N = 8</code> each)</td>
+<td><strong><code>29.6 s</code> in one invocation; <code>33.6 s</code> in two</strong></td>
+<td>DERIVED <code>8 × 1.681 + 8 × 1.525 + 4.0</code>; the record's <code>≈ 34 s</code> (<code>sec_cost.md</code> §4.x.8, <code>sec_apparatus.md</code> §A.11) is <code>17.4 + 16.2</code>, which pays the <code>4.0 s</code> once <strong>per arm</strong>. This plan carries <strong><code>34 s</code></strong> (the two-invocation, conservative reading) and every multiple below is on that figure</td>
+</tr>
+<tr>
+<td>one shape arm alone, <code>N = 8</code>, one invocation</td>
+<td><code>17.4 s</code></td>
+<td>DERIVED <code>8 × 1.681 + 4.0</code></td>
+</tr>
+<tr>
+<td>the pair on the corner-3 base</td>
+<td><code>129–133 s</code></td>
+<td>DERIVED; <strong>no certificate on this base</strong> (rows sum <code>1.31 … 10.29</code> at <code>β = 0</code>, <code>READ V16_ARM_SMPRIME.md:28-32</code>, V-25)</td>
+</tr>
+<tr>
+<td>InfSA-style Neumann <code>K = 16</code> cell</td>
+<td><code>5.12 s</code>; <code>N = 8</code> <code>44.9 s</code></td>
+<td>DERIVED floor from the <code>25.409 ms</code> hop microbenchmark (<code>sec_cost.md</code> §4.x.3)</td>
+</tr>
+<tr>
+<td>depth-5 softmax skyline cell</td>
+<td><code>7.6 s</code>; <code>N = 8</code> <code>64.8 s</code></td>
+<td>ASSUMED linear in depth (<code>sec_beds.md</code> §6.C.6); the first cell replaces this number</td>
+</tr>
+<tr>
+<td>the capped cell (<code>arm_pl</code>, <code>V20_R15_THEORY_TABLE.md:176</code>)</td>
+<td><code>1.884 s</code></td>
+<td>READ</td>
+</tr>
+<tr>
+<td>the <code>~6 GPU-s</code> capped run, seeds <code>2, 3, 7</code></td>
+<td><code>5.65 s</code> + <code>4.0</code> = <code>9.65 s</code></td>
+<td>DERIVED; priced at it.7, it.8, it.9, it.35 and taken zero times (<code>READ V20_R15_IT35_JUPITER.md:157-159</code>)</td>
+</tr>
+<tr>
+<td>1,024 forward passes at <code>n = 2048</code> (certificate on a mask)</td>
+<td><code>≤ 2.6 s</code></td>
+<td>DERIVED from <code>2.514 ms</code> fwd+bwd (an upper bound; forward alone is less)</td>
+</tr>
+<tr>
+<td>paired TOST, <code>N = 36</code>, one pair</td>
+<td><code>119 s</code></td>
+<td>DERIVED <code>36 × 3.206 + 4</code></td>
+</tr>
+<tr>
+<td>two-sample TOST, <code>N = 70</code>, one pair</td>
+<td><code>228 s</code></td>
+<td>DERIVED <code>70 × 3.206 + 4</code> (the design's <code>298 s</code> paid the fixed cost <code>8.75×</code>; struck)</td>
+</tr>
+<tr>
+<td><code>N = 16</code> escalation, three arms × 8 extra seeds</td>
+<td><code>44 s</code></td>
+<td>DERIVED</td>
+</tr>
+<tr>
+<td>dial sweep, 7 one-factor-at-a-time points × one pair</td>
+<td><code>3.46 min</code></td>
+<td>DERIVED <code>7 × 29.6 s</code> (<code>3.97 min</code> at <code>34 s</code>)</td>
+</tr>
+<tr>
+<td>the 9,600-step ladder, one pair</td>
+<td><code>32–36 min</code></td>
+<td>FITTED <code>×64</code> (<code>READ V17_R4_RETAKE_PRICE.md:243-254</code>)</td>
+</tr>
+<tr>
+<td>the synchronised randomised <code>s</code>-sweep</td>
+<td><code>206–537 GPU-s</code>, <strong>band only, no point</strong></td>
+<td>READ <code>V20_R15_THEORY_TABLE.md:104-109</code>; the band excludes the randomised order it must carry</td>
+</tr>
+<tr>
+<td><code>scripts/k_cert.py</code> full run</td>
+<td><code>523.9 s</code></td>
+<td>MEASURED locally 2026-08-31 (<code>READ COSTS.md:62</code>); on Kaggle ASSUMED equal until the card is certified</td>
+</tr>
+<tr>
+<td>Lean targets, manifests, census, identity checks, verdicts from journals</td>
+<td><code>0 GPU-s</code></td>
+<td>CPU seconds</td>
+</tr>
+</tbody>
+</table>
+<h3 id="03-seed-counts-and-the-statistics-the-cards-use-run-this-session-reproducing-venusmars-to-the-printed-digits">0.3 Seed counts and the statistics the cards use (<code>RUN</code> this session, reproducing VENUS/MARS to the printed digits)<a class="headerlink" href="#03-seed-counts-and-the-statistics-the-cards-use-run-this-session-reproducing-venusmars-to-the-printed-digits" title="Permanent link">#</a></h3>
+<table>
+<thead>
+<tr>
+<th>quantity</th>
+<th>value</th>
+<th>class</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>REQUIRED_SEEDS</code></td>
+<td><code>8</code>, deduplicated by seed (<code>READ scale/it11_verdict.py:59, :192</code>); at <code>N = 5</code> the finest two-sided <code>p</code> is <code>0.0625</code> (M-9)</td>
+<td>READ</td>
+</tr>
+<tr>
+<td>MDE, paired <code>t</code>, <code>α = 0.05</code> two-sided, power <code>0.80</code></td>
+<td>sd <code>0.010101 → 0.011677</code> (<code>n = 8</code>) / <code>0.007570</code> (<code>n = 16</code>); sd <code>0.034451 → 0.039827 / 0.025820</code>; sd <code>0.050146 → 0.057971 / 0.037583</code>; sd <code>0.109199 → 0.126238 / 0.081841</code></td>
+<td>RUN (noncentral-<code>t</code> bisection; VENUS's six record entries reproduced)</td>
+</tr>
+<tr>
+<td>TOST two-sample, margin <code>0.5σ</code>, <code>α = 0.05</code> per side</td>
+<td>power <code>0.7975</code> at <code>N = 69</code>, <code>0.8049</code> at <code>N = 70</code>; half-width <code>0.8807σ</code> at <code>N = 8</code>, <code>0.2799σ</code> at <code>N = 70</code></td>
+<td>RUN (<code>schuirmann-1987-tost</code> [V])</td>
+</tr>
+<tr>
+<td>TOST paired, <code>sd_d = σ</code></td>
+<td>power <code>0.1917</code> at <code>N = 16</code>, <code>0.4969</code> at <code>N = 23</code>, <strong><code>0.8014</code> at <code>N = 36</code></strong></td>
+<td>RUN (agrees with MARS's Monte Carlo <code>RUN[MARS]</code>); BED-S's realised <code>sd_d</code> chooses between <code>36</code> and <code>70</code></td>
+</tr>
+<tr>
+<td>thread-count floor</td>
+<td><code>2.345e-3</code>; no margin below <code>≈ 4.7e-3</code> is defensible (M-10, M-16, <code>READ scale/it11_verdict.py:133-137</code>)</td>
+<td>READ</td>
+</tr>
+<tr>
+<td>0-step RED gate</td>
+<td><code>GATE_TOL = 1e-3</code> (<code>READ COSTS.md:137</code>)</td>
+<td>READ</td>
+</tr>
+<tr>
+<td>the LR boundary null for <code>γ ∈ [0, 1)</code></td>
+<td><code>½χ²₀ + ½χ²₁</code>, 95 % point <code>2.706</code>, MOVED at <code>Λ &gt; ln 4096 = 8.318</code> (<code>sec_apparatus.md</code> §A.11 item 6; citation owed, not in <code>references.bib</code>)</td>
+<td>READ</td>
+</tr>
+</tbody>
+</table>
+<p>The one-liners: (i) <code>math.exp(-12.1852)*2048**0.9963</code> and the multiples above; (ii) the <code>[n, s, s]</code> residency model of §5.0; (iii) <code>scipy.stats.nct</code> bisection for the MDE; (iv) <code>scipy.stats.t</code> for the TOST half-widths and powers. Read-only; nothing written under the repository.</p>
+<h3 id="04-what-fits-in-7996-gib-and-what-does-not-read-costsmd109-116-derived-model-in-50">0.4 What fits in <code>7.996 GiB</code> and what does not (<code>READ COSTS.md:109-116</code>; DERIVED model in §5.0)<a class="headerlink" href="#04-what-fits-in-7996-gib-and-what-does-not-read-costsmd109-116-derived-model-in-50" title="Permanent link">#</a></h3>
+<p>Measured: softmax resident to <code>n = 32768</code> at <code>s = 64</code> (<code>4.908 GiB</code> reserved); <code>arm_smprime</code> resident to <code>8192</code> (<code>3.777 GiB</code>) and <strong>not</strong> to <code>16384</code> under a training loop (<code>10.578 GiB</code>, Ruling 8 <code>READ V17K_RULINGS.md:328-339</code>); the shape adds <code>8 · (n/2048) MiB</code> for <code>z</code> and keeps its <code>[S, S]</code> operand at <code>4.0 B/elem</code> because <code>solve_triangular</code> has no bf16 path in torch 2.5.1 ([U]). So on the softmax corner every arena card below is resident with <code>≥ 8×</code> headroom (<code>0.9224 GiB</code> measured for the arm cell, <code>READ V17_R4_RETAKE_PRICE.md:139</code>); on the corner-3 base <code>n ≤ 8192</code>. Past <code>s = 64</code> the explicit operator decides (§5.0): the dense resolvent at <code>n = 2048, s = 4096</code> is <code>137 GB</code> and does not run anywhere; <code>n</code> is declared per <code>s</code>.</p>
+<h2 id="1-phase-0-free-0-gpu-s-theorems-manifests-the-price-ledger">1. Phase 0 — free (0 GPU-s): theorems, manifests, the price ledger<a class="headerlink" href="#1-phase-0-free-0-gpu-s-theorems-manifests-the-price-ledger" title="Permanent link">#</a></h2>
+<p><strong>M0.1 — Build the ten <code>[M]</code> Lean targets with their refusals.</strong> <em>Phase</em> 0. <em>Prereq</em> none. <em>Independent-of</em> every other card. <em>Build:</em> <code>lean/CEQ/Shape.lean</code> declaring rows 1–10 of <code>judge/sec_shape.md</code> §4.6 (<code>gamma_zero_is_softmax</code>, <code>bos_row_is_absorbing</code> at <code>β = 1</code>, <code>later_boundary_unreachable</code>, <code>softmax_corner_not_nilpotent</code>, <code>lower_triangular_isUnit</code> + <code>diag_one_sub_smul_pos</code>, <code>resolvent_fromBlocks</code> + <code>segmentation_blockdiag</code> on <code>StrictlyLower</code>, <code>cut_makes_segment_head_absorbing</code>, <code>displacement_identity</code>, <code>lowerTriangular_ne_symmSupport</code>, <code>committor_is_resolvent_read</code> (a)/(b-causal)) each with the refusal named in that table; <code>#print axioms</code> on every declaration. <em>Prove:</em> the ten statements as written, grade <code>[M]</code>; any <code>[M]</code> resting on a <code>[U]</code> Mathlib name (<code>Matrix.det_of_lowerTriangular</code>, <code>inv_fromBlocks_zero₂₁_of_isUnit_iff</code>) is <code>[S]</code> until it builds. <em>Measure:</em> <code>lake build</code> exit code, <code>grep -c sorry</code>, the axiom list. <em>PASS:</em> exit <code>0</code>, <code>0</code> <code>sorry</code>, axioms <code>[propext, Classical.choice, Quot.sound]</code> only, <code>169 + 10</code> declarations. <em>KILL:</em> a <code>sorry</code> or a <code>sorryAx</code> demotes that row to <code>[S]</code>, and no paper sentence cites it (L-LEAN, P-11 — the contract's <code>#18/#19/#22 [M]</code> with no declaration, <code>sec_proved.md</code> §2.0). <em>Price:</em> <code>0 GPU-s</code>. <em>Mechanism:</em> P-11, L-LEAN, V-25. <em>Deliverable:</em> <code>lean/CEQ/Shape.lean</code>; <code>docs/PLAN.md</code> §P0 row with the build log. <em>Evenings:</em> 1. <strong>[cheapest-decisive 1 of 5]</strong></p>
+<p><strong>M0.2 — Extend the identity manifest and plant its drift test.</strong> <em>Phase</em> 0. <em>Prereq</em> none. <em>Independent-of</em> all. <em>Build:</em> the field list of <code>sec_apparatus.md</code> §A.10 (<code>beta/qk/g</code>, <code>gamma</code> init/final/<code>Λ</code>/verdict, <code>diag_convention</code>, <code>committor_route</code>, <code>route</code> + <code>K</code> + chunk <code>C</code>, <code>boundary_sets/goal_set/sink_set</code> + sha256, <code>K/m/t_star</code>, <code>S/D/d_model/n_train/n_eval/steps</code>, <code>seed/rng_plan</code>, device/threads/dtype/<code>cublas_workspace</code>/<code>deterministic_regime</code>, <code>instrument_hash/manifest_hash</code>, <code>producer_cmd</code>, <code>delta_vec/delta_bare/one_over_1mg/V_inf</code>, <code>census</code>, the four floors, the skyline settings, <code>void_contrasts</code>, <code>supersedes</code>); a missing declared field is a <strong>refusal</strong>, not <code>absent</code> (<code>READ scale/identity_manifest.py:141-151</code> reports; the shape lane raises). <em>Prove:</em> nothing. <em>Measure:</em> flip each of <code>beta/qk/g/gamma/boundary_sets</code> by one unit; count hash moves. <em>PASS:</em> <code>5/5</code> moves, and a run with one declared field missing raises. <em>KILL:</em> any flip that leaves <code>manifest_hash</code> unchanged (the L-2 defect: <code>0 of 24</code> attributable, <code>READ V20_R15_LEAP_LEDGER.md:23</code>). <em>Price:</em> <code>0 GPU-s</code>. <em>Mechanism:</em> L-2, P-1, V-16, M-10, M-16. <em>Deliverable:</em> <code>docs/MANIFEST_SHAPE.md</code> (field table + the flip counts). <em>Evenings:</em> 1.</p>
+<p><strong>M0.3 — Freeze the price ledger and the obstruction census lines.</strong> <em>Phase</em> 0. <em>Prereq</em> none. <em>Independent-of</em> all. <em>Build:</em> <code>docs/PRICE_LEDGER.md</code> carrying §0.1–0.4 verbatim with provenance, plus the three vacuity inequalities printed beside their citations — <code>h·m·p = 512 ≥ 64</code> (<code>sanford-2024-inductionheads</code> Thm 1), <code>n log₂ n = 384 &lt; 544</code> (<code>peng-2024-transformer-limitations</code> Thm 1), <code>64^{1/16} = 1.2968</code> (<code>chen-2024-multilayer</code> Thm 1.1) — all vacuous at <code>s = 64, d = 16, p = 32</code>; conditional bounds (<code>sanford-2024-logdepth</code> Cor 4.3) labelled conditional in the same sentence. <em>Prove:</em> nothing. <em>Measure:</em> nothing. <em>PASS:</em> every price in the ledger carries a tag and a producer; every obstruction carries its inequality. <em>KILL:</em> any price without <code>[FITTED R²]/[RUN]/[ASSUMED]</code>, or any "cannot" sentence outside the skyline table (K-10). <em>Price:</em> <code>0</code>. <em>Mechanism:</em> P-1, P-8, V-25, P-10, K-10, K-11. <em>Deliverable:</em> <code>docs/PRICE_LEDGER.md</code>. <em>Evenings:</em> 1.</p>
+<p><strong>M0.4 — Close the six <code>[S]</code> Lean targets.</strong> <em>Phase</em> 0. <em>Prereq</em> M0.1. <em>Independent-of</em> every Phase 1–5 card (off the critical path). <em>Build:</em> rows 11–16 of §4.6 (<code>pathprod_is_chain_resolvent</code>, <code>neumann_truncation_bound</code> + <code>neumann_tail_attained</code> + <code>mask_amplification</code> with the <code>s = 3</code> witness <code>0.5263</code>, <code>resolvent_is_triangular_solve</code> + <code>mixing_matrix_rowStochastic</code>, <code>causal_forward_only</code> + <code>suffix_resolve_eq_full</code> + <code>sherman_morrison_row</code>, <code>isUnit_one_sub_of_perron</code> + <code>reach_avoid_sum_one</code>, <code>masked_sink_finite_sum</code>), one file each of the <code>V15Source.lean</code> scale (201 lines, 7 declarations). <em>PASS/KILL:</em> as M0.1 per file. <em>Price:</em> <code>0</code>. <em>Mechanism:</em> P-11, V-3 (<code>neumann_tail_attained</code> is declared definitional), V-24 (<code>nonstochastic_breaks_bound</code> at a convergent <code>γ</code>). <em>Deliverable:</em> <code>lean/CEQ/ShapeS.lean</code> (or one file per target). <em>Evenings:</em> 4.</p>
+<h2 id="2-phase-1-bed-s-construction-and-census-0-gpu-s-cpu-seconds">2. Phase 1 — BED-S construction and census (0 GPU-s; CPU seconds)<a class="headerlink" href="#2-phase-1-bed-s-construction-and-census-0-gpu-s-cpu-seconds" title="Permanent link">#</a></h2>
+<p><strong>M1.1 — Write the BED-S generator specification.</strong> <em>Phase</em> 1. <em>Prereq</em> none. <em>Independent-of</em> M0.x, M2.0, M2.1. <em>Build:</em> <code>docs/BED_S_SPEC.md</code> — the environment is a random DAG in token order with self-loops only on declared absorbing positions (<code>sec_apparatus.md</code> §A.1); <code>𝒜_sink = {0}</code> (BOS, value <code>0</code> on every indicator channel), <code>𝒜_0</code> the goal, <code>𝒜_1..𝒜_K</code> the constraints, all <strong>before</strong> the query (F1/F2, <code>THESIS_CORRECTIONS_2.md</code> §1); node tokens carry out-adjacency multi-hot, membership flags, nothing from a solve; <code>m</code> query-side row clamps <code>P_env[v_a, :] ← e_{u_a}</code>; oracle = the Dirichlet solve of <code>bed_1.committor</code>'s form at <code>γ = 1</code> on the transient block, <code>Δz</code> by <code>Δz = (I − γP')^{-1}(ΔV + γΔP z)</code> on <code>P_env</code>; label <code>[m, K+2]</code> reach-avoid tensor + argmin + <code>z*</code> + <code>Δz(a)</code>; dials <code>t* ∈ {2, 8, 32}</code> (tolerance dial, <code>E2_DIAL_TOL</code>, <code>READ scale/negation_scope.py:264</code>), <code>K ∈ {2, 3, 4}</code>, <code>m ∈ {4, 8, 16}</code> default <code>8</code>; journal fields = the M0.2 manifest + <code>census</code>. <em>Prove:</em> nothing. <em>Measure:</em> nothing yet. <em>PASS:</em> the spec names every field a developer needs and the D-4 registration triple (<code>M3_TASKS</code> entry, <code>E_T_STAR</code>, <code>calibrate_bar</code> hooks) on the same commit. <em>KILL:</em> a spec that lets the transition matrix or any <code>q</code> into <code>x</code> (D-2, C2(c)). <em>Price:</em> <code>0</code>. <em>Mechanism:</em> D-2, D-3, D-4, V-12, V-8. <em>Deliverable:</em> <code>docs/BED_S_SPEC.md</code>. <em>Evenings:</em> 2.</p>
+<p><strong>M1.2 — Run the BED-S construction census on 512 draws.</strong> <em>Phase</em> 1. <em>Prereq</em> M1.1. <em>Independent-of</em> M0.x, M2.0. <em>Build:</em> the fifteen lines of <code>sec_apparatus.md</code> §A.7 printed per draw batch. <em>Measure:</em> row sums <code>|Σ − 1| ≤ 1e-12</code>; <code>0 ∈ 𝒜_sink</code> on <code>100 %</code>; <code>ρ(Q̂) = max_T P_ii &lt; 1</code>; sets before the query on <code>100 %</code>; label sd per coordinate over the admitted region; sink share; argmin class frequencies; disagreement fraction; discard count; <code>Var(Δz) &gt; 0</code> over coordinates <code>≥ i_min</code>; the move census. <em>PASS:</em> every sd <code>&gt; 0.05</code>, every class frequency in <code>(0.05, 0.95)</code>, disagreement <code>&gt; 0</code>, <code>0 ∈ 𝒜_sink</code> and sets-before-query on <code>100 %</code>, discard fraction printed. <em>KILL:</em> any <code>sd = 0</code> (V-8/V-12: the record's <code>1.11e-14</code>), any class outside the band, disagreement <code>0</code> (only one rule may then be named, C4), <code>ρ(Q) = 1</code> on any draw (BOS undeclared — the solve must <strong>raise</strong>, V-16). The bed is not admitted and no arm runs (D-4). <em>Price:</em> <code>0 GPU-s</code>; the oracle is <code>m</code> factorisations with <code>K + 2</code> right-hand sides, <code>|T|³/3 = 5.8e8</code> MACs at <code>|T| = 1200</code>, under a second per draw in float64 (<code>sec_beds.md</code> §6.D.5). <em>Mechanism:</em> V-8, V-12, V-25, D-3, D-4, V-16. <em>Deliverable:</em> <code>results/bed_s_census.jsonl</code> + the table in <code>docs/BED_S_SPEC.md</code> §census. <em>Evenings:</em> 1. <strong>[cheapest-decisive 2 of 5]</strong></p>
+<p><strong>M1.3 — Register the VOID list, the metrics and the floors before any cell.</strong> <em>Phase</em> 1. <em>Prereq</em> M1.1. <em>Independent-of</em> M1.2. <em>Build:</em> <code>docs/BED_S_SPEC.md</code> §registration — VOID as capability numbers: <code>shape − softmax</code>, <code>shape − skyline</code> on the committor head; creditable: <code>shape − ChaCAL-diag</code>, <code>shape − ChaCAL-published</code>, <code>shape − ChaCAL-with-sink</code>, <code>shape − InfSA-K16</code>, <code>shape − 0-hop MLP</code>, <code>shape − 1-hop softmax</code>, <code>‖P̂ − P_env‖_∞</code> per seed; metrics: position-matched NRMSE vector, harmonic residual with <code>σ_min</code> and <code>‖I − γP_env‖_∞</code> printed, Fisher–Rao <code>φ = 2 arcsin √p</code>, field cosine with masked zero-variance coordinates, CP (<code>clopper-1934-binomial</code>) and McNemar on the sign column only (<code>mcnemar-1947-correlated</code>); floors: exact oracle <code>0.0</code>, zero-information <code>1 − 1/m = 0.875</code> at <code>m = 8</code>, tight Fano <code>(ln m − ln 2)/ln(m − 1) = 0.7124</code> only where <code>I(X_{≤k}; a*) &gt; 0</code> (<code>cover-2006-elements</code> §2.10 [U] on the theorem number); the weak Fano <code>0.6667</code> struck. <em>PASS:</em> the list exists in a commit dated before M3.1's first cell. <em>KILL:</em> any contrast or threshold first written after a cell exists (M-2, M-7). <em>Price:</em> <code>0</code>. <em>Mechanism:</em> D-2, M-2, M-7, V-26, L-FLOOR, V-10, V-17. <em>Deliverable:</em> <code>docs/BED_S_SPEC.md</code> §registration. <em>Evenings:</em> 1.</p>
+<p><strong>M1.4 — Run the BED-S zero-hop control before any arm.</strong> <em>Phase</em> 1. <em>Prereq</em> M1.2, M1.3. <em>Independent-of</em> M0.x, M2.0. <em>Build:</em> (a) the untrained-arm read (0-step RED gate) on the admitted draw; (b) the 0-hop per-position MLP on the candidate's context row at matched <code>4,769</code> parameters (Ruling 3, count re-printed per arm), <code>N = 8</code>, 150 steps; (c) the corpus-alone probes <code>x → q</code> at order 0. <em>Measure:</em> argmin accuracy of (a) within <code>1/m ± CP</code>; committor NRMSE of (a) <code>≥ 1 − GATE_TOL</code>; (b)'s argmin accuracy with CP; (c) <code>R²</code>. <em>PASS:</em> (a) at chance, (c) <code>R² &lt; 0.5</code>, and (b)'s CP-upper on accuracy sits at or below the zero-information floor <code>0.875</code> error, i.e. the label is not readable from the candidate's own row. <em>KILL:</em> (b) reading above the zero-information floor by more than its CP half-width ⇒ <strong>BED-S is a third static task</strong> (C8, <code>READ D1.md:286-291</code>) and is struck before any number; (c) <code>R² ≥ 0.5</code> ⇒ the one-read claim is void on this bed (leak kill (c)). <em>Price:</em> <code>≤ 8 × 1.525 + 4 = 16.2 s</code> (the MLP costs no more than the softmax cell, DERIVED). <em>Mechanism:</em> V-10, D-5, C8, V-24 (the planted leak of M1.5 is its rejection half). <em>Deliverable:</em> <code>results/shape_bed_s.jsonl</code> (<code>kind = mlp0</code>, <code>kind = untrained</code>) + <code>docs/PLAN.md</code> §P1 verdict line. <em>Evenings:</em> 1.</p>
+<p><strong>M1.5 — Plant the leak and fire the detector both ways.</strong> <em>Phase</em> 1. <em>Prereq</em> M1.2. <em>Independent-of</em> M1.4. <em>Build:</em> a move token carrying its own <code>q</code> (planted positive); the E4′ local-feature decoder re-derived for BED-S (<code>FAIL_BAR/PASS_BAR</code> of <code>READ scale/rips_gate.py:60-61</code> are E4′'s and are marked V-22, not BED-S bars). <em>Measure:</em> corpus-alone probe <code>R²</code> with and without the plant. <em>PASS:</em> planted <code>R² ≥ 0.99</code>, honest <code>R² &lt; 0.5</code>. <em>KILL:</em> a detector that reads the same on both (V-24, V-7). <em>Price:</em> <code>0 GPU-s</code> (linear probes on CPU). <em>Mechanism:</em> V-24, V-7, V-22, D-2. <em>Deliverable:</em> <code>results/bed_s_census.jsonl</code> rows <code>leak_plant</code>, <code>leak_honest</code>. <em>Evenings:</em> 1.</p>
+<h2 id="3-phase-2-the-arm-the-smoke-tests-the-front-door-binds-seconds">3. Phase 2 — the arm, the smoke tests, the front-door binds (seconds)<a class="headerlink" href="#3-phase-2-the-arm-the-smoke-tests-the-front-door-binds-seconds" title="Permanent link">#</a></h2>
+<p><strong>M2.0 — Build the shape arm as a registered <code>kind</code>.</strong> <em>Phase</em> 2. <em>Prereq</em> none (building is not training; L-LEAN gates M2.2, not M2.0). <em>Independent-of</em> M1.x, M0.x. <em>Build:</em> one module exposing the corners <code>β/qk/g</code>, a learnable <code>γ ∈ [0, 1)</code> (init <code>0</code>), <code>boundary_sets/goal_set/sink_set</code> as identity rows, <code>diag_convention ∈ {kept, removed}</code>, <code>route ∈ {solve_triangular, neumann_K}</code>, <code>committor_route ∈ {dirichlet_gamma1, discounted_gamma}</code>, the read <code>O = (1 − γ) P (I − γP)^{-1} V</code> (the <code>(1 − γ)</code> factor carried, <code>fagnou-2024-chacal</code> Eq. 5 [V]), heads (H-q) the exact triangular solve at <code>γ = 1</code> on the transient block and (H-z) the state/displacement channel at <code>γ̂</code>; <code>make_arm</code> branch, optimiser path, journal emit — the W2 lesson (<code>READ V20_R15_WING_MANIFEST.md:115-123</code>: a three-line branch was the whole gap). <em>Prove:</em> nothing. <em>Measure:</em> the arm produces a journalled record with its <code>kind</code> under <code>results/</code> (FOUND, not NAMED, <code>READ V20_R15_WING_MANIFEST.md:59-63</code>). <em>PASS:</em> one FOUND record. <em>KILL:</em> a <code>kind</code> with <code>0</code> records at the end of Phase 2 is STRUCK (the R15 kill). <em>Price:</em> <code>0 GPU-s</code> to build; the first record is M2.2's. <em>Mechanism:</em> FOUND-not-NAMED, P-4, L-2. <em>Deliverable:</em> the author's module (a <code>.py</code> the author writes; not written here) + <code>docs/PLAN.md</code> §P2 FOUND line. <em>Evenings:</em> 3.</p>
+<p><strong>M2.1 — Take the <code>~6 GPU-s</code> capped run at seeds 2, 3, 7 on BED-M.</strong> <em>Phase</em> 2. <em>Prereq</em> none. <em>Independent-of</em> every card in this plan. <em>Build:</em> nothing new — <code>arm_pl</code> on <code>e3_t2</code>, <code>n = 2048, s = 64</code>, the three NO-READING seeds (<code>READ V15_R1.md:177-188</code>: <code>1.113403 / 1.139404 / 1.152430</code>, <code>â_max 20.31 / 49.66 / 285.07</code>), with the capped gate (<code>1.884 s</code> per cell), <code>torch.cuda.synchronize()</code> bracketing, randomised order. <em>Prove:</em> nothing. <em>Measure:</em> <code>eval_nrmse</code> and <code>â_max</code> per seed against the uncapped values. <em>PASS (Q3/W3 LEAPABLE reading):</em> all three cross <code>floor₁ = 0.7071</code> when capped — the divergence was the cause of NO READING, <code>sign(λ̂)</code> is not fixed by initialisation. <em>KILL (TERMINAL reading):</em> any capped seed still <code>&gt; 1.0</code> ⇒ the causal direction is unidentified from <code>n = 8</code> and the it.35 MARS verdict stands (<code>READ V20_R15_IT35_MARS.md:27-34</code>). <em>Price:</em> <code>9.65 s</code> (<code>3 × 1.884 + 4.0</code>, DERIVED). <em>Mechanism:</em> M-6 (a partial run read as a verdict — the record read a mean no seed produced), D-6 (the repair written and never started), C17 (timed synchronised). <em>Deliverable:</em> <code>results/v20_capped_seeds237.jsonl</code> + <code>docs/PLAN.md</code> §P2 row. <em>Evenings:</em> 1. <strong>[cheapest-decisive 3 of 5]</strong></p>
+<p><strong>M2.2 — Smoke-test the solve path: ChaCAL-diag at <code>γ = 0.9</code> on BED-M.</strong> <em>Phase</em> 2. <em>Prereq</em> M0.1 (L-LEAN), M2.0. <em>Independent-of</em> M1.x, M2.1. <em>Build:</em> the arm with <code>𝒜 = ∅</code>, <code>γ</code> fixed <code>0.9</code> (ChaCAL's own setting, <code>fagnou-2024-chacal</code> App. C [V]), <code>diag_convention = kept</code>, on <code>e3_t2</code>, <code>N = 8</code>, 150 steps; beside it the B-J and B-P5 plants: <code>γ = 0.5 ⇒ max|O − PV| = 2.3003</code> (<code>RUN[coord]</code>), <code>β = 0</code> at the softmax corner <code>⇒ &gt; 0.5</code> (<code>READ V16_ARM_SMPRIME.md:336-339</code>), ChaCAL-published's <code>A_s</code> <code>⇒ O(1)</code> at any <code>γ &gt; 0</code>, a dense <code>M</code> with <code>upper=False</code> disagreeing with the dense inverse. <em>Prove:</em> nothing (P1 is M0.1's). <em>Measure:</em> the cell price against the band; <code>torch.equal(O(0), PV)</code>; the plant residuals; determinism forward and backward over 8 repeats under strict mode. <em>PASS:</em> cell within <code>[−1.8 %, +14.4 %]</code> of <code>1.681 s</code> <strong>or</strong> flagged as the P-8 floor if above <code>2.2×</code>; <code>torch.equal</code> <code>True</code>; every plant fails at <code>O(1)</code>; <code>max|Δ| = 0.0</code> over 8 repeats forward and backward. <em>KILL:</em> <code>torch.equal</code> <code>False</code> at <code>γ = 0</code>; a plant that passes; a backward that raises under strict mode (then the solve route is not the first deterministic gated wing, V-23). No capability number is read: BED-M is contained (P2, D-2). <em>Price:</em> <code>17.4 s</code> (<code>8 × 1.681 + 4</code>). <em>Mechanism:</em> V-24, V-3, M-8, P-8, V-16, D-2. <em>Deliverable:</em> <code>results/shape_bed_m.jsonl</code> (<code>kind = chacal_diag</code>) + the plant table in <code>docs/PLAN.md</code> §P2. <em>Evenings:</em> 1. <strong>[cheapest-decisive 4 of 5]</strong></p>
+<p><strong>M2.3 — Give the solve increment and the determinism reading a live producer.</strong> <em>Phase</em> 2. <em>Prereq</em> M2.0. <em>Independent-of</em> M1.x, M2.1, M2.2. <em>Build:</em> the one code edit the judges owe (C-1, <code>proposition_ledger.md</code>): <code>scripts/k_cert.py::determinism_at_64</code> gains a fourth quantity (<code>solve_triangular</code> forward/backward bitwise over 8 repeats, flag ON and OFF) and a <code>solve_increment</code> block (solve+<code>Pz</code> vs <code>PV</code>, fwd+bwd, median of 14 after 2 warm-ups, <code>n ∈ {2048, 4096, 8192}</code>, <code>CUBLAS_WORKSPACE_CONFIG=:4096:8</code> exported before process start). <em>Measure:</em> the four numbers above regenerated into <code>results/k_cert_local.json</code>. <em>PASS:</em> increment within <code>±12 %</code> of <code>1.041 / 2.312 / 4.542 ms</code>; solve bitwise both ways; <code>cumsum</code> still raises (the three-outcome table). <em>KILL:</em> an increment outside the band ⇒ every shape price in §0.2 is re-derived before any card past M3.1 runs; a "pass" on an operator that raised is V-16 and is refused. <em>Price:</em> <code>≈ 60 s</code> [ASSUMED: the increment block alone] or <code>523.9 s</code> [MEASURED] for the full <code>k_cert</code> rerun. <em>Mechanism:</em> P-1, V-16, M-8, M-3. <em>Deliverable:</em> <code>results/k_cert_local.json</code> (regenerated, <code>git_head</code> updated) + <code>COSTS.md</code> §1.6 row (author's edit). <em>Evenings:</em> 1.</p>
+<p><strong>M2.4 — Run the front-door binds on BED-S's real draw, each plant a FOUND cell.</strong> <em>Phase</em> 2. <em>Prereq</em> M1.4 (admitted bed), M2.0, M0.1. <em>Independent-of</em> M2.1, M2.3. <em>Build:</em> B-E1 (<code>𝒜 = ∅ ⇒ torch.equal</code> with ChaCAL-diag; <code>𝒜 ≠ ∅ ⇒ ‖Π_shape − Π_ChaCAL-diag‖_∞ = O(1)</code> downstream, a weight gap), B-E2 (conservation <code>q^{(0)} + Σq^{(k)} + q^{(sink)} = 1</code> to <code>1e-15</code>; BOS dropped ⇒ raise), B-G1 (<code>V ≡ 1 ⇒ max|Δz| ≤ 1e-15</code>; Gaussian <code>V ⇒ O(1)</code>, <code>0.1096 / 0.363 / 1.127</code> on three draws; Sherman–Morrison vs re-solve <code>≤ 1e-12</code>; non-causal <code>P ⇒ Δz[:i] ≠ 0</code>, <code>0.0761 / 0.0868</code>), B-G2 (permuted oracle <code>≠ 0</code>; <code>+0.1σ</code> preferred; <code>−Δz</code> distinguished), B-H1 (committor vs <code>bed_1.committor</code> on real sets <code>0.0</code>; wrong-set plant <code>O(1)</code>; Kirchhoff <code>&lt; 1e-10</code> at <code>K = 2</code>), B-H2 (argmin identity V-3 declared; planted leak <code>R² ≥ 0.99</code>), B-K (segmentation zeros by <code>torch.equal</code>; <code>−30</code> logit leaves the block non-zero), each through <code>bed_s.build → arm.forward → journal row → verdict()</code> with its own <code>kind</code> and <code>manifest_hash</code> (V-14). <em>Measure:</em> the residuals and the plant failures, counts printed. <em>PASS:</em> every honest half passes and every plant fails at <code>O(1)</code> — the <code>0.9749 / 0.9165 / 1.000 / 0.4845</code> pattern (<code>READ workdonenewseal.md:114-122</code>). <em>KILL:</em> any bind with an empty rejection region is struck (V-24); the B-I certificate bind stays <strong>dormant</strong> until a mask ships (D-4). <em>Price:</em> <code>≈ 20 s</code> (nine plant cells at <code>≤ 1.681 s</code> + <code>4.0</code>, DERIVED; float64 identities on CPU are free). <em>Mechanism:</em> V-24, V-3, V-14, V-16, D-5, V-26, D-2. <em>Deliverable:</em> <code>results/shape_bed_s.jsonl</code> (<code>kind ∈ {plant_*}</code>) + <code>docs/PLAN.md</code> §P2 bind table. <em>Evenings:</em> 2.</p>
+<h2 id="4-phase-3-the-arena-on-bed-s-t-8-m-8-k-2-n-8-4769-params-150-steps-one-thread-lane">4. Phase 3 — the arena on BED-S (<code>t* = 8, m = 8, K = 2</code>, <code>N = 8</code>, <code>4,769</code> params, 150 steps, one thread lane)<a class="headerlink" href="#4-phase-3-the-arena-on-bed-s-t-8-m-8-k-2-n-8-4769-params-150-steps-one-thread-lane" title="Permanent link">#</a></h2>
+<p><strong>M3.1 — Run the ChaCAL control before the shape: ChaCAL-diag + softmax, <code>N = 8</code>.</strong> <em>Phase</em> 3. <em>Prereq</em> M1.4, M2.2, M2.4. <em>Independent-of</em> M2.1, M2.3, M3.6. <em>Build:</em> two invocations, the fellow approximator with <code>𝒜 = ∅</code> at the shape's <code>γ</code> initialisation rule and the depth-1 softmax with the same <code>[m, K+2]</code> head; synchronised, randomised order; every M0.2 field journalled. <em>Measure:</em> per seed <code>φ</code>-NRMSE, harmonic residual with its two unit factors, argmin accuracy + CP, <code>γ̂</code>, <code>Λ</code>; the paired sd of the contrast. <em>PASS:</em> eight FOUND records per arm; <code>verdict()</code> accepts (<code>N = 8</code> distinct seeds). <em>KILL:</em> ChaCAL-diag's residual ratio against softmax <code>≥ 10</code> <strong>before</strong> the shape runs ⇒ "joint consistency" is ChaCAL's property, not the boundary rows', and Bet E is re-filed against ChaCAL-diag (V-3 in prospect). <em>Price:</em> <code>34 s</code>. <em>Mechanism:</em> D-1, R-SKY, V-3, M-2 (order stated: control first), M-16. <em>Deliverable:</em> <code>results/shape_bed_s.jsonl</code> (<code>kind ∈ {chacal_diag, softmax}</code>). <em>Evenings:</em> 1.</p>
+<p><strong>M3.2 — Run the shape, <code>N = 8</code>: the pair that fixes the realised sd.</strong> <em>Phase</em> 3. <em>Prereq</em> M3.1. <em>Independent-of</em> M3.6. <em>Build:</em> the shape with the declared sets, <code>γ</code> learnable, both heads. <em>Measure:</em> everything in M3.1 plus <code>‖P̂ − P_env‖_∞</code>, <code>1/(1 − γ̂)</code>, the field cosine, the sign column; the <strong>realised paired sd</strong> against softmax and against ChaCAL-diag fills the MDE row (<code>0.039827</code> is the record's row-2 instance, not BED-S's). <em>PASS:</em> eight records; realised sd <code>≤ 0.034451</code> (then MDE₈ <code>≤ 0.039827</code>) — otherwise the K-P reprice fires: sd <code>2.18×</code> the pilot (M-3's precedent) ⇒ <code>N</code> is re-derived from the RUN table before any bet is scored. <em>KILL (D-2 learnability):</em> <code>‖P̂ − P_env‖_∞ &lt; 1e-3</code> on <code>≥ 6/8</code> ⇒ the arm copied the environment; registered as a learnability reading, no capability number. <em>Price:</em> <code>17.4 s</code> (softmax already banked) — <code>34 s</code> if re-run as a pair. <em>Mechanism:</em> M-3, D-2, V-17, M-9. <em>Deliverable:</em> <code>results/shape_bed_s.jsonl</code> (<code>kind = shape</code>) + the MDE row in <code>docs/PLAN.md</code> §P3. <em>Evenings:</em> 1. <strong>[cheapest-decisive 5 of 5 is the LR-instrument spec M4.3; this card is the sixth]</strong></p>
+<p><strong>M3.3 — Run the remaining fellows: ChaCAL-published, ChaCAL-with-sink, InfSA-K16, 1-hop softmax, majority/random/mean.</strong> <em>Phase</em> 3. <em>Prereq</em> M3.2. <em>Independent-of</em> M3.4–M3.6. <em>Build:</em> ChaCAL-published (diagonal removed in the inverse, sub-stochastic, <code>[V-fetched]</code> by one HTML read — re-read against the PDF first); ChaCAL-with-sink-token at the shape's <strong>trained</strong> <code>γ̂</code> (order stated, M-2); InfSA-style Neumann <code>K = 16</code> no boundaries (<code>roffo-2026-infsa</code> [V]) with <code>δ · ‖V‖_∞</code> printed and <code>‖V‖_∞</code> journalled; the three free argmin controls. <em>Measure:</em> the creditable contrasts of M1.3. <em>PASS:</em> the K-E1 reading at <code>N = 8</code> is reported as "separated / not separated at <code>MDE₈</code>", never as parity (M-13). <em>KILL (K-E1, first tier):</em> ChaCAL-with-sink within <code>MDE₈</code> of the shape's committor read on <code>≥ 6/8</code> seeds <strong>and</strong> residual within <code>2×</code> ⇒ escalate to M4.1; (K-H2): McNemar <code>p &gt; 0.05</code> shape vs 1-hop softmax on the argmin ⇒ BED-S struck. <em>Price:</em> <code>2 × 17.4 + 44.9 + 17.4 ≈ 97 s ≈ 1.6 min</code> (the free controls <code>0</code>). <em>Mechanism:</em> V-24, D-1, M-13, C8, L-CERT (the <code>K = 16</code> δ in vector units), P-10. <em>Deliverable:</em> <code>results/shape_bed_s.jsonl</code> (five more <code>kind</code>s). <em>Evenings:</em> 1.</p>
+<p><strong>M3.4 — Run the depth-5 softmax skyline (Bet D).</strong> <em>Phase</em> 3. <em>Prereq</em> M3.2. <em>Independent-of</em> M3.3, M3.5, M3.6. <em>Build:</em> a <code>⌊log₂ 8⌋ + 2 = 5</code>-layer softmax stack at unmatched parameters, depth chosen <strong>by analogy</strong> with <code>sanford-2024-logdepth</code> Thm 4.2 (the <code>hop_k → committor</code> reduction is NOT FOUND); width and CoT skylines (<code>yehudai-2025-depthwidth</code>, <code>merrill-2024-cot</code>) stay <code>NOT MEASURED</code> and the table says so. <em>Measure:</em> <code>acc_shape − acc_sky</code> against <code>MDE₈</code> of the realised sd. <em>PASS (prediction):</em> within <code>MDE₈</code> — the shape's claim is exactness, one-read consistency as a cost statement, and the boundary mechanism. <em>KILL (counter):</em> short by <code>&gt; MDE₈</code>, sign logged (D-7 calibration column). <em>Price:</em> <code>64.8 s</code> [ASSUMED linear in depth]; the first cell replaces the assumption. <em>Mechanism:</em> D-1, R-SKY, D-7, P-10. <em>Deliverable:</em> <code>results/shape_bed_s.jsonl</code> (<code>kind = sky_depth5</code>) + the calibration row. <em>Evenings:</em> 1.</p>
+<p><strong>M3.5 — Run the cached-mixture arm on <code>ΔP</code> and <code>ΔV</code> plants.</strong> <em>Phase</em> 3. <em>Prereq</em> M3.2. <em>Independent-of</em> M3.3, M3.4, M3.6. <em>Build:</em> <code>O_cached = P̂_base (I − γ P̂_base)^{-1} V_int</code> with <code>P̂</code> frozen from the un-intervened context (<code>momennejad-2017-sr</code>, <code>russek-2017-predictive</code>, mechanism [U]); two draw batches, one where moves change <code>P_env</code>, one where only <code>V</code> changes. <em>Measure:</em> field cosine and residual per batch, paired by seed. <em>PASS:</em> fails on <code>ΔP</code> plants (cosine below the shape by <code>&gt; MDE₈(cos)</code>) and passes on <code>ΔV</code> plants. <em>KILL (K-G1):</em> within one seed sd of the shape on <code>ΔP</code> plants on <code>≥ 6/8</code> ⇒ the interventional channel is a per-row control wearing a name (C5-type). <em>Price:</em> <code>2 × 17.4 ≈ 35 s</code>. <em>Mechanism:</em> D-2, V-9, D-5. <em>Deliverable:</em> <code>results/shape_bed_s.jsonl</code> (<code>kind ∈ {cached_dP, cached_dV}</code>). <em>Evenings:</em> 1.</p>
+<p><strong>M3.6 — Run the first-ever BED-K cell: the native delay control.</strong> <em>Phase</em> 3. <em>Prereq</em> M2.0, M0.1. <em>Independent-of</em> every BED-S card. <em>Build:</em> <code>hard_delay_attention</code> (<code>READ ceq/beds/bed_k.py:311-336</code>, reproduces the delay to <code>(n − 1)e^{−45}</code>) beside the shape at <code>γ &gt; 0</code> on <code>build_delay(n = 500, d = 4, seed = 7)</code> (the pinned generator, sha <code>15de94b4…</code>, <code>READ COSTS.md</code> §0); <code>N = 8</code>. <em>Measure:</em> NRMSE against the Hankel ceiling <code>1/d</code>. <em>PASS:</em> the shape within <code>MDE₈</code> of the native control — "not worse than one head at a fixed offset" (R-SKY). <em>KILL:</em> the shape claiming a delay advantage (<code>V15Kernel.first_order_cannot_delay</code> says a resolvent with <code>γ &gt; 0</code> has none); or the shape short by <code>&gt; MDE₈</code> ⇒ a capability gap the paper states. This is also the Q2/W1 admission condition (<code>READ V20_R15_THEORY_TABLE.md:304-306</code>: zero cells of BED-K's shape ever run). <em>Price:</em> <code>34 s</code>. <em>Mechanism:</em> R-SKY, V-3, D-3 (the <code>d</code> dial), F4→NOT-PUT lifted. <em>Deliverable:</em> <code>results/shape_bed_k.jsonl</code>. <em>Evenings:</em> 1.</p>
+<p><strong>M3.7 — Vary the dials: the one-factor-at-a-time sweep.</strong> <em>Phase</em> 3. <em>Prereq</em> M3.2 admitted and not killed. <em>Independent-of</em> M3.3–M3.6. <em>Build:</em> seven design points — centre <code>(8, 2, 8)</code> plus <code>t* ∈ {2, 32}</code>, <code>K ∈ {3, 4}</code>, <code>m ∈ {4, 16}</code> — each a shape + softmax pair with the census re-run per point (<code>t*</code> placed by the DAG's depth, read off the hop ladder, never a kill rate). <em>Measure:</em> the M3.2 statistics per point; the exact zero-information floor per <code>m</code> (<code>0.75 / 0.875 / 0.9375</code>). <em>PASS:</em> every point admitted by its census and the argmin error moves with <code>t*</code> (D-3: a dial that does not vary describes nothing). <em>KILL:</em> a point that cannot be placed (<code>t* = 32</code> unreachable inside the causal window) is recorded, not forced; error flat across <code>t*</code> ⇒ the dial is decoration and only the centre is reported. <em>Price:</em> <code>3.46 min</code> at <code>29.6 s</code> per pair (<code>3.97 min</code> at <code>34 s</code>). <em>Mechanism:</em> D-3, P-8, V-25, V-10. <em>Deliverable:</em> <code>results/shape_bed_s_dials.jsonl</code> + the <code>t*/K/m</code> table. <em>Evenings:</em> 2.</p>
+<p><strong>M3.8 — Open the vector-label lane on BED-M (<code>return z</code>, not <code>z[:, s−1]</code>).</strong> <em>Phase</em> 3. <em>Prereq</em> M2.2. <em>Independent-of</em> every BED-S card. <em>Build:</em> a separate lane and journal (a vector label voids <code>PUBLISHED_SOFTMAX_8192</code>, <code>READ MISTAKES.md:701-708</code>); the <code>vector_readout</code> plumbing (<code>READ scale/m3_quintuple.py:368,483</code>); label <code>z* ∈ ℝ^{s}</code> from <code>equilibrium_oracle</code> with the last-coordinate discard removed; shape vs softmax with the vector readout, <code>N = 8</code>, <code>e3_t8</code>. <em>Measure:</em> position-matched NRMSE vector, harmonic residual with <code>P_env</code> = the chain; B-G2's three plants. <em>PASS:</em> a journalled vector, histogram and quantiles (the Q6 census read <code>0 of 40</code>, <code>READ V20_R15_THEORY_TABLE.md:213</code>). <em>KILL:</em> the permuted oracle scoring <code>0</code> on the chosen metric ⇒ metric struck (V-26); <code>shape − corner-3</code> on this lane is VOID by registration (P2, D-2). <em>Price:</em> <code>34 s</code>. <em>Mechanism:</em> D-1, M-1, V-26, D-2. <em>Deliverable:</em> <code>results/shape_bed_m_vector.jsonl</code>. <em>Evenings:</em> 1.</p>
+<h2 id="5-phase-4-verdicts-journal-reads-two-priced-runs">5. Phase 4 — verdicts (journal reads; two priced runs)<a class="headerlink" href="#5-phase-4-verdicts-journal-reads-two-priced-runs" title="Permanent link">#</a></h2>
+<p><strong>M4.1 — Score the E1 kill at <code>MDE₈</code>; escalate to <code>N = 16</code> if unseparated.</strong> <em>Phase</em> 4. <em>Prereq</em> M3.3. <em>Independent-of</em> M4.2, M4.3. <em>Build:</em> the K-E1 rule frozen in <code>bind_ledger.md</code> §5: fires at within-<code>MDE₈</code> on <code>≥ 6/8</code> <strong>and</strong> residual within <code>2×</code>; unseparated-and-unfired ⇒ eight more seeds for shape, ChaCAL-with-sink and ChaCAL-diag. <em>Measure:</em> the contrast at <code>N = 16</code> against <code>MDE₁₆</code> of the realised sd (<code>0.025820</code> at sd <code>0.034451</code>). <em>PASS:</em> separated at <code>N = 16</code> by <code>&gt; MDE₁₆</code>. <em>KILL:</em> K-E1 fires ⇒ component (e) is a parameterisation of ChaCAL's sink; the paper's delta collapses to "ChaCAL + certificate + Lean containment + bed" (the median sentence of <code>design_falsify.md</code> §6.2) and every later card runs under that sentence. <em>Price:</em> <code>44 s</code> (<code>3 × 8 × 1.681 + 4</code>). <em>Mechanism:</em> M-13, M-7, D-7, M-9. <em>Deliverable:</em> <code>docs/PLAN.md</code> §P4 verdict row + calibration column entry. <em>Evenings:</em> 1.</p>
+<p><strong>M4.2 — Score Bets A, B, E from the journal (residual ratio, cosine, argmin floor).</strong> <em>Phase</em> 4. <em>Prereq</em> M3.2, M3.3. <em>Independent-of</em> M4.1, M4.3. <em>Build:</em> nothing new; the three deciding numbers — <code>cos_shape − cos_softmax</code> vs <code>MDE₈(cos)</code> (its own realised sd, V-17); <code>CP_upper(err_shape)</code> vs <code>floor_exact(k = 1)</code> with <code>CP_lower &lt; floor ≤ CP_upper</code> as SPLIT; <code>r_softmax / r_shape</code> with <code>≥ 10</code> confirm, <code>≤ 2</code> refute, <code>(2, 10)</code> SPLIT, both unit factors printed. <em>PASS/KILL:</em> as filed in <code>bind_ledger.md</code> §6 (frozen before M3.1). <em>Price:</em> <code>0</code>. <em>Mechanism:</em> D-7, L-SIGN, V-26, V-17, M-2. <em>Deliverable:</em> <code>docs/PLAN.md</code> §P4 calibration column (checked / wrong / sign) — the record's own is <code>7 of 8</code> optimistic (<code>READ V16_CALIBRATION.md:96-100</code>). <em>Evenings:</em> 1.</p>
+<p><strong>M4.3 — Write the <code>γ</code>-pinning LR instrument and read the verdict.</strong> <em>Phase</em> 4 (the spec is a first-evening item). <em>Prereq</em> none for the spec; M3.2 for the verdict. <em>Independent-of</em> M4.1, M4.2. <em>Build:</em> <code>docs/LR_GAMMA.md</code> — <code>Λ = 2[LL(γ̂) − LL(γ ≡ 0)]</code> on a declared held-out set (<code>n_eval = 4096</code>), null <code>½χ²₀ + ½χ²₁</code> (95 % point <code>2.706</code>, not <code>3.841</code>; Ruling 10′ was stated for <code>β</code>, <code>READ V17K_RULINGS.md:389-436</code>), PINNED <code>Λ ≤ 2.706</code>, MOVED <code>Λ &gt; 8.318</code>, interval verdict between; the seed-count rule "MOVED on <code>≥ 6/8</code>", SPLIT <code>3/8–5/8</code>; <code>1/(1 − γ̂)</code> printed beside every <code>δ</code>; the ablation <code>(I − γ̂P̂)^{-1} → I</code> at trained weights; the <code>|γ̂| &lt; 0.05</code> rule deleted (two verdicts for one cell, M-20). <em>Measure:</em> <code>Λ</code> per seed from M3.2. <em>PASS (Bet C):</em> MOVED on <code>≥ 6/8</code>. <em>KILL:</em> PINNED on <code>≥ 6/8</code> ⇒ softmax wearing a name on this bed; the equilibrium sentence is withdrawn; ChaCAL-with-sink at <code>γ̂ = 0</code> is unrunnable and M4.1 is void (dependency stated in <code>design_falsify.md</code> §5). Mirror kill: <code>γ̂ &gt; 0.99</code> on <code>≥ 6/8</code> ⇒ the certificate is vacuous on the <code>z/Δz</code> channel. <em>Price:</em> <code>0</code> (journal read); the ablation <code>≤ 17.4 s</code>. <em>Mechanism:</em> V-9, M-2, V-17, M-20, C5. <em>Deliverable:</em> <code>docs/LR_GAMMA.md</code> + the verdict row. <em>Evenings:</em> 1. <strong>[cheapest-decisive 5 of 5 — the spec half]</strong></p>
+<p><strong>M4.4 — Schedule TOST on the <code>𝒜 = ∅</code> parity half — not waived.</strong> <em>Phase</em> 4. <em>Prereq</em> M3.2, M4.3 (MOVED, else the half is softmax vs softmax). <em>Independent-of</em> M4.1, M4.2. <em>Build:</em> shape at <code>γ̂</code> with <code>𝒜 = ∅</code> vs ChaCAL-diag at the same <code>γ̂</code>, margin <code>0.5σ</code> fixed here (M-2), <code>α = 0.05</code> per side (<code>schuirmann-1987-tost</code> [V]); the realised <code>sd_d</code> from M3.1/M3.2 chooses the tier: paired <code>N = 36</code> if <code>sd_d ≈ σ</code> (power <code>0.8014</code>, <code>RUN</code>), two-sample <code>N = 70</code> if pairing buys nothing (power <code>0.8049</code>, <code>RUN</code>); the sequential (anytime-valid) form is NOT FOUND at [V] (<code>sweep_methods.md</code> S8) and fixed-<code>N</code> stands. <em>Measure:</em> the 90 % CI of the contrast against <code>±0.5σ</code>. <em>PASS:</em> CI inside the margin ⇒ the identity half of B-E1 is confirmed by equivalence, not only by bitwise identity. <em>KILL:</em> CI outside ⇒ the "same operator" sentence is withdrawn and <code>diag_convention</code> is inspected first. <em>Price:</em> <code>119 s</code> (paired <code>N = 36</code>) or <code>228 s</code> (two-sample <code>N = 70</code>); both under <code>4 GPU-min</code>; M-13's <code>N = 70</code> is affordable and is on the schedule. <em>Mechanism:</em> M-13, M-9, M-2, V-3. <em>Deliverable:</em> <code>results/shape_tost.jsonl</code> + <code>docs/PLAN.md</code> §P4 TOST row. <em>Evenings:</em> 1.</p>
+<p><strong>M4.5 — File the leap dossier and the two honest sentences.</strong> <em>Phase</em> 4. <em>Prereq</em> M4.1–M4.4. <em>Build:</em> the R15 template's Phase-E items with the beds replaced (<code>READ CEQ_V20_R15_CONTRACT.md:153-169</code>): candidate built with identity binds, manifests, certificates, param-matched, verdict by the registered clauses, purge, prognosis; both sentences of <code>design_falsify.md</code> §6 with every bracket filled from journals or left <code>NOT MEASURED</code>. <em>PASS:</em> every number in the dossier points at a <code>results/</code> row. <em>KILL:</em> a bracket filled from prose (P-1, P-2). <em>Price:</em> <code>0</code>. <em>Mechanism:</em> P-1, P-3, D-7, L-G2 (journals never move; a superseded cell gets a marker). <em>Deliverable:</em> <code>docs/CEQ_SHAPE_DOSSIER.md</code>. <em>Evenings:</em> 1.</p>
+<h2 id="6-phase-5-the-cost-law-and-the-memory-ceiling-the-s-sweep-is-the-precondition-for-any-cost-law">6. Phase 5 — the cost law and the memory ceiling (the <code>s</code>-sweep is the precondition for any cost law)<a class="headerlink" href="#6-phase-5-the-cost-law-and-the-memory-ceiling-the-s-sweep-is-the-precondition-for-any-cost-law" title="Permanent link">#</a></h2>
+<h3 id="50-the-residency-model-that-sets-n-per-s-derived-assumed-band-on-c_operator">5.0 The residency model that sets <code>n</code> per <code>s</code> (DERIVED; <code>[ASSUMED]</code> band on <code>C_OPERATOR</code>)<a class="headerlink" href="#50-the-residency-model-that-sets-n-per-s-derived-assumed-band-on-c_operator" title="Permanent link">#</a></h3>
+<p>Bytes <code>≈ 1.256 × [C_OP · n·s²·4 + 2·n·s·d·4 + 17.874·n·s·d·4]</code>, with <code>1.256</code> the worst reserved/allocated ratio over resident shapes (<code>READ COSTS.md</code> §3.2), <code>C_RESIDUAL = 17.874</code> (R² <code>0.996373</code>, <code>READ COSTS.md:89</code>), <code>C_OP ∈ [3.823, 5.823]</code> — the signed arm's <code>3.823</code> (R² <code>0.996373</code>, <code>:90</code>) plus <code>1…2</code> retained tensors for <code>M</code> and <code>M̄</code> (<code>sec_cost.md</code> §4.x.7, <strong>[ASSUMED]</strong>; M2.3's memory census replaces it), budget <code>0.90 × 7.996 = 7.20 GiB</code>. Largest power-of-two <code>n</code> that fits (<code>RUN</code>, the one-liner of §0.3):</p>
+<table>
+<thead>
+<tr>
+<th><code>s</code></th>
+<th><code>n</code> at <code>C_OP = 3.823</code></th>
+<th><code>n</code> at <code>C_OP = 5.823</code> (carried)</th>
+<th>check</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>64</td>
+<td>32768 (<code>5.52 GiB</code>)</td>
+<td>32768 (<code>6.78 GiB</code>)</td>
+<td>softmax measured resident at 32768, <code>4.908 GiB</code> (<code>READ COSTS.md:112</code>)</td>
+</tr>
+<tr>
+<td>256</td>
+<td>4096 (<code>6.36</code>)</td>
+<td><strong>2048</strong> (<code>4.44</code>)</td>
+<td>—</td>
+</tr>
+<tr>
+<td>1024</td>
+<td>256 (<code>5.19</code>)</td>
+<td><strong>128</strong> (<code>3.85</code>)</td>
+<td>—</td>
+</tr>
+<tr>
+<td>4096</td>
+<td>16 (<code>4.90</code>)</td>
+<td><strong>8</strong> (<code>3.71</code>)</td>
+<td>dense at <code>n = 2048</code>: <code>137 GB</code> — refused (<code>sec_apparatus.md</code> §A.6)</td>
+</tr>
+</tbody>
+</table>
+<p>So the sweep runs at <code>(s, n) ∈ {(64, 2048), (256, 2048), (1024, 128), (4096, 8)}</code>; any <code>n</code> above the carried column is attempted only after M2.3's measured <code>C_OP</code> licenses it. The corner-3 base (<code>complex64</code>, <code>8 B/elem</code>) halves every <code>n</code> and is not swept.</p>
+<p><strong>M5.1 — Run the synchronised, randomised <code>s</code>-sweep.</strong> <em>Phase</em> 5. <em>Prereq</em> M2.3 (the producer), M2.0. <em>Independent-of</em> every Phase 3–4 card (it can run first; it must run before any <em>cost law</em> is quoted — K-9). <em>Build:</em> the harness edits the record priced and never made: a <code>--seq-len</code> flag (<code>S, D = 64, 24</code> is a module constant at <code>READ scripts/v15_r1.py:137</code>; <code>seq_len</code> does not occur — <code>RUN[MERCURY]</code> grep in <code>sec_state.md</code> S.5), one substitution, two <code>torch.cuda.synchronize()</code> calls, <strong>and</strong> a randomised cell order (the fifth edit, never priced); shape and softmax at the four <code>(s, n)</code> points above, <code>N = 8</code>, 150 steps, <code>torch.cuda.max_memory_reserved</code> journalled per cell. <em>Prove:</em> nothing. <em>Measure:</em> <code>s/step</code> and peak reserved per <code>(arm, s, n)</code>; the run-order correlation <code>ρ(secs, order)</code> recomputed. <em>PASS:</em> <code>ρ(secs, order)</code> with <code>p &gt; 0.05</code> (the confound removed; C17's <code>+0.7029</code> was the disease); the increment's exponent in <code>s</code> fitted with a CI. <em>KILL (K-9):</em> the fitted exponent's CI excludes <code>2</code> toward <code>3</code>; or the solve does not beat <code>QKᵀ</code> at the <code>s</code> where the paper claims it; <strong>or any price quoted before this card runs</strong>. <em>Price:</em> <code>206–537 GPU-s</code> band (<code>READ V20_R15_THEORY_TABLE.md:104-109</code>), no point; the randomised order adds no GPU time. <em>Mechanism:</em> D-3, P-8, C17, M-3, K-9. <em>Deliverable:</em> <code>results/shape_s_sweep.jsonl</code> + <code>docs/COST_LAW.md</code> §sweep. <em>Evenings:</em> 3.</p>
+<p><strong>M5.2 — Refit the cost law with <code>s</code> as a variable and re-price every card.</strong> <em>Phase</em> 5. <em>Prereq</em> M5.1. <em>Independent-of</em> M5.3. <em>Build:</em> <code>s/step = a · n^b · s^c</code> per arm with R² and the CI on <code>c</code>; the increment law <code>Δ(s, n)</code>; the memory law <code>C_OP</code> re-solved against the allocator (the <code>3.823</code> is retired from <code>[ASSUMED]</code>). <em>Measure:</em> R² per law; the <code>[ASSUMED]</code> tags of §0.2 and §5.0 that the fit closes. <em>PASS:</em> every shape price in <code>docs/PRICE_LEDGER.md</code> carries a fitted law with R² <code>≥ 0.99</code> and no <code>[ASSUMED]</code> remains on a Phase 3–4 card. <em>KILL:</em> R² <code>&lt; 0.99</code> at any <code>s</code> ⇒ that <code>s</code> is quoted as a measured point, never as a law (the record's own R² gate refused paged points, <code>READ COSTS.md:76-79</code>). <em>Price:</em> <code>0</code>. <em>Mechanism:</em> M-8, P-8, V-22, P-1. <em>Deliverable:</em> <code>docs/COST_LAW.md</code> + <code>docs/PRICE_LEDGER.md</code> (revised, superseding rows kept with a marker, L-G2). <em>Evenings:</em> 1.</p>
+<p><strong>M5.3 — Spend the 9,600-step ladder on a survivor only.</strong> <em>Phase</em> 5. <em>Prereq</em> M4.1–M4.4 with the shape alive on at least one creditable contrast. <em>Independent-of</em> M5.1, M5.2. <em>Build:</em> the R1′ ladder (<code>×64</code> steps) for the surviving pair. <em>Measure:</em> the same statistics at the ladder's end; the crossing and residual curves. <em>PASS:</em> the <code>N = 8</code> verdict survives the ladder within its own <code>MDE₈</code>. <em>KILL:</em> a verdict that reverses at the ladder is filed as the ladder's, and the 150-step cell is marked a pilot (M-3). <em>Price:</em> <code>32–36 min</code> per pair. <em>Mechanism:</em> M-3, M-6, P-8. <em>Deliverable:</em> <code>results/shape_ladder.jsonl</code>. <em>Evenings:</em> 1.</p>
+<p><strong>M5.4 — Price the chunked and Neumann paths past <code>s = 64</code> (optional; <code>NOT MEASURED</code>).</strong> <em>Phase</em> 5. <em>Prereq</em> M5.1. <em>Independent-of</em> all. <em>Build:</em> a chunk-size sweep of the intra-chunk primitive (<code>yang-2024-deltanet</code> Eq. 10 pattern [V]; no <code>d × d</code> inter-chunk state exists for softmax <code>P</code>, <code>hu-2025-ssdtheory</code> [V]); the Neumann <code>K</code>-hop route at <code>s ∈ {1024, 4096}</code> with <code>δ · ‖V‖_∞</code> printed. <em>PASS/KILL:</em> the MAC law of <code>sec_cost.md</code> §4.x.9 reproduced in wall-clock within the dispatch gap; a chunked kernel that is not faster than <code>solve_triangular</code> at any <code>s</code> is reported as such (V-9). <em>Price:</em> <code>NOT MEASURED — needs a chunked kernel</code>; the Neumann route <code>≈ K ×</code> a solve cell. <em>Mechanism:</em> M-8, P-4, V-9. <em>Deliverable:</em> <code>docs/COST_LAW.md</code> §kernel. <em>Evenings:</em> 4 (spec 1 + kernel 3, the author's code).</p>
+<h2 id="7-phase-6-deferred-instruments-and-the-kaggle-gate">7. Phase 6 — deferred instruments and the Kaggle gate<a class="headerlink" href="#7-phase-6-deferred-instruments-and-the-kaggle-gate" title="Permanent link">#</a></h2>
+<p><strong>M6.1 — The Kaggle gate: certify the card before any cell, after the author's yes.</strong> <em>Phase</em> 6. <em>Prereq</em> the author's explicit yes (a node, not a formality); Gate 0 (<code>READ V17K_RULINGS.md:3-22</code>, open rulings <code>= 0</code>, with G0.10's circularity — rows 1–2 blocked on numbers only the Kaggle run produces — resolved by the author). <em>Independent-of</em> every local card (nothing local depends on it). <em>Build:</em> <code>python scripts/k_cert.py --out results/k_cert_kaggle.json</code> unchanged on the card (P100-16GB or 2×T4-16GB, recorded which), then <code>scripts/k_cost.py --cert results/k_cert_kaggle.json</code>; the M2.3 fourth quantity and solve increment included. <em>Measure:</em> the fifteen empty rows of <code>READ COSTS.md</code> §2. <em>PASS:</em> the local laws describe the Kaggle card within the tolerance stated by the author <strong>before</strong> reading it (the reproduction rule, <code>READ COSTS.md</code> §2). <em>KILL:</em> any threshold carried across the device boundary (V-22); any launch, upload or training start without the yes (memory rule). <em>Price:</em> <code>≈ 8.7 GPU-min</code> on Kaggle [ASSUMED = the local <code>523.9 s</code>, <code>READ COSTS.md:62</code>]; against the 12 h session / 30 GPU-h week limits (<code>READ COSTS.md</code> §3, <code>[INHERITED]</code>). <em>Mechanism:</em> V-22, P-8, the Kaggle-yes rule, G0.10. <em>Deliverable:</em> <code>results/k_cert_kaggle.json</code>; <code>COSTS.md</code> §2 filled (author's edit); <code>docs/KAGGLE_GATE.md</code>. <em>Evenings:</em> 1 + the yes.</p>
+<p><strong>M6.2 — The LM <code>γ</code> cell (component (j)) on the pinned <code>enwik8</code> slice.</strong> <em>Phase</em> 6. <em>Prereq</em> M6.1, M4.3 (MOVED on BED-S, else the bet is retired first). <em>Independent-of</em> the topology cards. <em>Build:</em> the shape in <code>ceq/hf/</code> (<code>READ MODEL_CARD.md:73-79</code>: no checkpoint ships; params <code>25,736,232</code> vs <code>25,728,000</code>, <code>+0.032 %</code>, matched by Ruling 3) vs ChaCAL at fixed <code>γ = 0.9</code>, <code>N = 8</code>, on the <code>90/5/5</code> split (<code>READ kaggle/README.md:31-43</code>, sha <code>2b49720e…</code>); the three unpinned sources (<code>lichess_*</code>, <code>tinystories_cdla</code>) make the hash cell raise <code>kdata.MissingPin</code> and are not used. <em>Measure:</em> <code>Λ</code> per seed with the boundary null; perplexity delta against ChaCAL within <code>MDE₈</code>. <em>PASS:</em> MOVED on <code>≥ 6/8</code>. <em>KILL:</em> PINNED on <code>≥ 6/8</code> (consistent with ChaCAL's own LM result being worse than its baseline, <code>21.46</code> vs <code>20.15</code>, digits [U]) ⇒ the LM <code>γ</code> claim is retired and <code>γ</code> stays a bed-side dial. <em>Price:</em> <code>NOT MEASURED</code> — no LM cell of the shape has run; the Q3 chunk shape reads <code>0.299 s/step</code> for the control (<code>READ COSTS.md</code> §3.2, <code>[MEASURED]</code>), so eight 11 h chunks would be the ceiling and the author sets the step count. <em>Mechanism:</em> V-9, C5, V-22, M-13. <em>Deliverable:</em> <code>results/shape_lm_kaggle.jsonl</code>. <em>Evenings:</em> the author's Kaggle sessions; not on the local critical path.</p>
+<p><strong>M6.3 — Specify the two topological instruments that do not exist.</strong> <em>Phase</em> 6. <em>Prereq</em> none. <em>Independent-of</em> all. <em>Build:</em> T-1 a digraph <code>β₀</code> instrument (connectivity notion, dissimilarity transform, Turner predicate as a checkable hypothesis on the filtered object, <code>turner-2019-quasimetric-rips</code> [V]; <code>beta0_interleaving</code> consumes point clouds, <code>READ ceq/certs/topological.py:476-505</code>); T-2 a Mapper-cover-to-tile quantiser with parameters fixed by the Reeb-estimator rule on a held-out relation (<code>carriere-2018-mapper-statistics</code> [V]), the do-nothing 0D-salience schedule (<code>sharma-2026-kernels-22</code> [V]) and <code>zhao-2026-structuredsparse</code> [V] as the two controls, the F1 union certificate carrying <code>1/(1 − γ)</code>, <code>n</code> declared per <code>s</code> from §5.0. <em>PASS:</em> each spec names its null (row-permuted influence at the same logit scale for T-1; equal visited tiles for T-2) and its refusal (non-integer <code>β₀</code>; a mask without a certificate). <em>KILL:</em> the barcode inside the null's 95 % band on <code>≥ 6/8</code> ⇒ decoration; Mapper within <code>MDE₈</code> of do-nothing ⇒ the exact dividend is segmentation's. <em>Price:</em> <code>NOT MEASURED</code> (<code>kernels#22</code> has no backward, <code>READ THEORY.md:223-224</code>). <em>Mechanism:</em> M-15, M-2, V-16, V-9, L-CERT, P-4. <em>Deliverable:</em> <code>docs/TOPO_INSTRUMENTS.md</code>. <em>Evenings:</em> 2.</p>
+<h2 id="8-totals-the-order-and-what-dies-if-what">8. Totals, the order, and what dies if what<a class="headerlink" href="#8-totals-the-order-and-what-dies-if-what" title="Permanent link">#</a></h2>
+<h3 id="81-gpu-by-phase-point-estimates-on-the-02-unit-prices-assumed-where-a-row-is">8.1 GPU by phase (point estimates on the §0.2 unit prices; <code>[ASSUMED]</code> where a row is)<a class="headerlink" href="#81-gpu-by-phase-point-estimates-on-the-02-unit-prices-assumed-where-a-row-is" title="Permanent link">#</a></h3>
+<table>
+<thead>
+<tr>
+<th>phase</th>
+<th>cards</th>
+<th>GPU</th>
+<th>class</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>M0.1–M0.4</td>
+<td><code>0</code></td>
+<td>—</td>
+</tr>
+<tr>
+<td>1</td>
+<td>M1.1–M1.5</td>
+<td><code>≤ 16 s</code> (<code>0.27 min</code>)</td>
+<td>DERIVED</td>
+</tr>
+<tr>
+<td>2</td>
+<td>M2.1 <code>9.65</code> + M2.2 <code>17.4</code> + M2.3 <code>60</code> + M2.4 <code>20</code></td>
+<td><code>≈ 107 s</code> (<code>1.8 min</code>); <code>+ 524 s</code> if <code>k_cert</code> is rerun whole</td>
+<td>DERIVED, M2.3 ASSUMED</td>
+</tr>
+<tr>
+<td>3</td>
+<td>M3.1 <code>34</code> + M3.2 <code>17.4</code> + M3.3 <code>97</code> + M3.4 <code>65</code> + M3.5 <code>35</code> + M3.6 <code>34</code> + M3.7 <code>207–238</code> + M3.8 <code>34</code></td>
+<td><code>≈ 8.7–9.2 min</code></td>
+<td>DERIVED; M3.4 ASSUMED</td>
+</tr>
+<tr>
+<td>4</td>
+<td>M4.1 <code>44</code> + M4.3 <code>≤ 17.4</code> + M4.4 <code>119–228</code></td>
+<td><code>≈ 3.0–4.8 min</code></td>
+<td>DERIVED</td>
+</tr>
+<tr>
+<td><strong>local decision total (0–4)</strong></td>
+<td></td>
+<td><strong><code>≈ 14–16 GPU-min</code></strong> (<code>≈ 25 min</code> with the whole <code>k_cert</code> rerun)</td>
+<td>—</td>
+</tr>
+<tr>
+<td>5</td>
+<td>M5.1 <code>206–537</code> + M5.3 <code>1,920–2,180</code> (+ M5.4 unpriced)</td>
+<td><code>≈ 35–45 min</code></td>
+<td>READ band + FITTED ×64</td>
+</tr>
+<tr>
+<td><strong>local total (0–5)</strong></td>
+<td></td>
+<td><strong><code>≈ 0.8–1.0 GPU-h</code></strong></td>
+<td>—</td>
+</tr>
+<tr>
+<td>6</td>
+<td>M6.1 <code>≈ 8.7 min</code> on Kaggle [ASSUMED]; M6.2 <code>NOT MEASURED</code>; M6.3 <code>0</code></td>
+<td>not local; behind the yes</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p>The whole falsification programme to a verdict costs under a quarter of a GPU-hour on the certified box; the record's dominant failure — a bed that dies at construction (D-4, M-3, V-8) — is a <code>0 GPU-s</code> decision at M1.2, and the expensive death (K-E1) is a <code>34 s</code> reading escalated once for <code>44 s</code>.</p>
+<h3 id="82-the-order-cheapest-decisive-first-d-1-dependency-law-the-critical-path">8.2 The order (cheapest decisive first; D-1 dependency law; the critical path)<a class="headerlink" href="#82-the-order-cheapest-decisive-first-d-1-dependency-law-the-critical-path" title="Permanent link">#</a></h3>
+<p>First evening (<code>THESIS_CORRECTIONS_2.md</code> §0's five, marked above): <strong>M0.1</strong> (Lean, <code>0</code>), <strong>M1.2</strong> via M1.1 (census, <code>0</code>), <strong>M2.1</strong> (the <code>~6 GPU-s</code> capped run, <code>9.65 s</code>), <strong>M2.2</strong> (ChaCAL-diag smoke test on BED-M, <code>17.4 s</code>), <strong>M4.3-spec</strong> (the LR instrument, <code>0</code>). Each settles something alone and none blocks another.</p>
+<p>Then, in DAG order with the four sequencing rules the coordinator set: (i) <strong>the BED-S zero-hop control (M1.4) before any arm</strong> trains on BED-S; (ii) <strong>the ChaCAL control (M3.1) before the shape (M3.2)</strong>; (iii) M2.4's binds before M3.1 (V-14: plants through the front door first); (iv) <strong>TOST (M4.4) scheduled, not waived</strong>, at the tier the realised <code>sd_d</code> picks. Independent branches the author may take in any order: <code>{M0.2, M0.3, M0.4}</code>, <code>{M2.1}</code>, <code>{M2.3, M5.1, M5.2}</code> (the cost-law branch; it gates only <em>prices</em>, never verdicts), <code>{M3.6, M3.8}</code> (the other beds), <code>{M6.3}</code>, and every Phase-3 fellow after M3.2.</p>
+<p>Critical path in evenings (serial depth of this file's own cards): M1.1 (2) → M1.2 (1) → M1.4 (1) → M2.4 (2) → M3.1 (1) → M3.2 (1) → M3.3 (1) → M4.1 (1) → M4.4 (1) → M5.3 (1) = <strong>12 evenings</strong> to the ladder on a survivor; M2.0 (3) and M0.1 (1) run beside M1.x and do not lengthen it; the cost-law branch adds 3 (M5.1) + 1 (M5.2) if a cost law is demanded before the ladder — <strong>15</strong>. The iteration count of any loop is this depth, never an agent's choice (D-3 of <code>CONTRACT.md</code>).</p>
+<h3 id="83-what-dies-if-what-each-kill-names-its-card-and-its-survivor">8.3 What dies if what (each kill names its card and its survivor)<a class="headerlink" href="#83-what-dies-if-what-each-kill-names-its-card-and-its-survivor" title="Permanent link">#</a></h3>
+<table>
+<thead>
+<tr>
+<th>kill fires at</th>
+<th>what dies</th>
+<th>what survives, and its price</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>M1.2 census (<code>0 GPU-s</code>)</td>
+<td>BED-S at <code>t* = 8</code></td>
+<td>reroute to <code>bed_1.build(jitter)</code> with <code>K = 2</code>, <code>B</code> as goal (oracle, guards, CK, Morse census tested — <code>sec_measured.md</code> M.7.2); reprice <code>N</code> from the realised sd</td>
+</tr>
+<tr>
+<td>M1.4 (<code>16 s</code>)</td>
+<td>BED-S as a capability bed (static task, C8)</td>
+<td>the label class stays registered with printed floors; no number</td>
+</tr>
+<tr>
+<td>M2.2 (<code>17.4 s</code>)</td>
+<td>the solve route's determinism or parity</td>
+<td>the corner-3 base (<code>133 s</code> per pair) with no certificate; the paper says why</td>
+</tr>
+<tr>
+<td>M3.2 D-2 kill (<code>17.4 s</code>)</td>
+<td>every capability number on BED-S</td>
+<td>the identification reading <code>‖P̂ − P_env‖_∞</code>; the property paper</td>
+</tr>
+<tr>
+<td>M4.3 PINNED (<code>0</code>)</td>
+<td>the equilibrium sentence; M4.1 and M4.4 become void</td>
+<td><code>γ</code> as a bed-side dial; regime N (corner 3, <code>γ = 1</code>, exact without a dial)</td>
+</tr>
+<tr>
+<td>M4.1 K-E1 (<code>44 s</code>)</td>
+<td>component (e) as a mechanism</td>
+<td><em>ChaCAL + certificate + Lean containment + BED-S with floors</em> — <code>design_falsify.md</code> §6.2, which the paper is written to remain honest in</td>
+</tr>
+<tr>
+<td>M5.1 K-9 (<code>≤ 537 s</code>)</td>
+<td>every <code>s</code>-scaled price and the "<code>+50 %</code> MACs" sentence as a wall-clock claim</td>
+<td>the MAC law as a MAC law; measured points quoted as points</td>
+</tr>
+<tr>
+<td>M6.1 (the yes withheld)</td>
+<td>nothing local</td>
+<td>the whole local programme; Kaggle rows stay <code>NOT MEASURED</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="9-limits-collected-once">9. Limits (collected once)<a class="headerlink" href="#9-limits-collected-once" title="Permanent link">#</a></h2>
+<p>Every price is a floor from a per-op microbenchmark under a <code>2.0×–6.6×</code> dispatch gap on a laptop clock that drifts <code>±12 %</code>; the solve increment exists at <code>s = 64</code> only, so every card past <code>s = 64</code> is priced by a <code>[DERIVED]</code> residency model with an <code>[ASSUMED]</code> <code>C_OPERATOR</code> band until M2.3 and M5.1 replace it; the record's <code>≈ 34 s</code> pair double-counts the fixed cost and this file carries it anyway as the conservative figure; the depth-5 skyline price is <code>[ASSUMED]</code> linear in depth; the InfSA cell is a <code>K = 16</code> microbenchmark floor; the <code>s</code>-sweep has a band and no point; the ladder is <code>×64</code> of a fitted law. The MDE and TOST figures are <code>RUN</code> re-derivations that agree with VENUS and MARS to the printed digits, but BED-S's realised sd and <code>sd_d</code> do not exist and every seed count past <code>N = 8</code> is conditional on them. The boundary-null <code>2.706</code> has no <code>references.bib</code> citation and is marked owed. Cards M2.0, M2.3, M5.1, M5.4 and M6.2 need code the author writes; this file specifies and does not write it. Nothing here was run on the GPU; the four one-liners computed and printed only; no git write, no Kaggle contact.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Invented by <a href="https://teerthsharma.vercel.app/">Teerth Sharma</a> · Apache License 2.0
+    </div>
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/teerthsharma/resolvent" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://teerthsharma.vercel.app/" target="_blank" rel="noopener" title="teerthsharma.vercel.app" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M351.9 280H161c2.9 64.5 17.2 123.9 37.5 167.4 11.4 24.5 23.7 41.8 35.1 52.4 11.2 10.5 18.9 12.2 22.9 12.2s11.7-1.7 22.9-12.2c11.4-10.6 23.7-28 35.1-52.4 20.3-43.5 34.6-102.9 37.5-167.4zm-191-48h190.9c-2.8-64.5-17.1-123.9-37.4-167.4-11.4-24.4-23.7-41.8-35.1-52.4C268.1 1.7 260.4 0 256.4 0s-11.7 1.7-22.9 12.2c-11.4 10.6-23.7 28-35.1 52.4-20.3 43.5-34.6 102.9-37.5 167.4m-48 0c3.5-85.6 25.6-165.1 57.9-217.3C78.7 47.3 10.9 131.2 1.5 232zM1.5 280c9.4 100.8 77.2 184.7 169.3 217.3-32.3-52.2-54.4-131.7-57.9-217.3zm398.4 0c-3.5 85.6-25.6 165.1-57.9 217.3 92.1-32.7 159.9-116.5 169.3-217.3zm111.4-48C501.9 131.2 434.1 47.3 342 14.7c32.3 52.2 54.4 131.7 57.9 217.3z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

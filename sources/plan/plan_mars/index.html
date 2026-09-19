@@ -1,0 +1,1924 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="One causal head, three switches. Softmax attention, unnormalized-kernel attention and the exact path product of a Markov chain as settings of one operator, proved in Lean 4, with every failure kept on the record.">
+      
+      
+        <meta name="author" content="Teerth Sharma">
+      
+      
+        <link rel="canonical" href="https://teerthsharma.github.io/resolvent/sources/plan/plan_mars/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/logo.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>PLAN — MARS (MORIARTY): the standing-attacks roadmap - resolvent</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/resolvent.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#plan-mars-moriarty-the-standing-attacks-roadmap" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="resolvent" class="md-header__button md-logo" aria-label="resolvent" data-md-component="logo">
+      
+  <img src="../../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            resolvent
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              PLAN — MARS (MORIARTY): the standing-attacks roadmap
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/teerthsharma/resolvent" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    teerthsharma/resolvent
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../FAILS/" class="md-tabs__link">
+          
+  
+  
+  The record
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../BED_H_PREREGISTRATION/" class="md-tabs__link">
+          
+  
+  
+  Pre-registrations
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../ledgers/mistakes/" class="md-tabs__link">
+          
+  
+  
+  Ledgers
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../canon/CHARTER/" class="md-tabs__link">
+          
+  
+  
+  Canon
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../CEQ_SHAPE/" class="md-tabs__link">
+          
+  
+  
+  Paper
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="resolvent" class="md-nav__button md-logo" aria-label="resolvent" data-md-component="logo">
+      
+  <img src="../../../assets/logo.svg" alt="logo">
+
+    </a>
+    resolvent
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/teerthsharma/resolvent" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    teerthsharma/resolvent
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The record
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    The record
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../FAILS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Everything retracted, broken or open
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../COMPONENT_LEDGER/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Component ledger
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../PLAN/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Research plan
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CORNER_RULE_RETIREMENT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Corner rule retirement
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../PI_JEPA_KAGGLE_CARD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kaggle card
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../DR2_CARD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DR2 card
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pre-registrations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Pre-registrations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../BED_H_PREREGISTRATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BED-H
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../prereg/REMOVAL_ECHO_v1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    REMOVAL-ECHO v1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ledgers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Ledgers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/mistakes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Failure mechanisms
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/struck/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Struck constants
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/mathematics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mathematics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/model-card/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model card
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/costs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Costs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/v17k-rulings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    V17K rulings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/v16-calibration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    V16 calibration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Canon
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Canon
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/CHARTER/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Charter
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/01_THEORY_ACCURACY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01 Theory of accuracy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/02_THEORY_TRAINING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    02 Theory of training
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/03_KERNEL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03 Kernel
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/04_BEDS_AND_INSTRUMENTS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    04 Beds and instruments
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/05_REPAIRS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05 Repairs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/06_PREDICTIONS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    06 Predictions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/08_ARCHITECTURE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    08 Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/09_CHESS_AND_MARKETS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    09 Chess and markets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/CORRECTIONS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Corrections
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Paper
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Paper
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CEQ_SHAPE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The shape of CEQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Paper sources
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../BIB_AUDIT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bibliography audit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../BIB_ALIASES/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bibliography aliases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#0-reading-rules-for-the-cards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0. Reading rules for the cards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-the-records-transferring-attacks-one-card-each" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. The record's transferring attacks, one card each
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-three-attacks-nobody-has-filed-each-runm-this-session-on-the-judges-draw" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Three attacks nobody has filed (each RUN[M] this session on the judge's draw)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-the-dag-the-critical-path-and-the-phase-gates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. The DAG, the critical path, and the phase gates
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-limits-collected-once" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Limits (collected once)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="plan-mars-moriarty-the-standing-attacks-roadmap">PLAN — MARS (MORIARTY): the standing-attacks roadmap<a class="headerlink" href="#plan-mars-moriarty-the-standing-attacks-roadmap" title="Permanent link">#</a></h1>
+<p><em>2026-09-03, HEAD <code>207e7b9</code>. Every card below is a killer: the cheapest run, with its threshold frozen here, that ends a claim sentence the judged sections permit (<code>judge/sec_shape.md</code>, <code>sec_obstructions.md</code>, <code>proposition_ledger.md</code>, <code>sec_apparatus.md</code>, <code>bind_ledger.md</code>; they outrank the designs and notes). Evidence classes: <code>RUN[M]</code> — this planet's numpy float64 one-liner (seed 0, <code>s = 32</code>, causal softmax <code>P</code> with the diagonal, sink <code>{0}</code>, goal <code>{5,6}</code>, constraints <code>{9,10}</code>, <code>{15}</code>, query position 20; the judge's draw of <code>sec_shape.md</code>); <code>RUN[x]</code> — another planet's run as its file records it; <code>READ path:line</code>; <code>CITED [V]</code> by canonical <code>references.bib</code> key; <code>DERIVED</code> with steps. Prices are on the certified RTX 4060 Laptop, tagged <code>[FITTED]</code>/<code>[RUN]</code>/<code>[ASSUMED]</code>/<code>DERIVED</code> from <code>sec_cost.md</code> §4.x.8 and <code>sec_apparatus.md</code> §A.11. Every card names the <code>MISTAKES.md</code> mechanism it is designed against (66 <code>###</code> headings at HEAD, <code>RUN grep</code>). Nothing launches on Kaggle from this plan: <code>kaggle/README.md:9-11</code> (READ via <code>sec_state.md</code> S.6) makes the author's explicit yes a node, and this plan places no work behind it. The author works alone, in evenings, in any order the DAG in §3 allows. No card produces code from this file; each names the file the author produces.</em></p>
+<h2 id="0-reading-rules-for-the-cards">0. Reading rules for the cards<a class="headerlink" href="#0-reading-rules-for-the-cards" title="Permanent link">#</a></h2>
+<ol>
+<li><strong>Fields, in order:</strong> id; title; phase; prerequisites; independent-of (D-1 dependency law, <code>READ CONTRACT.md:27-33</code>); what to build; what to prove; what to measure; PASS; KILL and what dies; price; mechanism; deliverable; evenings.</li>
+<li><strong>A threshold written here is frozen</strong> (M-2, <code>READ MISTAKES.md:451</code>). A card whose threshold is a formula on a not-yet-measured sd says so and is filled by MK-18 before any verdict; the formula does not move afterwards.</li>
+<li><strong>Phases:</strong> P0 free killers (0 GPU-s, CPU identities, Lean, specs); P1 bed admission (0 GPU-s); P2 binds on the real draw (seconds); P3 the first pair and the arena (<code>≈ 34 s</code> per pair, <code>≈ 98 s</code> for seven arms, <code>sec_apparatus.md</code> §A.11 item 5); P4 verdicts (MDE, LR, TOST); P5 deferred instruments (NOT MEASURED, each names the missing instrument).</li>
+<li><strong>The five cheapest decisive items</strong> carry <code>★</code> in their title: MK-01, MK-04, MK-07, MK-12, MK-13. Each settles something alone in one sitting (<code>THESIS_CORRECTIONS_2.md</code> §0's "first evening").</li>
+<li><strong>What would change this planet's mind</strong> is stated per card as the PASS number: a killer that reads its PASS side is the evidence that the attacked sentence stands; the calibration rule D-CALIB-1 (<code>READ V16_CALIBRATION.md:142-203</code> via <code>sec_measured.md</code> M.5: 7 of 8 signed rows optimistic, <code>p = 0.0352</code>) makes the KILL side the point estimate until a PASS is read.</li>
+</ol>
+<h2 id="1-the-records-transferring-attacks-one-card-each">1. The record's transferring attacks, one card each<a class="headerlink" href="#1-the-records-transferring-attacks-one-card-each" title="Permanent link">#</a></h2>
+<p><strong>MK-01 ★ — Build the ten <code>[M]</code> Lean identity targets and their refusals; a <code>sorry</code> demotes the row.</strong>
+phase P0 · prerequisites none · independent-of every other card
+· build: <code>lean/CEQ/Shape.lean</code> carrying <code>sec_shape.md</code> §4.6 rows 1–10 (<code>gamma_zero_is_softmax</code> with witness <code>gamma_half_is_not_softmax</code>; <code>bos_row_is_absorbing</code> at <code>β = 1</code> with the <code>β = 0</code> refusal, row 0 reading <code>e^{qk_00} = 2.0138</code>, <code>RUN[M]</code> per <code>sec_apparatus.md</code> §A.8.2; <code>later_boundary_unreachable</code>; <code>softmax_corner_not_nilpotent</code> with <code>pow_card_eq_zero</code> as the regime-N contrast; <code>lower_triangular_isUnit</code>, <code>diag_one_sub_smul_pos</code> on <code>[1-γ, 1)</code>; <code>resolvent_fromBlocks</code>, <code>segmentation_blockdiag</code> on <code>StrictlyLower</code> with <code>tiny_gate_does_not_cut</code> at a <code>−30</code> logit; <code>cut_makes_segment_head_absorbing</code>; <code>displacement_identity</code> with <code>const_value_zero_displacement</code>; <code>lowerTriangular_ne_symmSupport</code>; <code>committor_is_resolvent_read</code> (a) and (b-causal)). Journal fields: declaration name, <code>#print axioms</code> output, <code>lake build</code> exit code.
+· prove: the ten statements as written in <code>sec_apparatus.md</code> §A.8.2, grade <code>[M]</code>; any <code>[M]</code> resting on a <code>[U]</code> Mathlib name (<code>Matrix.det_of_lowerTriangular</code>, <code>inv_fromBlocks_zero₂₁_of_isUnit_iff</code>) is <code>[S]</code> until green.
+· measure: <code>lake build</code> in <code>lean/</code>; <code>grep -c '\bsorry\b'</code> on the new file; axiom set per declaration.
+· PASS: exit 0, <code>0</code> <code>sorry</code>, axioms <code>[propext, Classical.choice, Quot.sound]</code> only on all ten.
+· KILL: any target not building by this milestone ⇒ that row is <code>[S]</code>, never a claim; the paper's "machine-checked" sentence for component (k) is limited to the rows that build. What dies: the sentence, not the identity (its float instance stands as RUN).
+· price: <code>0 GPU-s</code> · mechanism: P-11 (<code>READ MISTAKES.md:1597</code>, a contract citing its own <code>[M]</code> tag as settled — the R15 <code>#18/#19/#22 [M]</code> had no declaration, <code>sec_proved.md</code> §2.0); L-LEAN · deliverable: <code>lean/CEQ/Shape.lean</code>, <code>docs/plan/MK-01_lean_ledger.md</code> · evenings: 1–2.</p>
+<p><strong>MK-02 — Extend the identity manifest with the shape fields and its one-unit drift plant.</strong>
+phase P0 · prerequisites none · independent-of all
+· build: the field list of <code>sec_apparatus.md</code> §A.10 (<code>gamma</code> init/final/<code>Λ</code>/verdict, <code>diag_convention</code>, <code>committor_route</code>, <code>route</code>+<code>K</code>+<code>C</code>, <code>boundary_sets</code>/<code>goal_set</code>/<code>sink_set</code> with sha256, <code>K</code>/<code>m</code>/<code>t_star</code>, <code>producer_cmd</code>, <code>delta_vec</code>/<code>delta_bare</code>/<code>one_over_1mg</code>/<code>V_inf</code>, <code>census</code>, floors, skyline settings, <code>void_contrasts</code>, <code>supersedes</code>); a missing declared field is a refusal, not <code>absent</code> (<code>READ scale/identity_manifest.py:141-151</code> reports rather than raises — the shape lane has no stored manifests to protect).
+· prove: none (an instrument).
+· measure: flip each of <code>beta / qk / g / gamma / boundary_sets</code> by one unit; count manifest-hash moves (the pattern of <code>READ V20_R15_WING_MANIFEST.md:148-152</code>).
+· PASS: <code>5/5</code> flips move the hash; a deliberately omitted declared field raises.
+· KILL: any flip leaving the hash fixed ⇒ the field is not identity and no cell may be attributed to it (L-2: <code>0 of 24</code> attributable, <code>READ V20_R15_LEAP_LEDGER.md:23</code>).
+· price: <code>0 GPU-s</code> · mechanism: V-16 (<code>:828</code>), P-1 (<code>:289</code>), V-3 · deliverable: <code>docs/plan/MK-02_manifest_spec.md</code>, <code>results/shape_manifest_plant.jsonl</code> · evenings: 1.</p>
+<p><strong>MK-03 — Print the vacuity inequality beside every obstruction citation before any obstruction sentence is typeset.</strong>
+phase P0 · prerequisites none · independent-of all
+· build: a table with, per theorem, the model class, the hypothesis as a predicate on <code>(s, d, h, p)</code>, and its value at the record's geometry <code>s = 64, d = 16, h = 1, p = 32</code>: <code>h·m·p = 512 ≥ 64</code> (<code>sanford-2024-inductionheads</code> Thm 1), <code>n log₂ n = 384 &lt; 544</code> (<code>peng-2024-transformer-limitations</code> Thm 1), <code>64^{1/16} = 1.2968</code> against <code>H·d·p = 512</code> (<code>chen-2024-multilayer</code> Thm 1.1), the one-vs-two-cycle conjecture named beside <code>sanford-2024-logdepth</code> Cor. 4.3 (all <code>[V]</code>, <code>sweep_expressivity.md</code> §3).
+· prove: none.
+· measure: the fraction of drawn BED-S cells whose geometry satisfies each hypothesis.
+· PASS: every obstruction sentence in the paper carries its line; <code>0 %</code> admitted ⇒ the sentence is stated as asymptotic lineage only.
+· KILL: an obstruction stated without its line (K-10 of <code>bind_ledger.md</code>) ⇒ the sentence is struck at assembly.
+· price: <code>0 GPU-s</code> · mechanism: V-25 (<code>:1954</code>), P-10 (<code>:1382</code>), P-3 · deliverable: <code>docs/plan/MK-03_vacuity_table.md</code> · evenings: 1.</p>
+<p><strong>MK-04 ★ — Write the BED-S generator specification and run its domain census on 512 draws (BOS declared; constraints and goal before the query).</strong>
+phase P1 · prerequisites none (MK-01 may run beside; L-LEAN forbids <em>training</em>, not construction) · independent-of MK-01..03, MK-11, MK-14, MK-15, MK-17
+· build: the DAG-in-token-order environment of <code>sec_apparatus.md</code> §A.1 — edges to earlier positions, self-loops only on declared absorbing positions, <code>𝒜_sink = {0}</code> with value <code>0</code> on every indicator channel, goal <code>𝒜_0</code> and constraints <code>𝒜_1..𝒜_K</code> all before the query, the query in <code>T</code>, adjacency multi-hot node features, membership flags, <code>m</code> query-side row clamps <code>P_env[v_a,:] ← e_{u_a}</code>, oracle = the Dirichlet solve of <code>READ ceq/beds/bed_1.py:188-198</code>'s form on <code>P_env</code> at <code>γ = 1</code> on the transient block. Journal fields: the fifteen census lines of §A.7 per batch.
+· prove: F1 and F2 as the census's two structural lines (<code>RUN[I]</code> R6/R10; <code>RUN[J]</code> <code>det(I − Q) = 0.0</code> undeclared; <code>q = 0.0</code> for a set after the query).
+· measure: on 512 draws at <code>t* = 8, m = 8, K = 2</code>: <code>0 ∈ 𝒜_sink</code> fraction; sets-before-query fraction; <code>ρ(Q̂) = max_T P_ii &lt; 1</code> fraction; per-coordinate label sd over the admitted query region; sink share <code>q^{(sink)}</code> separately from <code>q^{(0)}</code>; class frequency of <code>a*</code> over <code>m</code>; rule-disagreement fraction; discard count.
+· PASS: lines 1–4 at <code>100 %</code>; every sd <code>&gt; 0.05</code>; every class frequency in <code>(0.05, 0.95)</code>; disagreement <code>&gt; 0</code>.
+· KILL: any sd <code>= 0</code>, any class outside <code>(0.05, 0.95)</code>, disagreement <code>0</code>, or <code>&lt; 100 %</code> on lines 1–4 ⇒ the bed is not admitted (D-4) and no capability card below runs; the author reroutes to <code>bed_1.build(jitter)</code> with <code>K = 2</code> (<code>design_falsify.md</code> §5 rank 1) and reprices. What dies: every BED-S sentence, at <code>0 GPU-s</code>.
+· price: <code>0 GPU-s</code> (oracle <code>&lt; 1 s</code> per draw in float64 at <code>|T| = 1200</code>, DERIVED <code>sec_beds.md</code> §6.D.5) · mechanism: V-25, V-8 (<code>:136</code>), V-12 (<code>:189</code>), D-3 (<code>:727</code>), D-4 (<code>:740</code>) — the record's dominant death (a bed dying at construction) becomes a free decision · deliverable: <code>docs/plan/MK-04_bed_s_spec.md</code>, <code>results/bed_s_census_512.jsonl</code> · evenings: 2.</p>
+<p><strong>MK-05 — Run the corpus-alone feature-leak probe with its planted leak (the leak detector must fire both ways).</strong>
+phase P1 · prerequisites MK-04 · independent-of MK-06..08
+· build: a linear probe from the token features <code>x</code> to (b) the membership indicators and (c) <code>q</code> at order 0, on the admitted draws; the planted positive: a move token carrying its own <code>q</code>. Clause (a) (rows of <code>P_env</code>) is dropped for BED-S because the graph is the input (<code>sec_apparatus.md</code> §A.1); clause (c) is the kill. Journal fields: <code>R²</code> per clause, honest and planted.
+· prove: none.
+· measure: <code>R²</code> on (c) honest; <code>R²</code> on the planted leak.
+· PASS: honest <code>R² &lt; 0.5</code> and planted <code>R² ≥ 0.99</code>.
+· KILL: honest <code>R² ≥ 0.5</code> ⇒ the label is reachable without a solve and the one-read claim is void on BED-S; planted <code>R² &lt; 0.99</code> ⇒ the detector is blind (V-24) and no leak verdict is admissible.
+· price: <code>0 GPU-s</code> · mechanism: M-21 (<code>:2101</code>, the record's gate written into <code>x[:,:,CH_DRIVE]</code> read <code>R² = 1.000000</code>, <code>READ MISTAKES.md:2133-2143</code>), V-24 (<code>:1658</code>), V-7 · deliverable: <code>results/bed_s_leak_probe.jsonl</code> · evenings: 1.</p>
+<p><strong>MK-06 — Register the zero-hop, one-hop and hand-rule controls at construction, before any arm trains (the static-task kill).</strong>
+phase P1 · prerequisites MK-04 · independent-of MK-05, MK-07, MK-08
+· build: the argmin controls of <code>sec_apparatus.md</code> §A.4 (0-hop per-position MLP, 1-hop softmax, majority, random <code>1/m</code>, predict-the-mean) plus the closed-form rule of MK-24; the exact zero-information floor <code>1 − max_a π̂(a*)</code> from the realised class distribution (<code>0.875</code> at uniform <code>m = 8</code>, <code>RUN[J]</code>); <code>I(X_{≤0}; a*)</code> by plug-in over the zero-hop view including move tokens and flags.
+· prove: none.
+· measure: untrained arm at <code>1/m ± CP</code>; committor NRMSE <code>≥ 1 − GATE_TOL</code> at step 0 (<code>GATE_TOL = 1e-3</code>, <code>READ COSTS.md:137</code>).
+· PASS: untrained reads chance; <code>I(X_{≤0}; a*)</code> printed with the tight Fano only where <code>&gt; 0</code>.
+· KILL (frozen, scored at MK-19): 0-hop MLP within the Clopper–Pearson half-width at <code>N = 8</code> of the shape, or McNemar <code>p &gt; 0.05</code> against 1-hop softmax ⇒ BED-S is a third static task (<code>sec_refuted.md</code> C8) and is struck before any number is quoted.
+· price: <code>≤ 1.524 s</code> per control cell <code>[FITTED]</code> when trained; <code>0 GPU-s</code> at registration · mechanism: V-10 (<code>:168</code>), D-5 (<code>:755</code>), C8 · deliverable: <code>docs/plan/MK-06_controls.md</code> · evenings: 1.</p>
+<p><strong>MK-09 — Run the identity binds through the front door on BED-S's real draw, each plant as a FOUND cell.</strong>
+phase P2 · prerequisites MK-04 admitted, MK-02 · independent-of MK-11..17
+· build: B-J (parity: <code>torch.equal(O(0), PV)</code> against the lane's own <code>softmaxAttn</code>; plants <code>γ = 0.5 ⇒ 2.3002850040264393</code>, <code>β = 0 ⇒ &gt; 0.5</code>, ChaCAL-published's <code>A_s ⇒ O(1)</code> at any <code>γ &gt; 0</code>), B-E1 (<code>𝒜 = ∅ ⇒ torch.equal</code> with ChaCAL-diag; <code>𝒜 ≠ ∅ ⇒ ‖Π_shape − Π_ChaCAL-diag‖_∞ = O(1)</code> on downstream rows, a <em>weight</em> gap — rows changed <code>= [3]</code>, <code>RUN[M]</code> of the design round), B-E2 (conservation to <code>1e-15</code>; BOS dropped ⇒ the solve raises), B-G1 (<code>V ≡ 𝟙 ⇒ max|Δz| ≤ 1e-15</code>; Gaussian <code>V ⇒ 0.1096/0.363/1.127</code>; non-causal <code>P ⇒ Δz[:i] ≠ 0</code> at <code>0.0761/0.0868</code>; Sherman–Morrison vs re-solve <code>≤ 1e-12</code>), B-G2 (metric plants: permuted oracle must not score <code>0</code>; <code>+0.1σ</code> preferred; <code>−Δz</code> distinguished), B-H1 (<code>q</code> vs <code>bed_1.committor</code> on real sets <code>0.0</code>; wrong-set plant moves <code>q</code> by O(1); the script raises on a missing key — the <code>basin_A</code> default that read <code>0.858</code> is the filed V-16, <code>sec_refuted.md</code> C12), B-P5 (dense <code>M</code> with <code>upper=False</code> must disagree). Every plant enters as <code>bed_s.build → arm.forward → journal row → verdict()</code> with its own <code>kind</code> and <code>manifest_hash</code>.
+· prove: none beyond MK-01.
+· measure: honest residual and each plant's residual with counts, the <code>0.9749 / 0.9165 / 1.000 / 0.4845</code> pattern (<code>READ workdonenewseal.md:114-122</code>).
+· PASS: every honest half passes and every plant fails at O(1).
+· KILL: any plant passing ⇒ that bind has an empty rejection region and is struck from the paper; any honest half failing ⇒ the identity is wrong on the real draw and the proposition it carries is demoted to OPEN.
+· price: seconds, <code>0 GPU-min</code> to two decimals · mechanism: V-24, V-3 (<code>:72</code>), V-14 (<code>:238</code>, a plant that never enters the front door validates the matcher and not the reach), V-16 · deliverable: <code>results/bed_s_binds.jsonl</code>, <code>docs/plan/MK-09_bind_ledger.md</code> · evenings: 1.</p>
+<p><strong>MK-10 — Measure the certificate delta on the shipped object, in vector units, with <code>‖V‖_∞</code> printed (dormant until a mask ships).</strong>
+phase P5 · prerequisites a mask on any route (MK-25 or later) · independent-of everything until then
+· build: on the shipped mask, <code>‖O_full − O_mask‖_∞</code> over <code>1,024</code> drawn cells against <code>(ε/(1−γ̂) + δ_Π)·‖V‖_∞</code> with <code>ε</code> the dropped row mass, <code>δ_Π = γ̂^{K+1}</code> under the <code>(1−γ)</code> factor, <code>1/(1−γ̂)</code> printed beside every <code>δ</code> (<code>sec_shape.md</code> Prop. 4(ii): the resolvent amplifies dropped mass, <code>RUN[J]</code> <code>0.5263</code> vs naive <code>0.1</code> at <code>s = 3</code>). The row-sum equality <code>err = γ^{K+1}/(1−γ)</code> on the class is declared <em>definitional</em> (V-3) and never presented as evidence about <code>P</code>; the convergent plant (rows <code>1.5</code>, <code>γ = 0.6</code>, <code>K = 2</code>: <code>7.29</code> vs <code>0.54</code>, <code>RUN[M]</code> of the design round) is the rejection region; the coordinator's <code>119.37</code> vs <code>1.143</code> at <code>γ = 0.7</code> is a divergent partial sum (<code>ρ(γP) = 1.05</code>) and is labelled so.
+· prove: <code>mask_amplification</code> <code>[S]</code> (MK-01's row 12).
+· measure: the worst excess over <code>1,024</code> draws; <code>δ·‖V‖_∞</code> against <code>sd(label)</code>.
+· PASS: no exceedance on <code>1,024</code> draws and <code>δ·‖V‖_∞ &lt; sd(label)</code>.
+· KILL: one exceedance ⇒ the mask is refused (L-CERT) and the exact solve — cheaper than one Neumann hop here, <code>2.514</code> vs <code>3.001</code> ms at <code>n = 2048</code> <code>[RUN NEPTUNE]</code> — is the only route; <code>δ·‖V‖_∞ ≥ sd(label)</code> ⇒ the certificate is uninformative and no "certified" sentence stands.
+· price: <code>≈ 2.6 s</code> DERIVED (<code>1,024</code> forward passes at <code>n = 2048</code>) · mechanism: V-3, V-10, V-17 (<code>:855</code>, a threshold out of its units — the <code>≈ 7.6e-05</code> of <code>sec_cost.md</code> §4.x.3 carried <code>‖V‖_∞ ≈ 5 [ASSUMED]</code>), P-8 (<code>:387</code>) · deliverable: <code>results/certificate_shipped_mask.jsonl</code> · evenings: 1 (when a mask exists).</p>
+<p><strong>MK-11 — Specify the <code>γ</code>-pinning likelihood-ratio instrument with the boundary null, held-out set and seed rule declared.</strong>
+phase P0 · prerequisites none · independent-of all; consumed by MK-21
+· build: <code>Λ = 2[LL(γ̂) − LL(γ ≡ 0)]</code> on a declared held-out set (Ruling 10′ restated for <code>γ</code>, <code>READ V17K_RULINGS.md:389-436</code>); <code>γ</code> trained on <code>[0, 1)</code> so the null sits on a boundary and its <code>95 %</code> point is <code>½χ²₀ + ½χ²₁ = 2.7055</code>, not <code>3.8415</code> (<code>RUN[J]</code>; the citation for the boundary null is owed and not in <code>references.bib</code>); MOVED at <code>Λ &gt; ln n_eval</code> (<code>ln 4096 = 8.318</code>); the interval verdict between; the <code>|γ̂| &lt; 0.05</code> rule deleted (two verdicts for one cell, M-20); the ablation <code>(I − γ̂P̂)^{-1} → I</code> at trained weights; the mirror line <code>1/(1−γ̂)</code> beside every <code>δ</code>.
+· prove: none.
+· measure (at MK-21): <code>Λ</code> per seed; ablation NRMSE move in seed-sd units; <code>γ̂</code> support.
+· PASS: MOVED on <code>≥ 6/8</code> seeds and ablation move <code>≥ 1</code> seed sd.
+· KILL: PINNED (<code>Λ ≤ 2.7055</code>) on <code>≥ 6/8</code> ⇒ the arm is softmax wearing a name on that bed and every <code>γ</code>-dependent sentence (the horizon dial, Bet C) is withdrawn; ablation <code>&lt; 1</code> seed sd ⇒ the same; <code>γ̂ &gt; 0.99</code> on <code>≥ 6/8</code> ⇒ the <code>z</code>/<code>Δz</code> certificate is vacuous (<code>1/(1−â_max)</code> was undefined at all eight R1 seeds, <code>READ V15_R1.md:56</code>). The committor head is untouched (it reads at <code>γ = 1</code> on <code>Q̂</code>).
+· price: <code>0 GPU-s</code> for the spec · mechanism: V-9 (<code>:154</code>, a repair that changes nothing — the hop-2 sweep where no <code>γ</code> beat <code>0</code>, <code>READ workdonenew.md:276</code>), M-20 (<code>:1723</code>), V-17 · deliverable: <code>docs/plan/MK-11_gamma_lr_spec.md</code> · evenings: 1.</p>
+<p><strong>MK-12 ★ — Run the ChaCAL-diag smoke test at <code>γ = 0.9</code> on BED-M as the solve-path check.</strong>
+phase P2 · prerequisites MK-01 rows 1 and 5 green (L-LEAN) · independent-of MK-04..09
+· build: one cell of the shape with <code>𝒜 = ∅</code>, diagonal kept, <code>γ</code> fixed at ChaCAL's own <code>0.9</code> (<code>fagnou-2024-chacal</code> [V] App. C), on BED-M <code>e3_t2</code>, <code>n = 2048, s = 64</code>, 150 steps, under <code>use_deterministic_algorithms(True)</code> with <code>CUBLAS_WORKSPACE_CONFIG=:4096:8</code> exported before process start; the B-J plant battery run on the same cell.
+· prove: none.
+· measure: cell wall-clock with <code>torch.cuda.synchronize()</code> bracketing; bitwise repeat over 2 runs; the parity plant readings.
+· PASS: the cell runs forward and backward under strict mode, repeats bitwise, and its price reads within the record's law-vs-measured band (<code>−1.8 %</code> to <code>+14.4 %</code>, <code>READ V17_R4_RETAKE_PRICE.md:228-229</code>) of <code>1.680 s</code> <code>[FITTED + RUN]</code>.
+· KILL: strict mode raises ⇒ the determinism sentence is withdrawn (the shape would no longer be the first gated wing whose training step runs strict); price above <code>2.2×</code> the law ⇒ every <code>[FITTED + RUN]</code> price in this plan is re-tagged as the P-8 floor it is declared to be and re-measured end to end before any GPU-minute figure is quoted. No capability number is read from BED-M (contained by Prop. 2, D-2).
+· price: <code>≈ 1.7 s</code> <code>[FITTED + RUN]</code> · mechanism: M-3 (<code>:464</code>), P-8, V-16 (three-outcome determinism: executable-bitwise / drifting / raises), D-2 · deliverable: <code>results/chacal_smoke_bedm.jsonl</code> · evenings: 1.</p>
+<p><strong>MK-13 ★ — Take the <code>≈ 6 GPU-s</code> capped run at seeds 2, 3, 7 on BED-M that the record priced four times and never ran.</strong>
+phase P2 · prerequisites none · independent-of all
+· build: <code>arm_pl</code> at the three NO READING seeds (<code>1.113403 / 1.139404 / 1.152430</code>, <code>â_max 20.31 / 49.66 / 285.07</code>, <code>READ V15_R1.md:177-188</code> via <code>sec_measured.md</code> M.2.1) with the magnitude capped, the settled Q3/W3 question (<code>READ V20_R15_THEORY_TABLE.md:176</code>; priced at it.7, it.8, it.9, it.35, <code>READ V20_R15_IT35_JUPITER.md:157-159</code>).
+· prove: none.
+· measure: <code>eval_nrmse</code> per seed against <code>floor₁ = 0.7071067811865476</code>, which is a one-hop capability threshold and not a floor (C15); <code>â_max</code> after the cap.
+· PASS (for the record, not the shape): the three capped seeds read below <code>0.7071</code> ⇒ the bimodal split was a magnitude-divergence artefact and the paper's negatives section says so with the number.
+· KILL: the three stay above <code>1.0</code> ⇒ the split is not the cap's and the paper's account of R1 keeps "3 of 8 NO READING, mechanism unresolved". Either way the shape's own sentences are unaffected; what dies is a stale question, cheaply.
+· price: <code>≈ 6 GPU-s</code> <code>[FITTED]</code> (three cells at <code>1.884 s</code> capped) · mechanism: D-6 (<code>:1050</code>, the repair that was written and never started), P-3 (<code>:316</code>), M-6 (<code>:518</code>) · deliverable: <code>results/bedm_capped_237.jsonl</code>, one paragraph in <code>docs/plan/MK-13_capped.md</code> · evenings: 1.</p>
+<p><strong>MK-14 — Specify the synchronised, order-randomised timer, and price the <code>s</code>-sweep as a band until it runs (the run-order confound).</strong>
+phase P0 spec / P5 run · prerequisites none · independent-of all
+· build: the harness edits the record priced and never made — a <code>--seq-len</code> flag (<code>S, D = 64, 24</code> is a module constant at <code>scripts/v15_r1.py:137</code>, <code>RUN[MERCURY] sed</code>), two <code>torch.cuda.synchronize()</code> calls around the timed region (<code>grep</code> finds none, <code>RUN[MERCURY]</code>), randomised or blocked execution order (the fifth edit, never priced by any office). Journal fields: <code>secs_sync</code>, <code>run_index</code>, <code>order_seed</code>.
+· prove: none.
+· measure (at the run): Spearman <code>ρ(secs, run_index)</code> on the new timer; the fitted exponent of <code>s/step</code> in <code>s</code> with its CI at <code>s ∈ {64, 256, 1024, 4096}</code>, <code>N = 8</code>.
+· PASS: <code>|ρ(secs, run_index)| &lt; 0.2</code> and the exponent CI covers <code>2</code>.
+· KILL: <code>ρ</code> comparable to the record's <code>+0.7029</code> (<code>p = 0.0024</code>, <code>READ V20_R15_JOURNAL.md:53</code> C17) ⇒ every GPU-second in the lane is void as C17 voided the record's; exponent CI excluding <code>2</code> toward <code>3</code> ⇒ the cost law is restated at the measured exponent; any price quoted before the run ⇒ struck (K-9).
+· price: spec <code>0 GPU-s</code>; run in the record's band <code>206–537 GPU-s</code> = <code>3.4–9.0 GPU-min</code>, <strong>band only, no point</strong> (<code>READ V20_R15_THEORY_TABLE.md:104-109</code>) · mechanism: D-3 (<code>s = 64</code> on <code>40 of 40</code>), P-8, M-8 (<code>:544</code>), M-10 · deliverable: <code>docs/plan/MK-14_timer_spec.md</code>; later <code>results/s_sweep.jsonl</code> · evenings: 1 + 1.</p>
+<p><strong>MK-15 — Recount parameters per arm once the <code>[m, K+2]</code> head or vector readout is attached; fix width for the wide skyline (param-count wins).</strong>
+phase P0 · prerequisites none · independent-of all; consumed by MK-19
+· build: a per-arm parameter count printed in every table header (Ruling 3, <code>READ V17K_RULINGS.md:56-59</code>); the <code>4,769</code> of <code>READ CEQ_V20_R15_CONTRACT.md:119</code> is recounted, never assumed; the wide constant-depth skyline's width fixed at <code>n_nodes</code> (<code>yehudai-2025-depthwidth</code> [V]) and the sentence that at <code>d_model = 16 &lt; s = 64</code> the matched-parameter instance does not exist; the CoT decoder's step count fixed at <code>t*</code> (<code>merrill-2024-cot</code> [V]).
+· prove: none.
+· measure: the count per arm; the residual mismatch.
+· PASS: every matched arm within <code>0.032 %</code> of the reference count (the record's residual, <code>READ MODEL_CARD.md:76-79</code>).
+· KILL: a "matched" contrast with a count mismatch above that ⇒ the contrast is unmatched and is moved to the skyline column, never credited; any arm re-architected to close the gap is refused (Ruling 3).
+· price: <code>0 GPU-s</code> · mechanism: M-8, D-1 (<code>:677</code>), R-SKY (<code>READ CEQ_V16_CONTRACT.md:209</code>) · deliverable: <code>docs/plan/MK-15_param_table.md</code> · evenings: 1.</p>
+<p><strong>MK-16 — Register the VOID list and the identification reading <code>‖P̂ − P_env‖_∞</code> before any cell (the oracle-leak attack).</strong>
+phase P1 · prerequisites MK-04 · independent-of MK-05..09
+· build: the pre-registration that <code>shape − softmax</code> and <code>shape − skyline</code> on the committor head are reproduction-versus-non-reproduction contrasts and VOID as capability numbers, because the arm's class contains the oracle's operator (<code>sec_apparatus.md</code> §A.1); the creditable contrasts named (<code>shape − ChaCAL-diag</code>, <code>shape − ChaCAL-published</code>, <code>shape − ChaCAL-with-sink</code>, <code>shape − InfSA-Neumann-16</code>, <code>shape − 0-hop</code>, <code>shape − 1-hop</code>); <code>‖P̂ − P_env‖_∞</code> journalled per seed as a <em>learnability</em> reading.
+· prove: <code>lowerTriangular_ne_symmSupport</code> (MK-01 row 9) — the D-2 separation that fails on an undirected substrate and holds on the DAG.
+· measure (at MK-19): <code>‖P̂ − P_env‖_∞</code> per seed.
+· PASS: the identification reading is printed beside every capability number and the VOID list is in the manifest field <code>void_contrasts</code> before the first cell.
+· KILL: <code>&lt; 1e-3</code> on <code>≥ 6/8</code> seeds ⇒ the arm has copied the environment; every contrast against a non-reproducing arm is a copy-vs-no-copy statement and is filed as such (K-D2, now with a non-empty rejection region on the DAG); a capability number quoted against softmax on this bed ⇒ struck at assembly.
+· price: <code>0 GPU-s</code> · mechanism: D-2 (<code>:710</code>, <code>settled − softmax</code> VOID on <code>e3_t*</code>), M-7 (<code>:529</code>), V-10 · deliverable: <code>docs/plan/MK-16_void_list.md</code> · evenings: 1.</p>
+<p><strong>MK-17 — Freeze every BED-1 / BED-S guard partition before any itinerary is read (guards chosen after itineraries).</strong>
+phase P0 · prerequisites none · independent-of all
+· build: the <code>q = ½</code> isocommittor guards of <code>READ ceq/beds/bed_1.py:5-8, :382</code> and any BED-S basin partition fixed from the oracle's committor <em>before</em> <code>guard_itinerary</code> runs, with the partition's sha256 in the manifest; the Pesin-deficit reading kept as the <em>diagnostic</em> it is (the record's contract guards had deficit <code>0.009654 = 11.9 %</code> of <code>h</code>, not near zero; the state partition <code>0.000233</code>, <code>READ V15_BED1.md:248-272</code> via <code>sec_measured.md</code> M.7.2) and never used to select guards by argmin.
+· prove: none.
+· measure: the deficit of the frozen partition; the guard-crossing balance (the record's <code>21</code> net on <code>65,481</code> events).
+· PASS: the partition hash precedes the first itinerary record in the journal's order.
+· KILL: a partition whose hash postdates an itinerary it scores ⇒ every itinerary statistic on that partition is struck (a threshold refitted to the data it judges).
+· price: <code>0 GPU-s</code> · mechanism: M-2 (<code>:451</code>), M-18 (<code>:1483</code>), M-19 (<code>:1564</code>) · deliverable: <code>docs/plan/MK-17_guard_freeze.md</code> · evenings: 1.</p>
+<p><strong>MK-18 — Run the first <code>N = 8</code> pair on BED-S; the realised paired sd fills the MDE row and every kill formula.</strong>
+phase P3 · prerequisites MK-04 admitted, MK-09 green, MK-02, MK-15, MK-16 · independent-of MK-10, MK-13, MK-14
+· build: shape on the softmax corner with the committor head (exact solve at <code>γ = 1</code> on <code>Q̂</code>), the argmin columns, the <code>z</code>/<code>Δz</code> channel at learnable <code>γ</code> (init <code>0</code>), against depth-1 softmax with the same head, <code>n = 2048, s = 64, d_model = 16</code>, 150 steps, 8 seeds deduplicated (<code>REQUIRED_SEEDS = 8</code>, <code>READ scale/it11_verdict.py:59</code>), one thread lane, the flag regime journalled.
+· prove: none.
+· measure: paired sd of every scored statistic (argmin accuracy, <code>φ</code>-NRMSE, cosine, residual); the MDE at <code>n = 8</code> by the record's noncentral-<code>t</code> bisection (<code>0.039827</code> at sd <code>0.034451</code> is the <em>record's</em> row-2 instance, <code>RUN[VENUS]</code>, <code>RUN[MARS]</code> to <code>0.0398266</code>, not BED-S's).
+· PASS: realised sd <code>≤ 0.034451</code> (then every <code>N = 8</code> kill in this plan is falsifiable as written).
+· KILL: realised sd <code>≥ 2.18×</code> the pilot (M-3's precedent, <code>0.050146 → 0.109199</code>, MDE <code>0.126238</code>) ⇒ nothing below is falsifiable at <code>N = 8</code>; the plan reprices <code>N</code> from the realised sd before any prediction is scored and the paper files the bed with no capability number (K-P).
+· price: <code>≈ 34 s = 0.57 GPU-min</code> <code>[FITTED + RUN]</code> (<code>17.4 + 16.2</code> s, <code>sec_cost.md</code> §4.x.8) · mechanism: M-3, M-9 (<code>:580</code>, finest <code>p = 0.0625</code> at <code>N = 5</code>), V-5, L-FLOOR · deliverable: <code>results/bed_s_pair_n8.jsonl</code>, the MDE row in <code>docs/plan/MK-18_mde.md</code> · evenings: 1.</p>
+<p><strong>MK-19 — Run the seven-arm arena including ChaCAL-diag, ChaCAL-published, ChaCAL-with-sink-token, InfSA-Neumann-16 and the argmin controls (the ChaCAL-with-sink kill).</strong>
+phase P3 · prerequisites MK-18 (sd known), MK-06, MK-11 · independent-of MK-22 until scored
+· build: the control arms of <code>sec_apparatus.md</code> §A.6 on byte-identical draws; ChaCAL-with-sink-token uses the shape's trained <code>γ̂</code> (the pair is sequential; the order is stated).
+· prove: none.
+· measure: per arm, argmin accuracy with Clopper–Pearson (<code>clopper-1934-binomial</code> [V]), McNemar paired (<code>mcnemar-1947-correlated</code> [V]), <code>φ</code>-NRMSE, harmonic residual with <code>σ_min(I − γP_env)</code> and <code>‖I − γP_env‖_∞</code> printed, <code>Δz</code> cosine; the identification reading of MK-16.
+· PASS (Bet B, <code>bind_ledger.md</code> §6): <code>CP_upper(err_shape) &lt; floor_exact(k = 1)</code> and ChaCAL-with-sink's committor <code>φ</code>-NRMSE exceeds the shape's by <code>&gt; MDE₈</code> on <code>≥ 6/8</code> seeds.
+· KILL (K-E1): ChaCAL-with-sink within <code>MDE₈</code> of the realised sd on <code>≥ 6/8</code> seeds <em>and</em> residual within <code>2×</code> ⇒ component (e) is a parameterisation of ChaCAL's sink (<code>gu-2024-sinkemerges</code> [V]: sinks are key biases storing non-informative mass; <code>zhu-2003-harmonic</code> [V]: clamped nodes are the same rows, 2003); escalate to <code>N = 16</code>, never "within TOST" at <code>N = 8</code>. What dies: the boundary-row mechanism as a capability; the paper becomes a property paper about a published operator (<code>design_falsify.md</code> §6.2) and is written to remain honest there. K-H2 (MK-06) and K-D2 (MK-16) are scored on the same cells.
+· price: <code>7 × 8 × 1.680 + 4.0 ≈ 98 s ≈ 1.63 GPU-min</code> DERIVED; InfSA-16 cell <code>≈ 5.1 s</code> DERIVED floor · mechanism: V-24 (ChaCAL + same <code>γ</code> is the plant), M-13 (<code>:1210</code>), D-7 (<code>:2037</code>), R-SKY · deliverable: <code>results/bed_s_arena.jsonl</code>, <code>docs/plan/MK-19_arena.md</code> · evenings: 1.</p>
+<p><strong>MK-20 — File the one-step rule as a safety filter, not a policy, with the multichain hazard tested on the oracle (Bellman failure).</strong>
+phase P1 · prerequisites MK-04 · independent-of MK-05..09
+· build: on 512 admitted draws, the oracle-only comparison of the one-step rule <code>a* = argmax_a q^{(0)}(do a)</code> against the two-step optimum (apply <code>a</code>, re-solve, take the best second clamp) on the same <code>P_env</code>; the vocabulary fixed as <code>hsu-2023-safetyfilter</code> [V] / <code>borquez-2023-lrf</code> [V] (a one-step, most-restrictive filter whose value is the goal committor), the aggregations as <code>vanmoffaert-2013-chebyshev</code> [V] and <code>yang-2026-lexisafe</code> [V] columns, and <code>misra-2023-safety-constrained-mdp</code> [V] (Bellman's principle can fail for safety-constrained multichain MDPs) carried in Limits beside the rule.
+· prove: DERIVED — on a DAG with declared absorbing sets every transient state is absorbed with probability one (<code>ρ(Q) = max_T P_ii &lt; 1</code>, Prop. 10), so the <em>chain</em> is absorbing; the hazard is in the policy-level object, which the paper does not claim.
+· measure: the fraction of draws on which the one-step and two-step optima disagree.
+· PASS: the paper never writes "optimal move" or "policy"; the disagreement fraction is printed.
+· KILL: disagreement <code>&gt; 0.5</code> on 512 draws ⇒ the phrase "safest move" is replaced by "one-step safety filter" in every sentence, and the sequential problem is filed as future work with the Misra citation.
+· price: <code>0 GPU-s</code> (oracle solves) · mechanism: P-7 (<code>:375</code>, vocabulary with no referent), V-17, P-10 · deliverable: <code>docs/plan/MK-20_safety_filter.md</code>, <code>results/bed_s_onestep_vs_twostep.jsonl</code> · evenings: 1.</p>
+<p><strong>MK-21 — Score the <code>γ</code> LR verdict, the ablation and the mirror line on the MK-18 pair.</strong>
+phase P4 · prerequisites MK-11, MK-18 · independent-of MK-22, MK-23
+· build/measure/PASS/KILL: as MK-11, on the eight seeds; SPLIT band <code>3/8–5/8</code> reported as SPLIT (Bet C).
+· price: <code>0 GPU-s</code> beyond MK-18 (a re-read of the journal) · mechanism: V-9, M-20, D-7 · deliverable: <code>docs/plan/MK-21_gamma_verdict.md</code> · evenings: 1.</p>
+<p><strong>MK-22 — Decide the <code>𝒜 = ∅</code> parity half by identity bind at <code>N = 8</code> and by TOST only at the priced <code>N</code> (parity by underpowering).</strong>
+phase P4 · prerequisites MK-18, MK-19 not killed at K-E1 · independent-of MK-21, MK-23
+· build: the only contrast TOST decides is shape-at-<code>γ̂</code> vs ChaCAL-diag-at-<code>γ̂</code> with <code>𝒜 = ∅</code>; the margin <code>0.5σ</code> fixed here; paired TOST at <code>N = 36</code> if <code>sd_d = σ</code> (Monte Carlo <code>200,000</code> draws, <code>RUN[MARS]</code> of the design round), two-sample at <code>N = 70</code> (<code>0.7975</code> at <code>69</code>, <code>0.8073</code> at <code>70</code>, <code>RUN[VENUS]</code>); at <code>N = 8</code> the 90 % CI half-width is <code>0.8807σ</code> against a <code>0.5σ</code> margin, so two bit-identical arms return NO VERDICT (<code>READ workdonenew.md:400</code>).
+· prove: none.
+· measure: the realised <code>sd_d</code>; the TOST verdict at the <code>N</code> it licenses (<code>schuirmann-1987-tost</code> [V]).
+· PASS: equivalence within <code>0.5σ</code> at the licensed <code>N</code>.
+· KILL: any "parity" or "equivalent" sentence resting on <code>N = 8</code> ⇒ struck; a detected difference at the licensed <code>N</code> ⇒ the identity half of B-E1 is wrong at trained <code>γ̂</code> and the "ChaCAL-diag is the shape with <code>𝒜 = ∅</code>" sentence is limited to the bitwise bind at construction.
+· price: paired <code>36 × 3.204 + 4 ≈ 119 s ≈ 1.98 GPU-min</code>; two-sample <code>70 × 3.204 + 4 ≈ 228 s ≈ 3.80 GPU-min</code> DERIVED · mechanism: M-13, M-9, V-5 (<code>:98</code>) · deliverable: <code>results/bed_s_tost.jsonl</code> · evenings: 1.</p>
+<p><strong>MK-23 — Run the depth-<code>⌊log₂ t*⌋ + 2</code> softmax skyline and score Bet D with its sign logged.</strong>
+phase P3 · prerequisites MK-18 · independent-of MK-21, MK-22
+· build: depth <code>5</code> at <code>t* = 8</code>, unmatched parameters, chosen <em>by analogy</em> with <code>sanford-2024-logdepth</code> Thm 4.2 (its <code>hop_k</code> is not the committor; the reduction is NOT FOUND, <code>sweep_expressivity.md</code> §3.5); <code>wang-2024-incontext-td</code> / <code>xie-2026-softmax-rl</code> [V] are the reason the stack computes the same resolvent by iteration.
+· measure: <code>acc_shape − acc_sky</code>.
+· PASS: within <code>MDE₈</code> (the shape's separate claims are exactness, one-read consistency as a cost statement, and the boundary mechanism).
+· KILL: the skyline short by <code>&gt; MDE₈</code> ⇒ the paper must state a capability gap it did not predict, with the sign logged; the skyline <em>ahead</em> by <code>&gt; MDE₈</code> ⇒ "one operator" carries no accuracy sentence at all. "Beats softmax" is banned either way (R-SKY).
+· price: <code>≈ 7.6 s</code> per cell <code>[ASSUMED linear in depth]</code> · mechanism: D-1, P-10, D-7 · deliverable: <code>results/bed_s_skyline_d5.jsonl</code> · evenings: 1.</p>
+<p><strong>MK-25 — Run the cached-mixture arm on <code>ΔP</code> and <code>ΔV</code> plants (the re-solve is needed, or it is not).</strong>
+phase P3 · prerequisites MK-18 · independent-of MK-21..23
+· build: <code>O_cached = P̂_base (I − γP̂_base)^{-1} V_int</code> with <code>P̂</code> frozen from the un-intervened context (the operational cached successor representation, <code>momennejad-2017-sr</code> / <code>russek-2017-predictive</code> [V], mechanism <code>[U]</code>); <code>ΔP</code> plants (row clamps) and <code>ΔV</code> plants.
+· measure: cosine on <code>Δz</code> per plant class against the shape.
+· PASS: fails on <code>ΔP</code> plants by <code>&gt; MDE₈(cos)</code> and matches on <code>ΔV</code> plants.
+· KILL (K-G1): within one seed sd of the shape on <code>ΔP</code> plants on <code>≥ 6/8</code> ⇒ the interventional channel is a per-row control wearing a name and component (g)'s re-solve sentence dies.
+· price: <code>1.680 s</code> per cell <code>[FITTED + RUN]</code> · mechanism: P-7, D-2, V-9 · deliverable: <code>results/bed_s_cached_mixture.jsonl</code> · evenings: 1.</p>
+<h2 id="2-three-attacks-nobody-has-filed-each-runm-this-session-on-the-judges-draw">2. Three attacks nobody has filed (each <code>RUN[M]</code> this session on the judge's draw)<a class="headerlink" href="#2-three-attacks-nobody-has-filed-each-runm-this-session-on-the-judges-draw" title="Permanent link">#</a></h2>
+<p><strong>MK-07 ★ — Census the sink-escape degeneracy of the Chebyshev rule and the exact-zero tie it creates.</strong>
+phase P1 · prerequisites MK-04 · independent-of MK-05, MK-06, MK-08
+· the attack: with <code>𝒜_sink = {0}</code> declared (F1) and moves realised as clamps <code>P_env[v,:] ← e_u</code>, a clamp into any absorbing position gives <code>max_{k≥1} q^{(k)} = 0</code> exactly; the Chebyshev column <code>a† = argmin_a max_{k≥1} q^{(k)}</code> is therefore minimised <em>equally</em> by every move that sends the walk to the sink or to the goal. <code>RUN[M]</code>: at query 20, over the 20 clamp targets <code>u &lt; 20</code>, the Chebyshev minimum is <code>0.000e+00</code>, attained by <code>9 of 20</code> targets, of which <code>7</code> carry sink share <code>&gt; 0.5</code> and <code>2</code> goal share <code>&gt; 0.5</code>; the <code>1e-9</code> tie rule of census line 6 would discard the draw. The safest move under Chebyshev is "fall off the prompt", and the tie-discard rule then empties the bed — nobody filed either half. Mechanism: V-12 in a new guise (a boundary that makes the label degenerate), V-8, V-10 (a rule satisfied by construction), V-5 (slice-to-nothing via discards).
+· build: two census lines added to MK-04: (i) the fraction of admitted draws on which <code>a†</code> has <code>q^{(sink)}(a†) &gt; q^{(0)}(a†)</code>; (ii) the discard fraction attributable to exact-zero Chebyshev ties. Construction fix registered <em>now</em>, not after the number: clamp targets restricted to transient positions (<code>u_a ∈ T</code>) so no move is a direct absorption, and the Chebyshev column conditioned on non-absorption (<code>argmin_a max_{k≥1} q^{(k)}(a)/(1 − q^{(sink)}(a))</code>) printed as a third column.
+· prove: DERIVED — for <code>u ∈ 𝒜_j</code> the clamp gives <code>q^{(j)}(v) = 1</code> and <code>q^{(k)}(v) = 0</code> for <code>k ≠ j</code> exactly; the Chebyshev value of every absorbing-target move is <code>0</code> unless <code>j ≥ 1</code>.
+· measure: lines (i) and (ii) on 512 draws, with and without the <code>u_a ∈ T</code> restriction.
+· PASS: with the restriction, line (i) <code>&lt; 0.05</code> and line (ii) <code>&lt; 0.05</code>.
+· KILL: line (i) <code>≥ 0.5</code> on the unrestricted bed ⇒ the Chebyshev column as written is struck and only the goal rule and the conditioned form are named; line (ii) <code>≥ 0.5</code> ⇒ the discard rule slices the bed to nothing and admission is refused until the restriction is in the spec. What would change this planet's mind: a restricted bed on which line (i) reads below <code>0.05</code> <em>and</em> the disagreement fraction of census line 7 stays <code>&gt; 0</code> — then two rules survive and the attack is a census line.
+· price: <code>0 GPU-s</code> · deliverable: <code>docs/plan/MK-07_sink_escape.md</code>, two columns in <code>results/bed_s_census_512.jsonl</code> · evenings: 1.</p>
+<p><strong>MK-08 — Count no-op moves and correct the chance floor to the effective <code>m</code>.</strong>
+phase P1 · prerequisites MK-04 · independent-of MK-05..07
+· the attack: on a causal <code>P_env</code> a clamp at a row <code>v &gt; s₀</code> cannot change any committor at the query — <code>RUN[M]</code>: clamps at rows <code>21, 25, 31</code> move the query's four committors by <code>5.551e-17</code>, i.e. <code>0</code> to rounding — and a clamp at a row unreachable from <code>s₀</code> is a no-op for the same reason (F2 applied to moves, which nobody filed: F2 covers boundary sets, not candidate moves). A bed with <code>m = 8</code> of which <code>k</code> are no-ops has effective <code>m − k</code> distinct candidates; the chance floor <code>1 − 1/m = 0.875</code> and the tight Fano <code>(\ln m − \ln 2)/\ln(m − 1) = 0.7124</code> at <code>m = 8</code> (<code>RUN[J]</code>) are then too <em>low</em>, and a shape reading above the printed floor may be at chance on the effective set. Mechanism: L-FLOOR, V-10, V-17 (a floor in the wrong units — <code>m</code> nominal vs effective), D-3.
+· build: a census line — for every move, <code>max_k |q^{(k)}(do a) − q^{(k)}|</code> at the query; a move reading <code>&lt; 1e-12</code> is a no-op; the effective <code>m_eff</code> per draw; both floors recomputed at <code>m_eff</code>; the spec restricted to <code>v_a ≤ s₀</code> and <code>v_a</code> reachable from <code>s₀</code> (reachability read off the DAG), and the fraction of draws touched by the restriction printed.
+· prove: <code>later_boundary_unreachable</code> (MK-01 row 3) extended to a clamp row — DERIVED from triangularity: <code>(M^{-1} e_j)_i = 0</code> for <code>j &gt; i</code>.
+· measure: <code>m_eff</code> distribution on 512 draws; the floor at <code>m_eff</code>.
+· PASS: <code>m_eff = m</code> on <code>≥ 95 %</code> of admitted draws after the restriction.
+· KILL: <code>m_eff &lt; m</code> on <code>&gt; 5 %</code> of draws in any cell that quotes a floor ⇒ every argmin accuracy in that cell is re-floored at <code>m_eff</code> and the census line becomes an admission line (D-4). What would change this planet's mind: a spec whose clamp rows are drawn from the query's ancestor set by construction, with the census reading <code>100 %</code>.
+· price: <code>0 GPU-s</code> · deliverable: <code>docs/plan/MK-08_effective_m.md</code>, one column in <code>results/bed_s_census_512.jsonl</code> · evenings: 1.</p>
+<p><strong>MK-24 — Register the clamp-target membership rule as a closed-form zero-hop control (the flag decides the argmin).</strong>
+phase P1 · prerequisites MK-04 · independent-of MK-05..08; consumed by MK-06 and MK-19
+· the attack: the goal rule <code>a* = argmax_a q^{(0)}(do a)</code> is decided at zero hops whenever some clamp target lies in the goal set: <code>q^{(0)}(v) = 1.0000</code> exactly for <code>u = 5 ∈ 𝒜_0</code> (<code>RUN[M]</code>, the argmax on the judge's draw), and the goal flag of <code>u_a</code> is a token feature. The registered 0-hop control is a <em>trained</em> MLP (C-0H); a closed-form rule R0 — "pick the move whose clamp target carries the goal flag; else the move whose target carries no constraint flag and sits earliest" — costs nothing, needs no seed, and reads its accuracy at construction. The apparatus computes <code>I(X_{≤0}; a*)</code> (Prop. 8) but freezes no kill on a hand rule; the record's static beds died exactly this way (<code>READ D1.md:286-291</code> via <code>sec_refuted.md</code> C8). Mechanism: V-10, D-5, M-21 (a diagnostic prescribed by its statistic — a trained MLP can under-fit a rule a lookup solves), M-18.
+· build: R0 and its two ablations (goal-flag only; earliest-transient only) as oracle-free columns computed at construction on every draw batch; the fraction of draws on which R0 is <em>defined</em> (some <code>u_a ∈ 𝒜_0</code>).
+· prove: DERIVED — a clamp into <code>𝒜_0</code> yields <code>q^{(0)} = 1</code> and is the unique argmax unless another move also clamps into <code>𝒜_0</code>.
+· measure: R0 accuracy against the oracle argmin, with Clopper–Pearson, on 512 draws; the same after the MK-07 restriction <code>u_a ∈ T</code>.
+· PASS: R0 accuracy within <code>CP</code> of <code>1/m</code> after the restriction.
+· KILL (frozen): R0 accuracy <code>≥ acc_shape − MDE₈</code> on <code>≥ 6/8</code> seeds of MK-19, or R0 above the exact zero-information floor by more than <code>CP</code> at construction on the unrestricted bed ⇒ the argmin label is a flag lookup; BED-S's argmin head is struck and only the committor-vector head remains. What would change this planet's mind: R0 at chance on the restricted bed <em>and</em> the trained 0-hop MLP at chance at MK-19.
+· price: <code>0 GPU-s</code> · deliverable: <code>docs/plan/MK-24_flag_rule.md</code>, three columns in <code>results/bed_s_census_512.jsonl</code> · evenings: 1.</p>
+<p><em>Withdrawn candidate, recorded so it is not re-found (V-7 discipline).</em> The conditioning of the committor solve on a self-loop-saturated <code>Q̂</code>: <code>RUN[M]</code> with the diagonal logits raised by <code>0/4/8/12</code>, <code>max_T P_ii = 0.6927 / 0.9919 / 0.99985 / 0.999997</code>, <code>κ_∞(I − Q) = 7.9 / 214 / 771 / 810</code>, and the float32-vs-float64 solve gap <code>2.8e-08 / 2.8e-08 / 3.3e-08 / 1.9e-08</code> — it does not bite at <code>s = 32</code>. It stays as one printed line (<code>κ_∞(I − Q̂)</code> beside the committor head) and is not a card.</p>
+<h2 id="3-the-dag-the-critical-path-and-the-phase-gates">3. The DAG, the critical path, and the phase gates<a class="headerlink" href="#3-the-dag-the-critical-path-and-the-phase-gates" title="Permanent link">#</a></h2>
+<div class="highlight"><pre><span></span><code>P0 (any order, 0 GPU-s):  MK-01  MK-02  MK-03  MK-11  MK-14(spec)  MK-15  MK-17
+P1 (0 GPU-s):             MK-04 ──► {MK-05, MK-06, MK-07, MK-08, MK-16, MK-20, MK-24}   (parallel)
+P2 (seconds):             MK-09 (needs MK-04 admitted + MK-02) ;  MK-12 (needs MK-01 rows 1,5) ;  MK-13 (free-standing)
+P3 (≈ 0.6–1.7 GPU-min):   MK-18 (needs MK-09, MK-15, MK-16) ──► MK-19 ; MK-23 ; MK-25   (parallel after MK-18)
+P4 (≈ 2–4 GPU-min):       MK-21 (needs MK-11, MK-18) ; MK-22 (needs MK-19 alive at K-E1)
+P5 (NOT MEASURED):        MK-10 (needs a mask) ; MK-14(run) ; T-1 digraph β₀, T-2 Mapper-to-tile, the LM γ cell behind the author&#39;s yes — no card here launches them
+</code></pre></div>
+<p>Critical path in evenings (this planet's own cards): MK-04 (2) → MK-07 (1) → MK-09 (1) → MK-18 (1) → MK-19 (1) → MK-22 (1) = <strong>7 evenings</strong>; MK-01 runs beside it and gates MK-12 and MK-18 (L-LEAN). Total GPU time at the design point if nothing dies early: <code>1.7 + 6 + 34 + 98 + 7.6 + 1.7 + 228 + 2.6 s ≈ 380 s ≈ 6.3 GPU-min</code> DERIVED from the card prices, all <code>[FITTED + RUN]</code> floors with the record's <code>2.0×–6.6×</code> dispatch gap beside them (<code>READ scale/m3_flops.py:101-121</code>); the <code>s</code>-sweep band (<code>3.4–9.0 GPU-min</code>) and the <code>≈ 36 min</code> ladder are spent only on a survivor.</p>
+<p>Phase gates the author takes alone: after P1, admit or reroute (D-4) from the printed census; after P2, every plant failed at O(1) or the bind is out; after MK-18, the realised sd either licenses the <code>N = 8</code> kills or reprices <code>N</code>; after MK-19, K-E1 either fires (property paper) or escalates to <code>N = 16</code>; after P4, the two honest sentences of <code>design_falsify.md</code> §6 with their brackets filled. The record's own dominant failure — a bed dying at construction — is now a <code>0 GPU-s</code> decision (MK-04, MK-07, MK-08, MK-24); the expensive death (K-E1) is a <code>≈ 98 s</code> reading.</p>
+<h2 id="4-limits-collected-once">4. Limits (collected once)<a class="headerlink" href="#4-limits-collected-once" title="Permanent link">#</a></h2>
+<p>Every <code>RUN[M]</code> number here is one numpy float64 draw at <code>s = 32</code> on this CPU — an identity or counterexample check, never a statistic; the three unfiled attacks are shown to have O(1) instances, not rates, and their kill thresholds (<code>0.05</code>, <code>0.5</code>, <code>5 %</code>, <code>≥ 6/8</code>) are pre-registration candidates frozen here without a measured null. BED-S has no cell, no realised sd, no measured <code>t*</code>; every MDE in this plan is the record's row-2 instance until MK-18 fills it. Prices are per-op floors on a laptop clock that is not stationary (<code>±12 %</code>); the depth-5 skyline price is <code>[ASSUMED]</code>; the <code>s</code>-sweep has a band and no point. The boundary-null critical value <code>2.7055</code> has no <code>references.bib</code> citation and is marked owed. The ChaCAL diagonal convention is <code>[V-fetched]</code> from one HTML read and is re-read against the PDF before MK-19's arm table is typeset. Theorem numbers inside cited sources inherit the sweeps' <code>[U]</code> marks. The Misra multichain hazard is carried, not resolved (MK-20 tests the one-step/two-step disagreement on the oracle only). No code file, no git write, no Kaggle contact, no external fetch was made by this planet.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Invented by <a href="https://teerthsharma.vercel.app/">Teerth Sharma</a> · Apache License 2.0
+    </div>
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/teerthsharma/resolvent" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://teerthsharma.vercel.app/" target="_blank" rel="noopener" title="teerthsharma.vercel.app" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M351.9 280H161c2.9 64.5 17.2 123.9 37.5 167.4 11.4 24.5 23.7 41.8 35.1 52.4 11.2 10.5 18.9 12.2 22.9 12.2s11.7-1.7 22.9-12.2c11.4-10.6 23.7-28 35.1-52.4 20.3-43.5 34.6-102.9 37.5-167.4zm-191-48h190.9c-2.8-64.5-17.1-123.9-37.4-167.4-11.4-24.4-23.7-41.8-35.1-52.4C268.1 1.7 260.4 0 256.4 0s-11.7 1.7-22.9 12.2c-11.4 10.6-23.7 28-35.1 52.4-20.3 43.5-34.6 102.9-37.5 167.4m-48 0c3.5-85.6 25.6-165.1 57.9-217.3C78.7 47.3 10.9 131.2 1.5 232zM1.5 280c9.4 100.8 77.2 184.7 169.3 217.3-32.3-52.2-54.4-131.7-57.9-217.3zm398.4 0c-3.5 85.6-25.6 165.1-57.9 217.3 92.1-32.7 159.9-116.5 169.3-217.3zm111.4-48C501.9 131.2 434.1 47.3 342 14.7c32.3 52.2 54.4 131.7 57.9 217.3z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

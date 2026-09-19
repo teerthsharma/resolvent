@@ -1,0 +1,3021 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="One causal head, three switches. Softmax attention, unnormalized-kernel attention and the exact path product of a Markov chain as settings of one operator, proved in Lean 4, with every failure kept on the record.">
+      
+      
+        <meta name="author" content="Teerth Sharma">
+      
+      
+        <link rel="canonical" href="https://teerthsharma.github.io/resolvent/sources/sweep/sweep_expressivity/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/logo.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>SWEEP — expressivity, depth laws, optimality of the softmax role - resolvent</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/resolvent.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#sweep-expressivity-depth-laws-optimality-of-the-softmax-role" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="resolvent" class="md-header__button md-logo" aria-label="resolvent" data-md-component="logo">
+      
+  <img src="../../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            resolvent
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              SWEEP — expressivity, depth laws, optimality of the softmax role
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/teerthsharma/resolvent" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    teerthsharma/resolvent
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../FAILS/" class="md-tabs__link">
+          
+  
+  
+  The record
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../BED_H_PREREGISTRATION/" class="md-tabs__link">
+          
+  
+  
+  Pre-registrations
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../ledgers/mistakes/" class="md-tabs__link">
+          
+  
+  
+  Ledgers
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../canon/CHARTER/" class="md-tabs__link">
+          
+  
+  
+  Canon
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../CEQ_SHAPE/" class="md-tabs__link">
+          
+  
+  
+  Paper
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="resolvent" class="md-nav__button md-logo" aria-label="resolvent" data-md-component="logo">
+      
+  <img src="../../../assets/logo.svg" alt="logo">
+
+    </a>
+    resolvent
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/teerthsharma/resolvent" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    teerthsharma/resolvent
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The record
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    The record
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../FAILS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Everything retracted, broken or open
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../COMPONENT_LEDGER/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Component ledger
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../PLAN/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Research plan
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CORNER_RULE_RETIREMENT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Corner rule retirement
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../PI_JEPA_KAGGLE_CARD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kaggle card
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../DR2_CARD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DR2 card
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pre-registrations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Pre-registrations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../BED_H_PREREGISTRATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BED-H
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../prereg/REMOVAL_ECHO_v1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    REMOVAL-ECHO v1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ledgers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Ledgers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/mistakes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Failure mechanisms
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/struck/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Struck constants
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/mathematics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mathematics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/model-card/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model card
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/costs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Costs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/v17k-rulings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    V17K rulings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/v16-calibration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    V16 calibration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Canon
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Canon
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/CHARTER/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Charter
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/01_THEORY_ACCURACY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01 Theory of accuracy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/02_THEORY_TRAINING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    02 Theory of training
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/03_KERNEL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03 Kernel
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/04_BEDS_AND_INSTRUMENTS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    04 Beds and instruments
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/05_REPAIRS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05 Repairs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/06_PREDICTIONS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    06 Predictions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/08_ARCHITECTURE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    08 Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/09_CHESS_AND_MARKETS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    09 Chess and markets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/CORRECTIONS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Corrections
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Paper
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Paper
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CEQ_SHAPE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The shape of CEQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Paper sources
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../BIB_AUDIT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bibliography audit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../BIB_ALIASES/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bibliography aliases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#0-method-and-the-search-log" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0. Method and the search log
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-per-source-ledger-depth-laws-and-composition-lower-bounds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Per-source ledger — depth laws and composition lower bounds
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Per-source ledger — depth laws and composition lower bounds">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-sanford-hsu-telgarsky-transformers-parallel-computation-and-logarithmic-depth-arxiv240209268-v" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 Sanford, Hsu, Telgarsky — Transformers, parallel computation, and logarithmic depth — arXiv:2402.09268 · [V]
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-sanford-et-al-understanding-transformer-reasoning-capabilities-via-graph-algorithms-arxiv240518512-v" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 Sanford et al. — Understanding Transformer Reasoning Capabilities via Graph Algorithms — arXiv:2405.18512 · [V]
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-sanford-hsu-telgarsky-one-layer-transformers-fail-to-solve-the-induction-heads-task-arxiv240814332-v" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 Sanford, Hsu, Telgarsky — One-layer transformers fail to solve the induction heads task — arXiv:2408.14332 · [V]
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-sanford-hsu-telgarsky-representational-strengths-and-limitations-of-transformers-arxiv230602896-v" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 Sanford, Hsu, Telgarsky — Representational Strengths and Limitations of Transformers — arXiv:2306.02896 · [V]
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#15-peng-narayanan-papadimitriou-on-limitations-of-the-transformer-architecture-arxiv240208164-v" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.5 Peng, Narayanan, Papadimitriou — On Limitations of the Transformer Architecture — arXiv:2402.08164 · [V]
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#16-chen-peng-wu-theoretical-limitations-of-multi-layer-transformer-arxiv241202975-v" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.6 Chen, Peng, Wu — Theoretical limitations of multi-layer Transformer — arXiv:2412.02975 · [V]
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#17-kozachinskiy-et-al-strassen-attention-split-vc-dimension-and-compositionality-in-transformers-arxiv250119215-v" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.7 Kozachinskiy et al. — Strassen Attention, Split VC Dimension and Compositionality in Transformers — arXiv:2501.19215 · [V]
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#18-barcelo-kozachinskiy-steifer-ehrenfeucht-haussler-rank-and-chain-of-thought-arxiv250112997-v" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.8 Barceló, Kozachinskiy, Steifer — Ehrenfeucht-Haussler Rank and Chain of Thought — arXiv:2501.12997 · [V]
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#19-yehudai-et-al-depth-width-tradeoffs-in-algorithmic-reasoning-of-graph-tasks-with-transformers-arxiv250301805-v" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.9 Yehudai et al. — Depth-Width tradeoffs in Algorithmic Reasoning of Graph Tasks with Transformers — arXiv:2503.01805 · [V]
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#110-merrill-sabharwal-a-little-depth-goes-a-long-way-arxiv250303961-v" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.10 Merrill, Sabharwal — A Little Depth Goes a Long Way — arXiv:2503.03961 · [V]
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#111-merrill-sabharwal-the-parallelism-tradeoff-arxiv220700729-v-tacl-2023" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.11 Merrill, Sabharwal — The Parallelism Tradeoff — arXiv:2207.00729 · [V] (TACL 2023)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#112-merrill-sabharwal-smith-saturated-transformers-are-constant-depth-threshold-circuits-arxiv210616213-v-tacl-2022" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.12 Merrill, Sabharwal, Smith — Saturated Transformers are Constant-Depth Threshold Circuits — arXiv:2106.16213 · [V] (TACL 2022)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#113-merrill-sabharwal-a-logic-for-expressing-log-precision-transformers-arxiv221002671-v-neurips-2023" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.13 Merrill, Sabharwal — A Logic for Expressing Log-Precision Transformers — arXiv:2210.02671 · [V] (NeurIPS 2023)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#114-merrill-sabharwal-the-expressive-power-of-transformers-with-chain-of-thought-arxiv231007923-v-iclr-2024" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.14 Merrill, Sabharwal — The Expressive Power of Transformers with Chain of Thought — arXiv:2310.07923 · [V] (ICLR 2024)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#115-hahn-theoretical-limitations-of-self-attention-in-neural-sequence-models-arxiv190606755-v-tacl-2020" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.15 Hahn — Theoretical Limitations of Self-Attention in Neural Sequence Models — arXiv:1906.06755 · [V] (TACL 2020)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#116-hahn-rofin-why-are-sensitive-functions-hard-for-transformers-arxiv240209963-v-acl-2024" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.16 Hahn, Rofin — Why are Sensitive Functions Hard for Transformers? — arXiv:2402.09963 · [V] (ACL 2024)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#117-strobl-merrill-weiss-chiang-angluin-what-formal-languages-can-transformers-express-a-survey-arxiv231100208-v-tacl-12543561-2024" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.17 Strobl, Merrill, Weiss, Chiang, Angluin — What Formal Languages Can Transformers Express? A Survey — arXiv:2311.00208 · [V] (TACL 12:543–561, 2024)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#118-liu-ash-goel-krishnamurthy-zhang-transformers-learn-shortcuts-to-automata-arxiv221010749-v" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.18 Liu, Ash, Goel, Krishnamurthy, Zhang — Transformers Learn Shortcuts to Automata — arXiv:2210.10749 · [V]
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#119-barrington-1989-jcss-381150164-doi-1010160022-00008990037-8-v-via-crossref-krohnrhodes-1965-trans-ams-116450464-doi-101090s0002-9947-1965-0188316-1-v-via-crossref" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.19 Barrington 1989 (JCSS 38(1):150–164, DOI 10.1016/0022-0000(89)90037-8) · [V] via Crossref; Krohn–Rhodes 1965 (Trans. AMS 116:450–464, DOI 10.1090/S0002-9947-1965-0188316-1) · [V] via Crossref
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#120-cook-1985-a-taxonomy-of-problems-with-fast-parallel-algorithms-information-and-control-64222-doi-101016s0019-99588580041-3-v-via-crossref" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.20 Cook 1985 — A taxonomy of problems with fast parallel algorithms (Information and Control 64:2–22, DOI 10.1016/S0019-9958(85)80041-3) · [V] via Crossref
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#121-bhattamishra-hahn-blunsom-kanade-separations-in-the-representational-capabilities-of-transformers-and-recurrent-architectures-arxiv240609347-v" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.21 Bhattamishra, Hahn, Blunsom, Kanade — Separations in the Representational Capabilities of Transformers and Recurrent Architectures — arXiv:2406.09347 · [V]
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#122-chen-zou-what-can-transformer-learn-with-varying-depth-arxiv240401601-v" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.22 Chen, Zou — What Can Transformer Learn with Varying Depth? — arXiv:2404.01601 · [V]
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#123-wang-et-al-learning-compositional-functions-with-transformers-from-easy-to-hard-data-arxiv250523683-v-colt-2025" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.23 Wang et al. — Learning Compositional Functions with Transformers from Easy-to-Hard Data — arXiv:2505.23683 · [V] (COLT 2025)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#124-strobl-angluin-frank-concise-one-layer-transformers-can-do-function-evaluation-sometimes-arxiv250322076-v" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.24 Strobl, Angluin, Frank — Concise One-Layer Transformers Can Do Function Evaluation (Sometimes) — arXiv:2503.22076 · [V]
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#125-back-de-luca-et-al-positional-attention-arxiv241001686-v-icml-2025-rajaraman-et-al-transformers-on-markov-data-constant-depth-suffices-arxiv240717686-v-makkuva-et-al-attention-with-markov-arxiv240204161-v-iclr-2025-bietti-et-al-birth-of-a-transformer-arxiv230600802-v-neurips-2023" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.25 Back de Luca et al. — Positional Attention — arXiv:2410.01686 · [V] (ICML 2025); Rajaraman et al. — Transformers on Markov Data: Constant Depth Suffices — arXiv:2407.17686 · [V]; Makkuva et al. — Attention with Markov — arXiv:2402.04161 · [V] (ICLR 2025); Bietti et al. — Birth of a Transformer — arXiv:2306.00802 · [V] (NeurIPS 2023)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-per-source-ledger-the-softmax-role-and-the-resolvent-operators" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Per-source ledger — the softmax role, and the resolvent operators
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Per-source ledger — the softmax role, and the resolvent operators">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#2a-optimality-of-the-softmax-role" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.A Optimality of the softmax role
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#21-marion-berthier-biau-boyer-attention-layers-provably-solve-single-location-regression-arxiv241001537-v-iclr-2025" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Marion, Berthier, Biau, Boyer — Attention layers provably solve single-location regression — arXiv:2410.01537 · [V] (ICLR 2025)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-duranthon-marion-boyer-loureiro-zdeborova-statistical-advantage-of-softmax-attention-insights-from-single-location-regression-arxiv250921936-v-iclr-2026" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Duranthon, Marion, Boyer, Loureiro, Zdeborová — Statistical Advantage of Softmax Attention: Insights from Single-Location Regression — arXiv:2509.21936 · [V] (ICLR 2026)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-boursier-boyer-softmax-as-linear-attention-in-the-large-prompt-regime-arxiv251211784-v" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Boursier, Boyer — Softmax as Linear Attention in the Large-Prompt Regime — arXiv:2512.11784 · [V]
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-boncoraglio-troiani-erba-zdeborova-bayes-optimal-learning-of-attention-indexed-models-arxiv250601582-v-neurips-2025" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 Boncoraglio, Troiani, Erba, Zdeborová — Bayes optimal learning of attention-indexed models — arXiv:2506.01582 · [V] (NeurIPS 2025)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-velickovic-perivolaropoulos-barbero-pascanu-softmax-is-not-enough-for-sharp-size-generalisation-arxiv241001104-v-icml-2025" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5 Veličković, Perivolaropoulos, Barbero, Pascanu — Softmax is not Enough (for Sharp Size Generalisation) — arXiv:2410.01104 · [V] (ICML 2025)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#26-tarzanagh-li-zhang-oymak-max-margin-token-selection-in-attention-mechanism-arxiv230613596-v-tarzanagh-li-thrampoulidis-oymak-transformers-as-support-vector-machines-arxiv230816898-v" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6 Tarzanagh, Li, Zhang, Oymak — Max-Margin Token Selection in Attention Mechanism — arXiv:2306.13596 · [V]; Tarzanagh, Li, Thrampoulidis, Oymak — Transformers as Support Vector Machines — arXiv:2308.16898 · [V]
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#27-dong-cordonnier-loukas-attention-is-not-all-you-need-arxiv210303404-v" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.7 Dong, Cordonnier, Loukas — Attention is Not All You Need — arXiv:2103.03404 · [V]
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#28-ramsauer-et-al-hopfield-networks-is-all-you-need-arxiv200802217-v" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.8 Ramsauer et al. — Hopfield Networks is All You Need — arXiv:2008.02217 · [V]
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2b-the-resolvent-neumann-chain-operators-the-operator-side-of-the-shape" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.B The resolvent / Neumann / chain operators (the operator side of the shape)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#29-fagnou-caillon-delattre-allauzen-chain-and-causal-attention-for-efficient-entity-tracking-arxiv241005565-v-emnlp-2024-main-pp-1317413188-doi-1018653v12024emnlp-main731-acl-anthology-page-fetched-surprise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.9 Fagnou, Caillon, Delattre, Allauzen — Chain and Causal Attention for Efficient Entity Tracking — arXiv:2410.05565 · [V] · EMNLP 2024 main, pp. 13174–13188, DOI 10.18653/v1/2024.emnlp-main.731 (ACL Anthology page fetched) — SURPRISE
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#210-zhao-caillon-fagnou-allauzen-structured-sparse-attention-for-entity-tracking-with-subquadratic-sequence-complexity-arxiv260522476-v-v1-21-may-2026" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.10 Zhao, Caillon, Fagnou, Allauzen — Structured-Sparse Attention for Entity Tracking with Subquadratic Sequence Complexity — arXiv:2605.22476 · [V] (v1 21 May 2026)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#211-roffo-abdelkawy-lavie-palmer-self-attention-and-beyond-the-infinite-infsa-arxiv260300175-v-cscv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.11 Roffo, Abdelkawy, Lavie, Palmer — Self-Attention And Beyond the Infinite (InfSA) — arXiv:2603.00175 · [V] (cs.CV)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#212-erel-et-al-attention-as-discrete-time-markov-chains-arxiv250717657-v-neurips-2025-cscv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.12 Erel et al. — Attention (as Discrete-Time Markov) Chains — arXiv:2507.17657 · [V] (NeurIPS 2025, cs.CV)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#213-wang-ying-huang-leskovec-multi-hop-attention-graph-neural-network-magna-arxiv200914332-v-ijcai-2021" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.13 Wang, Ying, Huang, Leskovec — Multi-hop Attention Graph Neural Network (MAGNA) — arXiv:2009.14332 · [V] (IJCAI 2021)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#214-feng-li-jiang-ying-diffuser-arxiv221011794-v-glickman-yahav-diffusing-graph-attention-arxiv230300613-v" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.14 Feng, Li, Jiang, Ying — Diffuser — arXiv:2210.11794 · [V]; Glickman, Yahav — Diffusing Graph Attention — arXiv:2303.00613 · [V]
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2c-seen-in-the-record-but-not-fetched-this-session-excluded-from-the-bib" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.C Seen in the record but NOT fetched this session (excluded from the .bib)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-the-answer-to-the-dispatchs-question-which-theorem-licenses-what" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. The answer to the dispatch's question — which theorem licenses what
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. The answer to the dispatch&#39;s question — which theorem licenses what">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-t-2-one-composition-the-induction-head-unconditional-against-one-softmax-layer-asymptotic-in-n" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 t* = 2 (one composition; the induction head) — UNCONDITIONAL against one softmax layer, asymptotic in n
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-t-l-1-against-l-layers-unconditional-doubly-exponentially-vacuous-at-small-n" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 t* = L + 1 against L layers — UNCONDITIONAL, doubly-exponentially vacuous at small n
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-t-general-depth-log-t-conditional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 t* general, depth Ω(log t*) — CONDITIONAL
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-reachability-committor-as-a-problem-class-conditional-on-circuit-class-separations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 Reachability / committor as a problem class — CONDITIONAL on circuit-class separations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-what-one-operator-may-and-may-not-claim-derived-and-the-paper-must-say-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 What "one operator" may and may not claim — DERIVED, and the paper must say it
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#36-not-found-recorded-with-the-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.6 NOT FOUND (recorded, with the queries)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-verdict" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Verdict
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-design-against-the-taxonomy-how-the-paper-should-use-this-lineage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Design against the taxonomy — how the paper should use this lineage
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-counts-for-the-coordinator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Counts for the coordinator
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="sweep-expressivity-depth-laws-optimality-of-the-softmax-role">SWEEP — expressivity, depth laws, optimality of the softmax role<a class="headerlink" href="#sweep-expressivity-depth-laws-optimality-of-the-softmax-role" title="Permanent link">#</a></h1>
+<p>JUPITER-S3, 2026-09-03. Companion file: <code>bib_expressivity.bib</code> (45 entries, all <code>[V]</code> for
+identifier + title). Repository at <code>&lt;repo root&gt;</code>, branch <code>v17k-gate0</code>,
+HEAD <code>207e7b9</code>. Evidence classes per <code>BRIEF.md</code> §5.3: <code>RUN</code> / <code>READ path:line</code> / <code>CITED [V]|[U]</code> /
+<code>DERIVED</code>. <code>[V]</code> means the arXiv abs page (or the Crossref record for a DOI) was fetched this
+session and the title matched; <code>[U]</code> means reached only through a search snippet, a summary
+model's reading of a page, or memory, and is labelled as such wherever it appears.</p>
+<p>The question this sweep was asked to answer, verbatim from the dispatch: <em>exactly which theorem
+licenses "depth-1 softmax cannot compute a t*-hop reachability/committor that the resolvent computes
+in one operator", under what conditions, and what is conditional.</em> §3 answers it in five layers.
+§4 carries the SURPRISE: the shape's operator <code>P (I − γP)^{-1} V</code> is published, with the same
+triangular solve and the same depth-law motivation, as <strong>ChaCAL</strong> (Fagnou, Caillon, Delattre,
+Allauzen, EMNLP 2024, arXiv:2410.05565) — a paper the repository never cites (<code>grep</code> 2026-09-03:
+<code>0</code> files outside <code>kaggle/</code>).</p>
+<hr />
+<h2 id="0-method-and-the-search-log">0. Method and the search log<a class="headerlink" href="#0-method-and-the-search-log" title="Permanent link">#</a></h2>
+<p><strong>Seeds fetched (from the dispatch):</strong> 2402.09268, 2405.18512, 2402.08164, 2410.01537, 2509.21936,
+2210.10749, 2306.13596, 1906.06755, 2207.00729, 2106.16213, 2311.00208, Barrington 1989 (DOI),
+Krohn–Rhodes 1965 (DOI). Every seed identifier survived the fetch; the brief's <code>VERIFY</code> on
+Peng–Narayanan–Papadimitriou is closed: <strong>arXiv:2402.08164 is correct</strong> (<code>[V]</code>, v1 13 Feb 2024, v2
+26 Feb 2024, stat.ML).</p>
+<p><strong>Searches run (WebSearch, 2026-09-03), beyond the seeds — 16, of which the dispatch required
+at least six:</strong></p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>query</th>
+<th>what it surfaced (ids later fetched <code>[V]</code>)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>S1</td>
+<td><code>Sanford Fatemi Hall Tsitsulin "Understanding Transformer Reasoning Capabilities via Graph Algorithms" arXiv</code></td>
+<td>2405.18512</td>
+</tr>
+<tr>
+<td>S2</td>
+<td><code>k-hop induction heads depth lower bound transformer 2024</code></td>
+<td>2408.14332, 2505.23683, 2410.01686, 2407.17686</td>
+</tr>
+<tr>
+<td>S3</td>
+<td><code>unconditional lower bound multi-layer transformer sequential function composition polynomial width Chen Peng Wu 2024</code></td>
+<td>2412.02975, 2501.12997, 2503.22076</td>
+</tr>
+<tr>
+<td>S4</td>
+<td><code>Yehudai depth-width tradeoffs algorithmic reasoning transformers k-hop 2025</code></td>
+<td>2503.01805</td>
+</tr>
+<tr>
+<td>S5</td>
+<td><code>Strassen attention function composition single layer transformer 2025 arXiv</code></td>
+<td>2501.19215</td>
+</tr>
+<tr>
+<td>S6</td>
+<td><code>attention layer matrix inverse resolvent multi-hop one layer "Neumann series" attention expressivity arXiv</code></td>
+<td>2603.00175, 2009.14332, <strong>2605.22476</strong></td>
+</tr>
+<tr>
+<td>S7</td>
+<td><code>transformer expressivity committor absorption probability Markov chain attention layer computes hitting probability</code></td>
+<td>2402.04161, 2508.07208 (not fetched), 2510.18638 (not fetched)</td>
+</tr>
+<tr>
+<td>S8</td>
+<td><code>Merrill Sabharwal "A little depth goes a long way" log-depth transformers graph connectivity regular languages arXiv</code></td>
+<td>2503.03961</td>
+</tr>
+<tr>
+<td>S9</td>
+<td><code>attention as absorbing Markov chain "fundamental matrix" transformer layer arXiv</code></td>
+<td>2603.00175 only</td>
+</tr>
+<tr>
+<td>S10</td>
+<td><code>graph diffusion attention Katz PageRank powers of attention matrix in one transformer layer multi-hop</code></td>
+<td>2210.11794, 2303.00613, 2009.14332; "ParaFormer" (no id surfaced; see §2.C)</td>
+</tr>
+<tr>
+<td>S11</td>
+<td><code>softmax attention Bayes optimal theorem one layer in-context learning why softmax versus linear attention 2025</code></td>
+<td>2512.11784, 2506.01582</td>
+</tr>
+<tr>
+<td>S12</td>
+<td><code>one-layer transformer lower bound two-hop composition "grandparent" induction head Bietti "Birth of a Transformer"</code></td>
+<td>2306.00802, 2408.14332, 2503.22076</td>
+</tr>
+<tr>
+<td>S13</td>
+<td><code>transformers constant depth cannot solve directed graph reachability unless TC0 equals NL Merrill Sabharwal</code></td>
+<td>2503.03961, 2503.01805, 2402.09268</td>
+</tr>
+<tr>
+<td>S14</td>
+<td><code>counterfactual intervention do-operator attention mechanism expressivity theorem transformer causal consequence prediction 2025</code></td>
+<td>nothing in the expressivity lineage (applied causal-transformer papers only)</td>
+</tr>
+<tr>
+<td>S15</td>
+<td><code>attention head computes argmin over candidate actions of maximum absorption probability constraint sets safest action Markov chain transformer</code></td>
+<td>2507.17657; no result matching the safest-move object</td>
+</tr>
+<tr>
+<td>S16</td>
+<td><code>matched-depth comparison single-layer resolvent attention versus deeper softmax stack exactness certificate multi-hop reachability transformer</code></td>
+<td>2605.22476, 2404.01601; no matched-depth comparison paper</td>
+</tr>
+<tr>
+<td>S17</td>
+<td><code>"Chain and Causal Attention" Efficient Entity Tracking Fagnou Caillon Allauzen arXiv EMNLP 2024</code></td>
+<td><strong>2410.05565</strong> (search index also printed 2410.05573 — the abs fetch confirms 2410.05565)</td>
+</tr>
+<tr>
+<td>S18</td>
+<td><code>attention "(I - A)^{-1}" OR "resolvent" causal attention matrix single layer arbitrary number of hops entity tracking Boxes transformer</code></td>
+<td>2410.05565, 2605.22476</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Full-text reads (arXiv HTML, for theorem statements, not just titles):</strong> 2402.09268, 2402.08164,
+2410.01537, 2509.21936, 2405.18512, 2503.03961, 2207.00729, 2408.14332, 2501.19215, 2412.02975,
+2603.00175, 2605.22476, 2410.05565. The theorem numbers quoted below come from those reads; where a
+number or a detail is the summariser's reading rather than a displayed equation, it is marked <code>[U]</code>.</p>
+<p><strong>Repository reads that anchor the sweep:</strong> <code>BRIEF.md</code> §1 (the shape, I1–I5), <code>MATHEMATICS.md:284-306</code>
+(§2 depth law), <code>MATHEMATICS.md:106-128</code> (§0.3 the narrow claim), <code>MATHEMATICS.md:488-521</code> (§9 the
+novelty position, including <em>"no unconditional lower bound against one-layer softmax on this product
+chain"</em>), <code>MATHEMATICS.md:1044-1057</code> (§17.5 erf-not-softmax, <code>L/d = 4.00</code>), <code>PRIOR_ART.md:1-110</code>
+(Liu et al. delta, Theorem 4 quoted, <code>O(|Q|² log |Q|)</code> depth), <code>PRIOR_ART.md:585-610</code> (Sanford
+NeurIPS 2024 as occupant of the capability hierarchy), <code>DONE.md:786-803</code> (the record's earlier
+reading of Sanford as conditional and "pointer-chasing rather than this product chain"),
+<code>DONE_ARCHIVE_ROUND1.md:672-681</code> and <code>:1312-1324</code> (APPNP, GDC, MAGNA, InfSA, ParaFormer, Gated
+DeltaNet — all rejected during the <em>signed</em> programme for being non-negative), <code>THEORY.md:22,51,187</code>
+(the resolvent <code>(I − γP)⁻¹</code> as "successor operator"), <code>MISTAKES.md:677-690</code> (D-1),
+<code>ceq/attention.py:1-60</code> (the tier table), <code>CEQ_V16_CONTRACT.md:209</code> (R-SKY).</p>
+<hr />
+<h2 id="1-per-source-ledger-depth-laws-and-composition-lower-bounds">1. Per-source ledger — depth laws and composition lower bounds<a class="headerlink" href="#1-per-source-ledger-depth-laws-and-composition-lower-bounds" title="Permanent link">#</a></h2>
+<p>Format: <strong>id</strong> · class · <em>owns</em> (the equation or mechanism, in this sweep's words) · <em>leaves open</em>
+relative to the shape in <code>BRIEF.md</code> §1 · <em>found by</em>.</p>
+<h3 id="11-sanford-hsu-telgarsky-transformers-parallel-computation-and-logarithmic-depth-arxiv240209268-v">1.1 Sanford, Hsu, Telgarsky — <em>Transformers, parallel computation, and logarithmic depth</em> — arXiv:2402.09268 · <code>[V]</code><a class="headerlink" href="#11-sanford-hsu-telgarsky-transformers-parallel-computation-and-logarithmic-depth-arxiv240209268-v" title="Permanent link">#</a></h3>
+<ul>
+<li><strong>Owns.</strong> The <code>hop_k</code> task (<code>hop_k(X)_i = X_{find^k_X(i)}</code>, k-fold last-occurrence pointer chasing);
+  <strong>Thm 4.2</strong> (upper): a causally-masked transformer computes <code>hop_k</code> at depth <code>L = ⌊log₂ k⌋ + 2</code>,
+  <code>m = O(1)</code>, <code>H = 1</code>; <strong>Cor 4.3</strong> (lower): <em>assuming Conjecture 2.4 (one-versus-two-cycle in the
+  (γ,δ)-MPC model)</em>, for <code>k = Θ(N^ξ)</code>, <code>ξ ∈ (0, 1/2]</code>, every transformer computing <code>hop_k</code> with
+  <code>mH = O(k^{1−ε})</code> needs <code>L = Ω(log k)</code>. <strong>Thm 3.1 / 3.4</strong>: two-way simulation between depth-<code>L</code>
+  transformers and <code>O(L)</code>-round MPC at <code>p = Θ(log N)</code> bits. <strong>Cor 3.3 / 3.5</strong>: connected components
+  at <code>L = O(log D)</code>, <code>m = O(N^ε)</code>; conditionally optimal.</li>
+<li><strong>Leaves open.</strong> (i) The lower bound is conditional and asymptotic in <code>N</code> with <code>k</code> polynomial in
+  <code>N</code>; it says nothing at <code>s = 64</code>, <code>k = t* ≤ 8</code>, <code>d = 16</code>. (ii) It bounds <em>standard</em> transformer
+  layers; a layer that is a triangular solve is outside the model, so the theorem neither licenses
+  nor forbids the resolvent — it is silent. (iii) <code>hop_k</code> is pointer chasing in a <em>token-defined</em>
+  graph; the shape computes reachability in the graph <em>the layer itself computes</em> (<code>P</code>), which is a
+  different object (the record already said this: <code>DONE.md:802</code>, <em>"pointer-chasing rather than
+  this product chain"</em>).</li>
+<li><strong>Found by.</strong> Seed; theorem statements from the HTML read.</li>
+</ul>
+<h3 id="12-sanford-et-al-understanding-transformer-reasoning-capabilities-via-graph-algorithms-arxiv240518512-v">1.2 Sanford et al. — <em>Understanding Transformer Reasoning Capabilities via Graph Algorithms</em> — arXiv:2405.18512 · <code>[V]</code><a class="headerlink" href="#12-sanford-et-al-understanding-transformer-reasoning-capabilities-via-graph-algorithms-arxiv240518512-v" title="Permanent link">#</a></h3>
+<ul>
+<li><strong>Owns.</strong> The nine-problem hierarchy: <strong>Thm 5</strong> retrieval tasks (node/edge count, edge existence,
+  degree) at depth 1 with <code>m = O(log N)</code>; <strong>Thm 2/18</strong> parallelizable tasks (connectivity, cycle
+  check, bipartiteness) at <code>L = O(log N)</code>, <code>m = O(N^ε)</code>; <strong>Thm 3/19</strong> <code>L = Ω(log N)</code> for
+  parallelizable tasks with <code>mH = O(N^ε)</code>, <em>conditional on Conjecture 13</em> (the same one-vs-two-cycle
+  conjecture); <strong>Thm 4</strong> search tasks (shortest path, diameter) at <code>m = O(N^{1/2+ε})</code>.</li>
+<li><strong>Leaves open.</strong> Same three gaps as 1.1. Additionally: the hierarchy places <em>undirected
+  connectivity</em> in "parallelizable"; the committor is an <em>absorption probability</em> — a weighted,
+  directed, quantitative reachability — which the hierarchy does not name. NOT FOUND: any class in
+  that hierarchy for "absorption probability into one of K sets".</li>
+<li><strong>Found by.</strong> S1 (the record cited it by OpenReview id only, <code>PRIOR_ART.md:593-596</code>).</li>
+</ul>
+<h3 id="13-sanford-hsu-telgarsky-one-layer-transformers-fail-to-solve-the-induction-heads-task-arxiv240814332-v">1.3 Sanford, Hsu, Telgarsky — <em>One-layer transformers fail to solve the induction heads task</em> — arXiv:2408.14332 · <code>[V]</code><a class="headerlink" href="#13-sanford-hsu-telgarsky-one-layer-transformers-fail-to-solve-the-induction-heads-task-arxiv240814332-v" title="Permanent link">#</a></h3>
+<ul>
+<li><strong>Owns.</strong> <strong>Thm 1</strong> (unconditional): a one-layer <em>softmax</em> transformer with <code>h</code> heads, embedding
+  <code>m</code>, <code>p</code> bits, solving induction heads (= <code>hop_1</code>, the 2-hop pointer) at length <code>n</code> over a
+  three-symbol alphabet has <code>h·m·p = Ω(n)</code>; proof by reduction from INDEX. Two-layer upper bound
+  <code>h = O(1)</code>, <code>m = O(1)</code>, <code>p = O(log n)</code>.</li>
+<li><strong>Leaves open.</strong> This is the cleanest <em>unconditional</em> one-layer statement in the lineage, and it
+  is exactly the <code>t* = 2</code> case. It is asymptotic in <code>n</code>; at the record's <code>s = 64</code>, <code>d = 16</code>,
+  float32 (<code>p = 32</code>), <code>h = 1</code>: <code>h·m·p = 512 ≥ 64</code> — <strong>the hypothesis is not violated, so the theorem
+  says nothing at that geometry</strong> (the <code>V-25</code> mechanism: a theorem whose hypothesis no draw satisfies).
+  The paper must say so.</li>
+<li><strong>Found by.</strong> S2, S12.</li>
+</ul>
+<h3 id="14-sanford-hsu-telgarsky-representational-strengths-and-limitations-of-transformers-arxiv230602896-v">1.4 Sanford, Hsu, Telgarsky — <em>Representational Strengths and Limitations of Transformers</em> — arXiv:2306.02896 · <code>[V]</code><a class="headerlink" href="#14-sanford-hsu-telgarsky-representational-strengths-and-limitations-of-transformers-arxiv230602896-v" title="Permanent link">#</a></h3>
+<ul>
+<li><strong>Owns.</strong> Sparse averaging (attention needs <code>log</code>-scaling embedding; RNN/FFN polynomial); triple
+  detection (Match3) needs width linear in <code>n</code> for one attention layer; the "attention is a
+  pairwise object" limitation in its earliest clean form.</li>
+<li><strong>Leaves open.</strong> Pairwise-vs-triple is about <em>one</em> layer's arity, not about hops; not the shape's
+  question. Cited as the origin of the Match3 lower-bound line continued by 1.7.</li>
+<li><strong>Found by.</strong> Memory of the lineage; abs fetched.</li>
+</ul>
+<h3 id="15-peng-narayanan-papadimitriou-on-limitations-of-the-transformer-architecture-arxiv240208164-v">1.5 Peng, Narayanan, Papadimitriou — <em>On Limitations of the Transformer Architecture</em> — arXiv:2402.08164 · <code>[V]</code><a class="headerlink" href="#15-peng-narayanan-papadimitriou-on-limitations-of-the-transformer-architecture-arxiv240208164-v" title="Permanent link">#</a></h3>
+<ul>
+<li><strong>Owns.</strong> <strong>Thm 1</strong> (unconditional, communication complexity): a single <code>H</code>-head softmax layer with
+  embedding <code>d</code> and <code>p</code>-bit precision errs on function composition (<code>f(g(x))</code> with <code>n</code>-element
+  domains) with probability <code>≥ R/(3 n log n)</code> where <code>R = n log n − H(d+1)p &gt; 0</code>. <strong>Thm 2</strong>:
+  <code>Ω(√(n/(Hdp)))</code> chain-of-thought steps for iterated composition. <strong>Thm 3</strong>: Derivability, 2-SAT,
+  Horn-SAT, circuit evaluation not solvable by multi-layer transformers unless <code>L = NL</code> (resp. <code>L = P</code>).</li>
+<li><strong>Leaves open.</strong> The identifier is confirmed; the brief's obstruction 3 may drop its <code>[U]</code>. The
+  condition <code>n log n &gt; H(d+1)p</code> at the record's geometry: <code>n = 64</code> gives <code>64·6 = 384</code> against
+  <code>H(d+1)p = 1·17·32 = 544</code> — <strong>not satisfied</strong> (<code>DERIVED</code>, <code>log₂</code>), so Thm 1 is vacuous at <code>s = 64</code>,
+  <code>d = 16</code>, float32; it bites at <code>n ≳ 100</code> for that width or at <code>p = 16</code>. "A consequence <em>is</em> a
+  composition" (brief §1 item 3) is licensed as a <em>reduction sketch</em>, not as a theorem about the
+  committor. Multi-layer statements are conditional (<code>L ≠ NL</code>).</li>
+<li><strong>Found by.</strong> Seed.</li>
+</ul>
+<h3 id="16-chen-peng-wu-theoretical-limitations-of-multi-layer-transformer-arxiv241202975-v">1.6 Chen, Peng, Wu — <em>Theoretical limitations of multi-layer Transformer</em> — arXiv:2412.02975 · <code>[V]</code><a class="headerlink" href="#16-chen-peng-wu-theoretical-limitations-of-multi-layer-transformer-arxiv241202975-v" title="Permanent link">#</a></h3>
+<ul>
+<li><strong>Owns.</strong> <strong>Thm 1.1</strong> (unconditional; the first against multi-layer decoders): for constant
+  <code>L ≤ Õ(log log n)</code>, an <code>L</code>-layer decoder-only softmax transformer cannot solve <code>L</code>-sequential
+  function composition when <code>H·d·p ≤ n^{2^{−4L}}</code>, <code>p ≥ log n</code>. <strong>Cor 1.2</strong>: <code>L + 1</code> layers suffice
+  with polylog parameters — the depth-<code>L</code> vs depth-<code>L+1</code> separation is exponential. <strong>Cor 1.3</strong>:
+  <code>O(log L)</code>-layer encoder vs <code>L</code>-layer decoder, unconditional.</li>
+<li><strong>Leaves open.</strong> This is the theorem the brief's obstruction 2 should cite for an <em>unconditional</em>
+  statement that depth-1 softmax cannot do 2-hop and depth-<code>L</code> cannot do <code>(L+1)</code>-hop sequential
+  composition. Its price: the exponent <code>2^{−4L}</code> — at <code>L = 1</code>, <code>H·d·p ≤ n^{1/16}</code>; <code>64^{1/16} ≈ 1.30</code>
+  (<code>DERIVED</code>) — <strong>vacuous at every geometry the record has run</strong>. Also decoder-only (causal), which
+  matches the shape's causal <code>P</code>. The task is sequential composition of <em>given</em> functions, not
+  absorption in a learned chain.</li>
+<li><strong>Found by.</strong> S3.</li>
+</ul>
+<h3 id="17-kozachinskiy-et-al-strassen-attention-split-vc-dimension-and-compositionality-in-transformers-arxiv250119215-v">1.7 Kozachinskiy et al. — <em>Strassen Attention, Split VC Dimension and Compositionality in Transformers</em> — arXiv:2501.19215 · <code>[V]</code><a class="headerlink" href="#17-kozachinskiy-et-al-strassen-attention-split-vc-dimension-and-compositionality-in-transformers-arxiv250119215-v" title="Permanent link">#</a></h3>
+<ul>
+<li><strong>Owns.</strong> <strong>Thm 3.2</strong>: one-layer softmax transformers at <em>infinite precision</em> satisfy
+  <code>size(T) = split-VC(f)^{Ω(1)}</code>, <code>size = max{d, H, L_mlp}</code>; <strong>Thm 3.4</strong> function composition needs
+  <code>size = n^{Ω(1)}</code>; <strong>Thm 3.6</strong> Match3; <strong>Thm 3.8</strong> binary-relation composition. <strong>Strassen
+  attention</strong>: <code>a_i = Σ_{j,k} a_{ijk}(v_j ⊙ v_k)</code> with a trilinear softmax, <code>O(n^ω d)</code>.</li>
+<li><strong>Leaves open.</strong> Removes the precision hypothesis from 1.5 — the only one-layer lower bound that
+  survives float64. Still asymptotic (<code>n^{o(1)}</code> vs <code>n^{Ω(1)}</code>). Strassen attention is a competing
+  <em>one-layer composition</em> operator (third-order, sub-cubic), a NEAR-MISS to "one operator computes the
+  hops": it does <strong>two</strong> hops per layer by arity, the resolvent does <strong>all</strong> hops by inversion.
+  No chain, no absorbing sets, no certificate.</li>
+<li><strong>Found by.</strong> S5.</li>
+</ul>
+<h3 id="18-barcelo-kozachinskiy-steifer-ehrenfeucht-haussler-rank-and-chain-of-thought-arxiv250112997-v">1.8 Barceló, Kozachinskiy, Steifer — <em>Ehrenfeucht-Haussler Rank and Chain of Thought</em> — arXiv:2501.12997 · <code>[V]</code><a class="headerlink" href="#18-barcelo-kozachinskiy-steifer-ehrenfeucht-haussler-rank-and-chain-of-thought-arxiv250112997-v" title="Permanent link">#</a></h3>
+<ul>
+<li><strong>Owns.</strong> EH-rank of <code>f</code> = minimum CoT steps for a single-layer <em>hard</em>-attention transformer;
+  composing <code>ℓ</code> functions needs exactly <code>ℓ</code> steps.</li>
+<li><strong>Leaves open.</strong> Hard attention only; a CoT-steps law, not a depth law; not softmax.</li>
+<li><strong>Found by.</strong> S3.</li>
+</ul>
+<h3 id="19-yehudai-et-al-depth-width-tradeoffs-in-algorithmic-reasoning-of-graph-tasks-with-transformers-arxiv250301805-v">1.9 Yehudai et al. — <em>Depth-Width tradeoffs in Algorithmic Reasoning of Graph Tasks with Transformers</em> — arXiv:2503.01805 · <code>[V]</code><a class="headerlink" href="#19-yehudai-et-al-depth-width-tradeoffs-in-algorithmic-reasoning-of-graph-tasks-with-transformers-arxiv250301805-v" title="Permanent link">#</a></h3>
+<ul>
+<li><strong>Owns.</strong> With width <em>linear</em> in <code>n</code>, constant depth suffices for a host of graph tasks; some need
+  quadratic width. The log-depth "necessity" of 1.1/1.2 holds only under sub-linear width.</li>
+<li><strong>Leaves open.</strong> Sharpens the skyline the brief demands: a <em>wide</em> shallow softmax stack is also a
+  fellow approximator, so the matched-<em>parameter</em> control must fix width as well as depth (the
+  brief's "matched depth and parameters" clause is exactly right, and this paper is its citation).</li>
+<li><strong>Found by.</strong> S4.</li>
+</ul>
+<h3 id="110-merrill-sabharwal-a-little-depth-goes-a-long-way-arxiv250303961-v">1.10 Merrill, Sabharwal — <em>A Little Depth Goes a Long Way</em> — arXiv:2503.03961 · <code>[V]</code><a class="headerlink" href="#110-merrill-sabharwal-a-little-depth-goes-a-long-way-arxiv250303961-v" title="Permanent link">#</a></h3>
+<ul>
+<li><strong>Owns.</strong> <strong>Thm 2</strong>: a <code>(17,2,1)</code>-universal transformer unrolled <code>⌈log₂ n⌉</code> times solves connectivity
+  on <code>n</code> vertices (directed or undirected; <code>18 + 2⌈log₂ n⌉</code> layers; <code>p ≥ c log n</code>; averaging-hard
+  attention; input as <code>n²</code> adjacency tokens + <code>n³</code> padding). <strong>Thm 1</strong>: regular languages at
+  <code>⌈log₂|w|⌉</code> unrolls. Fixed-depth impossibility <em>conditional on <code>TC⁰ ≠ NC¹</code></em>.</li>
+<li><strong>Leaves open.</strong> Occupies "log depth suffices for reachability" with a <em>uniform</em> construction —
+  the honest skyline for the paper's control. Says nothing about weighted absorption probabilities.</li>
+<li><strong>Found by.</strong> S8, S13.</li>
+</ul>
+<h3 id="111-merrill-sabharwal-the-parallelism-tradeoff-arxiv220700729-v-tacl-2023">1.11 Merrill, Sabharwal — <em>The Parallelism Tradeoff</em> — arXiv:2207.00729 · <code>[V]</code> (TACL 2023)<a class="headerlink" href="#111-merrill-sabharwal-the-parallelism-tradeoff-arxiv220700729-v-tacl-2023" title="Permanent link">#</a></h3>
+<ul>
+<li><strong>Owns.</strong> <strong>Thm 2</strong>: log-precision, constant-depth transformers ⊆ logspace-uniform <code>TC⁰</code>.
+  Consequences under <code>TC⁰ ≠ P</code> (the paper phrases the family as <code>L ≠ P</code>): cannot solve linear
+  equalities <code>Ax = b</code> (P-complete), universal CFG recognition, and — explicitly named — graph
+  connectivity (L-complete).</li>
+<li><strong>Leaves open.</strong> This is the circuit-class root of every "constant-depth softmax cannot reach"
+  sentence, and it is conditional. It also cuts the other way: <strong>the exact committor is a linear
+  solve <code>(I − Q) q = R 1</code></strong>, and the paper lists linear-system solving among the problems above
+  <code>TC⁰</code>. So the shape's operator is not a constant-depth circuit either (§3.5).</li>
+<li><strong>Found by.</strong> Seed.</li>
+</ul>
+<h3 id="112-merrill-sabharwal-smith-saturated-transformers-are-constant-depth-threshold-circuits-arxiv210616213-v-tacl-2022">1.12 Merrill, Sabharwal, Smith — <em>Saturated Transformers are Constant-Depth Threshold Circuits</em> — arXiv:2106.16213 · <code>[V]</code> (TACL 2022)<a class="headerlink" href="#112-merrill-sabharwal-smith-saturated-transformers-are-constant-depth-threshold-circuits-arxiv210616213-v-tacl-2022" title="Permanent link">#</a></h3>
+<ul>
+<li><strong>Owns.</strong> Saturated (hard-limit) attention ⊆ <code>TC⁰</code>. Precursor of 1.11.</li>
+<li><strong>Leaves open.</strong> Superseded by 1.11 for the soft case.</li>
+<li><strong>Found by.</strong> Memory; abs fetched.</li>
+</ul>
+<h3 id="113-merrill-sabharwal-a-logic-for-expressing-log-precision-transformers-arxiv221002671-v-neurips-2023">1.13 Merrill, Sabharwal — <em>A Logic for Expressing Log-Precision Transformers</em> — arXiv:2210.02671 · <code>[V]</code> (NeurIPS 2023)<a class="headerlink" href="#113-merrill-sabharwal-a-logic-for-expressing-log-precision-transformers-arxiv221002671-v-neurips-2023" title="Permanent link">#</a></h3>
+<ul>
+<li><strong>Owns.</strong> Log-precision transformers ⊆ <code>FO(M)</code> (first-order logic with majority).</li>
+<li><strong>Leaves open.</strong> A tighter upper bound than <code>TC⁰</code>; same conditional consequences.</li>
+<li><strong>Found by.</strong> Memory; abs fetched.</li>
+</ul>
+<h3 id="114-merrill-sabharwal-the-expressive-power-of-transformers-with-chain-of-thought-arxiv231007923-v-iclr-2024">1.14 Merrill, Sabharwal — <em>The Expressive Power of Transformers with Chain of Thought</em> — arXiv:2310.07923 · <code>[V]</code> (ICLR 2024)<a class="headerlink" href="#114-merrill-sabharwal-the-expressive-power-of-transformers-with-chain-of-thought-arxiv231007923-v-iclr-2024" title="Permanent link">#</a></h3>
+<ul>
+<li><strong>Owns.</strong> CoT step-count hierarchy: log steps ≈ nothing; linear steps ⊇ regular languages;
+  polynomial steps = P.</li>
+<li><strong>Leaves open.</strong> The <em>autoregressive</em> route to the hops — a third fellow approximator (deeper
+  stack, wider stack, longer decode). The brief's skyline should list it.</li>
+<li><strong>Found by.</strong> Memory; abs fetched.</li>
+</ul>
+<h3 id="115-hahn-theoretical-limitations-of-self-attention-in-neural-sequence-models-arxiv190606755-v-tacl-2020">1.15 Hahn — <em>Theoretical Limitations of Self-Attention in Neural Sequence Models</em> — arXiv:1906.06755 · <code>[V]</code> (TACL 2020)<a class="headerlink" href="#115-hahn-theoretical-limitations-of-self-attention-in-neural-sequence-models-arxiv190606755-v-tacl-2020" title="Permanent link">#</a></h3>
+<ul>
+<li><strong>Owns.</strong> Hard attention cannot recognise PARITY or 2DYCK at fixed layers/heads; soft attention
+  cannot do so robustly (bounded Lipschitz argument).</li>
+<li><strong>Leaves open.</strong> Periodic/hierarchical languages, not hops; historical anchor only.</li>
+<li><strong>Found by.</strong> Seed.</li>
+</ul>
+<h3 id="116-hahn-rofin-why-are-sensitive-functions-hard-for-transformers-arxiv240209963-v-acl-2024">1.16 Hahn, Rofin — <em>Why are Sensitive Functions Hard for Transformers?</em> — arXiv:2402.09963 · <code>[V]</code> (ACL 2024)<a class="headerlink" href="#116-hahn-rofin-why-are-sensitive-functions-hard-for-transformers-arxiv240209963-v-acl-2024" title="Permanent link">#</a></h3>
+<ul>
+<li><strong>Owns.</strong> Low-sensitivity bias: high-sensitivity functions sit in isolated regions of parameter space.</li>
+<li><strong>Leaves open.</strong> A trainability bias, not a representational bound; relevant to "a third token can
+  veto" (a veto is a high-sensitivity function), which the shape moves into boundary conditions.</li>
+<li><strong>Found by.</strong> Memory; abs fetched.</li>
+</ul>
+<h3 id="117-strobl-merrill-weiss-chiang-angluin-what-formal-languages-can-transformers-express-a-survey-arxiv231100208-v-tacl-12543561-2024">1.17 Strobl, Merrill, Weiss, Chiang, Angluin — <em>What Formal Languages Can Transformers Express? A Survey</em> — arXiv:2311.00208 · <code>[V]</code> (TACL 12:543–561, 2024)<a class="headerlink" href="#117-strobl-merrill-weiss-chiang-angluin-what-formal-languages-can-transformers-express-a-survey-arxiv231100208-v-tacl-12543561-2024" title="Permanent link">#</a></h3>
+<ul>
+<li><strong>Owns.</strong> The map of circuit/logic/automata bounds; the citation for "the field's consensus".</li>
+<li><strong>Leaves open.</strong> Pre-dates 1.6, 1.7, 1.9, 1.10; the paper must cite those directly.</li>
+<li><strong>Found by.</strong> Seed.</li>
+</ul>
+<h3 id="118-liu-ash-goel-krishnamurthy-zhang-transformers-learn-shortcuts-to-automata-arxiv221010749-v">1.18 Liu, Ash, Goel, Krishnamurthy, Zhang — <em>Transformers Learn Shortcuts to Automata</em> — arXiv:2210.10749 · <code>[V]</code><a class="headerlink" href="#118-liu-ash-goel-krishnamurthy-zhang-transformers-learn-shortcuts-to-automata-arxiv221010749-v" title="Permanent link">#</a></h3>
+<ul>
+<li><strong>Owns.</strong> <code>O(log T)</code>-depth simulation of any semiautomaton; <code>O(1)</code>-in-<code>T</code> depth for solvable ones
+  (Krohn–Rhodes, with <code>O(|Q|² log |Q|)</code> depth, <code>PRIOR_ART.md:85-90</code>); <strong>Thm 4</strong> (Transformer
+  Barrington): non-solvable semiautomata not simulable at depth independent of <code>T</code> unless
+  <code>TC⁰ = NC¹</code> (<code>PRIOR_ART.md:44-50</code>).</li>
+<li><strong>Leaves open.</strong> State tracking is <em>not</em> the shape's task, and the record already concedes the
+  whole solvability axis (<code>PRIOR_ART.md:52-56</code>). Cited for the ceiling only.</li>
+<li><strong>Found by.</strong> Seed; the record's own delta memo.</li>
+</ul>
+<h3 id="119-barrington-1989-jcss-381150164-doi-1010160022-00008990037-8-v-via-crossref-krohnrhodes-1965-trans-ams-116450464-doi-101090s0002-9947-1965-0188316-1-v-via-crossref">1.19 Barrington 1989 (JCSS 38(1):150–164, DOI 10.1016/0022-0000(89)90037-8) · <code>[V]</code> via Crossref; Krohn–Rhodes 1965 (Trans. AMS 116:450–464, DOI 10.1090/S0002-9947-1965-0188316-1) · <code>[V]</code> via Crossref<a class="headerlink" href="#119-barrington-1989-jcss-381150164-doi-1010160022-00008990037-8-v-via-crossref-krohnrhodes-1965-trans-ams-116450464-doi-101090s0002-9947-1965-0188316-1-v-via-crossref" title="Permanent link">#</a></h3>
+<ul>
+<li><strong>Own.</strong> <code>NC¹ =</code> bounded-width branching programs; the prime decomposition of finite semigroups.</li>
+<li><strong>Leave open.</strong> Context for 1.18 only. The Elsevier landing page returned HTTP 403 and the AMS
+  page only redirected; the Crossref API records (title, authors, volume, pages) matched.</li>
+<li><strong>Found by.</strong> Seed.</li>
+</ul>
+<h3 id="120-cook-1985-a-taxonomy-of-problems-with-fast-parallel-algorithms-information-and-control-64222-doi-101016s0019-99588580041-3-v-via-crossref">1.20 Cook 1985 — <em>A taxonomy of problems with fast parallel algorithms</em> (Information and Control 64:2–22, DOI 10.1016/S0019-9958(85)80041-3) · <code>[V]</code> via Crossref<a class="headerlink" href="#120-cook-1985-a-taxonomy-of-problems-with-fast-parallel-algorithms-information-and-control-64222-doi-101016s0019-99588580041-3-v-via-crossref" title="Permanent link">#</a></h3>
+<ul>
+<li><strong>Owns.</strong> The class <code>DET</code> (integer determinant, matrix inversion, iterated matrix product) and its
+  place <code>NL ⊆ DET ⊆ NC²</code>.</li>
+<li><strong>Leaves open.</strong> Not a paper about attention; it is the reference for §3.5's <code>DERIVED</code> statement
+  that the exact resolvent is a <code>DET</code>-class computation.</li>
+<li><strong>Found by.</strong> Memory of the class; DOI fetched.</li>
+</ul>
+<h3 id="121-bhattamishra-hahn-blunsom-kanade-separations-in-the-representational-capabilities-of-transformers-and-recurrent-architectures-arxiv240609347-v">1.21 Bhattamishra, Hahn, Blunsom, Kanade — <em>Separations in the Representational Capabilities of Transformers and Recurrent Architectures</em> — arXiv:2406.09347 · <code>[V]</code><a class="headerlink" href="#121-bhattamishra-hahn-blunsom-kanade-separations-in-the-representational-capabilities-of-transformers-and-recurrent-architectures-arxiv240609347-v" title="Permanent link">#</a></h3>
+<ul>
+<li><strong>Owns.</strong> One-layer log-width index lookup; one-layer linear size for bounded Dyck and string
+  equality, two-layer log size.</li>
+<li><strong>Leaves open.</strong> One-vs-two-layer separations on decision tasks; corroborates 1.3's shape.</li>
+<li><strong>Found by.</strong> Memory; abs fetched.</li>
+</ul>
+<h3 id="122-chen-zou-what-can-transformer-learn-with-varying-depth-arxiv240401601-v">1.22 Chen, Zou — <em>What Can Transformer Learn with Varying Depth?</em> — arXiv:2404.01601 · <code>[V]</code><a class="headerlink" href="#122-chen-zou-what-can-transformer-learn-with-varying-depth-arxiv240401601-v" title="Permanent link">#</a></h3>
+<ul>
+<li><strong>Owns.</strong> Case studies: one layer memorises, two reason/generalise, three do contextual
+  generalisation. This is the "Chen et al." of the dispatch's seed line, and it is empirical/case-based.</li>
+<li><strong>Leaves open.</strong> No lower bound.</li>
+<li><strong>Found by.</strong> S16.</li>
+</ul>
+<h3 id="123-wang-et-al-learning-compositional-functions-with-transformers-from-easy-to-hard-data-arxiv250523683-v-colt-2025">1.23 Wang et al. — <em>Learning Compositional Functions with Transformers from Easy-to-Hard Data</em> — arXiv:2505.23683 · <code>[V]</code> (COLT 2025)<a class="headerlink" href="#123-wang-et-al-learning-compositional-functions-with-transformers-from-easy-to-hard-data-arxiv250523683-v-colt-2025" title="Permanent link">#</a></h3>
+<ul>
+<li><strong>Owns.</strong> <code>k</code>-fold composition learnable by GD under an easy-to-hard curriculum; a
+  statistical-computational gap under the standard distribution.</li>
+<li><strong>Leaves open.</strong> A <em>learnability</em> result that the paper's BED-S curriculum (candidate moves in
+  context) should cite as the reason a difficulty dial must vary (<code>MISTAKES.md</code> D-3).</li>
+<li><strong>Found by.</strong> S2.</li>
+</ul>
+<h3 id="124-strobl-angluin-frank-concise-one-layer-transformers-can-do-function-evaluation-sometimes-arxiv250322076-v">1.24 Strobl, Angluin, Frank — <em>Concise One-Layer Transformers Can Do Function Evaluation (Sometimes)</em> — arXiv:2503.22076 · <code>[V]</code><a class="headerlink" href="#124-strobl-angluin-frank-concise-one-layer-transformers-can-do-function-evaluation-sometimes-arxiv250322076-v" title="Permanent link">#</a></h3>
+<ul>
+<li><strong>Owns.</strong> One-layer polylog transformers evaluate a function (one hop) under some encodings and
+  fail when input/output are carried only by position; two layers repair it.</li>
+<li><strong>Leaves open.</strong> Marks the <em>boundary</em> of the one-hop ground softmax owns — the shape's BED-M at
+  <code>t* = 1</code> sits inside it.</li>
+<li><strong>Found by.</strong> S3, S12.</li>
+</ul>
+<h3 id="125-back-de-luca-et-al-positional-attention-arxiv241001686-v-icml-2025-rajaraman-et-al-transformers-on-markov-data-constant-depth-suffices-arxiv240717686-v-makkuva-et-al-attention-with-markov-arxiv240204161-v-iclr-2025-bietti-et-al-birth-of-a-transformer-arxiv230600802-v-neurips-2023">1.25 Back de Luca et al. — <em>Positional Attention</em> — arXiv:2410.01686 · <code>[V]</code> (ICML 2025); Rajaraman et al. — <em>Transformers on Markov Data: Constant Depth Suffices</em> — arXiv:2407.17686 · <code>[V]</code>; Makkuva et al. — <em>Attention with Markov</em> — arXiv:2402.04161 · <code>[V]</code> (ICLR 2025); Bietti et al. — <em>Birth of a Transformer</em> — arXiv:2306.00802 · <code>[V]</code> (NeurIPS 2023)<a class="headerlink" href="#125-back-de-luca-et-al-positional-attention-arxiv241001686-v-icml-2025-rajaraman-et-al-transformers-on-markov-data-constant-depth-suffices-arxiv240717686-v-makkuva-et-al-attention-with-markov-arxiv240204161-v-iclr-2025-bietti-et-al-birth-of-a-transformer-arxiv230600802-v-neurips-2023" title="Permanent link">#</a></h3>
+<ul>
+<li><strong>Own.</strong> Respectively: position-only attention keeps parallel expressivity at log depth; three
+  layers represent the in-context conditional of <code>k</code>-th order Markov data; single-layer models on
+  first-order Markov data fall into unigram minima; the two-layer induction head as associative memory.</li>
+<li><strong>Leave open.</strong> None concerns absorption probabilities or interventions; 2402.04161 and
+  2407.17686 are the nearest "attention + Markov chain" theory and both treat the chain as the <em>data</em>,
+  not as the <em>operator</em>. The shape treats <code>P</code> itself as the chain.</li>
+<li><strong>Found by.</strong> S2, S7, S12.</li>
+</ul>
+<hr />
+<h2 id="2-per-source-ledger-the-softmax-role-and-the-resolvent-operators">2. Per-source ledger — the softmax role, and the resolvent operators<a class="headerlink" href="#2-per-source-ledger-the-softmax-role-and-the-resolvent-operators" title="Permanent link">#</a></h2>
+<h3 id="2a-optimality-of-the-softmax-role">2.A Optimality of the softmax role<a class="headerlink" href="#2a-optimality-of-the-softmax-role" title="Permanent link">#</a></h3>
+<h3 id="21-marion-berthier-biau-boyer-attention-layers-provably-solve-single-location-regression-arxiv241001537-v-iclr-2025">2.1 Marion, Berthier, Biau, Boyer — <em>Attention layers provably solve single-location regression</em> — arXiv:2410.01537 · <code>[V]</code> (ICLR 2025)<a class="headerlink" href="#21-marion-berthier-biau-boyer-attention-layers-provably-solve-single-location-regression-arxiv241001537-v-iclr-2025" title="Permanent link">#</a></h3>
+<ul>
+<li><strong>Owns.</strong> Task <code>Y = X_{J₀}ᵀ v* + ξ</code>; predictor <code>T(X) = erf(λXk)ᵀ X v</code> (<strong>erf, not softmax</strong>);
+  <strong>Cor 2</strong>: risk <code>→ ε²</code> under <code>λ√d → ∞</code>, <code>λ√L → 0</code> (i.e. <code>d → ∞</code>, <code>L = o(d)</code>); <strong>Prop 3</strong>: the
+  best <em>linear</em> predictor's risk <code>→ ε² + γ²</code>. Multiple-location regression is named as future work.</li>
+<li><strong>Leaves open.</strong> Confirms <code>MATHEMATICS.md:1044-1057</code> line by line. The paper may say "softmax-like
+  attention is asymptotically optimal on a scalar single-location label" and no more; the record's
+  <code>L/d = 4.00</code> is the wrong direction for Cor 2. D-1 stands.</li>
+<li><strong>Found by.</strong> Seed.</li>
+</ul>
+<h3 id="22-duranthon-marion-boyer-loureiro-zdeborova-statistical-advantage-of-softmax-attention-insights-from-single-location-regression-arxiv250921936-v-iclr-2026">2.2 Duranthon, Marion, Boyer, Loureiro, Zdeborová — <em>Statistical Advantage of Softmax Attention: Insights from Single-Location Regression</em> — arXiv:2509.21936 · <code>[V]</code> (ICLR 2026)<a class="headerlink" href="#22-duranthon-marion-boyer-loureiro-zdeborova-statistical-advantage-of-softmax-attention-insights-from-single-location-regression-arxiv250921936-v-iclr-2026" title="Permanent link">#</a></h3>
+<ul>
+<li><strong>Owns.</strong> With softmax proper: <strong>Prop 4.2</strong> population-level Bayes optimality on SLR; <strong>Cor 4.3</strong>
+  linear attention error <code>O(1/ν)</code> vs softmax <code>e^{−cν}</code> (spiked-SLR), and <code>→ 1</code> on max-SLR; <strong>Cor 4.4</strong>
+  variable <code>L</code> hurts linear attention; <strong>Result 5.1</strong> proportional-limit finite-sample risk.</li>
+<li><strong>Leaves open.</strong> Repairs the "erf" caveat: softmax itself is now the optimal object on SLR. Still
+  single-location; no multi-hop, no vector label. This is the sharpest possible statement of <em>the
+  ground softmax owns</em> and it should be cited where the brief says "D-1".</li>
+<li><strong>Found by.</strong> Seed.</li>
+</ul>
+<h3 id="23-boursier-boyer-softmax-as-linear-attention-in-the-large-prompt-regime-arxiv251211784-v">2.3 Boursier, Boyer — <em>Softmax as Linear Attention in the Large-Prompt Regime</em> — arXiv:2512.11784 · <code>[V]</code><a class="headerlink" href="#23-boursier-boyer-softmax-as-linear-attention-in-the-large-prompt-regime-arxiv251211784-v" title="Permanent link">#</a></h3>
+<ul>
+<li><strong>Owns.</strong> Softmax attention → a linear operator on token measures as the prompt grows.</li>
+<li><strong>Leaves open.</strong> A limit in which the three corners of the record's family (<code>V16Domain.three_corners_containment</code>) coalesce; cite when stating that parity at <code>γ = 0</code> is not a large-<code>s</code> distinction.</li>
+<li><strong>Found by.</strong> S11.</li>
+</ul>
+<h3 id="24-boncoraglio-troiani-erba-zdeborova-bayes-optimal-learning-of-attention-indexed-models-arxiv250601582-v-neurips-2025">2.4 Boncoraglio, Troiani, Erba, Zdeborová — <em>Bayes optimal learning of attention-indexed models</em> — arXiv:2506.01582 · <code>[V]</code> (NeurIPS 2025)<a class="headerlink" href="#24-boncoraglio-troiani-erba-zdeborova-bayes-optimal-learning-of-attention-indexed-models-arxiv250601582-v-neurips-2025" title="Permanent link">#</a></h3>
+<ul>
+<li><strong>Owns.</strong> Closed-form Bayes-optimal error and phase transitions for attention-indexed models.</li>
+<li><strong>Leaves open.</strong> An information floor <em>methodology</em> (replica/AMP) that BED-S's Fano floor could
+  borrow; not about hops.</li>
+<li><strong>Found by.</strong> S11.</li>
+</ul>
+<h3 id="25-velickovic-perivolaropoulos-barbero-pascanu-softmax-is-not-enough-for-sharp-size-generalisation-arxiv241001104-v-icml-2025">2.5 Veličković, Perivolaropoulos, Barbero, Pascanu — <em>Softmax is not Enough (for Sharp Size Generalisation)</em> — arXiv:2410.01104 · <code>[V]</code> (ICML 2025)<a class="headerlink" href="#25-velickovic-perivolaropoulos-barbero-pascanu-softmax-is-not-enough-for-sharp-size-generalisation-arxiv241001104-v-icml-2025" title="Permanent link">#</a></h3>
+<ul>
+<li><strong>Owns.</strong> Softmax circuits must disperse as item count grows; a size-generalisation failure of
+  sharpness.</li>
+<li><strong>Leaves open.</strong> A length-generalisation limitation of the <em>row mixture</em> itself — supports
+  obstruction 1 (per-row independence) at the level of sharpness, not joint determination.</li>
+<li><strong>Found by.</strong> Memory; abs fetched.</li>
+</ul>
+<h3 id="26-tarzanagh-li-zhang-oymak-max-margin-token-selection-in-attention-mechanism-arxiv230613596-v-tarzanagh-li-thrampoulidis-oymak-transformers-as-support-vector-machines-arxiv230816898-v">2.6 Tarzanagh, Li, Zhang, Oymak — <em>Max-Margin Token Selection in Attention Mechanism</em> — arXiv:2306.13596 · <code>[V]</code>; Tarzanagh, Li, Thrampoulidis, Oymak — <em>Transformers as Support Vector Machines</em> — arXiv:2308.16898 · <code>[V]</code><a class="headerlink" href="#26-tarzanagh-li-zhang-oymak-max-margin-token-selection-in-attention-mechanism-arxiv230613596-v-tarzanagh-li-thrampoulidis-oymak-transformers-as-support-vector-machines-arxiv230816898-v" title="Permanent link">#</a></h3>
+<ul>
+<li><strong>Own.</strong> GD on attention converges in direction to the max-margin token separator; the SVM
+  equivalence with nuclear-norm objective.</li>
+<li><strong>Leave open.</strong> Training-dynamics results about <em>selection</em>; the record used them to explain the
+  one-hot control (<code>DONE.md:792-795</code>). Not a representational bound.</li>
+<li><strong>Found by.</strong> Seed.</li>
+</ul>
+<h3 id="27-dong-cordonnier-loukas-attention-is-not-all-you-need-arxiv210303404-v">2.7 Dong, Cordonnier, Loukas — <em>Attention is Not All You Need</em> — arXiv:2103.03404 · <code>[V]</code><a class="headerlink" href="#27-dong-cordonnier-loukas-attention-is-not-all-you-need-arxiv210303404-v" title="Permanent link">#</a></h3>
+<ul>
+<li><strong>Owns.</strong> Pure attention stacks lose rank doubly exponentially with depth.</li>
+<li><strong>Leaves open.</strong> A cost law for the deeper-softmax skyline that the paper's control section should
+  carry beside the parameter count.</li>
+<li><strong>Found by.</strong> Memory; abs fetched.</li>
+</ul>
+<h3 id="28-ramsauer-et-al-hopfield-networks-is-all-you-need-arxiv200802217-v">2.8 Ramsauer et al. — <em>Hopfield Networks is All You Need</em> — arXiv:2008.02217 · <code>[V]</code><a class="headerlink" href="#28-ramsauer-et-al-hopfield-networks-is-all-you-need-arxiv200802217-v" title="Permanent link">#</a></h3>
+<ul>
+<li><strong>Owns.</strong> The modern-Hopfield update rule <em>is</em> softmax attention; one-step retrieval, exponential
+  capacity — the energy-descent reading of why one softmax step suffices for retrieval.</li>
+<li><strong>Leaves open.</strong> Retrieval is Thm 5 territory of 1.2 (depth 1); the Hopfield fixed point is a
+  <em>per-query</em> fixed point, so it does not touch joint determination. Another planet's lineage
+  (equilibrium) owns the rest.</li>
+<li><strong>Found by.</strong> Memory; abs fetched.</li>
+</ul>
+<h3 id="2b-the-resolvent-neumann-chain-operators-the-operator-side-of-the-shape">2.B The resolvent / Neumann / chain operators (the operator side of the shape)<a class="headerlink" href="#2b-the-resolvent-neumann-chain-operators-the-operator-side-of-the-shape" title="Permanent link">#</a></h3>
+<h3 id="29-fagnou-caillon-delattre-allauzen-chain-and-causal-attention-for-efficient-entity-tracking-arxiv241005565-v-emnlp-2024-main-pp-1317413188-doi-1018653v12024emnlp-main731-acl-anthology-page-fetched-surprise">2.9 <strong>Fagnou, Caillon, Delattre, Allauzen — <em>Chain and Causal Attention for Efficient Entity Tracking</em> — arXiv:2410.05565 · <code>[V]</code> · EMNLP 2024 main, pp. 13174–13188, DOI 10.18653/v1/2024.emnlp-main.731 (ACL Anthology page fetched)</strong> — <strong>SURPRISE</strong><a class="headerlink" href="#29-fagnou-caillon-delattre-allauzen-chain-and-causal-attention-for-efficient-entity-tracking-arxiv241005565-v-emnlp-2024-main-pp-1317413188-doi-1018653v12024emnlp-main731-acl-anthology-page-fetched-surprise" title="Permanent link">#</a></h3>
+<ul>
+<li><strong>Owns.</strong> <strong>Eq. 5</strong>: <code>Y = (1 − γ) A (I − γA)^{-1} V</code> with <code>A</code> the <em>causal, row-stochastic softmax</em>
+  attention (diagonal removed), <code>γ ∈ [0,1)</code> a discount; series <code>A + γA² + γ²A³ + …</code>; computed by a
+  <strong>triangular solve</strong> (<code>torch.linalg.solve_triangular</code> in training; row-by-row forward substitution
+  at decode); <strong>Thm 1</strong>: standard attention needs <code>L_min = ⌈log₂(depth(G) + 1)⌉</code> layers to track <code>n</code>
+  state changes (unconditional inside a receptive-field-one model; induction on <code>2^L − 1</code>); <strong>§4.2</strong>:
+  ChaCAL is the fixed point of <code>f(Z) = A(γZ + (1 − γ)V)</code>; results: Boxes exact-match <code>99.1 %</code> with
+  <code>1 + 1</code> layers vs <code>97.0 %</code> for a 5-layer standard transformer, <code>1.75×</code> faster <code>[U: summariser's
+  reading of the HTML]</code>; cites MAGNA (2.13) as closest with "significant differences".</li>
+<li><strong>What it occupies in the shape (each line checked against <code>BRIEF.md</code> §1):</strong></li>
+<li><code>O = P (I − γP)^{-1} V</code> — occupied up to the scalar <code>(1 − γ)</code>.</li>
+<li>I1 parity at <code>γ = 0</code> — occupied (<code>(1 − 0) A (I)^{-1} V = AV</code>, <code>DERIVED</code>).</li>
+<li>I5 "the causal resolvent is a triangular solve" — occupied, same PyTorch call.</li>
+<li>The depth-law motivation ("one layer instead of <code>log</code> layers") — occupied, with its own
+    Theorem 1.</li>
+<li>The fixed-point reading of the operator — occupied (§4.2).</li>
+<li><strong>What it leaves open (the shape's remaining delta, stated narrowly):</strong></li>
+<li><strong>I2/nilpotency.</strong> Its convergence argument is <code>γ &lt; 1</code> (geometric) <code>[U]</code>; the record's
+    <code>Nilpotent.pow_card_eq_zero</code> / <code>occupancy_is_exact_inverse</code> say the strictly-causal series is
+    <em>finite and exact at any <code>γ</code>, sign-blind</em> — a stronger, machine-checked statement ChaCAL lacks.</li>
+<li><strong>I3 boundary conditions.</strong> No absorbing rows, no committor, no constraint sets, no
+    "third token vetoes through the boundary". NOT FOUND in the paper.</li>
+<li><strong>I4 certificate.</strong> No truncation bound <code>γ^{K+1}/(1 − γ)</code>, no planted negative. NOT FOUND.</li>
+<li><strong>do() / displacement / safest move.</strong> NOT FOUND (<code>[V]</code> for absence: the HTML read reports
+    none of "intervention", "counterfactual", "do", "committor", "hitting").</li>
+<li><strong>Label class.</strong> Boxes is a per-position state readout — still a scalar-at-a-position label
+    (the D-1 class), not a jointly determined configuration.</li>
+<li><strong>Row sums.</strong> <code>(1 − γ)</code> restores row-stochasticity: for row-stochastic <code>A</code>,
+    <code>A(I − γA)^{-1} 𝟙 = 𝟙/(1 − γ)</code> (<code>DERIVED</code>: Neumann series termwise), so ChaCAL's read is a
+    convex mixture again and the shape's <code>O = P(I − γP)^{-1}V</code> without the factor has row sums
+    <code>1/(1 − γ)</code>. The paper must choose and say which (I4's bound is in <code>‖·‖_∞</code> and the factor
+    changes its constant).</li>
+<li><strong>Found by.</strong> S6 → 2605.22476 → its cited foundation → S17/S18. <strong>The repository does not cite it</strong>
+  (<code>grep -rlEi "ChaCAL|Fagnou|2410\.05565" --include="*.md"</code> outside <code>kaggle/</code> → <code>0</code> files, <code>RUN</code>
+  2026-09-03). The record's own prior-art trawl (<code>DONE_ARCHIVE_ROUND1.md:672-681</code>) was run during
+  the <em>signed</em> programme and discarded every non-negative multi-hop operator as "requires a
+  non-negative matrix" — the shape now <em>is</em> a non-negative multi-hop operator, so that filter must be
+  re-run without it. This is the <code>V-7</code> mechanism (a search structurally incapable of finding
+  anything, read as absence), applied to prior art.</li>
+</ul>
+<h3 id="210-zhao-caillon-fagnou-allauzen-structured-sparse-attention-for-entity-tracking-with-subquadratic-sequence-complexity-arxiv260522476-v-v1-21-may-2026">2.10 Zhao, Caillon, Fagnou, Allauzen — <em>Structured-Sparse Attention for Entity Tracking with Subquadratic Sequence Complexity</em> — arXiv:2605.22476 · <code>[V]</code> (v1 21 May 2026)<a class="headerlink" href="#210-zhao-caillon-fagnou-allauzen-structured-sparse-attention-for-entity-tracking-with-subquadratic-sequence-complexity-arxiv260522476-v-v1-21-may-2026" title="Permanent link">#</a></h3>
+<ul>
+<li><strong>Owns.</strong> Blockwise evaluation of <code>S_γ(A) = (1 − γ)A(I − γA)^{-1}</code>: <code>A = A_blk + A_res</code>, exact
+  triangular solves on <code>m × m</code> tiles, cross-block interactions through a reduced <code>k × k</code> system;
+  <code>Õ(n^{4/3} d)</code>; <code>γ</code> fixed; cites an <code>O(log K)</code> depth lower bound for <code>K</code> state updates; Boxes
+  <code>100 %</code> at <code>12–29 %</code> lower latency than dense resolvent, <code>2.4×</code> vs a 5-layer dense transformer;
+  WikiText-103 ppl <code>15.18</code> vs <code>16.46</code> <code>[U: summariser's numbers]</code>; head–property capacity
+  constraint (<code>h ≥ p</code>).</li>
+<li><strong>Leaves open.</strong> Occupies "blockwise resolvent" as an <em>approximation of learned locality</em>. The
+  shape's block structure is <em>exact</em> — a zero gate annihilates the path product
+  (<code>V16Domain.pathProd_eq_zero_iff</code>, <code>bedM_gate_exact</code>), with a Lean certificate — so the delta is
+  "segmentation ⇒ block-diagonal resolvent, exactly, with a printed δ = 0" against "block-diagonal
+  plus a learned residual, approximately". The paper must cite 2.10 before stating the segmentation
+  proposition (<code>BRIEF.md</code> §6.4 "segmentation ⇒ block structure"). Same absences as 2.9 for I3, I4,
+  do(), safest move.</li>
+<li><strong>Found by.</strong> S6, S16, S18.</li>
+</ul>
+<h3 id="211-roffo-abdelkawy-lavie-palmer-self-attention-and-beyond-the-infinite-infsa-arxiv260300175-v-cscv">2.11 Roffo, Abdelkawy, Lavie, Palmer — <em>Self-Attention And Beyond the Infinite (InfSA)</em> — arXiv:2603.00175 · <code>[V]</code> (cs.CV)<a class="headerlink" href="#211-roffo-abdelkawy-lavie-palmer-self-attention-and-beyond-the-infinite-infsa-arxiv260300175-v-cscv" title="Permanent link">#</a></h3>
+<ul>
+<li><strong>Owns.</strong> <code>Ĉ = (I − γÂ)^{-1} − I</code> with <code>Â</code> ReLU-activated, <em>Frobenius-normalised</em> (explicitly not
+  row-stochastic, and the paper argues <em>against</em> softmax's stochasticity as oversmoothing); <code>γ</code>
+  learnable per head via sigmoid; the absorbing-chain / fundamental-matrix reading
+  (<code>N_ij</code> = expected visits before absorption; <code>R_i = 1 − γ Σ_j Â_ij</code>); Linear-InfSA rank-1
+  principal-eigenvector approximation; ImageNet numbers.</li>
+<li><strong>Leaves open.</strong> Non-causal; no committor into <em>named</em> absorbing sets (absorption is a uniform
+  leak, not a constraint set); no do(); no truncation bound in the main text; no softmax parity. The
+  record already had it (<code>DONE_ARCHIVE_ROUND1.md:1317</code>) and dismissed it for non-negativity. It
+  occupies "attention as fundamental matrix of an absorbing chain" as a <em>reading</em>; the shape's I3
+  (absorbing rows as constraint sets, committor <code>q = (I − Q)^{-1} R 𝟙_B</code>) is the <em>boundary-value</em>
+  version, which InfSA does not state.</li>
+<li><strong>Found by.</strong> S6, S9, S10.</li>
+</ul>
+<h3 id="212-erel-et-al-attention-as-discrete-time-markov-chains-arxiv250717657-v-neurips-2025-cscv">2.12 Erel et al. — <em>Attention (as Discrete-Time Markov) Chains</em> — arXiv:2507.17657 · <code>[V]</code> (NeurIPS 2025, cs.CV)<a class="headerlink" href="#212-erel-et-al-attention-as-discrete-time-markov-chains-arxiv250717657-v-neurips-2025-cscv" title="Permanent link">#</a></h3>
+<ul>
+<li><strong>Owns.</strong> Softmax attention read as a DTMC transition matrix; indirect attention via chain
+  powers; TokenRank from the stationary vector; an analysis/editing tool.</li>
+<li><strong>Leaves open.</strong> Not a layer; no absorbing sets; no inverse. Occupies the <em>sentence</em> "the
+  row-stochastic attention matrix is a Markov chain".</li>
+<li><strong>Found by.</strong> S15.</li>
+</ul>
+<h3 id="213-wang-ying-huang-leskovec-multi-hop-attention-graph-neural-network-magna-arxiv200914332-v-ijcai-2021">2.13 Wang, Ying, Huang, Leskovec — <em>Multi-hop Attention Graph Neural Network (MAGNA)</em> — arXiv:2009.14332 · <code>[V]</code> (IJCAI 2021)<a class="headerlink" href="#213-wang-ying-huang-leskovec-multi-hop-attention-graph-neural-network-magna-arxiv200914332-v-ijcai-2021" title="Permanent link">#</a></h3>
+<ul>
+<li><strong>Owns.</strong> Attention diffusion <code>Σ_k θ_k A^k</code> with personalised-PageRank weights on a <em>fixed graph</em>.</li>
+<li><strong>Leaves open.</strong> Not causal, not a sequence operator, truncated in practice; the ancestor ChaCAL
+  names. Already in the record (<code>DONE_ARCHIVE_ROUND1.md:677</code>).</li>
+<li><strong>Found by.</strong> S6, S10.</li>
+</ul>
+<h3 id="214-feng-li-jiang-ying-diffuser-arxiv221011794-v-glickman-yahav-diffusing-graph-attention-arxiv230300613-v">2.14 Feng, Li, Jiang, Ying — <em>Diffuser</em> — arXiv:2210.11794 · <code>[V]</code>; Glickman, Yahav — <em>Diffusing Graph Attention</em> — arXiv:2303.00613 · <code>[V]</code><a class="headerlink" href="#214-feng-li-jiang-ying-diffuser-arxiv221011794-v-glickman-yahav-diffusing-graph-attention-arxiv230300613-v" title="Permanent link">#</a></h3>
+<ul>
+<li><strong>Own.</strong> Multi-hop attention diffusion over sparse patterns for long sequences (Diffuser); learned
+  structural relations steering graph-transformer attention.</li>
+<li><strong>Leave open.</strong> Neither is a causal resolvent nor certified; cited so the paper's occupancy table
+  is complete on "multi-hop in one layer".</li>
+<li><strong>Found by.</strong> S10.</li>
+</ul>
+<h3 id="2c-seen-in-the-record-but-not-fetched-this-session-excluded-from-the-bib">2.C Seen in the record but NOT fetched this session (excluded from the <code>.bib</code>)<a class="headerlink" href="#2c-seen-in-the-record-but-not-fetched-this-session-excluded-from-the-bib" title="Permanent link">#</a></h3>
+<ul>
+<li>ParaFormer (PageRank Transformer, <code>Σ_k γ_k Â^k</code>, scalar <code>γ_k</code> per hop, <code>K = 10</code>) —
+  <code>READ DONE_ARCHIVE_ROUND1.md:1321-1324</code>; no identifier surfaced by S10; <code>[U]</code>.</li>
+<li>Gated DeltaNet's <code>(I − A)^{-1} = Σ A^n</code> — <code>READ DONE_ARCHIVE_ROUND1.md:1319</code>, arXiv:2606.06034 per
+  the record; not fetched; <code>[U]</code>.</li>
+<li>APPNP 1810.05997, GDC 1911.05485 — <code>READ DONE_ARCHIVE_ROUND1.md:677</code>; not fetched; <code>[U]</code>.</li>
+<li>2508.07208 (two-layer induction heads on any-order Markov chains), 2510.18638 — surfaced by S7,
+  not fetched; <code>[U]</code>.</li>
+</ul>
+<hr />
+<h2 id="3-the-answer-to-the-dispatchs-question-which-theorem-licenses-what">3. The answer to the dispatch's question — which theorem licenses what<a class="headerlink" href="#3-the-answer-to-the-dispatchs-question-which-theorem-licenses-what" title="Permanent link">#</a></h2>
+<p>The sentence under examination: <em>"depth-1 softmax cannot compute a <code>t*</code>-hop reachability / committor
+that the resolvent computes in one operator."</em> No single theorem licenses it. Five theorems each
+license a piece, under stated conditions, and one <code>DERIVED</code> observation limits what "one operator"
+may claim.</p>
+<h3 id="31-t-2-one-composition-the-induction-head-unconditional-against-one-softmax-layer-asymptotic-in-n">3.1 <code>t* = 2</code> (one composition; the induction head) — UNCONDITIONAL against one softmax layer, asymptotic in <code>n</code><a class="headerlink" href="#31-t-2-one-composition-the-induction-head-unconditional-against-one-softmax-layer-asymptotic-in-n" title="Permanent link">#</a></h3>
+<ul>
+<li><strong>1.3</strong> Sanford–Hsu–Telgarsky 2408.14332 Thm 1: <code>h·m·p = Ω(n)</code> (softmax, <code>p</code> bits, 3-symbol
+  alphabet). <strong>1.5</strong> Peng–Narayanan–Papadimitriou 2402.08164 Thm 1: error <code>≥ R/(3 n log n)</code> when
+  <code>n log n &gt; H(d+1)p</code>. <strong>1.7</strong> Kozachinskiy et al. 2501.19215 Thm 3.4: <code>size = n^{o(1)}</code> cannot compose,
+  at <em>infinite</em> precision.</li>
+<li><strong>Conditions.</strong> Domain/context <code>n</code> grows; parameters sublinear/polylog in <code>n</code>. <strong>At the record's
+  geometry</strong> (<code>s = 64</code>, <code>d = 16</code>, <code>h = 1</code>, float32) 1.3's hypothesis reads <code>512 ≥ 64</code> and 1.5's reads
+  <code>384 &lt; 544</code> (<code>DERIVED</code>) — both vacuous. The paper may cite them for the <em>asymptotic</em> statement and
+  must print those two inequalities beside the citation (<code>MISTAKES.md</code> V-25, P-10).</li>
+</ul>
+<h3 id="32-t-l-1-against-l-layers-unconditional-doubly-exponentially-vacuous-at-small-n">3.2 <code>t* = L + 1</code> against <code>L</code> layers — UNCONDITIONAL, doubly-exponentially vacuous at small <code>n</code><a class="headerlink" href="#32-t-l-1-against-l-layers-unconditional-doubly-exponentially-vacuous-at-small-n" title="Permanent link">#</a></h3>
+<ul>
+<li><strong>1.6</strong> Chen–Peng–Wu 2412.02975 Thm 1.1: <code>L</code>-layer decoder-only softmax cannot do <code>L</code>-sequential
+  composition when <code>H·d·p ≤ n^{2^{−4L}}</code>, <code>L ≤ Õ(log log n)</code>; Cor 1.2: <code>L + 1</code> layers suffice at polylog.</li>
+<li><strong>Conditions.</strong> <code>n^{1/16}</code> at <code>L = 1</code> is <code>1.30</code> for <code>n = 64</code> (<code>DERIVED</code>) — the theorem is silent at
+  every <code>s</code> the record ran. It is the right citation for the <em>shape</em> of obstruction 2 (depth
+  <code>L</code> cannot do <code>L + 1</code> hops) and the wrong citation for any number at <code>s ≤ 10⁴</code>.</li>
+</ul>
+<h3 id="33-t-general-depth-log-t-conditional">3.3 <code>t*</code> general, depth <code>Ω(log t*)</code> — CONDITIONAL<a class="headerlink" href="#33-t-general-depth-log-t-conditional" title="Permanent link">#</a></h3>
+<ul>
+<li><strong>1.1</strong> SHT 2402.09268 Cor 4.3 (Conjecture 2.4, one-vs-two-cycle, <code>k = Θ(N^ξ)</code>, <code>mH = O(k^{1−ε})</code>);
+  <strong>1.2</strong> Sanford et al. 2405.18512 Thm 3/19 (Conjecture 13, same conjecture, <code>mH = O(N^ε)</code>). Upper
+  bounds Thm 4.2 (<code>⌊log₂ k⌋ + 2</code>) and Thm 2/18 are unconditional and are the <strong>skyline</strong>.</li>
+<li><strong>Conditions.</strong> Sub-linear width — <strong>1.9</strong> Yehudai et al. removes the necessity at linear width. So
+  the matched control must fix <em>both</em> depth and width (the brief's "matched depth and parameters"),
+  and the skyline row in the occupancy table must list three fellow approximators: the
+  <code>⌊log₂ t*⌋ + 2</code> stack (1.1), the wide constant-depth stack (1.9), and the CoT decoder (1.14).</li>
+</ul>
+<h3 id="34-reachability-committor-as-a-problem-class-conditional-on-circuit-class-separations">3.4 Reachability / committor as a <em>problem class</em> — CONDITIONAL on circuit-class separations<a class="headerlink" href="#34-reachability-committor-as-a-problem-class-conditional-on-circuit-class-separations" title="Permanent link">#</a></h3>
+<ul>
+<li><strong>1.11</strong> Merrill–Sabharwal 2207.00729 Thm 2 (log-precision constant depth ⊆ uniform <code>TC⁰</code>;
+  connectivity is L-complete; linear systems P-complete); <strong>1.10</strong> 2503.03961 (log depth suffices
+  for STCON; fixed depth cannot under <code>TC⁰ ≠ NC¹</code>); <strong>1.18</strong> Liu et al. Thm 4 (<code>TC⁰ ≠ NC¹</code>).</li>
+<li><strong>Conditions.</strong> All conditional; all asymptotic; all about <em>standard</em> layers.</li>
+</ul>
+<h3 id="35-what-one-operator-may-and-may-not-claim-derived-and-the-paper-must-say-it">3.5 What "one operator" may and may not claim — <code>DERIVED</code>, and the paper must say it<a class="headerlink" href="#35-what-one-operator-may-and-may-not-claim-derived-and-the-paper-must-say-it" title="Permanent link">#</a></h3>
+<ul>
+<li>The exact committor is the solution of <code>(I − Q) q = R 𝟙_B</code>; the exact <code>z</code> is <code>(I − γP)^{-1} V</code>.
+  Matrix inversion and iterated product are <code>DET</code>-complete and <code>NL ⊆ DET ⊆ NC²</code> (Cook 1985, 1.20).
+  So the resolvent <em>as a circuit</em> sits at or above the class the conditional lower bounds say
+  reachability needs. <strong>Nothing in the shape contradicts 3.3–3.4; the shape relocates the
+  <code>log</code>-depth from the parameter stack into the linear solve.</strong> I5's triangular solve is <code>O(s)</code>
+  sequential steps, or <code>O(log s)</code> parallel rounds by prefix doubling with <code>O(s³)</code>-class work
+  (<code>DERIVED</code>; not measured — <code>NOT MEASURED — needs a parallel-prefix kernel timing</code>).</li>
+<li>The honest sentence is therefore: <em>one </em><em>parameterised</em><em> operator (one <code>P</code>, one <code>γ</code>), not one
+  parallel round; its hops are exact and certified (I2, I4) rather than learned layer by layer.</em>
+  "Depth-1" in the paper must be defined as <em>one attention parameter set</em>, and the circuit-depth
+  reading must be disclaimed in the same paragraph (<code>MISTAKES.md</code> P-8: a headline stating an upper
+  bound as a price; V-17: a threshold imported out of its units — "depth" has two units here).</li>
+<li>The <code>hop_k</code> graph is token-defined; the shape's reachability is in the graph <code>P</code> <em>that the layer
+  computes</em>. A reduction "any <code>hop_k</code> instance is a committor instance of some <code>P</code>" is plausible
+  (put the pointer structure into <code>QKᵀ</code>) but <strong>NOT FOUND</strong> in the literature and not written in the
+  record. Until written out, obstruction 2 is a <em>lineage argument</em>, not a theorem about the shape.</li>
+</ul>
+<h3 id="36-not-found-recorded-with-the-queries">3.6 NOT FOUND (recorded, with the queries)<a class="headerlink" href="#36-not-found-recorded-with-the-queries" title="Permanent link">#</a></h3>
+<ul>
+<li>An unconditional lower bound against one softmax layer at fixed <code>s = 64</code>, <code>d = 16</code>, float32/64 —
+  none (S2, S3, S5, S12, S16; consistent with <code>MATHEMATICS.md:519-521</code>).</li>
+<li>A theorem about <em>absorption probabilities into named constraint sets</em> as a transformer task class —
+  none (S7, S9, S15).</li>
+<li>An expressivity theorem about <em>interventional displacement</em> <code>Δz = z(do a) − z</code> for attention —
+  none (S14).</li>
+<li>A matched-depth, matched-parameter comparison of a causal resolvent layer against the
+  <code>⌊log₂ t*⌋ + 2</code> softmax stack with an exactness certificate — none (S16; ChaCAL compares
+  <code>1 + 1</code> layers against a 5-layer stack on accuracy and latency, without a certificate).</li>
+<li>The <code>argmin_a max_k q^{(k)}(do a)</code> decision object as an attention read — none (S15).</li>
+</ul>
+<hr />
+<h2 id="4-verdict">4. Verdict<a class="headerlink" href="#4-verdict" title="Permanent link">#</a></h2>
+<p><strong>OCCUPIED (owner named, cite before naming):</strong>
+- The operator <code>P(I − γP)^{-1}V</code> on causal row-stochastic softmax <code>P</code>, its triangular-solve
+  evaluation, its <code>γ = 0</code> parity, and its fixed-point reading — <strong>Fagnou et al. 2024 (ChaCAL)</strong>,
+  arXiv:2410.05565, EMNLP 2024. The record does not cite it. The paper's I1 and I5 become
+  <em>reproductions</em> of ChaCAL's construction, and §4 "the shape — definition" must open with that
+  attribution.
+- Blockwise evaluation of the same resolvent with exact within-block solves — <strong>Zhao et al. 2026</strong>,
+  arXiv:2605.22476 (approximate; the exact zero-gate version stays with the record's Lean F0).
+- "Attention as the fundamental matrix of an absorbing chain" as a reading — <strong>Roffo et al. 2026
+  (InfSA)</strong>, arXiv:2603.00175 (non-stochastic, non-causal).
+- The depth law for <code>hop_k</code> — <strong>SHT 2024</strong> Thm 4.2 / Cor 4.3 (conditional); for graph connectivity —
+  <strong>Sanford et al. 2024</strong> Thm 2/18, 3/19 (conditional); log-depth sufficiency with a uniform
+  construction — <strong>Merrill–Sabharwal 2025</strong> Thm 2; <code>TC⁰</code> ceiling — <strong>Merrill–Sabharwal 2023</strong> Thm 2.
+- Unconditional one-layer composition impossibility — <strong>SHT 2408.14332</strong> Thm 1, <strong>Peng et al. 2024</strong>
+  Thm 1, <strong>Kozachinskiy et al. 2025</strong> Thm 3.4; unconditional multi-layer — <strong>Chen–Peng–Wu 2024</strong> Thm 1.1.
+- The ground softmax owns (scalar single-location label) — <strong>Marion et al. 2025</strong> Cor 2 (erf,
+  <code>L = o(d)</code>), <strong>Duranthon et al. 2026</strong> Prop 4.2 / Cor 4.3 (softmax proper).
+- Depth is not necessary at linear width — <strong>Yehudai et al. 2025</strong>.</p>
+<p><strong>NEAR-MISS (adjacent, does not take the component):</strong>
+- Strassen attention (1.7): one-layer composition by <em>arity</em> (two hops), not by inversion (all hops).
+- MAGNA / Diffuser / Diffusing Graph Attention / ParaFormer (2.13, 2.14, 2.C): non-negative
+  multi-hop sums, fixed-graph or truncated, uncertified.
+- Erel et al. (2.12), Makkuva et al., Rajaraman et al. (1.25): Markov chain as <em>data</em> or as an
+  <em>analysis lens</em>, not as the operator with boundary conditions.
+- Hopfield (2.8): a per-query energy fixed point; not joint determination.</p>
+<p><strong>NOT FOUND (see §3.6):</strong> absorbing constraint sets as boundary conditions inside the resolvent
+(I3 as a <em>layer</em>, with the committor <code>q^{(k)}</code> read out); the Neumann certificate with a planted
+negative (I4); the nilpotency exactness theorem in the operator's own paper (I2 — the record's Lean
+statement is stronger than ChaCAL's convergence argument <code>[U]</code>); the interventional displacement
+<code>Δz</code>; the safest-move decision; any lower bound at the record's geometry; any matched-depth,
+matched-parameter certified comparison.</p>
+<p><strong>SURPRISE — flagged loudly.</strong> <strong>ChaCAL (arXiv:2410.05565, EMNLP 2024) occupies the operator, the
+solver, the parity and the depth-law motivation of the shape, in one 2024 paper the repository never
+cites, with a 2026 follow-up (arXiv:2605.22476) that already adds block structure.</strong> It does <em>not</em>
+occupy the boundary conditions, the certificate, the interventional channel, the decision, the
+vector-valued label, or the Lean exactness — which is exactly the delta <code>BRIEF.md</code> §1 lists as I3,
+I4, do(), safest move. The record's earlier prior-art filter (<code>DONE_ARCHIVE_ROUND1.md:672-681</code>)
+discarded non-negative multi-hop operators wholesale while the signed programme was alive; with the
+sign programme dead, that filter is the reason ChaCAL was missed (V-7 applied to search). The
+paper must (i) cite ChaCAL in the abstract-level statement of the shape, (ii) state the delta as
+"boundary conditions + certificate + intervention + decision on ChaCAL's operator", (iii) print
+the <code>(1 − γ)</code> row-sum choice, and (iv) not describe I1 or I5 as contributions.</p>
+<hr />
+<h2 id="5-design-against-the-taxonomy-how-the-paper-should-use-this-lineage">5. Design against the taxonomy — how the paper should use this lineage<a class="headerlink" href="#5-design-against-the-taxonomy-how-the-paper-should-use-this-lineage" title="Permanent link">#</a></h2>
+<table>
+<thead>
+<tr>
+<th>proposal</th>
+<th>designed against</th>
+<th>how</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cite theorem <em>numbers</em> (Thm 4.2, Cor 4.3, Thm 1.1, Thm 1, Thm 3.4, Prop 4.2, Cor 2, Thm 2) never abstracts</td>
+<td>P-10 (a source's intro cited as its theorem)</td>
+<td>every obstruction sentence in §5 of the paper carries a theorem number and the model class it is stated for</td>
+</tr>
+<tr>
+<td>Print the two vacuity inequalities (<code>512 ≥ 64</code>; <code>384 &lt; 544</code>; <code>64^{1/16} = 1.30</code>) beside every unconditional lower bound</td>
+<td>V-25 (a theorem whose hypothesis no draw satisfies)</td>
+<td>the reader sees that the unconditional bounds are asymptotic and do not bind at <code>s = 64</code></td>
+</tr>
+<tr>
+<td>Label Cor 4.3 / Thm 3/19 / <code>TC⁰ ≠ NC¹</code> / <code>L ≠ NL</code> results "conditional" in the same sentence as the bound</td>
+<td>P-3 (a stale claim never retracted), P-11 (citing a conjecture as settled)</td>
+<td>conditional bounds never appear without their conjecture</td>
+</tr>
+<tr>
+<td>Define "depth-1" as <em>one parameter set</em> and disclaim the circuit-depth reading (§3.5)</td>
+<td>V-17 (a threshold imported out of its units), P-8 (an upper bound stated as a price)</td>
+<td>"one operator" cannot be read as "constant depth"</td>
+</tr>
+<tr>
+<td>Skyline row with three fellow approximators: <code>⌊log₂ t*⌋ + 2</code> stack (1.1), wide constant-depth stack (1.9), CoT decoder (1.14); cost laws from 2.7</td>
+<td>D-1 (racing a proven optimum), R-SKY (<code>CEQ_V16_CONTRACT.md:209</code>)</td>
+<td>no "beats softmax" sentence on a bed where any of the three is a fellow approximator</td>
+</tr>
+<tr>
+<td>Attribute the operator to ChaCAL before defining the shape; delta = I3 + I4 + do() + safest move</td>
+<td>P-7 (vocabulary with no referent), rule 7 of the brief (occupied components are cited before they are named)</td>
+<td>I1 and I5 are reproductions, not contributions</td>
+</tr>
+<tr>
+<td>Re-run the record's non-negative-operator filter without the sign criterion (2.9's finding)</td>
+<td>V-7 (a search structurally incapable of finding anything, read as absence)</td>
+<td>the prior-art census for the operator component is redone under the shape's own hypothesis</td>
+</tr>
+<tr>
+<td>The single-location ground is stated with Duranthon et al. (softmax proper), not only Marion et al. (erf)</td>
+<td>P-3, §17.5's own correction</td>
+<td>the "erf, not softmax" caveat is closed by the 2026 paper and the paper says so</td>
+</tr>
+<tr>
+<td>The <code>hop_k</code> → committor reduction is written out or marked <code>NOT FOUND</code></td>
+<td>V-3 (an assertion that is an algebraic identity of the author's own construction), D-2</td>
+<td>obstruction 2 is not presented as a theorem about the shape until the reduction exists</td>
+</tr>
+<tr>
+<td>Cite Wang et al. 2025 (1.23) for the difficulty dial in BED-S</td>
+<td>D-3 (a difficulty dial that does not vary)</td>
+<td>the easy-to-hard curriculum is a cited necessity, not a convenience</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="6-counts-for-the-coordinator">6. Counts for the coordinator<a class="headerlink" href="#6-counts-for-the-coordinator" title="Permanent link">#</a></h2>
+<ul>
+<li>Sources with a fetched identifier and matched title: <strong>45</strong> (<code>bib_expressivity.bib</code>), all <code>[V]</code>.</li>
+<li>Details inside those sources marked <code>[U]</code> (summariser readings, memory venues): ChaCAL's headline
+  numbers and its "geometric, not nilpotent" convergence remark; Zhao et al.'s numbers; NeurIPS 2023
+  venues for 2306.02896 / 2306.13596; ICML 2021 for 2103.03404; ICLR 2021 for 2008.02217; NeurIPS
+  2025 spotlight for 2503.01805; ICML 2024 for 2402.09268 (attested by the record, not the arXiv page);
+  Duranthon's given name.</li>
+<li>Sources mentioned but excluded from the <code>.bib</code> for lack of a fetched identifier: 6 (§2.C).</li>
+<li>Searches run beyond the seeds: 18 (table in §0).</li>
+<li>Files written: <code>sweep/bib_expressivity.bib</code>, <code>sweep/sweep_expressivity.md</code>. No code, no git writes.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Invented by <a href="https://teerthsharma.vercel.app/">Teerth Sharma</a> · Apache License 2.0
+    </div>
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/teerthsharma/resolvent" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://teerthsharma.vercel.app/" target="_blank" rel="noopener" title="teerthsharma.vercel.app" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M351.9 280H161c2.9 64.5 17.2 123.9 37.5 167.4 11.4 24.5 23.7 41.8 35.1 52.4 11.2 10.5 18.9 12.2 22.9 12.2s11.7-1.7 22.9-12.2c11.4-10.6 23.7-28 35.1-52.4 20.3-43.5 34.6-102.9 37.5-167.4zm-191-48h190.9c-2.8-64.5-17.1-123.9-37.4-167.4-11.4-24.4-23.7-41.8-35.1-52.4C268.1 1.7 260.4 0 256.4 0s-11.7 1.7-22.9 12.2c-11.4 10.6-23.7 28-35.1 52.4-20.3 43.5-34.6 102.9-37.5 167.4m-48 0c3.5-85.6 25.6-165.1 57.9-217.3C78.7 47.3 10.9 131.2 1.5 232zM1.5 280c9.4 100.8 77.2 184.7 169.3 217.3-32.3-52.2-54.4-131.7-57.9-217.3zm398.4 0c-3.5 85.6-25.6 165.1-57.9 217.3 92.1-32.7 159.9-116.5 169.3-217.3zm111.4-48C501.9 131.2 434.1 47.3 342 14.7c32.3 52.2 54.4 131.7 57.9 217.3z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

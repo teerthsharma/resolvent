@@ -1,0 +1,2579 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="One causal head, three switches. Softmax attention, unnormalized-kernel attention and the exact path product of a Markov chain as settings of one operator, proved in Lean 4, with every failure kept on the record.">
+      
+      
+        <meta name="author" content="Teerth Sharma">
+      
+      
+        <link rel="canonical" href="https://teerthsharma.github.io/resolvent/sources/sweep/sweep_causality/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/logo.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>PRIOR-ART SWEEP — causality, interventions, consequence learning in attention models - resolvent</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/resolvent.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#prior-art-sweep-causality-interventions-consequence-learning-in-attention-models" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="resolvent" class="md-header__button md-logo" aria-label="resolvent" data-md-component="logo">
+      
+  <img src="../../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            resolvent
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              PRIOR-ART SWEEP — causality, interventions, consequence learning in attention models
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/teerthsharma/resolvent" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    teerthsharma/resolvent
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../FAILS/" class="md-tabs__link">
+          
+  
+  
+  The record
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../BED_H_PREREGISTRATION/" class="md-tabs__link">
+          
+  
+  
+  Pre-registrations
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../ledgers/mistakes/" class="md-tabs__link">
+          
+  
+  
+  Ledgers
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../canon/CHARTER/" class="md-tabs__link">
+          
+  
+  
+  Canon
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../CEQ_SHAPE/" class="md-tabs__link">
+          
+  
+  
+  Paper
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="resolvent" class="md-nav__button md-logo" aria-label="resolvent" data-md-component="logo">
+      
+  <img src="../../../assets/logo.svg" alt="logo">
+
+    </a>
+    resolvent
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/teerthsharma/resolvent" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    teerthsharma/resolvent
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The record
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    The record
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../FAILS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Everything retracted, broken or open
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../COMPONENT_LEDGER/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Component ledger
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../PLAN/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Research plan
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CORNER_RULE_RETIREMENT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Corner rule retirement
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../PI_JEPA_KAGGLE_CARD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kaggle card
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../DR2_CARD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DR2 card
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pre-registrations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Pre-registrations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../BED_H_PREREGISTRATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BED-H
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../prereg/REMOVAL_ECHO_v1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    REMOVAL-ECHO v1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ledgers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Ledgers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/mistakes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Failure mechanisms
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/struck/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Struck constants
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/mathematics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mathematics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/model-card/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model card
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/costs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Costs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/v17k-rulings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    V17K rulings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/v16-calibration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    V16 calibration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Canon
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Canon
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/CHARTER/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Charter
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/01_THEORY_ACCURACY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01 Theory of accuracy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/02_THEORY_TRAINING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    02 Theory of training
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/03_KERNEL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03 Kernel
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/04_BEDS_AND_INSTRUMENTS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    04 Beds and instruments
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/05_REPAIRS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05 Repairs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/06_PREDICTIONS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    06 Predictions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/08_ARCHITECTURE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    08 Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/09_CHESS_AND_MARKETS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    09 Chess and markets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/CORRECTIONS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Corrections
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Paper
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Paper
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CEQ_SHAPE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The shape of CEQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Paper sources
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../BIB_AUDIT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bibliography audit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../BIB_ALIASES/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bibliography aliases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#0-the-shapes-components-as-this-lineage-reads-them" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0. The shape's components, as this lineage reads them
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-search-log" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Search log
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-sources-one-block-each" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Sources, one block each
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Sources, one block each">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#2a-scm-foundations-and-the-linear-closed-form" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.A SCM foundations and the linear closed form
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2b-equilibrium-dynamical-scms-consequence-displacement-of-an-equilibrium" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.B Equilibrium / dynamical SCMs — consequence = displacement of an equilibrium
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2c-fixed-points-and-attention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.C Fixed points and attention
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2d-transformers-for-causal-inference-in-context-interventional-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.D Transformers for causal inference; in-context interventional queries
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2e-causal-attention-the-two-meanings-the-misnomer-settled-by-citation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.E "Causal attention" — the two meanings (the misnomer, settled by citation)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2f-world-models-consequence-prediction-embodied-intervention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.F World models, consequence prediction, embodied intervention
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2g-safety-reachability-constrained-planning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.G Safety, reachability, constrained planning
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2h-metrics-sign-direction-fidelity-and-the-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.H Metrics: sign / direction fidelity and the control
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2i-record-cited-items-re-verified-this-session" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.I Record-cited items re-verified this session
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-verdict" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Verdict
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Verdict">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-occupied-owner-named-the-paper-cites-before-it-names" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 OCCUPIED (owner named; the paper cites before it names)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-near-miss-touches-a-component-does-not-take-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 NEAR-MISS (touches a component, does not take it)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-not-found-absences-with-the-queries-that-failed-to-find-them" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 NOT FOUND (absences, with the queries that failed to find them)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-surprise-flagged-loudly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 SURPRISE — flagged loudly
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-design-against-the-taxonomy-what-this-lineage-hands-the-plan-and-the-mechanism-each-is-aimed-at" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Design against the taxonomy — what this lineage hands the plan, and the mechanism each is aimed at
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-limits-of-this-sweep" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Limits of this sweep
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="prior-art-sweep-causality-interventions-consequence-learning-in-attention-models">PRIOR-ART SWEEP — causality, interventions, consequence learning in attention models<a class="headerlink" href="#prior-art-sweep-causality-interventions-consequence-learning-in-attention-models" title="Permanent link">#</a></h1>
+<p><strong>Planet:</strong> MARS-S4. <strong>Date:</strong> 2026-09-03. <strong>Repository:</strong> <code>&lt;repo root&gt;</code>,
+branch <code>v17k-gate0</code>, HEAD <code>207e7b9</code>. <strong>Companion file:</strong> <code>bib_causality.bib</code> (same directory,
+59 entries: 58 <code>[V]</code>, 1 <code>[U]</code>).</p>
+<p><strong>Evidence classes used below</strong> (brief §5.3): <code>RUN</code> = executed this session on this box;
+<code>READ path:line</code> = quoted from the repository; <code>CITED [V]</code> = the arXiv abs page, the DOI /
+CrossRef record, the publisher page or an ISBN-registry record was fetched this session and the
+title matched; <code>CITED [U]</code> = reached through a search-index snippet or memory only; <code>DERIVED</code> =
+steps written out. A content claim about a <code>[V]</code> source that came only from a search snippet is
+marked <code>[U]</code> inline, even when the source itself is <code>[V]</code>.</p>
+<p><strong>The question put to this planet.</strong> Does anyone define <em>the consequence of an intervention</em> as
+<em>the displacement of a jointly determined fixed point of an attention operator</em>, supervise it with
+<em>exact <code>do()</code> oracles</em>, and score <em>sign / vector fidelity against a per-row control</em>?</p>
+<p><strong>The short answer.</strong> Each clause has an owner; the conjunction does not. The equilibrium-displacement
+definition of consequence is owned, in structural-causal-model and dynamical-systems terms, by the
+Mooij–Janzing–Schölkopf / Bongers–Forré–Peters–Mooij / Dash lineage (§2.B). The "fixed point of a
+causally masked transformer, with <code>do()</code> by clamping and re-solving" is owned — this is the
+<strong>SURPRISE</strong> — by Scetbon, Jennings, Hilmkil, Zhang and Ma 2024, <em>A Fixed-Point Approach for Causal
+Generative Modeling</em> (§2.C, §3.4). Supervising a transformer with exact interventional targets from
+synthetic SCMs is owned by the Do-PFN / CausalFM / CausalTimePrior line (§2.D). Auditing a model's
+<em>imagined</em> intervention effect against an environment oracle with a no-change floor is owned, as of
+four days before this sweep, by Vakalis 2026 (§2.F). What is <strong>NOT FOUND</strong> is the resolvent read
+<code>P(I − γP)^{-1}V</code> of a <em>context</em> (not a data-generating SCM) as the attention output, with absorbing
+constraint rows, the displacement <code>Δz</code> as a <em>vector</em> label scored jointly against a matched-depth
+per-row softmax control, and the committor as the safety score inside the same read (§3.3).</p>
+<hr />
+<h2 id="0-the-shapes-components-as-this-lineage-reads-them">0. The shape's components, as this lineage reads them<a class="headerlink" href="#0-the-shapes-components-as-this-lineage-reads-them" title="Permanent link">#</a></h2>
+<p>From the brief §1 (READ <code>BRIEF.md:59-71</code>), the components whose ownership this planet must settle:</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>component</th>
+<th>where it lives in the shape</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>C1</td>
+<td><code>P</code> causal row-stochastic operator (three-corner family; <code>β = 1</code> is softmax)</td>
+<td><code>ceq/arm_smprime.py</code>, <code>lean/CEQ/V16Domain.lean</code></td>
+</tr>
+<tr>
+<td>C2</td>
+<td><code>z = (I − γP)^{-1} V</code> the jointly determined state; <code>O = Pz</code> the read</td>
+<td>identity I1, I2, I5</td>
+</tr>
+<tr>
+<td>C3</td>
+<td>absorbing sets <code>𝒜_k</code>; committor <code>q^{(k)} = (I − Q)^{-1} R_k 1</code></td>
+<td>identity I3; <code>ceq/beds/bed_1.py:188-198</code> (READ: solves <code>(Lq)_i = 0</code> interior, <code>q = 0</code> on A, <code>q = 1</code> on B)</td>
+</tr>
+<tr>
+<td>C4</td>
+<td><code>do(a)</code>: intervene on the context, re-solve; <code>Δz = z(do a) − z</code> is the consequence</td>
+<td>the interventional channel, <code>CEQ_V16_CONTRACT.md:179</code> (READ: "per-position <code>do()</code> bumps with oracle responses; gates are Jacobians")</td>
+</tr>
+<tr>
+<td>C5</td>
+<td>supervision by <em>exact</em> <code>do()</code> oracles on the latent environment chain (never the arm's own resolvent — D-2)</td>
+<td><code>CEQ_V15_CONTRACT.md:188-190</code> (READ: "interventions identify <code>a</code> directly; observations confound <code>a</code> with <code>b</code>")</td>
+</tr>
+<tr>
+<td>C6</td>
+<td>sign / vector fidelity against a per-row control (softmax at matched depth)</td>
+<td><code>MATHEMATICS.md:384-392</code> (READ: <code>fidelity = fraction of interventions where sign(Δŷ_model) = sign(Δy_oracle)</code>, Clopper–Pearson, McNemar vs softmax on byte-identical draws)</td>
+</tr>
+<tr>
+<td>C7</td>
+<td>safest move <code>argmin_a max_k q^{(k)}(do a)</code></td>
+<td>brief §1</td>
+</tr>
+<tr>
+<td>C8</td>
+<td>the <code>do()</code>-conditioned resolvent <code>p(· \| do(a_k))</code> (THEORY v1)</td>
+<td><code>THEORY.md:61-62</code> (READ: "the action-conditioned <code>T_k</code> blocks make it <code>p(· \| do(a_k))</code> rather than <code>p(· \| a_k)</code> — provided the training data contains real interventions")</td>
+</tr>
+</tbody>
+</table>
+<p>One record fact frames C6 and must travel with any fidelity number: at <code>s = 64, d = 24</code>, seed 0,
+softmax already reads consequence fidelity <code>0.807843</code> with CP <code>[0.754044, 0.854329]</code>, and the
+signed arm's <code>0.854902</code> does not survive McNemar (<code>p = 0.18181</code>) (READ <code>MATHEMATICS.md:399-412</code>).
+Sign fidelity at one position is therefore <em>not</em> the ground softmax cannot occupy; only the joint
+vector and the per-row-vs-joint contrast are (READ <code>MATHEMATICS.md:106-127</code>, §0.3, "currently
+UNTESTED, because no vector-valued label exists in the repository").</p>
+<hr />
+<h2 id="1-search-log">1. Search log<a class="headerlink" href="#1-search-log" title="Permanent link">#</a></h2>
+<p>Seeds fetched directly (S1–S13) are listed with the entries. WebSearch queries run this session,
+in order, with the hits that were then fetched and verified:</p>
+<table>
+<thead>
+<tr>
+<th>q</th>
+<th>query (verbatim)</th>
+<th>verified hits it produced</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Q1</td>
+<td><code>interventional world model transformer consequences of actions</code></td>
+<td>vakalis-2026-interventiongap, lin-2026-scratchworld, chen-2026-worldmodelroadmap</td>
+</tr>
+<tr>
+<td>Q2</td>
+<td><code>"causal attention" misnomer masking versus causality transformer</code></td>
+<td>karagodin-2024-clustering (via Q8)</td>
+</tr>
+<tr>
+<td>Q3</td>
+<td><code>transformer in-context learning interventional queries structural causal model do-operator supervised oracle</code></td>
+<td>robertson-2025-dopfn, wang-2026-inherently, anon-2025-iclcausalbma <code>[U]</code></td>
+</tr>
+<tr>
+<td>Q4</td>
+<td><code>Basseville Nikiforov 1993 "Detection of Abrupt Changes" pdf</code></td>
+<td>basseville-1993-detection (author page + PDF TOC)</td>
+</tr>
+<tr>
+<td>Q5</td>
+<td><code>robot learn consequences of actions attention transformer intervention</code></td>
+<td>nothing on-lineage (robot-attention patents, decision transformers); CausalWorld reached from memory and verified</td>
+</tr>
+<tr>
+<td>Q6</td>
+<td><code>counterfactual transformer attention intervention fixed point equilibrium displacement</code></td>
+<td>saha-2025-cyclic, bottou-2013-counterfactual, scetbon-2024-fip, miller-2025-counterfactualicl</td>
+</tr>
+<tr>
+<td>Q7</td>
+<td><code>Dash 2005 "Restructuring dynamic causal systems in equilibrium" AISTATS equilibration manipulation</code></td>
+<td>dash-2005-emc, voortman-2010-manipulation</td>
+</tr>
+<tr>
+<td>Q8</td>
+<td><code>Karagodin Polyanskiy "clustering in causal attention masking" arXiv</code></td>
+<td>karagodin-2024-clustering</td>
+</tr>
+<tr>
+<td>Q9</td>
+<td><code>deep equilibrium model intervention causal effect fixed point displacement implicit layer do-operator</code></td>
+<td><strong>nothing</strong> on interventions in DEQs (DEQ tutorials, monotone operator nets only)</td>
+</tr>
+<tr>
+<td>Q10</td>
+<td><code>sign agreement metric direction of intervention effect prediction evaluation causal model "sign accuracy"</code></td>
+<td>xun-2026-evidencetype, hoogland-2022-ite, chen-2024-calm</td>
+</tr>
+<tr>
+<td>Q11</td>
+<td><code>absorbing Markov chain committor attention constraint satisfaction safest action transformer</code></td>
+<td>makkuva-2024-attentionmarkov; <strong>no</strong> committor-in-attention hit</td>
+</tr>
+<tr>
+<td>Q12</td>
+<td><code>model-based reinforcement learning "consequence prediction" action-conditioned next state transformer causal intervention 2025</code></td>
+<td>nothing new verified (surveys, Decision Transformer)</td>
+</tr>
+<tr>
+<td>Q13</td>
+<td><code>successor representation transition revaluation fails Russek Momennejad 2017 predictive representations model-based</code></td>
+<td>momennejad-2017-sr, russek-2017-predictive (both via CrossRef)</td>
+</tr>
+<tr>
+<td>Q14</td>
+<td><code>linear structural equation model intervention closed form "(I-B)^{-1}" do-operator total causal effect path coefficients</code></td>
+<td>gische-2022-beyondmean (CrossRef)</td>
+</tr>
+<tr>
+<td>Q15</td>
+<td><code>reach-avoid probability safest action under multiple constraints transformer world model planning 2025 2026</code></td>
+<td>nakamura-2025-latentreach, latyshev-2025-safeplanning</td>
+</tr>
+<tr>
+<td>Q16</td>
+<td><code>transformers in-context learning linear structural causal model intervention prediction interventional distribution synthetic SCM 2024 2025 arXiv</code></td>
+<td>ma-2025-causalfm, thumm-2026-causaltimeprior</td>
+</tr>
+<tr>
+<td>Q17</td>
+<td><code>"How Transformers Learn Causal Structures In-Context" explainable mechanism theoretical guarantee arXiv</code></td>
+<td>dangelo-2025-selective; the OpenReview paper itself stayed <code>[U]</code></td>
+</tr>
+<tr>
+<td>Q18</td>
+<td><code>"Learning why things change" Voortman Dash Druzdzel difference-based causality learner equilibrium manipulation</code></td>
+<td>weinberger-2023-equilibrium (CrossRef)</td>
+</tr>
+</tbody>
+</table>
+<p>Eighteen searches; twelve beyond the seed list. Landing-page fetches that failed and were routed
+around: Cambridge (500 → DOI redirect → product page OK), MIT Press (403 ×2 → Open Library ISBN
+record), OAPEN (ECONNRESET ×3), Google Books (429 ×2), DOAB (403), Elsevier linkinghub (login →
+CrossRef), Springer (cookie redirect → CrossRef), OpenReview (bot wall ×2), Semantic Scholar (429),
+dblp (0 hits), <code>www-lm2s.utt.fr</code> (ENOTFOUND). Three PDFs that WebFetch could not text-extract
+(Basseville–Nikiforov book, Bottou 2013, Dash 2005) were read with a <code>python -X utf8 -c</code> one-liner
+on the locally saved copies — a read, no file written (brief §5.1).</p>
+<hr />
+<h2 id="2-sources-one-block-each">2. Sources, one block each<a class="headerlink" href="#2-sources-one-block-each" title="Permanent link">#</a></h2>
+<p>Format per source: <strong>id</strong> · class · <em>owns</em> (the equation or mechanism, in this planet's words) ·
+<em>leaves open</em> (relative to C1–C8) · <em>found by</em>.</p>
+<h3 id="2a-scm-foundations-and-the-linear-closed-form">2.A SCM foundations and the linear closed form<a class="headerlink" href="#2a-scm-foundations-and-the-linear-closed-form" title="Permanent link">#</a></h3>
+<p><strong>pearl-2009-causality</strong> · <code>[V]</code> (Cambridge product page via DOI <code>10.1017/CBO9780511803161</code>;
+2nd ed., 2009, ISBN 9780521895606) · <em>owns:</em> the <code>do()</code> operator as graph surgery — replace the
+structural equation of the intervened variable by a constant, keep every other mechanism; the
+three rungs (association, intervention, counterfactual); do-calculus. · <em>leaves open:</em> nothing
+about attention, fixed points of an operator read, or a metric; the linear-SCM resolvent is present
+as path analysis, not as an attention read. · S1.</p>
+<p><strong>peters-2017-elements</strong> · <code>[V]</code> (Open Library ISBN record 9780262037310; MIT Press page 403) ·
+<em>owns:</em> the textbook form of SCMs, the principle of Independent Causal Mechanisms (ICM: mechanisms
+do not inform or influence each other, so an intervention on one leaves the rest invariant), and
+the statement that interventional data identify what observational data confound. · <em>leaves open:</em>
+C1–C8 entirely; the ICM principle is the <em>licence</em> for the shape's claim that <code>do(a)</code> alters one
+row of <code>P</code> and the rest of <code>P</code> is invariant — the paper must cite it as that licence and no more. ·
+S2, S11.</p>
+<p><strong>shimizu-2006-lingam</strong> · <code>[V]</code> (JMLR 7:2003–2030) · <em>owns:</em> the linear SCM written as
+<code>x = Bx + e</code>, solved as <code>x = (I − B)^{-1} e</code> — the identical algebraic object to <code>z = (I − γP)^{-1}V</code>
+with <code>B ↔ γP</code>, <code>e ↔ V</code>; identification of <code>B</code> from non-Gaussian <code>e</code> by ICA. · <em>leaves open:</em> <code>B</code> is
+the data-generating graph, not a context-dependent attention operator; no <code>γ</code>, no row-stochastic
+constraint, no absorbing rows, no <code>do()</code> displacement as a supervised label. · S1 lineage, from
+memory, verified.</p>
+<p><strong>gische-2022-beyondmean</strong> · <code>[V]</code> (CrossRef, Psychometrika 87(3):868–901) · <em>owns</em> <code>[U]</code> (search
+snippet only): the total effect of <code>X_i</code> on <code>X_j</code> under <code>do(X_i = x_i)</code> as the entry
+<code>(I − B)^{-1}_{ji}</code>, and interventional distributions in closed matrix form. · <em>leaves open:</em> same as
+LiNGAM; the record's own <code>results/r9_maths_survey.md:313</code> (READ: "<code>X = (I−B)^{-1}Z</code>; <code>do(X_i=a)</code>
+clamps row <code>i</code>. <code>ACE_i = B_do(1)[i] − B_do(0)[i]</code>") already states this and reuses
+<code>e4_harmonic.fixed_point</code> — the record has this component and knew it was occupied. · Q14.</p>
+<h3 id="2b-equilibrium-dynamical-scms-consequence-displacement-of-an-equilibrium">2.B Equilibrium / dynamical SCMs — consequence = displacement of an equilibrium<a class="headerlink" href="#2b-equilibrium-dynamical-scms-consequence-displacement-of-an-equilibrium" title="Permanent link">#</a></h3>
+<p><strong>mooij-2013-ode2scm</strong> · <code>[V]</code> (arXiv:1304.7920, stat.OT, UAI 2013) · <em>owns:</em> the equilibria of a
+first-order ODE system define a (possibly cyclic) deterministic SCM, and an intervention on the
+ODE (clamp a variable) corresponds to graph surgery on that SCM; consequence of intervention =
+the new equilibrium. <strong>This is the earliest clean statement of "consequence = displacement of a
+fixed point" in the causal literature.</strong> · <em>leaves open:</em> no operator read of a context, no
+attention, no learning, no supervision protocol, no metric; equilibria of ODEs, not of a resolvent
+on a sequence. · Q6 lineage, from memory, verified.</p>
+<p><strong>bongers-2021-cyclic</strong> · <code>[V]</code> (arXiv:1611.06221, stat.ME; Ann. Statist. 49(5):2885–2915) ·
+<em>owns:</em> solvability and uniqueness for cyclic SCMs ("simple SCMs"); interventions and
+counterfactuals remain well defined when the structural equations are a fixed-point system rather
+than a DAG. · <em>leaves open:</em> the shape's <code>P</code> is row-stochastic with <code>γ &lt; 1</code>, which puts it inside
+the "unique solution" class by construction (I4) — the paper should cite Bongers for the
+<em>existence/uniqueness vocabulary</em> and prove the shape's instance itself (spectral radius <code>γ</code>). ·
+Q6 lineage, verified.</p>
+<p><strong>blom-2019-ccm</strong> · <code>[V]</code> (arXiv:1805.06539, cs.AI, UAI 2019) · <em>owns:</em> the claim that SCMs cannot
+represent every dynamical system in equilibrium; Causal Constraints Models generalise them. ·
+<em>leaves open:</em> a warning, not a component: an equilibrium with absorbing constraints (C3) is a
+constrained equilibrium; whether the shape's boundary-condition semantics survive as an SCM or need
+a constraints-model reading is a question the paper should state, not assume. · Q18 lineage.</p>
+<p><strong>dash-2005-emc</strong> · <code>[V]</code> (PMLR R5:81–88; PDF read this session: Definition 4, Theorems 1–2) ·
+<em>owns:</em> <strong>the Equilibration–Manipulation Commutability (EMC) question</strong> — whether "equilibrate,
+then <code>do()</code>" equals "<code>do()</code>, then equilibrate"; Theorem 1 gives conditions under which EMC is
+<em>violated</em> (feedback through the manipulated variable), Theorem 2 conditions under which it holds.
+· <em>leaves open:</em> the shape's C4 defines consequence as "intervene on the context, re-solve" —
+that is <code>do()</code>-then-equilibrate. A reader of Dash will ask whether the shape's <code>Δz</code> is the same
+object as "equilibrate-then-<code>do()</code>" on the underlying environment chain. For a <em>strictly causal</em>
+(triangular) <code>P</code> there is no feedback and EMC holds trivially (DERIVED below); for a <code>P</code> with
+absorbing rows the two orders differ exactly when the intervened position feeds an absorbing set.
+<strong>This is a bind the shape owes and did not have.</strong> · Q7.</p>
+<p><strong>voortman-2010-manipulation</strong> · <code>[V]</code> (PMLR 6:257–266) · <em>owns:</em> the first structure-learning
+algorithm shown to predict manipulation effects correctly in systems that <em>violate</em> EMC. · <em>leaves
+open:</em> time-series structure learning, not attention. · Q7.</p>
+<p><strong>iwasaki-1994-abstraction</strong> · <code>[V]</code> (CrossRef, AIJ 67(1):143–194; content not read) · <em>owns:</em>
+the equilibration operator on a dynamic causal ordering (the source Dash builds on). · <em>leaves
+open:</em> cited as lineage only. · Q7 lineage.</p>
+<p><strong>weinberger-2023-equilibrium</strong> · <code>[V]</code> (CrossRef, Erkenntnis 88(6):2467–2491; content not read) ·
+<em>owns:</em> the philosophical adequacy of equilibrium causal models under intervention. · <em>leaves
+open:</em> cited as lineage only. · Q18.</p>
+<p><strong>saha-2025-cyclic</strong> · <code>[V]</code> (arXiv:2510.25005, cs.AI, NeurIPS 2025) · <em>owns:</em> counterfactuals
+in cyclic SCMs under shift–scale (soft) interventions, using the steady-state SCM of an ODE. ·
+<em>leaves open:</em> the shape's <code>do(a)</code> on a context is a <em>hard</em> intervention on one position; the
+soft-intervention algebra here is the natural generalisation if the paper ever wants "nudge a
+token" rather than "replace a token" — record as future, not as a component. · Q6.</p>
+<p><strong>bottou-2013-counterfactual</strong> · <code>[V]</code> (JMLR 14:3207–3260; arXiv:1209.2355; PDF read: §7
+"Equilibrium Analysis", §7.3 "Estimating the equilibrium response") · <em>owns:</em> estimating how a
+small change <code>dθ</code> displaces the equilibrium of a feedback system by differentiating the first-order
+equilibrium conditions, which yields a linear system linking the displacements — the first-order
+(implicit-function) form of the shape's C4. · <em>leaves open:</em> first-order in <code>dθ</code>, a quasistatic
+economic equilibrium (advertising auctions), no attention, no exact re-solve; but the <em>mechanism</em>
+"differentiate the equilibrium equations" is precisely the Jacobian gate the record's contract
+already prescribes (READ <code>CEQ_V16_CONTRACT.md:180</code>, "gates are Jacobians <code>[RUN 1e-9]</code>"). · Q6.</p>
+<p><strong>DERIVED — the exact displacement identity, and why EMC is trivial for triangular <code>P</code>.</strong>
+Let <code>z = (I − γP)^{-1}V</code>. An intervention changes the operator and the value at the intervened
+position: <code>P' = P + ΔP</code>, <code>V' = V + ΔV</code>, <code>z' = (I − γP')^{-1}V'</code>. Then</p>
+<div class="highlight"><pre><span></span><code>(I − γP&#39;) z&#39; = V&#39;                           (definition of z&#39;)
+(I − γP&#39;) z  = V − γ ΔP z                    (expand (I − γP − γΔP) z, use (I − γP) z = V)
+subtract:  (I − γP&#39;)(z&#39; − z) = ΔV + γ ΔP z
+so         Δz = (I − γP&#39;)^{-1} (ΔV + γ ΔP z)          … exact, no first-order step
+</code></pre></div>
+<p>Three consequences. (i) The consequence is <em>one more resolvent read</em> of a perturbation that is
+supported on the intervened row(s) only — the same triangular solve as I5 and the same Neumann
+certificate as I4 with the same <code>γ</code>. (ii) Bottou §7.3 is the linearisation <code>Δz ≈ (I − γP)^{-1}(…)</code>
+of this identity; the shape can carry the exact form because <code>P'</code> is known. (iii) For strictly
+causal <code>P</code> (triangular), position <code>i</code>'s row of <code>P'</code> depends only on positions <code>&lt; i</code>, so
+"<code>do()</code> then solve" and "solve, then <code>do()</code> and re-solve the suffix" produce the same <code>z'</code> —
+EMC holds by nilpotency (<code>lean/CEQ/Nilpotent.lean</code>, <code>Occupancy.lean</code>, per brief §2); the two orders
+differ only when <code>P</code> has feedback, i.e. when the shape is used with a non-triangular <code>P</code> or when
+absorbing rows are re-targeted. That is the sentence the paper should write next to Dash 2005.
+(Steps: 4 lines of algebra; no number claimed.)</p>
+<h3 id="2c-fixed-points-and-attention">2.C Fixed points and attention<a class="headerlink" href="#2c-fixed-points-and-attention" title="Permanent link">#</a></h3>
+<p><strong>scetbon-2024-fip</strong> · <code>[V]</code> (arXiv:2404.06969, cs.LG; abs + HTML read: Def. 2.3, §2.4, Def. 4.1,
+Alg. 2) · <em>owns:</em> <strong>an SCM written as a fixed-point problem <code>X = Pᵀ H(PX, PN)</code> on causally ordered
+variables</strong>, with <code>H</code> lower-triangular in its first argument (Condition 2.2); <strong>a transformer whose
+attention is masked to the causal order</strong> (Def. 4.1, <code>M_{ij} = 0</code> if <code>i &lt; j</code>, <code>+∞</code> otherwise —
+i.e. the ordinary triangular mask); <strong>interventions <code>do([PX]_i = a)</code> by composing <code>H</code> with a
+clamping map <code>T_{i,a}</code> and re-solving</strong> (§2.4); counterfactuals by abduction of the noise and
+re-solve (Theorem 2.14); the fixed point is reached by <strong>composing the map <code>d</code> times</strong> (Alg. 2,
+<code>d</code> = number of variables) — which is the nilpotent path-sum of the record's corner 3 in
+different clothes. · <em>leaves open, exactly:</em> (a) the fixed point is the <em>data-generating</em> SCM over
+<code>d</code> variables, not a read of an <code>s</code>-token context — the transformer is the mechanism <code>H</code>, not a
+context operator; (b) no <code>γ</code>, no row-stochastic <code>P</code>, no resolvent <code>(I − γP)^{-1}</code> with <code>γ &lt; 1</code> and
+a printed truncation certificate — their solve is exact only because acyclic; (c) no absorbing
+sets, no committor, no safest move (the HTML read confirms none of these words occur); (d) no
+metric against a per-row control, no matched-depth softmax skyline; (e) no exact <code>do()</code> oracle
+external to the model — their interventional distribution <em>is</em> the model's own re-solved fixed
+point, which if imitated is the D-2 hazard (an oracle that is the arm's own resolvent). · Q6.
+<strong>Flagged loudly in §3.4.</strong></p>
+<p><strong>bai-2019-deq</strong> · <code>[V]</code> (arXiv:1909.01377, NeurIPS 2019) · <em>owns:</em> a layer defined as the fixed
+point of a map, solved by root-finding, differentiated implicitly. · <em>leaves open:</em> no
+intervention on the fixed point; Q9 found <strong>nothing</strong> on <code>do()</code> in DEQs. · S-memory, verified.</p>
+<p><strong>ramsauer-2020-hopfield</strong> · <code>[V]</code> (arXiv:2008.02217, cs.NE) · <em>owns:</em> the attention update as one
+step of a modern-Hopfield energy descent whose fixed points are the retrieved patterns. · <em>leaves
+open:</em> the fixed point is in pattern space per query (still a per-row object); no joint
+determination across rows, no intervention. · S-memory, verified.</p>
+<p><strong>dayan-1993-sr</strong> · <code>[V]</code> (CrossRef, Neural Computation 5(4):613–624) · <em>owns:</em> the successor
+representation <code>M = (I − γP)^{-1}</code> — the shape's C2 as an object, under a fixed policy chain. ·
+<em>leaves open:</em> a cached quantity, not a context read; the record's <code>THEORY.md:61</code> already reads
+the resolvent as "discounted expected future occupancy" and this is its owner. · Q13.</p>
+<p><strong>momennejad-2017-sr</strong> · <code>[V]</code> (CrossRef, Nat. Hum. Behav. 1(9):680–692) and
+<strong>russek-2017-predictive</strong> · <code>[V]</code> (CrossRef, PLoS Comput. Biol. 13(9)) · <em>own</em> <code>[U]</code> (search
+snippet for the mechanism): a cached SR cannot adapt to a change in the <em>transition</em> structure
+without re-experiencing trajectories — humans show exactly that insensitivity — while a change in
+<em>reward</em> is handled immediately. In the shape's terms: an intervention on <code>V</code> needs no re-solve;
+an intervention on <code>P</code> (a <code>do()</code> that rewires who attends to whom) does. <strong>This is the strongest
+external argument that "consequence" requires a re-solve of <code>(I − γP')^{-1}</code> and not a re-read of
+a cached mixture</strong> — and it is the argument against a per-row softmax control that has memorised
+<code>(I − γP)^{-1}</code> implicitly. · Q13.</p>
+<h3 id="2d-transformers-for-causal-inference-in-context-interventional-queries">2.D Transformers for causal inference; in-context interventional queries<a class="headerlink" href="#2d-transformers-for-causal-inference-in-context-interventional-queries" title="Permanent link">#</a></h3>
+<p><strong>melnychuk-2022-causaltransformer</strong> · <code>[V]</code> (arXiv:2204.07258, ICML 2022 PMLR 162) · <em>owns:</em>
+counterfactual (potential-outcome) prediction over time with three transformer sub-networks
+(covariates, treatments, outcomes) joined by cross-attention and a balancing adversarial term. ·
+<em>leaves open:</em> potential outcomes under treatment sequences on longitudinal data, not a fixed
+point; no <code>do()</code> oracle (observational data, unconfoundedness assumed); no per-row control. · S3.</p>
+<p><strong>zhang-2023-cina</strong> · <code>[V]</code> (arXiv:2310.00809) · <em>owns:</em> the duality between optimal covariate
+balancing and self-attention, so a self-supervised transformer estimates treatment effects
+zero-shot. · <em>leaves open:</em> per-query balancing weights are a <em>per-row mixture</em> — CInA is
+evidence that softmax's own ground includes single-effect estimation, which strengthens the brief's
+D-1 warning: single-position causal-effect labels are softmax's ground. · S4.</p>
+<p><strong>robertson-2025-dopfn</strong> · <code>[V]</code> (arXiv:2506.06039, NeurIPS 2025) · <em>owns:</em> <strong>a prior-data-fitted
+network trained on synthetic SCMs with paired observational and interventional data, predicting
+interventional outcomes in-context from observational data alone.</strong> This occupies C5 ("supervise
+with exact <code>do()</code> oracles") for scalar per-query effects. · <em>leaves open:</em> the label is a scalar
+outcome at one unit; no fixed point, no vector <code>Δz</code>, no absorbing sets, no matched-depth softmax
+control (the PFN <em>is</em> a transformer, so the control question does not arise for them). · Q3.</p>
+<p><strong>ma-2025-causalfm</strong> · <code>[V]</code> (arXiv:2506.10914) · <em>owns:</em> a family of SCM-based priors so PFNs do
+back-door / front-door / IV adjustment in context. · <em>leaves open:</em> as Do-PFN. · Q16.</p>
+<p><strong>thumm-2026-causaltimeprior</strong> · <code>[V]</code> (arXiv:2603.11090, ICLR 2026 TSALM workshop) · <em>owns:</em>
+synthetic <em>temporal</em> SCMs with paired observational/interventional series, ground-truth
+interventional targets by structural manipulation. · <em>leaves open:</em> time-series effects; no
+fixed-point read, no committor. · Q16.</p>
+<p><strong>ke-2022-induce</strong> · <code>[V]</code> (arXiv:2204.04875) and <strong>lorch-2022-avici</strong> · <code>[V]</code> (arXiv:2205.12934,
+NeurIPS 2022) · <em>own:</em> amortised causal <em>structure</em> inference from observational + interventional
+data with a neural net (transformer-class). · <em>leave open:</em> the output is a graph, not a
+consequence; relevant only as the licence that interventional data are the identifying signal. ·
+memory, verified.</p>
+<p><strong>xia-2021-ncm</strong> · <code>[V]</code> (arXiv:2107.00793) · <em>owns:</em> the Neural Causal Model class and the
+theorem that the causal hierarchy still holds for neural models — observational training alone
+cannot yield interventional answers. · <em>leaves open:</em> the theorem is the formal backing for C5's
+"exact <code>do()</code> oracles in training"; it does not touch attention or fixed points. · memory,
+verified.</p>
+<p><strong>zecevic-2021-gnnscm</strong> · <code>[V]</code> (arXiv:2109.04173) · <em>owns:</em> message passing on the causal graph
+as an SCM realisation, with interventions as edge removal. · <em>leaves open:</em> GNN not attention;
+one message-passing step per hop (the depth law applies to them too). · memory, verified.</p>
+<p><strong>scholkopf-2021-crl</strong> · <code>[V]</code> (arXiv:2102.11107, Proc. IEEE) · <em>owns:</em> the ICM principle and
+the sparse-mechanism-shift hypothesis. · <em>leaves open:</em> licence only. · S11.</p>
+<p><strong>jin-2023-cladder</strong> · <code>[V]</code> (arXiv:2312.04350, NeurIPS 2023) and <strong>chen-2024-calm</strong> · <code>[V]</code>
+(arXiv:2405.00622) · <em>own:</em> benchmarks of causal reasoning with ground truth from causal models,
+and a metric taxonomy ("intervention accuracy", "effect estimate accuracy"). · <em>leave open:</em>
+natural-language questions to LLMs; no operator, no control, no vector label. · Q10, memory.</p>
+<p><strong>miller-2025-counterfactualicl</strong> · <code>[V]</code> (arXiv:2506.05188, NeurIPS 2025) · <em>owns:</em>
+counterfactual reasoning as noise abduction in an in-context linear-regression task, with
+attention heads identified as the mechanism. · <em>leaves open:</em> per-example scalar counterfactuals;
+no fixed point. · Q6.</p>
+<h3 id="2e-causal-attention-the-two-meanings-the-misnomer-settled-by-citation">2.E "Causal attention" — the two meanings (the misnomer, settled by citation)<a class="headerlink" href="#2e-causal-attention-the-two-meanings-the-misnomer-settled-by-citation" title="Permanent link">#</a></h3>
+<p><strong>karagodin-2024-clustering</strong> · <code>[V]</code> (arXiv:2411.04990, NeurIPS 2024) · <em>owns:</em> the dynamics of
+<em>causally masked</em> attention as an interacting particle system; "causal" = the triangular mask. ·
+<strong>nichani-2024-causalstructure</strong> · <code>[V]</code> (arXiv:2402.14735, ICML 2024) and
+<strong>dangelo-2025-selective</strong> · <code>[V]</code> (arXiv:2509.08184) · <em>own:</em> "causal structure" = which
+earlier token a later token depends on in a latent Markov process, learned as an attention
+pattern; no <code>do()</code>. · <strong>wang-2026-inherently</strong> · <code>[V]</code> (arXiv:2601.05647) · <em>owns:</em> extraction of
+time-lagged dependency structure from gradients of an autoregressive transformer; "causal" =
+Granger/dynamical. · <strong>makkuva-2024-attentionmarkov</strong> · <code>[V]</code> (arXiv:2402.04161, ICLR 2025) ·
+<em>owns:</em> Markov chains as the controlled data process for analysing transformers; the chain is the
+<em>data</em>, not the attention operator. · <strong>yang-2021-causalattention</strong> · <code>[V]</code> (arXiv:2103.03493) ·
+<em>owns:</em> "causal attention" in the Pearl sense — front-door adjustment inside an attention module. ·
+<strong>anon-2025-iclcausalbma</strong> · <code>[U]</code> (OpenReview bpF8zgSt41; authors not retrievable this session).</p>
+<p><em>What this settles for the paper:</em> the phrase "causal attention" has at least three published
+meanings — the mask (Karagodin), the learned dependency graph (Nichani, D'Angelo, Wang), and
+front-door adjustment (Yang). The shape's <code>P</code> is "causal" only in the first sense; its <em>capability</em>
+claim is in the Pearl sense (a <code>do()</code> and its consequence). The paper must say so in one
+sentence and never let the mask stand in for the semantics. Designed against <strong>P-7</strong> (vocabulary
+with no referent) and <strong>P-10</strong> (a source's intro cited as its theorem).</p>
+<h3 id="2f-world-models-consequence-prediction-embodied-intervention">2.F World models, consequence prediction, embodied intervention<a class="headerlink" href="#2f-world-models-consequence-prediction-embodied-intervention" title="Permanent link">#</a></h3>
+<p><strong>ha-2018-worldmodels</strong> · <code>[V]</code>, <strong>oh-2015-actionconditional</strong> · <code>[V]</code> (NIPS 2015),
+<strong>hafner-2023-dreamerv3</strong> · <code>[V]</code>, <strong>schrittwieser-2020-muzero</strong> · <code>[V]</code> (Nature; DOI on abs),
+<strong>micheli-2023-iris</strong> · <code>[V]</code> (ICLR 2023) · <em>own:</em> action-conditioned next-state prediction as the
+learned model (Oh: next frame given action; Ha/Dreamer: latent dynamics and imagination; MuZero:
+a model that predicts only reward, value and policy and is <em>never</em> asked to reproduce the state;
+IRIS: a discrete autoencoder plus an autoregressive transformer as the world model). · <em>leave
+open:</em> consequences are learned from <em>on-policy experience</em>, not from <code>do()</code> oracles; the model is
+scored by return, not by fidelity of the consequence against an exact oracle; MuZero in particular
+is the proof that a planner does not need the state's consequence at all — which is the honest
+skyline for C4: a <em>value</em> head can beat a consequence head on return. · S5.</p>
+<p><strong>baradel-2020-cophy</strong> · <code>[V]</code> (arXiv:1909.12000, ICLR 2020) · <em>owns:</em> counterfactual physical
+outcome given a <code>do()</code> on initial conditions, with ground truth from a simulator that executes the
+intervention. · <em>leaves open:</em> the model learns latent confounders and predicts trajectories; no
+fixed point, no per-row control. This is the nearest <em>embodied</em> occupant of "supervise with an
+exact <code>do()</code> oracle". · S13 lineage, memory, verified.</p>
+<p><strong>wang-2022-cdl</strong> · <code>[V]</code> (arXiv:2206.13452, ICML 2022) · <em>owns:</em> learning which state variables
+causally drive which, so the dynamics model ignores spurious correlations. · <em>leaves open:</em> no
+intervention semantics on the model's read. · memory, verified.</p>
+<p><strong>ahmed-2020-causalworld</strong> · <code>[V]</code> (arXiv:2010.04296, cs.RO) · <em>owns:</em> a robotic benchmark where
+every environment variable can be intervened on by the experimenter (<code>do()</code> on masses, sizes,
+colours). · <em>leaves open:</em> the interventions are on the <em>environment</em>, not on a context read; no
+consequence label. · Q5 lineage, memory, verified.</p>
+<p><strong>vakalis-2026-interventiongap</strong> · <code>[V]</code> (arXiv:2608.29998, cs.LG, submitted 2026-08-30) · <em>owns:</em>
+<strong>the "intervention gap"</strong> — the mismatch between a latent world model's <em>imagined</em> effect of an
+action and the <em>actual</em> environment effect, measured by matched-intervention audits against
+environment-endpoint oracles, with the finding that imagined effects can score <em>below a
+no-change predictor</em> even when reward prediction is good. · <em>leaves open, exactly:</em> latent world
+models trained by reconstruction/reward, not an attention read; no fixed point; the control is
+"no change", not a per-row softmax at matched depth. But it <strong>occupies the metric-with-floor
+idea</strong> for C6: an oracle-scored intervention effect with an information floor. The paper should
+cite it as the owner of that discipline and state the delta as "per-row softmax control at
+matched depth, joint vector label". · Q1.</p>
+<p><strong>lin-2026-scratchworld</strong> · <code>[V]</code> (arXiv:2606.31689, cs.SE) · <em>owns:</em> executable-consequence
+evaluation of world models against a pinned VM oracle, with a changed-field F₁ that credits only
+altered fields. · <em>leaves open:</em> program states, not attention; but "credit only what moved" is
+exactly the record's own do()-bit discipline (READ <code>MISTAKES.md:755</code> D-5 "Declaring <code>0.0</code> without
+a movement test"). · Q1.</p>
+<p><strong>chen-2026-worldmodelroadmap</strong> · <code>[V]</code> (arXiv:2607.06401) · <em>owns:</em> a definition of world
+models as internal simulators. · <em>leaves open:</em> a perspective; cite for vocabulary only. · Q1.</p>
+<h3 id="2g-safety-reachability-constrained-planning">2.G Safety, reachability, constrained planning<a class="headerlink" href="#2g-safety-reachability-constrained-planning" title="Permanent link">#</a></h3>
+<p><strong>nakamura-2025-latentreach</strong> · <code>[V]</code> (arXiv:2502.00935, RSS 2025) · <em>owns:</em> Hamilton–Jacobi
+reachability computed in the latent space of a learned world model to obtain safety-preserving
+actions beyond collision avoidance. · <em>leaves open:</em> HJ value functions, not committors; a single
+failure set, not <code>K</code> absorbing sets with a <code>max_k</code>; no attention read. Nearest occupant of C7. ·
+Q15.</p>
+<p><strong>latyshev-2025-safeplanning</strong> · <code>[V]</code> (arXiv:2506.04828) · <em>owns:</em> model-based RL that switches
+between planning in the model and direct policy execution under adaptive safety thresholds. ·
+<em>leaves open:</em> same as above. · Q15.</p>
+<p><em>Q11 found no work that computes an absorption probability (committor) into a constraint set
+inside an attention read and takes <code>argmin_a max_k</code> over candidate moves in the context.</em> The
+absorbing-chain machinery itself is classical and belongs to the resolvent planet's bib; this
+planet records only that the <em>attention-native</em> version is NOT FOUND.</p>
+<h3 id="2h-metrics-sign-direction-fidelity-and-the-control">2.H Metrics: sign / direction fidelity and the control<a class="headerlink" href="#2h-metrics-sign-direction-fidelity-and-the-control" title="Permanent link">#</a></h3>
+<p><strong>xun-2026-evidencetype</strong> · <code>[V]</code> (arXiv:2607.29484) · <em>owns:</em> sign-correctness of a causal
+effect as the scored quantity for language models trained on interventional data, with
+observational context as the noise floor (<code>38 %</code> mixed context vs <code>82 %</code> interventional-only, per
+the abs page). · <em>leaves open:</em> LLM prompts; no operator; but it is the nearest published
+"sign-fidelity with a floor", and it is four weeks old. · Q10.</p>
+<p><strong>hoogland-2022-ite</strong> · <code>[V]</code> (arXiv:2209.06101, stat.ME) · <em>owns:</em> discrimination and
+calibration of individualised treatment-effect predictions, including whether predicted benefit
+vs harm (the sign) is right. · <em>leaves open:</em> clinical ITE; per-unit scalar. · Q10.</p>
+<p>The record's own metric (READ <code>MATHEMATICS.md:384-392</code>) is a sign-fidelity with a Clopper–Pearson
+interval and a <em>paired</em> McNemar against softmax on byte-identical draws. Nothing found pairs the
+sign test against a per-row control at matched depth on the <em>same</em> intervention draws; the
+paired-control discipline is the record's and is NOT FOUND outside it (Q10). What <em>is</em> found is
+the sign metric itself (directional accuracy is a standard forecasting statistic) — so the paper
+must not call the sign metric new; it may call the <em>pairing</em> new, narrowly.</p>
+<h3 id="2i-record-cited-items-re-verified-this-session">2.I Record-cited items re-verified this session<a class="headerlink" href="#2i-record-cited-items-re-verified-this-session" title="Permanent link">#</a></h3>
+<p><strong>kim-2026-topological</strong> · <code>[V]</code> (arXiv:2603.02289, stat.ME, Kim &amp; Lee, submitted 2026-03-02) ·
+<em>owns:</em> "Topological Causal Effects" — treatment effects on persistence-diagram features of an
+outcome distribution, doubly robust estimator, a test for whether treatment alters shape. · <em>what
+the record says:</em> <code>results/r9_maths_survey.md:314,503</code> (READ: "<code>ψ_d(t) := E[φ¹_{i,d}(t) −
+φ⁰_{i,d}(t)]</code>, a curve in <code>t</code>… verified to resolve and title-match: Kim &amp; Lee, 2026-03-02"). The
+identifier, authors and date <strong>match</strong>. · <em>leaves open:</em> a function-valued <em>label class</em>, not an
+attention component; it is the licence for the paper's "topological layer" to score a consequence
+by a persistence curve rather than a scalar. · S8.</p>
+<p><strong>bai-2026-pinnchangepoint</strong> · <code>[V]</code> (arXiv:2604.25655, stat.ML, submitted 2026-04-28; HTML read)
+· <em>owns:</em> Theorem 3.1 "Residual lower bound on change-point subintervals": any fitting window that
+straddles a regime change carries a strictly positive residual energy under a single constant
+parameter, and a window inside one regime reads zero. · <em>what the record says:</em> <code>README.md:216-219</code>
+and <code>workdonenewseal.md:464</code> (READ: "The learned-model form is arXiv:2604.25655, four months old,
+whose Theorem 3.1 is the must-fire stated as a theorem"). The identifier, date and Theorem 3.1
+<strong>match</strong>. <strong>Two cautions for the paper:</strong> (a) the paper does <strong>not</strong> cite Basseville &amp; Nikiforov,
+so "learned-model form of §7.2.4" is the <em>record's</em> reading, not the source's — write it as an
+analogy owned by the record; (b) Theorem 3.1 is about a PINN's physics residual over a window,
+not about a hidden <em>cause</em>; the must-fire it discharges is "no plant ⇒ flat residual", and only
+that. Designed against <strong>P-10</strong>. · S10.</p>
+<p><strong>basseville-1993-detection</strong> · <code>[V]</code> (author-hosted page; PDF TOC read: Ch. 7 "Additive Changes
+in Linear Models" p.209; §7.2 "Statistical Approach" p.214; <strong>§7.2.4 "State-Space Models"
+p.234</strong>; §7.2.5 "Statistical Decoupling for Diagnosis" p.245; §7.2.6 "Statistical Detectability"
+p.252) · <em>owns:</em> additive-change detection in state-space models via the innovation / residual
+of a Kalman filter (GLR on the residual), which is the closed form the record says discharged
+X₃₅'s must-fires (READ <code>README.md:216-218</code>). The section number and its subject <strong>match</strong> the
+record's citation. · <em>leaves open:</em> X₃₅ is occupied and the record already conceded it; the paper
+lists it under "refuted / occupied" and moves on. · S9, Q4.</p>
+<p><strong>peng-2024-limitations</strong> · <code>[V]</code> (arXiv:2402.08164, stat.ML) — identifier and title confirmed
+for the brief's obstruction 3 (brief §1 asked for this VERIFY); <strong>sanford-2024-logdepth</strong> · <code>[V]</code>
+(arXiv:2402.09268). Both belong to the expressivity planet; recorded here only because a
+<em>consequence</em> is a composition (<code>z' = R(P') V'</code> after <code>P' = S(P, a)</code>) and the paper's obstruction
+3 rests on Peng et al.</p>
+<hr />
+<h2 id="3-verdict">3. Verdict<a class="headerlink" href="#3-verdict" title="Permanent link">#</a></h2>
+<h3 id="31-occupied-owner-named-the-paper-cites-before-it-names">3.1 OCCUPIED (owner named; the paper cites before it names)<a class="headerlink" href="#31-occupied-owner-named-the-paper-cites-before-it-names" title="Permanent link">#</a></h3>
+<table>
+<thead>
+<tr>
+<th>component</th>
+<th>owner(s)</th>
+<th>what they take</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Linear SCM <code>X = (I − B)^{-1}Z</code>; <code>do()</code> as row surgery; total effect = entries of <code>(I − B)^{-1}</code></td>
+<td>Pearl 2009; Shimizu et al. 2006; Gische &amp; Voelkle 2022 <code>[U]</code> on the formula</td>
+<td>the algebra of C2 and C4 on a <em>data-generating</em> graph</td>
+</tr>
+<tr>
+<td>Consequence of an intervention = displacement of an equilibrium / fixed point</td>
+<td>Mooij–Janzing–Schölkopf 2013; Bongers et al. 2021; Bottou et al. 2013 §7.3 (first-order)</td>
+<td>the <em>definition</em> in C4, in SCM/ODE terms</td>
+</tr>
+<tr>
+<td>The order of <code>do()</code> and equilibration (EMC)</td>
+<td>Dash 2005 (Def. 4, Thms 1–2); Voortman et al. 2010; Blom et al. 2019</td>
+<td>a <em>bind</em> the shape must carry (§2.B DERIVED)</td>
+</tr>
+<tr>
+<td><code>(I − γP)^{-1}</code> as an occupancy / successor operator; cached resolvent fails under a transition change</td>
+<td>Dayan 1993; Momennejad et al. 2017 &amp; Russek et al. 2017 <code>[U]</code> on the mechanism</td>
+<td>C2 as an object; the argument that C4 needs a re-solve</td>
+</tr>
+<tr>
+<td>Supervising a transformer with exact interventional targets from synthetic SCMs (in-context)</td>
+<td>Do-PFN 2025; CausalFM 2025; CausalTimePrior 2026; Ke et al. 2022; Lorch et al. 2022</td>
+<td>C5 for <em>scalar per-query</em> effects</td>
+</tr>
+<tr>
+<td>Attention for treatment effects; balancing ≡ attention</td>
+<td>Melnychuk et al. 2022; Zhang et al. 2023 (CInA)</td>
+<td>single-effect estimation is softmax's own ground (strengthens D-1)</td>
+</tr>
+<tr>
+<td>The three meanings of "causal attention"</td>
+<td>Karagodin et al. 2024; Nichani et al. 2024; D'Angelo et al. 2025; Wang et al. 2026; Yang et al. 2021</td>
+<td>the vocabulary; the paper must disambiguate</td>
+</tr>
+<tr>
+<td>Attention as a fixed point (Hopfield update; DEQ layer)</td>
+<td>Ramsauer et al. 2020; Bai et al. 2019</td>
+<td>fixed-point-ness of a layer; <strong>not</strong> interventions on it</td>
+</tr>
+<tr>
+<td>Action-conditioned consequence prediction; planning with a learned model that never predicts the state</td>
+<td>Oh et al. 2015; Ha &amp; Schmidhuber 2018; Hafner et al. 2023; Schrittwieser et al. 2020; Micheli et al. 2023</td>
+<td>the world-model skyline: return without consequence fidelity</td>
+</tr>
+<tr>
+<td>Counterfactual physics from a simulator <code>do()</code>; robot benchmark with experimenter <code>do()</code></td>
+<td>Baradel et al. 2020; Ahmed et al. 2020</td>
+<td>embodied exact oracles</td>
+</tr>
+<tr>
+<td>Oracle-scored imagined intervention effect with a no-change floor</td>
+<td>Vakalis 2026 (2026-08-30)</td>
+<td>the metric-with-floor discipline for C6, on latent world models</td>
+</tr>
+<tr>
+<td>Executable-consequence oracle, credit only changed fields</td>
+<td>Lin &amp; Zhang 2026</td>
+<td>the do()-bit movement discipline (D-5), on program states</td>
+</tr>
+<tr>
+<td>X₃₅ residual hidden-cause inference</td>
+<td>Basseville &amp; Nikiforov 1993 §7.2.4 (State-Space Models, p.234); learned-model analogue Bai et al. 2026 Thm 3.1</td>
+<td>conceded by the record</td>
+</tr>
+<tr>
+<td>Persistent-homology causal effect (function-valued label)</td>
+<td>Kim &amp; Lee 2026</td>
+<td>a label class for the topological layer</td>
+</tr>
+</tbody>
+</table>
+<h3 id="32-near-miss-touches-a-component-does-not-take-it">3.2 NEAR-MISS (touches a component, does not take it)<a class="headerlink" href="#32-near-miss-touches-a-component-does-not-take-it" title="Permanent link">#</a></h3>
+<ul>
+<li><strong>Scetbon et al. 2024 (FiP)</strong> — see 3.4; takes "fixed point of a causally masked transformer +
+  <code>do()</code> by clamp-and-re-solve", leaves <code>γ</code>, row-stochasticity, the certificate, the context read,
+  absorbing sets, the committor, the vector label and the control.</li>
+<li><strong>Saha et al. 2025</strong> — soft interventions on cyclic equilibrium SCMs; the generalisation of C4 to
+  "nudge", not the component.</li>
+<li><strong>Nakamura et al. 2025; Latyshev et al. 2025</strong> — safety value in a learned latent space; not a
+  committor into <code>K</code> sets, not <code>argmin_a max_k</code>, not an attention read (C7).</li>
+<li><strong>Xun 2026; Hoogland et al. 2022</strong> — sign fidelity with a floor; not paired against a per-row
+  control on identical draws (C6).</li>
+<li><strong>Miller et al. 2025</strong> — counterfactual abduction in-context; scalar.</li>
+<li><strong>Zečević et al. 2021</strong> — SCM as message passing with edge-removal interventions; GNN, one hop per
+  layer.</li>
+</ul>
+<h3 id="33-not-found-absences-with-the-queries-that-failed-to-find-them">3.3 NOT FOUND (absences, with the queries that failed to find them)<a class="headerlink" href="#33-not-found-absences-with-the-queries-that-failed-to-find-them" title="Permanent link">#</a></h3>
+<ol>
+<li>The resolvent read <code>P(I − γP)^{-1}V</code> of a <em>context</em> (row-stochastic <code>P</code> from the three-corner
+   family, learnable <code>γ</code>) as the attention output, with <strong>absorbing constraint rows</strong> — Q6, Q9,
+   Q11. (The resolvent planet owns the general resolvent literature; this planet records only that
+   no <em>causal-inference</em> source reads a context this way.)</li>
+<li>The consequence <code>Δz = z(do a) − z</code> as a <strong>vector-valued supervised label</strong> over all positions,
+   scored <strong>jointly</strong> (not per coordinate) — Q1, Q3, Q6, Q16.</li>
+<li>A <strong>per-row softmax control at matched depth and parameters</strong> paired on byte-identical
+   intervention draws (McNemar / TOST) — Q10. The sign metric is standard; the pairing is not
+   found.</li>
+<li>The <strong>committor into <code>K</code> absorbing constraint sets</strong> computed inside the attention read, with
+   <code>argmin_a max_k q^{(k)}(do a)</code> over candidate moves present <em>in the context</em> — Q11, Q15.</li>
+<li>An <strong>EMC (order-of-<code>do()</code>-and-settle) test</strong> inside an attention model — Q7 (Dash's theorems
+   exist; no attention instance).</li>
+<li>An intervention on a <strong>Deep Equilibrium</strong> layer or on the Hopfield fixed point of attention —
+   Q9.</li>
+<li>A <strong>robot / embodied</strong> transformer that supervises consequences with exact <code>do()</code> oracles on
+   an <em>attention fixed point</em> — Q5, Q12 (CoPhy and CausalWorld are simulators with <code>do()</code>, no
+   fixed-point read).</li>
+</ol>
+<h3 id="34-surprise-flagged-loudly">3.4 SURPRISE — flagged loudly<a class="headerlink" href="#34-surprise-flagged-loudly" title="Permanent link">#</a></h3>
+<p><strong>Scetbon, Jennings, Hilmkil, Zhang, Ma (2024), <em>A Fixed-Point Approach for Causal Generative
+Modeling</em>, arXiv:2404.06969 <code>[V]</code>, full text read.</strong> It defines an SCM as a fixed point
+<code>X = Pᵀ H(PX, PN)</code> with <code>H</code> lower-triangular (Def. 2.3), parameterises <code>H</code> by a transformer whose
+attention carries the ordinary triangular mask (Def. 4.1), performs <code>do()</code> by composing <code>H</code> with a
+clamping map and re-solving (§2.4), computes counterfactuals by abduction (Thm 2.14), and reaches the
+fixed point by composing the map <code>d</code> times (Alg. 2). A reader who has seen only the abstract of the
+shape will say "this is FiP". The paper must pre-empt that reader in the prior-art section with the
+five exact differences in §2.C: (a) data-generating SCM over <code>d</code> variables vs a read of an <code>s</code>-token
+context; (b) acyclic <code>d</code>-fold composition vs a <code>γ</code>-resolvent with a printed Neumann <code>δ</code> (I4) on a
+row-stochastic <code>P</code>; (c) no absorbing sets / committor / safest move; (d) no per-row control at
+matched depth, no vector-fidelity metric; (e) their interventional answer <em>is</em> the model's own
+re-solved fixed point — exactly the D-2 hazard the record's contract forbids (READ
+<code>MISTAKES.md:710</code> "An oracle that is the arm's own resolvent"). The same authorship (Zhang, Ma)
+owns CInA (§2.D), so the two together occupy "attention ⇄ causal inference" at the <em>foundation-model</em>
+level; the shape's delta survives only as stated narrowly in §3.3, items 1–4.</p>
+<p>Second surprise, smaller: <strong>Vakalis 2026, arXiv:2608.29998 <code>[V]</code></strong>, dated 2026-08-30, owns the
+"oracle-scored intervention effect with a no-change floor" discipline for world models. It does not
+touch attention or fixed points, but it means the paper's C6 metric section must cite a paper four
+days old as the owner of its <em>control philosophy</em> and claim only the pairing against a per-row
+softmax at matched depth.</p>
+<p>Third, a bind rather than a surprise: <strong>Dash 2005 EMC</strong>. The shape defines consequence as
+"intervene, re-solve". For a triangular <code>P</code> the two orders coincide by nilpotency (§2.B DERIVED);
+for any <code>P</code> with feedback or re-targeted absorbing rows they do not, and Dash's Theorem 1 says when.
+The paper should file EMC as a proposition with both halves (holds for corner 3 by
+<code>Nilpotent.pow_card_eq_zero</code>; can fail otherwise, with a planted feedback instance) — designed
+against <strong>V-24</strong> (an identity bind whose rejection region is empty) and <strong>D-7</strong> (a prediction filed
+without its counter).</p>
+<hr />
+<h2 id="4-design-against-the-taxonomy-what-this-lineage-hands-the-plan-and-the-mechanism-each-is-aimed-at">4. Design against the taxonomy — what this lineage hands the plan, and the mechanism each is aimed at<a class="headerlink" href="#4-design-against-the-taxonomy-what-this-lineage-hands-the-plan-and-the-mechanism-each-is-aimed-at" title="Permanent link">#</a></h2>
+<p>Each item names the <code>MISTAKES.md</code> mechanism (READ headings, <code>MISTAKES.md:34-2190</code>).</p>
+<ol>
+<li><strong>The <code>do()</code> oracle runs on the latent environment chain; the arm never sees its transition
+   matrix.</strong> Aimed at <strong>D-2</strong> (<code>MISTAKES.md:710</code>, an oracle that is the arm's own resolvent). FiP
+   §2.4 is the published example of the hazard: its interventional distribution is the model's own
+   fixed point. Literature licence for the design: Xia et al. 2021 (the hierarchy holds for neural
+   models — interventional targets must come from outside the model); Do-PFN / CausalTimePrior
+   (paired observational/interventional synthetic data as the training signal).</li>
+<li><strong>Every <code>do()</code> draw ships a planted zero-effect intervention and a planted feedback instance.</strong>
+   Aimed at <strong>V-24</strong> (identity bind with empty rejection region) and <strong>D-5</strong> (<code>MISTAKES.md:755</code>,
+   declaring <code>0.0</code> without a movement test). ScratchWorld's "credit only changed fields" and the
+   record's own do()-bit (<code>results/r10_it17_battery.md:270-342</code>, READ: one boundary node moved the
+   label by exactly <code>0.0</code>) are the two precedents; EMC violation (Dash Thm 1) is the feedback plant.</li>
+<li><strong>The vector label <code>Δz</code> is scored jointly (relative <code>ℓ₂</code> and the full sign pattern), never only
+   as a per-coordinate sign rate.</strong> Aimed at <strong>V-26</strong> (a marginal assertion standing in for a joint
+   claim) and <strong>D-1</strong> (racing a proven optimum): <code>MATHEMATICS.md:399-412</code> already shows softmax at
+   <code>0.807843</code> sign fidelity on the scalar; CInA shows single-effect estimation is softmax's ground.
+   The joint vector is the only ground §0.3 (<code>MATHEMATICS.md:106-127</code>) claims.</li>
+<li><strong>The control is a per-row softmax at matched depth <code>⌊log₂ t*⌋ + 2</code> on byte-identical draws,
+   with McNemar / TOST fixed before data (N ≥ 8, MDE, TOST N = 70 per brief §6).</strong> Aimed at <strong>M-2</strong>
+   (threshold refitted to the data it judges), <strong>M-3</strong> (pilot spread taken as realised spread),
+   <strong>M-9</strong> (finest achievable <code>p</code> cannot reach the quoted <code>α</code>). Vakalis 2026 supplies the
+   no-change floor; the record supplies the pairing.</li>
+<li><strong>Two absorbing sets minimum on any committor bed.</strong> Aimed at <strong>V-12</strong> (<code>MISTAKES.md:189</code>, a
+   single absorbing target makes the label constant) and <strong>V-8</strong> (the PASS half's label is
+   constant): with <code>K = 1</code>, <code>q ≡ 1</code> on every transient state that can reach the set.</li>
+<li><strong>A domain census that every drawn <code>P</code> is row-stochastic including its absorbing rows, before
+   the Neumann certificate is quoted.</strong> Aimed at <strong>V-25</strong> (a theorem whose hypothesis no draw
+   satisfies); I4's planted negative (rows summing <code>1.5</code>, err <code>119.37</code> vs bound <code>1.143</code>, RUN by
+   the coordinator) is the rejection-region witness.</li>
+<li><strong>The EMC proposition with both halves</strong> (§3.4, third item). Aimed at <strong>D-7</strong> (a prediction
+   filed without its counter).</li>
+<li><strong>"Causal attention" disambiguated in one sentence with three citations</strong> (§2.E). Aimed at
+   <strong>P-7</strong> (vocabulary with no referent) and <strong>P-10</strong> (a source's intro cited as its theorem).</li>
+<li><strong>The 2604.25655 attribution written as the record's analogy, not the source's claim</strong> (§2.I).
+   Aimed at <strong>P-10</strong> and <strong>P-3</strong> (a stale claim never retracted): the source does not cite
+   Basseville &amp; Nikiforov.</li>
+<li><strong>The consequence read priced as one extra triangular solve</strong> (§2.B DERIVED: <code>Δz = (I −
+    γP')^{-1}(ΔV + γΔP z)</code>). Aimed at <strong>M-8</strong> (pricing every arm at one arm's rate) and <strong>P-8</strong> (a
+    headline that states an upper bound as a price): the price is <code>≈ s²d</code> multiply-adds per
+    intervention, the same as I5, and it must be measured on the certified RTX 4060, not asserted.</li>
+<li><strong>MuZero as the honest skyline for any "consequence head".</strong> Aimed at <strong>D-1</strong> and the R-SKY
+    rule (brief §1): a planner that never predicts the state can win on return; the shape's claim
+    is fidelity of the consequence with a certificate, not return.</li>
+</ol>
+<hr />
+<h2 id="5-limits-of-this-sweep">5. Limits of this sweep<a class="headerlink" href="#5-limits-of-this-sweep" title="Permanent link">#</a></h2>
+<p>Collected once. (i) Seven landing pages were reached only through registry records (CrossRef,
+Open Library) after publisher pages refused; titles and authors matched but section-level content
+of Iwasaki–Simon 1994, Weinberger 2023, Momennejad 2017 and Russek 2017 was not read. (ii) One
+source (OpenReview bpF8zgSt41) is <code>[U]</code>: two bot walls, dblp 0 hits, Semantic Scholar 429; it is
+listed as a pointer only and must not carry a claim. (iii) The Gische–Voelkle closed-form
+attribution rests on a search snippet; the record's own <code>r9_maths_survey.md:313</code> is the load-bearing
+source for that formula. (iv) Searches were English-only and arXiv-weighted; the safety /
+reach-avoid literature was sampled, not swept — the safety planet owns it. (v) No number in this
+file was produced by new code; the only executions were text extraction from three locally saved
+PDFs and <code>sed</code>/<code>grep</code> reads of the repository. (vi) The DERIVED identity in §2.B is four lines of
+algebra and was not run numerically this session — it is a candidate for the coordinator's
+<code>shape_identities.py</code> as I6 (<code>torch.allclose</code> of the two sides at <code>γ = 0.5</code> on a planted row
+surgery), which this planet may not write.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Invented by <a href="https://teerthsharma.vercel.app/">Teerth Sharma</a> · Apache License 2.0
+    </div>
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/teerthsharma/resolvent" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://teerthsharma.vercel.app/" target="_blank" rel="noopener" title="teerthsharma.vercel.app" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M351.9 280H161c2.9 64.5 17.2 123.9 37.5 167.4 11.4 24.5 23.7 41.8 35.1 52.4 11.2 10.5 18.9 12.2 22.9 12.2s11.7-1.7 22.9-12.2c11.4-10.6 23.7-28 35.1-52.4 20.3-43.5 34.6-102.9 37.5-167.4zm-191-48h190.9c-2.8-64.5-17.1-123.9-37.4-167.4-11.4-24.4-23.7-41.8-35.1-52.4C268.1 1.7 260.4 0 256.4 0s-11.7 1.7-22.9 12.2c-11.4 10.6-23.7 28-35.1 52.4-20.3 43.5-34.6 102.9-37.5 167.4m-48 0c3.5-85.6 25.6-165.1 57.9-217.3C78.7 47.3 10.9 131.2 1.5 232zM1.5 280c9.4 100.8 77.2 184.7 169.3 217.3-32.3-52.2-54.4-131.7-57.9-217.3zm398.4 0c-3.5 85.6-25.6 165.1-57.9 217.3 92.1-32.7 159.9-116.5 169.3-217.3zm111.4-48C501.9 131.2 434.1 47.3 342 14.7c32.3 52.2 54.4 131.7 57.9 217.3z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

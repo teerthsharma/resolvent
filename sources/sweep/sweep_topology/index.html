@@ -1,0 +1,2668 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="One causal head, three switches. Softmax attention, unnormalized-kernel attention and the exact path product of a Markov chain as settings of one operator, proved in Lean 4, with every failure kept on the record.">
+      
+      
+        <meta name="author" content="Teerth Sharma">
+      
+      
+        <link rel="canonical" href="https://teerthsharma.github.io/resolvent/sources/sweep/sweep_topology/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/logo.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Prior-art sweep — lineage S6: topology in and around the attention role - resolvent</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/resolvent.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#prior-art-sweep-lineage-s6-topology-in-and-around-the-attention-role" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="resolvent" class="md-header__button md-logo" aria-label="resolvent" data-md-component="logo">
+      
+  <img src="../../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            resolvent
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Prior-art sweep — lineage S6: topology in and around the attention role
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/teerthsharma/resolvent" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    teerthsharma/resolvent
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../FAILS/" class="md-tabs__link">
+          
+  
+  
+  The record
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../BED_H_PREREGISTRATION/" class="md-tabs__link">
+          
+  
+  
+  Pre-registrations
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../ledgers/mistakes/" class="md-tabs__link">
+          
+  
+  
+  Ledgers
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../canon/CHARTER/" class="md-tabs__link">
+          
+  
+  
+  Canon
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../CEQ_SHAPE/" class="md-tabs__link">
+          
+  
+  
+  Paper
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="resolvent" class="md-nav__button md-logo" aria-label="resolvent" data-md-component="logo">
+      
+  <img src="../../../assets/logo.svg" alt="logo">
+
+    </a>
+    resolvent
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/teerthsharma/resolvent" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    teerthsharma/resolvent
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The record
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    The record
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../FAILS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Everything retracted, broken or open
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../COMPONENT_LEDGER/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Component ledger
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../PLAN/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Research plan
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CORNER_RULE_RETIREMENT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Corner rule retirement
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../PI_JEPA_KAGGLE_CARD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kaggle card
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../DR2_CARD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DR2 card
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pre-registrations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Pre-registrations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../BED_H_PREREGISTRATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BED-H
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../prereg/REMOVAL_ECHO_v1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    REMOVAL-ECHO v1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ledgers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Ledgers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/mistakes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Failure mechanisms
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/struck/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Struck constants
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/mathematics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mathematics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/model-card/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model card
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/costs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Costs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/v17k-rulings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    V17K rulings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/v16-calibration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    V16 calibration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Canon
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Canon
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/CHARTER/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Charter
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/01_THEORY_ACCURACY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01 Theory of accuracy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/02_THEORY_TRAINING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    02 Theory of training
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/03_KERNEL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03 Kernel
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/04_BEDS_AND_INSTRUMENTS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    04 Beds and instruments
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/05_REPAIRS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05 Repairs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/06_PREDICTIONS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    06 Predictions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/08_ARCHITECTURE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    08 Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/09_CHESS_AND_MARKETS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    09 Chess and markets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/CORRECTIONS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Corrections
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Paper
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Paper
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CEQ_SHAPE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The shape of CEQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Paper sources
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../BIB_AUDIT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bibliography audit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../BIB_ALIASES/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bibliography aliases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-method" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Method
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Method">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-verification-protocol" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 Verification protocol
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-queries-run-in-order-what-each-found" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 Queries run (in order; what each found)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-what-the-record-already-owns-in-this-lineage-read" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 What the record already owns in this lineage (READ)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-sources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Sources
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Sources">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-tda-of-attention-maps-descriptive-barcodes-of-attention-graphs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A. TDA of attention maps (descriptive barcodes of attention graphs)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b-sheaf-simplicial-cellular-and-hodge-attention-operator-views-of-attention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        B. Sheaf, simplicial, cellular and Hodge attention; operator views of attention
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c-differentiable-persistent-homology-the-m10-lineage-ids-corrected" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        C. Differentiable persistent homology (the M10 lineage; ids corrected)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d-sparse-masked-attention-from-graph-or-cluster-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D. Sparse / masked attention from graph or cluster structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#e-gates-segmentation-block-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        E. Gates, segmentation, block structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#f-mapper-reeb-graphs-persistence-stability-directed-persistence-foundations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        F. Mapper, Reeb graphs, persistence stability, directed persistence, foundations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#g-committors-isocommittor-surfaces-transition-path-theory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        G. Committors, isocommittor surfaces, transition-path theory
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#h-the-authors-own-merged-upstream-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        H. The author's own merged upstream work
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-verdicts-on-the-four-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Verdicts on the four components
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Verdicts on the four components">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-zero-gate-segmentation-as-an-exact-block-certificate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        (a) Zero-gate segmentation as an exact block certificate
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b-0-persistence-of-the-influence-graph-across-a-threshold-as-a-causal-structure-barcode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        (b) β₀ persistence of the influence graph across a threshold as a causal-structure barcode
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c-isocommittor-surfaces-as-decision-boundaries-inside-an-attention-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        (c) Isocommittor surfaces as decision boundaries inside an attention model
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d-a-mapper-cover-as-the-long-context-candidate-builder-for-a-resolvent-read" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        (d) A Mapper cover as the long-context candidate builder for a resolvent read
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-surprises-flagged-loudly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Surprises (flagged loudly)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Surprises (flagged loudly)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-the-records-m10-citations-are-all-three-misattributed-p-class-defect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 The record's M10 citations are all three misattributed (P-class defect)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-a-title-already-claims-betti-numbers-of-attention-graphs-are-all-you-need" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 A title already claims Betti numbers of attention graphs are "all you need"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-intervention-barcode-change-already-has-a-causal-inference-owner" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 "Intervention ⇒ barcode change" already has a causal-inference owner
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-attention-as-a-connection-walk-sheaf-view-of-the-same-p" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 Attention as a connection walk (sheaf view of the same P)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#45-the-cheeger-inequality-the-record-cites-needs-reversibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.5 The Cheeger inequality the record cites needs reversibility
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#46-a-near-miss-to-watch-not-an-occupant" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.6 A near-miss to watch, not an occupant
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-not-found-with-the-queries-that-failed-to-find-them" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. NOT FOUND (with the queries that failed to find them)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-design-against-the-taxonomy-for-the-proposals-this-lineage-feeds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Design against the taxonomy (for the proposals this lineage feeds)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-limits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Limits
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="prior-art-sweep-lineage-s6-topology-in-and-around-the-attention-role">Prior-art sweep — lineage S6: topology in and around the attention role<a class="headerlink" href="#prior-art-sweep-lineage-s6-topology-in-and-around-the-attention-role" title="Permanent link">#</a></h1>
+<p>SATURN-S6, 2026-09-03. Companion file: <code>bib_topology.bib</code> (59 entries, one per source).
+Repository: <code>&lt;repo root&gt;</code>, branch <code>v17k-gate0</code>, HEAD <code>207e7b9</code>.</p>
+<p>Evidence classes as in <code>BRIEF.md</code> §5.3: <code>RUN</code> (executed this session), <code>READ path:line</code>,
+<code>CITED [V]</code> (abs page / DOI metadata record / primary host API fetched this session, title
+matched), <code>CITED [U]</code> (search index, reference list, or memory only), <code>DERIVED</code>.</p>
+<p><strong>The question put to this planet.</strong> Is any part of the shape's topological layer occupied:
+(a) zero-gate segmentation as an exact block certificate; (b) β₀ persistence of the
+influence graph across a threshold as a causal-structure barcode; (c) isocommittor surfaces
+as decision boundaries inside an attention model; (d) a Mapper cover as the long-context
+candidate builder for a resolvent read.</p>
+<p><strong>The short verdict.</strong> (a) mechanism NEAR-MISS (gated-linear-attention family), certificate
+owned by the record's own Lean and NOT FOUND outside it; (b) the <em>descriptive</em> barcode of an
+attention graph is OCCUPIED (Kushnareva et al. 2021 and its lineage), the <em>interventional</em>
+reading has a statistical owner (Kim &amp; Lee 2026), the influence-Jacobian filtration with a
+printed δ is NOT FOUND; (c) isocommittor surfaces are OCCUPIED by transition-path theory,
+their use inside an attention model is NOT FOUND; (d) Mapper is OCCUPIED (Singh–Mémoli–
+Carlsson 2007), cluster covers as candidate builders are OCCUPIED (Routing Transformer,
+Reformer, SBM attention), persistence-derived block schedules are OCCUPIED by the author's
+own merged <code>triton-lang/kernels#22</code>, and the composition Mapper cover → CSR schedule →
+resolvent read is NOT FOUND. No single paper occupies the whole delta. Five surprises,
+§4; the loudest is that the record's three M10 arXiv ids are all misattributed.</p>
+<p>Tally: <strong>58 [V], 1 [U]</strong> (Mapper's DOI landing page returned HTTP 403; two bibliographic
+records agree). Searches run: <strong>17</strong> (§1.2), of which 15 go beyond the seed list.</p>
+<hr />
+<h2 id="1-method">1. Method<a class="headerlink" href="#1-method" title="Permanent link">#</a></h2>
+<h3 id="11-verification-protocol">1.1 Verification protocol<a class="headerlink" href="#11-verification-protocol" title="Permanent link">#</a></h3>
+<p>Every arXiv source: <code>https://arxiv.org/abs/&lt;id&gt;</code> fetched, title read, author list read,
+primary class read. Every DOI source: Crossref <code>api.crossref.org/works/&lt;doi&gt;</code> fetched (the
+DOI registration agency's own record) after the publisher landing page either redirected to
+an authorization endpoint (Springer, <code>10.1007/s00454-006-1276-5</code>) or returned 403
+(Eurographics diglib, <code>10.2312/SPBG/SPBG07/091-100</code>). Two workshop papers absent from arXiv
+were resolved through the primary host's API (<code>api.openreview.net</code>, <code>proceedings.mlr.press</code>).
+The two GitHub pull requests were fetched at <code>github.com/&lt;org&gt;/&lt;repo&gt;/pull/&lt;n&gt;</code> and, for
+<code>kernels#22</code>, at <code>/files</code>.</p>
+<p><strong>Planted positive for the search instrument (<code>MISTAKES.md</code> V-7, READ <code>:117-135</code>: "a
+reported absence needs a planted positive").</strong> The same search tool that returned NOT FOUND
+for the four composite queries in §5 returned, on identical settings, the seed papers it was
+required to find: query 4 (§1.2) surfaced Kushnareva 2022 <code>2207.01903</code> and Perez–Reinauer
+<code>2206.15195</code> beside the seeded Cherniavskii 2022; query 11 surfaced Bodnar 2022 beside the
+sought Barbero 2022. The absences in §5 are therefore claims about the literature as indexed,
+not about a search that could find nothing.</p>
+<h3 id="12-queries-run-in-order-what-each-found">1.2 Queries run (in order; what each found)<a class="headerlink" href="#12-queries-run-in-order-what-each-found" title="Permanent link">#</a></h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>query</th>
+<th>found (ids)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><code>"Sheaf Attention Networks" Barbero Bodnar Veličković Liò 2022</code></td>
+<td>pointer to NeurReps 2022; <code>2601.21207</code>, <code>2608.02558</code>, PMLR v196 <code>barbero22a</code></td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>persistent homology sparse attention schedule transformer</code></td>
+<td><code>2605.03163</code>, <code>2312.10702</code>, <code>2107.09031</code></td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>topological attention sparsification transformer persistence block mask</code></td>
+<td><code>2410.03462</code>, <code>2210.15541</code></td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>attention graph persistent homology betti causal structure</code></td>
+<td><code>2207.01903</code> (via ResearchGate title), <code>2206.15195</code>, <code>2205.09630</code></td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>committor function neural network isocommittor surface decision boundary transition path theory</code></td>
+<td><code>2507.21961</code>, <code>2012.06727</code>, <code>1802.10275</code>, Nature Comput. Sci. 2025</td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>Mapper algorithm topological data analysis long context retrieval transformer candidate selection</code></td>
+<td>Mapper-only hits (<code>1706.00204</code> via JMLR URL, <code>2412.11631</code>); <strong>no attention hit</strong></td>
+</tr>
+<tr>
+<td>7</td>
+<td><code>forget gate zero resets state equivalent block diagonal attention mask segmentation gated linear attention</code></td>
+<td><code>2312.06635</code>, <code>2503.02130</code>, <code>2502.01578</code>, <code>2605.22791</code></td>
+</tr>
+<tr>
+<td>8</td>
+<td><code>persistent homology attention maps large language model hallucination detection topological 2025</code></td>
+<td><code>2504.10063</code>, <code>2601.01552</code>, <code>2605.05025</code>, <code>2604.10697</code></td>
+</tr>
+<tr>
+<td>9</td>
+<td><code>Levin Peres Wilmer Markov Chains and Mixing Times Theorem 13.10 bottleneck ratio Cheeger</code></td>
+<td>the authors' PDF at <code>pages.uoregon.edu/dlevin/MARKOV/</code></td>
+</tr>
+<tr>
+<td>10</td>
+<td><code>cellular transformer simplicial attention Hodge Laplacian attention 2024 arXiv</code></td>
+<td><code>2405.14094</code>, <code>2403.06687</code>, <code>2607.10677</code>, <code>2509.01839</code>, <code>2204.09455</code></td>
+</tr>
+<tr>
+<td>11</td>
+<td>arXiv API <code>ti:"Sheaf Attention Networks"</code></td>
+<td>0 results (the paper is not on arXiv)</td>
+</tr>
+<tr>
+<td>12</td>
+<td>arXiv API <code>ti:"Betti numbers of attention graphs"</code></td>
+<td><code>2207.01903v1</code></td>
+</tr>
+<tr>
+<td>13</td>
+<td><code>transformer learns committor absorbing Markov chain attention "committor" transformer</code></td>
+<td><code>2402.04161</code>, <code>2410.05493</code>, <code>2110.05050</code>; <strong>no committor-inside-attention hit</strong></td>
+</tr>
+<tr>
+<td>14</td>
+<td><code>exact block-diagonal attention equivalence gate zero segment boundary theorem proof "block diagonal" gated linear attention reset</code></td>
+<td><code>2606.02680</code>, <code>2604.14702</code>, <code>2608.28541</code>, <code>2606.17830</code>; <strong>no exact-certificate hit</strong></td>
+</tr>
+<tr>
+<td>15</td>
+<td><code>Reeb graph Mapper attention transformer tokens cover overlapping clusters sparse attention</code></td>
+<td>graph-transformer sparsity only (<code>2303.06147</code>, <code>2502.01659</code>); <strong>no Mapper/Reeb hit</strong></td>
+</tr>
+<tr>
+<td>16</td>
+<td><code>"zigzag persistence" OR "persistence barcode" attention influence Jacobian threshold connected components causal</code></td>
+<td><code>2601.01552</code>, <code>2103.07353</code>, <code>2304.03828</code>; <strong>no influence-Jacobian filtration hit</strong></td>
+</tr>
+<tr>
+<td>17</td>
+<td>dblp / OpenReview / Semantic Scholar record lookups for Mapper 2007 and Sheaf Attention Networks</td>
+<td>dblp <code>conf/spbg/SinghMC07</code>; OpenReview forum <code>LIDvgVjpkZr</code></td>
+</tr>
+</tbody>
+</table>
+<p>Seeds that were fetched directly without a search (ids known): <code>2109.04825</code>, <code>2205.09630</code>,
+<code>2202.04579</code>, <code>2203.07485</code>, <code>2206.00606</code>, <code>2011.05804</code>, <code>1905.12200</code>, <code>1904.09378</code>,
+<code>2010.08356</code>, <code>1906.00722</code>, <code>1906.09003</code>, <code>1307.6188</code>, <code>1207.3674</code>, <code>1701.00565</code>,
+<code>1608.05432</code>, <code>1608.00365</code>, <code>1706.00204</code>, <code>2603.02289</code>, <code>2012.06333</code>, <code>1808.01513</code>,
+<code>2003.05997</code>, <code>2001.04451</code>, <code>2502.11089</code>, <code>2507.07955</code>, the two GitHub PRs, and the Crossref
+records for Cohen-Steiner 2007, E–Vanden-Eijnden 2010, Vanden-Eijnden–Venturoli 2009,
+Levin–Peres 2017, Milnor 1963, Edelsbrunner–Harer 2009, Carlsson 2009, Reimann 2017,
+Perea–Harer 2015.</p>
+<h3 id="13-what-the-record-already-owns-in-this-lineage-read">1.3 What the record already owns in this lineage (READ)<a class="headerlink" href="#13-what-the-record-already-owns-in-this-lineage-read" title="Permanent link">#</a></h3>
+<ul>
+<li><code>lean/CEQ/V16Domain.lean:129-131</code> — <code>pathProd_eq_zero_iff</code>: the path product is <code>0</code> <strong>iff</strong>
+  some gate magnitude on the path is <code>0</code> (an iff, machine-checked, no <code>sorry</code>; <code>README.md</code> §2
+  per the brief).</li>
+<li><code>lean/CEQ/V16Domain.lean:165-169</code> — <code>no_prefix_scan_represents_a_zero_gate</code>: for any prefix
+  scan <code>C : ℕ → ℂ</code>, <code>exp(C i − C j) ≠ pathProd</code> whenever a gate on the path is zero, because
+  <code>Complex.exp</code> is never zero. The docstring at <code>:157-164</code> names this a cost in the
+  <em>computational route</em>, not the conclusion.</li>
+<li><code>ceq/certs/topological.py:1-70</code> — three certificates that can <em>refuse</em>: <code>Z</code> winding,
+  persistent <code>β₁</code> of a carrier trajectory, Euler–Poincaré against a Poincaré–Hopf index sum;
+  the persistence threshold <code>τ = 4 · max nearest-neighbour distance</code> is derived from
+  <code>d_B ≤ 2 d_H</code>, not fitted (<code>:47-56</code>, explicitly against <code>MISTAKES.md</code> M-2).</li>
+<li><code>ceq/certs/topological.py:476-500</code> — <code>beta0_interleaving</code>: the sandwich
+  <code>b0(X, r+2ε) ≤ b0(X_ε, r) ≤ b0(X, r−2ε)</code> with a <code>strict_span</code> measure so that a sandwich
+  that never bites cannot report a pass (against V-16). This is a β₀-stability instrument on
+  <em>point clouds</em>, not on an influence graph.</li>
+<li><code>ceq/rips.py:1-30</code> — the S² geodesic Vietoris–Rips corpus ported from the author's
+  <code>mujoco#3396</code>; a Rips 1-skeleton and <code>b0</code>; component count falls from 178 to 1 across six
+  cases (docstring <code>:16-17</code>).</li>
+<li><code>ceq/beds/bed_1.py:5-8</code> — BED-1's label is the committor <code>q</code>; "Guards are the <code>q = 1/2</code>
+  isocommittor surfaces and the itinerary of guard crossings is the action vocabulary."
+  <code>:382-390</code> <code>guard_itinerary</code> counts traversals of the <code>q = 1/2</code> surface by channel.
+  <code>:188</code> <code>committor</code> solves the Dirichlet problem; <code>:336-343</code> <code>morse_census</code> reports
+  <code>m₀ − m₁ = χ = V − E</code>.</li>
+<li><code>workdonenewseal.md:265</code> — the record's own caveat: on a 1-complex <code>β₀ − β₁ = V − E</code>
+  identically, so half of the Euler–Poincaré cross-check cannot fail.</li>
+<li><code>THEORY.md:23</code> — <code>topoml</code> supplies <code>metric_cover / nerve_graph / mapper_graph</code>;
+  <code>THEORY.md:114-118</code> — <code>kernels#22</code> consumes a causal CSR block schedule with a
+  0D-persistence salience over key-block centroids; <code>THEORY.md:162-165</code> — schedule selection
+  with the do-nothing (merged 0D-salience) schedule always entered.</li>
+<li><code>THEORY.md:176-190</code> — the v1 pipeline: barcode → Hilbert-series embedding → hierarchical
+  partition → CSR schedule → scheduled attention → resolvent solve <code>(I − γP)⁻¹ b</code> → sheaf
+  consistency gate <code>‖R·û − ψ̂‖</code>.</li>
+<li><code>tests/foreman/test_topology_washout.py:1-16</code> — the refutation instrument asking whether
+  the resolvent stage preserves what the barcode stage measured; <code>AUDIT.md:562</code> keeps it as a
+  refutation instrument whose RED is its deliverable.</li>
+<li><code>CEQ_V20_R15_CONTRACT.md:220-226</code> — M10: "β₀ of the influence graph across the threshold ε
+  is a persistence barcode of causal structure [RUN: 4096→…→1]; segmentation is its ε=0
+  endpoint; the differentiable-persistence lineage (1905.12200, 1904.09378, 2011.05804 —
+  occupied)". The three ids are misattributed; §4.1.</li>
+<li><code>MATHEMATICS.md:455</code> — "A Cheeger obstruction bounds what any one-edge bridge can do.
+  <code>g ≤ 2φ</code>". The cited theorem needs reversibility; §4.5.</li>
+<li><code>PRIOR_ART.md:629-640</code> — the committor as a regression target already recorded [V] (Khoo,
+  Lu, Ying <code>1802.10275</code>; Li, Lin, Ren <code>1906.06285</code>; Contreras Arredondo et al.
+  <code>2507.17700</code>), and NOT FOUND for <code>B = N R</code> as a supervised label of a neural network.</li>
+</ul>
+<hr />
+<h2 id="2-sources">2. Sources<a class="headerlink" href="#2-sources" title="Permanent link">#</a></h2>
+<p>Format per source: <strong>key</strong> — [V]/[U] — <em>owns</em> — <em>leaves open relative to the shape</em> —
+<em>found by</em>.</p>
+<h3 id="a-tda-of-attention-maps-descriptive-barcodes-of-attention-graphs">A. TDA of attention maps (descriptive barcodes of attention graphs)<a class="headerlink" href="#a-tda-of-attention-maps-descriptive-barcodes-of-attention-graphs" title="Permanent link">#</a></h3>
+<p><strong>kushnareva-2021-tda-attention</strong> (<code>2109.04825</code>, cs.CL, EMNLP 2021) — [V] — Owns the
+construction: threshold a BERT head's attention matrix at a sweep of levels, read the
+resulting graph's H0/H1 persistence and simple graph statistics as features, and classify
+(here: machine-generated vs human text). — Leaves open: the filtration is by <em>attention
+weight</em> of a trained softmax model, read post hoc; nothing is a certificate, nothing feeds
+back into the operator, nothing is causal or interventional; there is no absorbing set and no
+resolvent. — seed.</p>
+<p><strong>cherniavskii-2022-acceptability</strong> (<code>2205.09630</code>, cs.CL, Findings EMNLP 2022) — [V] — Owns
+the same feature family applied to grammatical acceptability across languages. — Same
+openings as above. — seed.</p>
+<p><strong>kushnareva-2022-betti</strong> (<code>2207.01903</code>, cs.CL, preprint; abs page records "submitted, not
+accepted" to TDA&amp;Beyond NeurIPS 2020) — [V] — Owns the <em>title-level</em> claim that Betti numbers
+of thresholded attention graphs are sufficient classification features. — Same openings; and
+by its own status it is a preprint, so the paper cites it as such. — query 4, 12.</p>
+<p><strong>perez-2022-topological-bert</strong> (<code>2206.15195</code>, cs.CL) — [V] — Owns "attention → graph →
+topological features → classifier" as a full pipeline with an adversarial-robustness claim.
+— Same openings. — query 4.</p>
+<p><strong>bazarova-2025-toha</strong> (<code>2504.10063</code>, cs.CL, ACL 2026 as printed) — [V] — Owns a
+<em>divergence</em> between the topologies of two attention subgraphs (prompt vs response) as a
+hallucination signal in RAG. — The two-subgraph contrast is the nearest existing thing to
+"displacement of structure under a change of context", but the change is <em>which tokens</em>, not
+an intervention <code>do(a)</code> on a jointly determined state; no resolvent, no barcode across ε as a
+certificate. — query 8.</p>
+<p><strong>samaga-2026-halluzig</strong> (<code>2601.01552</code>, cs.CL) — [V] — Owns zigzag persistence over the
+<em>layer</em> axis of causally-masked attention graphs (a filtration that goes up and down as the
+graph changes layer to layer). — The zigzag axis is depth; the shape's axis is the threshold
+ε on one operator's <em>influence</em>; open. — query 8, 16.</p>
+<p><strong>balderas-2023-ph-bert-compression</strong> (<code>2312.10702</code>, cs.LG, Applied Sciences 2025) — [V] —
+Owns persistence-ranked neuron pruning of a Transformer. — Not an attention operator; not
+causal. — query 2.</p>
+<h3 id="b-sheaf-simplicial-cellular-and-hodge-attention-operator-views-of-attention">B. Sheaf, simplicial, cellular and Hodge attention; operator views of attention<a class="headerlink" href="#b-sheaf-simplicial-cellular-and-hodge-attention-operator-views-of-attention" title="Permanent link">#</a></h3>
+<p><strong>barbero-2022-sheaf-attention</strong> (OpenReview <code>LIDvgVjpkZr</code>, NeurReps 2022 Oral) — [V] via
+<code>api.openreview.net</code>; not on arXiv (query 11: 0 results), not in dblp (0 hits); the reference
+entry in <code>2608.02558</code> agrees. — Owns sheaf diffusion with input-dependent attention (the GAT
+generalisation of neural sheaf diffusion, as <code>2608.02558</code>'s body states). — Attention here is
+a <em>weighting of restriction maps on a graph</em>, not a row-stochastic resolvent with absorbing
+rows; no boundary conditions, no committor. — query 1, 17.</p>
+<p><strong>barbero-2022-connection-laplacians</strong> (PMLR v196 pp. 28–36) — [V] — Owns sheaf construction
+by Riemannian alignment of tangent spaces (orthogonal restriction maps). — Same openings. —
+query 1.</p>
+<p><strong>bodnar-2022-neural-sheaf-diffusion</strong> (<code>2202.04579</code>, cs.LG, NeurIPS 2022) — [V] — Owns the
+sheaf-Laplacian diffusion with the heterophily / oversmoothing analysis and the
+asymptotic-behaviour control. — The shape's <code>(I − γP)⁻¹</code> is a <em>resolvent</em> of a stochastic
+operator, not a diffusion to its kernel; <code>THEORY.md:215</code> already flags that <code>ker Δ_F</code> may be
+trivial for generic restriction maps. — seed.</p>
+<p><strong>hansen-2020-sheaf-neural-networks</strong> (<code>2012.06333</code>, cs.LG, NeurIPS 2020 TDA&amp;Beyond) — [V]
+— Owns the sheaf-Laplacian GCN. — Same. — <code>THEORY.md:232</code> names it; fetched here.</p>
+<p><strong>hansen-2019-spectral-cellular-sheaves</strong> (<code>1808.01513</code>, math.AT) — [V] — Owns the sheaf
+Laplacian and its Hodge theory on cell complexes. — The mathematical object behind any sheaf
+consistency gate <code>‖R·û − ψ̂‖</code> (<code>THEORY.md:188</code>); no attention, no resolvent read. —
+fetched directly.</p>
+<p><strong>lin-2026-connection-laplacian-attention</strong> (<code>2607.10677</code>, cs.LG) — [V] — Owns the
+identification of single-head self-attention with a <em>connection walk</em> on the token graph
+(messages transported by learned linear maps) and multi-head attention with an edge-dependent
+connection walk; states when the generator reduces to a random-walk connection Laplacian
+(stochasticity, reversibility). — <strong>Near-miss to the definition of <code>P</code>, not to the shape</strong>:
+the abs page carries no resolvent, fixed point, absorbing boundary, committor or persistence.
+If the paper's <code>P</code> is presented as a connection walk, this paper owns that reading and must
+be cited before the word is used. — query 10.</p>
+<p><strong>hu-2026-sheaf-attention-perspective</strong> (<code>2601.21207</code>, cs.LG, AAAI 2026 MATH4AI workshop) —
+[V] — Owns a cellular-sheaf reading of attention in graph neural models through local
+consistency. — No resolvent, boundary, committor or barcode on the abs page. — query 1.</p>
+<p><strong>giusti-2022-simplicial-attention</strong> (<code>2203.07485</code>, cs.LG) — [V] — Owns attention over
+upper/lower simplicial neighbourhoods. — Attention on a <em>given</em> complex; the shape's complex
+(the influence graph) is produced by the operator. — seed.</p>
+<p><strong>goh-2022-simplicial-attention-networks</strong> (<code>2204.09455</code>, cs.LG, ICLR 2022 GTRL workshop) —
+[V] — Owns signed (orientation-equivariant) simplicial attention. — Same. — query 10.</p>
+<p><strong>hajij-2022-topological-deep-learning</strong> (<code>2206.00606</code>, cs.LG) — [V] — Owns combinatorial
+complexes and message passing over them (the survey/framework). — Same. — seed.</p>
+<p><strong>ballester-2024-cellular-transformer</strong> (<code>2405.14094</code>, cs.LG) — [V] — Owns a Transformer
+over cell complexes with incidence-based attention and cellular positional encodings. — Same.
+— query 10.</p>
+<h3 id="c-differentiable-persistent-homology-the-m10-lineage-ids-corrected">C. Differentiable persistent homology (the M10 lineage; ids corrected)<a class="headerlink" href="#c-differentiable-persistent-homology-the-m10-lineage-ids-corrected" title="Permanent link">#</a></h3>
+<p><strong>gabrielsson-2019-topology-layer</strong> (<code>1905.12200</code>, cs.LG) — [V] — Owns a differentiable
+persistence layer over level-set and edge filtrations, used as a regulariser / constraint /
+adversary. — Trains through persistence of <em>data or activations</em>; the shape's filtration
+would be the influence graph of a resolvent; open. — seed id; <strong>the record attributes this id
+to Hofer et al. (<code>CEQ_V20_R15_CONTRACT.md:223</code>); it is Brüel-Gabrielsson et al.</strong> — §4.1.</p>
+<p><strong>carriere-2019-perslay</strong> (<code>1904.09378</code>, stat.ML) — [V] — Owns learnable vectorisations of
+persistence diagrams (PersLay) and extended-persistence graph signatures. — Same. — seed id;
+<strong>the record attributes this id to Moor et al.; it is PersLay.</strong> — §4.1.</p>
+<p><strong>corcoran-2020-ph-gradient-regularization</strong> (<code>2011.05804</code>, cs.LG) — [V] — Owns a grouping
+regulariser that makes persistence gradients act on aggregates rather than single points. —
+Same. — seed id; <strong>the record attributes this id to Carrière et al. 2021; it is Corcoran &amp;
+Deng.</strong> — §4.1.</p>
+<p><strong>carriere-2021-optimizing-ph</strong> (<code>2010.08356</code>, cs.CG) — [V] — Owns the differentiability
+conditions and subgradient convergence for persistence-based objectives. This is the paper the
+record <em>meant</em> by "Carriere et al. 2021". — Same openings. — fetched directly.</p>
+<p><strong>hofer-2019-connectivity-optimized</strong> (<code>1906.09003</code>, cs.LG) — [V] — Owns a persistence loss
+that shapes latent-space connectivity (β₀ structure) for one-class learning. This is the
+paper the record <em>meant</em> by "Hofer et al. 2019". — Same. — fetched directly.</p>
+<p><strong>moor-2020-topological-autoencoders</strong> (<code>1906.00722</code>, cs.LG, ICML 2020) — [V] — Owns the
+topological autoencoder loss (preserve the input's persistence in the latent space). This is
+the paper the record <em>meant</em> by "Moor et al. 2020". — Same. — fetched directly.</p>
+<p><strong>zeng-2021-topological-attention</strong> (<code>2107.09031</code>, cs.LG) — [V] — Owns attention <em>over</em>
+local persistence features of a time series. — Persistence is the input to attention, not a
+reading of attention's influence; no certificate. — query 2.</p>
+<p><strong>faghihi-2026-topology-aware-attention</strong> (<code>2605.03163</code>, cs.LG) — [V] — Owns persistence
+(H0–H2) and anchored Euler-characteristic biases <em>added to attention logits</em> (exact PH under
+a 28-point cap, smooth surrogates otherwise, per the search snippet [U]). — The nearest
+"topology inside the logits" paper; it biases a softmax, does not certify a mask and has no
+resolvent or boundary. — query 2, 4.</p>
+<h3 id="d-sparse-masked-attention-from-graph-or-cluster-structure">D. Sparse / masked attention from graph or cluster structure<a class="headerlink" href="#d-sparse-masked-attention-from-graph-or-cluster-structure" title="Permanent link">#</a></h3>
+<p><strong>reid-2024-topological-masking</strong> (<code>2410.03462</code>, cs.LG) — [V] — Owns learnable <em>topological
+masks</em> (functions of a weighted adjacency) approximated by graph random features in linear
+time, with concentration bounds. — "Topological" here means graph-derived relative position
+weighting; the mask is a bias, not an exact block certificate; no persistence. — query 3.</p>
+<p><strong>cho-2022-sbm-attention</strong> (<code>2210.15541</code>, cs.LG) — [V] — Owns per-head <em>sampled</em> attention
+masks from a mixed-membership stochastic block model over node and cluster embeddings. —
+<strong>Nearest existing thing to a Mapper cover as candidate builder</strong>: overlapping cluster
+membership decides who attends to whom, per input. What is open: the cover is sampled, not
+built from a lens with a Reeb-graph guarantee; no CSR schedule with a certificate; no
+resolvent. — query 3.</p>
+<p><strong>roy-2021-routing-transformer</strong> (<code>2003.05997</code>, cs.LG, TACL) — [V] — Owns online k-means
+routing of queries to key clusters. — Non-overlapping clusters; no cover; no certificate. —
+fetched directly.</p>
+<p><strong>kitaev-2020-reformer</strong> (<code>2001.04451</code>, cs.LG, ICLR 2020) — [V] — Owns LSH bucketing as the
+candidate builder. — Same. — fetched directly.</p>
+<p><strong>yuan-2025-nsa</strong> (<code>2502.11089</code>, cs.CL) — [V] — Owns the three-branch hierarchy
+compression / selection / sliding window, hardware-aligned and trainable. — The nearest
+owner of "fine-near / coarse-far" as a trained sparse attention; the record's
+<code>ceq/multizoom.py:1-40</code> carries a coarsening <em>bound</em> rather than a learned selector, which is
+the narrow delta and is not topological. — fetched directly.</p>
+<p><strong>yang-2026-boundary-repair</strong> (<code>2606.02680</code>, cs.LG) — [V] — Owns Theorem 1 (fixed-block
+reachability barrier): under a fixed block-causal mask with only positionwise non-attention
+ops, a token's reachable set stays inside its block's causal prefix at every depth; and
+"Boundary Bridge Attention" as the repair. — <strong>This is the converse of (a)</strong>: it proves that a
+block mask confines reach; the shape's certificate says a <em>zero gate</em> makes the resolvent
+<em>exactly</em> block-diagonal. Neither implies the other; the paper is cited before the phrase
+"block structure ⇒ no cross-block influence" is used. — query 14.</p>
+<h3 id="e-gates-segmentation-block-structure">E. Gates, segmentation, block structure<a class="headerlink" href="#e-gates-segmentation-block-structure" title="Permanent link">#</a></h3>
+<p><strong>lin-2025-forgetting-transformer</strong> (<code>2503.02130</code>, cs.LG, ICLR 2025) — [V], HTML full text
+also fetched — Owns the forget gate in softmax attention: <code>f_t = σ(w_fᵀx_t + b_f)</code>,
+<code>F_ij = Π_{l=j+1}^{i} f_l</code>, computed as <code>D_ij = c_i − c_j</code> with <code>c</code> the cumulative sum of
+<code>log f</code>, added to the logits (the paper's own equations, ≤ 15 words quoted in the bib note).
+— <strong>This is exactly the exponential-prefix-scan form that <code>no_prefix_scan_represents_a_zero_gate</code>
+(<code>V16Domain.lean:165</code>) proves cannot carry a zero gate.</strong> The paper's convention <code>log 0 = −∞</code>
+is a limit, and the fetched text does not discuss an exact-zero gate or a block boundary. So
+FoX owns the <em>mechanism</em> (a data-dependent cumulative decay on softmax logits); the record
+owns the theorem that the mechanism's computational form has no exact zero. Narrow delta,
+stated in those words. — query 7.</p>
+<p><strong>yang-2023-gla</strong> (<code>2312.06635</code>, cs.LG) — [V] — Owns gated linear attention with a
+data-dependent gate on the 2-D state and a chunkwise-parallel training form. — A gate of <code>0</code>
+resets the state, which <em>is</em> a segmentation in practice; no theorem, no certificate, and the
+linear-attention corner is <code>β = 0</code> of the record's family (<code>V16Domain.gate_zero_beta_zero_is_linear_attention</code>,
+brief §2). — query 7.</p>
+<p><strong>hwang-2025-hnet</strong> (<code>2507.07955</code>, cs.LG) — [V] — Owns learned, content-dependent chunk
+boundaries trained end to end (H-Net). — The abs page makes no exactness or certificate
+claim for the segmentation; open. — fetched directly.</p>
+<p><strong>bathula-2026-gating-curvature</strong> (<code>2604.14702</code>, cs.LG) — [V] — Owns the claim that
+multiplicative gating lets attention realise non-flat decision boundaries that ungated
+attention cannot. — Relevant only to the <em>phrase</em> "decision boundary inside attention"; not
+a committor, not a level set of a harmonic function. — query 14.</p>
+<p><strong>aguilar-2026-enclosed-mode</strong> (<code>2608.28541</code>, cs.LG) — [V] — Owns "topology relative to
+reach": a certified world model can be correct on the reachable region and wrong elsewhere;
+a persistent-homology summary (<code>β₁</code>) and a "gate quotient" reachability framework;
+planners exploit hidden channels. — <strong>The closest existing combination of reachability
+certificate + persistence + a decision-maker.</strong> Not attention, not a resolvent, not an
+absorbing chain. Watch it; cite it in §7 of the paper when "certified reach" is said. —
+query 14.</p>
+<p><strong>makkuva-2024-attention-with-markov</strong> (<code>2402.04161</code>, cs.LG, ICLR 2025) — [V] — Owns the
+analysis of transformers trained on first-order Markov chains (single-layer traps at unigram;
+induction heads at depth ≥ 2). — Markov chains as <em>data</em>; nothing about a chain inside the
+operator, committors or absorption. Cited as the nearest "Markov chain and attention" owner
+so that (c) can be stated as NOT FOUND against it. — query 13.</p>
+<h3 id="f-mapper-reeb-graphs-persistence-stability-directed-persistence-foundations">F. Mapper, Reeb graphs, persistence stability, directed persistence, foundations<a class="headerlink" href="#f-mapper-reeb-graphs-persistence-stability-directed-persistence-foundations" title="Permanent link">#</a></h3>
+<p><strong>singh-2007-mapper</strong> (DOI <code>10.2312/SPBG/SPBG07/091-100</code>, SPBG 2007) — <strong>[U]</strong>: DOI landing
+403, Crossref 404 on this DOI form; dblp <code>conf/spbg/SinghMC07</code> and Semantic Scholar
+CorpusId 5703368 both fetched and agree on title, authors, year, DOI. — Owns Mapper: a lens,
+an overlapping cover of its range, partial clustering per cover element, the nerve graph. —
+The shape's (d) uses exactly this object; the delta can only be <em>where the cover goes</em> (into a
+CSR schedule feeding a resolvent read) and <em>what the lens is</em> (a committor or influence
+score). — seed; query 17.</p>
+<p><strong>carriere-2018-mapper-statistics</strong> (<code>1706.00204</code>, cs.CG, JMLR 19) — [V] — Owns Mapper as an
+optimal estimator of the Reeb graph, with parameter selection and confidence regions. — This
+is the paper that lets (d) fix its cover parameters <em>before</em> seeing a bed (against M-2). —
+query 6.</p>
+<p><strong>cohen-steiner-2007-stability</strong> (DOI <code>10.1007/s00454-006-1276-5</code>, DCG 37(1) 103–120) — [V]
+via Crossref — Owns bottleneck stability of persistence diagrams under sup-norm perturbation
+of the filtering function. — The δ in any "barcode with a printed δ" (L-CERT) is this
+theorem's constant; the influence graph is <em>directed</em>, which this theorem does not cover
+(see Turner, Chowdhury–Mémoli). — seed.</p>
+<p><strong>chazal-2012-structure-stability</strong> (<code>1207.3674</code>, math.AT) — [V] — Owns the
+interleaving-distance form of stability for persistence modules over ℝ under weak finiteness.
+— The form used by <code>ceq/certs/topological.py:476</code> (<code>2ε</code>-interleaving). — seed.</p>
+<p><strong>turner-2019-quasimetric-rips</strong> (<code>1608.00365</code>, math.AT, AGT 19) — [V] — Owns Rips-type
+filtrations for <em>asymmetric</em> functions and quasi-metrics with bottleneck stability. — The
+influence graph <code>∂z_i/∂x_j</code> is asymmetric; this is the stability result (b) would have to
+invoke, not Cohen-Steiner's. — fetched directly.</p>
+<p><strong>chowdhury-2016-dowker</strong> (<code>1608.05432</code>, math.AT) — [V] — Owns Dowker persistence for
+asymmetric networks with a functorial Dowker theorem. — Same role. — fetched directly.</p>
+<p><strong>chowdhury-2017-path-homology</strong> (<code>1701.00565</code>, math.AT) — [V] — Owns persistent <em>path</em>
+homology of digraphs (direction-sensitive). — Same role; <code>β₀</code> of a digraph under path
+homology is weak connectivity, which matters for how (b) is defined. — fetched directly.</p>
+<p><strong>reimann-2017-directed-flag</strong> (DOI <code>10.3389/fncom.2017.00048</code>) — [V] via Crossref — Owns
+the directed flag complex of a directed network and its Betti numbers as a structure-function
+link. — Same role; no learning. — fetched directly.</p>
+<p><strong>carlsson-2009-topology-and-data</strong> (DOI <code>10.1090/S0273-0979-09-01249-X</code>, BAMS 46(2)) — [V]
+via Crossref — Owns the survey framing of persistence and Mapper. — Foundational citation. —
+fetched directly.</p>
+<p><strong>edelsbrunner-2009-computational-topology</strong> (DOI <code>10.1090/mbk/069</code>) — [V] via Crossref —
+Owns the textbook Euler–Poincaré and Morse-inequality material the record's <code>morse_census</code>
+reports. — Foundational. — fetched directly.</p>
+<p><strong>milnor-1963-morse-theory</strong> (DOI <code>10.1515/9781400881802</code>) — [V] via Crossref — Owns Morse
+theory. — Foundational. — fetched directly.</p>
+<p><strong>perea-2015-sliding-windows</strong> (<code>1307.6188</code>; DOI <code>10.1007/s10208-014-9206-z</code>, FoCM 15(3)
+799–838) — [V] both — Owns persistence of sliding-window (delay) embeddings as a periodicity
+score with convergence guarantees. — The <code>stratum</code> regime check in <code>THEORY.md:141-150</code> is
+this object; the shape's next-transient-state prediction can <em>use</em> it as a regime detector
+but it is not an attention operator. — seed.</p>
+<p><strong>levin-2017-markov-mixing</strong> (DOI <code>10.1090/mbk/107</code>) — [V] via Crossref; <strong>Theorem 13.10 read
+on p. 183 of the authors' PDF</strong> (RUN: <code>pypdf</code> text extraction, page index 198): for a
+reversible <code>P</code> with spectral gap <code>γ = 1 − λ₂</code> and bottleneck ratio <code>Φ⋆</code>,
+<code>Φ⋆²/2 ≤ γ ≤ 2Φ⋆</code>, attributed to Sinclair–Jerrum (1989) and Lawler–Sokal (1988). — Owns the
+Cheeger inequality in the form the record cites. — <strong>Hypothesis: reversible.</strong> The shape's <code>P</code>
+is causal (strictly lower-triangular off the diagonal blocks, <code>I5</code> in the brief), hence not
+reversible unless made so; §4.5. — seed; query 9.</p>
+<p><strong>kim-2026-topological-causal-effects</strong> (<code>2603.02289</code>, stat.ME, ICLR 2026) — [V] — Owns the
+<em>causal estimand</em> "difference between potential outcomes measured through persistence
+summaries" (power-weighted silhouettes). — <strong>This owns "an intervention changes the
+barcode" as a statistical object.</strong> The shape's <code>Δz = z(do a) − z</code> read through a β₀ barcode
+would be an instance and must cite it. Open: the intervention here is on exogenous
+treatment, not on a token in a context; no operator. — <code>results/r9_maths_survey.md:314,503</code>;
+fetched here.</p>
+<h3 id="g-committors-isocommittor-surfaces-transition-path-theory">G. Committors, isocommittor surfaces, transition-path theory<a class="headerlink" href="#g-committors-isocommittor-surfaces-transition-path-theory" title="Permanent link">#</a></h3>
+<p><strong>e-2010-transition-path-theory</strong> (DOI <code>10.1146/annurev.physchem.040808.090412</code>) — [V] via
+Crossref — Owns transition-path theory: the committor as the backward-Kolmogorov boundary
+value problem, isocommittor surfaces, reactive flux. — The shape's <code>q^{(k)} = (I − Q)⁻¹R_k 1</code>
+is the discrete instance (<code>ceq/beds/bed_1.py:188</code>, brief I3); TPT owns the object, the
+record owns the finite-chain reading as a resolvent with absorbing rows. — seed area.</p>
+<p><strong>vanden-eijnden-2009-string-method</strong> (DOI <code>10.1063/1.3130083</code>, JCP 130, 194103) — [V] via
+Crossref — Owns isocommittor surfaces as the objects a string method sweeps (reaction tubes).
+— Same. — fetched directly.</p>
+<p><strong>khoo-2018-committor-nn</strong> (<code>1802.10275</code>) — [V] — Owns the variational neural committor. —
+Regresses <code>q</code> from molecular configurations; the record's <code>PRIOR_ART.md:637</code> NOT FOUND for
+the fundamental-matrix label stands. — query 5; already [V] in the record.</p>
+<p><strong>li-2021-semigroup-committor</strong> (<code>2012.06727</code>, math.NA, MSML 2021) — [V] — Owns the
+semigroup (integral) formulation with boundary conditions built in. — Same. — query 5.</p>
+<p><strong>chen-2025-committor-flow</strong> (<code>2507.21961</code>, physics.comp-ph) — [V] — Owns strings lying on
+isocommittor surfaces, iterated with a learned committor. — Same; no attention. — query 5.</p>
+<h3 id="h-the-authors-own-merged-upstream-work">H. The author's own merged upstream work<a class="headerlink" href="#h-the-authors-own-merged-upstream-work" title="Permanent link">#</a></h3>
+<p><strong>sharma-2026-mujoco-3396</strong> — [V] PR page — merged 2026-07-20; touches <code>engine_island.c/.h</code>
+and disjoint-set-forest helpers; the PR description references the S²–Vietoris–Rips
+corpus. <code>ceq/rips.py:3-9</code> (READ) records that the Rips generator file was added and removed
+inside the PR and is not in the merge commit. — What merged is a linear-memory island
+discovery, not the corpus; the corpus lives in this repository. — fetched directly.</p>
+<p><strong>sharma-2026-kernels-22</strong> — [V] PR page and files tab — merged 2026-07-28; files
+<code>kernels/topology_sparse_attention.py</code>, <code>test/test_topology_sparse_attention.py</code>,
+<code>benchmarking/topology_sparse_attention.py</code> (+146), <code>benchmarking/benchmark_utils.py</code>
+(+8/−1), <code>kernels/__init__.py</code> (+10); a forward-only Triton kernel consuming a causal CSR
+block schedule built from sink blocks, local-window blocks and a persistence-style salience
+over key-block centroids; the PR page states up to 3.48× against dense CSR on its measured
+sequences (the PR's number, not re-measured here). — <strong>The author already occupies
+"persistence-derived block schedule consumed by an attention kernel."</strong> The delta for (d) is
+therefore not the schedule but the <em>cover</em> (Mapper/Reeb, overlapping) and the <em>consumer</em> (a
+resolvent read with a Neumann certificate, brief I4), and <code>THEORY.md:223</code> already records that
+the kernel is forward-only. — fetched directly.</p>
+<hr />
+<h2 id="3-verdicts-on-the-four-components">3. Verdicts on the four components<a class="headerlink" href="#3-verdicts-on-the-four-components" title="Permanent link">#</a></h2>
+<h3 id="a-zero-gate-segmentation-as-an-exact-block-certificate">(a) Zero-gate segmentation as an exact block certificate<a class="headerlink" href="#a-zero-gate-segmentation-as-an-exact-block-certificate" title="Permanent link">#</a></h3>
+<ul>
+<li>OCCUPIED — the <em>mechanism</em> (a data-dependent multiplicative gate on the path from <code>j</code> to
+  <code>i</code>, a small gate cutting the sequence): <strong>lin-2025-forgetting-transformer</strong> for softmax,
+  <strong>yang-2023-gla</strong> for linear attention, <strong>hwang-2025-hnet</strong> for learned chunk boundaries.</li>
+<li>OCCUPIED — the <em>converse</em> statement (a block mask confines reach at every depth):
+  <strong>yang-2026-boundary-repair</strong> Theorem 1.</li>
+<li>OWNED BY THE RECORD, NOT FOUND OUTSIDE IT — the <em>iff</em> certificate: <code>pathProd = 0 ⇔ ∃ k:
+  m_k = 0</code> (<code>V16Domain.lean:129</code>) and the impossibility of carrying it in any exponential
+  prefix scan (<code>:165</code>). FoX's own computation is <code>D_ij = c_i − c_j</code> with <code>c = cumsum log f</code>,
+  which is precisely the form the theorem excludes at <code>f = 0</code> (FoX writes <code>log 0 = −∞</code> as a
+  convention and does not treat the exact zero).</li>
+<li>DERIVED, elementary and not anyone's to own: if <code>P</code> is block-diagonal (after the gate zeroes
+  every cross-block entry) then every power <code>P^k</code> is block-diagonal and so is
+  <code>Σ_k (γP)^k = (I − γP)⁻¹</code>; hence the read <code>P(I − γP)⁻¹V</code> is exactly block-diagonal. The
+  paper states this as a one-line proposition and does not call it new.</li>
+<li>Delta, narrowly: "a machine-checked iff certificate that a zero gate yields an exactly
+  block-diagonal resolvent, and a proof that the cumulative-log-gate implementation family
+  (FoX, GLA chunk forms) cannot represent that zero."</li>
+</ul>
+<h3 id="b-0-persistence-of-the-influence-graph-across-a-threshold-as-a-causal-structure-barcode">(b) β₀ persistence of the influence graph across a threshold as a causal-structure barcode<a class="headerlink" href="#b-0-persistence-of-the-influence-graph-across-a-threshold-as-a-causal-structure-barcode" title="Permanent link">#</a></h3>
+<ul>
+<li>OCCUPIED — barcodes / Betti numbers of <em>attention-weight</em>-thresholded graphs as descriptive
+  features: <strong>kushnareva-2021-tda-attention</strong>, <strong>cherniavskii-2022-acceptability</strong>,
+  <strong>kushnareva-2022-betti</strong>, <strong>perez-2022-topological-bert</strong>; across layers by zigzag:
+  <strong>samaga-2026-halluzig</strong>; as a two-subgraph divergence: <strong>bazarova-2025-toha</strong>.</li>
+<li>OCCUPIED — "an intervention changes the persistence summary" as a causal estimand:
+  <strong>kim-2026-topological-causal-effects</strong>.</li>
+<li>OCCUPIED — persistence of <em>directed</em> networks and its stability: <strong>turner-2019</strong>,
+  <strong>chowdhury-2016-dowker</strong>, <strong>chowdhury-2017-path-homology</strong>, <strong>reimann-2017</strong>.</li>
+<li>OCCUPIED — training through a persistence layer: the corrected M10 lineage
+  (<strong>gabrielsson-2019</strong>, <strong>carriere-2019-perslay</strong>, <strong>carriere-2021-optimizing-ph</strong>,
+  <strong>hofer-2019</strong>, <strong>moor-2020</strong>, <strong>corcoran-2020</strong>).</li>
+<li>NEAR-MISS — persistence <em>inside the logits</em> as a bias: <strong>faghihi-2026</strong>.</li>
+<li>NOT FOUND — a filtration by the <em>influence Jacobian of a resolvent read</em> (signed or
+  absorbing), read as a certificate with a printed δ from a directed stability theorem, whose
+  ε = 0 endpoint is the exact segmentation of (a). Queries 4, 8, 16.</li>
+<li>Delta, narrowly: the filtering function. Everything else in the sentence has an owner.</li>
+</ul>
+<h3 id="c-isocommittor-surfaces-as-decision-boundaries-inside-an-attention-model">(c) Isocommittor surfaces as decision boundaries inside an attention model<a class="headerlink" href="#c-isocommittor-surfaces-as-decision-boundaries-inside-an-attention-model" title="Permanent link">#</a></h3>
+<ul>
+<li>OCCUPIED — isocommittor surfaces and the committor as a boundary-value problem:
+  <strong>e-2010</strong>, <strong>vanden-eijnden-2009</strong>; neural committors: <strong>khoo-2018</strong>, <strong>li-2021</strong>,
+  <strong>chen-2025</strong> (strings on isocommittor surfaces).</li>
+<li>OWNED BY THE RECORD — the <code>q = 1/2</code> guard as the action vocabulary of a bed
+  (<code>ceq/beds/bed_1.py:5-8, :382</code>), the committor as a resolvent read with absorbing rows
+  (brief I3; <code>MATHEMATICS.md</code> §7, §11).</li>
+<li>NEAR-MISS in phrase only — <strong>bathula-2026-gating-curvature</strong> ("decision boundaries" that
+  gating enables in attention).</li>
+<li>NOT FOUND — a committor computed <em>by</em> the attention operator (an absorbing set inside the
+  context, <code>q = (I − Q)⁻¹R1</code> as the read) and its <code>q = 1/2</code> level set used as the decision
+  boundary of the model. Queries 5, 13; the record's own <code>PRIOR_ART.md:637</code> agrees.</li>
+<li>Delta, narrowly: the absorbing rows are positions of the context; the committor is the read.</li>
+</ul>
+<h3 id="d-a-mapper-cover-as-the-long-context-candidate-builder-for-a-resolvent-read">(d) A Mapper cover as the long-context candidate builder for a resolvent read<a class="headerlink" href="#d-a-mapper-cover-as-the-long-context-candidate-builder-for-a-resolvent-read" title="Permanent link">#</a></h3>
+<ul>
+<li>OCCUPIED — Mapper: <strong>singh-2007-mapper</strong> [U-landing/V-records]; Mapper as a Reeb-graph
+  estimator with pre-fixable parameters: <strong>carriere-2018-mapper-statistics</strong>.</li>
+<li>OCCUPIED — cluster covers as who-attends-to-whom: <strong>cho-2022-sbm-attention</strong> (overlapping,
+  sampled), <strong>roy-2021-routing-transformer</strong> (k-means), <strong>kitaev-2020-reformer</strong> (LSH);
+  hierarchical compress/select/window: <strong>yuan-2025-nsa</strong>; graph-derived masks:
+  <strong>reid-2024-topological-masking</strong>.</li>
+<li>OCCUPIED BY THE AUTHOR — persistence-derived CSR block schedule consumed by a Triton
+  kernel: <strong>sharma-2026-kernels-22</strong> (merged); the do-nothing schedule as the standing
+  control (<code>THEORY.md:162-165</code>).</li>
+<li>NOT FOUND — a Mapper (lens + overlapping cover + nerve) used to build the candidate set of
+  a <em>resolvent</em> read, with the candidate set carrying a truncation certificate (brief I4) and
+  the cover parameters fixed by the Reeb-estimator rule. Queries 6, 15.</li>
+<li>Delta, narrowly: the cover's construction (nerve of a lens cover, not a sample or a
+  hash) and its consumer (a certified resolvent, not a softmax).</li>
+</ul>
+<hr />
+<h2 id="4-surprises-flagged-loudly">4. Surprises (flagged loudly)<a class="headerlink" href="#4-surprises-flagged-loudly" title="Permanent link">#</a></h2>
+<h3 id="41-the-records-m10-citations-are-all-three-misattributed-p-class-defect">4.1 The record's M10 citations are all three misattributed (P-class defect)<a class="headerlink" href="#41-the-records-m10-citations-are-all-three-misattributed-p-class-defect" title="Permanent link">#</a></h3>
+<p><code>CEQ_V20_R15_CONTRACT.md:223-224</code> reads "(1905.12200, 1904.09378, 2011.05804 — occupied)"
+under the names Hofer 2019, Moor 2020 and Carrière 2021 (as relayed in this planet's brief).
+Fetched this session:</p>
+<table>
+<thead>
+<tr>
+<th>id in the record</th>
+<th>resolves to [V]</th>
+<th>the record meant</th>
+<th>correct id [V]</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>1905.12200</code></td>
+<td>Brüel-Gabrielsson, Nelson, Dwaraknath, Skraba, Guibas, Carlsson — <em>A Topology Layer for Machine Learning</em></td>
+<td>Hofer et al. 2019</td>
+<td><code>1906.09003</code></td>
+</tr>
+<tr>
+<td><code>1904.09378</code></td>
+<td>Carrière, Chazal, Ike, Lacombe, Royer, Umeda — <em>PersLay</em></td>
+<td>Moor et al. 2020</td>
+<td><code>1906.00722</code></td>
+</tr>
+<tr>
+<td><code>2011.05804</code></td>
+<td>Corcoran, Deng — <em>Regularization of Persistent Homology Gradient Computation</em></td>
+<td>Carrière et al. 2021</td>
+<td><code>2010.08356</code></td>
+</tr>
+</tbody>
+</table>
+<p>The lineage verdict "occupied" survives (all six papers are differentiable-persistence
+papers), but the paper must cite the six correct pairs. Mechanism this is filed against:
+<code>MISTAKES.md</code> P-5 (doc rot pointing at nothing) and P-10 (a source cited without its
+content read); the brief's rule 3 ("a fabricated citation is the one defect that ends the
+paper") makes this the first correction the assembler applies.</p>
+<h3 id="42-a-title-already-claims-betti-numbers-of-attention-graphs-are-all-you-need">4.2 A title already claims Betti numbers of attention graphs are "all you need"<a class="headerlink" href="#42-a-title-already-claims-betti-numbers-of-attention-graphs-are-all-you-need" title="Permanent link">#</a></h3>
+<p><strong>kushnareva-2022-betti</strong> (<code>2207.01903</code>). It is a preprint the abs page marks as not
+accepted, but it is prior art for the <em>descriptive</em> β₀/β₁ reading and must be cited before
+(b) is stated.</p>
+<h3 id="43-intervention-barcode-change-already-has-a-causal-inference-owner">4.3 "Intervention ⇒ barcode change" already has a causal-inference owner<a class="headerlink" href="#43-intervention-barcode-change-already-has-a-causal-inference-owner" title="Permanent link">#</a></h3>
+<p><strong>kim-2026-topological-causal-effects</strong> (ICLR 2026). The shape's consequence channel, if it
+is ever <em>read through persistence</em>, is an instance of this estimand and says so.</p>
+<h3 id="44-attention-as-a-connection-walk-sheaf-view-of-the-same-p">4.4 Attention as a connection walk (sheaf view of the <em>same</em> <code>P</code>)<a class="headerlink" href="#44-attention-as-a-connection-walk-sheaf-view-of-the-same-p" title="Permanent link">#</a></h3>
+<p><strong>lin-2026-connection-laplacian-attention</strong> identifies single-head attention with a
+connection walk and multi-head attention with mixed transports, and states the
+stochastic/reversible conditions under which the generator is a random-walk connection
+Laplacian. It contains no resolvent, boundary or barcode (abs page). It occupies the
+<em>operator identification</em>, which the paper must acknowledge if <code>P</code> is described in sheaf
+or connection language (<code>THEORY.md:24, :188</code> do so).</p>
+<h3 id="45-the-cheeger-inequality-the-record-cites-needs-reversibility">4.5 The Cheeger inequality the record cites needs reversibility<a class="headerlink" href="#45-the-cheeger-inequality-the-record-cites-needs-reversibility" title="Permanent link">#</a></h3>
+<p>Levin–Peres Theorem 13.10 (read on p. 183, 2nd ed.) is stated for a <em>reversible</em> <code>P</code>. The
+shape's <code>P</code> is causal and, by brief I5, a triangular operator; it is not reversible.
+<code>MATHEMATICS.md:455</code> ("<code>g ≤ 2φ</code>") must either (i) restrict to a symmetrised or lazy
+reversible surrogate and say so, or (ii) cite a non-reversible bottleneck bound instead.
+Mechanism: <code>MISTAKES.md</code> V-25 (a theorem whose hypothesis no draw satisfies) and P-10.</p>
+<h3 id="46-a-near-miss-to-watch-not-an-occupant">4.6 A near-miss to watch, not an occupant<a class="headerlink" href="#46-a-near-miss-to-watch-not-an-occupant" title="Permanent link">#</a></h3>
+<p><strong>aguilar-2026-enclosed-mode</strong> combines a reachability certificate, a <code>β₁</code> persistence
+summary and a planner exploiting hidden channels. It is the only fetched paper that puts
+"certified reach" and persistence in one frame with a decision-maker. It is not attention
+and not a resolvent; it does not occupy the delta. It is cited in §7 so that "certified
+reach" is not presented as unowned.</p>
+<p><strong>No paper fetched or indexed occupies the whole delta</strong> (resolvent read + absorbing
+constraint rows + influence-filtered β₀ barcode with δ + Mapper cover as certified
+candidate builder, in one attention operator).</p>
+<hr />
+<h2 id="5-not-found-with-the-queries-that-failed-to-find-them">5. NOT FOUND (with the queries that failed to find them)<a class="headerlink" href="#5-not-found-with-the-queries-that-failed-to-find-them" title="Permanent link">#</a></h2>
+<table>
+<thead>
+<tr>
+<th>component</th>
+<th>queries</th>
+<th>nearest thing found</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Exact iff certificate that a zero gate gives an exactly block-diagonal resolvent / attention read, outside the record's Lean</td>
+<td>7, 14</td>
+<td>FoX (<code>2503.02130</code>) mechanism; boundary-repair Theorem 1 (<code>2606.02680</code>) converse</td>
+</tr>
+<tr>
+<td>A persistence filtration by the influence Jacobian of an attention or resolvent read, with a stability δ from a directed-network theorem</td>
+<td>4, 8, 16</td>
+<td>attention-weight filtrations (<code>2109.04825</code> lineage); zigzag over layers (<code>2601.01552</code>)</td>
+</tr>
+<tr>
+<td>A committor / isocommittor level set computed by the attention operator itself with absorbing positions in the context</td>
+<td>5, 13</td>
+<td>neural committors on molecular configurations (<code>1802.10275</code>, <code>2012.06727</code>, <code>2507.21961</code>); Markov chains as data (<code>2402.04161</code>)</td>
+</tr>
+<tr>
+<td>Mapper / Reeb-graph cover as the candidate builder for any attention read</td>
+<td>6, 15</td>
+<td>SBM-sampled overlapping masks (<code>2210.15541</code>); k-means / LSH clusters (<code>2003.05997</code>, <code>2001.04451</code>)</td>
+</tr>
+<tr>
+<td>Mapper cover → CSR block schedule → resolvent read with a Neumann truncation certificate</td>
+<td>6, 15, 2</td>
+<td>the author's own <code>kernels#22</code> (0D-salience schedule → softmax kernel, forward-only)</td>
+</tr>
+<tr>
+<td>"Sheaf Attention Networks" on arXiv or in dblp</td>
+<td>11, 17</td>
+<td>resolved on OpenReview (<code>LIDvgVjpkZr</code>) instead</td>
+</tr>
+</tbody>
+</table>
+<p>Each row is an absence in the indexed literature as of 2026-09-03 under the listed queries,
+paid for by the planted positives in §1.1. None is written as "novel".</p>
+<hr />
+<h2 id="6-design-against-the-taxonomy-for-the-proposals-this-lineage-feeds">6. Design against the taxonomy (for the proposals this lineage feeds)<a class="headerlink" href="#6-design-against-the-taxonomy-for-the-proposals-this-lineage-feeds" title="Permanent link">#</a></h2>
+<p>Each proposal the paper makes from this lineage names the <code>MISTAKES.md</code> mechanism it is
+designed against (brief §5.6). Line numbers are the headings in <code>MISTAKES.md</code>.</p>
+<ol>
+<li><strong>Correct the M10 ids before any citation is typeset</strong> — against P-5 (<code>:343</code>) and P-10
+   (<code>:1382</code>); the bib in this directory carries both the resolved and the intended ids.</li>
+<li><strong>(a) The block certificate bind</strong> — plant a gate at <code>1e-300</code> (nonzero) and require that
+   the read is <em>not</em> block-diagonal (rejection region non-empty, V-24 <code>:1658</code>); run a domain
+   census showing at least one draw with <code>m_k = 0</code> exactly (V-25 <code>:1954</code>); assert against a
+   dense <code>(I − γP)⁻¹</code> solve with <code>torch.equal</code> on the zeroed blocks, not a tolerance
+   (V-3 <code>:72</code>: the identity is the theorem's, not the test author's).</li>
+<li><strong>(b) The influence barcode</strong> — the threshold grid and the δ are fixed from Turner's
+   stability constant and the sampling scale <em>before</em> the barcode is read (M-2 <code>:451</code>,
+   following <code>ceq/certs/topological.py:47-56</code>); a null barcode from row-permuted influence
+   at the same logit scale is reported beside every measured one (M-15 <code>:1289</code>); a barcode
+   the instrument cannot compute (non-integer β₀, aliasing) is a refusal, not a pass
+   (V-16 <code>:828</code>); the descriptive owners in §2.A are cited <em>before</em> the filtration is named
+   (brief rule 7).</li>
+<li><strong>(c) The committor read</strong> — the oracle committor runs on the latent environment chain and
+   the arm never sees <code>Q</code> or <code>R</code> (D-2 <code>:710</code>); the label is a vector over candidate moves, not
+   a scalar at one position (D-1 <code>:677</code>); a single absorbing set makes the label constant
+   (V-12 <code>:189</code>), so <code>K ≥ 2</code> constraint sets are required by construction.</li>
+<li><strong>(d) The Mapper cover</strong> — cover parameters fixed by the Reeb-estimator rule
+   (<code>carriere-2018</code>) on a held-out relation, never on the bed (M-2); the do-nothing schedule
+   (the merged 0D-salience builder) always entered (<code>THEORY.md:162-165</code>; V-9 <code>:154</code>: a repair
+   that changes nothing must be a first-class outcome); every candidate set carries the
+   Neumann δ of brief I4 (L-CERT) and the coarsening bound of <code>ceq/multizoom.py</code>.</li>
+<li><strong>The Cheeger sentence</strong> — restate with the reversibility hypothesis or replace
+   (V-25, P-10); no <code>g ≤ 2φ</code> on a causal <code>P</code> without a stated symmetrisation.</li>
+<li><strong>This sweep itself</strong> — the NOT FOUND rows are paid for with planted positives
+   (V-7 <code>:117</code>); every [V] carries the date and the page type fetched; every remembered venue
+   is marked [U] in the bib note rather than silently printed (P-1 <code>:289</code>).</li>
+</ol>
+<hr />
+<h2 id="7-limits">7. Limits<a class="headerlink" href="#7-limits" title="Permanent link">#</a></h2>
+<p>The sweep reads abs pages, DOI metadata records and one full text (FoX); it does not read
+the body of the other 57 sources, so every "leaves open" clause is a statement about what the
+<em>abstract</em> claims and the paper may contain more. Venues remembered rather than fetched are
+marked [U] inside the bib notes and are not load-bearing. The Mapper 2007 entry is [U] on the
+landing page only; its DOI, title and authors are confirmed by two independent bibliographic
+records. The search index is one engine on one day (2026-09-03); the queries are recorded so
+the absence claims can be re-run. The <code>kernels#22</code> speed figure (3.48×) is the PR page's own
+number and was not re-measured. No code was written or run beyond a read-only <code>pypdf</code> text
+extraction of the Levin–Peres PDF and the repository <code>grep</code>/<code>sed</code> reads listed in §1.3.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Invented by <a href="https://teerthsharma.vercel.app/">Teerth Sharma</a> · Apache License 2.0
+    </div>
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/teerthsharma/resolvent" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://teerthsharma.vercel.app/" target="_blank" rel="noopener" title="teerthsharma.vercel.app" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M351.9 280H161c2.9 64.5 17.2 123.9 37.5 167.4 11.4 24.5 23.7 41.8 35.1 52.4 11.2 10.5 18.9 12.2 22.9 12.2s11.7-1.7 22.9-12.2c11.4-10.6 23.7-28 35.1-52.4 20.3-43.5 34.6-102.9 37.5-167.4zm-191-48h190.9c-2.8-64.5-17.1-123.9-37.4-167.4-11.4-24.4-23.7-41.8-35.1-52.4C268.1 1.7 260.4 0 256.4 0s-11.7 1.7-22.9 12.2c-11.4 10.6-23.7 28-35.1 52.4-20.3 43.5-34.6 102.9-37.5 167.4m-48 0c3.5-85.6 25.6-165.1 57.9-217.3C78.7 47.3 10.9 131.2 1.5 232zM1.5 280c9.4 100.8 77.2 184.7 169.3 217.3-32.3-52.2-54.4-131.7-57.9-217.3zm398.4 0c-3.5 85.6-25.6 165.1-57.9 217.3 92.1-32.7 159.9-116.5 169.3-217.3zm111.4-48C501.9 131.2 434.1 47.3 342 14.7c32.3 52.2 54.4 131.7 57.9 217.3z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

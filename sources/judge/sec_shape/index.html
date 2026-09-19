@@ -1,0 +1,2279 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="One causal head, three switches. Softmax attention, unnormalized-kernel attention and the exact path product of a Markov chain as settings of one operator, proved in Lean 4, with every failure kept on the record.">
+      
+      
+        <meta name="author" content="Teerth Sharma">
+      
+      
+        <link rel="canonical" href="https://teerthsharma.github.io/resolvent/sources/judge/sec_shape/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/logo.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>2. The shape - resolvent</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/resolvent.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#2-the-shape" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="resolvent" class="md-header__button md-logo" aria-label="resolvent" data-md-component="logo">
+      
+  <img src="../../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            resolvent
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              2. The shape
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/teerthsharma/resolvent" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    teerthsharma/resolvent
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../FAILS/" class="md-tabs__link">
+          
+  
+  
+  The record
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../BED_H_PREREGISTRATION/" class="md-tabs__link">
+          
+  
+  
+  Pre-registrations
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../ledgers/mistakes/" class="md-tabs__link">
+          
+  
+  
+  Ledgers
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../canon/CHARTER/" class="md-tabs__link">
+          
+  
+  
+  Canon
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../CEQ_SHAPE/" class="md-tabs__link">
+          
+  
+  
+  Paper
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="resolvent" class="md-nav__button md-logo" aria-label="resolvent" data-md-component="logo">
+      
+  <img src="../../../assets/logo.svg" alt="logo">
+
+    </a>
+    resolvent
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/teerthsharma/resolvent" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    teerthsharma/resolvent
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The record
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    The record
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../FAILS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Everything retracted, broken or open
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../COMPONENT_LEDGER/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Component ledger
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../PLAN/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Research plan
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CORNER_RULE_RETIREMENT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Corner rule retirement
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../PI_JEPA_KAGGLE_CARD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kaggle card
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../DR2_CARD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DR2 card
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pre-registrations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Pre-registrations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../BED_H_PREREGISTRATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BED-H
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../prereg/REMOVAL_ECHO_v1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    REMOVAL-ECHO v1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ledgers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Ledgers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/mistakes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Failure mechanisms
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/struck/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Struck constants
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/mathematics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mathematics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/model-card/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model card
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/costs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Costs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/v17k-rulings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    V17K rulings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/v16-calibration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    V16 calibration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Canon
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Canon
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/CHARTER/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Charter
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/01_THEORY_ACCURACY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01 Theory of accuracy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/02_THEORY_TRAINING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    02 Theory of training
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/03_KERNEL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03 Kernel
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/04_BEDS_AND_INSTRUMENTS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    04 Beds and instruments
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/05_REPAIRS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05 Repairs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/06_PREDICTIONS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    06 Predictions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/08_ARCHITECTURE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    08 Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/09_CHESS_AND_MARKETS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    09 Chess and markets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/CORRECTIONS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Corrections
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Paper
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Paper
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CEQ_SHAPE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The shape of CEQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Paper sources
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../BIB_AUDIT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bibliography audit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../BIB_ALIASES/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bibliography aliases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#20-occupancy-cited-before-the-shape-is-named" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.0 Occupancy — cited before the shape is named
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#21-definitions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Definitions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#22-propositions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Propositions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#23-what-the-shape-computes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 What the shape computes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#24-the-topological-layer-restricted" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 The topological layer (restricted)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#25-the-cost-law-and-the-kernel-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5 The cost law and the kernel path
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#26-lean-targets-build-order-every-m-is-pending-lake-build-a-missing-mathlib-lemma-moves-it-to-s-nothing-is-cited-as-proved-before-it-builds-l-lean-p-11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6 Lean targets (build order; every [M] is pending lake build; a missing Mathlib lemma moves it to [S]; nothing is cited as proved before it builds — L-LEAN, P-11)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#27-limits-carried-to-8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.7 Limits carried to §8
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="2-the-shape">2. The shape<a class="headerlink" href="#2-the-shape" title="Permanent link">#</a></h1>
+<p>JUPITER (MYCROFT), judge of the theory, 2026-09-03, HEAD <code>207e7b9</code>. The paper's §2 as final
+prose. Inputs: the brief, the notes, both corrections, the six <code>sections/</code>, the eight <code>sweep/</code>,
+<code>references.bib</code> (canonical keys only), the three designs and all six refutations
+(<code>refute_{theory,instrument,falsify}_{occvac,math}.md</code>; none is missing). Rule: every KEEP adopted,
+every REPAIR applied in the refuter's wording where right, every KILL deleted unless answered with
+a number; where refuters disagree the ruling carries its RUN. Evidence classes: <code>RUN[J]</code> — one
+numpy float64 draw by this judge (seed 0, <span class="arithmatex">\(s=32\)</span>, <span class="arithmatex">\(\gamma=0.6\)</span>, causal softmax <span class="arithmatex">\(P\)</span> with the
+diagonal, sink <span class="arithmatex">\(\{0\}\)</span>, goal <span class="arithmatex">\(\{5\}\)</span>, constraints <span class="arithmatex">\(\{9,10\},\{15\}\)</span>; computed and printed only);
+<code>RUN[coord]</code>/<code>RUN[M]</code>/<code>RUN[I]</code>/<code>RUN[F]</code> — the coordinator's, MARS's, SATURN's, VENUS's runs as
+their files record them; <code>READ path:line</code>; <code>CITED [V]</code>/<code>[U]</code> by canonical key; <code>DERIVED</code> with
+steps. Every proposition carries its <code>MISTAKES.md</code> mechanism and a status in
+<code>{LEAN, CLASSICAL, DERIVED, RUN, OPEN}</code>. Nothing here is a result; the paper's body is the plan
+(<code>THESIS_CORRECTIONS_2.md</code> §0) and this section is its load-bearing wall.</p>
+<h2 id="20-occupancy-cited-before-the-shape-is-named">2.0 Occupancy — cited before the shape is named<a class="headerlink" href="#20-occupancy-cited-before-the-shape-is-named" title="Permanent link">#</a></h2>
+<p>The read operator on a causal row-stochastic softmax matrix, solved as a triangular system and
+reverting to standard attention at <span class="arithmatex">\(\gamma = 0\)</span>, is <strong>ChaCAL</strong> (<code>fagnou-2024-chacal</code>, EMNLP 2024,
+Eq. 5, Eq. 7, Thm 1; CITED [V]; <code>0</code> files in the tree cite it — a V-7-on-search finding for §3).
+One detail decides two controls below: ChaCAL removes the diagonal inside the inverse
+(<code>refute_falsify_math.md</code> §3.15, <code>[V-fetched]</code>), so its resolvent is a finite regime-N sum and its
+read is <strong>sub-stochastic</strong> — <code>RUN[J]</code> row sums <code>0.400 … 0.765</code> against <code>1.000</code> diagonal-kept. Its
+blockwise evaluation is <code>zhao-2026-structuredsparse</code> [V]. The discounted Neumann closure of a
+content-adaptive attention with learnable per-head <span class="arithmatex">\(\gamma\)</span>, read as the fundamental matrix of an
+absorbing chain with one leak state, is <code>roffo-2026-infsa</code> [V] (ReLU Frobenius base, non-causal).
+Multi-hop PageRank on attention: <code>wang-2021-magna</code>, <code>feng-2022-diffuser</code>, <code>yuan-2025-paraformer</code>
+(lineage <code>chien-2020-gprgnn</code>); the implicit resolvent step of an attention flow
+<code>chamberlain-2021-grand</code>; the exact resolvent layer on a fixed graph <code>gasteiger-2019-appnp</code>;
+<span class="arithmatex">\((I-\gamma P)^{-1}\)</span> as policy evaluation, successor representation, Katz/PageRank index
+<code>bellman-1957-markovian</code>, <code>dayan-1993-successor</code>, <code>katz-1953-status</code>, <code>brin-1998-anatomy</code>. The three
+corners: <code>vaswani-2017-attention</code> (<span class="arithmatex">\(\beta=1\)</span>), <code>katharopoulos-2020-linearattention</code> (<span class="arithmatex">\(\beta=0\)</span>,
+<span class="arithmatex">\(g\equiv0\)</span>), <code>dao-2024-ssd</code> Def. 3.1 (the 1-semiseparable mask); the chunked triangular solve
+<code>yang-2024-deltanet</code> Eq. 10; no finite-state dual for row-softmax <code>hu-2025-ssdtheory</code> [V].</p>
+<p>Boundary rows: <span class="arithmatex">\(N=(I-Q)^{-1}\)</span>, <span class="arithmatex">\(B=NR\)</span> — <code>kemeny-1960-finitemarkov</code> [V-cat] (the bib carries
+the same book as <code>kemeny-1976-finite</code> and <code>kemeny-1976-finitemarkov</code>; the assembler collapses the
+three) and <code>grinstead-1997-probability</code> Thm 11.6 [U]; clamped labelled nodes as absorbing boundary
+with a harmonic read <em>as a learning layer</em> — <code>zhu-2003-harmonic</code> [V], <code>zhou-2003-consistency</code>,
+<code>wu-2012-partially-absorbing</code>, <code>begga-2023-diffusion-jump</code>, <code>azad-2022-harmonic-extension</code>; the
+discrete Dirichlet committor — <code>metzner-2009-tpt-markov-jump</code>, <code>e-2006-transition-paths</code>,
+<code>e-2010-tptreview</code>, <code>doyle-1984-electric</code>; one absorbing row inside attention (<code>do()</code> with the
+token fixed and forbidden from attending) — <code>karbalayghareh-2026-doformer</code> [V]; the attention
+<em>sink</em>, a column device distinct from a row condition — <code>xiao-2023-attentionsinks</code>,
+<code>gu-2024-sinkemerges</code>, <code>ranmilo-2026-attentionsinks</code>. Decision: reach-avoid probability —
+<code>summers-2010-reach-avoid</code>, <code>abate-2008-reachability</code>, <code>kariotoglou-2014-lp-reach-avoid</code>; several
+target sets in one linear system with a verdict — <code>baier-2008-modelchecking</code>; Chebyshev
+<code>vanmoffaert-2013-chebyshev</code>, lexicographic <code>yang-2026-lexisafe</code>, max–min <code>park-2026-maxmin</code>, CMDP
+<code>altman-1999-cmdp</code>, argmin over evaluated values <code>bellman-1957-markovian</code>, a move from a linear
+first-exit solve <code>todorov-2006-lmdp</code> / <code>todorov-2009-efficient</code>, a transformer choosing the
+lowest predicted violation probability <code>jeddi-2021-lyapunovsafe</code> (NEAR-MISS), safety filter
+<code>hsu-2023-safetyfilter</code> / <code>borquez-2023-lrf</code>, the discount that buys a contraction
+<code>fisac-2019-bridging</code> / <code>hsu-2021-reachavoidrl</code>. Intervention: row surgery on a linear SCM
+<code>pearl-2009-causality</code>, <code>shimizu-2006-lingam</code>; consequence as equilibrium displacement
+<code>mooij-2013-ode2scm</code>, <code>bongers-2021-cyclic</code>, first-order <code>bottou-2013-counterfactual</code> §7.3; rank-one
+re-solve <code>sherman-1950-inverse-adjustment</code>, <code>hager-1989-updating</code>; fundamental-matrix perturbation
+<code>schweitzer-1968-perturbation</code>; barrier re-solve on a fixed chain <code>piray-2021-linearrl</code> Eq. 5; the
+SCM as the fixed point of a causally masked transformer with <code>do()</code> by clamp-and-re-solve
+<code>scetbon-2024-fip</code> [V]; order of intervention and equilibration <code>dash-2005-emc</code>; oracle-scored
+effect with a no-change floor <code>vakalis-2026-interventiongap</code>, <code>lin-2026-scratchworld</code>. Neumann
+tail: textbook (<code>meyer-2000-matrix</code>, <code>horn-2013-matrix</code>). Segmentation mechanism:
+<code>lin-2025-forgetting-transformer</code>, <code>yang-2023-gla</code>, <code>hwang-2025-hnet</code>; converse
+<code>yang-2026-boundary-repair</code> Thm 1. Topology: thresholded attention barcodes
+<code>kushnareva-2021-tda-attention</code>, <code>kushnareva-2022-betti</code>; intervention effects on persistence
+<code>kim-2026-topological-causal</code>; directed stability <code>turner-2019-quasimetric-rips</code>,
+<code>chowdhury-2017-path-homology</code>; Mapper <code>singh-2007-mapper</code> (records [V], landing [U]),
+<code>carriere-2018-mapper-statistics</code>; cluster covers <code>cho-2022-sbm-attention</code>,
+<code>roy-2021-routing-transformer</code>, <code>kitaev-2020-reformer</code>, <code>yuan-2025-nsa</code>; the persistence-derived
+CSR schedule in an attention kernel — the author's own <code>sharma-2026-kernels-22</code> [V].</p>
+<p><strong>The delta, stated narrowly.</strong> No fetched source combines the following in one attention
+operator, and each part is owned above (eight sweeps, queries recorded; absence is bounded by
+those queries, V-7): (e) <span class="arithmatex">\(K\ge2\)</span> absorbing constraint sets, a goal set and a declared sink as
+identity rows of a <em>content-dependent, causal, row-stochastic</em> read; (g) the interventional
+re-solve with the displacement as a jointly scored vector label at two stated prices; (h) the
+committor vector and the safest-move rules over candidate moves placed in the context; (i) a
+printed certificate with a planted negative and the <span class="arithmatex">\(1/(1-\gamma)\)</span> mask amplification; (j) a
+learnable discount in a causal LM read pinned by a boundary-corrected LR test; (k) machine-checked
+containment and the zero-gate iff; (l) restricted to the F0 endpoint; (m) the cover-to-schedule
+path. The name is the repository's, <strong>Consequence–Equilibrium Attention (CEQ)</strong>; its operator is
+ChaCAL's read with the diagonal kept in the inverse, on the record's three-corner base.</p>
+<h2 id="21-definitions">2.1 Definitions<a class="headerlink" href="#21-definitions" title="Permanent link">#</a></h2>
+<p><strong>Definition 1 (base family).</strong> For <span class="arithmatex">\(s\)</span> positions with logits <span class="arithmatex">\(qk_{ij}=q_i\cdot k_j\)</span>, magnitudes
+<span class="arithmatex">\(m_k\in[0,1]\)</span>, phases <span class="arithmatex">\(\theta_k\)</span>, and a switch <span class="arithmatex">\(\beta\in\{0,1\}\)</span>,
+$<span class="arithmatex">\(W_{\beta,qk,m,\theta}[i,j]=\mathbb 1[j\le i]\;\mathrm{pathProd}(m,\theta)_{ij}\;e^{qk_{ij}}/Z_i^{\beta},\qquad
+\mathrm{pathProd}(m,\theta)_{ij}=\prod_{k=j+1}^{i} m_k e^{i\theta_k},\)</span>$
+<code>READ lean/CEQ/V16Domain.lean:92-97</code>, <code>ceq/arm_smprime.py:144</code>. The exponential prefix-scan form
+of <code>V16Domain.lean:366-378</code> (<code>Hop</code>) is its restriction to <span class="arithmatex">\(m&gt;0\)</span> (<code>prefix_logit_mask_restated</code>
+clause 5, <code>:221</code>) and carries no zero (<code>no_prefix_scan_represents_a_zero_gate</code>, <code>:165</code>). Corners:
+<span class="arithmatex">\(\beta=1,m\equiv1\)</span> softmax; <span class="arithmatex">\(\beta=0,m\equiv1\)</span> linear attention; <span class="arithmatex">\(\beta=0\)</span>, QK off, the path product
+(<code>three_corners_containment</code> <code>:433</code>, <code>corners_are_distinct</code> <code>:445</code>). Ruling: the base carries the
+multiplicative gate (<code>refute_theory_math</code> item 1, <code>refute_theory_occvac</code> §1.2 row 9) so that
+Proposition 6 has a subject. Mechanism: V-25, P-7.</p>
+<p><strong>Definition 2 (two regimes, one solve).</strong> Regime S: <span class="arithmatex">\(\beta=1\)</span>, <span class="arithmatex">\(W=P\)</span> row-stochastic with
+<span class="arithmatex">\(P_{ii}&gt;0\)</span> for <span class="arithmatex">\(i\ge1\)</span> and <span class="arithmatex">\(P_{00}=1\)</span>; <span class="arithmatex">\(\gamma\in[0,1)\)</span>; <span class="arithmatex">\((I-\gamma P)^{-1}=\sum_{t\ge0}(\gamma P)^t\)</span>
+by <span class="arithmatex">\(\|\gamma P\|_\infty=\gamma&lt;1\)</span>. Regime N: <span class="arithmatex">\(W=A\)</span> strictly causal (<span class="arithmatex">\(A_{ij}=0\)</span> for <span class="arithmatex">\(j\ge i\)</span>), any
+<span class="arithmatex">\(\gamma\)</span>, <span class="arithmatex">\(A^s=0\)</span> (<code>Nilpotent.pow_card_eq_zero</code> <code>:77</code>, <code>occupancy_is_exact_inverse</code> <code>:96</code>). The
+boundary is a theorem (<code>one_not_nilpotent</code> <code>:105</code>), and an absorbing row is not <code>StrictlyLower</code>:
+regime N admits no absorbing row, and at <span class="arithmatex">\(\gamma=1\)</span> one makes <span class="arithmatex">\(I-A'\)</span> singular (<code>RUN[M]</code>
+<span class="arithmatex">\(\det(I-A')=0.0\)</span>). The north star lives in regime S, corner 3 in regime N; they do not meet on a
+boundary row. Mechanism: V-25, C8.</p>
+<p><strong>Definition 3 (boundary rows).</strong> Disjoint position sets: the sink <span class="arithmatex">\(\mathcal A_{\rm sink}\ni0\)</span>,
+the goal <span class="arithmatex">\(\mathcal A_0\)</span>, the constraints <span class="arithmatex">\(\mathcal A_1,\dots,\mathcal A_K\)</span>;
+<span class="arithmatex">\(\mathcal A=\bigsqcup\mathcal A_\bullet\)</span>, <span class="arithmatex">\(T=[s]\setminus\mathcal A\)</span>, the query position in <span class="arithmatex">\(T\)</span>.
+<span class="arithmatex">\(P_{a,\cdot}=e_a\)</span> for <span class="arithmatex">\(a\in\mathcal A\)</span>; canonical form <span class="arithmatex">\(P=\begin{pmatrix}Q&amp;R\\0&amp;I\end{pmatrix}\)</span>,
+<span class="arithmatex">\(Q=P_{TT}\)</span>, <span class="arithmatex">\(R_k=P_{T\mathcal A_k}\)</span>. Two construction facts (<code>THESIS_CORRECTIONS_2.md</code> §1,
+re-run <code>RUN[J]</code>): <strong>F1</strong> row 0 of any causal softmax at <span class="arithmatex">\(\beta=1\)</span> is <span class="arithmatex">\(e_0\)</span>, so position 0 is
+absorbing whether or not declared; undeclared, <span class="arithmatex">\(\det(I-Q)=0.0\)</span>. <strong>F2</strong> walks descend, so a
+boundary set after the query has committor exactly <span class="arithmatex">\(0.0\)</span>; every set precedes the query.
+Ruling on BOS (<code>refute_theory_math</code> C8(b), <code>refute_falsify_math</code> §3.11 against <code>design_theory</code>
+§1.3): BOS is its <strong>own sink set with value <span class="arithmatex">\(0\)</span> on every indicator channel</strong>, not a goal member —
+otherwise "reach the goal" collapses to "descend to 0 without a constraint" and the two rules of
+Definition 7 become one by construction (V-3, C4); the sink share ("fell off the prompt") is printed
+beside every label. The value-zero column sink of <code>V15Fork.Asink</code> (<code>V15Fork.lean:67-70</code>) and the
+sink row are two distinct conditions that coexist on any causal softmax (<code>sweep_resolvent.md</code>
+§2.14; P-7). Mechanism: V-25, V-8, V-12, D-3.</p>
+<p><strong>Definition 4 (state, mixing matrix, read).</strong>
+$<span class="arithmatex">\(z(\gamma)=(I-\gamma W)^{-1}V,\qquad \Pi_\gamma=(1-\gamma)W(I-\gamma W)^{-1},\qquad O(\gamma)=\Pi_\gamma V.\)</span>$
+The read carries the <span class="arithmatex">\((1-\gamma)\)</span> factor. For any row-stochastic <span class="arithmatex">\(W\)</span> — boundary rows or not —
+the bare <span class="arithmatex">\(W(I-\gamma W)^{-1}\)</span> has every row sum <span class="arithmatex">\(1/(1-\gamma)\)</span> (<code>RUN[J]</code>, <code>RUN[M]</code>: <span class="arithmatex">\(2.5\)</span> at
+<span class="arithmatex">\(\gamma=0.6\)</span> with and without the sets); the factor is a property of the class, not of the
+boundary rows. Mechanism: V-17, V-23.</p>
+<p><strong>Definition 5 (horizon dial).</strong> <span class="arithmatex">\(\gamma\in[0,1)\)</span> is one learnable scalar per head: the discount of
+<code>bellman-1957-markovian</code>, learnable as in <code>roffo-2026-infsa</code>, the <span class="arithmatex">\(\gamma\uparrow1\)</span> limit of
+<code>kemeny-1960-finitemarkov</code>. At <span class="arithmatex">\(\gamma=1\)</span> with any absorbing row <span class="arithmatex">\(I-P\)</span> is singular
+(<code>RUN[M]</code>); the endpoint is a limit (Proposition 9).</p>
+<p><strong>Definition 6 (interventional channel, two objects).</strong> A candidate move <span class="arithmatex">\(a\)</span> is an intervention.
+(i) On the <em>oracle's</em> latent chain: a row clamp <span class="arithmatex">\(P'_{v_a,\cdot}\leftarrow e_{u_a}\)</span>, rank one,
+<span class="arithmatex">\(u^\top\mathbb 1=0\)</span>. (ii) On the <em>arm's</em> operator: a token rewrite at position <span class="arithmatex">\(i\)</span>, which changes
+<span class="arithmatex">\(q_i\)</span> and <span class="arithmatex">\(k_i\)</span>, hence every softmax row <span class="arithmatex">\(j\ge i\)</span> through <span class="arithmatex">\(qk_{ji}\)</span> and <span class="arithmatex">\(Z_j\)</span> — <code>RUN[J]</code> at <span class="arithmatex">\(i=12\)</span>,
+<span class="arithmatex">\(s=32\)</span>: <span class="arithmatex">\(\mathrm{rank}(\Delta P)=20=s-i\)</span>. Two objects, two prices (Proposition 7); <code>design_theory</code>
+§1.6 ("supported on the intervened rows") is KILLED for (ii), kept for (i). Mechanism: M-8, P-8.</p>
+<p><strong>Definition 7 (labels and rules).</strong> Per move, the reach-avoid vector
+<span class="arithmatex">\((q^{({\rm sink})},q^{(0)},q^{(1)},\dots,q^{(K)})(a)\)</span> with <span class="arithmatex">\(\sum=1\)</span> on <span class="arithmatex">\(T\)</span> (Proposition 8). Two
+rules as columns of one bed (V-1): <span class="arithmatex">\(a^\star=\arg\max_a q^{(0)}(\mathrm{do}\,a)\)</span> (reach the goal
+before any constraint) and the Chebyshev <span class="arithmatex">\(a^\dagger=\arg\min_a\max_{k\ge1}q^{(k)}(\mathrm{do}\,a)\)</span>;
+lexicographic as a third column; the disagreement fraction printed. Two heads: (H-q) the committor
+vector by the <strong>exact triangular solve at <span class="arithmatex">\(\gamma=1\)</span> on the transient block</strong>,
+<span class="arithmatex">\(\hat q=(I-\hat Q)^{-1}\hat R_k\mathbb 1\)</span>; (H-z) the state/displacement channel at the trained
+<span class="arithmatex">\(\hat\gamma\)</span>. Ruling (<code>refute_instrument_occvac</code> FATAL-2, <code>refute_falsify_math</code> item 16): an
+undiscounted label and a discounted read at <span class="arithmatex">\(\hat\gamma&lt;1\)</span> pull <span class="arithmatex">\(\gamma\)</span> in opposite directions —
+<span class="arithmatex">\(q\)</span> to <span class="arithmatex">\(1\%\)</span> at <span class="arithmatex">\(\tau=8\)</span> needs <span class="arithmatex">\(\hat\gamma\ge0.99857\)</span>, <span class="arithmatex">\(1/(1-\hat\gamma)\approx697\)</span> (<code>RUN[F]</code>) —
+so the committor head does not carry <span class="arithmatex">\(\gamma\)</span>; the discounted read <span class="arithmatex">\(E_i[\gamma^{\tau-1}\mathbb 1_k]\)</span>
+is a separate registered label at a bed constant <span class="arithmatex">\(\gamma_{\rm env}\)</span> (<code>fisac-2019-bridging</code>) for the
+horizon-dial bet only. Mechanism: V-17, D-2, D-3, M-20.</p>
+<h2 id="22-propositions">2.2 Propositions<a class="headerlink" href="#22-propositions" title="Permanent link">#</a></h2>
+<p><strong>Proposition 1 (parity at <span class="arithmatex">\(\gamma=0\)</span>, with a rejection region).</strong> For every causal <span class="arithmatex">\(W\)</span> and <span class="arithmatex">\(V\)</span>,
+<span class="arithmatex">\(O(0)=WV\)</span>; in IEEE-754 forward substitution at <span class="arithmatex">\(\gamma=0\)</span>, <span class="arithmatex">\(z=V\)</span> bitwise and the read is the same
+matmul as attention. <em>Proof.</em> <span class="arithmatex">\((I-0\cdot W)=I\)</span>; <span class="arithmatex">\(0\cdot x=0\)</span>, <span class="arithmatex">\(v-0=v\)</span>, <span class="arithmatex">\(v/1=v\)</span> exact for finite
+entries. <span class="arithmatex">\(\square\)</span> Carrier <code>V16Domain.corner_softmax</code> <code>:394</code>; target <code>gamma_zero_is_softmax</code> [M].
+<em>Evidence.</em> <code>RUN[coord]</code> <code>torch.equal(O(0),PV)=True</code> at <span class="arithmatex">\(s=64,d=16\)</span>; rejection region
+<span class="arithmatex">\(\max|O(0.5)-O(0)|=2.3002850040264393\)</span>; the record's own softmax corner is <span class="arithmatex">\(1.110223\times10^{-16}\)</span>
+off <code>ceq/lm.py</code> on <span class="arithmatex">\(19/64\)</span> entries (<code>READ V16_ARM_SMPRIME.md:266-293</code>), so "bitwise" is against the
+lane's own routine. <em>Battery</em> (<code>refute_theory_occvac</code> §2.1): the plant "non-causal <span class="arithmatex">\(W\)</span>" is deleted
+(it passes at <span class="arithmatex">\(\gamma=0\)</span>, <code>RUN[M]</code> <code>array_equal True</code>); kept: <span class="arithmatex">\(\gamma\ne0\)</span> and <span class="arithmatex">\(\beta=0\)</span> at the
+softmax corner (<span class="arithmatex">\(\max|{\rm gap}|&gt;0.5\)</span>, <code>READ V16_ARM_SMPRIME.md:336-339</code>); declared-empty row:
+"ChaCAL at the same <span class="arithmatex">\(\gamma\)</span>" — a reproduction of ChaCAL's Eq. 5 at <span class="arithmatex">\(\gamma=0\)</span>, not a
+contribution. Mechanism: V-24, V-3. Status: <strong>RUN + LEAN (corner)</strong>.</p>
+<p><strong>Proposition 2 (corner 3 is a resolvent, regime N).</strong> For <span class="arithmatex">\(A\)</span> strictly lower bidiagonal with
+<span class="arithmatex">\(A_{i,i-1}=a_i\)</span>: <span class="arithmatex">\([(I-A)^{-1}]_{ij}=\prod_{k=j+1}^{i}a_k\)</span> for <span class="arithmatex">\(j\le i\)</span>, <span class="arithmatex">\(0\)</span> above. <em>Proof.</em> One walk
+per <span class="arithmatex">\((i,j)\)</span> of length <span class="arithmatex">\(i-j\)</span>; <span class="arithmatex">\(A^s=0\)</span>; <span class="arithmatex">\(\sum_{m&lt;s}A^m=(I-A)^{-1}\)</span> (<code>occupancy_is_exact_inverse</code>),
+entry <span class="arithmatex">\((i,j)\)</span> receiving the <span class="arithmatex">\(m=i-j\)</span> term. <span class="arithmatex">\(\square\)</span> Consequence: BED-M's label
+<span class="arithmatex">\(y_{s-1}=((I-A)^{-1}b)_{s-1}\)</span> (<code>READ scale/negation_scope.py:286-304</code>) is <span class="arithmatex">\(z(1)_{s-1}\)</span>, so any arm
+containing corner 3 reproduces BED-M's label as its own forward — BED-M is contained, not won.
+<em>Evidence.</em> <code>RUN[coord]</code> <span class="arithmatex">\(\max|G-(I-A)^{-1}|=0.0\)</span>, last row vs <code>equilibrium_oracle</code>
+<span class="arithmatex">\(6.217248937900877\times10^{-15}\)</span>, <span class="arithmatex">\(A^{64}=0\)</span> exactly. Mechanism: D-2. Status: <strong>LEAN</strong> (two halves)
++ target <code>pathprod_is_chain_resolvent</code> [S].</p>
+<p><strong>Proposition 3 (the committor is the resolvent read with absorbing rows — classical).</strong> <span class="arithmatex">\(P\)</span>
+row-stochastic including its absorbing rows, <span class="arithmatex">\(\rho(Q)&lt;1\)</span>, <span class="arithmatex">\(V=\mathbb 1_{\mathcal A_k}\)</span>; for <span class="arithmatex">\(i\in T\)</span>,
+$<span class="arithmatex">\((1-\gamma)z(\gamma)_i=E_i[\gamma^{\tau_k}\mathbb 1_k],\qquad O(\gamma)_i=E_i[\gamma^{\tau_k-1}\mathbb 1_k],\qquad
+\lim_{\gamma\uparrow1}O(\gamma)_i=q^{(k)}_i=[(I-Q)^{-1}R_k\mathbb 1]_i,\)</span>$
+and, when the declared sets exhaust the absorbing states, <span class="arithmatex">\(\sum_\bullet q^{(\bullet)}=\mathbb 1\)</span> on
+<span class="arithmatex">\(T\)</span>; at <span class="arithmatex">\(i\in\mathcal A_k\)</span> the read is <span class="arithmatex">\(1\)</span>, not <span class="arithmatex">\(\gamma^{-1}\)</span>. <em>Proof.</em> Exchange sums in
+<span class="arithmatex">\(z_i=\sum_t\gamma^tP_i(\tau_k\le t,k)\)</span>; first-step analysis; monotone convergence;
+<span class="arithmatex">\(\sum_kR_k\mathbb 1=\mathbb 1-Q\mathbb 1\)</span>. <span class="arithmatex">\(\square\)</span> Every clause is Kemeny–Snell; the <em>read</em> form on an
+attention <span class="arithmatex">\(P\)</span> is the composition. Discounted reads sum below one: <code>RUN[I]</code> state-form
+<span class="arithmatex">\([0.136,0.340]\)</span>, read-form <span class="arithmatex">\([0.227,0.567]\)</span> at <span class="arithmatex">\(\gamma=0.6\)</span>, ratio exactly <span class="arithmatex">\(\gamma\)</span>; the delay share
+printed beside every safest-move reading is <span class="arithmatex">\(1-\sum_kE[\gamma^{\tau-1}\mathbb 1_k]\)</span>. <em>Evidence.</em>
+<code>RUN[J]</code>/<code>RUN[M]</code>: read vs <span class="arithmatex">\(E[\gamma^{\tau-1}]\)</span> to <span class="arithmatex">\(8.33\times10^{-17}\)</span>; BED-1's real sets
+<span class="arithmatex">\(A=[0],B=[1],|T|=9\)</span>: resolvent read vs <code>bed["q"]</code> <span class="arithmatex">\(0.0\)</span>, residual <span class="arithmatex">\(1.04\times10^{-17}\)</span>,
+<span class="arithmatex">\(\rho(Q)=0.9408612510154677\)</span>; Kirchhoff <span class="arithmatex">\(&lt;10^{-10}\)</span> (<code>READ MATHEMATICS.md:542-600</code>). <em>Ruling on
+the <span class="arithmatex">\(3.8\times10^{-7}\)</span> line.</em> <code>refute_theory_math</code> item 8 derived a universal gap <span class="arithmatex">\(\ge1-\gamma\)</span>; the
+derivation dropped the indicator — <span class="arithmatex">\(q_i-E_i[\gamma^{\tau}\mathbb 1_k]=E_i[(1-\gamma^\tau)\mathbb 1_k]\ge(1-\gamma)q_i\)</span>,
+small where <span class="arithmatex">\(q_i\)</span> is. <code>RUN[J]</code> at <span class="arithmatex">\(\gamma=1-10^{-6}\)</span> on channel <span class="arithmatex">\(\{15\}\)</span>: <span class="arithmatex">\(\max_T=1.42\times10^{-7}\)</span>.
+The line stands with <span class="arithmatex">\((1-\gamma)q_i\)</span> printed beside it. <em>Read-side plant</em> (ADD): declare
+<span class="arithmatex">\(\mathcal A_k\)</span> on the wrong set <span class="arithmatex">\(\Rightarrow q\)</span> moves by <span class="arithmatex">\(O(1)\)</span>. Mechanism: D-2, V-12, V-25.
+Status: <strong>CLASSICAL, RUN on the arm's <span class="arithmatex">\(P\)</span></strong>; targets <code>committor_is_resolvent_read</code> (a) [M],
+(b-causal) [M] via Proposition 10, (b-chain) [S], <code>hitting_time_transform</code> [D].</p>
+<p><strong>Proposition 4 (Neumann tail: attained on the class, and what a mask does).</strong> (i) <span class="arithmatex">\(P\ge0\)</span>
+row-stochastic (identity rows included), <span class="arithmatex">\(\gamma\in[0,1)\)</span>, <span class="arithmatex">\(K\ge0\)</span>:
+$<span class="arithmatex">\(\Big\|(I-\gamma P)^{-1}-\sum_{k\le K}(\gamma P)^k\Big\|_\infty=\frac{\gamma^{K+1}}{1-\gamma}\quad(\text{equality});\)</span>$
+for <span class="arithmatex">\(\|P\|_\infty\le1\)</span> the same quantity is <span class="arithmatex">\(\le\)</span> the right side; for <span class="arithmatex">\(\|P\|_\infty&gt;1\)</span> the bound
+<em>can</em> fail (a nilpotent <span class="arithmatex">\(A\)</span> with <span class="arithmatex">\(\|A\|_\infty=2\)</span> satisfies it at <span class="arithmatex">\(K=s-1\)</span>, <code>RUN[M]</code>
+<span class="arithmatex">\(1.98\times10^{-10}\)</span> vs <span class="arithmatex">\(3.68\times10^{-5}\)</span>). <em>Proof.</em> The tail is entrywise non-negative with row
+sums <span class="arithmatex">\(\sum_{k&gt;K}\gamma^k\)</span>; the <span class="arithmatex">\(\infty\)</span>-norm of a non-negative matrix is its largest row sum
+(<code>meyer-2000-matrix</code>, <code>horn-2013-matrix</code>). <span class="arithmatex">\(\square\)</span> On the vector: <span class="arithmatex">\(\le\gamma^{K+1}\|V\|_\infty/(1-\gamma)\)</span>,
+never the bare <span class="arithmatex">\(\delta\)</span> (V-17). <code>err = bound</code> is a declared V-3 identity; the bind is the planted
+non-stochastic <span class="arithmatex">\(P\)</span> — quote the convergent plant (rows <span class="arithmatex">\(1.5\)</span>, <span class="arithmatex">\(\gamma=0.6\)</span>, <span class="arithmatex">\(K=2\)</span>: <span class="arithmatex">\(7.29\)</span> vs <span class="arithmatex">\(0.54\)</span>,
+<code>RUN[M]</code>); the coordinator's <span class="arithmatex">\(\gamma=0.7\)</span> plant (<span class="arithmatex">\(119.37\)</span> vs <span class="arithmatex">\(1.143\)</span>) is a divergent series
+(<span class="arithmatex">\(\gamma\cdot1.5=1.05\)</span>) and is labelled so. (ii) <strong>Mask amplification</strong> (ADD,
+<code>refute_instrument_math</code> row 8): for a sparsified <span class="arithmatex">\(P_m\)</span> with dropped row mass
+<span class="arithmatex">\(\varepsilon=\|P-P_m\|_\infty\)</span>, <span class="arithmatex">\(\|O_{\rm full}-O_{\rm mask}\|_\infty\le\varepsilon\|V\|_\infty/(1-\gamma)\)</span>,
+attained up to a constant: <code>RUN[J]</code> <span class="arithmatex">\(s=3\)</span>, <span class="arithmatex">\(\gamma=0.9\)</span>, <span class="arithmatex">\(\varepsilon=0.1\)</span>: <span class="arithmatex">\(0.5263157894736843\)</span>
+against the naive <span class="arithmatex">\(0.1\)</span>. Every F1 union bound carries <span class="arithmatex">\(1/(1-\gamma)\)</span>; the exact solve on an F1 mask
+is refused (L-CERT). <em>Census.</em> <span class="arithmatex">\(\mathrm{rowsum}(\hat P)\)</span> on every trained cell; at <span class="arithmatex">\(\hat\beta\ne1\)</span>
+rows sum <span class="arithmatex">\(1.31\dots10.29\)</span> (<code>READ V16_ARM_SMPRIME.md:28-32</code>) and no certificate is printed (V-25).
+The <code>≈7.6e-05</code> vector bound of <code>sec_cost.md</code> §4.x.3 carries <code>[ASSUMED ‖V‖_∞ ≈ 5]</code>. Mechanism:
+V-3, V-10, V-17, V-24, L-CERT.
+Status: <strong>DERIVED (textbook) + RUN</strong>; targets <code>neumann_truncation_bound</code> [S],
+<code>neumann_tail_attained</code> [S], <code>mask_amplification</code> [S].</p>
+<p><strong>Proposition 5 (one triangular solve; <span class="arithmatex">\(\Pi_\gamma\)</span> is a mixture; the support does not move).</strong>
+(a) For causal <span class="arithmatex">\(W\)</span>, <span class="arithmatex">\(I-\gamma W\)</span> is lower-triangular with diagonal <span class="arithmatex">\(1-\gamma W_{ii}\in[1-\gamma,1)\)</span>
+in regime S (row 0 and every absorbing row attain <span class="arithmatex">\(1-\gamma\)</span>; <code>RUN[M]</code> min <span class="arithmatex">\(0.4\)</span> at <span class="arithmatex">\(\gamma=0.6\)</span>)
+and <span class="arithmatex">\(=1\)</span> in regime N; <span class="arithmatex">\(z\)</span> is a forward substitution costing <span class="arithmatex">\(+s^2d/2\)</span> MACs and depth <span class="arithmatex">\(s\)</span> <strong>over</strong>
+the <span class="arithmatex">\(s^2d\)</span> causal MACs of the softmax head it contains at <span class="arithmatex">\(\gamma=0\)</span> (<span class="arithmatex">\(+50\%\)</span>; <span class="arithmatex">\(+25\%\)</span> if <span class="arithmatex">\(QK^\top\)</span>
+is counted dense) — an increment, never a stand-alone figure (<code>sec_cost.md</code> §4.x.1, M-8).
+(b) In regime S, <span class="arithmatex">\(\Pi_\gamma=(1-\gamma)\sum_t\gamma^tP^{t+1}\)</span> is row-stochastic and non-negative,
+with or without absorbing rows (<code>RUN[F]</code> row sums <span class="arithmatex">\(1.000000000000000\)</span>), so <span class="arithmatex">\(O_i\in\mathrm{hull}\{V_j:j\le i\}\)</span>
+for every <span class="arithmatex">\(\gamma\)</span>: the record's Q2/W3 hull bound applies verbatim, and labels outside the hull
+need the value rescale of <code>V15Fork.Asink_computes_chain</code> or regime N; committors live in <span class="arithmatex">\([0,1]\)</span>.
+(c) On a dense causal softmax, <span class="arithmatex">\(\mathrm{supp}\,\Pi_\gamma=\mathrm{supp}\,P\)</span> with or without boundary
+rows (<code>RUN[J]</code> <code>True</code>; lower-triangle minimum on transient rows <span class="arithmatex">\(2.1\times10^{-3}&gt;0\)</span>): the
+resolvent adds <strong>no support</strong> in regime S; absorbing rows change <em>weights</em> downstream (mass
+redirected to <span class="arithmatex">\(a\)</span>); the "transitive closure" sentence has content only under F0 zeros. The claim
+"identity rows change the support" (<code>design_falsify</code> §3.1) is KILLED (<code>refute_falsify_math</code> item
+13, <code>refute_instrument_math</code> row 5). <em>Evidence.</em> <code>RUN[coord]</code> <code>solve_triangular</code> vs dense inverse
+<span class="arithmatex">\(1.7763568394002505\times10^{-15}\)</span>; <code>RUN</code> (NEPTUNE, certified RTX 4060, float32, <span class="arithmatex">\(n=2048,s=64,d=16\)</span>;
+producer owed to <code>scripts/k_cert.py</code>): solve<span class="arithmatex">\(+Pz\)</span> fwd+bwd <span class="arithmatex">\(2.514\)</span> ms vs <span class="arithmatex">\(PV\)</span> <span class="arithmatex">\(1.473\)</span> ms vs one
+Neumann hop <span class="arithmatex">\(3.001\)</span> ms — truncation never wins in MACs. Kernel boundary: no finite-state dual for
+softmax <span class="arithmatex">\(P\)</span> (<code>hu-2025-ssdtheory</code>); the exact path is the full <span class="arithmatex">\(s\times s\)</span> solve or Zhao et al.'s
+<span class="arithmatex">\(\tilde O(n^{4/3}d)\)</span>. Mechanism: M-8, M-3, V-17, P-7.
+Status: <strong>DERIVED + RUN</strong>; targets <code>lower_triangular_isUnit</code>, <code>diag_one_sub_smul_pos</code> [M],
+<code>resolvent_is_triangular_solve</code>, <code>mixing_matrix_rowStochastic</code> [S].</p>
+<p><strong>Proposition 6 (segmentation is exact, and a zero gate is a boundary condition).</strong> (i) In the
+Definition-1 base, <span class="arithmatex">\(m_c=0\)</span> gives <span class="arithmatex">\(W_{ij}=0\)</span> for all <span class="arithmatex">\(j&lt;c\le i\)</span> (<code>pathProd_eq_zero_iff</code> <code>:129</code>, no
+hypothesis); then <span class="arithmatex">\(I-\gamma W\)</span> is block lower-triangular with a zero sub-block and inverts
+blockwise; an identity row respects every cut, so absorbing rows are consistent with the block
+structure (<code>refute_instrument_math</code> row 15). In regime S an exact zero is a <span class="arithmatex">\(-\infty\)</span> logit — F0
+by mask, not by gate — and the iff has no producing theorem on the softmax corner
+(<code>no_prefix_scan_represents_a_zero_gate</code>); <code>segmentation_blockdiag</code> [M] is stated for
+<code>StrictlyLower</code> and <code>resolvent_fromBlocks</code> [M] is the half that transfers. (ii) <strong>ADD</strong> (<code>refute_theory_math</code>
+item 11, <code>RUN[J]</code>): after a cut at <span class="arithmatex">\(c\)</span> the row <span class="arithmatex">\(c\)</span> has window <span class="arithmatex">\(\{c\}\)</span> and renormalises to
+<span class="arithmatex">\(P_{cc}=1.0\)</span> — a new undeclared absorbing state; with the sets of Definition 3 and <span class="arithmatex">\(c\notin\mathcal A\)</span>,
+<span class="arithmatex">\(\rho(Q)=1.0\)</span> and the committor solve is singular; declaring <span class="arithmatex">\(c\)</span> absorbing severs every boundary
+set before the cut from every <span class="arithmatex">\(i\ge c\)</span> (<span class="arithmatex">\(q=0.0\)</span>, <code>RUN[M]</code>); segmentation and the reach-avoid read
+coexist only if every segment carries its own sink, goal and constraint sets, with the cut position
+a registered dial. (iii) The dividend is stated in pair-count units, <span class="arithmatex">\(D=s(s+1)/\sum_mL_m(L_m+1)\)</span>:
+BED-M reads <span class="arithmatex">\(31.04\times\)</span> from the live-pair fraction <span class="arithmatex">\(0.0322\)</span> (<code>READ V16_ARM_SMPRIME.md:518-522</code>;
+the source line's pair counts disagree by <span class="arithmatex">\(2\times\)</span>, flagged); <span class="arithmatex">\((C5)\)</span>'s <span class="arithmatex">\(s^2/\sum L_m^2\)</span> would read
+<span class="arithmatex">\(58.5\)</span> (V-17); a corpus property, <span class="arithmatex">\(1\times\)</span> on the softmax corner. Mechanism: L-CERT, V-25, D-3,
+V-22, V-24 (the <span class="arithmatex">\(10^{-300}\)</span> plant reads F0 by underflow after <span class="arithmatex">\(\ge80\)</span> gates at <span class="arithmatex">\(0.5\)</span>; the safe
+plant is a <span class="arithmatex">\(-30\)</span> logit, <span class="arithmatex">\(e^{-30}=9.36\times10^{-14}\)</span>, <code>refute_instrument_math</code> row 14).
+Status: <strong>LEAN (annihilation) + DERIVED + RUN</strong>; targets <code>cut_makes_segment_head_absorbing</code> [M],
+<code>masked_softmax_blockdiag</code> [S].</p>
+<p><strong>Proposition 7 (consequence as a displacement field).</strong> (i) For <span class="arithmatex">\((P,V)\to(P',V')\)</span>,
+<span class="arithmatex">\(\Delta z=(I-\gamma P')^{-1}(\Delta V+\gamma\,\Delta P\,z)\)</span> exactly — one extra solve (four lines;
+<code>bottou-2013-counterfactual</code> §7.3 is its linearisation). (ii) For lower-triangular <span class="arithmatex">\(P'\)</span> with
+<span class="arithmatex">\(P'_{&lt;i,\cdot}=P_{&lt;i,\cdot}\)</span>, <span class="arithmatex">\(V'_{&lt;i}=V_{&lt;i}\)</span>: <span class="arithmatex">\(z'_{&lt;i}=z_{&lt;i}\)</span> and the suffix re-solve equals
+the full re-solve — by <em>triangularity</em>, not nilpotency (<code>RUN[F]</code> <span class="arithmatex">\(5.6\times10^{-17}\)</span> on the
+non-nilpotent softmax corner); consequences propagate forward only, <span class="arithmatex">\(\Delta z_0=0\)</span> on every draw.
+(iii) For a <strong>row clamp</strong> (Definition 6(i)) <span class="arithmatex">\(P'=P+e_iu^\top\)</span>, <span class="arithmatex">\(u^\top\mathbb 1=0\)</span>, <span class="arithmatex">\(M=(I-\gamma P)^{-1}\)</span>:
+<span class="arithmatex">\(\Delta z=\gamma(Me_i)(u^\top z)/(1-\gamma u^\top Me_i)\)</span> with denominator
+<span class="arithmatex">\((1-\gamma p'_{ii})/(1-\gamma P_{ii})&gt;0\)</span> for every <span class="arithmatex">\(\gamma&lt;1\)</span>, absorbing rows included
+(<code>RUN[I]</code> <span class="arithmatex">\(1.45\times10^{-15}\)</span>; <code>RUN[F]</code> <span class="arithmatex">\(0.511918\)</span>); the column <span class="arithmatex">\(Me_i\)</span> costs one substitution
+(<span class="arithmatex">\(s^2/2\)</span> MACs), the update <span class="arithmatex">\(O(sd)\)</span>; <span class="arithmatex">\(m\)</span> candidates cost <span class="arithmatex">\(m\cdot s^2/2\)</span> against the solve's <span class="arithmatex">\(s^2d/2\)</span>,
+ratio <span class="arithmatex">\(m/d=0.5\)</span> at <span class="arithmatex">\((8,16)\)</span>. For a <strong>token rewrite</strong> (Definition 6(ii)) <span class="arithmatex">\(\Delta P\)</span> has rank <span class="arithmatex">\(s-i\)</span>
+and the price is the suffix re-solve <span class="arithmatex">\((s-i)^2d/2\)</span> — pricing the arm at the oracle's rank-one rate
+is M-8 literally. (iv) <span class="arithmatex">\(V\equiv\mathbb 1\Rightarrow\Delta z\equiv0\)</span> exactly; in floats <span class="arithmatex">\(\le10^{-15}\)</span>
+(<code>RUN[F]</code> <span class="arithmatex">\(1.1\times10^{-16}\)</span>; a bitwise <span class="arithmatex">\(0.0\)</span> is a one-code-path accident); the region is a
+Gaussian <span class="arithmatex">\(V\)</span> (<span class="arithmatex">\(0.1096\)</span> at <span class="arithmatex">\(s=32\)</span>, <span class="arithmatex">\(1.127\)</span> at <span class="arithmatex">\(s=64\)</span>). (v) A value-only move leaves every <span class="arithmatex">\(q^{(k)}\)</span>
+constant across moves — the <span class="arithmatex">\(m(K+1)\)</span>-RHS route is legal for <span class="arithmatex">\(\Delta z\)</span> only. <em>Metric</em> (VENUS):
+position-matched per-coordinate NRMSE over coordinates <span class="arithmatex">\(\ge i_{\min}\)</span>, field cosine, magnitude
+ratio, harmonic residual <span class="arithmatex">\(r(\hat z)=\|(I-\gamma P_{\rm env})\hat z-V\|_\infty/\|V\|_\infty\)</span> with
+<span class="arithmatex">\(\sigma_{\min}\)</span> and <span class="arithmatex">\(\|I-\gamma P_{\rm env}\|_\infty\)</span> printed (its units), the sign column kept
+(softmax reads <span class="arithmatex">\(0.807843\)</span>, <code>READ MATHEMATICS.md:396-406</code>); McNemar on the sign column only, paired
+<span class="arithmatex">\(t\)</span>/Wilcoxon on the cosine. Mechanism: V-24, D-5, V-26, M-8, P-8, V-17.
+Status: <strong>DERIVED + RUN</strong>; targets <code>displacement_identity</code> [M], <code>causal_forward_only</code> [S],
+<code>sherman_morrison_row</code> [S] (docstring: row clamp only).</p>
+<p><strong>Remark (EMC, retired to a remark).</strong> For <span class="arithmatex">\(\gamma&lt;1\)</span> the map <span class="arithmatex">\(x\mapsto V+\gamma P'x\)</span> is a
+contraction with one fixed point, so "settle then intervene" and "intervene then solve" coincide
+for every row-stochastic <span class="arithmatex">\(P'\)</span>, cyclic or not (<code>RUN[J]</code> <span class="arithmatex">\(8.9\times10^{-16}\)</span> on a dense feedback
+<span class="arithmatex">\(P\)</span>; <code>RUN[I]</code> <span class="arithmatex">\(1.33\times10^{-15}\)</span>; <code>RUN[F]</code> <span class="arithmatex">\(4.4\times10^{-16}\)</span>). <code>dash-2005-emc</code> Thm 1 concerns a
+reduced model whose equilibrated form hides feedback; an explicit linear fixed point has no
+such gap. The "planted feedback instance" exhibits loss of forward-only propagation
+(<span class="arithmatex">\(\Delta z_{&lt;i}\ne0\)</span> on a non-causal <span class="arithmatex">\(P\)</span>) and is filed as a <strong>triangularity</strong> bind under
+Proposition 7(ii). <code>momennejad-2017-sr</code> / <code>russek-2017-predictive</code> (mechanism [U]) remain the
+external argument that a cached resolvent needs the re-solve under a transition change.
+Ruling: two refuters KEEP-with-label, two KILL; the KILL stands because the rejection region was
+an artefact of a wrong algorithm (V-24, V-3).</p>
+<p><strong>Proposition 8 (the safest move; degeneracy; the reach-avoid identity with a sink).</strong> With
+Definition 3, <span class="arithmatex">\(q^{({\rm sink})}+q^{(0)}+\sum_{k\ge1}q^{(k)}=\mathbb 1\)</span> on <span class="arithmatex">\(T\)</span> (Proposition 3; <code>RUN[I]</code>
+<span class="arithmatex">\([0.9999999999999993,1.0]\)</span>). <em>Degeneracy lemma.</em> If the constraint sets exhaust the absorbing
+states, <span class="arithmatex">\(\sum_{k\ge1}q^{(k)}=\mathbb 1\)</span> and <span class="arithmatex">\(\max_kq^{(k)}\ge1/K\)</span> by pigeonhole — "avoid every
+constraint" is unattainable (V-12 generalised). Its planted negative is "BOS declared inside a
+constraint set"; the plant "drop <span class="arithmatex">\(\mathcal A_0\)</span>" cannot run (dropping BOS makes <span class="arithmatex">\(I-Q\)</span> singular,
+<code>refute_instrument_math</code> row 3), and the coordinator's <span class="arithmatex">\(0.605\)</span> was computed <em>with</em> the goal
+counted. <em>Floors.</em> The zero-information floor on the argmin is chance, <span class="arithmatex">\(1-\max_a\pi(a^\star)=1-1/m\)</span>
+uniform: <span class="arithmatex">\(0.75/0.875/0.9375\)</span> at <span class="arithmatex">\(m=4/8/16\)</span>; the weak Fano <span class="arithmatex">\(1-\ln2/\ln m\)</span> (<span class="arithmatex">\(0.5/0.6667/0.75\)</span>) is
+struck as a floor (an arm at error <span class="arithmatex">\(0.60\)</span>, <span class="arithmatex">\(m=4\)</span>, would print above it while worse than chance);
+tight Fano <span class="arithmatex">\((\ln m-\ln2)/\ln(m-1)\)</span> (<span class="arithmatex">\(0.6309/0.7124/0.7679\)</span>, <code>RUN[J]</code>) only where
+<span class="arithmatex">\(I(X_{\le k};a^\star)&gt;0\)</span> is computed; <span class="arithmatex">\(m=2\)</span> has floor <span class="arithmatex">\(0.5\)</span>. The zero-hop view carries the move
+tokens and membership flags, so <span class="arithmatex">\(I(X_{\le0};a^\star)&gt;0\)</span> and the plug-in is computed (V-25 on a
+floor). <em>Census.</em> Label sd over the admitted query region (the prefix before the first constraint
+is constant); every class frequency of <span class="arithmatex">\(a^\star\)</span> in <span class="arithmatex">\((0.05,0.95)\)</span> (the "argmin-unique" gate was
+inverted); rule-disagreement fraction <span class="arithmatex">\(&gt;0\)</span>; discard count; <span class="arithmatex">\(q^{({\rm sink})}\)</span> apart from <span class="arithmatex">\(q^{(0)}\)</span>.
+<em>Bed.</em> The environment chain must lie inside the arm's operator class or the identity licenses
+nothing (<code>refute_theory_occvac</code> §2.4, <code>refute_instrument_occvac</code> FATAL-1): an undirected
+Rips/<code>bed_1</code> chain has <code>SymmSupport</code> and no causal <span class="arithmatex">\(\hat P\)</span> equals it (one line; target
+<code>lowerTriangular_ne_symmSupport</code>); a causal chain recoverable from edge tokens makes the label the
+arm's own resolvent (D-2). Ruling: BED-S's environment is a random DAG in token order with
+self-loops, adjacency rows as multi-hot node features so <span class="arithmatex">\(\hat P=P_{\rm env}\)</span> is representable at
+<span class="arithmatex">\(d_{\rm model}\ge n_{\rm nodes}\)</span>; the VOID list is pre-registered — <code>shape − softmax</code> and
+<code>shape − skyline</code> are reproduction-vs-non-reproduction contrasts; creditable are
+<code>shape − ChaCAL-diag-with-sink</code> (boundary mechanism), <code>shape − Neumann-K</code> (exactness) and
+<span class="arithmatex">\(\|\hat P-P_{\rm env}\|_\infty\)</span> per seed (identification); leak clause C2(a) is dropped (the graph
+is the bed's input), C2(c) kept; <code>bed_1</code>/E4′ remain oracle cross-checks (Kirchhoff at <span class="arithmatex">\(K=2\)</span>).
+Hazard carried to Limits: <code>misra-2023-safety-constrained-mdp</code>.
+Mechanism: V-8, V-12, V-25, D-2, D-3, M-2, V-10, L-FLOOR. Status: <strong>OPEN</strong> (no cell; discharged by
+PLAN items S-1 to S-4 of the ledger).</p>
+<p><strong>Proposition 9 (the horizon dial).</strong> <span class="arithmatex">\(\gamma=0\)</span>: next step, softmax bitwise (P1); <span class="arithmatex">\(0&lt;\gamma&lt;1\)</span>:
+the hitting-time transform <span class="arithmatex">\(E[\gamma^{\tau-1}]\)</span> (P3); <span class="arithmatex">\(\gamma\uparrow1\)</span>: absorption probabilities,
+basin membership, the <span class="arithmatex">\(q=\tfrac12\)</span> isocommittor for <span class="arithmatex">\(K=2\)</span> (<code>ceq/beds/bed_1.py:5-8,:382</code>,
+<code>e-2010-tptreview</code>); corner 3 is <span class="arithmatex">\(\gamma=1\)</span> on a nilpotent chain (P2). <em>Pinning.</em> Ruling 10′'s
+<span class="arithmatex">\(\Lambda=2[LL(\hat\gamma)-LL(\gamma=0)]\)</span> on held-out, null and held-out set declared for <span class="arithmatex">\(\gamma\)</span>
+(Ruling 10′ was stated for <span class="arithmatex">\(\beta\)</span>); with <span class="arithmatex">\(\gamma\in[0,1)\)</span> the null sits on a boundary and the
+<span class="arithmatex">\(95\%\)</span> point is <span class="arithmatex">\(\tfrac12\chi^2_0+\tfrac12\chi^2_1=2.7055\)</span>, not <span class="arithmatex">\(3.8415\)</span> (<code>RUN[J]</code>; the citation is
+owed, not in <code>references.bib</code>); the <span class="arithmatex">\(|\hat\gamma|&lt;0.05\)</span> rule is deleted (two verdicts for one
+cell); the mirror kill <span class="arithmatex">\(\hat\gamma&gt;0.99\)</span> prints <span class="arithmatex">\(1/(1-\hat\gamma)\)</span> beside every <span class="arithmatex">\(\delta\)</span>
+(<code>READ V15_R1.md:56</code>). Mechanism: V-9, M-2, V-17. Status: <strong>DERIVED (corollary)</strong>; instrument OPEN.</p>
+<p><strong>Proposition 10 (invertibility on the causal class is a diagonal read).</strong> For the arm's causal
+<span class="arithmatex">\(P\)</span> with finite logits, <span class="arithmatex">\(Q=P_{TT}\)</span> is lower-triangular, <span class="arithmatex">\(\rho(Q)=\max_{i\in T}P_{ii}\)</span> (<code>RUN[J]</code>
+<span class="arithmatex">\(0.6926596893360386\)</span> both), and <span class="arithmatex">\(I-Q\)</span> is invertible <strong>iff</strong> <span class="arithmatex">\(0\in\mathcal A\)</span> (<span class="arithmatex">\(\det(I-Q)=0.0\)</span>
+undeclared): "absorption a.s." is the single census line "BOS declared", and
+<code>committor_is_resolvent_read</code>(b) is [M] via <code>lower_triangular_isUnit</code>; the Perron certificate is
+for the oracle's non-causal chain only (<code>SymmSupport</code>, <span class="arithmatex">\(\rho(Q)=0.9409\)</span>). The <span class="arithmatex">\(\|Q\|_\infty\)</span> Neumann
+bound on the committor is vacuous (<span class="arithmatex">\(\|Q\|_\infty=0.958\)</span>, bound <span class="arithmatex">\(19.2\)</span> at <span class="arithmatex">\(K=4\)</span> vs error
+<span class="arithmatex">\(2.5\times10^{-3}\)</span>, <code>RUN[I]</code>): the committor head is the exact solve and claims no truncation
+certificate. Mechanism: V-10, V-25, L-CERT. Status: <strong>DERIVED + RUN</strong>; <code>isUnit_one_sub_of_perron</code>
+split into (b-causal) [M] and (b-chain) [S].</p>
+<p><strong>Proposition 11 (regime boundary).</strong> The softmax corner keeps <span class="arithmatex">\(P_{ii}&gt;0\)</span>, so <span class="arithmatex">\(\gamma P\)</span> is not
+nilpotent (<code>one_not_nilpotent</code>) and "all <span class="arithmatex">\(s\)</span> hops by nilpotency" holds in regime N only. The
+discriminating evidence is <span class="arithmatex">\(\max_{i\ge1}(\gamma P)^{32}_{ii}=6.27\times10^{-13}\)</span> beside
+<span class="arithmatex">\(\gamma^{32}=7.96\times10^{-8}\)</span> attained at <span class="arithmatex">\((0,0)\)</span> (<code>RUN[M]</code>; the design's number was V-4). The
+masked-diagonal route is not a matrix identity (<span class="arithmatex">\(\|(I-\gamma P_m)^{-1}-\sum_{t&lt;s}(\gamma P_m)^t\|=1.99\times10^{-7}\)</span>);
+it is exact on a value channel iff <span class="arithmatex">\(V_0=0\)</span>, which the Definition-3 sink satisfies on every
+indicator channel (target <code>masked_sink_finite_sum</code> [S]). Default: keep the diagonal and carry
+Proposition 4. Mechanism: V-25, P-3, V-4. Status: <strong>LEAN + RUN</strong>.</p>
+<h2 id="23-what-the-shape-computes">2.3 What the shape computes<a class="headerlink" href="#23-what-the-shape-computes" title="Permanent link">#</a></h2>
+<p>Consequence: <span class="arithmatex">\(\Delta z\)</span> (Proposition 7), one extra solve, scored as a field. Committor vector: <span class="arithmatex">\(\hat q\)</span>
+by the exact solve on <span class="arithmatex">\(\hat Q\)</span> (Propositions 3, 10). Safest move: the two rules of Definition 7 with
+their disagreement fraction; the threshold form <span class="arithmatex">\(\max_k\hat q^{(k)}+\delta\|V\|_\infty\le\delta_{\rm thr}\)</span>
+bounds the solve, never the model error <span class="arithmatex">\(\hat P\ne P_{\rm env}\)</span> — no move is "admitted" by it (V-17).
+Next transient state / phase / equilibrium: the dial (Proposition 9); "phase" is metastable
+membership (<code>prinz-2011-msm</code>, <code>ramsauer-2021-hopfield</code>, <code>erel-2025-attentionchains</code>).</p>
+<h2 id="24-the-topological-layer-restricted">2.4 The topological layer (restricted)<a class="headerlink" href="#24-the-topological-layer-restricted" title="Permanent link">#</a></h2>
+<p>(a) The F0 endpoint is a theorem (Proposition 6) on gated corners or masked <span class="arithmatex">\(P\)</span>; on the parity
+corner the <span class="arithmatex">\(\varepsilon=0\)</span> influence graph is one weak component on <span class="arithmatex">\(100\%\)</span> of draws (<span class="arithmatex">\(\Pi_{i0}&gt;0\)</span>),
+so the <span class="arithmatex">\(\beta_0\)</span> barcode row is KILLED on BED-S (three refuters agree) and survives only as the
+thresholded barcode with a permutation null on BED-M (corner 3, zero gates on <span class="arithmatex">\(3\)</span> of <span class="arithmatex">\(3\)</span> values):
+<code>NOT MEASURED — needs a digraph β₀ instrument</code> (<code>beta0_interleaving</code> consumes point clouds,
+<code>READ ceq/certs/topological.py:476-505</code>); Turner's hypothesis is stated as a predicate on the
+filtered object first. (b) Isocommittor surfaces: BED-1's <span class="arithmatex">\(q=\tfrac12\)</span> guard inside the read;
+NOT MEASURED. (c) Mapper cover <span class="arithmatex">\(\to\)</span> tiles <span class="arithmatex">\(\to\)</span> schedule: the do-nothing control is both the
+0D-salience schedule and Zhao et al.'s blockwise resolvent; the F1 union certificate carries
+<span class="arithmatex">\(1/(1-\gamma)\)</span> (Proposition 4(ii)); the dense control is not runnable at <span class="arithmatex">\(n=2048\)</span>, <span class="arithmatex">\(s=4096\)</span>
+(<span class="arithmatex">\(\approx137\)</span> GB against <span class="arithmatex">\(7.996\)</span> GiB), so <span class="arithmatex">\(n\)</span> is stated per <span class="arithmatex">\(s\)</span>; <code>kernels#22</code> has no backward.
+Mechanism: V-3, V-25, M-15, M-2, V-9, L-CERT, P-4, P-8.</p>
+<h2 id="25-the-cost-law-and-the-kernel-path">2.5 The cost law and the kernel path<a class="headerlink" href="#25-the-cost-law-and-the-kernel-path" title="Permanent link">#</a></h2>
+<p>Per head, MACs, increments over the softmax head contained at <span class="arithmatex">\(\gamma=0\)</span> (<code>sec_cost.md</code> §4.x.9):
+serial substitution <span class="arithmatex">\(+s^2d/2\)</span>, depth <span class="arithmatex">\(s\)</span>, <span class="arithmatex">\(O(s^2)\)</span> memory (<span class="arithmatex">\(P\)</span> explicit; no bf16 path for
+<code>solve_triangular</code> [U]); chunked <span class="arithmatex">\(+s^2d/2+sCd/2+sC^2/3\)</span>, depth <span class="arithmatex">\(s/C\)</span>, <code>NOT MEASURED — needs a
+chunked kernel</code> (pattern <code>yang-2024-deltanet</code>); Neumann <span class="arithmatex">\(+Ks^2d/2\)</span>, depth <span class="arithmatex">\(K\)</span>, never wins in MACs;
+F0-segmented <span class="arithmatex">\(+\sum_mL_m^2d/2\)</span>; CSR two-stage <span class="arithmatex">\(+\,\)</span>units<span class="arithmatex">\(\cdot B^2d/2\)</span>, forward-only. Measured
+increment <span class="arithmatex">\(2.514-1.473=1.041\)</span> ms/step at <span class="arithmatex">\(n=2048\)</span> (<span class="arithmatex">\(2.312\)</span> at <span class="arithmatex">\(4096\)</span>, <span class="arithmatex">\(4.542\)</span> at <span class="arithmatex">\(8192\)</span>), a per-op
+floor under a dispatch gap of <span class="arithmatex">\(2.0\times\)</span>–<span class="arithmatex">\(6.6\times\)</span> (<code>READ scale/m3_flops.py:101-121</code>). One
+bed-cell pair on the softmax corner <span class="arithmatex">\(\approx34\)</span> s; seven arms <span class="arithmatex">\(7\times8\times1.680+4.0\approx98\)</span> s
+<span class="arithmatex">\(\approx1.6\)</span> GPU-min (<code>refute_instrument_math</code> row 28 corrects the design's <span class="arithmatex">\(4\)</span>); the corner-3
+base (<span class="arithmatex">\(\approx133\)</span> s) has no certificate domain (<span class="arithmatex">\(\hat\beta=0\)</span> rows sum <span class="arithmatex">\(1.31\)</span>–<span class="arithmatex">\(10.29\)</span>).
+Determinism: <code>solve_triangular</code> bitwise forward and backward over 8 repeats under strict mode, no
+torch-documented guarantee; <code>cumsum</code> raises; the shape on the softmax corner is the first <em>gated
+wing</em> whose training step runs under <code>use_deterministic_algorithms(True)</code>. Circuit class: DET
+(<code>cook-1985-taxonomy</code>, §3.3). Must-fire checks: parity at <span class="arithmatex">\(\gamma=0\)</span> with the <span class="arithmatex">\(\gamma=0.5\)</span> region;
+solve vs dense inverse with a non-triangular plant; certificate in vector units with the convergent
+plant; segmentation <code>torch.equal</code> zeros with the <span class="arithmatex">\(-30\)</span> plant; CSR fill-in guard; three-outcome
+determinism; cell price within the law-vs-measured band. Mechanism: M-8, M-3, L-CERT, V-17, P-1,
+P-8, V-16, V-23.</p>
+<h2 id="26-lean-targets-build-order-every-m-is-pending-lake-build-a-missing-mathlib-lemma-moves-it-to-s-nothing-is-cited-as-proved-before-it-builds-l-lean-p-11">2.6 Lean targets (build order; every <code>[M]</code> is pending <code>lake build</code>; a missing Mathlib lemma moves it to <code>[S]</code>; nothing is cited as proved before it builds — L-LEAN, P-11)<a class="headerlink" href="#26-lean-targets-build-order-every-m-is-pending-lake-build-a-missing-mathlib-lemma-moves-it-to-s-nothing-is-cited-as-proved-before-it-builds-l-lean-p-11" title="Permanent link">#</a></h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>target</th>
+<th>grade</th>
+<th>carries</th>
+<th>refusal shipped</th>
+<th>mechanism</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><code>gamma_zero_is_softmax</code></td>
+<td>[M]</td>
+<td>P1</td>
+<td><code>gamma_half_is_not_softmax</code> witness</td>
+<td>V-3, V-24</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>bos_row_is_absorbing</code> at <span class="arithmatex">\(\beta=1\)</span></td>
+<td>[M]</td>
+<td>F1</td>
+<td>at <span class="arithmatex">\(\beta=0\)</span> row 0 is <span class="arithmatex">\(e^{qk_{00}}\)</span></td>
+<td>V-25</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>later_boundary_unreachable</code></td>
+<td>[M]</td>
+<td>F2</td>
+<td>—</td>
+<td>V-8</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>softmax_corner_not_nilpotent</code> (<span class="arithmatex">\(0&lt;\gamma\)</span>, lower-triangular)</td>
+<td>[M]</td>
+<td>P11</td>
+<td><code>pow_card_eq_zero</code></td>
+<td>V-25</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>lower_triangular_isUnit</code>, <code>diag_one_sub_smul_pos</code> (interval <span class="arithmatex">\([1-\gamma,1)\)</span>)</td>
+<td>[M]</td>
+<td>P5a, P10</td>
+<td><code>zero_diag_not_unit</code></td>
+<td>M-8</td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>resolvent_fromBlocks</code>; <code>segmentation_blockdiag</code> (<code>StrictlyLower</code>)</td>
+<td>[M]</td>
+<td>P6(i)</td>
+<td><code>tiny_gate_does_not_cut</code> at a <span class="arithmatex">\(-30\)</span> logit</td>
+<td>L-CERT</td>
+</tr>
+<tr>
+<td>7</td>
+<td><code>cut_makes_segment_head_absorbing</code>, <code>cut_severs_boundary_sets</code></td>
+<td>[M]</td>
+<td>P6(ii)</td>
+<td>—</td>
+<td>V-25, D-3</td>
+</tr>
+<tr>
+<td>8</td>
+<td><code>displacement_identity</code></td>
+<td>[M]</td>
+<td>P7(i)</td>
+<td><code>const_value_zero_displacement</code></td>
+<td>V-24, D-5</td>
+</tr>
+<tr>
+<td>9</td>
+<td><code>lowerTriangular_ne_symmSupport</code></td>
+<td>[M]</td>
+<td>P8 (D-2)</td>
+<td><code>zero_not_a_counterexample</code> pattern</td>
+<td>D-2</td>
+</tr>
+<tr>
+<td>10</td>
+<td><code>committor_is_resolvent_read</code> (a), (b-causal)</td>
+<td>[M]</td>
+<td>P3, P10</td>
+<td>—</td>
+<td>D-2</td>
+</tr>
+<tr>
+<td>11</td>
+<td><code>subdiag_pow_entry</code>, <code>pathprod_is_chain_resolvent</code></td>
+<td>[S]</td>
+<td>P2</td>
+<td><code>forward_map_fills_in</code> at general <span class="arithmatex">\(n\)</span></td>
+<td>D-2</td>
+</tr>
+<tr>
+<td>12</td>
+<td><code>neumann_truncation_bound</code>, <code>neumann_tail_attained</code>; <code>mask_amplification</code> (<span class="arithmatex">\(\varepsilon/(1-\gamma)\)</span>)</td>
+<td>[S]</td>
+<td>P4</td>
+<td><code>nonstochastic_breaks_bound</code> (rows <span class="arithmatex">\(3/2\)</span>, <span class="arithmatex">\(\gamma\cdot3/2&lt;1\)</span>); the <span class="arithmatex">\(s=3\)</span> witness</td>
+<td>V-24, V-10, L-CERT</td>
+</tr>
+<tr>
+<td>13</td>
+<td><code>resolvent_is_triangular_solve</code>; <code>mixing_matrix_rowStochastic</code></td>
+<td>[S]</td>
+<td>P5</td>
+<td><code>bare_read_row_sum</code> <span class="arithmatex">\(=1/(1-\gamma)\)</span></td>
+<td>V-17</td>
+</tr>
+<tr>
+<td>14</td>
+<td><code>causal_forward_only</code>; <code>suffix_resolve_eq_full</code> (prefix invariance); <code>sherman_morrison_row</code> (row clamp only)</td>
+<td>[S]</td>
+<td>P7</td>
+<td><code>dense_P_displaces_backward</code>; <code>token_rewrite_rank</code> remark</td>
+<td>V-24, M-8</td>
+</tr>
+<tr>
+<td>15</td>
+<td><code>isUnit_one_sub_of_perron</code> (b-chain); <code>reach_avoid_sum_one</code> (sets exhaust the absorbing states)</td>
+<td>[S]</td>
+<td>P3, P8</td>
+<td><code>unit_needs_rho_lt_one</code>; <code>no_goal_forces_max_ge_inv_K</code></td>
+<td>V-25, V-12</td>
+</tr>
+<tr>
+<td>16</td>
+<td><code>masked_sink_finite_sum</code> (<span class="arithmatex">\(V_0=0\)</span>)</td>
+<td>[S]</td>
+<td>P11</td>
+<td>—</td>
+<td>V-25</td>
+</tr>
+<tr>
+<td>17</td>
+<td><code>hitting_time_transform</code>; <code>f1_cantelli_union</code></td>
+<td>[D]</td>
+<td>P3, L-CERT</td>
+<td>—</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p>Rows 1–10 are one evening of independent <code>[M]</code> items; 11–16 name their dependencies; 17 is off the critical path. Price: <span class="arithmatex">\(0\)</span> GPU-s each.</p>
+<h2 id="27-limits-carried-to-8">2.7 Limits carried to §8<a class="headerlink" href="#27-limits-carried-to-8" title="Permanent link">#</a></h2>
+<p>Every <code>RUN[J]</code> number is one numpy float64 draw at <span class="arithmatex">\(s=32\)</span>, <span class="arithmatex">\(\gamma=0.6\)</span>, seed 0, CPU, an identity
+or counterexample check, not a statistic; other planets' runs are quoted at their own geometries.
+The NEPTUNE timings are one box, float32, a per-op floor, producer owed to <code>scripts/k_cert.py</code>.
+The ChaCAL diagonal convention rests on one HTML fetch (<code>refute_falsify_math</code> §3.15) and is re-read
+against the PDF before typesetting. Theorem numbers inside cited sources inherit the sweeps' <code>[U]</code>
+marks; <code>grinstead-1997-probability</code> is <code>[U]</code>; the boundary-null citation is owed. Proposition 8 has
+no cell, no realised sd, no measured <span class="arithmatex">\(t^\star\)</span>; its DAG bed is written, not run. The barcode and
+Mapper rows have no instrument. Lean grades are statements about statements; nothing was compiled.
+No code file, no git write, no external fetch by this judge.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Invented by <a href="https://teerthsharma.vercel.app/">Teerth Sharma</a> · Apache License 2.0
+    </div>
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/teerthsharma/resolvent" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://teerthsharma.vercel.app/" target="_blank" rel="noopener" title="teerthsharma.vercel.app" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M351.9 280H161c2.9 64.5 17.2 123.9 37.5 167.4 11.4 24.5 23.7 41.8 35.1 52.4 11.2 10.5 18.9 12.2 22.9 12.2s11.7-1.7 22.9-12.2c11.4-10.6 23.7-28 35.1-52.4 20.3-43.5 34.6-102.9 37.5-167.4zm-191-48h190.9c-2.8-64.5-17.1-123.9-37.4-167.4-11.4-24.4-23.7-41.8-35.1-52.4C268.1 1.7 260.4 0 256.4 0s-11.7 1.7-22.9 12.2c-11.4 10.6-23.7 28-35.1 52.4-20.3 43.5-34.6 102.9-37.5 167.4m-48 0c3.5-85.6 25.6-165.1 57.9-217.3C78.7 47.3 10.9 131.2 1.5 232zM1.5 280c9.4 100.8 77.2 184.7 169.3 217.3-32.3-52.2-54.4-131.7-57.9-217.3zm398.4 0c-3.5 85.6-25.6 165.1-57.9 217.3 92.1-32.7 159.9-116.5 169.3-217.3zm111.4-48C501.9 131.2 434.1 47.3 342 14.7c32.3 52.2 54.4 131.7 57.9 217.3z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

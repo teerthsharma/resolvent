@@ -1,0 +1,2131 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="One causal head, three switches. Softmax attention, unnormalized-kernel attention and the exact path product of a Markov chain as settings of one operator, proved in Lean 4, with every failure kept on the record.">
+      
+      
+        <meta name="author" content="Teerth Sharma">
+      
+      
+        <link rel="canonical" href="https://teerthsharma.github.io/resolvent/sources/sections/sec_cost/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/logo.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>4.x The cost law and the kernel path - resolvent</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/resolvent.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#4x-the-cost-law-and-the-kernel-path" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="resolvent" class="md-header__button md-logo" aria-label="resolvent" data-md-component="logo">
+      
+  <img src="../../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            resolvent
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              4.x The cost law and the kernel path
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/teerthsharma/resolvent" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    teerthsharma/resolvent
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../FAILS/" class="md-tabs__link">
+          
+  
+  
+  The record
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../BED_H_PREREGISTRATION/" class="md-tabs__link">
+          
+  
+  
+  Pre-registrations
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../ledgers/mistakes/" class="md-tabs__link">
+          
+  
+  
+  Ledgers
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../canon/CHARTER/" class="md-tabs__link">
+          
+  
+  
+  Canon
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../CEQ_SHAPE/" class="md-tabs__link">
+          
+  
+  
+  Paper
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="resolvent" class="md-nav__button md-logo" aria-label="resolvent" data-md-component="logo">
+      
+  <img src="../../../assets/logo.svg" alt="logo">
+
+    </a>
+    resolvent
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/teerthsharma/resolvent" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    teerthsharma/resolvent
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The record
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    The record
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../FAILS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Everything retracted, broken or open
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../COMPONENT_LEDGER/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Component ledger
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../PLAN/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Research plan
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CORNER_RULE_RETIREMENT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Corner rule retirement
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../PI_JEPA_KAGGLE_CARD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kaggle card
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../DR2_CARD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DR2 card
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pre-registrations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Pre-registrations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../BED_H_PREREGISTRATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BED-H
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../prereg/REMOVAL_ECHO_v1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    REMOVAL-ECHO v1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ledgers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Ledgers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/mistakes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Failure mechanisms
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/struck/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Struck constants
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/mathematics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mathematics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/model-card/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model card
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/costs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Costs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/v17k-rulings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    V17K rulings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/v16-calibration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    V16 calibration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Canon
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Canon
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/CHARTER/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Charter
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/01_THEORY_ACCURACY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01 Theory of accuracy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/02_THEORY_TRAINING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    02 Theory of training
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/03_KERNEL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03 Kernel
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/04_BEDS_AND_INSTRUMENTS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    04 Beds and instruments
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/05_REPAIRS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05 Repairs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/06_PREDICTIONS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    06 Predictions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/08_ARCHITECTURE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    08 Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/09_CHESS_AND_MARKETS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    09 Chess and markets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/CORRECTIONS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Corrections
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Paper
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Paper
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CEQ_SHAPE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The shape of CEQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Paper sources
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../BIB_AUDIT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bibliography audit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../BIB_ALIASES/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bibliography aliases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#4x1-the-serial-law-forward-substitution-against-qkt-and-pv-derived" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.x.1 The serial law: forward substitution against QKᵀ and PV (DERIVED)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4x2-the-chunked-block-triangular-solve-derived-the-occupied-pattern-cited" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.x.2 The chunked block-triangular solve (DERIVED; the occupied pattern CITED)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4x3-the-neumann-path-at-k-hops-and-its-crossover-derived-run" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.x.3 The Neumann path at K hops and its crossover (DERIVED + RUN)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4x4-the-segmentation-dividend-derived-from-the-f0-certificate-the-number-read" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.x.4 The segmentation dividend (DERIVED from the F0 certificate; the number READ)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4x5-the-csr-two-stage-path-and-what-a-mapper-cover-buys-read-derived" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.x.5 The CSR two-stage path, and what a Mapper cover buys (READ + DERIVED)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4x6-determinism-run-read-of-the-installed-torch-cited" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.x.6 Determinism (RUN; READ of the installed torch; CITED)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4x7-memory-the-ss-materialisation-read-derived" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.x.7 Memory: the [S,S] materialisation (READ + DERIVED)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4x8-the-price-of-one-arena-cell-on-the-certified-rtx-4060-fitted-run-every-extrapolation-labelled" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.x.8 The price of one arena cell on the certified RTX 4060 ([FITTED] + [RUN], every extrapolation labelled)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4x9-the-cost-law-in-one-table-and-the-kernel-paths-must-fire-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.x.9 The cost law in one table, and the kernel path's must-fire checks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#limits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Limits
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="4x-the-cost-law-and-the-kernel-path">4.x The cost law and the kernel path<a class="headerlink" href="#4x-the-cost-law-and-the-kernel-path" title="Permanent link">#</a></h1>
+<p>Evidence classes on every load-bearing claim: <code>RUN</code> (executed this session on the certified box, 2026-09-03, torch 2.5.1+cu121, RTX 4060 Laptop, HEAD <code>207e7b9</code>), <code>READ path:line</code> (quoted at HEAD <code>207e7b9</code>), <code>CITED [V]/[U]</code>, <code>DERIVED</code> (steps shown). Cost tags follow <code>COSTS.md:16-20</code>: <code>[MEASURED]</code>, <code>[FITTED]</code> with its R², <code>[MODULE]</code>, <code>[INHERITED]</code>, <code>[ASSUMED]</code>. The FLOP convention is the house one: one multiply-add (MAC) = 2 FLOPs, a matmul <code>[m,p]@[p,q]</code> costs <code>2mpq</code> FLOPs (READ <code>scale/m3_flops.py:41</code>); every count below is stated in MACs first and FLOPs second so that no OPS/HOUSE mix of the kind <code>V12_PRICING.md:31-39</code> catalogues can enter.</p>
+<p>The object priced is the read <code>O = P (I − γP)^{-1} V</code> with <code>P</code> causal (lower-triangular including the diagonal), row-stochastic, absorbing rows equal to identity rows, <code>γ ∈ [0,1)</code>, per head, one sequence of length <code>s</code>, head width <code>d</code>. The design constraint that governs every cost below: the shape at <code>γ = 0</code> is <code>PV</code> bitwise (identity I1, RUN by the coordinator), so <strong>every cost is stated as an increment over the softmax head it contains</strong>, never as a stand-alone figure. That is the M-8 rule (READ <code>MISTAKES.md:575-578</code>: price each arm at its own measured rate; never carry a cross-arm ratio across a task, a geometry or an <code>n</code>).</p>
+<h2 id="4x1-the-serial-law-forward-substitution-against-qkt-and-pv-derived">4.x.1 The serial law: forward substitution against QKᵀ and PV (DERIVED)<a class="headerlink" href="#4x1-the-serial-law-forward-substitution-against-qkt-and-pv-derived" title="Permanent link">#</a></h2>
+<p><code>M = I − γP</code> is lower-triangular with diagonal <code>1 − γP_ii ≥ 1 − γ &gt; 0</code>, so <code>z = M^{-1}V</code> is a forward substitution, row by row:</p>
+<div class="highlight"><pre><span></span><code>z_i = ( v_i + γ Σ_{j&lt;i} P_ij z_j ) / (1 − γ P_ii),        i = 0 … s−1          (C1)
+</code></pre></div>
+<p>Per head, per sequence, the MAC count of (C1) is <code>d · Σ_{i} i = d·s(s−1)/2</code> for the inner sums plus <code>s·d</code> reciprocal-multiplies for the diagonal:</p>
+<table>
+<thead>
+<tr>
+<th>term</th>
+<th>MACs per head</th>
+<th>FLOPs (house)</th>
+<th>depth (sequential rounds)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>QKᵀ</code>, causal lower triangle only (a fused kernel skips the upper triangle, READ <code>ceq/sizing.py:153-157</code>)</td>
+<td><code>d·s(s+1)/2 ≈ s²d/2</code></td>
+<td><code>≈ s²d</code></td>
+<td>1</td>
+</tr>
+<tr>
+<td><code>QKᵀ</code>, dense as <code>FlopCounterMode</code> counts it (READ <code>ceq/sizing.py:149-157</code>)</td>
+<td><code>s²d</code></td>
+<td><code>2s²d</code></td>
+<td>1</td>
+</tr>
+<tr>
+<td><code>PV</code> (softmax read), causal</td>
+<td><code>≈ s²d/2</code></td>
+<td><code>≈ s²d</code></td>
+<td>1</td>
+</tr>
+<tr>
+<td><strong>forward substitution (C1)</strong>, causal</td>
+<td><code>d·s(s−1)/2 + s·d ≈ s²d/2</code></td>
+<td><code>≈ s²d</code></td>
+<td><strong><code>s</code></strong></td>
+</tr>
+<tr>
+<td><code>Pz</code> (the shape's read, replaces <code>PV</code>)</td>
+<td><code>≈ s²d/2</code></td>
+<td><code>≈ s²d</code></td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<p>So the shape's forward costs <code>≈ 3·s²d/2</code> MACs per head against softmax's <code>≈ s²d</code> MACs: <strong>+50 % of the causal MACs, +25 % if <code>QKᵀ</code> is counted dense</strong> (the brief's I5 figure <code>s²d</code> vs <code>2s²d</code> is the dense count of the same arithmetic). The softmax itself (exp, sum, divide, <code>3·s²</code> elements, READ <code>scale/m3_flops.py:375-376</code>) is paid identically by both and is not in the ratio. The one thing the table's last column says that the MAC column hides: the substitution is <strong>depth <code>s</code></strong>, and every other row is depth 1. On a GPU the substitution is therefore not "half a matmul"; it is a latency chain of <code>s</code> dependent steps, each a <code>[1,i]·[i,d]</code> product, which is exactly what §4.x.2 removes.</p>
+<p>Backward (DERIVED from the adjoint of a triangular solve): with <code>ḡ = ∂L/∂z</code>, the adjoints are <code>V̄ = M^{-T} ḡ</code> (one more triangular solve, upper, <code>≈ s²d/2</code> MACs, depth <code>s</code>) and <code>M̄ = −M^{-T} ḡ zᵀ = −V̄ zᵀ</code> (one outer product, <code>s²d</code> MACs over the causal triangle <code>≈ s²d/2</code>, depth 1), then <code>P̄ = −γ M̄</code> and <code>γ̄ = −⟨M̄, P⟩</code>. The backward is therefore <code>≈ 2×</code> the forward's solve MACs, the usual ratio, and carries one more depth-<code>s</code> chain. Per training step (forward + backward) the solve adds <code>≈ 3·s²d/2</code> MACs per head to the softmax head's <code>≈ 3·s²d</code> (forward <code>s²d</code> and backward <code>2s²d</code>): the +50 % is preserved through the step.</p>
+<p>The record's own corner is the floor of this law. When <code>P</code> is the corner-3 chain — the only nonzero band is the sub-diagonal, <code>A[i,i−1] = x[i, CH_DRIVE]</code> — (C1) collapses to the first-order scan <code>z = a_i z + b_i</code> (READ <code>scale/negation_scope.py:288-303</code>, <code>equilibrium_oracle</code>), cost <code>O(s·d)</code>, and the path product is a <code>cumprod</code> (READ <code>ceq/arm_smprime.py:144-172</code>, <code>path_product</code>; its own note at <code>:165-168</code> names a segmented associative scan as the move past <code>s = 64</code>). The general row-stochastic <code>P</code> has no scan: the resolvent of a dense lower-triangular matrix is the triangular solve, and (C1) is its cost.</p>
+<h2 id="4x2-the-chunked-block-triangular-solve-derived-the-occupied-pattern-cited">4.x.2 The chunked block-triangular solve (DERIVED; the occupied pattern CITED)<a class="headerlink" href="#4x2-the-chunked-block-triangular-solve-derived-the-occupied-pattern-cited" title="Permanent link">#</a></h2>
+<p>Partition the <code>s</code> positions into <code>s/C</code> chunks of <code>C</code> rows. Write <code>M</code> in blocks <code>M_kl</code>, <code>l ≤ k</code>. Then</p>
+<div class="highlight"><pre><span></span><code>M_kk z_k = v_k − γ Σ_{l&lt;k} P_kl z_l ,        k = 0 … s/C − 1                    (C2)
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>piece</th>
+<th>how</th>
+<th>MACs per head</th>
+<th>depth</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>diagonal blocks <code>M_kk^{-1}</code></td>
+<td>dense <code>[C,C]</code> lower-triangular inverse, all <code>s/C</code> blocks in parallel</td>
+<td><code>(s/C)·C³/3 = s·C²/3</code> (inverse) or <code>(s/C)·C²d/2 = s·C·d/2</code> (apply)</td>
+<td><code>C</code> once (inverse) then 1 per chunk</td>
+</tr>
+<tr>
+<td>off-diagonal propagation</td>
+<td>one GEMM <code>[C, kC]·[kC, d]</code> per chunk <code>k</code></td>
+<td><code>Σ_k C·kC·d = C²d·(s/C)(s/C−1)/2 ≈ s²d/2</code></td>
+<td>1 per chunk</td>
+</tr>
+<tr>
+<td><strong>total</strong></td>
+<td></td>
+<td><code>≈ s²d/2 + s·C·d/2 + s·C²/3</code></td>
+<td><strong><code>s/C</code></strong></td>
+</tr>
+</tbody>
+</table>
+<p>The MAC total is the same <code>≈ s²d/2</code> as (C1) — chunking moves no arithmetic, it re-shapes it: the off-diagonal work becomes <code>s/C</code> dense GEMMs that tensor cores execute at depth 1 each, and the depth falls from <code>s</code> to <code>s/C</code>. At <code>s = 64, C = 64</code> the whole thing is one dense <code>[64,64]</code> triangular solve, which is what <code>torch.linalg.solve_triangular</code> executes (one cuBLAS <code>trsm</code> per batch element) and what §4.x.6 timed; at <code>s = 4096, C = 64</code> the depth is 64 instead of 4096, and the memory of the retained diagonal blocks is <code>(s/C)·C² = s·C</code> elements instead of <code>s²/2</code>.</p>
+<p><strong>The occupied kernel pattern.</strong> DeltaNet's chunkwise training algorithm — Yang, Wang, Zhang, Shen, Kim, <em>Parallelizing Linear Transformers with the Delta Rule over Sequence Length</em>, arXiv:2406.06484 (CITED [V], abs page fetched 2026-09-03, title matched) — computes inside each chunk of size <code>C</code> a lower-triangular <code>[C,C]</code> inversion (its "UT transform"), forms <code>W = T K</code> and <code>U = T V</code>, and passes a <code>d×d</code> state between chunks; the chunk size interpolates between the fully-parallel (<code>C = L</code>) and recurrent (<code>C = 1</code>) forms, and the per-chunk complexity is stated as <code>O(LCd + Ld²)</code> (CITED [V], HTML v3 fetched 2026-09-03). The intra-chunk triangular inversion of (C2)'s diagonal blocks is that pattern and is owned by it. What differs, stated narrowly:</p>
+<ol>
+<li><strong>The inter-chunk term has no <code>d×d</code> state.</strong> DeltaNet's transition is the outer-product form <code>KVᵀ</code> (rank <code>≤ d</code>), so everything before chunk <code>k</code> compresses into a <code>[d,d]</code> matrix and the inter-chunk cost is <code>O(L d²)</code>. The shape's <code>P = softmax(QKᵀ)</code> (β = 1 corner) has no low-rank inter-chunk state; the term <code>Σ_{l&lt;k} P_kl z_l</code> in (C2) is a genuine <code>[C, kC]·[kC, d]</code> GEMM, and the inter-chunk cost is <code>≈ s²d/2</code> MACs, quadratic. The shape is quadratic <strong>because</strong> it keeps softmax's <code>P</code> bitwise at <code>γ = 0</code> (I1); DeltaNet is linear because it does not.</li>
+<li><strong>DeltaNet is linear attention, no softmax</strong> (CITED [V]); the shape at <code>γ = 0</code> is softmax bitwise. The Lean <code>gate_zero_beta_zero_is_linear_attention</code> corner (READ brief §2) is the record's own linear-attention setting, and it is the <em>other</em> corner of the family from the one priced here.</li>
+<li><strong><code>γ</code> is one scalar with a certificate</strong> (<code>γ^{K+1}/(1−γ)</code>, §4.x.3); DeltaNet's per-token <code>β_t</code> is a learned write strength with no truncation certificate in the cited abstract. NOT FOUND in this session's search: a chunkwise solve of <code>(I − γ·softmax(QKᵀ))^{-1}</code> — the search covered arXiv:2406.06484 only and is not a literature census; the prior-art planet owns that.</li>
+<li><strong>Absorbing rows</strong> (identity rows on the constraint sets) are a boundary condition the diagonal blocks carry for free — an identity row makes <code>M_kk</code>'s corresponding row <code>(1−γ)·e_i</code> — and DeltaNet has no such rows.</li>
+</ol>
+<p>Design against the taxonomy: the chunked law is stated as MACs <em>and</em> depth so that a wall-clock reading is never scaled off the MAC ratio alone — <code>scale/m3_flops.py:101-121</code> (READ) records the FLOP model being optimistic by <code>2.0×</code> at the pilot geometry and <code>4.4×–6.6×</code> at the shipped one because dispatch is not in the arithmetic (M-3, pilot spread taken as the realised spread). No chunked kernel exists in the tree at HEAD <code>207e7b9</code>; its clock is <code>NOT MEASURED — needs a chunked kernel</code>.</p>
+<h2 id="4x3-the-neumann-path-at-k-hops-and-its-crossover-derived-run">4.x.3 The Neumann path at K hops and its crossover (DERIVED + RUN)<a class="headerlink" href="#4x3-the-neumann-path-at-k-hops-and-its-crossover-derived-run" title="Permanent link">#</a></h2>
+<p>Truncate <code>(I − γP)^{-1} = Σ_{k≥0} (γP)^k</code> at <code>K</code>:</p>
+<div class="highlight"><pre><span></span><code>z_K = Σ_{k=0}^{K} (γP)^k V   — K matmuls [s,s]·[s,d], each depth 1                (C3)
+‖(I − γP)^{-1} − Σ_{k≤K}(γP)^k‖_∞ ≤ γ^{K+1}/(1−γ)     (P row-stochastic, γ &lt; 1)     (C4)
+</code></pre></div>
+<p>(C4) is identity I4 of the brief (RUN by the coordinator at K = 1, 2, 4, 8, 16, error equal to the bound to <code>1e-15</code>; planted non-stochastic negative reads <code>119.37</code> against a bound of <code>1.143</code>). MACs: <code>K · s²d/2</code> causal per head, depth <code>K</code>. Against the solve's <code>s²d/2</code> at depth <code>s</code> (or <code>s/C</code>):</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>MACs</th>
+<th>depth</th>
+<th>exact?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>solve (C1)/(C2)</td>
+<td><code>s²d/2</code></td>
+<td><code>s</code> or <code>s/C</code></td>
+<td>yes, to rounding</td>
+</tr>
+<tr>
+<td>Neumann (C3)</td>
+<td><code>K·s²d/2</code></td>
+<td><code>K</code></td>
+<td>no; δ = <code>γ^{K+1}/(1−γ)</code> printed</td>
+</tr>
+</tbody>
+</table>
+<p><strong>MAC crossover: none.</strong> <code>K·s²d/2 &lt; s²d/2</code> requires <code>K &lt; 1</code>. Truncation never beats the solve in arithmetic; it beats it only in depth, and only when the solve's serial chain is the bottleneck. Hops needed for a target operator-norm δ: <code>K ≥ log(δ(1−γ))/log γ − 1</code> — at <code>γ = 0.5, δ = 10^{-6}</code>: <code>K ≥ 19.9</code>, i.e. 20 hops, <code>20×</code> the solve's MACs; at <code>γ = 0.9</code>: 129 hops. (The record's own settle count agrees in kind: <code>scale/arm_s.py:326-334</code> <code>neumann_for(β)</code> routes β through the Δ↔κ inverse and returned <code>n_neumann = 21</code> at β = 0.5, READ <code>V12_PRICING.md:42</code>.)</p>
+<p><strong>Measured on the certified box</strong> (RUN this session; <code>n</code> sequences batched, <code>s = 64</code>, <code>d = 16</code>, <code>γ = 0.5</code>, float32, <code>CUBLAS_WORKSPACE_CONFIG=:4096:8</code> exported before process start, <code>use_deterministic_algorithms</code> off for this timing, median of 14 timed forward+backward calls after 2 warm-ups, <code>torch.cuda.synchronize</code> bracketed; no Adam step):</p>
+<table>
+<thead>
+<tr>
+<th><code>n</code></th>
+<th><code>PV</code> fwd+bwd</th>
+<th>solve + <code>Pz</code> fwd+bwd</th>
+<th>Neumann K=1</th>
+<th>K=2</th>
+<th>K=4</th>
+<th>K=8</th>
+<th>K=16</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2048</td>
+<td>1.473 ms</td>
+<td><strong>2.514 ms</strong></td>
+<td>3.001</td>
+<td>4.524</td>
+<td>6.511</td>
+<td>13.182</td>
+<td>25.409</td>
+</tr>
+<tr>
+<td>4096</td>
+<td>2.347 ms</td>
+<td><strong>4.659 ms</strong></td>
+<td>5.684</td>
+<td>8.652</td>
+<td>14.571</td>
+<td>28.064</td>
+<td>53.470</td>
+</tr>
+<tr>
+<td>8192</td>
+<td>5.374 ms</td>
+<td><strong>9.916 ms</strong></td>
+<td>12.222</td>
+<td>18.812</td>
+<td>31.835</td>
+<td>58.147</td>
+<td>115.050</td>
+</tr>
+</tbody>
+</table>
+<p>At this shape the exact solve is cheaper than <strong>one</strong> Neumann hop (2.514 vs 3.001 ms at <code>n = 2048</code>): the solve is one <code>trsm</code> launch per batch and each hop is a <code>bmm</code> launch plus an add, so the comparison is launch-bound at <code>s = 64</code>, and the solve's depth-64 chain is invisible. The crossover in wall-clock is therefore <code>K &lt; 1</code> on this box at <code>s = 64</code> — the "cheap path" is not cheap here. Where the Neumann path earns its place is (i) <code>s ≫ 64</code> with no chunked kernel, where depth <code>s</code> becomes visible — <code>NOT MEASURED</code> past <code>s = 64</code>; and (ii) the sparse case of §4.x.5, where <code>(γP)^k</code> on a block-sparse <code>P</code> stays block-sparse (reachability within <code>k</code> hops) while the exact inverse fills in.</p>
+<p><strong>The certificate's units</strong> (DERIVED; designed against V-17, a threshold imported out of its units, READ <code>MISTAKES.md:855</code>). (C4) is an operator ∞-norm. The error on the <em>vector</em> <code>z</code> is <code>≤ δ·‖V‖_∞</code>. The RUN above printed <code>max|z_solve − z_{K=16}| = 6.13e-05</code> (n = 2048) against a bare <code>δ = γ^{17}/(1−γ) = 1.526e-05</code>; the bare bound is not violated, because <code>V</code> was standard Gaussian over <code>2.1e6</code> entries, whose maximum is <code>≈ 5</code> [ASSUMED from the Gaussian extreme-value order <code>√(2 ln N) ≈ 5.4</code>; not printed by the run], giving a vector bound <code>≈ 7.6e-05 ≥ 6.13e-05</code>. The L-CERT rule for every Neumann mask in the arena is therefore: <strong>print <code>δ·‖V‖_∞</code>, not <code>δ</code></strong>, or the printed certificate is in the wrong units and a compliant kernel will read as a violation. A float32 solve-vs-Neumann diff below <code>δ·‖V‖_∞</code> is the must-fire planted check; a planted non-stochastic <code>P</code> (row sums 1.5, as in I4) is the rejection region (V-24, empty rejection region).</p>
+<h2 id="4x4-the-segmentation-dividend-derived-from-the-f0-certificate-the-number-read">4.x.4 The segmentation dividend (DERIVED from the F0 certificate; the number READ)<a class="headerlink" href="#4x4-the-segmentation-dividend-derived-from-the-f0-certificate-the-number-read" title="Permanent link">#</a></h2>
+<p><code>pathProd_eq_zero_iff</code> (READ <code>lean/CEQ/V16Domain.lean:129</code>; summarised at <code>:41</code>: the product is <code>0</code> iff a zero magnitude is on the path) is the F0 certificate: a zero gate at position <code>k</code> sends every entry whose window contains <code>k</code> to exactly <code>0</code>. In resolvent language: if the strictly-causal part of <code>P</code> has zero blocks <code>P_BA = 0</code> for every pair of segments <code>A &lt; B</code>, then <code>M = I − γP</code> is block-diagonal by segment and so is <code>M^{-1}</code> — no approximation, no δ. The solve cost falls from <code>s²d/2</code> to</p>
+<div class="highlight"><pre><span></span><code>Σ_m L_m² d / 2 ,   L_m = length of segment m,   Σ_m L_m = s ;   dividend  D = s² / Σ_m L_m²    (C5)
+</code></pre></div>
+<p>For <code>s/L̄</code> equal segments, <code>D = s/L̄</code>. Two things follow. First, the dividend is a property of the <strong>corpus's</strong> segment-length distribution, not of the arm, and it must be quoted with the corpus named — a dividend carried from one bed to another is V-22 (READ <code>MISTAKES.md:1140</code>, a pre-registered constant carried in from another system). Second, it applies to the exact solve, the Neumann path and the CSR path alike, because a block-diagonal <code>M</code> makes all three block-diagonal.</p>
+<p><strong>BED-M's number.</strong> On BED-M <code>e3_t2</code> at <code>n = 128, s = 64</code>, <code>96.78 %</code> of causal pairs <code>j ≤ i</code> annihilate — positives <code>257,664 / 266,240</code> (READ <code>V16_ARM_SMPRIME.md:518-522</code>; the same <code>96.78 %</code> at <code>workdonenewseal.md:92</code> and <code>README.md:147</code>). The nonzero fraction of the causal resolvent is <code>1 − 0.9678 = 0.0322</code>, so</p>
+<div class="highlight"><pre><span></span><code>D_BED-M = 1 / 0.0322 = 31.06×     (DERIVED from the READ fraction; denominator-independent)
+</code></pre></div>
+<p>The same line reads <code>133,120</code> causal pairs while <code>266,240 = 128 · 64·65/2</code> is the count of pairs <code>j ≤ i</code> and matches the printed positives (<code>257,664/266,240 = 0.9678</code>); the <code>133,120</code> is half of that and is flagged here as a provenance inconsistency in the source (P-class), which does not move the fraction. What the fraction <em>means</em> is the domain-census point (V-25, READ <code>MISTAKES.md:1954</code>): <code>0.0322 · 2080 ≈ 67</code> live pairs per 64-row block; with <code>s/L̄</code> segments of length <code>L̄</code> the live pairs number <code>(s/L̄)·L̄(L̄+1)/2 = 32(L̄+1)</code>, so <code>L̄ ≈ 1.1</code>. BED-M's real support at <code>t* = 2</code> is one to two positions per segment — the 31× dividend on BED-M is a statement that BED-M is almost entirely dead gates, not that natural text segments are short. The paper carries the dividend as the law (C5) with BED-M's <code>31.06×</code> as one measured instance and the segment-length distribution of BED-S, BED-K and any text corpus as <code>NOT MEASURED — needs the corpus's zero-gate census</code>.</p>
+<p>For a softmax <code>P</code> an exact zero needs a <code>−∞</code> logit, i.e. a mask; that is the F0 case. When the mask drops entries that are small but nonzero, the certificate is F1 — Cantelli per pair with a Boole/Bonferroni union over the mask (<code>d = 65</code> at <code>δ = 1 %</code>, <code>32×</code>), or Azuma for token-dependent gates (<code>d = 20</code> at the same δ) — READ <code>CEQ_V20_R15_CONTRACT.md:212-219</code>, annex M9. Every arena mask carries one of F0/F1 or is refused (L-CERT, READ <code>:64-67</code>).</p>
+<h2 id="4x5-the-csr-two-stage-path-and-what-a-mapper-cover-buys-read-derived">4.x.5 The CSR two-stage path, and what a Mapper cover buys (READ + DERIVED)<a class="headerlink" href="#4x5-the-csr-two-stage-path-and-what-a-mapper-cover-buys-read-derived" title="Permanent link">#</a></h2>
+<p>The executor exists and is merged: <code>triton-lang/kernels#22</code>, forward-only, consumes a causal CSR block schedule built from sink blocks, local-window blocks and a 0D-persistence salience over key-block centroids; tested for dense-CSR parity, block selection, schedule validation, dtype, 2-D and batched/headed correctness (READ <code>THEORY.md:112-119</code>; CITED [V] GitHub PR page fetched 2026-09-03: "Add topology-derived sparse attention kernel", merged 2026-07-28). Its two failure modes that escaped validation — an empty schedule row returning <code>acc/0 = NaN</code> silently, and a negative block index passing the <code>k_pos &lt; seq</code> mask into an out-of-bounds load that poisons the CUDA context — are made structural in the tree's own kernel (READ <code>ceq/mz_kernel.py:10-21</code>, <code>:80-83</code>, <code>:116-121</code>). The useful-FLOP count the tree already uses is</p>
+<div class="highlight"><pre><span></span><code>attention_flops = 4 · units · B² · d · BH        (READ ceq/mz_kernel.py:170-179; 2·QKᵀ + 2·PV per visited tile)
+</code></pre></div>
+<p><strong>Two stages.</strong> Stage 1 (topology selects candidates): the schedule is data, not code — a CSR list of <code>[B,B]</code> tiles per query block (READ <code>THEORY.md:122-131</code>). Stage 2 (dense resolvent inside): per query block-row, the selected tiles are the nonzeros of <code>P</code>'s block-row, and (C2) runs over them. Cost per visited tile of the solve's off-diagonal propagation: <code>B²d/2</code> MACs = <code>B²d</code> FLOPs, so the resolvent adds <code>1 · units · B² · d · BH</code> FLOPs to the kernel's <code>4·units·B²·d·BH</code> — <strong>+25 % over the visited tiles</strong>, plus the diagonal tiles' intra-tile inverse (<code>(s/B)·B³/3</code>).</p>
+<p><strong>The fill-in caveat, which decides which of §4.x.1–4.x.3 the CSR path can host.</strong> The inverse of a block-sparse lower-triangular matrix is dense along reachability: if tile <code>(k,l)</code> is dropped but <code>(k,m)</code> and <code>(m,l)</code> are kept, <code>M^{-1}</code> has a nonzero <code>(k,l)</code> block. So the <em>exact</em> solve on a CSR schedule is exact only when the dropped tiles disconnect the graph (§4.x.4, block-diagonal); otherwise the exact solve either fills in (cost returns toward <code>s²d/2</code>) or silently computes the resolvent of a <em>different</em> <code>P</code> — the masked one — with no certificate for the difference. The path that keeps the schedule's sparsity honestly is Neumann on the sparse <code>P</code>: <code>(γP)^k</code> has the sparsity of <code>k</code>-hop reachability, each hop is a block-sparse matmul over the schedule, and the total certificate is the union of the mask's F1 δ (dropped mass) and the truncation's <code>γ^{K+1}/(1−γ)</code>. The paper states the two-stage path as: <strong>F0 segmentation ⇒ exact block-diagonal solve; F1 mask ⇒ Neumann on the sparse <code>P</code> with a union certificate; exact solve on an F1 mask ⇒ refused</strong> (a mask without a certificate is a heuristic, L-CERT).</p>
+<p><strong>What a Mapper / nerve cover buys at long context.</strong> <code>topoml</code> supplies <code>metric_cover / nerve_graph / mapper_graph</code> (READ <code>THEORY.md:23</code>). A cover <code>{U_a}</code> of the key positions gives candidate tiles = nerve edges; the resolvent's cost becomes <code>Σ_a |U_a|²d/2</code> plus the overlap terms, against <code>s²d/2</code> — the same form as (C5) with overlaps, so a cover buys exactly what segmentation buys, minus the overlaps, and its dividend is again a corpus property. Two measured warnings apply. (i) A candidate set realised by <code>index_select</code> pays the gather: <code>2.58 ms</code> of <code>index_select</code> against <code>0.82 ms</code> of attention over the same slice at 65,536 positions on this same card (READ <code>ceq/multizoom.py:12-16</code>); the CSR tile form of kernels#22 reads contiguous <code>[B,B]</code> tiles and avoids it, so a Mapper cover must be quantised to tiles before it is a schedule. (ii) The far-field the cover drops needs a printed bound: the tree's only computable one is the mean-pool coarsening bound <code>‖A − Ã‖_∞ ≤ (D_∞/2)(e^{δ_max} − 1) + max_G[min(2, e^{R_G} − 1)·r_G]</code> from key/value geometry alone (READ <code>ceq/multizoom.py:38-49</code>); a Mapper cover with a comparable printed δ is <code>NOT FOUND</code> in the tree, so a Mapper schedule enters the arena only through the F1 union bound of annex M9. Backward through kernels#22 does not exist (READ <code>THEORY.md:223-224</code>, risk 6); the CSR path is inference-side until it does.</p>
+<h2 id="4x6-determinism-run-read-of-the-installed-torch-cited">4.x.6 Determinism (RUN; READ of the installed torch; CITED)<a class="headerlink" href="#4x6-determinism-run-read-of-the-installed-torch-cited" title="Permanent link">#</a></h2>
+<p>Method: the installed <code>torch.use_deterministic_algorithms</code> docstring (READ, <code>torch/__init__.py</code> of torch 2.5.1+cu121 on this box, printed via <code>inspect.getsource</code>) was read in full for each operator's class, and each operator was then executed under <code>use_deterministic_algorithms(True)</code> on the certified card with <code>CUBLAS_WORKSPACE_CONFIG=:4096:8</code> exported before the process started (<code>V17_R4_RETAKE_PRICE.md:178-181</code> READ: set in-process it does not take). Three outcomes are distinguished — executable-and-bitwise, executable-and-drifting, not executable — because collapsing "could not tell" into "pass" is V-16 (READ <code>MISTAKES.md:828</code>).</p>
+<table>
+<thead>
+<tr>
+<th>operator</th>
+<th>docstring class (READ, torch 2.5.1)</th>
+<th>RUN, flag ON, CUDA, this box</th>
+<th>class of the verdict</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>torch.cumsum</code></td>
+<td>in the <strong>throws <code>RuntimeError</code></strong> list: "when called on a CUDA tensor when dtype is floating point or complex"</td>
+<td>forward <strong>raises</strong>, backward <strong>raises</strong> (<code>cumsum_cuda_kernel does not have a deterministic implementation</code>)</td>
+<td>RUN + READ</td>
+</tr>
+<tr>
+<td><code>torch.cumprod</code></td>
+<td><strong>absent</strong> from both lists</td>
+<td>forward <strong>OK</strong>; backward <strong>raises</strong> the same <code>cumsum</code> error — autograd differentiates a cumulative product through <code>cumsum</code></td>
+<td>RUN; matches <code>COSTS.md:147-154</code> (READ, 8 repeats, hop bitwise flag OFF and ON, gradient NOT EXECUTABLE flag ON)</td>
+</tr>
+<tr>
+<td><code>torch.linalg.solve_triangular</code></td>
+<td><strong>absent</strong> from both lists</td>
+<td>forward <strong>OK</strong>, backward <strong>OK</strong>; over 8 repeats, forward <code>max|Δ| = 0.0</code>, backward <code>max|Δ| = 0.0</code> on <code>[2048,64,64]·[2048,64,16]</code> float32</td>
+<td>RUN (repeatability, one box, one process); the docstring's silence means no deterministic <em>guarantee</em> is documented by torch</td>
+</tr>
+<tr>
+<td><code>torch.mm / bmm</code></td>
+<td>deterministic <strong>only if</strong> <code>CUBLAS_WORKSPACE_CONFIG=:4096:8</code> or <code>:16:8</code> is set, else raises</td>
+<td>forward OK, backward OK</td>
+<td>RUN + READ</td>
+</tr>
+</tbody>
+</table>
+<p>The torch 2.5 reproducibility note (CITED [V], <code>docs.pytorch.org/docs/2.5/notes/randomness.html</code>, fetched 2026-09-03) names none of <code>cumsum</code>, <code>cumprod</code>, <code>solve_triangular</code> and defers CUDA matmul reproducibility to the cuBLAS workspace setting. cuBLAS's own reproducibility statement (CITED [V], <code>docs.nvidia.com/cuda/cublas</code> §results-reproducibility, fetched 2026-09-03) guarantees bitwise-identical results per toolkit version on GPUs of the same architecture and SM count, withdraws the guarantee under multiple active streams unless one workspace or handle per stream (or the <code>CUBLAS_WORKSPACE_CONFIG</code> values above) is used, and does not name <code>trsm</code>. That <code>solve_triangular</code> dispatches to cuBLAS <code>trsm</code> on CUDA is [U] (not verified from source this session; the ATen binary is compiled). The class of the determinism claim for the shape is therefore: <strong><code>solve_triangular</code> — RUN-bitwise on the certified card under the single-stream, workspace-pinned regime, with no torch-documented guarantee; <code>cumsum</code> — documented non-deterministic, raises; <code>cumprod</code> — undocumented, forward bitwise, backward blocked by <code>cumsum</code>.</strong></p>
+<p>Consequence for the arms. The shape's solve path is executable under strict mode forward <em>and</em> backward, which <code>arm_smprime</code>'s <code>cumprod</code> path is not (backward raises, <code>COSTS.md:151-154</code> READ; reproduced at <code>V17_R4_RETAKE_PRICE.md:161-164</code> READ). So a shape built on the triangular solve is the first arm in the record whose <em>training</em> step can run under <code>use_deterministic_algorithms(True)</code>; the record's "hazard follows reduction length, not launch size" finding (<code>workdonenewseal.md:328-334</code> READ: bitwise at reduction 64 and 4,096, drifting only at <code>1e6</code>) is the measured floor for the flag-OFF regime. Design against P-1 (a number with no live producer): the RUN's exact command is the one-liner recorded in this session's transcript — <code>torch.use_deterministic_algorithms(True)</code> then <code>solve_triangular</code> on <code>tril(rand(64,64)) + I</code> against <code>randn(64,16)</code>, 8 repeats forward and backward — and it must be added to <code>scripts/k_cert.py::determinism_at_64</code> (READ <code>:579-640</code>) as a fourth quantity beside hop / forward / gradient before any arena cell quotes it; that edit is code and is owed, not done.</p>
+<h2 id="4x7-memory-the-ss-materialisation-read-derived">4.x.7 Memory: the <code>[S,S]</code> materialisation (READ + DERIVED)<a class="headerlink" href="#4x7-memory-the-ss-materialisation-read-derived" title="Permanent link">#</a></h2>
+<p>The one number that decides everything in <code>ceq/sizing.py</code> (READ <code>:9-16</code>): SDPA never forms the <code>[S,S]</code> matrix and its activations are <code>O(S)</code>; an operator that materialises <code>P</code> and lets autograd retain it grows as <code>O(S²)</code>, measured <strong><code>3.9</code> tensors of <code>[B,H,S,S]</code> per layer</strong> (<code>C_OPERATOR</code>, READ <code>:48</code>), re-solved against the CUDA allocator at <strong><code>3.823</code>, R² <code>0.996373</code></strong> (READ <code>COSTS.md:90</code>), with <code>C_RESIDUAL = 17.874</code> (R² <code>0.996373</code>, <code>:89</code>). The measured ratio signed/softmax activation bytes at <code>B=4 d=256 L=4 H=4</code> fp32 runs <code>1.44×</code> at <code>seq 128</code> to <strong><code>8.06×</code> at <code>seq 2048</code></strong> (READ <code>ceq/sizing.py:17-22</code>) — a function of <code>S</code>, not a constant.</p>
+<p>Bytes per element on the certified device: fp32 <code>4.0</code> B; under bf16 autocast the operator term measures <strong><code>3.341</code> B/elem (R² <code>0.999830</code>)</strong>, not 2 (READ <code>COSTS.md:91</code>, <code>ceq/sizing.py:54-65</code>), and the residual term <code>2.383</code> B/elem is the one constant the module gets wrong, optimistic by <code>+8.3 %</code> (READ <code>COSTS.md:92-99</code>). The shape's solve consumes <code>P</code> explicitly — (C1) reads row <code>i</code> of <code>P</code> — so it inherits the <code>O(S²)</code> class unless the chunked path of §4.x.2 recomputes off-diagonal tiles from <code>Q, K</code> in the backward (flash-style), at the price of two more <code>QKᵀ</code> tile products per tile; that kernel is <code>NOT MEASURED — needs a chunked kernel</code>. The retained-tensor increment of the solve itself (DERIVED): the forward retains <code>M</code> (or <code>P</code>, 1 tensor of <code>[S,S]</code>) and <code>z</code> (<code>[S,d]</code>); the backward forms <code>M̄ = −V̄ zᵀ</code> (one <code>[S,S]</code> transient). Estimate <code>C_OPERATOR_shape ≈ C_OPERATOR + 1…2</code> [ASSUMED; the record's <code>3.823</code> was fitted on the signed arm, not on this operator, and carrying it is M-8 unless re-solved]. Furthermore <code>torch.linalg.solve_triangular</code> has no bf16/fp16 CUDA path in torch 2.5.1 [U, from the linalg dtype policy; the RUN used float32], so the solve's <code>[S,S]</code> operand stays at <code>4.0</code> B/elem under autocast where the softmax's stays at <code>3.341</code>.</p>
+<p>Measured at the arm's shape (RUN, same run as §4.x.3, <code>torch.cuda.max_memory_allocated</code> above a reset baseline): peak extra bytes for solve+<code>Pz</code> fwd+bwd equal <code>PV</code>'s at <code>n = 4096</code> (<code>48.1</code> vs <code>48.0</code> MiB) and <code>n = 8192</code> (<code>96.1</code> vs <code>96.0</code> MiB); at <code>n = 2048</code> the two readings (<code>24.0</code> vs <code>88.0</code> MiB) are caching-allocator ordering, not a saving, and are not quoted. <code>z</code> at <code>n = 2048</code> is <code>2048·64·16·4 B = 8 MiB</code>. Residency on the card is unchanged from <code>COSTS.md:111-116</code> (READ): the workhorse arm is resident to <code>n = 8192</code> and pages over PCIe at <code>n = 16384</code> under a training loop (reserved <code>10.578 GiB</code> against <code>7.996</code>); the shape on the softmax corner inherits the softmax rows (resident to <code>n = 32768</code>, <code>4.908 GiB</code> reserved) plus <code>8·(n/2048)</code> MiB.</p>
+<h2 id="4x8-the-price-of-one-arena-cell-on-the-certified-rtx-4060-fitted-run-every-extrapolation-labelled">4.x.8 The price of one arena cell on the certified RTX 4060 ([FITTED] + [RUN], every extrapolation labelled)<a class="headerlink" href="#4x8-the-price-of-one-arena-cell-on-the-certified-rtx-4060-fitted-run-every-extrapolation-labelled" title="Permanent link">#</a></h2>
+<p>The arena cell (READ <code>CEQ_V20_R15_CONTRACT.md:119-127</code>): 4,769 parameters matched, <strong>150 steps</strong>, <strong>N = 8</strong> seeds, one BH family, every cell reporting crossing rate, conditional NRMSE, distance-to-floor, distance-to-skyline, GPU-seconds-to-floor, peak bytes, and the certificate grade of any mask; criterion (3) is <em>lowest GPU-seconds-to-floor</em>. The R1′ shape is <code>n_train = 2048, s = 64, d_model = 16</code> (READ <code>V17_R4_RETAKE_PRICE.md:45-47</code>).</p>
+<p>Laws (<code>[FITTED]</code>, READ <code>COSTS.md:73-74</code>; R² re-read from <code>results/k_cert_local.json</code> <code>throughput.laws</code>): <code>softmax</code> <code>s/step = exp(−12.1852)·n^{0.9963}</code>, R² <code>0.9999975</code>, 5 points <code>n = 2048…32768</code>; <code>arm_smprime</code> <code>s/step = exp(−10.0187)·n^{1.0026}</code>, R² <code>0.9999999</code>, 3 points <code>n = 2048, 4096, 8192</code> — the arm's law does not extend past 8192 because those points are bus measurements, not arm measurements (READ <code>COSTS.md:76-79</code>). Both laws are <code>s = 64, d_model = 16</code>, forward + backward + <code>Adam.step</code>, median over 3 children of the median of ≥ 12 steps — the R1 regime (READ <code>V17_R4_RETAKE_PRICE.md:220-224</code>). The measured control on the law: the arm cell read <code>15.970 s / 150 steps</code> (mean of 2) against the law's <code>13.960 s</code>, <code>+14.4 %</code>; softmax <code>1.497</code> vs <code>1.524 s</code>, <code>−1.8 %</code> (READ <code>:228-229</code>).</p>
+<p>The shape's increment is <strong>the solve, measured at the shape's own geometry</strong> (RUN §4.x.3, fwd+bwd, no Adam): <code>Δ = 2.514 − 1.473 = 1.041 ms/step</code> at <code>n = 2048</code>, <code>2.312 ms</code> at <code>4096</code>, <code>4.542 ms</code> at <code>8192</code>. Adam on 4,769 parameters is taken as unchanged between the two arms [ASSUMED; the parameter count is matched by the contract]. The increment is a per-op microbenchmark and therefore a <strong>floor</strong> on the end-to-end cell increment, not a prediction of it — the record measured the FLOP-model-to-wall-clock gap at <code>2.0×–6.6×</code> when Python dispatch entered (READ <code>scale/m3_flops.py:101-121</code>; P-8, an upper bound stated as a price, READ <code>MISTAKES.md:387</code>); the honest statement is that the increment lies in <code>[1.041 ms, ~2–7 ms]</code> per step at <code>n = 2048</code> until an end-to-end cell is timed.</p>
+<table>
+<thead>
+<tr>
+<th>base corner of <code>P</code></th>
+<th>law s/step at <code>n = 2048</code> <code>[FITTED]</code></th>
+<th>+ solve <code>[RUN]</code></th>
+<th>150-step cell</th>
+<th>× 8 seeds</th>
+<th>+ fixed 4.0 s (READ <code>V17_R4:198-201, 328-331</code>)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>softmax (β = 1), the shape's parity corner</td>
+<td><code>0.010162</code></td>
+<td><strong><code>0.011203</code></strong> (+10.2 %)</td>
+<td><strong><code>1.680 s</code></strong></td>
+<td><code>13.4 s</code></td>
+<td><strong><code>17.4 s</code></strong></td>
+</tr>
+<tr>
+<td><code>arm_smprime</code> (corner 3, complex64 path product)</td>
+<td><code>0.093066</code></td>
+<td><strong><code>0.094107</code></strong> (+1.1 %)</td>
+<td><strong><code>14.12 s</code></strong></td>
+<td><code>112.9 s</code></td>
+<td><strong><code>116.9 s</code></strong></td>
+</tr>
+<tr>
+<td>softmax control (no solve), the cell's fellow</td>
+<td><code>0.010162</code></td>
+<td>—</td>
+<td><code>1.524 s</code></td>
+<td><code>12.2 s</code></td>
+<td><code>16.2 s</code></td>
+</tr>
+</tbody>
+</table>
+<p>So <strong>one arena bed-cell pair (shape on the softmax corner + its softmax control, 8 seeds each) prices at <code>≈ 34 s</code> of GPU time <code>[FITTED + RUN]</code></strong>, and on the corner-3 base at <code>≈ 133 s</code>; peak memory <code>0.9224 GiB</code> measured for the arm cell (READ <code>V17_R4:139</code>) plus <code>8 MiB</code> for <code>z</code>, under the <code>7.996 GiB</code> card by <code>8.6×</code>. At the full ladder (9600 steps, <code>×64</code>, READ <code>V17_R4:243-254</code>) the pair is <code>≈ 36 min</code> on the softmax corner. Extrapolations: to <code>n = 8192</code> the softmax law gives <code>0.040436 + 0.004542 = 0.044978 s/step</code> <code>[FITTED R² 0.9999975 + RUN]</code>, inside the law's fitted range; to <code>n = 16384</code> and <code>32768</code> the softmax law extends (<code>0.080663</code>, <code>0.160907</code>, READ <code>COSTS.md:237-238</code>) but the solve increment is <code>[ASSUMED linear in n from the three RUN points: 1.041 → 2.312 → 4.542 ms, ratio 2.22 and 1.96 per doubling]</code> and is <code>NOT MEASURED</code> there; the corner-3 base has no law past 8192 at all. No Kaggle figure is derived: the Kaggle certificate slot is empty (READ <code>COSTS.md:158-168</code>) and a threshold carried across a device boundary is V-22 (READ <code>COSTS.md:190-193</code>).</p>
+<p>Design against the taxonomy, in one place: M-8 (each corner priced at its own law; the solve's increment measured, not ratioed); M-3 (increment measured at <code>s = 64</code>, the shipped geometry, at all three <code>n</code>, never scaled from a smaller <code>s</code>); P-8 (the microbenchmark stated as a floor with the measured dispatch gap beside it); V-22 (no cross-device carry); P-1 (every number names its producer: <code>scripts/k_cert.py</code>, <code>results/k_cert_local.json</code>, <code>V17_R4_RETAKE_PRICE.md</code>, and this session's RUN command); L-COST (the GPU-seconds-to-floor column is the arena's, and this section supplies the per-step term it multiplies).</p>
+<h2 id="4x9-the-cost-law-in-one-table-and-the-kernel-paths-must-fire-checks">4.x.9 The cost law in one table, and the kernel path's must-fire checks<a class="headerlink" href="#4x9-the-cost-law-in-one-table-and-the-kernel-paths-must-fire-checks" title="Permanent link">#</a></h2>
+<p>Per head, per sequence, MACs (multiply <code>× 2</code> for house FLOPs), increments stated over the softmax head the shape contains at <code>γ = 0</code>:</p>
+<table>
+<thead>
+<tr>
+<th>path</th>
+<th>forward MACs</th>
+<th>backward MACs</th>
+<th>depth</th>
+<th>memory class</th>
+<th>certificate</th>
+<th>status at HEAD <code>207e7b9</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>softmax head (fused causal SDPA)</td>
+<td><code>s²d</code></td>
+<td><code>2s²d</code></td>
+<td>1</td>
+<td><code>O(s)</code></td>
+<td>exact</td>
+<td>shipped (control)</td>
+</tr>
+<tr>
+<td>shape, serial substitution (C1)</td>
+<td><code>+ s²d/2</code></td>
+<td><code>+ s²d</code></td>
+<td><code>s</code></td>
+<td><code>O(s²)</code> (<code>P</code> explicit)</td>
+<td>exact</td>
+<td><code>torch.linalg.solve_triangular</code>, RUN §4.x.3</td>
+</tr>
+<tr>
+<td>shape, chunked (C2), chunk <code>C</code></td>
+<td><code>+ s²d/2 + sCd/2 + sC²/3</code></td>
+<td><code>≈ 2×</code></td>
+<td><code>s/C</code></td>
+<td><code>O(sC)</code> retained + recompute</td>
+<td>exact</td>
+<td><code>NOT MEASURED — needs a chunked kernel</code>; pattern occupied by arXiv:2406.06484 [V]</td>
+</tr>
+<tr>
+<td>shape, Neumann <code>K</code> hops (C3)</td>
+<td><code>+ K·s²d/2</code></td>
+<td><code>+ K·s²d</code></td>
+<td><code>K</code></td>
+<td><code>O(s²)</code> or block-sparse</td>
+<td><code>δ = γ^{K+1}/(1−γ)</code>, print <code>δ·‖V‖_∞</code></td>
+<td><code>bmm</code> loop, RUN §4.x.3; never wins in MACs, <code>K &lt; 1</code></td>
+</tr>
+<tr>
+<td>shape, F0-segmented (C5)</td>
+<td><code>+ Σ_m L_m² d/2</code></td>
+<td><code>≈ 2×</code></td>
+<td><code>max L_m</code></td>
+<td><code>O(Σ L_m²)</code></td>
+<td>exact (<code>pathProd_eq_zero_iff</code>)</td>
+<td>dividend <code>31.06×</code> on BED-M (READ fraction), corpus-dependent</td>
+</tr>
+<tr>
+<td>shape, CSR two-stage (§4.x.5)</td>
+<td><code>+ units·B²d/2</code></td>
+<td>none</td>
+<td><code>s/B</code></td>
+<td><code>O(units·B²)</code></td>
+<td>F1 union bound (annex M9) + Neumann δ; exact solve refused on an F1 mask</td>
+<td>kernels#22 forward-only [V]; resolvent stage <code>NOT MEASURED</code></td>
+</tr>
+<tr>
+<td>record's corner 3 (chain <code>P</code>)</td>
+<td><code>+ sd</code> (scan)</td>
+<td><code>+ 2sd</code></td>
+<td><code>s</code> (<code>cumprod</code>)</td>
+<td><code>O(s²)</code> as shipped (<code>path_product</code>)</td>
+<td>exact</td>
+<td><code>ceq/arm_smprime.py:144</code> READ; backward blocked under strict mode (<code>cumsum</code>)</td>
+</tr>
+</tbody>
+</table>
+<p>Each row is designed against a named mechanism: the increment column against M-8 (no cross-arm ratio), the depth column against M-3 (a MAC ratio never stands in for a clock), the certificate column against L-CERT and V-17 (units), the status column against P-1 and P-4 (no claimed scaffolding that does not exist — every <code>NOT MEASURED</code> names the missing kernel).</p>
+<p><strong>Must-fire checks the kernel path ships with</strong>, each a planted negative so that the parity test is not V-2 (a hand-built example where right and wrong coincide) and the bind has a rejection region (V-24):</p>
+<ol>
+<li><strong>Parity at <code>γ = 0</code>:</strong> <code>torch.equal(P (I − 0·P)^{-1} V, P V)</code> bitwise (I1, RUN by the coordinator); rejection region <code>γ = 0.5</code>, max abs <code>2.3003</code> (RUN, brief §1).</li>
+<li><strong>Solve against dense inverse:</strong> <code>solve_triangular</code> vs <code>torch.linalg.inv</code> to <code>1.8e-15</code> in float64 (I5); planted negative: a non-triangular <code>M</code> passed with <code>upper=False</code> must disagree.</li>
+<li><strong>Neumann certificate in vector units:</strong> <code>max|z_solve − z_K| ≤ γ^{K+1}/(1−γ) · ‖V‖_∞</code> at K ∈ {1, 2, 4, 8, 16}; planted negative: row sums <code>1.5</code> (I4's non-stochastic plant, err <code>119.37</code> vs bound <code>1.143</code>).</li>
+<li><strong>Segmentation exactness:</strong> with a <code>−∞</code> logit column at position <code>k</code>, <code>M^{-1}</code> has exactly-zero blocks across <code>k</code> (<code>torch.equal</code> to zero, not <code>allclose</code>); planted negative: replace <code>−∞</code> by <code>−30</code> and the block must be nonzero — the F0/F1 boundary made visible.</li>
+<li><strong>CSR fill-in guard:</strong> on a schedule that drops tile <code>(k,l)</code> but keeps <code>(k,m)</code> and <code>(m,l)</code>, the exact solve's <code>(k,l)</code> block must be reported nonzero and the mask refused unless a Neumann δ is printed; the empty-row <code>NaN</code> and negative-index loads of <code>ceq/mz_kernel.py:13-21</code> (READ) remain the two structural guards.</li>
+<li><strong>Determinism, three outcomes:</strong> <code>solve_triangular</code> forward and backward bitwise over 8 repeats under strict mode (RUN, <code>0.0</code>); <code>cumsum</code> must raise (RUN); a run that reports "pass" on an operator that raised is V-16 and is refused.</li>
+<li><strong>Cell price control:</strong> the shape's 150-step cell on the softmax corner must read within the record's own law-vs-measured band (<code>−1.8 %</code> to <code>+14.4 %</code>, READ <code>V17_R4:228-229</code>) of <code>1.680 s</code>; a reading above <code>2.2×</code> that (the dispatch gap's lower end, READ <code>scale/m3_flops.py:106-108</code>) flags the microbenchmark increment as the P-8 floor it is declared to be.</li>
+</ol>
+<h2 id="limits">Limits<a class="headerlink" href="#limits" title="Permanent link">#</a></h2>
+<p>Every RUN number here is one box, one process, one session, float32, <code>use_deterministic_algorithms</code> off for timings and on for the executability table, with <code>CUBLAS_WORKSPACE_CONFIG=:4096:8</code>; the laptop GPU's clock is not stationary (<code>V17_R4_RETAKE_PRICE.md:143-150</code> READ: the same cell read <code>14.390</code> and <code>17.839 s</code>), so the timing table is quoted to the medians it printed and no per-op figure is offered to better than the <code>±12 %</code> spread the record measured on cells. The solve increment is a per-op microbenchmark without Adam and without Python dispatch, and is a floor. The <code>n = 2048</code> peak-memory readings are allocator-ordering artefacts and are struck. The chunked solve (§4.x.2), the flash-style recompute path (§4.x.7), the Neumann path past <code>s = 64</code>, the CSR-hosted resolvent, and any Mapper schedule have no kernel in the tree and are priced in MACs and depth only; their clocks are <code>NOT MEASURED</code>. <code>solve_triangular</code>'s determinism is repeatability on one card with no torch-documented guarantee, and its dispatch to cuBLAS <code>trsm</code> is [U]. <code>C_OPERATOR</code> for the shape is not re-solved; the <code>3.823</code> carried is the signed arm's and is marked [ASSUMED] where used. The DeltaNet comparison rests on its abs and HTML pages fetched this session and on no other paper; "NOT FOUND" for a chunkwise resolvent of a softmax <code>P</code> reflects a one-source search, not a census. The BED-M dividend uses a fraction whose source line carries an internally inconsistent pair count; the fraction itself is consistent with the printed positives and is the only quantity used. The Kaggle card has no certificate; nothing here transfers to it.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Invented by <a href="https://teerthsharma.vercel.app/">Teerth Sharma</a> · Apache License 2.0
+    </div>
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/teerthsharma/resolvent" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://teerthsharma.vercel.app/" target="_blank" rel="noopener" title="teerthsharma.vercel.app" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M351.9 280H161c2.9 64.5 17.2 123.9 37.5 167.4 11.4 24.5 23.7 41.8 35.1 52.4 11.2 10.5 18.9 12.2 22.9 12.2s11.7-1.7 22.9-12.2c11.4-10.6 23.7-28 35.1-52.4 20.3-43.5 34.6-102.9 37.5-167.4zm-191-48h190.9c-2.8-64.5-17.1-123.9-37.4-167.4-11.4-24.4-23.7-41.8-35.1-52.4C268.1 1.7 260.4 0 256.4 0s-11.7 1.7-22.9 12.2c-11.4 10.6-23.7 28-35.1 52.4-20.3 43.5-34.6 102.9-37.5 167.4m-48 0c3.5-85.6 25.6-165.1 57.9-217.3C78.7 47.3 10.9 131.2 1.5 232zM1.5 280c9.4 100.8 77.2 184.7 169.3 217.3-32.3-52.2-54.4-131.7-57.9-217.3zm398.4 0c-3.5 85.6-25.6 165.1-57.9 217.3 92.1-32.7 159.9-116.5 169.3-217.3zm111.4-48C501.9 131.2 434.1 47.3 342 14.7c32.3 52.2 54.4 131.7 57.9 217.3z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

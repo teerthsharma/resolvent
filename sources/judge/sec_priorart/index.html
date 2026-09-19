@@ -1,0 +1,2124 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="One causal head, three switches. Softmax attention, unnormalized-kernel attention and the exact path product of a Markov chain as settings of one operator, proved in Lean 4, with every failure kept on the record.">
+      
+      
+        <meta name="author" content="Teerth Sharma">
+      
+      
+        <link rel="canonical" href="https://teerthsharma.github.io/resolvent/sources/judge/sec_priorart/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/logo.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>7. Prior art and occupancy - resolvent</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/resolvent.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#7-prior-art-and-occupancy" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="resolvent" class="md-header__button md-logo" aria-label="resolvent" data-md-component="logo">
+      
+  <img src="../../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            resolvent
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              7. Prior art and occupancy
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/teerthsharma/resolvent" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    teerthsharma/resolvent
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../FAILS/" class="md-tabs__link">
+          
+  
+  
+  The record
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../BED_H_PREREGISTRATION/" class="md-tabs__link">
+          
+  
+  
+  Pre-registrations
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../ledgers/mistakes/" class="md-tabs__link">
+          
+  
+  
+  Ledgers
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../canon/CHARTER/" class="md-tabs__link">
+          
+  
+  
+  Canon
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../CEQ_SHAPE/" class="md-tabs__link">
+          
+  
+  
+  Paper
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="resolvent" class="md-nav__button md-logo" aria-label="resolvent" data-md-component="logo">
+      
+  <img src="../../../assets/logo.svg" alt="logo">
+
+    </a>
+    resolvent
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/teerthsharma/resolvent" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    teerthsharma/resolvent
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The record
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    The record
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../FAILS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Everything retracted, broken or open
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../COMPONENT_LEDGER/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Component ledger
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../PLAN/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Research plan
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CORNER_RULE_RETIREMENT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Corner rule retirement
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../PI_JEPA_KAGGLE_CARD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kaggle card
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../DR2_CARD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DR2 card
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pre-registrations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Pre-registrations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../BED_H_PREREGISTRATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BED-H
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../prereg/REMOVAL_ECHO_v1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    REMOVAL-ECHO v1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ledgers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Ledgers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/mistakes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Failure mechanisms
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/struck/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Struck constants
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/mathematics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mathematics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/model-card/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model card
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/costs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Costs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/v17k-rulings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    V17K rulings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ledgers/v16-calibration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    V16 calibration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Canon
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Canon
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/CHARTER/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Charter
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/01_THEORY_ACCURACY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01 Theory of accuracy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/02_THEORY_TRAINING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    02 Theory of training
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/03_KERNEL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03 Kernel
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/04_BEDS_AND_INSTRUMENTS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    04 Beds and instruments
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/05_REPAIRS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05 Repairs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/06_PREDICTIONS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    06 Predictions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/08_ARCHITECTURE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    08 Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/09_CHESS_AND_MARKETS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    09 Chess and markets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../canon/CORRECTIONS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Corrections
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Paper
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Paper
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CEQ_SHAPE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The shape of CEQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Paper sources
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../BIB_AUDIT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bibliography audit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../BIB_ALIASES/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bibliography aliases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#70-how-to-read-the-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.0 How to read the table
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#71-the-occupancy-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 The occupancy table
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7.1 The occupancy table">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#711-the-cite-first-sentences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1.1 The cite-first sentences
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#72-the-delta-narrowly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 The delta, narrowly
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#73-the-records-own-prior-art-defect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.3 The record's own prior-art defect
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="7-prior-art-and-occupancy">7. Prior art and occupancy<a class="headerlink" href="#7-prior-art-and-occupancy" title="Permanent link">#</a></h1>
+<p>JUPITER (MYCROFT), 2026-09-03, HEAD <code>207e7b9</code>. Inputs read in full: the brief; both corrections;
+the outline; <code>sec_intro_draft.md</code>; the eight sweeps <code>sweep_{resolvent,linrec,expressivity,causality,
+safety,topology,occupied,methods}.md</code>; <code>judge/sec_shape.md</code> §4.0, whose occupancy paragraph this
+section must agree with and go wider than; <code>bib_audit.md</code>; <code>bib_aliases.md</code>; <code>references.bib</code>
+(canonical keys only — an alias key is never printed). Evidence classes: <code>RUN</code> (executed on this box
+this session), <code>READ path:line</code>, <code>CITED [V]</code> (abs page, DOI/registry record, catalogue record or
+proceedings page fetched by the named sweep this session and the title matched), <code>CITED [U]</code> (reached
+through a search index, a secondary paper, or memory), <code>DERIVED</code> (steps written out). No number
+without provenance. Struck constants (<code>STRUCK.md</code>, 12 entries) do not appear.</p>
+<p>The rule this section exists to serve is the brief's rule 7: <em>occupied components are cited before
+they are named, and absence is recorded as NOT FOUND with the query that bounds it, never as
+"novel"</em>. It is the same rule the record breaks in §7.3.</p>
+<hr />
+<h2 id="70-how-to-read-the-table">7.0 How to read the table<a class="headerlink" href="#70-how-to-read-the-table" title="Permanent link">#</a></h2>
+<p><strong>Verdicts.</strong> <code>OCCUPIED</code> — one named source states, in print, the equation or mechanism with the
+same object on both sides. <code>NEAR-MISS</code> — a named source states a neighbouring object and the table
+says which clause is missing. <code>NOT FOUND</code> — no fetched source states it, and the row carries the
+queries that failed; the totals in §7.2 bound how much that absence is worth (<code>MISTAKES.md</code> V-7, a
+search structurally incapable of finding anything read as absence, <code>MISTAKES.md:117</code>).</p>
+<p><strong>Marks.</strong> <code>[V]</code> and <code>[U]</code> are per source, as the sweep that found it recorded them. <code>[V]</code> here is a
+title match against a fetched identifier page; it is <strong>not</strong> an equation-level check. Where a sweep
+read the body and transcribed the equation the row says so; those are the only rows on which an
+equation number is load-bearing.</p>
+<p><strong>Boxes.</strong> Six of the shape's structural properties were fixed <em>before</em> the first fetch
+(<code>sweep_resolvent.md</code> §0, against M-2, a threshold refitted to the data it judges): (a) <code>P</code> is
+content-dependent, (b) causally masked, (c) row-stochastic softmax, (d) the read uses the exact
+resolvent, (e) absorbing rows on named sets, (f) softmax parity at <span class="arithmatex">\(\gamma=0\)</span>; and four more —
+(g) the interventional re-solve, (h) the safest-move decision, (i) a printed truncation certificate,
+(j) learnable <span class="arithmatex">\(\gamma\)</span>. The delta letters in §7.2 are those boxes plus (k) machine-checked
+containment and the zero-gate iff, (l) the influence barcode restricted to the F0 endpoint, and
+(m) the cover-to-schedule path.</p>
+<hr />
+<h2 id="71-the-occupancy-table">7.1 The occupancy table<a class="headerlink" href="#71-the-occupancy-table" title="Permanent link">#</a></h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>component of the shape</th>
+<th>verdict</th>
+<th>owner(s), canonical key, mark</th>
+<th>what it owns (under 25 words)</th>
+<th>what it leaves open relative to CEQ</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>the read operator <span class="arithmatex">\(O=(1-\gamma)P(I-\gamma P)^{-1}V\)</span> on causal row-stochastic softmax <span class="arithmatex">\(P\)</span></td>
+<td><strong>OCCUPIED</strong></td>
+<td><code>fagnou-2024-chacal</code> [V], Eq. 5, EMNLP 2024 (body read)</td>
+<td>Discounted path sum over the causal softmax matrix, written as one closed-form read with <span class="arithmatex">\(\gamma\in[0,1)\)</span> fixed at 0.9.</td>
+<td>No boundary rows, no committor, no intervention, no truncation bound; diagonal removed inside the inverse, so the read is sub-stochastic</td>
+</tr>
+<tr>
+<td>2</td>
+<td>the triangular solve</td>
+<td><strong>OCCUPIED</strong></td>
+<td><code>fagnou-2024-chacal</code> [V] Eq. 7; <code>yang-2024-deltanet</code> [V] Eq. 10; <code>zhao-2026-structuredsparse</code> [V]</td>
+<td>Solve <span class="arithmatex">\((I-\gamma A)Y=(1-\gamma)AV\)</span> by forward substitution rather than inverting; DeltaNet solves the same unit-lower-triangular system per chunk.</td>
+<td>Nothing on the solve itself. CEQ's I5 is a reproduction, not a contribution</td>
+</tr>
+<tr>
+<td>3</td>
+<td><span class="arithmatex">\(\gamma=0\)</span> parity with softmax</td>
+<td><strong>OCCUPIED</strong></td>
+<td><code>fagnou-2024-chacal</code> [V] (body: <span class="arithmatex">\(\gamma=0\)</span> reverts to standard attention)</td>
+<td>At zero discount the layer is the ordinary attention matmul.</td>
+<td>The <em>machine-checked</em> containment of softmax, linear attention and the path product in one family; that is the record's Lean and is NOT FOUND elsewhere (letter k)</td>
+</tr>
+<tr>
+<td>4</td>
+<td>the discount / horizon dial <span class="arithmatex">\(\gamma\)</span></td>
+<td><strong>OCCUPIED</strong></td>
+<td><code>bellman-1957-markovian</code> [V]; <code>dayan-1993-successor</code> [V]; <code>gasteiger-2019-appnp</code> [V]; learnable per head <code>roffo-2026-infsa</code> [V]</td>
+<td>The discount of policy evaluation; APPNP's teleport <span class="arithmatex">\(\alpha\)</span>; InfSA learns one <span class="arithmatex">\(\gamma\)</span> per head through a sigmoid.</td>
+<td>A learnable discount inside a <strong>causal language-model</strong> read, pinned by a boundary-corrected likelihood-ratio test (letter j)</td>
+</tr>
+<tr>
+<td>5</td>
+<td>the row-stochastic base and its three corners</td>
+<td><strong>OCCUPIED</strong></td>
+<td><code>vaswani-2017-attention</code> [V]; <code>katharopoulos-2020-linearattention</code> [V]; <code>dao-2024-ssd</code> [V] Def. 3.1</td>
+<td>Row-softmax; kernel-feature linear attention; the 1-semiseparable cumulative-product mask that is the record's path product.</td>
+<td>That the three are one family with distinct corners, proved rather than asserted (letter k, <code>V16Domain.three_corners_containment</code>)</td>
+</tr>
+<tr>
+<td>5b</td>
+<td>why softmax leaves that lineage</td>
+<td><strong>OCCUPIED</strong></td>
+<td><code>hu-2025-ssdtheory</code> [V]</td>
+<td>Row-softmax over <span class="arithmatex">\(QK^\top\)</span> has rank <span class="arithmatex">\(T\)</span> even at rank-1 logits, so it admits no finite-state dual.</td>
+<td>Nothing. This is a gift: it <em>proves</em> the exit point the record had asserted</td>
+</tr>
+<tr>
+<td>6</td>
+<td>the chunked / blockwise cost path</td>
+<td><strong>OCCUPIED</strong></td>
+<td><code>zhao-2026-structuredsparse</code> [V] (<span class="arithmatex">\(\tilde O(n^{4/3}d)\)</span>); <code>yang-2024-deltanet</code> [V]; <code>beck-2025-tfla</code> [V]</td>
+<td>Exact triangular solves on diagonal tiles with cross-block traffic routed through a reduced system; chunk tiling for linear-RNN kernels.</td>
+<td>An <strong>exact</strong> block structure from a zero gate with a printed <span class="arithmatex">\(\delta=0\)</span>, against a learned block-plus-residual approximation (letter l's sibling; §7.1 row 15)</td>
+</tr>
+<tr>
+<td>7</td>
+<td>absorbing rows as boundary conditions</td>
+<td><strong>OCCUPIED on fixed graphs; NOT FOUND in a causal content-dependent attention operator</strong></td>
+<td><code>zhu-2003-harmonic</code> [V]; <code>zhou-2003-consistency</code> [V]; <code>wu-2012-partially-absorbing</code> [V]; <code>begga-2023-diffusion-jump</code> [V]; <code>azad-2022-harmonic-extension</code> [V]; one row inside attention <code>karbalayghareh-2026-doformer</code> [V]</td>
+<td>Clamp labelled nodes, take the harmonic extension elsewhere; partially absorbing walks with per-node absorption; DoFormer fixes an intervened token and forbids it attending.</td>
+<td><span class="arithmatex">\(K\ge 2\)</span> constraint sets <em>plus</em> a goal set <em>plus</em> a declared sink, as identity rows of a causal row-stochastic content-dependent read (letter e). Queries: resolvent 17/22, linrec Q11/Q17, occupied S4/S5, methods S11</td>
+</tr>
+<tr>
+<td>8</td>
+<td>the fundamental matrix and absorption probabilities</td>
+<td><strong>OCCUPIED</strong></td>
+<td><code>kemeny-1960-finitemarkov</code> [V-cat]; <code>grinstead-1997-probability</code> [U], Thm 11.6 (§11.2 body read by the safety sweep)</td>
+<td><span class="arithmatex">\(N=(I-Q)^{-1}\)</span>, <span class="arithmatex">\(B=NR\)</span>, expected absorption times <span class="arithmatex">\(N\mathbf 1\)</span>, in canonical form.</td>
+<td>Nothing on the identity — the record concedes zero delta at <code>V13_TIER6_PRIOR_ART.md:389-398</code> (READ). The <em>use</em> as a layer's read is elsewhere in this table</td>
+</tr>
+<tr>
+<td>9</td>
+<td>the committor / reach-avoid reading</td>
+<td><strong>OCCUPIED, twice, for one object</strong></td>
+<td><code>metzner-2009-tpt-markov-jump</code> [V]; <code>e-2006-transition-paths</code> [V]; <code>e-2010-tptreview</code> [V]; <code>doyle-1984-electric</code> [V]; <code>summers-2010-reach-avoid</code> [V]; <code>abate-2008-reachability</code> [V]</td>
+<td>The discrete Dirichlet problem <span class="arithmatex">\((Lq)_i=0\)</span> with $q</td>
+<td>_A=0$, $q</td>
+</tr>
+<tr>
+<td>10</td>
+<td>the safest-move decision rule</td>
+<td><strong>OCCUPIED as names; NOT FOUND as a read</strong></td>
+<td><code>vanmoffaert-2013-chebyshev</code> [V]; <code>park-2026-maxmin</code> [V]; <code>yang-2026-lexisafe</code> [V]; <code>altman-1999-cmdp</code> [V-cat]; <code>bellman-1957-markovian</code> [V]; <code>baier-2008-modelchecking</code> [V-cat]; <code>todorov-2006-lmdp</code> [V] / <code>todorov-2009-efficient</code> [V]; NEAR-MISS <code>jeddi-2021-lyapunovsafe</code> [V]; framing <code>hsu-2023-safetyfilter</code> [V], <code>borquez-2023-lrf</code> [V]</td>
+<td>Chebyshev (worst-objective) action selection; max-min and lexicographic orders; <span class="arithmatex">\(K\)</span> cost functionals on one chain; several target sets in one linear system with a verdict; a move from a linear first-exit solve; a transformer picking the lowest predicted violation probability.</td>
+<td>The scores being <strong>committors read out of the layer's own operator</strong>, over candidate moves placed in the context (letter h). Queries: safety 2/5/10/12/13/17/18/19, occupied S8, expressivity S15</td>
+</tr>
+<tr>
+<td>11</td>
+<td>the interventional re-solve and its rank-one update</td>
+<td><strong>OCCUPIED as algebra; NOT FOUND as a trained read</strong></td>
+<td><code>pearl-2009-causality</code> [V]; <code>shimizu-2006-lingam</code> [V]; <code>sherman-1950-inverse-adjustment</code> [V]; <code>hager-1989-updating</code> [V]; <code>schweitzer-1968-perturbation</code> [V]; <code>piray-2021-linearrl</code> [V] Eq. 5; <code>mooij-2013-ode2scm</code> [V]; <code>bongers-2021-cyclic</code> [V]; <code>bottou-2013-counterfactual</code> [V] §7.3; <code>scetbon-2024-fip</code> [V]</td>
+<td><span class="arithmatex">\(do(\cdot)\)</span> as row surgery on <span class="arithmatex">\(x=(I-B)^{-1}e\)</span>; rank-one inverse update; perturbation of the fundamental matrix; the barrier update of a default representation; consequence as displacement of an equilibrium; a causally masked transformer whose <span class="arithmatex">\(do()\)</span> is clamp-and-re-solve.</td>
+<td>The displacement <span class="arithmatex">\(\Delta z\)</span> as a <strong>jointly scored vector label</strong> at two stated prices — row clamp <span class="arithmatex">\(O(sd)\)</span> against token rewrite <span class="arithmatex">\((s-i)^2d/2\)</span> (letter g). Queries: resolvent 19, linrec Q15, causality Q6/Q9, methods S10</td>
+</tr>
+<tr>
+<td>12</td>
+<td>the order-of-intervention question</td>
+<td><strong>OCCUPIED as a theorem; NOT FOUND inside an attention model</strong></td>
+<td><code>dash-2005-emc</code> [V] Def. 4, Thms 1–2 (PDF read by the causality sweep); <code>voortman-2010-manipulation</code> [V]; <code>blom-2019-ccm</code> [V]</td>
+<td>When "equilibrate then manipulate" differs from "manipulate then equilibrate", and when a reduced equilibrium model hides the feedback that makes it differ.</td>
+<td>Nothing: for <span class="arithmatex">\(\gamma&lt;1\)</span> the map <span class="arithmatex">\(x\mapsto V+\gamma P'x\)</span> is a contraction with one fixed point, so the orders coincide (<code>RUN[J]</code> <span class="arithmatex">\(8.9\times10^{-16}\)</span>) and the paper retires EMC to a remark rather than claiming a bind</td>
+</tr>
+<tr>
+<td>13</td>
+<td>equilibrium as the layer's output</td>
+<td><strong>OCCUPIED</strong></td>
+<td><code>bai-2019-deq</code> [V]; <code>gu-2020-ignn</code> [V]; <code>liu-2021-eignn</code> [V]; <code>georgiev-2024-dear-neurips</code> [V]; <code>ramsauer-2021-hopfield</code> [V]; <code>hoover-2023-energytransformer</code> [V]</td>
+<td>A layer whose output is the root of <span class="arithmatex">\(z=f(z,x)\)</span>, differentiated implicitly; algorithmic targets as equilibria; softmax attention as one Hopfield update.</td>
+<td>All of these fixed points are <strong>nonlinear</strong> or <strong>per query</strong>. CEQ's is linear in <span class="arithmatex">\(z\)</span>, which is what makes the certificate and the one-pass solve available; Hopfield's is the per-row independence obstruction, not its repair</td>
+</tr>
+<tr>
+<td>14</td>
+<td>the attention barcode</td>
+<td><strong>OCCUPIED</strong></td>
+<td><code>kushnareva-2021-tda-attention</code> [V]; <code>kushnareva-2022-betti</code> [V] (preprint, abs marks it not accepted); <code>cherniavskii-2022-acceptability</code> [V]; <code>perez-2022-topological-bert</code> [V]; <code>samaga-2026-halluzig</code> [V]; <code>bazarova-2025-toha</code> [V]</td>
+<td>Threshold a head's attention matrix over a sweep, read <span class="arithmatex">\(H_0/H_1\)</span> persistence as classification features; zigzag over the layer axis; a two-subgraph topological divergence.</td>
+<td>The <strong>filtering function</strong>: a filtration by the influence Jacobian of a resolvent read, with a stability <span class="arithmatex">\(\delta\)</span> from a <em>directed</em> theorem, whose <span class="arithmatex">\(\varepsilon=0\)</span> endpoint is the exact segmentation (letter l). Queries: topology 4/8/16</td>
+</tr>
+<tr>
+<td>15</td>
+<td>segmentation as an exact block certificate</td>
+<td><strong>NEAR-MISS on mechanism; NOT FOUND as a certificate</strong></td>
+<td>mechanism <code>lin-2025-forgetting-transformer</code> [V] (body read), <code>yang-2023-gla</code> [V], <code>hwang-2025-hnet</code> [V]; converse <code>yang-2026-boundary-repair</code> [V] Thm 1</td>
+<td>A data-dependent cumulative decay on softmax logits, <span class="arithmatex">\(D_{ij}=c_i-c_j\)</span> with <span class="arithmatex">\(c=\mathrm{cumsum}\log f\)</span>; a fixed block mask confines reach at every depth.</td>
+<td>The <strong>iff</strong>: an exponential prefix scan cannot carry an exact zero (<code>no_prefix_scan_represents_a_zero_gate</code>), so the annihilation certificate is the record's and is NOT FOUND outside its Lean (letter k). Queries: topology 7/14</td>
+</tr>
+<tr>
+<td>16</td>
+<td>the truncation certificate <span class="arithmatex">\(\gamma^{K+1}/(1-\gamma)\)</span></td>
+<td><strong>OCCUPIED as mathematics; NOT FOUND as an instrument</strong></td>
+<td><code>meyer-2000-matrix</code> [V]; <code>horn-2013-matrix</code> [V]; global-bound NEAR-MISS <code>roffo-2026-infsa</code> [V] (<span class="arithmatex">\(\|S_L\|\le\gamma/(1-\gamma)\)</span>)</td>
+<td>The Neumann tail of a matrix with <span class="arithmatex">\(\|P\|_\infty\le1\)</span>; the spectral-radius convergence condition for a content-adaptive attention series.</td>
+<td>A per-<span class="arithmatex">\(K\)</span> bound <strong>printed beside a truncated attention read</strong>, with a planted non-stochastic negative and the <span class="arithmatex">\(1/(1-\gamma)\)</span> mask amplification (letter i). No attention paper fetched prints any <span class="arithmatex">\(\delta\)</span>. Queries: resolvent 3, linrec Q6/Q14, methods S4</td>
+</tr>
+<tr>
+<td>17</td>
+<td>intervention effects on persistence</td>
+<td><strong>OCCUPIED</strong></td>
+<td><code>kim-2026-topological-causal</code> [V]</td>
+<td>Treatment effects defined on persistence-diagram summaries of the outcome, with a doubly robust estimator and a shape test.</td>
+<td>Nothing on the estimand. If CEQ ever reads <span class="arithmatex">\(\Delta z\)</span> through a barcode it is an instance of this and says so</td>
+</tr>
+<tr>
+<td>18</td>
+<td>the Mapper cover</td>
+<td><strong>OCCUPIED</strong></td>
+<td><code>singh-2007-mapper</code> [U on the landing page; dblp <code>conf/spbg/SinghMC07</code> and one further record agree]; <code>carriere-2018-mapper-statistics</code> [V]; cluster covers <code>cho-2022-sbm-attention</code> [V], <code>roy-2021-routing-transformer</code> [V], <code>kitaev-2020-reformer</code> [V], <code>yuan-2025-nsa</code> [V]</td>
+<td>Lens, overlapping cover, partial clustering, nerve graph; Mapper as a consistent Reeb-graph estimator with parameters fixable in advance; sampled/hashed/k-means covers deciding who attends to whom.</td>
+<td>A <strong>nerve-of-a-lens-cover</strong> as the candidate builder for a <em>resolvent</em> read, cover parameters fixed by the Reeb-estimator rule, candidate set carrying the Neumann <span class="arithmatex">\(\delta\)</span> (letter m). Queries: topology 6/15</td>
+</tr>
+<tr>
+<td>19</td>
+<td>the persistence-derived CSR schedule</td>
+<td><strong>OCCUPIED BY THE AUTHOR</strong></td>
+<td><code>sharma-2026-kernels-22</code> [V] (PR page and files tab fetched; merged 2026-07-28)</td>
+<td>A forward-only Triton kernel consuming a causal CSR block schedule built from sink blocks, local windows and a 0D-persistence salience over key-block centroids.</td>
+<td>The consumer: the schedule feeds a softmax kernel, forward-only, with no backward and no truncation certificate. The cover and the certified consumer are letter m</td>
+</tr>
+<tr>
+<td>20</td>
+<td>the depth law</td>
+<td><strong>OCCUPIED, and conditional where it is a lower bound</strong></td>
+<td><code>sanford-2024-logdepth</code> [V] Thm 4.2 / Cor. 4.3; <code>sanford-2024-graph-algorithms</code> [V]; <code>merrill-2025-littledepth</code> [V] Thm 2; <code>fagnou-2024-chacal</code> [V] Thm 1; <code>yehudai-2025-depthwidth</code> [V]; ceiling <code>merrill-2023-parallelism</code> [V]; class <code>cook-1985-taxonomy</code> [V]</td>
+<td><span class="arithmatex">\(k\)</span> hops at depth <span class="arithmatex">\(\lfloor\log_2 k\rfloor+2\)</span> (upper, unconditional); <span class="arithmatex">\(\Omega(\log k)\)</span> conditional on one-vs-two-cycle; <span class="arithmatex">\(\lceil\log_2(n+1)\rceil\)</span> for entity tracking; log depth suffices for connectivity; depth unnecessary at linear width; log-precision constant depth <span class="arithmatex">\(\subseteq\mathrm{TC}^0\)</span>; <span class="arithmatex">\(\mathrm{NL}\subseteq\mathrm{DET}\subseteq\mathrm{NC}^2\)</span>.</td>
+<td>Nothing. CEQ does not evade the law; it relocates the log-depth into one linear solve, which is a DET-class computation. Every comparison therefore fixes depth <em>and</em> width, and three fellow approximators sit in every table</td>
+</tr>
+<tr>
+<td>21</td>
+<td>single-location optimality (why the record could not win)</td>
+<td><strong>OCCUPIED</strong></td>
+<td><code>marion-2025-single-location</code> [V] Cor. 2 (erf gate, asymptotic <span class="arithmatex">\(d\to\infty\)</span>, <span class="arithmatex">\(L=o(d)\)</span>); <code>duranthon-2026-softmax-advantage</code> [V] Prop. 4.2 / Cor. 4.3 (softmax proper); <code>zhang-2023-cina</code> [V]</td>
+<td>An attention layer attains Bayes risk on scalar single-location regression; softmax beats linear attention exponentially in the spike; balancing weights are a per-query mixture.</td>
+<td>Nothing. This is D-1's owner and the reason the plan's label class is chosen <em>away</em> from it. The record's own geometry has <span class="arithmatex">\(L/d=4.00\)</span>, the wrong direction for Cor. 2 (<code>MATHEMATICS.md</code> §17.5)</td>
+</tr>
+<tr>
+<td>22</td>
+<td>the statistical instruments</td>
+<td><strong>OCCUPIED</strong></td>
+<td><code>schuirmann-1987-tost</code> [V]; <code>clopper-1934-binomial</code> [V]; <code>mcnemar-1947-correlated</code> [V]; <code>page-1963-ordered</code> [V]; <code>ayer-1955-empirical</code> [V]; <code>wilson-1927-probable</code> [V]; <code>ville-1939-collectif</code> [V]; <code>wang-2023-extended-ville</code> [V]; <code>ramdas-2023-game-theoretic</code> [V]; <code>hoeffding-1963-probability</code> [V]; <code>azuma-1967-weighted</code> [V]; floors <code>cover-2006-elements</code> [V], <code>welch-1974-lower</code> [V]</td>
+<td>Two one-sided tests; exact binomial and score intervals; the paired-proportions test; ordered alternatives; pool-adjacent-violators; the martingale maximal inequality and e-processes; bounded-increment concentration; Fano and the Welch bound.</td>
+<td>Nothing. The plan uses them and claims none. The <em>pairing</em> of a sign test against a per-row control on byte-identical draws is the record's and is NOT FOUND outside it (causality Q10)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Agreement with §4.0.</strong> Every owner in <code>judge/sec_shape.md</code> §4.0 appears above under the same
+canonical key and the same verdict; this table adds rows 5b, 6, 12, 14, 15, 16, 17, 19, 20, 21, 22
+and splits row 7's fixed-graph owners from its attention near-miss. No row contradicts §4.0.</p>
+<h3 id="711-the-cite-first-sentences">7.1.1 The cite-first sentences<a class="headerlink" href="#711-the-cite-first-sentences" title="Permanent link">#</a></h3>
+<p>Rule 7 requires that an occupied component be citable in one sentence <em>before</em> it is named. These
+are those sentences; the assembler places each at the first occurrence of its component.</p>
+<ol>
+<li><strong>Read operator.</strong> "The read is that of ChaCAL (<code>fagnou-2024-chacal</code>, EMNLP 2024, Eq. 5), with the
+   diagonal kept inside the inverse so that the mixing matrix stays row-stochastic."</li>
+<li><strong>Triangular solve.</strong> "ChaCAL solves it as a lower-triangular system (Eq. 7); the per-chunk form of
+   the same primitive is DeltaNet's (<code>yang-2024-deltanet</code>, Eq. 10)."</li>
+<li><strong>Discount.</strong> "The discount is Bellman's (<code>bellman-1957-markovian</code>), the operator Dayan's successor
+   representation (<code>dayan-1993-successor</code>); learning one per head is InfSA's (<code>roffo-2026-infsa</code>)."</li>
+<li><strong>Base family.</strong> "The three corners are Vaswani et al.'s softmax, Katharopoulos et al.'s linear
+   attention, and the 1-semiseparable mask of <code>dao-2024-ssd</code> Def. 3.1."</li>
+<li><strong>Absorbing rows.</strong> "Clamping labelled positions and reading the harmonic extension is
+   <code>zhu-2003-harmonic</code>; one absorbing row inside attention is <code>karbalayghareh-2026-doformer</code>."</li>
+<li><strong>Fundamental matrix.</strong> "<span class="arithmatex">\(N=(I-Q)^{-1}\)</span> and <span class="arithmatex">\(B=NR\)</span> are Kemeny–Snell (<code>kemeny-1960-finitemarkov</code>);
+   <code>grinstead-1997-probability</code> Thm 11.6 states the same, and is <code>[U]</code>."</li>
+<li><strong>Committor.</strong> "The committor is the discrete Dirichlet problem of <code>metzner-2009-tpt-markov-jump</code>;
+   its control-theoretic name is the reach-avoid probability (<code>summers-2010-reach-avoid</code>)."</li>
+<li><strong>Decision rule.</strong> "Selecting by the worst of several scores is Chebyshev scalarisation
+   (<code>vanmoffaert-2013-chebyshev</code>); as a safety filter it is <code>hsu-2023-safetyfilter</code>."</li>
+<li><strong>Re-solve.</strong> "The rank-one re-solve is Sherman–Morrison (<code>sherman-1950-inverse-adjustment</code>);
+   on a fixed chain with a barrier it is <code>piray-2021-linearrl</code> Eq. 5."</li>
+<li><strong>Equilibrium layer.</strong> "A layer defined as a fixed point is <code>bai-2019-deq</code>; on a causally masked
+    transformer with <span class="arithmatex">\(do()\)</span> by clamp-and-re-solve it is <code>scetbon-2024-fip</code>."</li>
+<li><strong>Barcode.</strong> "Persistence of a thresholded attention graph is <code>kushnareva-2021-tda-attention</code>;
+    an intervention read through persistence summaries is <code>kim-2026-topological-causal</code>."</li>
+<li><strong>Cover and schedule.</strong> "Mapper is <code>singh-2007-mapper</code>, its estimator theory
+    <code>carriere-2018-mapper-statistics</code>; a persistence-derived CSR schedule inside an attention kernel
+    is the author's own merged <code>sharma-2026-kernels-22</code>."</li>
+<li><strong>Depth law.</strong> "<span class="arithmatex">\(k\)</span> hops need depth <span class="arithmatex">\(\lfloor\log_2 k\rfloor+2\)</span> (<code>sanford-2024-logdepth</code> Thm 4.2;
+    the matching lower bound is conditional, Cor. 4.3); the same law is reached independently for
+    entity tracking by <code>fagnou-2024-chacal</code> Thm 1."</li>
+<li><strong>Optimality.</strong> "One attention layer attains Bayes risk on single-location regression
+    (<code>marion-2025-single-location</code>; for softmax proper, <code>duranthon-2026-softmax-advantage</code>)."</li>
+<li><strong>Certificate.</strong> "The Neumann tail bound is textbook (<code>meyer-2000-matrix</code>); no attention paper
+    fetched prints one."</li>
+</ol>
+<hr />
+<h2 id="72-the-delta-narrowly">7.2 The delta, narrowly<a class="headerlink" href="#72-the-delta-narrowly" title="Permanent link">#</a></h2>
+<p>No fetched source combines the following in one attention operator, and every part of every clause is
+owned above. <strong>(e)</strong> <span class="arithmatex">\(K\ge2\)</span> absorbing constraint sets, a goal set, and a declared sink as identity
+rows of a content-dependent, causal, row-stochastic read — bounded by <code>sweep_resolvent</code> searches 17
+and 22, <code>sweep_linrec</code> Q4/Q11/Q17, <code>sweep_occupied</code> S4/S5 (S5 returned <strong>0</strong> hits containing
+"committor" in a transformer context), <code>sweep_methods</code> S11 and <code>sweep_topology</code> 5/13; the nearest
+things found are InfSA's single uniform absorption leak, DoFormer's one clamped row, and the attention
+<em>sink</em>, which is a column device and not a row condition. <strong>(g)</strong> the interventional re-solve with the
+displacement as a jointly scored vector label at two stated prices — bounded by <code>sweep_resolvent</code> 19,
+<code>sweep_linrec</code> Q15, <code>sweep_causality</code> Q1/Q3/Q6/Q9/Q16 and <code>sweep_methods</code> S10; Q9 returned nothing at
+all on interventions in deep-equilibrium layers. <strong>(h)</strong> the committor vector and the two safest-move
+rules over candidate moves placed in the context — bounded by <code>sweep_safety</code> 2/5/10/12/13/17/18/19
+(query 14 established that the word "committor" does not occur in the control literature),
+<code>sweep_occupied</code> S8, <code>sweep_expressivity</code> S15 and <code>sweep_causality</code> Q11/Q15. <strong>(i)</strong> a printed
+certificate with a planted negative and the <span class="arithmatex">\(1/(1-\gamma)\)</span> mask amplification — bounded by
+<code>sweep_resolvent</code> 3, <code>sweep_linrec</code> Q6/Q14 and <code>sweep_methods</code> S4; the inequality is textbook and is
+claimed only as an instrument, never as mathematics. <strong>(j)</strong> a learnable discount in a <em>causal
+language-model</em> read pinned by a boundary-corrected likelihood-ratio test — bounded by
+<code>sweep_resolvent</code> 2 and 3 and <code>sweep_linrec</code> Q1/Q16 (Q16 and <code>sweep_occupied</code> S12 each returned <strong>0</strong>
+hits for the successor representation used as an attention operator); ChaCAL fixes <span class="arithmatex">\(\gamma=0.9\)</span>,
+InfSA learns it and is non-causal vision. <strong>(k)</strong> machine-checked containment of the three corners and
+the zero-gate iff — bounded by <code>sweep_topology</code> 7 and 14 and <code>sweep_expressivity</code> S16; the nearest
+statements are FoX's cumulative-log gate, which the record's own theorem excludes at an exact zero,
+and the block-mask converse of <code>yang-2026-boundary-repair</code> Thm 1. <strong>(l)</strong> the influence-Jacobian
+barcode restricted to the F0 endpoint, with a directed stability <span class="arithmatex">\(\delta\)</span> — bounded by
+<code>sweep_topology</code> 4/8/16. <strong>(m)</strong> the cover-to-schedule path, Mapper nerve to CSR blocks to a certified
+resolvent read — bounded by <code>sweep_topology</code> 6/15/2. <strong>The totals.</strong> Across the eight sweeps, <strong>143</strong>
+numbered queries were logged (resolvent 22, linrec 18, expressivity 18, causality 18, safety 25,
+topology 17, occupied 12, methods 13), plus five bibliographic-repair searches in the methods sweep;
+<code>references.bib</code> carries <strong>408 canonical entries</strong> (RUN, <code>grep -c "^@" references.bib</code> = 408, this
+session), of which the audit resolved <strong>278/278</strong> arXiv identifiers and <strong>91/92</strong> DOIs against the
+registries, with 38 entries carrying neither identifier; the five sweeps that print an entry-level
+<code>[U]</code> count report <strong>13</strong> in total (methods 9, occupied 2, topology 1, causality 1, expressivity 0),
+and the other three mark <code>[U]</code> per field rather than per entry, so no merged <code>[U]</code> count exists.
+Absence here is exactly as strong as those 143 queries and no stronger, and two of the sweeps paid for
+their absences with planted positives — <code>sweep_topology</code> §1.1 shows the same instrument returning the
+seed papers it was required to find, and <code>sweep_occupied</code> §4 plants the record's own dead signed
+programme as a lineage the table must return red.</p>
+<hr />
+<h2 id="73-the-records-own-prior-art-defect">7.3 The record's own prior-art defect<a class="headerlink" href="#73-the-records-own-prior-art-defect" title="Permanent link">#</a></h2>
+<p>The paper that owns CEQ's read operator has been in print since October 2024 and the campaign never
+cited it. The mechanism is a filter, and the filter is written down. At round 1 the record's
+prior-art trawl concluded: <em>"Every multi-hop propagation found (APPNP 1810.05997, GDC 1911.05485,
+MAGNA 2009.14332) requires a non-negative matrix; every signed attention found … is single-hop"</em>
+(<code>READ DONE_ARCHIVE_ROUND1.md:676-680</code>). The clause "requires a non-negative matrix" was a
+<em>disqualifier</em>: the programme then alive was the signed strictly-causal path sum, so a multi-hop
+operator built on a non-negative base was recorded as inapplicable and dropped. Every candidate in
+the class ChaCAL belongs to was therefore discarded by construction, and the same page later
+concedes that the survey sentence built on that filter was false (<code>READ
+DONE_ARCHIVE_ROUND1.md:1046-1050</code>). When the signed programme died (<code>RESEARCH.md</code>, <code>PROGNOSIS.md</code>,
+per <code>BRIEF.md</code> §3), the filter was never re-run without its sign criterion. The shape is now itself a
+non-negative multi-hop operator, which is to say the record's search was, for the whole life of the
+campaign, structurally incapable of finding the paper that occupies its read.</p>
+<p>The measurement of the gap is a grep. <code>grep -rlEi "ChaCAL|Fagnou|2410\.05565" --include='*.md'</code> over
+the repository returns <strong>0 files</strong> (RUN, 2026-09-03, this box; confirmed twice); a full-tree
+<code>grep -rlEi "2410\.05565"</code> returns exactly <strong>one</strong> file, <code>docs/references.bib</code> — the bibliography
+this paper assembles. <code>2603.00175</code> (InfSA, which put "fundamental matrix of an absorbing Markov
+chain" into an attention abstract in February 2026) appears in <strong>2</strong> <code>.md</code> files, both inside the
+dead signed programme's archive, where it was read as a signed near-miss and its absorbing-chain
+paragraph was not read (<code>READ DONE_ARCHIVE_ROUND1.md:1317-1318</code>).</p>
+<p>This is <code>MISTAKES.md</code> <strong>V-7</strong> — <em>a search structurally incapable of finding anything, read as
+absence</em> (<code>MISTAKES.md:117</code>) — applied to a <strong>literature</strong> search rather than to a code search, which
+is the form the taxonomy had never recorded. V-7's existing instances condemn <code>grep</code> patterns and
+test selectors that could not match; this instance condemns an inclusion criterion in a prior-art
+census. It compounds <strong>P-3</strong> (a stale claim never retracted, <code>MISTAKES.md:316</code>): <code>THEORY.md:22</code> still
+calls the successor operator new, and <code>THEORY.md:225-235</code> still marks Dayan 1993, Ramsauer 2020 and
+Bai et al. 2019 unverified, all three of which the sweeps have now fetched. <strong>The rule the plan
+installs against it:</strong> every prior-art census keeps <em>one mechanism-keyed query per component beside
+every name-keyed query</em>, and no census criterion may name the programme's current hypothesis. ChaCAL
+was found by <code>sweep_expressivity</code> S6 and <code>sweep_resolvent</code> search 2 — queries built from <em>triangular
+solve</em> and <em>resolvent</em>, the shape's mechanism — and not by any query naming an operator family; the
+name-keyed query <code>sweep_resolvent</code> 18 ("chain and causal attention … citing papers") returned only
+ChaCAL's own pages after it had already been found. The census's planted positive is its own
+refuted lineage: a table that cannot return a red on the signed programme is not calibrated.</p>
+<p>One interval in the sweeps is not supported by anything in the tree. <code>sweep_occupied.md</code> §0.1 says
+ChaCAL was in print "eleven months before the brief"; the identifier is arXiv 2410.05565, submitted
+October 2024, twenty-three months before 2026-09-03, and the tree's own history runs only
+2026-08-25 to 2026-09-01 (RUN, <code>git log --format=%ad --date=short</code>), so no in-tree date supports
+either figure. The paper prints the identifier's date and no interval.</p>
+<hr />
+<h1 id="8-limits">8. Limits<a class="headerlink" href="#8-limits" title="Permanent link">#</a></h1>
+<p>Collected once, here, and nowhere else.</p>
+<p><strong>There is no result.</strong> No CEQ arm has been trained and no capability number exists; the paper reports a plan and the
+identities that justify it. Proposition 8 — the safest move — has no cell, no realised label standard deviation and no
+measured hop depth, and the barcode and Mapper rows have no instrument at all (<code>beta0_interleaving</code> consumes point
+clouds, <code>READ ceq/certs/topological.py:476-505</code>). The record's last deciding measurement crossed a one-hop threshold
+on five seeds of eight, straddled it on the interval, and that threshold was afterwards shown not to be an information
+floor (13 of 40 cells violate it, <code>V20_R15_THEORY_TABLE.md</code> §0.2). Every number here is an identity check, a price, or
+a citation.</p>
+<p><strong>Theorems cited beyond their hypotheses license nothing, so the hypotheses are printed.</strong> The one-layer composition
+bound of <code>peng-2024-transformer-limitations</code> Thm 1 requires <span class="arithmatex">\(n\log n &gt; H(d+1)p\)</span>; at <span class="arithmatex">\(s=64\)</span>, <span class="arithmatex">\(d=16\)</span>, one head, float32
+this reads <span class="arithmatex">\(384 &lt; 544\)</span> (DERIVED, <span class="arithmatex">\(\log_2\)</span>), so the inequality is <strong>vacuous</strong> at the record's geometry and the theorem
+is cited for its asymptotic shape with those numbers beside it. The same discipline applies to <code>sanford-2024-logdepth</code>
+Cor. 4.3 and <code>sanford-2024-graph-algorithms</code> Thm 3/19, both conditional on the one-vs-two-cycle conjecture, and to
+<code>chen-2024-multilayer</code> Thm 1.1, whose parameter budget <span class="arithmatex">\(n^{2^{-4L}}\)</span> reads <span class="arithmatex">\(1.30\)</span> at <span class="arithmatex">\(L=1\)</span>, <span class="arithmatex">\(n=64\)</span>. The Cheeger
+restatement is owed: the record writes <span class="arithmatex">\(g\le 2\varphi\)</span> at <code>MATHEMATICS.md:455</code>, while Levin–Peres Thm 13.10
+(<code>levin-2017-markov-mixing</code>, read at printed p. 183 by the methods sweep) states
+<span class="arithmatex">\(\Phi_\star^2/2\le\gamma\le 2\Phi_\star\)</span> <strong>for a reversible chain</strong>; the shape's <span class="arithmatex">\(P\)</span> is causal and not reversible, so the sentence must be
+restated on a named symmetrised or lazy surrogate, or replaced by a non-reversible bottleneck bound, and until it is,
+no conductance sentence is written about <span class="arithmatex">\(P\)</span>. A second hazard is carried, not resolved:
+<code>misra-2023-safety-constrained-mdp</code> [V] warns that Bellman optimality can fail in multichain constrained MDPs with
+several unsafe sets — the class the safest-move rule inhabits — so the rule is stated as a one-step filter over an
+evaluated committor vector and no card claims policy-level optimality.</p>
+<p><strong>Determinism and cost carry their own caveats.</strong> <code>solve_triangular</code> was observed bitwise identical forward and
+backward over eight repeats under <code>use_deterministic_algorithms(True)</code>, but torch documents no such guarantee for it,
+so that is an observation on one box and one version, not a contract; <code>cumsum</code> raises under the same setting, which is
+why the segmentation route is a mask and not a scan. The timings inherit an unsynchronised timer and a run-order
+confound — the arms were not interleaved — so every price is a <strong>per-op floor</strong> under a measured dispatch gap of
+<span class="arithmatex">\(2.0\times\)</span> to <span class="arithmatex">\(6.6\times\)</span> (<code>READ scale/m3_flops.py:101-121</code>). The measured increment of the solve over the softmax
+head it contains is <span class="arithmatex">\(2.514-1.473 = 1.041\)</span> ms/step at <span class="arithmatex">\(n=2048\)</span> (<span class="arithmatex">\(2.312\)</span> at <span class="arithmatex">\(4096\)</span>, <span class="arithmatex">\(4.542\)</span> at <span class="arithmatex">\(8192\)</span>), float32, one
+box, producer owed to <code>scripts/k_cert.py</code>; the chunked and CSR paths are <code>NOT MEASURED — needs a chunked kernel</code>, and
+the dense control is not runnable at <span class="arithmatex">\(n=2048\)</span>, <span class="arithmatex">\(s=4096\)</span> (<span class="arithmatex">\(\approx137\)</span> GB against <span class="arithmatex">\(7.996\)</span> GiB), so <span class="arithmatex">\(n\)</span> is stated per
+<span class="arithmatex">\(s\)</span> everywhere.</p>
+<p><strong>The bibliography is verified at the identifier, not at the equation.</strong> The audit resolved 278 of 278 arXiv
+identifiers and 91 of 92 DOIs with no identifier paired to a wrong title; the unresolved one is <code>singh-2007-mapper</code>,
+<code>10.2312/SPBG/SPBG07/091-100</code>, absent from Crossref (Eurographics digital library), carried <code>[U]</code> with two independent
+records agreeing on title, authors and year. Thirty-eight entries carry neither identifier — books, nineteenth- and
+twentieth-century papers, unregistered proceedings — and rest on catalogue, ISBN, zbMATH or DBLP marks; nine of those
+were never fetched at all (Cantelli 1928, Bonferroni 1936, Frobenius 1912, Neumann 1877, Kantorovich–Rubinstein 1958,
+Grünwald 1867, Letnikov 1868, Kramers 1927, Littlewood–Offord 1943) and carry no load-bearing sentence, a textbook
+statement standing in where one is needed. <strong>The sweeps' <code>[V]</code> marks are abs-page title matches, not equation-level
+<code>[V-eq]</code> marks.</strong> Only a handful of sources were read at the body — ChaCAL, InfSA, DeltaNet, SSD, Hu et al., FoX, Dash
+2005, Bottou §7.3, Grinstead–Snell §11.2, Levin–Peres Thm 13.10 — and every other equation number, theorem number and
+hypothesis here was read through a rendered page or a summarising fetch and <strong>must be re-checked against the compiled
+PDF before typesetting</strong>, ChaCAL's diagonal convention included, since it rests on one HTML fetch and decides two of
+the paper's controls. That is not a formality; it is the record's own hazard. Extracting the LRU paper's §3.3 with
+<code>pypdf</code> returned text whose Type-1 encoding mapped <span class="arithmatex">\(-\)</span> to <code>\x00</code> and <span class="arithmatex">\(\infty\)</span> to the glyph <code>1</code>, turning an open
+interval into a closed one — <em>"the single sentence that decides that node is the one the extractor corrupts, and it
+corrupts it into the claim under test"</em> (<code>READ workdonenewseal.md:468-473</code>; <code>V15_X36_PRIOR_ART.md:45-56</code>). The remedy
+there was to read every ML source from arXiv LaTeX source, and it is the remedy owed here. One internal inconsistency,
+recorded: <code>sweep_expressivity</code>'s header says sixteen searches where its own table and count section say eighteen;
+eighteen is used.</p>
+<p><strong>The provenance of this document.</strong> It was produced by two multi-agent passes, both cut by a session cap, and the
+reader is owed what was lost. In the <strong>first</strong> pass two of three design documents reached the first synthesis and no
+refutations reached it at all: <code>design_instrument.md</code> (525 lines) and <code>design_falsify.md</code> (fourteen bets with counters
+and killers) survive as inputs, <code>design_theory.md</code> was never written (<code>THESIS_CORRECTIONS_2.md</code> §2, <code>READ</code>;
+<code>PAPER_OUTLINE.md</code> §8), and the theory design was produced fresh in the second pass. In the <strong>second</strong> pass the plan
+synthesis was the casualty and was re-run separately. So this section was judged against six refutations, all present,
+but the plan it points at was assembled on a second attempt rather than in one pass, and no single agent saw every
+input at once. The judge's <code>RUN[J]</code> numbers are each one numpy float64 draw at <span class="arithmatex">\(s=32\)</span>, <span class="arithmatex">\(\gamma=0.6\)</span>, seed 0, CPU —
+identity and counterexample checks, not statistics — and other planets' runs are quoted at their own differing
+geometries. No planet wrote a code file or made a git write, so nothing here is reproduced by running this document;
+the reproduction path is the plan's first-evening list, and it starts at zero GPU-seconds.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Invented by <a href="https://teerthsharma.vercel.app/">Teerth Sharma</a> · Apache License 2.0
+    </div>
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/teerthsharma/resolvent" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://teerthsharma.vercel.app/" target="_blank" rel="noopener" title="teerthsharma.vercel.app" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M351.9 280H161c2.9 64.5 17.2 123.9 37.5 167.4 11.4 24.5 23.7 41.8 35.1 52.4 11.2 10.5 18.9 12.2 22.9 12.2s11.7-1.7 22.9-12.2c11.4-10.6 23.7-28 35.1-52.4 20.3-43.5 34.6-102.9 37.5-167.4zm-191-48h190.9c-2.8-64.5-17.1-123.9-37.4-167.4-11.4-24.4-23.7-41.8-35.1-52.4C268.1 1.7 260.4 0 256.4 0s-11.7 1.7-22.9 12.2c-11.4 10.6-23.7 28-35.1 52.4-20.3 43.5-34.6 102.9-37.5 167.4m-48 0c3.5-85.6 25.6-165.1 57.9-217.3C78.7 47.3 10.9 131.2 1.5 232zM1.5 280c9.4 100.8 77.2 184.7 169.3 217.3-32.3-52.2-54.4-131.7-57.9-217.3zm398.4 0c-3.5 85.6-25.6 165.1-57.9 217.3 92.1-32.7 159.9-116.5 169.3-217.3zm111.4-48C501.9 131.2 434.1 47.3 342 14.7c32.3 52.2 54.4 131.7 57.9 217.3z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>
