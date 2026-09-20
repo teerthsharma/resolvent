@@ -312,6 +312,44 @@ returned "no."
 
 Claims with no producer located, stated as such rather than silently dropped.
 
+- **BED B1's chess-fortress cells are VOID at their own pre-registered floor.**
+  Measured 2026-09-20 on Kaggle (kernel `melowdramtic/bed-b1-fortress-calibration-3k`,
+  24,020 positions, 1000 per cell x 3 seeds, Stockfish with `SyzygyPath` unset at
+  depths 6 and 10, Syzygy 3-4-5 via `chess.syzygy`). The rule registered before the
+  run was 200 fortress positions per cell at the full 2000 x 5 scale, with any cell
+  below that reported void rather than hidden. Every cell fails it:
+
+  | class | depth | n | fortresses | rate | extrapolated at 10,000 |
+  |---|---|---|---|---|---|
+  | KBPKB | 6 | 3000 | 42 | 1.40% | 140 |
+  | KBPKB | 10 | 3000 | 1 | 0.03% | 10 |
+  | KQKRP | 6 | 3000 | 2 | 0.07% | 16 |
+  | KQKRP | 10 | 3000 | 0 | 0.00% | 10 |
+  | KRPKB | 6 | 3000 | 5 | 0.17% | 31 |
+  | KRPKB | 10 | 3000 | 0 | 0.00% | 10 |
+  | KRPKN | 6 | 3000 | 6 | 0.20% | 36 |
+  | KRPKN | 10 | 3000 | 0 | 0.00% | 10 |
+
+  A fortress here is the conjunction WDL draw AND `cp >= +300`: the engine is
+  confident and the truth is that nothing happens. The sanity cell KBPK at depth 10
+  returned 0 of 20, as expected for an endgame engines carry as a rule.
+
+  **Why the first calibration was wrong in the optimistic direction.** A 75-position
+  pass read KBPKB at depth 6 as 3 of 75, 4.0%, projecting about 400 and clearing the
+  floor. At 3000 positions the same cell reads 1.40%, a point estimate 2.9x lower,
+  and its 95% upper bound extrapolates to 182 — still short. Seven cells were
+  labelled provisionally void at 75 positions with an upper bound of 3.92%, which
+  extrapolates to 392 and could not be distinguished from alive; at 3000 that bound
+  tightens to about 0.10% and the distinction is real.
+
+  **The replacement route is about the sampler, not about chess.** Positions are
+  drawn by random legal placement filtered to quiet. Fortresses arise from play,
+  and a uniform draw over quiet positions is sampling the wrong population; the
+  measurement is evidence about the generator rather than about how rare fortresses
+  are in games. Any future attempt draws from played positions — an endgame tablebase
+  walk or a game corpus filtered to the same material — before the yield rule is
+  applied again.
+
 - **"This repository's instruments measure its models rather than its beds."
   UNTESTED as of 2026-09-20, and the bed built to settle it cannot.** Five
   instruments failed this on the same day, each scoring a property of the draw:
