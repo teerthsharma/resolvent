@@ -66,11 +66,31 @@ exponentiated.
 Measured directly: the real modulus row `R_ij · e_ij` and the normalizer `Z_i`
 are `0.000e+00` different between `θ = 0` and `θ ~ N(0,1)`.
 
-The phase does not touch the attention pattern at all. No setting of β, g or qk
-routes it into the real logit, and a repository-wide search for any q/k rotation
-returns nothing, including `ceq/hf/modeling_ceq.py`. So the corner claim splits:
-**softmax is β=1 exactly, and RoPE is not contained**, because RoPE is softmax
+The phase did not touch the attention pattern at all. No setting of β, g or qk
+routed it into the real logit, and a repository-wide search for any q/k rotation
+returned nothing, including `ceq/hf/modeling_ceq.py`. So the corner claim split:
+**softmax is β=1 exactly, and RoPE was not contained**, because RoPE is softmax
 on a rotated score rather than vanilla softmax.
+
+**That gap is now closed in code.** `numerator`, `operator`, `readout` and
+`block_summary` take `phase_route ∈ {gate, logit, both}`, defaulting to `gate`.
+Under `logit` the phase is derived from `θ·g` and rotates `q` and `k` before the
+dot product. Measured on the landed file: the logit route moves `R_ij·e_ij` by
+`3.822e+01`, `3.392e+00` and `1.065e+01` at seeds 0/1/2, where it previously
+read `0.000e+00`; the gate route still reads `0.000e+00`, unchanged. Against an
+independent reference sharing no code — rotation by slicing into a complex
+tensor, `torch.polar`, and explicit loops for the logit and the path product —
+the rotation is bit-identical at float64, `0.000e+00`, and the whole numerator
+sits at that reference's own floor rather than above it.
+
+The default is bitwise unchanged: `0.000e+00` across 144 `(β, qk, g)` settings
+at 6 seeds, and the `tests/arm_smprime` suite reads 61 passed both before and
+after. A gradient reaches the angle — 16/16 non-zero entries, and a central
+finite difference at `θ[5]` with `h = 1e-6` gives `0.295108` against autograd's
+`0.295108`, relative error `8.20e-09`.
+
+The containment is now *available*, not *used*: `ArmSMPrime` still trains the
+gate route only, so no measured row in this document runs through `logit`.
 
 A second lane reached the same wall numerically from the other side: the
 imaginary half of the twist is discarded bitwise,

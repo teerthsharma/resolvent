@@ -213,9 +213,66 @@ def hop(u: torch.Tensor, theta: torch.Tensor, *, g=1.0,
 
 # --------------------------------------------------------------- the operator
 
+
+#: Chase, round 2 -- where the existing `theta` argument is allowed to act.
+#: "gate" is the shipped behaviour (theta multiplies G_ij post-exp) and is
+#: the default everywhere, so every caller that never passes `phase_route`
+#: is bitwise unaffected.
+PHASE_ROUTES = ("gate", "logit", "both")
+
+
+def _rope_rotate(x, cos, sin):
+    """Standard RoPE rotation, per 2-channel block (interleaved pairs),
+    round 1's convention. `cos`/`sin` are cast to x's dtype AT THE POINT OF
+    USE (never cached in a different dtype) -- this is the one place a rope
+    table (external, via `rope=`, or theta-derived, via `phase_route`) ever
+    touches q/k."""
+    *lead, seqlen, d = x.shape
+    if d % 2:
+        raise ValueError(f"rope needs an even channel count, got {d}")
+    cos = cos.to(x.dtype)
+    sin = sin.to(x.dtype)
+    xp = x.reshape(*lead, seqlen, d // 2, 2)
+    x0, x1 = xp[..., 0], xp[..., 1]
+    r0 = x0 * cos - x1 * sin
+    r1 = x0 * sin + x1 * cos
+    return torch.stack((r0, r1), dim=-1).reshape(*lead, seqlen, d)
+
+
+def _theta_rotation_table(th, d):
+    """`(cos, sin)`, each broadcastable to `[..., S, d//2]`, from the SAME
+    scalar-per-position `th` (already `theta * g`, `blend()`'s own quantity)
+    that the gate route multiplies into `G_ij` -- ONE angle per position,
+    applied uniformly across every 2-channel block, computed fresh in `th`'s
+    own dtype every call. No cache, no dtype key, so the dtype bug the round
+    1 external table had (angles always built in float32, cast up at use)
+    cannot occur here by construction."""
+    if d % 2:
+        raise ValueError(f"phase_route='logit'/'both' needs an even head dim, got {d}")
+    ang = th.unsqueeze(-1)                      # [..., S, 1], th's own dtype
+    return torch.cos(ang).expand(*ang.shape[:-1], d // 2), \
+           torch.sin(ang).expand(*ang.shape[:-1], d // 2)
+
+
+def _route_theta(q, k, th, phase_route):
+    """Apply the theta-derived rotation to q/k when `phase_route` says the
+    logit should see it; return (q, k, gate_theta) where `gate_theta` is what
+    the gate route (`hop`) should be given -- `th`'s own ORIGINAL undivided
+    theta for "gate"/"both", zeros for "logit" (so the post-exp mechanism is
+    truly switched off there, not merely small)."""
+    if phase_route not in PHASE_ROUTES:
+        raise ValueError(f"unknown phase_route {phase_route!r}; expected one of {PHASE_ROUTES}")
+    if phase_route in ("logit", "both"):
+        cos, sin = _theta_rotation_table(th, q.shape[-1])
+        q = _rope_rotate(q, cos, sin)
+        k = _rope_rotate(k, cos, sin)
+    return q, k
+
+
 def numerator(q: torch.Tensor, k: torch.Tensor,
               u: torch.Tensor | None = None, theta: torch.Tensor | None = None,
-              *, qk=1.0, g=1.0, route: str = "product") -> tuple:
+              *, qk=1.0, g=1.0, route: str = "product",
+              rope=None, phase_route: str = "gate") -> tuple:
     """`(G_ij exp(qk q_i.k_j), R_ij exp(qk q_i.k_j))` -- the numerator and the
     modulus row it is normalized by, before `beta` is applied.
 
@@ -225,14 +282,24 @@ def numerator(q: torch.Tensor, k: torch.Tensor,
     """
     n = q.shape[-2]
     du, dev = q.dtype, q.device
+    uu = torch.ones(n, dtype=du, device=dev) if u is None else u
+    tt = torch.zeros(n, dtype=du, device=dev) if theta is None else theta
+    #: `phase_route`, Chase round 2: the SAME theta that `blend()` scales by
+    #: `g` for the gate can instead (or also) rotate q/k before the dot
+    #: product, so a learnable theta reaches the real logit.
+    th_for_logit = tt * g
+    gate_theta = tt if phase_route in ("gate", "both") else torch.zeros_like(tt)
+    q, k = _route_theta(q, k, th_for_logit, phase_route)
+    if rope is not None:
+        cos, sin = rope
+        q = _rope_rotate(q, cos, sin)
+        k = _rope_rotate(k, cos, sin)
     w = qk * ((q @ k.transpose(-2, -1)) / math.sqrt(q.shape[-1]))
     up = torch.ones(n, n, dtype=torch.bool, device=dev).triu(1)
     #: mask BEFORE the exponential: `exp(-inf) = 0` exactly, and no `inf` is
     #: created above the diagonal to meet a zero gradient in the backward.
     e = torch.exp(w.masked_fill(up, NEG))
-    uu = torch.ones(n, dtype=du, device=dev) if u is None else u
-    tt = torch.zeros(n, dtype=du, device=dev) if theta is None else theta
-    gh, rh = hop(uu, tt, g=g, route=route)
+    gh, rh = hop(uu, gate_theta, g=g, route=route)
     #: DEAD-ENTRY GUARD. `rh` (`R_ij`) is exactly `0` wherever the gate
     #: already killed the entry (clause 4); if that same entry also carries
     #: a masked logit past float64's overflow edge, `e` there is `inf`, and
@@ -259,7 +326,8 @@ def numerator(q: torch.Tensor, k: torch.Tensor,
 
 def operator(q: torch.Tensor, k: torch.Tensor,
              u: torch.Tensor | None = None, theta: torch.Tensor | None = None,
-             *, beta=1.0, qk=1.0, g=1.0, route: str = "product") -> torch.Tensor:
+             *, beta=1.0, qk=1.0, g=1.0, route: str = "product",
+             rope=None, phase_route: str = "gate") -> torch.Tensor:
     """The `[..., S, S]` complex operator `W_ij = num_ij / Z_i^beta`.
 
     `Z_i = sum_{j<=i} R_ij exp(...)` is real and STRICTLY POSITIVE: the
@@ -272,21 +340,24 @@ def operator(q: torch.Tensor, k: torch.Tensor,
     quotient `(ac + bd)/(c^2 + d^2)`, which is not bitwise `a/c` even at
     `d = 0`; the two corners that are bitwise here would not be.
     """
-    num, mod = numerator(q, k, u, theta, qk=qk, g=g, route=route)
+    num, mod = numerator(q, k, u, theta, qk=qk, g=g, route=route,
+                        rope=rope, phase_route=phase_route)
     zb = mod.sum(-1, keepdim=True) ** beta
     return torch.complex(num.real / zb, num.imag / zb)
 
 
 def readout(q: torch.Tensor, k: torch.Tensor, v: torch.Tensor,
             u: torch.Tensor | None = None, theta: torch.Tensor | None = None,
-            *, beta=1.0, qk=1.0, g=1.0, route: str = "product") -> torch.Tensor:
+            *, beta=1.0, qk=1.0, g=1.0, route: str = "product",
+            rope=None, phase_route: str = "gate") -> torch.Tensor:
     """`O_i = sum_{j<=i} W_ij V_j`, complex.
 
     At `beta = 0` with QK off this is `sum_j (prod_{k>j} a_k) b_j` -- BED-M's
     label by its own definition (`scale/negation_scope.py::equilibrium_oracle`
     calls it "the signed path sum"), with `V = b` and no rescale.
     """
-    a = operator(q, k, u, theta, beta=beta, qk=qk, g=g, route=route)
+    a = operator(q, k, u, theta, beta=beta, qk=qk, g=g, route=route,
+                 rope=rope, phase_route=phase_route)
     return a @ v.to(a.dtype)
 
 
@@ -295,7 +366,8 @@ def readout(q: torch.Tensor, k: torch.Tensor, v: torch.Tensor,
 def block_summary(q: torch.Tensor, k: torch.Tensor, v: torch.Tensor,
                    u: torch.Tensor | None = None,
                    theta: torch.Tensor | None = None, *, block: int,
-                   qk=1.0, g=1.0, route: str = "product") -> tuple:
+                   qk=1.0, g=1.0, route: str = "product",
+                   rope=None, phase_route: str = "gate") -> tuple:
     """`(m, l, o, carry)`, one column-block wide: THE SURVIVOR's per-block
     summary, `read_summary`'s job to re-merge at any `beta` off this ONE call.
 
@@ -319,7 +391,18 @@ def block_summary(q: torch.Tensor, k: torch.Tensor, v: torch.Tensor,
     dev, du = q.device, q.dtype
     uu = torch.ones(n, dtype=du, device=dev) if u is None else u
     tt = torch.zeros(n, dtype=du, device=dev) if theta is None else theta
-    gh, rh = hop(uu, tt, g=g, route=route)
+    #: same theta-routing as `numerator` -- kept as ONE helper (`_route_theta`)
+    #: so the survivor path cannot silently diverge from the dense path the
+    #: way round 1's diff let it (dense-vs-merge read 0.30 apart once rope
+    #: went live on the dense side only).
+    th_for_logit = tt * g
+    gate_theta = tt if phase_route in ("gate", "both") else torch.zeros_like(tt)
+    q, k = _route_theta(q, k, th_for_logit, phase_route)
+    if rope is not None:
+        cos, sin = rope
+        q = _rope_rotate(q, cos, sin)
+        k = _rope_rotate(k, cos, sin)
+    gh, rh = hop(uu, gate_theta, g=g, route=route)
 
     #: `numerator`'s own masked logit, pre-`exp`.
     s = qk * ((q @ k.transpose(-2, -1)) / math.sqrt(q.shape[-1]))
