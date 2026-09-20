@@ -89,6 +89,10 @@ import Mathlib.Algebra.GroupWithZero.Units.Basic
 import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
 import Mathlib.Data.Fintype.Card
 import Mathlib.Data.Finset.Card
+import Mathlib.Analysis.Matrix
+import Mathlib.Data.Matrix.Block
+import Mathlib.Data.Real.Sqrt
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Inverse
 
 namespace CEQ.V16Domain
 
@@ -634,6 +638,19 @@ theorem beta_one_row_is_one (g : ℕ → ℝ) (hg : ∀ k, g k = 0) (qk : ℕ �
     corpus's choice of a scalar gate forecloses order-sensitivity — a fact
     ABOUT the choice, not a theorem about the shipped operator.
 
+    **H.1 — AMENDED BY §7 (PHASE H.1). The last sentence of the paragraph
+    above is now WRONG and is retained only so the correction is legible.**
+    `PhaseH1.pathProd_eq_pathProdL` proves that `pathProd` — this file's own
+    `Finset.prod`, unchanged — IS a `List.prod` over
+    `(Ico (j+1) (i+1)).toList`, and `PhaseH1.pathProdL_scalar_is_order_blind`
+    then proves it equals that `List.prod` over EVERY permutation of the
+    window. So order-blindness of the SHIPPED product is a theorem, not an
+    unstatable free fact, and `matrix_gate_not_commutes` is the contrast
+    against a product (`PhaseH1.pathProdMatrixL`) that the corpus now
+    actually has. What remains true in the paragraph above is only the typing
+    fact: `Finset.prod` needs a `CommMonoid` and cannot be written over a
+    noncommuting codomain.
+
     **H.2 — WHAT IS AND IS NOT LOAD-BEARING.** `projector_idempotent_not_invertible`
     carries `hP0 : P ≠ 0` for parity with the round's contract, and the proof
     never uses it; only `hP1 : P ≠ 1` does work. Recorded rather than removed
@@ -874,6 +891,405 @@ def demoStallG : Finset (Bool → Bool) := {id}
 
 end PhaseH
 
+/-! ## 7. PHASE H.1 — the product moved off `Finset.prod` onto `List.prod`
+
+    Provenance: Phase-H.1 work order, targets `pathProdL`, the AGREEMENT
+    LEMMA, `contraction_path_bounded`, `dilation_block_eq_sigma`. Each was
+    built standalone in the Prove phase and is merged here only after the
+    whole library rebuilt with every pre-existing declaration's axiom list
+    unchanged.
+
+    **THE BLOCKER THIS SECTION CLEARS, and it is a fact about the DEFINITION
+    rather than about the mathematics.** `pathProd` above is a `Finset.prod`.
+    `Finset.prod` is `protected def Finset.prod [CommMonoid β] (s : Finset α)
+    (f : α → β) : β := (s.1.map f).prod` — it REQUIRES a `CommMonoid` to be
+    well defined at all, so it cannot typecheck over a noncommuting codomain,
+    and permutation-invariance over a `Finset` is vacuous because a `Finset`
+    carries no order to permute. §6's `scalar_gate_commutes` /
+    `matrix_gate_not_commutes` pair therefore said nothing about the shipped
+    `pathProd`, and every matrix-gate sentence stayed unformalised.
+
+    `pathProdL` is `List.prod`, which needs only a `Monoid`, so
+    `Matrix n n R` for a noncommutative `Semiring R` typechecks.
+
+    **WHAT PROTECTS THE EXISTING CORPUS.** `pathProd_eq_pathProdL` is the
+    agreement lemma: the corpus's own `pathProd` — not a restated copy of it —
+    equals `pathProdL` applied to the same gates over
+    `(Ico (j+1) (i+1)).toList`. It is Mathlib's `Finset.prod_to_list`
+    (`Mathlib/Algebra/BigOperators/Basic.lean`, `CommMonoid`-only) cited at the
+    corpus's objects, not a duplicate bridge re-proved here.
+    `gateList_multiset` is the anti-vacuity check on it: the list's underlying
+    MULTISET is literally `(Ico (j+1) (i+1)).val.map gate`, i.e. the same
+    multiset `Finset.prod` folds over, not a re-indexed or re-sorted one.
+
+    **AND THE CORPUS IS RECOVERED, NOT MERELY COEXISTED WITH.** §H.1c derives
+    four pre-existing results as statements about `pathProdL` by rewriting
+    along the agreement lemma and then QUOTING the original — `pathProd_abs`,
+    `pathProd_eq_zero_iff`, `no_prefix_scan_represents_a_zero_gate`,
+    `constant_phase_gate_is_rope`. Nothing is re-proved. That is the sense in
+    which the scalar family is the `CommMonoid` specialisation of the new
+    mechanism rather than an orphan beside it, and
+    `pathProdL_scalar_is_order_blind` closes the loop the other way: over the
+    commutative codomain the `List.prod` is invariant under EVERY permutation
+    of the window, so the scalar family provably cannot hold step order, which
+    is what `pathProdMatrixL_order_sensitive` exhibits a matrix carry doing.
+
+    **THE NORM IS NAMED, AND IT IS NOT `σ_max`.** `contraction_path_bounded`
+    is stated in the `L∞`-operator norm (`Matrix.linftyOpSeminormedAddCommGroup`,
+    activated `local` inside §H.1d only) because that is the matrix norm this
+    Mathlib pin actually proves submultiplicative for a general entry ring
+    (`Matrix.linfty_opNorm_mul`, `[NonUnitalSeminormedRing α]`). The plain
+    entrywise sup norm carries no `norm_mul` field at all, and the Frobenius
+    instance needs the stronger `[RCLike α]`. There is NO submultiplicative
+    SPECTRAL-norm instance on `Matrix` in this pin, so the singular-value
+    reading of `σ_max ≤ 1` is NOT what is formalised here, and that gap is
+    stated rather than papered over.
+
+    **THE CONCLUSION IS `≤ 1`, NOT SUBMULTIPLICATIVITY RENAMED.**
+    `Matrix.linfty_opNorm_mul` needs no hypothesis and concludes
+    `‖A*B‖ ≤ ‖A‖*‖B‖`; it says nothing about `1`.
+    `contraction_hypothesis_is_load_bearing` proves the hypothesis-free version
+    of §H.1d's statement is FALSE, by the witness `[2 • 1]` whose product has
+    norm `2`. `contraction_path_bounded_noncommuting_witness` is the other
+    side: the two `2×2` nilpotents of `matrix_gate_not_commutes` each have
+    `L∞`-operator norm EXACTLY `1`, their two orderings give DIFFERENT
+    products, and the bound holds for both — so the theorem has content on a
+    genuinely noncommuting chain and is not carried by a commutative or
+    degenerate instance.
+
+    **WHAT `dilation_block_eq_sigma` DOES AND DOES NOT COVER.** The general
+    DIAGONAL contraction `S : Fin n → ℝ` with entries in the closed `[0,1]`
+    is the top-left block of an orthogonal matrix on the doubled index
+    `Fin n ⊕ Fin n`. A non-diagonal contraction is NOT covered: the SVD
+    reduction to the diagonal case is not formalised here.
+    `dilation_2x2_rotation_by_arccos` ties the construction to the gate
+    `m · e^{iθ}` by naming the angle: at one scalar, `θ = arccos S` gives
+    `S = cos θ` and the off-diagonal `s = sin θ`. No `#eval` witness exists
+    for either — `Real.sqrt` is `noncomputable` in this pin, so neither
+    theorem can be run the way `finite_semigroup_never_decidable` can. The
+    `#eval`-shaped witnesses in this section are the two `ℤ`-matrix products
+    at the foot of §H.1a, which do reduce; the closest available check on the
+    dilation is the exact rational instance `dilation_gate_instance_three_five`,
+    closed by `norm_num` with no numerical tolerance. -/
+
+namespace PhaseH1
+
+/-! ### H.1a The product over a `List`, which a noncommuting codomain can type -/
+
+/-- **TARGET `pathProdL`.** The path product of a list of monoid elements.
+    `List.prod` needs only `[Monoid M]`; no commutativity appears in the
+    signature and none is needed, which is the whole point — `Finset.prod`
+    could not be written down here. -/
+def pathProdL {M : Type*} [Monoid M] (L : List M) : M := L.prod
+
+/-- The matrix instance, spelled to the work order's signature.
+    `Matrix.semiring` supplies `Monoid (Matrix n n R)` through
+    `Semiring → MonoidWithZero → Monoid`, so `R` is NOT assumed commutative
+    and `n ≥ 2` typechecks. -/
+def pathProdMatrixL {n : Type*} [Fintype n] [DecidableEq n] {R : Type*} [Semiring R]
+    (L : List (Matrix n n R)) : Matrix n n R := pathProdL L
+
+/-- **The new definition carries what the old one could not even be asked.**
+    The same two `2×2` witnesses as `PhaseH.matrix_gate_not_commutes`: the
+    two lists ARE permutations of each other, and `pathProdMatrixL` separates
+    them. Over `pathProd` this statement is not false — it is unstatable. -/
+theorem pathProdMatrixL_order_sensitive :
+    ∃ A B : Matrix (Fin 2) (Fin 2) ℂ,
+      ([A, B] : List (Matrix (Fin 2) (Fin 2) ℂ)).Perm [B, A]
+        ∧ pathProdMatrixL [A, B] ≠ pathProdMatrixL [B, A] := by
+  refine ⟨!![0, 1; 0, 0], !![0, 0; 1, 0], List.Perm.swap _ _ _, ?_⟩
+  unfold pathProdMatrixL pathProdL
+  simp only [List.prod_cons, List.prod_nil, mul_one, Matrix.mul_fin_two]
+  intro h
+  have h00 := congrFun (congrFun h 0) 0
+  norm_num [Matrix.of_apply, Matrix.cons_val_zero, Matrix.cons_val_one,
+    Matrix.head_cons] at h00
+
+/- `#eval` witnesses for `pathProdMatrixL`, over `ℤ` so the kernel reduces
+   (`ℂ` does not). Entry `(0,0)` of the two reorderings: expected `1` then
+   `0`. A `/-- -/` doc comment may not precede a `#eval`, hence the plain
+   block comment. -/
+#eval (pathProdMatrixL ([!![0, 1; 0, 0], !![0, 0; 1, 0]] : List (Matrix (Fin 2) (Fin 2) ℤ))) 0 0
+#eval (pathProdMatrixL ([!![0, 0; 1, 0], !![0, 1; 0, 0]] : List (Matrix (Fin 2) (Fin 2) ℤ))) 0 0
+
+/-! ### H.1b THE AGREEMENT LEMMA, stated over this file's own `pathProd` -/
+
+/-- The window's gates as an ordered list, over the canonical representative
+    `(Ico (j+1) (i+1)).toList`. -/
+noncomputable def gateList (m θ : ℕ → ℝ) (i j : ℕ) : List ℂ :=
+  (Ico (j + 1) (i + 1)).toList.map (fun k => gateOf (m k) (θ k))
+
+/-- **TARGET: THE AGREEMENT LEMMA.** `pathProd` — the object all of §1–§4b's
+    declarations are stated about, unchanged — IS a `pathProdL`. Proof: cite
+    Mathlib's `Finset.prod_to_list`, which holds over any `CommMonoid` and is
+    exactly "`List.prod` over a representative list equals `Finset.prod` over
+    the same multiset". No duplicate bridge lemma is proved. -/
+theorem pathProd_eq_pathProdL (m θ : ℕ → ℝ) (i j : ℕ) :
+    pathProd m θ i j = pathProdL (gateList m θ i j) := by
+  unfold pathProdL gateList pathProd
+  exact (Finset.prod_to_list (Ico (j + 1) (i + 1)) (fun k => gateOf (m k) (θ k))).symm
+
+/-- **The anti-vacuity check on the agreement lemma: SAME MULTISET, not a
+    rewritten one.** `gateList`'s underlying multiset is literally
+    `(Ico (j+1) (i+1)).val.map gate` — the multiset `Finset.prod` folds over.
+    Without this, "equals the product over the same multiset" would be a
+    claim about the prose and not about the terms. -/
+theorem gateList_multiset (m θ : ℕ → ℝ) (i j : ℕ) :
+    (gateList m θ i j : Multiset ℂ)
+      = (Ico (j + 1) (i + 1)).val.map (fun k => gateOf (m k) (θ k)) := by
+  unfold gateList
+  rw [← Multiset.map_coe, Finset.coe_toList]
+
+/-! ### H.1c The pre-existing corpus RECOVERED through the agreement lemma
+
+    Each of the four below is `rw [← pathProd_eq_pathProdL]` followed by
+    QUOTING the original declaration. Nothing above this section is restated,
+    weakened, or re-proved: the scalar family is recovered as the `CommMonoid`
+    case of the `List.prod` mechanism, which is the continuity claim the page
+    needs in order to add matrix-gate sentences. -/
+
+/-- `pathProd_abs`, recovered on `pathProdL`. -/
+theorem pathProdL_abs (m θ : ℕ → ℝ) (h0 : ∀ k, 0 ≤ m k) (i j : ℕ) :
+    Complex.abs (pathProdL (gateList m θ i j)) = ∏ k in Ico (j + 1) (i + 1), m k := by
+  rw [← pathProd_eq_pathProdL]; exact pathProd_abs m θ h0 i j
+
+/-- `pathProd_eq_zero_iff`, recovered on `pathProdL`: annihilation at a zero
+    magnitude survives the move off `Finset.prod`. -/
+theorem pathProdL_eq_zero_iff (m θ : ℕ → ℝ) (i j : ℕ) :
+    pathProdL (gateList m θ i j) = 0 ↔ ∃ k ∈ Ico (j + 1) (i + 1), m k = 0 := by
+  rw [← pathProd_eq_pathProdL]; exact pathProd_eq_zero_iff m θ i j
+
+/-- `no_prefix_scan_represents_a_zero_gate`, recovered on `pathProdL`: the
+    file's central cost is not an artifact of the `Finset` shape. -/
+theorem pathProdL_no_prefix_scan (C : ℕ → ℂ) (m θ : ℕ → ℝ) {i j : ℕ}
+    (hz : ∃ k ∈ Ico (j + 1) (i + 1), m k = 0) :
+    Complex.exp (C i - C j) ≠ pathProdL (gateList m θ i j) := by
+  rw [← pathProd_eq_pathProdL]; exact no_prefix_scan_represents_a_zero_gate C m θ hz
+
+/-- `constant_phase_gate_is_rope`, recovered on `pathProdL`. -/
+theorem pathProdL_is_rope (ω : ℝ) {i j : ℕ} (hij : j ≤ i) :
+    pathProdL (gateList (fun _ => (1 : ℝ)) (fun _ => ω) i j)
+      = Complex.exp (((ω * ((i : ℝ) - (j : ℝ)) : ℝ) : ℂ) * Complex.I) := by
+  rw [← pathProd_eq_pathProdL]; exact constant_phase_gate_is_rope ω hij
+
+/-- **The loop closed the other way, and this is what §6's `PhaseH` docstring
+    could only assert.** `pathProd` equals the `List.prod` of the same gates
+    over EVERY permutation of the window, not just the canonical one — so the
+    scalar carry provably holds no step order. Read against
+    `pathProdMatrixL_order_sensitive`, which exhibits a matrix carry that
+    does, this is now a statement about the SHIPPED product rather than about
+    a separate combinatorial object. -/
+theorem pathProdL_scalar_is_order_blind (m θ : ℕ → ℝ) {i j : ℕ} {L : List ℕ}
+    (hperm : (Ico (j + 1) (i + 1)).toList.Perm L) :
+    pathProd m θ i j = pathProdL (L.map (fun k => gateOf (m k) (θ k))) := by
+  rw [pathProd_eq_pathProdL]
+  unfold pathProdL gateList
+  exact (hperm.map (fun k => gateOf (m k) (θ k))).prod_eq
+
+/-! ### H.1d The contraction bound on the operator axis -/
+
+section Contraction
+
+/- The `L∞`-operator norm on square matrices — the one
+   `Matrix.linfty_opNorm_mul` is proved against — is declared
+   `@[local instance]` inside `Mathlib.Analysis.Matrix`, so it does not leak
+   in from the import. These two lines activate it for THIS SECTION ONLY, so
+   no declaration outside §H.1d sees a `Norm (Matrix n n α)` instance.
+   Plain block comments: `attribute` is a command and cannot carry a `/-- -/`. -/
+attribute [local instance] Matrix.linftyOpSeminormedAddCommGroup
+attribute [local instance] Matrix.linftyOpNormedSpace
+
+/-- **TARGET `contraction_path_bounded`.** If EVERY factor of the list has
+    operator norm at most `1`, the `List.prod` of the whole chain does too.
+    The chain is submultiplicativity (`Matrix.linfty_opNorm_mul`, lifted to
+    arbitrary length by induction on the list) and then the per-factor bound.
+    This is `prefix_logit_mask_restated`'s clause 2 — `|∏ a| ≤ 1` from
+    `m k ≤ 1` — carried onto the operator axis, and commutativity of the
+    codomain is never used. -/
+theorem contraction_path_bounded {n : Type*} [Fintype n] [DecidableEq n] [Nonempty n]
+    {α : Type*} [NormedRing α] [NormOneClass α]
+    (L : List (Matrix n n α)) (h : ∀ T ∈ L, ‖T‖ ≤ 1) :
+    ‖pathProdMatrixL L‖ ≤ 1 := by
+  unfold pathProdMatrixL pathProdL
+  induction L with
+  | nil => rw [List.prod_nil]; exact le_of_eq norm_one
+  | cons T L ih =>
+      rw [List.prod_cons]
+      have hT : ‖T‖ ≤ 1 := h T (List.mem_cons_self T L)
+      have hL : ‖L.prod‖ ≤ 1 := ih (fun S hS => h S (List.mem_cons_of_mem T hS))
+      calc ‖T * L.prod‖ ≤ ‖T‖ * ‖L.prod‖ := Matrix.linfty_opNorm_mul T L.prod
+        _ ≤ 1 * 1 := mul_le_mul hT hL (norm_nonneg _) (by norm_num)
+        _ = 1 := by norm_num
+
+/-- **REFUSED: `contraction_path_bounded` without its per-factor hypothesis.**
+    Deleting `h` does not give submultiplicativity under a new name; it gives
+    a FALSE statement, and here is the witness. `[2 • 1]` is a one-element
+    chain whose product has operator norm `2`. So the hypothesis
+    `∀ T ∈ L, ‖T‖ ≤ 1` is load-bearing and the conclusion `≤ 1` is not
+    carried by `Matrix.linfty_opNorm_mul` alone. -/
+theorem contraction_hypothesis_is_load_bearing :
+    ∃ L : List (Matrix (Fin 2) (Fin 2) ℝ), ¬ ‖pathProdMatrixL L‖ ≤ 1 := by
+  refine ⟨[(2 : ℝ) • (1 : Matrix (Fin 2) (Fin 2) ℝ)], ?_⟩
+  unfold pathProdMatrixL pathProdL
+  rw [List.prod_cons, List.prod_nil, mul_one, norm_smul, norm_one]
+  norm_num
+
+/-- **And the bound has content on a genuinely noncommuting chain.** The two
+    `2×2` nilpotents of `PhaseH.matrix_gate_not_commutes` have operator norm
+    EXACTLY `1` each — so they satisfy the hypothesis at its boundary, not
+    with slack — the two orderings of the chain give DIFFERENT products, and
+    `contraction_path_bounded` bounds both. Filed so the theorem cannot be
+    read as holding only on commutative or degenerate instances. -/
+theorem contraction_path_bounded_noncommuting_witness :
+    ‖(!![0, 1; 0, 0] : Matrix (Fin 2) (Fin 2) ℝ)‖ = 1
+      ∧ ‖(!![0, 0; 1, 0] : Matrix (Fin 2) (Fin 2) ℝ)‖ = 1
+      ∧ pathProdMatrixL ([!![0, 1; 0, 0], !![0, 0; 1, 0]] : List (Matrix (Fin 2) (Fin 2) ℝ))
+          ≠ pathProdMatrixL ([!![0, 0; 1, 0], !![0, 1; 0, 0]] : List (Matrix (Fin 2) (Fin 2) ℝ))
+      ∧ ‖pathProdMatrixL ([!![0, 1; 0, 0], !![0, 0; 1, 0]]
+            : List (Matrix (Fin 2) (Fin 2) ℝ))‖ ≤ 1
+      ∧ ‖pathProdMatrixL ([!![0, 0; 1, 0], !![0, 1; 0, 0]]
+            : List (Matrix (Fin 2) (Fin 2) ℝ))‖ ≤ 1 := by
+  have hA : ‖(!![0, 1; 0, 0] : Matrix (Fin 2) (Fin 2) ℝ)‖ = 1 := by
+    rw [Matrix.linfty_opNorm_def]
+    norm_num [Fin.sum_univ_succ, Fin.univ_succ, Finset.sup_insert, Finset.sup_singleton]
+  have hB : ‖(!![0, 0; 1, 0] : Matrix (Fin 2) (Fin 2) ℝ)‖ = 1 := by
+    rw [Matrix.linfty_opNorm_def]
+    norm_num [Fin.sum_univ_succ, Fin.univ_succ, Finset.sup_insert, Finset.sup_singleton]
+  refine ⟨hA, hB, ?_, ?_, ?_⟩
+  · unfold pathProdMatrixL pathProdL
+    simp only [List.prod_cons, List.prod_nil, mul_one, Matrix.mul_fin_two]
+    intro h
+    have h00 := congrFun (congrFun h 0) 0
+    norm_num [Matrix.of_apply, Matrix.cons_val_zero, Matrix.cons_val_one,
+      Matrix.head_cons] at h00
+  · refine contraction_path_bounded _ ?_
+    intro T hT
+    rcases List.mem_cons.mp hT with rfl | hT
+    · exact le_of_eq hA
+    · rcases List.mem_cons.mp hT with rfl | hT
+      · exact le_of_eq hB
+      · simp at hT
+  · refine contraction_path_bounded _ ?_
+    intro T hT
+    rcases List.mem_cons.mp hT with rfl | hT
+    · exact le_of_eq hB
+    · rcases List.mem_cons.mp hT with rfl | hT
+      · exact le_of_eq hA
+      · simp at hT
+
+end Contraction
+
+/-! ### H.1e The dilation -/
+
+section Dilation
+
+open Matrix
+
+/-- **TARGET `dilation_block_eq_sigma`.** A DIAGONAL contraction
+    `S : Fin n → ℝ` with entries in the CLOSED `[0,1]` is the top-left block
+    of an orthogonal matrix on the doubled index: with
+    `s i = sqrt (1 - (S i)^2)`,
+    `D = fromBlocks (diag S) (diag s) (-(diag s)) (diag S)` satisfies
+    `Dᵀ * D = 1` and `D (inl i) (inl j) = diagonal S i j`. Both endpoints of
+    the band are ordinary points: `S i = 0` and `S i = 1` are admitted, not
+    excluded. NOT covered: a non-diagonal contraction — the SVD reduction to
+    this case is not formalised. -/
+theorem dilation_block_eq_sigma {n : ℕ} (S : Fin n → ℝ)
+    (hS0 : ∀ i, 0 ≤ S i) (hS1 : ∀ i, S i ≤ 1) :
+    ∃ D : Matrix (Fin n ⊕ Fin n) (Fin n ⊕ Fin n) ℝ,
+      Dᵀ * D = 1 ∧ ∀ i j : Fin n, D (Sum.inl i) (Sum.inl j) = Matrix.diagonal S i j := by
+  set s : Fin n → ℝ := fun i => Real.sqrt (1 - (S i) ^ 2)
+  have hs_sq : ∀ i, (s i) ^ 2 = 1 - (S i) ^ 2 := fun i =>
+    Real.sq_sqrt (by nlinarith [hS0 i, hS1 i])
+  have hsum1 : ∀ i, S i * S i + s i * s i = 1 := fun i => by
+    have h := hs_sq i; nlinarith [h]
+  have hsum2 : ∀ i, s i * s i + S i * S i = 1 := fun i => by
+    have h := hs_sq i; nlinarith [h]
+  refine ⟨Matrix.fromBlocks (Matrix.diagonal S) (Matrix.diagonal s)
+      (-(Matrix.diagonal s)) (Matrix.diagonal S), ?_, ?_⟩
+  · rw [Matrix.fromBlocks_transpose]
+    simp only [Matrix.diagonal_transpose, Matrix.transpose_neg]
+    rw [Matrix.fromBlocks_multiply]
+    have e1 : Matrix.diagonal S * Matrix.diagonal S
+        + -Matrix.diagonal s * -Matrix.diagonal s = (1 : Matrix (Fin n) (Fin n) ℝ) := by
+      rw [neg_mul_neg, Matrix.diagonal_mul_diagonal, Matrix.diagonal_mul_diagonal,
+        Matrix.diagonal_add]
+      have hfun : (fun i => S i * S i + s i * s i) = (fun _ : Fin n => (1 : ℝ)) :=
+        funext hsum1
+      rw [hfun]; exact Matrix.diagonal_one
+    have e2 : Matrix.diagonal S * Matrix.diagonal s
+        + -Matrix.diagonal s * Matrix.diagonal S = (0 : Matrix (Fin n) (Fin n) ℝ) := by
+      rw [neg_mul, Matrix.diagonal_mul_diagonal, Matrix.diagonal_mul_diagonal,
+        Matrix.diagonal_neg, Matrix.diagonal_add]
+      have hfun : (fun i => S i * s i + -(s i * S i)) = (fun _ : Fin n => (0 : ℝ)) :=
+        funext (fun i => by ring)
+      rw [hfun]; exact Matrix.diagonal_zero
+    have e3 : Matrix.diagonal s * Matrix.diagonal S
+        + Matrix.diagonal S * -Matrix.diagonal s = (0 : Matrix (Fin n) (Fin n) ℝ) := by
+      rw [mul_neg, Matrix.diagonal_mul_diagonal, Matrix.diagonal_mul_diagonal,
+        Matrix.diagonal_neg, Matrix.diagonal_add]
+      have hfun : (fun i => s i * S i + -(S i * s i)) = (fun _ : Fin n => (0 : ℝ)) :=
+        funext (fun i => by ring)
+      rw [hfun]; exact Matrix.diagonal_zero
+    have e4 : Matrix.diagonal s * Matrix.diagonal s
+        + Matrix.diagonal S * Matrix.diagonal S = (1 : Matrix (Fin n) (Fin n) ℝ) := by
+      rw [Matrix.diagonal_mul_diagonal, Matrix.diagonal_mul_diagonal, Matrix.diagonal_add]
+      have hfun : (fun i => s i * s i + S i * S i) = (fun _ : Fin n => (1 : ℝ)) :=
+        funext hsum2
+      rw [hfun]; exact Matrix.diagonal_one
+    rw [e1, e2, e3, e4]
+    exact Matrix.fromBlocks_one
+  · intro i j
+    exact Matrix.fromBlocks_apply₁₁ _ _ _ _ i j
+
+/-- **The `2×2` case, with the ANGLE named, which is what ties the dilation to
+    this file's gate.** For one contraction scalar `S ∈ [0,1]`,
+    `D = !![S, s; -s, S]` with `s = sqrt (1 - S^2)` is orthogonal, its
+    top-left entry is `S`, and it IS the rotation by `θ = arccos S`:
+    `S = cos θ`, `s = sin θ`. `gateOf m θ` at `m = 1` is exactly this
+    rotation. Proved independently of `dilation_block_eq_sigma` rather than by
+    specializing `Fin n ⊕ Fin n` to `Fin 1 ⊕ Fin 1`, so a defect in one does
+    not hide inside the other. -/
+theorem dilation_2x2_rotation_by_arccos (S : ℝ) (hS0 : 0 ≤ S) (hS1 : S ≤ 1) :
+    ∃ D : Matrix (Fin 2) (Fin 2) ℝ, ∃ s : ℝ,
+      D = !![S, s; -s, S]
+        ∧ Dᵀ * D = 1
+        ∧ D 0 0 = S
+        ∧ s = Real.sqrt (1 - S ^ 2)
+        ∧ S = Real.cos (Real.arccos S)
+        ∧ s = Real.sin (Real.arccos S) := by
+  refine ⟨!![S, Real.sqrt (1 - S ^ 2); -Real.sqrt (1 - S ^ 2), S], Real.sqrt (1 - S ^ 2),
+    rfl, ?_, rfl, rfl, (Real.cos_arccos (by linarith) hS1).symm, (Real.sin_arccos S).symm⟩
+  set s : ℝ := Real.sqrt (1 - S ^ 2) with hs_def
+  have hs_sq : s * s = 1 - S * S := by
+    rw [hs_def, Real.mul_self_sqrt (by nlinarith : (0:ℝ) ≤ 1 - S ^ 2)]; ring
+  have hDT : (!![S, s; -s, S] : Matrix (Fin 2) (Fin 2) ℝ)ᵀ = !![S, -s; s, S] := by
+    ext i j; fin_cases i <;> fin_cases j <;> rfl
+  rw [hDT, Matrix.mul_fin_two]
+  have h1 : S * S + -s * -s = (1 : ℝ) := by rw [neg_mul_neg]; linarith [hs_sq]
+  have h2 : S * s + -s * S = (0 : ℝ) := by ring
+  have h3 : s * S + S * -s = (0 : ℝ) := by ring
+  have h4 : s * s + S * S = (1 : ℝ) := by linarith [hs_sq]
+  rw [h1, h2, h3, h4]
+  exact Matrix.one_fin_two.symm
+
+/-- **The closest thing to an `#eval` witness available for the dilation.**
+    `Real.sqrt` is `noncomputable` in this pin, so no instance of the two
+    theorems above can be RUN. `S = 3/5` is a Pythagorean triple, so its
+    complementary magnitude is `4/5` on the nose and the instance closes by
+    `norm_num` with no numerical tolerance — a checked exact instance rather
+    than a kernel reduction, and stated as such. -/
+theorem dilation_gate_instance_three_five :
+    Real.sqrt (1 - (3 / 5 : ℝ) ^ 2) = 4 / 5
+      ∧ ((3 / 5 : ℝ)) ^ 2 + ((4 / 5 : ℝ)) ^ 2 = 1 := by
+  refine ⟨?_, by norm_num⟩
+  rw [show (1 : ℝ) - (3 / 5 : ℝ) ^ 2 = (4 / 5 : ℝ) ^ 2 by norm_num]
+  rw [Real.sqrt_sq (by norm_num : (0:ℝ) ≤ 4/5)]
+
+end Dilation
+
+end PhaseH1
+
 
 end CEQ.V16Domain
 
@@ -985,3 +1401,27 @@ end CEQ.V16Domain
   (CEQ.V16Domain.PhaseH.Reachable CEQ.V16Domain.PhaseH.demoStallG false true)
   (CEQ.V16Domain.PhaseH.finite_semigroup_never_decidable
     CEQ.V16Domain.PhaseH.demoStallG false true)
+
+/-! ## Phase H.1, printed
+
+    17 declarations. The `#eval` pair at the foot of §H.1a is inside the file
+    body above; it prints `1` then `0` — the `(0,0)` entries of the two
+    reorderings of the same noncommuting chain. -/
+
+#print axioms CEQ.V16Domain.PhaseH1.pathProdL
+#print axioms CEQ.V16Domain.PhaseH1.pathProdMatrixL
+#print axioms CEQ.V16Domain.PhaseH1.pathProdMatrixL_order_sensitive
+#print axioms CEQ.V16Domain.PhaseH1.gateList
+#print axioms CEQ.V16Domain.PhaseH1.pathProd_eq_pathProdL
+#print axioms CEQ.V16Domain.PhaseH1.gateList_multiset
+#print axioms CEQ.V16Domain.PhaseH1.pathProdL_abs
+#print axioms CEQ.V16Domain.PhaseH1.pathProdL_eq_zero_iff
+#print axioms CEQ.V16Domain.PhaseH1.pathProdL_no_prefix_scan
+#print axioms CEQ.V16Domain.PhaseH1.pathProdL_is_rope
+#print axioms CEQ.V16Domain.PhaseH1.pathProdL_scalar_is_order_blind
+#print axioms CEQ.V16Domain.PhaseH1.contraction_path_bounded
+#print axioms CEQ.V16Domain.PhaseH1.contraction_hypothesis_is_load_bearing
+#print axioms CEQ.V16Domain.PhaseH1.contraction_path_bounded_noncommuting_witness
+#print axioms CEQ.V16Domain.PhaseH1.dilation_block_eq_sigma
+#print axioms CEQ.V16Domain.PhaseH1.dilation_2x2_rotation_by_arccos
+#print axioms CEQ.V16Domain.PhaseH1.dilation_gate_instance_three_five
