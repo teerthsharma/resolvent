@@ -2,8 +2,14 @@
 
 Phase G asked whether the operator's phase axis carries anything, whether the
 closed-class certificate discriminates, and whether a Chebyshev read of the
-resolvent is cheaper than solving it. Three of its rows died. The two that
-survived did so at a narrower claim than the one they were dispatched to make.
+resolvent is cheaper than solving it. Of seven rows, three died outright, one
+was voided and rerouted, and the three that survived did so at a narrower claim
+than the one they were dispatched to make.
+
+The phase axis turns out not to reach the attention pattern at all, and the
+exact-zero gate turns out to be a masking trick that already ships in two
+libraries. What survives is smaller than what was claimed and is stated here at
+the size the measurements support.
 
 Every number below carries its producer. Deciding numbers come from this
 machine — Windows 10.0.26200, Intel64 Family 6 Model 183, 28 logical CPUs,
@@ -18,7 +24,8 @@ struck it.
 | row | claim dispatched | verdict | what survives |
 |---|---|---|---|
 | S1 | phase folds into q, k | **holds, float64** | fold-in exact to `2.398082e-13`; the "free" half struck |
-| S5 | phase is free in a fused kernel | **repriced** | ~2 ULPs, 0.66% of attention time at n=4096 |
+| S5a | phase is free in a fused kernel | **repriced** | ~2 ULPs, 0.66% of attention time at n=4096 |
+| S5b | carry=0 beats masked attention | **dead in this cell** | graded magnitudes and multi-chunk merges, both untested |
 | S6 | learned θ beats fixed schedules | **void, then rerouted** | the fixed schedule is the right *initialization* |
 | C10 | closed-class count is recovered | **holds, discriminating** | 4,424 subsets, exact and float64 agreeing |
 | C11 | Chebyshev filter beats a dense solve | **cost lever struck** | accuracy holds; the degree formula was wrong |
@@ -102,6 +109,66 @@ path at float32 reads `72.253×` its floor at an absolute error of `2.4e-04`,
 because the floor shrinks faster than accumulated arithmetic noise does. No bare
 multiple appears in this document without its absolute and relative error and a
 do-nothing control.
+
+---
+
+## 3b. The kernel race, and what it killed
+
+With the phase priced, the race ran: the carry-extended block merge against
+production masked attention on packed block-diagonal sequences, n = 4096 and
+n = 16384, 64 groups of 64 tokens, one learned interior zero per group,
+magnitude only.
+
+**Two baselines could not be reached on this machine and were not faked.**
+`flash_attn` raises `ModuleNotFoundError` — there is no CUDA build here. Compiled
+FlexAttention raises `InvalidCxxCompiler: cl is not found`, so Inductor cannot
+build its fused block-sparse kernel. Uncompiled `flex_attention` runs, but
+torch's own warning states it materializes the full score matrix instead of
+generating a fused kernel, and it was labelled eager throughout rather than
+reported as FlexAttention. What was raced instead is real and fair:
+`F.scaled_dot_product_attention` with an additive mask, a hand-computed masked
+softmax whose weight tensor can be inspected directly, and torch's built-in CPU
+flash SDPA backend.
+
+**The merge loses on both axes.**
+
+| route | wall clock | against the floor |
+|---|---|---|
+| do-nothing floor | 0.042 ms | — |
+| `F.scaled_dot_product_attention`, additive mask | **12.36 ms** | 294× |
+| hand-computed masked softmax | 47.07 ms | — |
+| `flex_attention`, eager | 111.08 ms | — |
+| `block_summary` + `read_summary` | **1917.5 ms** | ~45,600× |
+
+SDPA is 155.1× faster in absolute wall clock, a difference of +1905.1 ms, at
+matched dense `O(n²d)` FLOPs — with no block-skip advantage available to it.
+
+And the bitwise distinction does not survive contact with the real baselines.
+Across about 1.04 million block/row pairs per seed, `carry`, `l` and `o` are
+bitwise `0.0` on every wholly-forbidden block — and so is the masked route.
+Poisoning never-attended keys with `1e6` leaves all four routes bitwise
+identical. The hand-computed softmax weight is bitwise `0.0` at every forbidden
+pair.
+
+The reason was proved up front rather than discovered: an isolated binary zero
+gate is a **static position-space rectangle**, and any masked kernel with a true
+`-inf` reproduces it exactly, because `exp(-inf) = 0.0` is exact in IEEE 754.
+On this cell the carry is a masking trick that already ships in two libraries.
+
+**Replacement route — reroute, and the two live cells are named.** What this
+result does *not* cover is the part the project actually claims:
+
+* **Graded magnitudes.** This cell tests isolated *binary* gates. A continuous
+  `u` compounding multiplicatively with no exact zero has no masked-softmax
+  analogue at all, because there is no `-inf` to place. That cell is
+  unresolved and is where the operator's generality, if it has any, must live.
+* **Multi-chunk merges.** `BLOCK = 64` equals the causal window here, so no row
+  straddles a chunk boundary and neither backend ever had to merge across one.
+  Whether a genuinely fused multi-chunk online-softmax can leak a nonzero
+  contribution through `exp(-inf − (−inf)) = nan` is untested, because neither
+  kernel that performs that merge could be reached. That is a hardware gap —
+  a CUDA box for FlashAttention varlen, or an MSVC toolchain for compiled
+  FlexAttention — not a measured result.
 
 ---
 
@@ -344,7 +411,10 @@ Every deciding number here is CPU-only on one machine; nothing in this phase ran
 on the certified 4060 and nothing was reproduced on Kaggle. The S5 timings are
 float32 CPU measurements over 20 repetitions and must be re-timed on whatever
 device a fused kernel would actually use; the half-precision conclusions rest on
-CPU emulation of those dtypes. C10 and C12 exercise no shipped repository code —
+CPU emulation of those dtypes. The kernel race reached neither FlashAttention
+varlen nor compiled FlexAttention — no CUDA build and no MSVC toolchain on this
+box — so its kill is measured against eager and additive-mask baselines only,
+and the multi-chunk merge question it was dispatched to settle remains open. C10 and C12 exercise no shipped repository code —
 C10 by choice, C12 because the object it tests does not exist in the tree. The
 S6 reroute is a pilot at one width on one bed, and its pre-registered
 reproduction bar, together with the null it still lacks — shuffling the learned
