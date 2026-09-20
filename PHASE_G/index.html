@@ -842,6 +842,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#3b-the-kernel-race-and-what-it-killed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3b. The kernel race, and what it killed
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#4-the-chebyshev-row" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1821,6 +1832,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#3b-the-kernel-race-and-what-it-killed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3b. The kernel race, and what it killed
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#4-the-chebyshev-row" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1962,8 +1984,13 @@
 <h1 id="phase-g-spectral">Phase G — spectral<a class="headerlink" href="#phase-g-spectral" title="Permanent link">#</a></h1>
 <p>Phase G asked whether the operator's phase axis carries anything, whether the
 closed-class certificate discriminates, and whether a Chebyshev read of the
-resolvent is cheaper than solving it. Three of its rows died. The two that
-survived did so at a narrower claim than the one they were dispatched to make.</p>
+resolvent is cheaper than solving it. Of seven rows, three died outright, one
+was voided and rerouted, and the three that survived did so at a narrower claim
+than the one they were dispatched to make.</p>
+<p>The phase axis turns out not to reach the attention pattern at all, and the
+exact-zero gate turns out to be a masking trick that already ships in two
+libraries. What survives is smaller than what was claimed and is stated here at
+the size the measurements support.</p>
 <p>Every number below carries its producer. Deciding numbers come from this
 machine — Windows 10.0.26200, Intel64 Family 6 Model 183, 28 logical CPUs,
 Python 3.11.9, torch 2.14.0+cpu, numpy 2.4.6, scipy 1.17.1. Rows are marked
@@ -1988,10 +2015,16 @@ struck it.</p>
 <td>fold-in exact to <code>2.398082e-13</code>; the "free" half struck</td>
 </tr>
 <tr>
-<td>S5</td>
+<td>S5a</td>
 <td>phase is free in a fused kernel</td>
 <td><strong>repriced</strong></td>
 <td>~2 ULPs, 0.66% of attention time at n=4096</td>
+</tr>
+<tr>
+<td>S5b</td>
+<td>carry=0 beats masked attention</td>
+<td><strong>dead in this cell</strong></td>
+<td>graded magnitudes and multi-chunk merges, both untested</td>
 </tr>
 <tr>
 <td>S6</td>
@@ -2096,6 +2129,86 @@ path at float32 reads <code>72.253×</code> its floor at an absolute error of <c
 because the floor shrinks faster than accumulated arithmetic noise does. No bare
 multiple appears in this document without its absolute and relative error and a
 do-nothing control.</p>
+<hr />
+<h2 id="3b-the-kernel-race-and-what-it-killed">3b. The kernel race, and what it killed<a class="headerlink" href="#3b-the-kernel-race-and-what-it-killed" title="Permanent link">#</a></h2>
+<p>With the phase priced, the race ran: the carry-extended block merge against
+production masked attention on packed block-diagonal sequences, n = 4096 and
+n = 16384, 64 groups of 64 tokens, one learned interior zero per group,
+magnitude only.</p>
+<p><strong>Two baselines could not be reached on this machine and were not faked.</strong>
+<code>flash_attn</code> raises <code>ModuleNotFoundError</code> — there is no CUDA build here. Compiled
+FlexAttention raises <code>InvalidCxxCompiler: cl is not found</code>, so Inductor cannot
+build its fused block-sparse kernel. Uncompiled <code>flex_attention</code> runs, but
+torch's own warning states it materializes the full score matrix instead of
+generating a fused kernel, and it was labelled eager throughout rather than
+reported as FlexAttention. What was raced instead is real and fair:
+<code>F.scaled_dot_product_attention</code> with an additive mask, a hand-computed masked
+softmax whose weight tensor can be inspected directly, and torch's built-in CPU
+flash SDPA backend.</p>
+<p><strong>The merge loses on both axes.</strong></p>
+<table>
+<thead>
+<tr>
+<th>route</th>
+<th>wall clock</th>
+<th>against the floor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>do-nothing floor</td>
+<td>0.042 ms</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>F.scaled_dot_product_attention</code>, additive mask</td>
+<td><strong>12.36 ms</strong></td>
+<td>294×</td>
+</tr>
+<tr>
+<td>hand-computed masked softmax</td>
+<td>47.07 ms</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>flex_attention</code>, eager</td>
+<td>111.08 ms</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>block_summary</code> + <code>read_summary</code></td>
+<td><strong>1917.5 ms</strong></td>
+<td>~45,600×</td>
+</tr>
+</tbody>
+</table>
+<p>SDPA is 155.1× faster in absolute wall clock, a difference of +1905.1 ms, at
+matched dense <code>O(n²d)</code> FLOPs — with no block-skip advantage available to it.</p>
+<p>And the bitwise distinction does not survive contact with the real baselines.
+Across about 1.04 million block/row pairs per seed, <code>carry</code>, <code>l</code> and <code>o</code> are
+bitwise <code>0.0</code> on every wholly-forbidden block — and so is the masked route.
+Poisoning never-attended keys with <code>1e6</code> leaves all four routes bitwise
+identical. The hand-computed softmax weight is bitwise <code>0.0</code> at every forbidden
+pair.</p>
+<p>The reason was proved up front rather than discovered: an isolated binary zero
+gate is a <strong>static position-space rectangle</strong>, and any masked kernel with a true
+<code>-inf</code> reproduces it exactly, because <code>exp(-inf) = 0.0</code> is exact in IEEE 754.
+On this cell the carry is a masking trick that already ships in two libraries.</p>
+<p><strong>Replacement route — reroute, and the two live cells are named.</strong> What this
+result does <em>not</em> cover is the part the project actually claims:</p>
+<ul>
+<li><strong>Graded magnitudes.</strong> This cell tests isolated <em>binary</em> gates. A continuous
+  <code>u</code> compounding multiplicatively with no exact zero has no masked-softmax
+  analogue at all, because there is no <code>-inf</code> to place. That cell is
+  unresolved and is where the operator's generality, if it has any, must live.</li>
+<li><strong>Multi-chunk merges.</strong> <code>BLOCK = 64</code> equals the causal window here, so no row
+  straddles a chunk boundary and neither backend ever had to merge across one.
+  Whether a genuinely fused multi-chunk online-softmax can leak a nonzero
+  contribution through <code>exp(-inf − (−inf)) = nan</code> is untested, because neither
+  kernel that performs that merge could be reached. That is a hardware gap —
+  a CUDA box for FlashAttention varlen, or an MSVC toolchain for compiled
+  FlexAttention — not a measured result.</li>
+</ul>
 <hr />
 <h2 id="4-the-chebyshev-row">4. The Chebyshev row<a class="headerlink" href="#4-the-chebyshev-row" title="Permanent link">#</a></h2>
 <h3 id="the-degree-formula-was-wrong">The degree formula was wrong<a class="headerlink" href="#the-degree-formula-was-wrong" title="Permanent link">#</a></h3>
@@ -2378,7 +2491,10 @@ It is also not FNet, and the results table's <code>d_fnet</code> label carries t
 on the certified 4060 and nothing was reproduced on Kaggle. The S5 timings are
 float32 CPU measurements over 20 repetitions and must be re-timed on whatever
 device a fused kernel would actually use; the half-precision conclusions rest on
-CPU emulation of those dtypes. C10 and C12 exercise no shipped repository code —
+CPU emulation of those dtypes. The kernel race reached neither FlashAttention
+varlen nor compiled FlexAttention — no CUDA build and no MSVC toolchain on this
+box — so its kill is measured against eager and additive-mask baselines only,
+and the multi-chunk merge question it was dispatched to settle remains open. C10 and C12 exercise no shipped repository code —
 C10 by choice, C12 because the object it tests does not exist in the tree. The
 S6 reroute is a pilot at one width on one bed, and its pre-registered
 reproduction bar, together with the null it still lacks — shuffling the learned
