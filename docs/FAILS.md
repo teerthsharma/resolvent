@@ -353,7 +353,9 @@ Claims with no producer located, stated as such rather than silently dropped.
 - **"This repository's instruments measure its models rather than its beds."
   UNTESTED as of 2026-09-20, and the bed built to settle it cannot.** Five
   instruments failed this on the same day, each scoring a property of the draw:
-  effective rank prefers a frozen-random encoder by `22.08×` at `D=64`; a
+  effective rank prefers a frozen-random encoder, by a ratio whose published
+  figure was withdrawn as unproduced (CORRECTIONS.md C9) and is not restated
+  here; the mechanism stands and the number does not; a
   hitting-time R² window is 89% draw geometry, with arm error differing `1.06×`
   between draws where counting won and broke while the label's own spread
   differs `5.16×`; an unscoreable gate sits flat at `0.89` across four decades
