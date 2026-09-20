@@ -853,6 +853,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#3c-the-graded-carry-and-the-theorem-that-ends-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3c. The graded carry, and the theorem that ends it
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#4-the-chebyshev-row" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1843,6 +1854,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#3c-the-graded-carry-and-the-theorem-that-ends-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3c. The graded carry, and the theorem that ends it
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#4-the-chebyshev-row" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2023,14 +2045,20 @@ struck it.</p>
 <tr>
 <td>S5b</td>
 <td>carry=0 beats masked attention</td>
-<td><strong>dead in this cell</strong></td>
-<td>graded magnitudes and multi-chunk merges, both untested</td>
+<td><strong>dead</strong></td>
+<td>nothing; it is a masking trick</td>
+</tr>
+<tr>
+<td>S5c</td>
+<td>graded carry has no additive analogue</td>
+<td><strong>dead</strong></td>
+<td>the frame: every single-token gate is one head dimension</td>
 </tr>
 <tr>
 <td>S6</td>
 <td>learned θ beats fixed schedules</td>
-<td><strong>void, then rerouted</strong></td>
-<td>the fixed schedule is the right <em>initialization</em></td>
+<td><strong>void, twice</strong></td>
+<td>a value null that discriminates; the arm still has no phase</td>
 </tr>
 <tr>
 <td>C10</td>
@@ -2210,6 +2238,68 @@ result does <em>not</em> cover is the part the project actually claims:</p>
   FlexAttention — not a measured result.</li>
 </ul>
 <hr />
+<h2 id="3c-the-graded-carry-and-the-theorem-that-ends-it">3c. The graded carry, and the theorem that ends it<a class="headerlink" href="#3c-the-graded-carry-and-the-theorem-that-ends-it" title="Permanent link">#</a></h2>
+<p>One claim survived the binary kill: a <em>graded</em> magnitude — a continuous
+<code>u_k ∈ (0,1)</code> compounding multiplicatively with no exact zero anywhere — has no
+masked-softmax analogue, because a mask is binary and there is no <code>-inf</code> to
+place. That claim is false, and it is false by algebra rather than by
+measurement.</p>
+<p><strong>The collapse theorem.</strong> Under softmax a per-row constant cancels exactly:</p>
+<div class="highlight"><pre><span></span><code>softmax(s_ij + C[i] − C[j])  ==  softmax(s_ij − C[j])
+</code></pre></div>
+<p>So for any gate <code>u_k</code> depending on a <strong>single token</strong> <code>k</code> — position-only,
+content-dependent, learned or fixed, it makes no difference — <code>log G_ij</code>
+telescopes to <code>C[i] − C[j]</code> and the whole path product collapses to a
+<strong>length-n per-key vector</strong> <code>b[j] = −C[j]</code>. Dropping <code>C[i]</code> entirely changes the
+output by <code>1.353e-13</code> (relative <code>3.784e-14</code>) at float64, n = 1024, d = 64 over 3
+seeds, against a do-nothing control differing by <code>3.514e+00</code> (relative
+<code>9.827e-01</code>). The gate is emphatically not a no-op; the match is not trivial.</p>
+<p><strong>And it is not even a mask.</strong> A per-key additive scalar folds into one extra
+head dimension — <code>q' = [q/√d, 1]</code>, <code>k' = [k, b_j]</code>, scale 1. Stock
+<code>F.scaled_dot_product_attention(is_causal=True, attn_mask=None)</code> then reproduces
+the graded carry to <code>1.353e-13</code> at float64, with no mask, no <code>score_mod</code> and no
+extra FLOPs. Reserving one of the existing 64 dimensions instead matches on the
+other 63 to <code>1.389e-13</code> against a control at <code>3.328e+00</code>. The graded carry is a
+<strong>rank-1 key augmentation that FlashAttention already executes unmodified</strong>.</p>
+<p>The constant-<code>u</code> case is ALiBi <em>literally</em>: <code>log G_ij = (i−j) log u</code> against
+ALiBi's <code>−m(i−j)</code> with <code>m = −log u = 0.030459</code> gives <code>0.000e+00</code> maximum
+deviation over 262,144 pairs at float64. ALiBi's own <code>−m·i</code> term is itself a
+per-row constant that cancels, so production ALiBi is a per-key vector too.</p>
+<p><strong>Cost is parity, which is the harder death.</strong> The reserved-dimension carry runs
+4.82 ms against its shape-matched zeroed control at 4.84 ms — <code>0.996×</code> — and
+<code>1.084×</code> against plain causal SDPA at 4.44 ms, <code>+0.37 ms</code>, at n = 4096, d = 64,
+float32, CPU, flush-denormal on, interleaved min-of-9. Every larger figure in
+this cell was an artifact and each was isolated by name: a head dimension of 65
+costs 6.70× to tiling alone, non-interleaved timing 2.67×, a materialized n×n
+bias 4.18×, and a default-denormal tail 2.341× — 0.609% of live causal pairs land
+in the <code>exp(−104)..exp(−87.3)</code> band, where a magnitude-matched ALiBi ramp puts
+0.639% and pays 2.191×. GPUs flush subnormals by default.</p>
+<p>The binary cell died at 155.1× with a <code>+1905.1 ms</code> gap. This one dies at ~1×,
+which is worse: there is no cost gap to defend when there is no distinct
+computation.</p>
+<p><strong>Replacement route — retire the carry as a kernel, keep it as a frame.</strong> What
+is established is worth stating at exactly its size: every graded multiplicative
+path-gate whose factor depends on a single token is exactly a per-key additive
+scalar under softmax, hence exactly one reserved head dimension in production
+attention, at <code>1.084×</code> plain causal SDPA. That places ALiBi, exponential decay
+and every learned scalar-gate decay in one family with a one-line implementation
+and a published price. It is a real unifying statement. It is not a new
+primitive, and claiming otherwise would be a false survival.</p>
+<p><strong>Where the collapse provably cannot reach.</strong> The telescoping needs the carried
+object to be a <em>commuting scalar shared across rows</em>. A gate reading both query
+and key escapes it — the best separable fit <code>a[i] + c[k]</code> to <code>log u</code> leaves a
+maximum residual of <code>3.808e+00</code> over 65,536 entries at float64 — but it is then
+an arbitrary n×n score modification, which SDPA already accepts as <code>attn_mask</code>
+at <code>O(n²)</code> memory by construction. Escaping this way costs exactly the
+generality that made it a carry.</p>
+<p>The one live direction is a <strong>non-commuting</strong> carry: a matrix-valued transition
+<code>A_k</code>, so that <code>G_ij = A_i ··· A_{j+1}</code> has no scalar log to telescope. There
+"no additive analogue" would be true by construction. The honest rival is then
+not FlashAttention but DeltaNet and GLA, which already ship rank-1 and
+diagonal-plus-low-rank versions of exactly this — and a diagonal <code>A_k</code> commutes,
+so it collapses per channel just as the scalar case did. That cell is open at
+the time of writing.</p>
+<hr />
 <h2 id="4-the-chebyshev-row">4. The Chebyshev row<a class="headerlink" href="#4-the-chebyshev-row" title="Permanent link">#</a></h2>
 <h3 id="the-degree-formula-was-wrong">The degree formula was wrong<a class="headerlink" href="#the-degree-formula-was-wrong" title="Permanent link">#</a></h3>
 <p>The formula in use took <code>sup |f − S_K| ≤ ρ^K/(1−ρ)</code> — prefactor 1. For
@@ -2297,19 +2387,43 @@ readable.</p>
 numbers had already been reported.</p>
 <ol>
 <li><strong>Arm (a) had no phase to learn.</strong> The imaginary half of the twist is
-   discarded bitwise. The row was not testing a learned phase.</li>
+   discarded bitwise — amplifying <code>Im(twist)</code> by 1000× and adding an offset of
+   <code>5i</code> moves the output by exactly <code>0.000e+00</code>, against <code>max|Im(twist)| =
+   0.5324</code> and an output magnitude of <code>0.8912</code>. A rebuilt arm reproduces this
+   verbatim, so the defect is the parametrization and not the draw.</li>
 <li><strong>The two lanes implement different operators under one label.</strong> The
    stationary lane rotates <code>q</code>/<code>k</code> pre-softmax; the chirp lane reweights
    post-softmax. The 0.130-nat stationary headline is not a learned-versus-fixed
    comparison and is quarantined as unreadable.</li>
-<li><strong>The floors are ±logit-pinned</strong>, overstating margins 5–7×. Chirp last-value
-   calibrates to <code>0.5408</code>, not <code>1.3900</code>. Stationary FFT-linear calibrates to
-   <code>0.6725</code> — worse than chance, an anti-signal rather than a floor.</li>
+<li><strong>The floors are ±logit-pinned</strong>, overstating margins 2.6–4.7×. Pinned to
+   calibrated: chirp last-value <code>1.3900 → 0.5407</code> (2.57×), chirp FFT-linear
+   <code>1.7298 → 0.5987</code> (2.89×), stationary last-value <code>1.7753 → 0.5293</code> (3.35×),
+   stationary FFT-linear <code>3.1910 → 0.6725</code> (4.74×). An earlier draft of this
+   page called the last of those <em>worse than chance, an anti-signal</em>. That is
+   wrong: its accuracy is <code>0.6012 &gt; 0.5</code>, its best symmetric logit is <code>+0.4104</code>
+   and needs no flip, and chance on that bed is the class prior
+   <code>H(0.4801) = 0.6924</code> nats — so <code>0.6725</code> sits <code>0.0199</code> nats <strong>below</strong> chance.
+   It is a weak floor, not an anti-signal.</li>
 <li><strong>The headline gap is not significant.</strong> Paired, <code>b − a</code> gives <code>t = −1.59</code>
    (51/80). Only <code>c − a</code> reaches significance at <code>t = −3.50</code> (58/80).</li>
 <li><strong>The two regimes ran at different widths</strong> — <code>d_model=64, hidden=128</code> against
    <code>d_model=16, hidden=32</code>. Two beds, not one sweep.</li>
 </ol>
+<p>Defects 1, 2 and 5 are one defect seen three times. Real RoPE binds frequency
+<code>f</code> to the dimension pair <code>(2f, 2f+1)</code>, which is what makes a rotation a
+rotation. The chirp arm collapsed that binding into a scalar mean over <code>f</code> and
+then discarded the imaginary half, so it multiplies <em>post</em>-softmax weights by a
+real even Toeplitz kernel and its attention rows sum to <code>[0.4879, 1.0000]</code>
+rather than to 1. It is neither a rotation nor normalized, and calling it RoPE
+is what made the stationary and chirp lanes look comparable.</p>
+<p>A slot-order null cannot see any of this: a mean over <code>f</code> is symmetric in <code>f</code>,
+so permuting the slots is an algebraic no-op — <code>6.664e-08</code> at F=4 and
+<code>1.229e-07</code> at F=32, four orders below the noise floor set to judge it. The
+instrument is sound, not the arm: the same shuffle applied to the genuinely
+rotary stationary arm moves the output by <code>3.524e-03</code>. A null that does
+discriminate on this bed exists — resampling the frequency multiset costs
+<code>+0.0498</code> nats at F=4 (<code>t(4) = +2.35</code>) and <code>+0.0556</code> at F=32 (<code>t(4) = +4.39</code>,
+<code>p = 0.012</code>), worse on 5 of 5 seeds at both widths.</p>
 <h3 id="the-reroute">The reroute<a class="headerlink" href="#the-reroute" title="Permanent link">#</a></h3>
 <p>Promoting <code>ArmRoPE.freqs</code> from <code>register_buffer</code> to <code>nn.Parameter</code>, initialized
 at the schedule it already used and with nothing else changed, beats every arm
@@ -2342,6 +2456,11 @@ S6 ran, on <strong>5 of 5 seeds at every budget</strong>:</p>
 </table>
 <p>for +32 parameters on 1,937. At the original 150-step budget it scores <code>0.3867</code>
 against the old winner's <code>0.4004</code>.</p>
+<p>Those figures belong to the 32-frequency arm. The <code>+4</code>-parameter and
+initialization arguments below rest on the <strong>4-frequency</strong> arm, which is a
+different measurement; an earlier draft of this page reported the two as one
+result. On a rebuilt bed the pre-registered reproduction bar fails at 150 steps
+by <code>0.0063</code> nats on every matched learned-versus-own-fixed pair.</p>
 <p>The effect is initialization, and parameter count is excluded by construction:
 <code>f_learn4_randinit</code> and <code>e_learn4_ropeinit</code> carry identical 1,941 parameters and
 the same seeds, differing only in start point. <code>e</code> wins at every budget and <code>f</code>
