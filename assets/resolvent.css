@@ -103,9 +103,17 @@
 .rs .dead{fill:none;stroke:var(--rs-unmet);stroke-width:1.4;stroke-dasharray:4 5;opacity:.75}
 .rs .tok{fill:var(--rs-panel2);stroke:var(--rs-line2);stroke-width:1.4}
 .rs .tok.q{fill:color-mix(in srgb,var(--rs-proved) 22%,var(--rs-panel2));stroke:var(--rs-proved)}
+.rs .tok.bad{fill:color-mix(in srgb,var(--rs-unmet) 22%,var(--rs-panel2));stroke:var(--rs-unmet)}
 .rs .gate{stroke:var(--rs-kill);stroke-width:4;stroke-linecap:round}
 .rs .edge{stroke:var(--rs-line2);stroke-width:1.4;fill:none}
 .rs .edge.back{stroke-dasharray:3 4}
+/* A filled interval/zone on a plot — the wall figure's disagreement interval
+   between the bf16 and float32 ticks, the detector-inversion figure's "no
+   threshold fits between them" gap. Deliberately its own rect/polygon class
+   with a real fill, never combined onto .edge/.live/.dead/.gatetick/[data-j]:
+   those are all fill:none (stroke-only), and a shaded region drawn with one
+   of them applied would render invisible. */
+.rs .band{fill:color-mix(in srgb,var(--rs-kill) 16%,transparent);stroke:none}
 /* ---------- the figures are instruments ---------- */
 .rs [data-j]{fill:none;transition:stroke-width .35s ease,opacity .35s ease,stroke .35s ease}
 .rs .pkt{fill:var(--rs-proved);opacity:0;transition:opacity .35s ease}
@@ -138,6 +146,7 @@
 .rs.fig .ctl label{display:flex;align-items:center;gap:.5rem;color:var(--rs-dim);white-space:nowrap}
 .rs.fig input[type=range][data-ctl]{width:9rem;max-width:40vw;accent-color:var(--rs-proved);cursor:pointer}
 .rs.fig input[type=range][data-ctl]:focus-visible{outline:2px solid var(--rs-link);outline-offset:3px;border-radius:.3rem}
+.rs.fig .ctl button:focus-visible,.rs.fig .ctl select:focus-visible,.rs.fig .ctl input:focus-visible{outline:2px solid var(--rs-link);outline-offset:2px;border-radius:.3rem}
 .rs.fig output[data-out]{font:600 .78rem var(--rs-mono);color:var(--rs-proved);white-space:nowrap}
 .rs.fig .cap{color:var(--rs-dim);font-size:.72rem;line-height:1.55;margin:.6rem 0 0;text-align:center}
 /* A caption's inline <code> (e.g. a reproduction command) must never force the
@@ -204,6 +213,7 @@
 .rs .bars .lab{font-size:.76rem;color:var(--rs-dim)}
 .rs .bars .track{height:.65rem;border-radius:99px;background:var(--rs-panel2);border:1px solid var(--rs-line);overflow:hidden;display:block}
 .rs .bars .fill{height:100%;background:var(--rs-kill);border-radius:99px;min-width:2px;display:block}
+.rs .bars .fill.ok{background:var(--rs-proved)}
 .rs .bars .val{font:.7rem var(--rs-mono)}
 
 .rs ol.tl{list-style:none;margin:1.4rem 0;padding:0;position:relative}

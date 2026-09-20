@@ -1888,6 +1888,15 @@ are not independently chosen. The triple in the task's "reference instance"
 is recovered because the bed was pinned to produce it, and that pinning is
 now part of the certificate rather than hidden behind an unstated choice of
 weights.</p>
+<p><strong>The triple is definitional, not predicted.</strong> The transient block is
+diagonal by construction — no coupling among states 3, 4 and 5 — so <code>Q</code> is
+diagonal and the general <code>r_gamma = (1-g) (I - g Q)^{-1} V</code> collapses
+state-by-state to the one-line identity <code>r_gamma_i = (1-g) / (1 - g p_i)</code>
+used above to solve for <code>p_i</code>. Running <code>state_solve</code> on that same diagonal
+<code>Q</code> and getting the target triple back checks that <code>state_solve</code> correctly
+implements the identity it was handed; it is not evidence about causal
+structure between transient states, because this bed has none to detect —
+3, 4 and 5 cannot influence one another by construction.</p>
 <h2 id="must-fire-1-r_gamma-1-on-f">MUST-FIRE 1: <code>r_gamma = 1</code> on <code>F</code><a class="headerlink" href="#must-fire-1-r_gamma-1-on-f" title="Permanent link">#</a></h2>
 <p><code>state_solve</code> on the transient block <code>{0,...,5,7}</code> (<code>WIN</code> absorbing, <code>DRAW</code>
 carried as a self-looping row since it is not declared absorbing here) gives,
@@ -1980,9 +1989,15 @@ index, not at their position in the argument list):</p>
 bitwise-one on the transient states, one bitwise-one at <code>WIN</code> itself, one
 bitwise-zero at <code>DRAW</code>. "Committor <code>= 1.0</code> off <code>F</code>" is false as a universal
 claim — <code>DRAW</code> is off <code>F</code> and reads bitwise <code>0.0</code>, as a distinct absorbing
-outcome must, since no mass in this bed ever reaches <code>WIN</code> from <code>DRAW</code>. The
-claim only holds read as "off <code>F</code>, among <code>{3, 4, 5, WIN}</code>"; restated that
-way, all four entries are bitwise <code>1.0</code>.</p>
+outcome must. That <code>0.0</code> is not evidence about this bed's dynamics: <code>committor</code>
+never reads an absorbing state's own row of <code>P</code> at all — it hard-codes every
+declared absorbing index to the one-hot row of <code>eye(k)</code> at that index,
+regardless of what the matrix says there. (Checked directly: setting
+<code>W[DRAW, WIN] = 0.5</code> in this bed still returns <code>0.0</code> for DRAW's committor to
+WIN.) So <code>DRAW</code> reads <code>0.0</code> at <code>WIN</code> by embedding convention, not because
+"no mass in this bed ever reaches WIN from DRAW." The claim only holds read
+as "off <code>F</code>, among <code>{3, 4, 5, WIN}</code>"; restated that way, all four entries are
+bitwise <code>1.0</code>.</p>
 <h2 id="the-arithmetic-wall">The arithmetic wall<a class="headerlink" href="#the-arithmetic-wall" title="Permanent link">#</a></h2>
 <p><code>committor(W, [WIN, DRAW])</code> — <code>F</code> folded into the transient block instead of
 declared absorbing — raises <code>SingularTransientBlockError</code>, confirmed by
@@ -1998,12 +2013,15 @@ it. Separately, must-fire 2's companion inequality — <code>r_gamma &lt; 1e-3</
 every transient state, checked on the repo-canonical twin and on a
 strict one-factor twin whose sole change is a finite logit floor <code>-Delta</code> in
 place of structural <code>-inf</code> — holds unconditionally as a statement about wall
-(b) (<code>W_10 &gt; 0</code> for every finite <code>Delta</code>), but the <code>r_gamma &lt; 1e-3</code> half
-holds only below a measured crossover at <code>Delta = 3.556913</code>
-(<code>Delta = 3.5469</code> gives max <code>r</code> <code>9.9316e-04</code>; <code>Delta = 3.5669</code> gives
-<code>1.0069e-03</code>). That crossover is a statement about logit scale, not about
-softmax, and belongs here rather than inside the pass/fail line of the
-must-fire itself.</p>
+(b) (<code>W_10 &gt; 0</code> for every finite <code>Delta</code>, an analytic fact about softmax on
+finite input, not a measured one). The <code>r_gamma &lt; 1e-3</code> half is a statement
+about logit scale, not about softmax: whether it holds depends on where the
+finite floor <code>-Delta</code> sits relative to the bed's other logits, and that is a
+property of a specific twin construction, not of the softmax map. This
+certificate does not pin that twin — it names no <code>n</code>, no absorbing set, no
+base logits, and no command that reproduces one, and no test guards it — so
+no crossover value is reported here. A crossover is unmeasured in this
+certificate.</p>
 
 
 
