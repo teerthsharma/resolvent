@@ -864,6 +864,39 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#5-three-beds-three-floors-and-what-that-cost" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Three beds, three floors, and what that cost
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-three-claims-that-did-not-survive-their-own-audit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Three claims that did not survive their own audit
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-what-the-lean-corpus-gained" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. What the Lean corpus gained
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#limits" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1726,6 +1759,39 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#5-three-beds-three-floors-and-what-that-cost" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Three beds, three floors, and what that cost
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-three-claims-that-did-not-survive-their-own-audit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Three claims that did not survive their own audit
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-what-the-lean-corpus-gained" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. What the Lean corpus gained
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#limits" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1897,9 +1963,11 @@ thematic roles is not made on this page.</p>
   is the phase's one unconditional claim.</li>
 <li><strong>Forgetting.</strong> Two gate primitives and only two: invertible gates (rotations,
   permutations), which a prefix scan separates by composing with an inverse; and
-  projectors, which are idempotent, rank-deficient and have no inverse. An
-  invertible-only family cannot forget, and the separation is structural rather
-  than a matter of optimisation.</li>
+  projectors, which are idempotent, rank-deficient and have no inverse. The
+  intended claim was that an invertible-only family cannot forget, and that the
+  separation is structural rather than a matter of optimisation. <strong>It is not, and
+  §6 records why</strong> — an invertible near-projector solves the task exactly, and
+  the separating property is contraction rather than singularity.</li>
 <li><strong>Decidability.</strong> Restricted to a finite semigroup, "does it ever reach this
   state" is answered by eigenvalue-1 multiplicity and a resolvent residue rather
   than left undecidable. The claim is that finiteness escapes Rice's
@@ -1907,6 +1975,146 @@ thematic roles is not made on this page.</p>
 </ul>
 <p>Every model-scoring row carries the standing precondition: <strong>a bed whose null
 scores nothing is void before the model runs.</strong></p>
+<hr />
+<h2 id="5-three-beds-three-floors-and-what-that-cost">5. Three beds, three floors, and what that cost<a class="headerlink" href="#5-three-beds-three-floors-and-what-that-cost" title="Permanent link">#</a></h2>
+<p>Nothing in §4 has been measured yet, because every bed built to measure it
+failed first — and all three failed the same way. The floor each used was chosen
+for being easy to compute rather than for being the thing a passing arm must
+beat.</p>
+<p><strong>A kernel-carry bed was floored against chance.</strong> Its floor was position-blind
+and sat at chance, 0.125. But a model that <em>sees the context and cannot bind</em>
+scores <strong>0.3460</strong> on that generator, by guessing uniformly among the values
+present. The arms read 0.401–0.414, so they cleared the real floor by 0.055–0.068
+and recovered about 10% of the 0.346→1.0 headroom. The reported 0.125→0.41
+separation was almost entirely "this model mixes tokens at all". Tripling the
+training budget moved nothing outside one seed spread, and a two-layer variant
+landed in the same place: the plateau was the task, not the budget.</p>
+<p><strong>The Krohn–Rhodes bed shipped no null at all.</strong> Its <code>floors_and_null()</code>
+contains no shuffle, and its own structured return reports <code>null_scores=false</code>.
+Under the standing precondition that is a halt, so the bed is void before any
+model runs.</p>
+<p><strong>The planted-operator text bed cannot see order, and the reason is geometric.</strong></p>
+<table>
+<thead>
+<tr>
+<th>baseline</th>
+<th>L2 error</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>bag-of-context</td>
+<td>4.9938</td>
+</tr>
+<tr>
+<td>last-operator-only</td>
+<td>5.0922</td>
+</tr>
+<tr>
+<td>order-free composition</td>
+<td><strong>5.5367</strong></td>
+</tr>
+<tr>
+<td>chance</td>
+<td>5.7160</td>
+</tr>
+</tbody>
+</table>
+<p>Applying the correct operators in the <strong>wrong order</strong> scores worse than a bag of
+context and within 3.1% of chance. The planted operators are norm-preserving
+SO(8) rotations, so a permuted composition lands uniformly on the sphere however
+wrong the permutation is; the true state lies on that same sphere; and the
+expected L2 distance between two uniform points on a sphere is a constant.
+Order-free therefore scores at chance <strong>by geometry</strong>, not by failing to know the
+order. Bag-of-context wins only because averaging shrinks a vector toward the
+origin, a norm artefact unrelated to composition.</p>
+<p>Both trained arms on that bed scored <strong>worse than chance</strong> — 6.3206 and 6.7240
+against 5.7160 — which is the signature of a metric that cannot see the property
+under test, not a result about binding.</p>
+<p><strong>Consequence for the kill list.</strong> The rule "(a) ties (d) on this bed →
+operator binding is dead" presupposes the bed measures something. It does not, so
+that kill does not fire, and no number from those twins carries information about
+binding either way.</p>
+<p><strong>What order-sensitivity does have.</strong> The Barrington bed is certified: its oracle
+was rebuilt by independent array-index permutation composition over 2,000 pairs,
+both matrix conventions confirmed as exact homomorphisms, and a BFS closure over
+the two generators reaches exactly 120 elements, so the scan has real depth
+rather than being a lookup. A scan of 5×5 permutation operators is bitwise exact
+at length 10,000 in float64, float32 <strong>and bfloat16</strong> — every surviving entry of
+a permutation product is exactly 0 or 1, so no dtype has anything to round. Of
+the C(120,2) = 7,140 unordered generator pairs, 6,780 do not commute.</p>
+<p>S₅ is non-abelian and its word problem is order-defined by construction, so order
+is demonstrable there. What remains open is whether a <em>text-shaped</em> bed can ever
+show it, which is a question about the corpus rather than about the operator.</p>
+<hr />
+<h2 id="6-three-claims-that-did-not-survive-their-own-audit">6. Three claims that did not survive their own audit<a class="headerlink" href="#6-three-claims-that-did-not-survive-their-own-audit" title="Permanent link">#</a></h2>
+<p><strong>The gate class is keyed on the wrong quantity.</strong> The intended division is
+<em>group</em> (invertible) against <em>reset</em> (projector, rank-deficient, <code>det = 0</code>). An
+invertible near-projector <code>R_ε = (1−ε)P + εI</code> solves parity-since-reset with
+<strong>exactly zero label error for every ε &lt; 1/2</strong>, measured down to <code>ε = 1e−15</code>
+(<code>det = 1e−15</code>) at length 50,000 with about 5,000 resets. The worst state
+entering a reset is <code>(0,1)</code>; <code>R_ε</code> sends it to <code>(1−ε, ε)</code>; an argmax decode is
+correct whenever <code>1−ε &gt; ε</code>, and the residual is re-multiplied by ε at every reset
+so it never accumulates. Meanwhile an orthogonal substitute with <code>|det| = 1</code>
+stays at 0.4150 error.</p>
+<p>So <code>det = 0</code> is <strong>sufficient but not necessary</strong>, and the separating property is
+contraction rather than singularity. A load-time gate check that rejects on
+"non-idempotent and non-invertible" would admit the wrong objects and reject the
+right ones. The earlier structural claim came from measuring an L2 norm on
+isolated prefixes and never decoding a task label.</p>
+<p><strong>The line gate is a length filter, not a noise filter.</strong> It does separate real
+English from random letters — the fraction of random samples above the threshold
+is 0.0000 at every length from 50 to 150,000 characters, against 1.63–1.72 for
+real English. But its reject set is monotone in line length and nothing else:
+41.72% of lines under 40 letters are rejected, 4.71% at 80–100, 0.12% at 150–250,
+and <strong>0.00% above 250</strong>. Median reject 51 letters, median keep 126.</p>
+<p>The index of coincidence is a function of the letter multiset alone, so the gate
+is blind to word order, spelling and grammar by construction. Shuffling the
+letters within each of the first 1,000 lines produces <strong>75 rejects against 75</strong>
+for the unshuffled lines — identical, not approximately. A control of real corpus
+words in random order passes the gate 93.6% of the time. A filter whose stated
+job is to reject noise admits word salad nine times in ten and rejects two in
+five genuine short sentences.</p>
+<p>Separately, the two published index-of-coincidence figures, 1.46 and 1.73, are
+the same convention — strip to 26 letters, fold case, normalise by 26 — at two
+sample lengths, and that is the only convention whose random baseline is 1.00.
+Three alternative conventions were tested on two corpora and all read <em>higher</em>,
+never lower, so "a different convention reads lower" is ruled out.</p>
+<p><strong>A recall bar that measures nothing.</strong> Verb-centre recall against a parser
+oracle reads 1.0000 with a 95% Wilson interval of [0.9922, 1.0] at n = 489,
+because the system under test and the oracle are the same parser call on the same
+string, run twice and compared. It is an identity wearing error bars. The
+replacement is measured and available: agreement against an independent
+part-of-speech tagger that never sees the parser's output reads <strong>0.8262, 95% CI
+[0.7901, 0.8572]</strong>, and a threshold belongs on that distribution.</p>
+<hr />
+<h2 id="7-what-the-lean-corpus-gained">7. What the Lean corpus gained<a class="headerlink" href="#7-what-the-lean-corpus-gained" title="Permanent link">#</a></h2>
+<p>Three results landed in <code>lean/CEQ/V16Domain.lean</code>, and the accounting is stated
+rather than implied: the section adds <strong>19 declarations and 3 citable new
+facts</strong>, and two of the three named targets carry none of their own.</p>
+<p><strong>A scalar gate composed over a finite ordered list is invariant under permuting
+that list.</strong> This is Mathlib's <code>List.Perm.prod_eq</code> specialised to a commutative
+monoid; it carries no new mathematics and is present only as the contrast term.</p>
+<p><strong>A matrix gate is not</strong>, witnessed concretely by two nilpotent 2×2 matrices
+whose products differ at entry (0,0). That is the pair's only new fact, and the
+pair is the claim — commutativity alone is a library lemma, while commutativity
+set against non-commutativity is the architectural statement.</p>
+<p><strong>Reachability in a finite semigroup is decidable</strong>, and now as a <code>def</code> rather
+than a <code>theorem</code>, so the <code>Decidable</code> instance carries executable code. The
+distinction is not cosmetic: declared as a theorem on a Type-valued goal it
+proved a decision procedure <em>exists</em> while being unable to <em>run</em> one. The two
+evaluations print <code>true</code> and <code>false</code> during both <code>lake env lean</code> and
+<code>lake build</code>, and an instance backed by classical choice would not reduce to
+literals at all. Finiteness is load-bearing — the reachability predicate carries
+no <code>Fintype</code> binder of its own, and the pigeonhole step is the single place the
+cardinality is consumed.</p>
+<p>The List-shaped commutation statements are declared as <strong>separate combinatorial
+facts that do not connect to <code>pathProd</code></strong>, and the reason is worth recording:
+<code>pathProd</code> is a <code>Finset.prod</code>, and <code>Finset.prod</code> requires a <code>CommMonoid</code> by
+definition. It cannot typecheck over a non-commuting codomain at all, and
+permutation-invariance over a <code>Finset</code> is vacuous because there is nothing to
+permute. The operator as currently defined in the corpus therefore cannot express
+a matrix gate; that is a fact about the definition, not about the mathematics.</p>
 <hr />
 <h2 id="limits">Limits<a class="headerlink" href="#limits" title="Permanent link">#</a></h2>
 <p>No result tables appear on this page yet; the rows that would fill them were
