@@ -99,6 +99,16 @@ is recovered because the bed was pinned to produce it, and that pinning is
 now part of the certificate rather than hidden behind an unstated choice of
 weights.
 
+**The triple is definitional, not predicted.** The transient block is
+diagonal by construction — no coupling among states 3, 4 and 5 — so `Q` is
+diagonal and the general `r_gamma = (1-g) (I - g Q)^{-1} V` collapses
+state-by-state to the one-line identity `r_gamma_i = (1-g) / (1 - g p_i)`
+used above to solve for `p_i`. Running `state_solve` on that same diagonal
+`Q` and getting the target triple back checks that `state_solve` correctly
+implements the identity it was handed; it is not evidence about causal
+structure between transient states, because this bed has none to detect —
+3, 4 and 5 cannot influence one another by construction.
+
 ## MUST-FIRE 1: `r_gamma = 1` on `F`
 
 `state_solve` on the transient block `{0,...,5,7}` (`WIN` absorbing, `DRAW`
@@ -141,9 +151,15 @@ Eight guarded entries evaluated: three bitwise-zero on `F`, three
 bitwise-one on the transient states, one bitwise-one at `WIN` itself, one
 bitwise-zero at `DRAW`. "Committor `= 1.0` off `F`" is false as a universal
 claim — `DRAW` is off `F` and reads bitwise `0.0`, as a distinct absorbing
-outcome must, since no mass in this bed ever reaches `WIN` from `DRAW`. The
-claim only holds read as "off `F`, among `{3, 4, 5, WIN}`"; restated that
-way, all four entries are bitwise `1.0`.
+outcome must. That `0.0` is not evidence about this bed's dynamics: `committor`
+never reads an absorbing state's own row of `P` at all — it hard-codes every
+declared absorbing index to the one-hot row of `eye(k)` at that index,
+regardless of what the matrix says there. (Checked directly: setting
+`W[DRAW, WIN] = 0.5` in this bed still returns `0.0` for DRAW's committor to
+WIN.) So `DRAW` reads `0.0` at `WIN` by embedding convention, not because
+"no mass in this bed ever reaches WIN from DRAW." The claim only holds read
+as "off `F`, among `{3, 4, 5, WIN}`"; restated that way, all four entries are
+bitwise `1.0`.
 
 ## The arithmetic wall
 
@@ -163,9 +179,12 @@ it. Separately, must-fire 2's companion inequality — `r_gamma < 1e-3` on
 every transient state, checked on the repo-canonical twin and on a
 strict one-factor twin whose sole change is a finite logit floor `-Delta` in
 place of structural `-inf` — holds unconditionally as a statement about wall
-(b) (`W_10 > 0` for every finite `Delta`), but the `r_gamma < 1e-3` half
-holds only below a measured crossover at `Delta = 3.556913`
-(`Delta = 3.5469` gives max `r` `9.9316e-04`; `Delta = 3.5669` gives
-`1.0069e-03`). That crossover is a statement about logit scale, not about
-softmax, and belongs here rather than inside the pass/fail line of the
-must-fire itself.
+(b) (`W_10 > 0` for every finite `Delta`, an analytic fact about softmax on
+finite input, not a measured one). The `r_gamma < 1e-3` half is a statement
+about logit scale, not about softmax: whether it holds depends on where the
+finite floor `-Delta` sits relative to the bed's other logits, and that is a
+property of a specific twin construction, not of the softmax map. This
+certificate does not pin that twin — it names no `n`, no absorbing set, no
+base logits, and no command that reproduces one, and no test guards it — so
+no crossover value is reported here. A crossover is unmeasured in this
+certificate.

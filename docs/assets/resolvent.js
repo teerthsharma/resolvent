@@ -3,8 +3,30 @@
    Cube: the marker tours the three named settings, or jumps to a clicked one.
    Bars: the Hodge shares grow when they first come into view.
    Motion is off under prefers-reduced-motion; every control stays usable. */
+
+/* WHEN THIS FILE RUNS, AND WHY IT MATTERS.
+   mkdocs injects this via extra_javascript, which executes it BEFORE the page
+   content exists, and Material swaps the body on instant navigation without
+   re-running scripts. Either way every document.querySelector below returns null
+   and every figure is silently empty — no error, no warning, just blank frames.
+   That shipped: six figures rendered as empty boxes on the live site while the
+   same bundle drew all six correctly when re-executed by hand against a built
+   DOM. rsReady defers each block to a point where the figures actually exist,
+   and re-runs it after every instant navigation. */
+function rsReady(boot) {
+  if (typeof window.document$ !== "undefined" && window.document$ &&
+      typeof window.document$.subscribe === "function") {
+    window.document$.subscribe(boot);          // Material: fires on load and on every instant nav
+  } else if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", boot);
+  } else {
+    boot();                                     // already parsed; run now
+  }
+}
+
 (function () {
   "use strict";
+  function boot() {
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   /* ---------------------------------------------------- the gate demo ---- */
@@ -142,6 +164,8 @@
       if (b.parentNode) io.observe(b.parentNode);
     });
   }
+  }
+  rsReady(boot);
 })();
 
 
@@ -155,6 +179,7 @@
    root is missing from the page is a no-op, never a throw. */
 (function () {
   "use strict";
+  function boot() {
   var SVGNS = "http://www.w3.org/2000/svg";
 
   // None of the six figures below animate on their own (no interval, no
@@ -281,6 +306,56 @@
   var foldSolutionCount = function (a, crit) {
     if (Math.abs(a - crit) < 0.0001) return 1;
     return a < crit ? 2 : 0;
+  };
+
+  // -------------------------------------------- vocabulary-cost math (result 2) ----
+  // Gate vocabulary on a row of length i is exactly i patterns (close one of the i
+  // gates); sparsemax's unconstrained vocabulary is every nonempty subset of i
+  // positions, 2^i - 1. Both are exact combinatorial counts computed from i, not read
+  // from a table — no tracked test in this repo yet enumerates sparsemax's reachable
+  // supports directly, so the vocab figure treats these as a computed illustration of
+  // the counting argument rather than a redraw of a specific measured enumeration.
+  var gateVocab = function (i) { return i; };
+  var sparsemaxVocab = function (i) { return Math.pow(2, i) - 1; };
+
+  // -------------------------------------------- effective-rank math (result 4) ----
+  // Clustering into K groups pins effective rank near K-1 however wide the layer; a
+  // frozen-random encoder spreads over nearly all D directions. D=4 is the one point
+  // this repo tracks (tests/cameron/test_third_collapse_leg.py,
+  // test_frozen_random_encoder_on_real_labels_fires_the_third_leg, N=20000, K=4,
+  // D=K=4, seed 20260920); D=8/16/32/64 have no tracked sweep, so those come from a
+  // smooth model of the same two behaviours instead of a hardcoded table.
+  var ERANK_K = 4;
+  var ERANK_D4_INFO = 3.0047;   // measured, see comment above
+  var ERANK_D4_NOISE = 3.9993;  // measured, see comment above
+  var erankInfo = function (D) {
+    return D === ERANK_K ? ERANK_D4_INFO : (ERANK_K - 1) + 0.08 * Math.log2(D / ERANK_K);
+  };
+  var erankNoise = function (D) {
+    return D === ERANK_K ? ERANK_D4_NOISE : D - 0.25 * Math.log2(D / ERANK_K) - 0.05;
+  };
+
+  // -------------------------------------------- consistency-sample math (result 1) ----
+  // No tracked test in this repo yet emits the measured 1500-sequence run (per-row
+  // accuracy 0.9919 sparsemax / 0.9845 gate; cross-row agreement 1500/1500 gate /
+  // 1352/1500 sparsemax), so this figure demonstrates the mechanism it reports — the
+  // gate is exactly consistent every time, sparsemax occasionally is not — on a small
+  // deterministic sample instead of redrawing those untracked numbers. A tiny seeded
+  // LCG keeps the sample identical on every load.
+  var lcg = function (seed) {
+    var s = seed >>> 0;
+    return function () { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; };
+  };
+  var CONSISTENCY_N = 60;
+  var consistencySample = function () {
+    var rnd = lcg(20260920), rows = [];
+    for (var k = 0; k < CONSISTENCY_N; k++) {
+      var len = 4 + (k % 21);                // row length cycles 4..24
+      var disagrees = rnd() < 0.12;          // sparsemax's tail: occasional cross-row disagreement
+      var spread = disagrees ? 1 + Math.round(rnd() * (len - 4)) : 0;
+      rows.push({ len: len, gateSpread: 0, sparseSpread: spread });
+    }
+    return rows;
   };
 
   /* --------------------------------------------------------- 1. what a row is ---- */
@@ -439,6 +514,64 @@
     render();
   }
 
+  /* ------------------------------------------- 6b. the detector that prefers noise ---- */
+  /* Effective rank counts how many directions a representation spreads over. A
+     representation that has learned K clusters pins near K-1 HOWEVER WIDE the layer,
+     because clustering IS anisotropy; a frozen-random encoder that learned nothing
+     fills nearly all D. So the wider the model, the more confidently this detector
+     rewards the useless one. The shaded band is the gap a threshold would have to sit
+     in, and it is empty at every width: the noise bar is always above the informative
+     one, so no horizontal line separates them. */
+  function initErank(root) {
+    var s = shell(root, "0 0 640 260",
+      "Two bars, informative against frozen-random, as the layer width D grows from 4 to 64.",
+      "Drag the width. The informative representation pins near K-1 = 3 at every width; the frozen-random one grows with D. Notice the noise bar is above the informative bar at every setting, so no threshold separates them. D = 4 is measured (tests/cameron/test_third_collapse_leg.py, N = 20000, K = 4); the wider points are a smooth model of the same two behaviours, not a measured sweep.");
+    if (!s) return;
+    var svg = s.svg, ctl = s.ctl;
+    var WIDTHS = [4, 8, 16, 32, 64];
+    var L = 70, R = 600, TOP = 30, BASE = 196, SPAN = BASE - TOP;
+
+    var idx = range(ctl, "dwidth", "layer width D", "0", String(WIDTHS.length - 1), "1", "0");
+    var infoOut = readout(ctl, "erinfo", "informative =");
+    var noiseOut = readout(ctl, "ernoise", "frozen-random =");
+
+    var render = function () {
+      while (svg.firstChild) svg.removeChild(svg.firstChild);
+      var D = WIDTHS[+idx.value];
+      var vi = erankInfo(D), vn = erankNoise(D);
+      var top = Math.max(vn, 4) * 1.08;                 // scale so the taller bar always fits
+      var y = function (v) { return BASE - SPAN * (v / top); };
+
+      mk("line", { x1: L - 20, y1: BASE, x2: R + 20, y2: BASE, "class": "edge" }, svg);
+
+      // The band between the two bars: the region a separating threshold would need.
+      // It is drawn every time and is never empty, which is the point — the noise bar
+      // is above the informative bar at every width, so the gap is on the wrong side.
+      mk("rect", { x: L - 10, y: y(vn), width: (R - L) + 20,
+                   height: Math.max(0, y(vi) - y(vn)), "class": "band" }, svg);
+
+      [[L, vi, "informative", "live"], [L + 260, vn, "frozen-random", "dead"]].forEach(function (b) {
+        var bx = b[0], v = b[1], h = BASE - y(v);
+        mk("rect", { x: bx, y: y(v), width: 170, height: Math.max(1, h), "class": "tok " + b[3] }, svg);
+        mk("text", { x: bx + 85, y: y(v) - 8, "text-anchor": "middle", "class": "t-mono" }, svg)
+          .textContent = v.toFixed(4);
+        mk("text", { x: bx + 85, y: BASE + 20, "text-anchor": "middle", "class": "t-dim" }, svg)
+          .textContent = b[2];
+      });
+
+      mk("text", { x: (L + R) / 2, y: BASE + 46, "text-anchor": "middle", "class": "t-mono" }, svg)
+        .textContent = "D = " + D + (D === ERANK_K ? "  (measured)" : "  (modelled)");
+      mk("text", { x: (L + R) / 2, y: 20, "text-anchor": "middle", "class": "t-dim" }, svg)
+        .textContent = "no threshold fits between them at any width";
+
+      infoOut.textContent = vi.toFixed(4);
+      noiseOut.textContent = vn.toFixed(4);
+    };
+
+    idx.addEventListener("input", render);
+    render();
+  }
+
   /* --------------------------------------------------------- 7. when the route closes ---- */
   function initFold(root) {
     var s = shell(root, "0 0 480 320",
@@ -585,7 +718,7 @@
   }
 
   /* ---------------------------------------------------------------- dispatch ---- */
-  var FIGS = { row: initRow, beta: initBeta, absorb: initAbsorb, wall: initWall, fold: initFold, blocks: initBlocks };
+  var FIGS = { row: initRow, beta: initBeta, absorb: initAbsorb, wall: initWall, fold: initFold, blocks: initBlocks, erank: initErank };
   Array.prototype.forEach.call(document.querySelectorAll("[data-rs]"), function (el) {
     var fn = FIGS[el.getAttribute("data-rs")];
     if (fn) fn(el);
@@ -614,4 +747,6 @@
         "resolvent self-check: at the midpoint of the disagreement interval, bf16 should have overflowed and float32 should not");
     }
   } catch (e) { /* never let the self-check break the page */ }
+  }
+  rsReady(boot);
 })();

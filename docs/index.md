@@ -469,6 +469,21 @@ hide:
       <p>The dead set is now masked before the complex multiply. The dead-shift bed returns <code>[(1+0j), (1.5+0j), (3+0j)]</code>, bitwise equal to the block summary, where dense attention had returned <code>(nan+nanj)</code>; the live-diagonal artifact <code>inf+nan*j</code> became <code>inf+0j</code>. <code>tests/arm_smprime/</code> reads 61 passed.</p>
       <span class="num">173 nan became inf; the nan count went 173 to 0, non-finite count held at exactly 339</span>
     </li>
+    <li class="built">
+      <span class="when">2026-09-20 · tests/cameron/test_third_collapse_leg.py</span>
+      <h4>The detector inversion: the encoder that learned nothing reads healthier</h4>
+
+      <div class="rs fig" data-rs="erank">
+        <figure>
+          <svg></svg>
+        </figure>
+        <div class="ctl"></div>
+        <p class="cap">Effective rank at D = 4, N = 20000, K = 4, float64, seed 20260920 (the one width this repository has measured; a sweep across wider D is not yet tracked). The informative representation, which genuinely separated four clusters, pins to erank 3.0047 — clustering is anisotropy, so a representation that learned the task cannot spread across the space it has. The frozen-random encoder, which never received a gradient, is isotropic noise and reads erank 3.9993 — higher, not lower, than the encoder that learned something.</p>
+      </div>
+
+      <p><code>pi_jepa.collapse_report</code>'s two geometric collapse legs, <code>std_min</code> and effective rank, are both computed from the representation alone, before either one ever looks at the label. That is a structural blind spot: the repository's own mandatory frozen-random control — an encoder that receives no gradient, hence isotropic noise independent of the real, unpermuted label — is exactly the plant the blind spot predicts, and it is the one measured above. Both geometric legs read it green, and effective rank reads it healthier than the encoder that actually learned the four clusters; only a label-aware leg (<code>i_q</code>) calls the frozen-random plant dead. <code>pytest tests/cameron/test_third_collapse_leg.py -q</code> is the producer.</p>
+      <span class="num">informative erank 3.0047 against frozen-random erank 3.9993, both green under the existing legs (D=4 only)</span>
+    </li>
     <li class="open">
       <span class="when">now</span>
       <h4>The exact side holds; the learned side is the open question</h4>
