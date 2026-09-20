@@ -82,6 +82,13 @@ import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import CEQ.V15
 import CEQ.V15Kernel
 import CEQ.V15Phase
+import Mathlib.Data.List.Perm
+import Mathlib.Data.Matrix.Notation
+import Mathlib.Algebra.Ring.Idempotents
+import Mathlib.Algebra.GroupWithZero.Units.Basic
+import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
+import Mathlib.Data.Fintype.Card
+import Mathlib.Data.Finset.Card
 
 namespace CEQ.V16Domain
 
@@ -594,6 +601,280 @@ theorem beta_one_row_is_one (g : ℕ → ℝ) (hg : ∀ k, g k = 0) (qk : ℕ �
   rw [Finset.sum_congr rfl (fun j _ => corner_softmax hg qk i j)]
   exact softmax_row_sum_one qk i
 
+/-! ## 6. PHASE H — three operator-class facts, merged from the Phase-H round
+
+    Provenance: Phase-H targets `scalar_gate_commutes`,
+    `projector_idempotent_not_invertible`, `finite_semigroup_never_decidable`,
+    each built and audited standalone before being merged here. They are
+    grouped in `PhaseH` because they are about the operator CLASS a gate is
+    drawn from — commutative scalars, idempotents, finite semigroups — and not
+    about the `[0,1]`-magnitude re-statement the rest of this file exists for.
+
+    **H.1 — WHAT THE PAIR MEANS.** `scalar_gate_commutes` says a scalar gate
+    `gateOf m θ : ℂ`, composed along an ORDERED list of steps, gives the same
+    product under any permutation of that list. `matrix_gate_not_commutes`
+    exhibits two `2×2` complex matrices for which the same composition does
+    NOT: `!![0,1;0,0] * !![0,0;1,0] = !![1,0;0,0]` but the other order gives
+    `!![0,0;0,1]`. Together: a scalar carry CANNOT represent step order — the
+    algebra makes every ordering equal, so there is no state in which to keep
+    it — and a matrix carry can. The scalar half alone is a one-line
+    specialization of Mathlib's `List.Perm.prod_eq` and carries no content;
+    the contrast is the claim.
+
+    **H.1 — SHAPE, STATED PLAINLY BECAUSE IT DOES NOT MATCH.** `pathProd`
+    above is a `Finset.prod` over `Finset.Ico (j+1) (i+1)`, NOT a `List.prod`.
+    A `Finset` has no order, so there is nothing in `pathProd` to permute:
+    permutation-invariance of `pathProd` is free, unprovable-because-unstatable
+    rather than proved, and `Finset.prod` could not even be TYPED over a
+    noncommuting matrix codomain, since the definition requires a `CommMonoid`
+    to be well defined at all. So `scalar_gate_commutes` and
+    `matrix_gate_not_commutes` are a SEPARATE combinatorial statement about
+    `List.prod`. They do not restate, strengthen, or apply to `pathProd` as
+    this file defines it. What they establish is the algebraic reason the
+    corpus's choice of a scalar gate forecloses order-sensitivity — a fact
+    ABOUT the choice, not a theorem about the shipped operator.
+
+    **H.2 — WHAT IS AND IS NOT LOAD-BEARING.** `projector_idempotent_not_invertible`
+    carries `hP0 : P ≠ 0` for parity with the round's contract, and the proof
+    never uses it; only `hP1 : P ≠ 1` does work. Recorded rather than removed
+    so the redundancy is a stated contract choice, not a hidden one.
+    `projector_det_eq_zero` is a genuine strengthening, not a packaging
+    conjunction: over ℝ it names the scalar witness `0` where the abstract
+    form gives only a negative existential.
+
+    **H.3 — WHICH RICE PRECONDITION FAILS.** Rice's proof needs a class rich
+    enough to simulate unboundedly many distinct configurations, so that
+    "never halts" can be realized as "never repeats a configuration, forever."
+    A finite semigroup acting on a `Fintype` state space `α` has only
+    `Fintype.card α` configurations, so the orbit cannot strictly grow beyond
+    that without repeating, and a repeat is a decision — there is nowhere left
+    to hide an unbounded computation. `finite_semigroup_never_decidable` is a
+    `def`, not a `theorem`: the goal `DecidablePred (Reachable G s)` is
+    Type-valued, and `theorem` compiles Type-valued goals opaquely, yielding a
+    decision procedure that provably exists and cannot run. As a `def` it
+    runs — see the `#eval` pair at the foot of this file, which computes
+    `true` for a reachable target and `false` for a stalled generator. -/
+
+namespace PhaseH
+
+/-! ### H.1 A scalar gate is order-blind; a matrix gate is not -/
+
+/-- **`scalar_gate_commutes`.** The path product of a SCALAR gate
+    `gateOf (m k) (θ k)` over an ordered sequence of steps `l : List ι` is
+    invariant under permuting that sequence. True because `ℂ` is a
+    `CommMonoid` under multiplication and `List.Perm.prod_eq` holds over any
+    `CommMonoid`. On its own this is Mathlib; its content is the contrast with
+    `matrix_gate_not_commutes` below. NOTE the shape: this is `List.prod`, not
+    the `Finset.prod` of `pathProd` — see the section docstring. -/
+theorem scalar_gate_commutes {ι : Type*} (m θ : ι → ℝ) {l l' : List ι}
+    (hperm : l.Perm l') :
+    (l.map (fun k => gateOf (m k) (θ k))).prod
+      = (l'.map (fun k => gateOf (m k) (θ k))).prod :=
+  (hperm.map (fun k => gateOf (m k) (θ k))).prod_eq
+
+/-- **`matrix_gate_not_commutes`.** The scalar case is not a free fact about
+    list products — it consumes `ℂ`'s commutativity. Witness:
+    `A = !![0,1;0,0]`, `B = !![0,0;1,0]`. `[A, B]` and `[B, A]` ARE
+    permutations of each other (`List.Perm.swap`), yet `A * B = !![1,0;0,0]`
+    and `B * A = !![0,0;0,1]` differ at entry `(0,0)`. The failure is
+    exhibited by a witness, not asserted from an abstract non-commutativity
+    lemma. Order is information a matrix carry can hold and a scalar carry
+    provably cannot. -/
+theorem matrix_gate_not_commutes :
+    ∃ A B : Matrix (Fin 2) (Fin 2) ℂ,
+      ([A, B] : List (Matrix (Fin 2) (Fin 2) ℂ)).Perm [B, A]
+        ∧ ([A, B] : List (Matrix (Fin 2) (Fin 2) ℂ)).prod
+            ≠ ([B, A] : List (Matrix (Fin 2) (Fin 2) ℂ)).prod := by
+  refine ⟨!![0, 1; 0, 0], !![0, 0; 1, 0], List.Perm.swap _ _ _, ?_⟩
+  simp only [List.prod_cons, List.prod_nil, mul_one, Matrix.mul_fin_two]
+  intro h
+  have h00 := congrFun (congrFun h 0) 0
+  norm_num [Matrix.of_apply, Matrix.cons_val_zero, Matrix.cons_val_one,
+    Matrix.head_cons] at h00
+
+/-! ### H.2 A nontrivial projector gate is not invertible -/
+
+/-- **Helper, not a round target.** In any monoid, an idempotent that is not
+    `1` is not a unit: `P*P = P*1` cancels `P` to force `P = 1`. This is why
+    `P ≠ 1` alone suffices to kill invertibility — no determinant, no
+    dimension. -/
+theorem idempotent_ne_one_not_isUnit {M : Type*} [Monoid M] {P : M}
+    (hP : IsIdempotentElem P) (hP1 : P ≠ 1) : ¬ IsUnit P := by
+  intro hu
+  exact hP1 (hu.mul_left_cancel (hP.eq.trans (mul_one P).symm))
+
+/-- **TARGET.** A projector (`P * P = P`) that is neither the zero gate nor
+    the identity gate is not invertible, over any ring. `hP0 : P ≠ 0` is
+    carried for contract parity and is NOT used (hence bound as `_hP0`; it is
+    still a required positional argument, so the statement is unchanged);
+    `hP1 : P ≠ 1` is the
+    load-bearing hypothesis. This separates "reset" from "rotate" as gate
+    primitives: `gateOf m θ` with `m ≠ 0` is invertible at every `θ`,
+    including `θ = 0`; a nontrivial reset is invertible at no parameter value
+    whatsoever, because idempotence — not the value of a continuous
+    parameter — forces the singularity. -/
+theorem projector_idempotent_not_invertible {R : Type*} [Ring R] {P : R}
+    (hP : IsIdempotentElem P) (_hP0 : P ≠ 0) (hP1 : P ≠ 1) : ¬ IsUnit P :=
+  idempotent_ne_one_not_isUnit hP hP1
+
+/-- **Sharper form.** Over `Matrix (Fin n) (Fin n) ℝ` the same hypotheses give
+    `P.det = 0` outright. Genuinely sharper, not a repackaging: over a field
+    `IsUnit` and `≠ 0` coincide, so the conclusion becomes a named scalar
+    rather than a negated existential. -/
+theorem projector_det_eq_zero {n : ℕ} {P : Matrix (Fin n) (Fin n) ℝ}
+    (hP : IsIdempotentElem P) (hP0 : P ≠ 0) (hP1 : P ≠ 1) : P.det = 0 := by
+  by_contra hdet
+  exact projector_idempotent_not_invertible hP hP0 hP1
+    (Matrix.isUnit_iff_isUnit_det P |>.mpr (isUnit_iff_ne_zero.mpr hdet))
+
+/-! ### H.3 Finite-semigroup reachability is decidable, and the decision runs -/
+
+section Finite
+
+variable {α : Type*} [Fintype α] [DecidableEq α]
+
+/-- One step of the closure: everything already reached, plus everything one
+    more generator-application reaches from it. Concrete and computable — no
+    `Submonoid.closure`, no classical `sInf`, just union and image. -/
+def step (G : Finset (α → α)) (S : Finset α) : Finset α :=
+  S ∪ S.biUnion (fun x => G.image (fun f => f x))
+
+/-- The orbit after `n` closure steps from `{s}`. `orbit G s 0 = {s}`:
+    reachability is reflexive, as standard for automata reachability. -/
+def orbit (G : Finset (α → α)) (s : α) : ℕ → Finset α
+  | 0 => {s}
+  | n + 1 => step G (orbit G s n)
+
+/-- Each closure step only grows the set. -/
+theorem subset_step (G : Finset (α → α)) (S : Finset α) : S ⊆ step G S := by
+  unfold step
+  apply Finset.subset_union_left
+
+/-- The orbit sequence is `⊆`-monotone in `n`. -/
+theorem orbit_subset_succ (G : Finset (α → α)) (s : α) (n : ℕ) :
+    orbit G s n ⊆ orbit G s (n + 1) :=
+  subset_step G (orbit G s n)
+
+theorem orbit_mono (G : Finset (α → α)) (s : α) : Monotone (orbit G s) :=
+  monotone_nat_of_le_succ (orbit_subset_succ G s)
+
+/-- Once one closure step changes nothing it never changes anything again:
+    `step` depends only on the current `Finset`, so a fixed point is fixed
+    forever. Needs no cardinality bound. -/
+theorem orbit_stable_forward (G : Finset (α → α)) (s : α) {n : ℕ}
+    (h : orbit G s n = orbit G s (n + 1)) : ∀ k, orbit G s (n + k) = orbit G s n := by
+  intro k
+  induction k with
+  | zero => rfl
+  | succ j ih =>
+    have heq : orbit G s (n + (j + 1)) = step G (orbit G s (n + j)) := rfl
+    rw [heq, ih]
+    exact h.symm
+
+/-- Pure arithmetic: a `ℕ`-valued sequence that strictly increases at every
+    step below `N` has grown by at least `N` by step `N`. -/
+theorem sum_of_strict_steps (c : ℕ → ℕ) :
+    ∀ N, (∀ n < N, c n < c (n + 1)) → c 0 + N ≤ c N := by
+  intro N
+  induction N with
+  | zero => intro _; simp
+  | succ k ih =>
+    intro h
+    show c 0 + (k + 1) ≤ c (k + 1)
+    have hk : ∀ n < k, c n < c (n + 1) := fun n hn => h n (Nat.lt_succ_of_lt hn)
+    have hlt : c k < c (k + 1) := h k (Nat.lt_succ_self k)
+    have hprev := ih hk
+    omega
+
+/-- **THE PIGEONHOLE STEP — the single place `Fintype.card` is consumed.**
+    Some closure step strictly below `Fintype.card α` changes nothing. This is
+    exactly what fails for infinite `α`: with no upper bound on
+    `(orbit G s n).card`, a sequence can grow forever and no stabilization
+    step below any fixed `N` is forced to exist. -/
+theorem exists_stable_step (G : Finset (α → α)) (s : α) :
+    ∃ n < Fintype.card α, orbit G s n = orbit G s (n + 1) := by
+  by_contra hcon
+  push_neg at hcon
+  have hstrict : ∀ n < Fintype.card α, (orbit G s n).card < (orbit G s (n + 1)).card :=
+    fun n hn =>
+      Finset.card_lt_card
+        (lt_of_le_of_ne (orbit_subset_succ G s n) (hcon n hn))
+  have hgrow : (orbit G s 0).card + Fintype.card α ≤ (orbit G s (Fintype.card α)).card :=
+    sum_of_strict_steps (fun n => (orbit G s n).card) (Fintype.card α) hstrict
+  have hpos : 1 ≤ (orbit G s 0).card := by
+    show 1 ≤ ({s} : Finset α).card
+    simp
+  have hbound : (orbit G s (Fintype.card α)).card ≤ Fintype.card α :=
+    (orbit G s (Fintype.card α)).card_le_univ.trans_eq (by simp)
+  omega
+
+/-- **`Fintype.card α` closure steps already contain every orbit.** This is
+    what lets the reachability question be answered by ONE finite `Finset`
+    rather than an unbounded search. -/
+theorem orbit_le_card_stable (G : Finset (α → α)) (s : α) (n : ℕ) :
+    orbit G s n ⊆ orbit G s (Fintype.card α) := by
+  obtain ⟨m, hm, heq⟩ := exists_stable_step G s
+  rcases le_or_lt n (Fintype.card α) with hn | hn
+  · exact orbit_mono G s hn
+  · have hcard : orbit G s (Fintype.card α) = orbit G s m := by
+      have := orbit_stable_forward G s heq (Fintype.card α - m)
+      rw [Nat.add_sub_cancel' hm.le] at this
+      exact this
+    have horb : orbit G s n = orbit G s m := by
+      have := orbit_stable_forward G s heq (n - m)
+      rw [Nat.add_sub_cancel' (hm.le.trans hn.le)] at this
+      exact this
+    rw [hcard, horb]
+
+/-- **Reachability.** `t` is reachable from `s` by some finite number of
+    applications of elements of `G`. A `Finset (α → α)` has no order, so
+    nothing here privileges one composition order — H.1 and H.3 are about
+    different objects: H.1 fixes a composition order over a linear index, H.3
+    quantifies over how many times and which generators fire. -/
+def Reachable (G : Finset (α → α)) (s t : α) : Prop := ∃ n, t ∈ orbit G s n
+
+/-- **The reduction to one `Finset`.** The unbounded existential over `ℕ` is
+    EQUIVALENT to membership in the single computed set
+    `orbit G s (Fintype.card α)`. -/
+theorem reachable_iff (G : Finset (α → α)) (s t : α) :
+    Reachable G s t ↔ t ∈ orbit G s (Fintype.card α) := by
+  constructor
+  · rintro ⟨n, hn⟩
+    exact orbit_le_card_stable G s n hn
+  · intro ht
+    exact ⟨Fintype.card α, ht⟩
+
+/-- **TARGET: `finite_semigroup_never_decidable`.** Restricting the operator
+    class to a finite semigroup on a finite state space turns reachability —
+    the shape of question Rice's theorem forbids a general decision procedure
+    for — into a decidable predicate, and the witness is a terminating
+    computation (`Fintype.card α` closure steps), not `Classical.propDecidable`.
+    `Fintype α` is used essentially, at `exists_stable_step`.
+
+    Declared `def`, not `theorem`: `DecidablePred (Reachable G s)` is
+    Type-valued, and `theorem` compiles Type-valued goals opaquely — that
+    version proves a decision procedure exists and cannot run one. Which Rice
+    precondition fails: a finite semigroup on a `Fintype` state space has only
+    `Fintype.card α` configurations, so the orbit cannot strictly grow beyond
+    that without repeating, and a repeat is a decision. The `#eval` pair at
+    the foot of this file runs this instance. -/
+def finite_semigroup_never_decidable (G : Finset (α → α)) (s : α) :
+    DecidablePred (Reachable G s) := fun t =>
+  decidable_of_iff (t ∈ orbit G s (Fintype.card α)) (reachable_iff G s t).symm
+
+end Finite
+
+/-- Demonstration generator, reaching: `not false = true`, so `true` is
+    reached from `false` in one step. -/
+def demoReachG : Finset (Bool → Bool) := {Bool.not}
+
+/-- Demonstration generator, stalled: `id` never moves anything, so the orbit
+    is stuck at `{false}` forever. -/
+def demoStallG : Finset (Bool → Bool) := {id}
+
+end PhaseH
+
+
 end CEQ.V16Domain
 
 /-! ## The census, printed -/
@@ -678,3 +959,29 @@ end CEQ.V16Domain
 #print axioms CEQ.V15.bounded_gates_stable                      -- #6
 #print axioms CEQ.V15.scan_assoc                                -- #7
 #print axioms CEQ.V15Phase.unit_phase_product                   -- #16
+
+/-! ## Phase H, printed and RUN
+
+    The `#eval` pair is the point of `finite_semigroup_never_decidable` being
+    a `def`: the decision procedure is executed here, not merely asserted to
+    exist. Expected `true` then `false`. -/
+
+#print axioms CEQ.V16Domain.PhaseH.scalar_gate_commutes
+#print axioms CEQ.V16Domain.PhaseH.matrix_gate_not_commutes
+#print axioms CEQ.V16Domain.PhaseH.idempotent_ne_one_not_isUnit
+#print axioms CEQ.V16Domain.PhaseH.projector_idempotent_not_invertible
+#print axioms CEQ.V16Domain.PhaseH.projector_det_eq_zero
+#print axioms CEQ.V16Domain.PhaseH.exists_stable_step
+#print axioms CEQ.V16Domain.PhaseH.orbit_le_card_stable
+#print axioms CEQ.V16Domain.PhaseH.reachable_iff
+#print axioms CEQ.V16Domain.PhaseH.finite_semigroup_never_decidable
+
+#eval @Decidable.decide
+  (CEQ.V16Domain.PhaseH.Reachable CEQ.V16Domain.PhaseH.demoReachG false true)
+  (CEQ.V16Domain.PhaseH.finite_semigroup_never_decidable
+    CEQ.V16Domain.PhaseH.demoReachG false true)
+
+#eval @Decidable.decide
+  (CEQ.V16Domain.PhaseH.Reachable CEQ.V16Domain.PhaseH.demoStallG false true)
+  (CEQ.V16Domain.PhaseH.finite_semigroup_never_decidable
+    CEQ.V16Domain.PhaseH.demoStallG false true)
