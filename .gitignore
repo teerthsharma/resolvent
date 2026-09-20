@@ -85,3 +85,7 @@ bounded_run_result.json
 errors_list.txt
 full_collect.txt
 pytest_collect.txt
+
+# paper fetched by a provenance lane; exhaust, not source
+magnet_2102_11391.pdf
+nul.tmp

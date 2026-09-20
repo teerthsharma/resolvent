@@ -43,6 +43,9 @@
   | `no_prefix_scan_represents_a_zero_gate` | off `m > 0` no exponential form exists at all |
   | `prefix_logit_mask_restated`         | the five clauses above assembled into one statement over `m ∈ [0,1]` |
   | `bedM_gate_exact`                    | each of `{−1, 0, +1}` is `gateOf (|a|) (arg a)` exactly — `−1` is `m = 1, θ = π`, an ordinary point |
+  | `constant_phase_gate_is_rope`        | a constant phase gate `≡ e^{iω}` is the RoPE kernel `e^{iω(i−j)}`, exactly |
+  | `cumulative_phase_is_separable`      | `∏ e^{iθ_k} = e^{i(Θ_i − Θ_j)}` with `Θ` the prefix sum — the phase path-product IS the prefix-scan difference, for every `θ`, no hypothesis |
+  | `magnitude_zero_not_separable`       | the phase always separates through a prefix scan; a planted magnitude zero on the same window has NO prefix-scan representation, by ANY `C` — quotes `no_prefix_scan_represents_a_zero_gate` rather than re-deriving it |
 
   WHAT WAS LOST. The conclusion was not weakened — `pathProd_abs`'s hypothesis
   is strictly weaker than #2's and its conclusion is the same path product, and
@@ -359,6 +362,86 @@ theorem sixteen_is_silent_on_the_zero_draw (θ : ℕ → ℝ) (s : Finset ℕ) :
   exact (pathProd_eq_zero_iff _ θ 1 0).mpr
     ⟨1, Finset.mem_Ico.mpr ⟨le_refl 1, by norm_num⟩, rfl⟩
 
+/-! ## 4b. PHASE G / S1 — the phase axis is SEPARABLE, the magnitude axis is not
+
+    The gate axis splits into MAGNITUDE `m ∈ [0,1]` and PHASE `θ` on the
+    circle. `constant_phase_gate_is_rope` and `cumulative_phase_is_separable`
+    show the phase half is SEPARABLE: a constant phase is exactly the RoPE
+    kernel, and any phase schedule at all folds through a prefix scan
+    (`cumsum`), which is what a fused kernel needs in order to absorb it into
+    `q, k`. `magnitude_zero_not_separable` states the asymmetry this buys: the
+    SAME window has a prefix-scan phase representation with no hypothesis on
+    `θ` whatsoever, and, the moment a magnitude on it is `0`, NO prefix scan
+    `C` represents its path product — `no_prefix_scan_represents_a_zero_gate`
+    quoted directly, not re-derived. The kernel race is therefore a race over
+    magnitude zeros only.
+
+    SEPARABLE IS NOT FREE, and an earlier draft of this comment said free.
+    Three measurements bound it, none of which these theorems assert:
+
+    * the fold-in is exact only in float64 — worst `2.398082e-13` at
+      n = 4096, d = 64 over 5 seeds. In half precision it costs about two
+      extra ULPs beyond the rounding a plain `q @ kᵀ` already pays
+      (`3.915×` the float16 floor against a no-phase control of `1.612×`),
+      and only when the angles, the cumulative sum and `cos`/`sin` are
+      computed in float32 and cast down afterwards. Computed entirely in
+      the half dtype it costs `61.513×` the floor;
+    * the rotation itself is `O(n·d)`. RoFormer §3.4.2 gives a separate
+      element-wise realization precisely because the direct form of its
+      Equation 16 is too expensive. Measured here at 0.66 % of attention
+      time at n = 4096 and 0.05 % at n = 16384, with the table cached
+      across batch and layers;
+    * separately, and more sharply: in the CURRENT operator `θ` multiplies
+      an already-exponentiated score, so it never reaches the real attention
+      logit. `R_ij * e_ij` and `Z_i` are bitwise identical between `θ = 0`
+      and random `θ`. RoPE rotates `q, k` BEFORE the dot product. These
+      theorems describe a containment the shipped code does not yet
+      implement. -/
+
+/-- **`constant_phase_gate_is_rope`.** A gate with magnitude `≡ 1` and a
+    CONSTANT phase `ω` is exactly the RoPE kernel `e^{iω(i−j)}` — the rotation
+    angle is the phase times the token distance, nothing else. -/
+theorem constant_phase_gate_is_rope (ω : ℝ) {i j : ℕ} (hij : j ≤ i) :
+    pathProd (fun _ => (1 : ℝ)) (fun _ => ω) i j
+      = Complex.exp (((ω * ((i : ℝ) - (j : ℝ)) : ℝ) : ℂ) * Complex.I) := by
+  rw [pathProd_polar]
+  have hcard : (Ico (j + 1) (i + 1)).card = i - j := by rw [Nat.card_Ico]; omega
+  have hs : (∑ _k in Ico (j + 1) (i + 1), ω) = ω * ((i : ℝ) - (j : ℝ)) := by
+    rw [Finset.sum_const, hcard, nsmul_eq_mul, Nat.cast_sub hij]; ring
+  simp [hs]
+
+/-- **`cumulative_phase_is_separable`.** The product of `e^{iθ_k}` over ANY
+    window `Ico (j+1) (i+1)`, for ANY phase schedule `θ` (no hypothesis at
+    all), equals `e^{i(Θ_i − Θ_j)}` with `Θ_n = Σ_{k ≤ n} θ_k` the prefix sum —
+    the phase-path-product IS the prefix-scan difference, always. This is the
+    fact that lets a fused kernel fold the whole phase gate into a rotation of
+    `q` and `k`. -/
+theorem cumulative_phase_is_separable (θ : ℕ → ℝ) {i j : ℕ} (hij : j ≤ i) :
+    ∏ k in Ico (j + 1) (i + 1), Complex.exp ((θ k : ℂ) * Complex.I)
+      = Complex.exp ((((∑ k in range (i + 1), θ k) - (∑ k in range (j + 1), θ k) : ℝ) : ℂ)
+          * Complex.I) := by
+  have hsum : (∑ k in Ico (j + 1) (i + 1), θ k)
+      = (∑ k in range (i + 1), θ k) - (∑ k in range (j + 1), θ k) :=
+    Finset.sum_Ico_eq_sub θ (Nat.succ_le_succ hij)
+  rw [← hsum, Complex.ofReal_sum, Finset.sum_mul, Complex.exp_sum]
+
+/-- **`magnitude_zero_not_separable`.** The asymmetry between the two halves of
+    the split gate axis, as one theorem: for ANY phase schedule `θ` the phase
+    factor over the window ALWAYS has a prefix-scan representation
+    (`cumulative_phase_is_separable`, no hypothesis on `θ`), while the moment
+    the window carries a planted magnitude zero, `pathProd m θ` has NO
+    prefix-scan representation AT ALL — for every `C : ℕ → ℂ`, not some — by
+    `no_prefix_scan_represents_a_zero_gate`, quoted rather than re-proved. The
+    phase axis separates through `cumsum`; the magnitude axis does not, and
+    `m = 0` is exactly where that stops being cosmetic. -/
+theorem magnitude_zero_not_separable (m θ : ℕ → ℝ) {i j : ℕ} (hij : j ≤ i)
+    (hz : ∃ k ∈ Ico (j + 1) (i + 1), m k = 0) :
+    (∏ k in Ico (j + 1) (i + 1), Complex.exp ((θ k : ℂ) * Complex.I)
+        = Complex.exp ((((∑ k in range (i + 1), θ k) - (∑ k in range (j + 1), θ k) : ℝ) : ℂ)
+            * Complex.I))
+      ∧ ∀ C : ℕ → ℂ, Complex.exp (C i - C j) ≠ pathProd m θ i j :=
+  ⟨cumulative_phase_is_separable θ hij, fun C => no_prefix_scan_represents_a_zero_gate C m θ hz⟩
+
 /-! ## 5. #5a — the hop family and its three corners -/
 
 /-- The §S-M′ numerator, `exp((C_i − C_j) + q_i·k_j)`. `qk i j` stands for the
@@ -556,6 +639,9 @@ end CEQ.V16Domain
 #print axioms CEQ.V16Domain.six_misses_every_bedM_value
 #print axioms CEQ.V16Domain.delay_zero_is_first_order
 #print axioms CEQ.V16Domain.sixteen_is_silent_on_the_zero_draw
+#print axioms CEQ.V16Domain.constant_phase_gate_is_rope
+#print axioms CEQ.V16Domain.cumulative_phase_is_separable
+#print axioms CEQ.V16Domain.magnitude_zero_not_separable
 #print axioms CEQ.V16Domain.num
 #print axioms CEQ.V16Domain.Znorm
 #print axioms CEQ.V16Domain.Hop
