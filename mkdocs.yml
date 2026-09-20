@@ -44,6 +44,7 @@ extra_css:
 
 extra_javascript:
   - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+  - assets/resolvent.js
 
 extra:
   generator: false
@@ -87,9 +88,8 @@ nav:
       - Corner rule retirement: CORNER_RULE_RETIREMENT.md
       - Kaggle card: PI_JEPA_KAGGLE_CARD.md
       - DR2 card: DR2_CARD.md
-  - Pre-registrations:
-      - BED-H: BED_H_PREREGISTRATION.md
-      - REMOVAL-ECHO v1: prereg/REMOVAL_ECHO_v1.md
+      - "Pre-registration: BED-H": BED_H_PREREGISTRATION.md
+      - "Pre-registration: REMOVAL-ECHO v1": prereg/REMOVAL_ECHO_v1.md
   - Ledgers:
       - Failure mechanisms: ledgers/mistakes.md
       - Struck constants: ledgers/struck.md
