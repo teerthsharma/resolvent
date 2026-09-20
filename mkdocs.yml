@@ -93,6 +93,7 @@ nav:
       - "Certificate C9: the NEVER residue": C9_NEVER_RESIDUE.md
       - "What the dispatcher got wrong, 2026-09-20": SESSION_ERRORS_2026_09_20.md
       - "Phase G: spectral": PHASE_G.md
+      - "Phase H: bind": PHASE_H.md
   - Ledgers:
       - Failure mechanisms: ledgers/mistakes.md
       - Struck constants: ledgers/struck.md
