@@ -2105,11 +2105,28 @@ moves the real attention logit — it changes which tokens attend to which. In
 exponentiated.</p>
 <p>Measured directly: the real modulus row <code>R_ij · e_ij</code> and the normalizer <code>Z_i</code>
 are <code>0.000e+00</code> different between <code>θ = 0</code> and <code>θ ~ N(0,1)</code>.</p>
-<p>The phase does not touch the attention pattern at all. No setting of β, g or qk
-routes it into the real logit, and a repository-wide search for any q/k rotation
-returns nothing, including <code>ceq/hf/modeling_ceq.py</code>. So the corner claim splits:
-<strong>softmax is β=1 exactly, and RoPE is not contained</strong>, because RoPE is softmax
+<p>The phase did not touch the attention pattern at all. No setting of β, g or qk
+routed it into the real logit, and a repository-wide search for any q/k rotation
+returned nothing, including <code>ceq/hf/modeling_ceq.py</code>. So the corner claim split:
+<strong>softmax is β=1 exactly, and RoPE was not contained</strong>, because RoPE is softmax
 on a rotated score rather than vanilla softmax.</p>
+<p><strong>That gap is now closed in code.</strong> <code>numerator</code>, <code>operator</code>, <code>readout</code> and
+<code>block_summary</code> take <code>phase_route ∈ {gate, logit, both}</code>, defaulting to <code>gate</code>.
+Under <code>logit</code> the phase is derived from <code>θ·g</code> and rotates <code>q</code> and <code>k</code> before the
+dot product. Measured on the landed file: the logit route moves <code>R_ij·e_ij</code> by
+<code>3.822e+01</code>, <code>3.392e+00</code> and <code>1.065e+01</code> at seeds 0/1/2, where it previously
+read <code>0.000e+00</code>; the gate route still reads <code>0.000e+00</code>, unchanged. Against an
+independent reference sharing no code — rotation by slicing into a complex
+tensor, <code>torch.polar</code>, and explicit loops for the logit and the path product —
+the rotation is bit-identical at float64, <code>0.000e+00</code>, and the whole numerator
+sits at that reference's own floor rather than above it.</p>
+<p>The default is bitwise unchanged: <code>0.000e+00</code> across 144 <code>(β, qk, g)</code> settings
+at 6 seeds, and the <code>tests/arm_smprime</code> suite reads 61 passed both before and
+after. A gradient reaches the angle — 16/16 non-zero entries, and a central
+finite difference at <code>θ[5]</code> with <code>h = 1e-6</code> gives <code>0.295108</code> against autograd's
+<code>0.295108</code>, relative error <code>8.20e-09</code>.</p>
+<p>The containment is now <em>available</em>, not <em>used</em>: <code>ArmSMPrime</code> still trains the
+gate route only, so no measured row in this document runs through <code>logit</code>.</p>
 <p>A second lane reached the same wall numerically from the other side: the
 imaginary half of the twist is discarded bitwise,
 <code>Re((w·twist) @ v) == (w·Re(twist)) @ v</code> at max difference <code>0.0</code>.</p>
