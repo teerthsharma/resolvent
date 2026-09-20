@@ -283,6 +283,210 @@ definition. It cannot typecheck over a non-commuting codomain at all, and
 permutation-invariance over a `Finset` is vacuous because there is nothing to
 permute. The operator as currently defined in the corpus therefore cannot express
 a matrix gate; that is a fact about the definition, not about the mathematics.
+
+---
+
+## 8. H.1 — the row that measured something
+
+A bed rebuilt to demand order finally separated the arms, and the separation
+survived a matched budget. Discrete-label accuracy over eight fixed anchors,
+5 seeds, same instances for every arm.
+
+| arm | params | accuracy | std | headroom over tightest floor |
+|---|---|---|---|---|
+| (a) vectors + softmax + RoPE | 620 | 0.2238 | 0.0115 | **−0.1328** |
+| (b) scalar gate `m·e^{iθ}` | 620 | 0.2628 | 0.0148 | **−0.0938** |
+| (c) operator gate, invertible | 552 | **0.9570** | 0.0048 | **+0.6004** |
+| (d) operator gate + projector | 654 | 0.9470 | 0.0059 | +0.5904 |
+
+Tightest floor is `last_two_ops = 0.3566` on that eval split. `(c) − (a) = 0.7332`
+against a pooled per-seed standard deviation of `0.01250` — **59 σ**, with every
+(c) seed beating every (a) seed by at least 0.708. Complete separation at n = 5.
+
+**The arms share instances, not merely a distribution.** Both lanes use the same
+population offsets, and the per-seed floors recomputed independently in each lane
+agree bitwise — `0.3900 / 0.3600 / 0.3190 / 0.3640 / 0.3500`. That agreement is
+what proves the split is identical. The parameter residue (620 against 552 and
+654) favours the *losing* arms, so it cannot explain the gap.
+
+Ratios are taken on excess over the majority-label baseline of 0.1640, the only
+oracle-free floor: (c)/(a) = **13.3×**, (c)/(b) = **8.0×**. Excess over the
+tightest floor admits no ratio at all, because (c) is +0.6004 and (a) is −0.1328 —
+opposite signs. That is the honest phrasing, and it is not the same as saying the
+vector side has no signal.
+
+The 653× figure recorded for the untrained comparison must never appear beside
+these. It is in consequence error, an L2 distance; these are accuracies. And that
+figure was inflated in any case: its vector leg computed a constant mean
+displacement over zero-mean Gaussian input, which is approximately zero for a
+rotation, so `4.0717` is `√(2d)` and the leg is the always-identity null. It
+compared a least-squares fit against a do-nothing predictor.
+
+### What the gap is actually attributable to
+
+The four arms do **not** differ only in the composition primitive. (a) and (b) are
+a single attention-pooling layer with no running state; (c) and (d) are a
+three-step recurrence. Matching the budget did not touch that, and an earlier
+draft of this row claimed otherwise.
+
+That confound was measured rather than conceded. A vector arm was given the
+identical structural gift — same three-step recurrence, same additive injection,
+same readout — with the per-verb matrix replaced by a per-verb **diagonal** gate,
+which commutes by construction and therefore cannot represent order. A live
+parameter search put it at **554**, a tighter match to (c)'s 552 than the 620 the
+(a)/(b) lane could reach. Same bed, offsets, seeds, split and optimiser.
+
+It scores **0.3080** at 400 steps and **0.3342 ± 0.0161** at 4000.
+
+So the recurrence, handed free to a vector arm at matched parameters, buys
+**+0.1104 — 15.1% of the 0.7332 gap** — and still lands *below* the tightest
+floor. The remaining **84.9% requires the non-commutative matrix.**
+
+### The limit this bed cannot remove
+
+The operator arms' forward pass is `state = ops[verb] @ (state + emb[patient])`,
+which is character-for-character the bed's own generative recursion. So 0.9570
+measures that the generator's own form fits its own generator. What this bed
+cannot separate is *non-commutative operator* from *the generator's exact operator
+family*, because on this bed they are the same thing by construction.
+
+An earlier draft of this row called the floors "trivial closed-form" baselines.
+That is wrong and understates them: `last_op_only`, `last_two_ops`, the
+order-free replay and the bag predictor are all handed the true entities and the
+true operators. They are oracle-assisted, which makes clearing them harder rather
+than easier.
+
+---
+
+## 9. H.1 — what the census extension turned out to be
+
+The stability zone reproduces exactly, and it says nothing checkable about the
+head.
+
+**The zone.** The recursion `c ← e^{ac}` has fixed point `c = −W₀(−a)/a` and is
+attracting exactly when `|W₀(−a)| < 1`. The boundary of the attracting region in
+the parameter plane is the analytic curve `a(t) = −e^{it}·exp(e^{it})`, with
+`|a(t)| = exp(cos t)` and `arg a(t) = t + sin t + π`. Its ray radii are
+
+| φ | 0 | π/4 | π/2 | 3π/4 | π |
+|---|---|---|---|---|---|
+| r(φ) | 0.3678794411714423 | 1.214461 | 1.961309 | 2.513997 | 2.718281828459045 |
+
+with both endpoints exact to machine precision at `1/e` and `e`. An earlier
+empirical ray scan read `0.3669` and `2.7178`; the gaps of `0.000979` and
+`0.000482` are both at or under that scan's own grid step of `0.0009970`, so the
+discrepancy is resolution and not a convention error. The substitution `z = a·c`
+turns the recursion into `z ← a·e^z` with a maximum floating-point difference of
+**exactly 0.0** over twenty trajectories, so the census map *is* the exponential
+family, bit for bit.
+
+Dimension 1. Not fractal. A prediction of a non-integer box dimension was
+withdrawn before measurement because it contradicts a theorem: the Julia set of
+`λe^z` has Hausdorff dimension 2 for every `λ`. That set lives in the *dynamical*
+plane; the census lives in the *parameter* plane, and the two had been conflated.
+Basin boundaries of periodic attractors can indeed have dimension between 1 and 2,
+which is a different object again.
+
+**One stated behaviour of the zone is false off the real axis.** "Converges at
+0.95r and diverges at 1.05r on every ray" holds only at φ = 0. At π/4, π/2, 3π/4
+and π the fixed point *is* locally unstable at 1.05r exactly as theory predicts,
+with multiplier ≈ 1.0245 on every ray — but the orbit is then captured by a
+bounded attracting cycle of period 7, 16, 15 and 2 respectively, verified to
+200,000 iterations without escape. Any test asserting literal divergence at 1.05r
+will misfire on non-real phases.
+
+**And the reduction to the head fails, established twice by different routes.**
+
+The first route found there is no quantity to reduce. Under the gate route the
+modulus row is bitwise phase-independent — the gate phase reaches the complex gate
+and never the real score, which extends an earlier finding from a constant phase
+to a positional ramp. Under the logit route the row does move with phase, but the
+whole operator output is then exactly real, with maximum imaginary part `0.0`
+across all twenty cells, so no complex quantity exists there at all. And the
+normalizer is computed before `β` is ever applied, so the `(1−β)` factor in the
+mapping has no counterpart in the per-position dynamics. By Cauchy–Schwarz the
+normalizer is bounded by `(i+1)·e^{w_max}` — linear in position, never
+exponential in itself.
+
+The second route measured the closest candidate directly. The row-sum tracks
+`c* = −W₀(−a)/a` within 5% only at `a = 0.10`, and misses by +7.6% to +8.8% at
+0.20, +19.6% to +22.4% at 0.30, and +37.6% to +49.1% at 0.36 — 15 of 20 cells
+fail. The cause is derived rather than observed: a single static application of the
+operator has **no self-referential feedback loop**, so its row-sum tracks `e^a`,
+smooth and singularity-free, while `c*` has an essential branch point at `a = 1/e`
+*only because* the census recursion feeds `c` back into itself. The two agree to
+first order in `a` — both approximately `1 + a` — which is exactly why the error is
+small at 0.10 and diverges toward the fold.
+
+So the Lambert bifurcation is exactly right about the scalar map and unconnected
+to this operator. What survives is the real-axis statement: the fold line restated
+as `|W(−a)| < 1` is exact and is a genuine sharpening, whether or not the complex
+part reaches anything.
+
+---
+
+## 10. H.1 — what the transformer autopsy returned
+
+**Identification first.** "JEV" does not resolve to a JEPA derivative or to a
+decision-making module. It resolves to a separate commercial product launched in
+September 2026: a non-autoregressive, schema-constrained classifier emitting one
+structured output and a calibrated confidence per query. It contains no
+state-transition model, no reward, no rollout and no value function, so it is not
+prior art for the resolvent read, and it should not be named beside JEPA.
+
+Nothing in it is liftable here. Its schema-constrained decoding solves invalid
+tool-call output, a problem this project does not have, and is a weaker relative
+of the exact-zero gate already killed as a masking trick.
+
+**But it names the sharpest absence in the project.** Calibration as an
+objective — training predicted confidence so that `P(correct | confidence = c) ≈ c`
+against the real hit rate — is a property this project has no mechanism to produce
+and has never checked. Exactness and calibration are orthogonal: being bit-identical
+to a reference says nothing about whether a stated confidence tracks an empirical
+rate. Only the former is covered anywhere here. It is not attachable today, because
+there is no labelled decision stream to train against, and that is precisely why it
+is worth recording.
+
+**JEPA, organ by organ.** One organ is already resident: the EMA target encoder
+with a stop-gradient is implemented and tested in `ceqjepa/pi_jepa.py`, at
+`tau = 0.99`, and costs nothing to adopt because it is adopted. The spatial
+multi-block masking is not applicable — it solves occlusion of 2D and 3D regions,
+while these beds are 1D sequences whose context/target split is a temporal horizon
+shift.
+
+Prediction in representation space is a **gap for the kernel**, and this
+repository's own code is the proof: `pi_jepa.py` already implements that objective
+around a plain three-layer MLP encoder, never around the operator, which appears
+only as the predictor. A kernel cannot contain an objective, and no setting of
+β, g or qk reaches it.
+
+**One correction to this project's own objection.** The anisotropy argument — that
+clustering *is* anisotropy, so an effective-rank read prefers a frozen-random
+encoder at every width — was aimed at JEPA's collapse machinery. Nothing in the
+fetched papers shows them validating non-collapse by a bare post-hoc geometric
+read, so the objection targets a validation method they may not use. The argument
+stands against the instrument this project built; its reach into that literature is
+unestablished.
+
+### The encoder route is probably not where this belongs
+
+`pi_jepa.py`'s encoder is a pointwise MLP with **no sequence mixing at all**,
+despite its own docstring describing otherwise. A prior round already built the
+repair and benchmarked it — a causal attention block lifts R² from `−0.19` to
+`0.986` on this project's own bar — but it uses stock scaled dot-product attention
+and never the operator.
+
+Two structural obstacles stand between the operator and an encoder slot. Its
+causal mask is not a setting but a structure: no bidirectional path exists, and a
+JEPA encoder is bidirectional. And its positional mechanism is content-conditioned
+rather than index-conditioned, so it is unverified to break permutation symmetry
+the way a sinusoid does.
+
+The sceptical finding is the one that matters, and it is stated rather than buried:
+**none of the three surviving certificates — exact refusal, decidable NEVER, a
+certified resolvent — is a property a representation-learning loss or a downstream
+probe can query.** If that holds, the encoder slot is not where this contribution
+belongs, and knowing that is worth more than an interface nobody would use.
 ---
 
 ## Limits
