@@ -91,6 +91,7 @@ nav:
       - "Pre-registration: BED-H": BED_H_PREREGISTRATION.md
       - "Pre-registration: REMOVAL-ECHO v1": prereg/REMOVAL_ECHO_v1.md
       - "Certificate C9: the NEVER residue": C9_NEVER_RESIDUE.md
+      - "What the dispatcher got wrong, 2026-09-20": SESSION_ERRORS_2026_09_20.md
   - Ledgers:
       - Failure mechanisms: ledgers/mistakes.md
       - Struck constants: ledgers/struck.md
