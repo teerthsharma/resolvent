@@ -312,6 +312,36 @@ returned "no."
 
 Claims with no producer located, stated as such rather than silently dropped.
 
+- **"This repository's instruments measure its models rather than its beds."
+  UNTESTED as of 2026-09-20, and the bed built to settle it cannot.** Five
+  instruments failed this on the same day, each scoring a property of the draw:
+  effective rank prefers a frozen-random encoder by `22.08×` at `D=64`; a
+  hitting-time R² window is 89% draw geometry, with arm error differing `1.06×`
+  between draws where counting won and broke while the label's own spread
+  differs `5.16×`; an unscoreable gate sits flat at `0.89` across four decades
+  of budget because it counts the sealed share of the draw; a refusal head is
+  beaten `7.3×` on recall by a one-line non-causal shortcut reading no
+  structure; and BED-H's magnitudes are draw properties with only their
+  ordering assertable.
+
+  The proposed cure — score every instrument as `f(model, draw) − f(null, draw)`
+  on the same seed, so additive draw terms cancel — regressed at slope
+  `−1.4513`, se `0.8439`, `t(3) = −1.7198`, `corr = −0.7046`, `n = 5`. The
+  follow-up hypothesis was that this is what *additive* pairing of a
+  *multiplicative* effect looks like, and that a log-ratio would cancel where a
+  subtraction did not. **That could not be evaluated.** At the refusal bed the
+  null fires on zero instances at all five seeds, so its precision is undefined
+  and its recall is exactly `0.0`; `0 of 5` seeds pass the strict-positivity a
+  ratio requires. The model side is well defined throughout — precision
+  `1.0000, 0.8333, 1.0000, 0.6667, 0.6667` — so the failure is the twin, not the
+  transform. The episodic-restart fix already in the tree guarantees eventual
+  sink access, which is what makes the shortcut silent.
+
+  Recorded rather than resolved: the additive slope's 95% interval at `n = 5`
+  spans roughly `[−3.7, +0.8]`, containing zero, no effect and a doubling, so it
+  is a statement about power and not a measurement. A bed with a null that
+  scores something is a precondition for answering this at all.
+
 - **The pre-rewrite README's corner floats `4.472918` / `1.144938` / `5.335671`.** A
   tree-wide search of `.py`, `.lean`, `.json`, `.jsonl`, `.txt` (re-run while
   writing this file) returns **zero hits**. They existed only in prose and left `README.md` in the 2026-09-11 rewrite
