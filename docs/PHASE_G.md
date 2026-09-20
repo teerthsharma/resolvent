@@ -25,8 +25,9 @@ struck it.
 |---|---|---|---|
 | S1 | phase folds into q, k | **holds, float64** | fold-in exact to `2.398082e-13`; the "free" half struck |
 | S5a | phase is free in a fused kernel | **repriced** | ~2 ULPs, 0.66% of attention time at n=4096 |
-| S5b | carry=0 beats masked attention | **dead in this cell** | graded magnitudes and multi-chunk merges, both untested |
-| S6 | learned θ beats fixed schedules | **void, then rerouted** | the fixed schedule is the right *initialization* |
+| S5b | carry=0 beats masked attention | **dead** | nothing; it is a masking trick |
+| S5c | graded carry has no additive analogue | **dead** | the frame: every single-token gate is one head dimension |
+| S6 | learned θ beats fixed schedules | **void, twice** | a value null that discriminates; the arm still has no phase |
 | C10 | closed-class count is recovered | **holds, discriminating** | 4,424 subsets, exact and float64 agreeing |
 | C11 | Chebyshev filter beats a dense solve | **cost lever struck** | accuracy holds; the degree formula was wrong |
 | C12 | flux spectrum reads the planted holonomy | **holds, self-contained** | three must-fires at 1e-15; no shipped code exercised |
@@ -170,6 +171,82 @@ result does *not* cover is the part the project actually claims:
   a CUDA box for FlashAttention varlen, or an MSVC toolchain for compiled
   FlexAttention — not a measured result.
 
+
+---
+
+## 3c. The graded carry, and the theorem that ends it
+
+One claim survived the binary kill: a *graded* magnitude — a continuous
+`u_k ∈ (0,1)` compounding multiplicatively with no exact zero anywhere — has no
+masked-softmax analogue, because a mask is binary and there is no `-inf` to
+place. That claim is false, and it is false by algebra rather than by
+measurement.
+
+**The collapse theorem.** Under softmax a per-row constant cancels exactly:
+
+```
+softmax(s_ij + C[i] − C[j])  ==  softmax(s_ij − C[j])
+```
+
+So for any gate `u_k` depending on a **single token** `k` — position-only,
+content-dependent, learned or fixed, it makes no difference — `log G_ij`
+telescopes to `C[i] − C[j]` and the whole path product collapses to a
+**length-n per-key vector** `b[j] = −C[j]`. Dropping `C[i]` entirely changes the
+output by `1.353e-13` (relative `3.784e-14`) at float64, n = 1024, d = 64 over 3
+seeds, against a do-nothing control differing by `3.514e+00` (relative
+`9.827e-01`). The gate is emphatically not a no-op; the match is not trivial.
+
+**And it is not even a mask.** A per-key additive scalar folds into one extra
+head dimension — `q' = [q/√d, 1]`, `k' = [k, b_j]`, scale 1. Stock
+`F.scaled_dot_product_attention(is_causal=True, attn_mask=None)` then reproduces
+the graded carry to `1.353e-13` at float64, with no mask, no `score_mod` and no
+extra FLOPs. Reserving one of the existing 64 dimensions instead matches on the
+other 63 to `1.389e-13` against a control at `3.328e+00`. The graded carry is a
+**rank-1 key augmentation that FlashAttention already executes unmodified**.
+
+The constant-`u` case is ALiBi *literally*: `log G_ij = (i−j) log u` against
+ALiBi's `−m(i−j)` with `m = −log u = 0.030459` gives `0.000e+00` maximum
+deviation over 262,144 pairs at float64. ALiBi's own `−m·i` term is itself a
+per-row constant that cancels, so production ALiBi is a per-key vector too.
+
+**Cost is parity, which is the harder death.** The reserved-dimension carry runs
+4.82 ms against its shape-matched zeroed control at 4.84 ms — `0.996×` — and
+`1.084×` against plain causal SDPA at 4.44 ms, `+0.37 ms`, at n = 4096, d = 64,
+float32, CPU, flush-denormal on, interleaved min-of-9. Every larger figure in
+this cell was an artifact and each was isolated by name: a head dimension of 65
+costs 6.70× to tiling alone, non-interleaved timing 2.67×, a materialized n×n
+bias 4.18×, and a default-denormal tail 2.341× — 0.609% of live causal pairs land
+in the `exp(−104)..exp(−87.3)` band, where a magnitude-matched ALiBi ramp puts
+0.639% and pays 2.191×. GPUs flush subnormals by default.
+
+The binary cell died at 155.1× with a `+1905.1 ms` gap. This one dies at ~1×,
+which is worse: there is no cost gap to defend when there is no distinct
+computation.
+
+**Replacement route — retire the carry as a kernel, keep it as a frame.** What
+is established is worth stating at exactly its size: every graded multiplicative
+path-gate whose factor depends on a single token is exactly a per-key additive
+scalar under softmax, hence exactly one reserved head dimension in production
+attention, at `1.084×` plain causal SDPA. That places ALiBi, exponential decay
+and every learned scalar-gate decay in one family with a one-line implementation
+and a published price. It is a real unifying statement. It is not a new
+primitive, and claiming otherwise would be a false survival.
+
+**Where the collapse provably cannot reach.** The telescoping needs the carried
+object to be a *commuting scalar shared across rows*. A gate reading both query
+and key escapes it — the best separable fit `a[i] + c[k]` to `log u` leaves a
+maximum residual of `3.808e+00` over 65,536 entries at float64 — but it is then
+an arbitrary n×n score modification, which SDPA already accepts as `attn_mask`
+at `O(n²)` memory by construction. Escaping this way costs exactly the
+generality that made it a carry.
+
+The one live direction is a **non-commuting** carry: a matrix-valued transition
+`A_k`, so that `G_ij = A_i ··· A_{j+1}` has no scalar log to telescope. There
+"no additive analogue" would be true by construction. The honest rival is then
+not FlashAttention but DeltaNet and GLA, which already ship rank-1 and
+diagonal-plus-low-rank versions of exactly this — and a diagonal `A_k` commutes,
+so it collapses per channel just as the scalar case did. That cell is open at
+the time of writing.
 ---
 
 ## 4. The Chebyshev row
@@ -248,18 +325,44 @@ The row was then withdrawn on five defects, four of which were found after its
 numbers had already been reported.
 
 1. **Arm (a) had no phase to learn.** The imaginary half of the twist is
-   discarded bitwise. The row was not testing a learned phase.
+   discarded bitwise — amplifying `Im(twist)` by 1000× and adding an offset of
+   `5i` moves the output by exactly `0.000e+00`, against `max|Im(twist)| =
+   0.5324` and an output magnitude of `0.8912`. A rebuilt arm reproduces this
+   verbatim, so the defect is the parametrization and not the draw.
 2. **The two lanes implement different operators under one label.** The
    stationary lane rotates `q`/`k` pre-softmax; the chirp lane reweights
    post-softmax. The 0.130-nat stationary headline is not a learned-versus-fixed
    comparison and is quarantined as unreadable.
-3. **The floors are ±logit-pinned**, overstating margins 5–7×. Chirp last-value
-   calibrates to `0.5408`, not `1.3900`. Stationary FFT-linear calibrates to
-   `0.6725` — worse than chance, an anti-signal rather than a floor.
+3. **The floors are ±logit-pinned**, overstating margins 2.6–4.7×. Pinned to
+   calibrated: chirp last-value `1.3900 → 0.5407` (2.57×), chirp FFT-linear
+   `1.7298 → 0.5987` (2.89×), stationary last-value `1.7753 → 0.5293` (3.35×),
+   stationary FFT-linear `3.1910 → 0.6725` (4.74×). An earlier draft of this
+   page called the last of those *worse than chance, an anti-signal*. That is
+   wrong: its accuracy is `0.6012 > 0.5`, its best symmetric logit is `+0.4104`
+   and needs no flip, and chance on that bed is the class prior
+   `H(0.4801) = 0.6924` nats — so `0.6725` sits `0.0199` nats **below** chance.
+   It is a weak floor, not an anti-signal.
 4. **The headline gap is not significant.** Paired, `b − a` gives `t = −1.59`
    (51/80). Only `c − a` reaches significance at `t = −3.50` (58/80).
 5. **The two regimes ran at different widths** — `d_model=64, hidden=128` against
    `d_model=16, hidden=32`. Two beds, not one sweep.
+
+Defects 1, 2 and 5 are one defect seen three times. Real RoPE binds frequency
+`f` to the dimension pair `(2f, 2f+1)`, which is what makes a rotation a
+rotation. The chirp arm collapsed that binding into a scalar mean over `f` and
+then discarded the imaginary half, so it multiplies *post*-softmax weights by a
+real even Toeplitz kernel and its attention rows sum to `[0.4879, 1.0000]`
+rather than to 1. It is neither a rotation nor normalized, and calling it RoPE
+is what made the stationary and chirp lanes look comparable.
+
+A slot-order null cannot see any of this: a mean over `f` is symmetric in `f`,
+so permuting the slots is an algebraic no-op — `6.664e-08` at F=4 and
+`1.229e-07` at F=32, four orders below the noise floor set to judge it. The
+instrument is sound, not the arm: the same shuffle applied to the genuinely
+rotary stationary arm moves the output by `3.524e-03`. A null that does
+discriminate on this bed exists — resampling the frequency multiset costs
+`+0.0498` nats at F=4 (`t(4) = +2.35`) and `+0.0556` at F=32 (`t(4) = +4.39`,
+`p = 0.012`), worse on 5 of 5 seeds at both widths.
 
 ### The reroute
 
@@ -275,6 +378,12 @@ S6 ran, on **5 of 5 seeds at every budget**:
 
 for +32 parameters on 1,937. At the original 150-step budget it scores `0.3867`
 against the old winner's `0.4004`.
+
+Those figures belong to the 32-frequency arm. The `+4`-parameter and
+initialization arguments below rest on the **4-frequency** arm, which is a
+different measurement; an earlier draft of this page reported the two as one
+result. On a rebuilt bed the pre-registered reproduction bar fails at 150 steps
+by `0.0063` nats on every matched learned-versus-own-fixed pair.
 
 The effect is initialization, and parameter count is excluded by construction:
 `f_learn4_randinit` and `e_learn4_ropeinit` carry identical 1,941 parameters and
