@@ -664,6 +664,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../C9_NEVER_RESIDUE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Certificate C9: the NEVER residue
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1548,6 +1576,42 @@ the page, never in a silent edit (<code>CHARTER.md</code> §0, §7; <code>MISTAK
 <td>The absence proof published for the nine names the U1/N3 battery calls was the bare <code>git log -S</code> across all refs, recorded as returning zero commits. It returns hits: the audit's own recordings, and <code>def harmonic_measure(</code> in <code>scale/kirchhoff.py</code> since <code>22036de</code>, an unrelated function of that name.</td>
 <td>RUN 2026-09-11: <code>git log -S'absorbing_boundary_kernel' --all --oneline</code> returns 9 commits; <code>git log -S'def harmonic_measure(' --all --oneline -- '*.py' ':!tests/'</code> returns 3 (<code>scale/kirchhoff.py</code> and two Kaggle snapshot copies).</td>
 <td>The file-scoped search: <code>git log -S"def &lt;name&gt;(" --all --oneline -- scale/negation_scope.py</code> returns 0 for all nine names against 1 for the control <code>def nrmse(</code>; for the lead name, <code>-- "*.py" ":!tests/"</code> returns 0 against 3 for the control <code>def path_product(</code>. The verdict NO PRODUCER HAS EVER EXISTED stands.</td>
+<td>—</td>
+</tr>
+<tr>
+<td>C6</td>
+<td>2026-09-20</td>
+<td><code>08_ARCHITECTURE.md:66</code> (08.2 Statement, the <code>4</code> B/element branch)</td>
+<td>"<strong>At <span class="arithmatex">\(g\equiv0\)</span> the operator is built and stored real</strong> — the branch <code>if g == 0: return num.real / zb</code>" asserts a branch that does not exist in the module it cites; WITHDRAWN as a shipped fact and restated as a target.</td>
+<td>READ <code>ceq/arm_smprime.py::operator</code> (this session): <code>return torch.complex(num.real / zb, num.imag / zb)</code> unconditionally, no <code>if g == 0</code> anywhere in the function. READ <code>ceq/hf/modeling_ceq.py:487</code> — the shipped call site takes <code>.real</code> on the complex tensor <code>smprime_readout(...)</code> returns, AFTER the complex operator is built — a discard, not a branch. RUN this session (CPU, <code>n=32,d=8,g=0.0,beta=1.0,qk=1.0</code>): <code>operator(...)</code> dtype is <code>torch.complex128</code> at <code>16</code> B/element from float64 input, <code>torch.complex64</code> at <code>8</code> B/element from float32 input, against the verse's claimed <code>4</code>. Also RUN: <code>num.imag</code> is exactly <code>0</code> on every entry at <code>g=0</code> (<code>bool((num.imag == 0).all())</code> is <code>True</code> — <code>blend</code> forces <code>theta*g=0</code> and <code>gate</code>'s <code>torch.polar(1,0)</code> is exactly real, unlike <code>polar(1,pi)</code>'s <code>1.2246e-16</code>), and <code>torch.complex(num.real/zb, num.imag/zb)</code> is <code>torch.equal</code> to <code>num.real/zb</code> on the real part and to <code>num.imag/zb</code> on the imaginary part.</td>
+<td>The verse's own line 620 (08.21 Hypotheses) already states the true reading — <code>operator</code> is complex at every switch setting, the real branch is <code>NOT MEASURED</code>, and the complex residency rule (<span class="arithmatex">\(n\le15\)</span> at <span class="arithmatex">\(s=4096\)</span>) is the conservative one; line 66's branch sentence is struck and line 620 governs. Line 878's Repair entry ("All three edits made") is superseded in its first clause — the branch it claims was added to 08.2's Statement is not in <code>ceq/arm_smprime.py::operator</code>. The branch is measured a <strong>bitwise no-op for correctness</strong> (both parts <code>torch.equal</code> to the unconditional real-division read above); its only payoff is byte width, a separate optimization with its own measurement (one forward on the real path at <span class="arithmatex">\(g=0\)</span>), not a canon repair — NO REPLACEMENT PRE-WRITTEN for adding it.</td>
+<td>B-9's Repair (line 878), first clause only</td>
+</tr>
+<tr>
+<td>C7</td>
+<td>2026-09-20</td>
+<td><code>08_ARCHITECTURE.md:329</code> (08.13 Statement, the freeze)</td>
+<td>"<span class="arithmatex">\(g_h\equiv0\)</span> <strong>frozen, non-learnable, in the shipped module</strong> — not '<span class="arithmatex">\(0\)</span> at load'" is false on all three clauses in the module it names; WITHDRAWN.</td>
+<td>READ <code>ceq/hf/modeling_ceq.py:446</code> — <code>self.g = nn.Parameter(torch.tensor(float(config.smp_g)))</code>, a plain learnable Parameter. READ <code>ceq/hf/configuration_ceq.py:71</code> — <code>SMPRIME_CORNER = (1.0, 1.0, 1.0)</code>, so <code>config.smp_g</code> defaults to <strong>1.0, not 0</strong>. RUN <code>grep -n "requires_grad" ceq/hf/modeling_ceq.py ceq/arm_smprime.py</code> this session: 4 hits, all <code>beta_column</code>'s reporting fields (<code>modeling_ceq.py:711,712,728,843</code>) — no <code>requires_grad=False</code> on <code>g</code> in either file. READ <code>ceq/arm_smprime.py:632</code> — <code>self.g = nn.Parameter(torch.tensor(1.0))</code>, the arm's own corner, same value.</td>
+<td>NO REPLACEMENT PRE-WRITTEN. 08.2's own text states the blast radius — "If <span class="arithmatex">\(g\)</span> is ever unfrozen, none of those hypotheses hold" — naming <strong>08.3, 08.4, 08.7, 08.11 and 08.12</strong>, plus 08.2's own row-stochasticity sentence; this row states that their Hypotheses are unmet in the shipped module and does not re-derive them. The prerequisite for any restatement is the row-sum guard 08.2 already marks <code>NOT MEASURED — needs the complex row-sum instrument (book 03/04)</code>. Freezing <code>g</code> is not the repair: <code>requires_grad_(False)</code> on <code>self.g</code> would contradict <code>#5a</code>'s settable-switch requirement (<code>ceq/arm_smprime.py:608</code> docstring: "which is what <code>#5a</code> requires to be settable, and they are <code>nn.Parameter</code>s so the harness trains them"; <code>ceq/hf/modeling_ceq.py:442-443</code> comment: "<code>#5a</code> requires the three switches to be settable and the arm makes them trainable") and <code>SMPRIME_CORNER</code>'s own corner value.</td>
+<td>—</td>
+</tr>
+<tr>
+<td>C8</td>
+<td>2026-09-20</td>
+<td><code>docs/assets/resolvent.js:160</code> / <code>docs/index.md:494,515</code> / <code>site/assets/resolvent.js:160</code> (site prose and its interactive widget, not a canon book verse)</td>
+<td>"bf16 and float32 share the overflow wall at 88.72283935546875" was published as a single shared constant for both dtypes — WRONG on both the shared-wall claim and the constant itself, and repeated into <code>house-events.jsonl</code>, <code>MISTAKES.md</code>, and <code>tests/arm_smprime/test_bf16_ceiling.py</code> through the day.</td>
+<td>RUN this session, <code>torch 2.14.0+cpu</code>: <code>float(torch.finfo(torch.float32).max)</code> = <code>3.4028234663852886e+38</code>, log = <code>88.72283905206835</code>; <code>float(torch.finfo(torch.bfloat16).max)</code> = <code>3.3895313892515355e+38</code>, log = <code>88.71892521235186</code> — two different walls, disagreeing across the whole interval <code>[88.71892521235186, 88.72283905206835]</code>, and neither equal to the published <code>88.72283935546875</code>, which also matches no run in the tree (<code>house-events.jsonl:1791</code> carries a third value, <code>88.72283554077147</code>, itself wrong). Demonstrated: <code>torch.exp(torch.tensor(88.7215, dtype=torch.float32))</code> = <code>3.3982583016316987e+38</code> (finite); casting that same result <code>.to(torch.bfloat16)</code> reads <code>inf</code>.</td>
+<td>bf16 and float32 share an 8-bit exponent, which is why the range intuition was right that they would be close — but bf16 carries fewer mantissa bits, so its largest finite value rounds down smaller than float32's, and it overflows first, at <code>88.71892521235186</code> against float32's <code>88.72283905206835</code>. The surviving claim — bf16 does not widen the overflow ceiling — holds and is stronger than the retracted one: it does not merely fail to widen the ceiling, it narrows it.</td>
+<td>—</td>
+</tr>
+<tr>
+<td>C9</td>
+<td>2026-09-20</td>
+<td>site caption, "reproduced independently on a second draw, ratio 22.08x at D=64" (site prose, not a canon book verse)</td>
+<td>A caption carried a second-draw reproduction figure, ratio <code>22.08x</code> at <code>D=64</code>, with supporting arrays <code>2.1221/3.9995</code> through <code>2.8945/63.9008</code> — WITHDRAWN AS UNPRODUCED.</td>
+<td>SEARCHED this session: <code>git grep</code> and a tree-wide search for <code>22.08</code>, <code>2.1221</code>, <code>63.9008</code> return no hit in any tracked <code>.py</code>, <code>.md</code>, <code>.js</code>, <code>.html</code>, or notebook — the figure's only home was a throwaway command, never a file the repo runs.</td>
+<td>NO REPLACEMENT PRE-WRITTEN. The caption is struck, not re-derived; under the same rule as C3, a number with no producer in the tree is deleted, not replaced with another unproduced one.</td>
 <td>—</td>
 </tr>
 </tbody>
