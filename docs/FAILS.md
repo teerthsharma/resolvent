@@ -61,6 +61,52 @@ Assertions this repository made and then withdrew, with what killed each one.
   encoder satisfies it BETTER (`7.772e-16` vs `2.290e-13`). Recorded in
   `docs/ARCHITECTURE_OPTIONS.md:288-289`, which is untracked.
 
+- **"`exp` is never zero, so the attention family cannot represent a closed
+  class; an exact-zero gate can." RETRACTED 2026-09-20, by construction.**
+  Under a causal mask any row-stochastic matrix is lower-triangular, so its
+  eigenvalues are exactly its diagonal and "closed class" collapses to
+  `P_ii == 1.0`. A real sparsemax projection (Martins–Astudillo, sort-based,
+  not the identity shortcut) on logits `[10.0]`, `[0.5, 0.5]`, `[-5,-5,5]`,
+  `[-5,-5,0.5,0.5]` returns `diag(P) = [1.0, 0.5, 1.0, 0.5]` bitwise, and
+  `eigvals` gives `(1+0j)` with multiplicity 2. All 14 nonempty proper subsets
+  were checked with `det(I-Q)` computed twice — exact `Fraction` arithmetic and
+  float64 — agreeing bitwise on every one: 11 complements closed, 3 genuinely
+  transient. That 11-vs-3 split is what shows the test discriminates rather
+  than returning zero everywhere. A second construction gives six simultaneous
+  closed classes at `n=6`. The Lean theorems `softmax_unique_absorbing` and
+  `gate_zero_second_absorbing` remain true and both still typecheck at 0
+  `sorry`, but they bind `exp`-based scores only; sparsemax, entmax and top-k
+  routing are not built from `exp` and `Real.exp_pos` does not reach them.
+
+- **"A mask closes by position, a learned gate closes by content, and that
+  separates the two families." RETRACTED the same day.** The sparse-attention
+  family also produces exact, learned, content-dependent zeros at positions
+  unknown before the input arrives. Measured against a rival given every
+  advantage — hidden width 64 against the gate's 8, a feature handing it
+  segment identity almost directly, and a learning-rate sweep the gate did not
+  get — sparsemax **won** per-row boundary accuracy, `0.9919` against `0.9845`,
+  ahead on 3 of 5 seeds.
+
+- **"Cross-row disagreement is invisible at `k=1` and becomes a corridor under
+  composition." RETIRED 2026-09-20.** The leak does grow under powers, from
+  `0.000895` at `k=1` to `0.732453` at `k=8`, crossing its `0.0043` bar. But
+  the confinement the hypothesis requires is absent: sequences whose rows
+  *agree* leak `0.676408` at `k=8`, within `1.08×` of the disagreeing ones. That
+  is generic `A^k` mixing of a stochastic matrix, not a corridor at the
+  boundary. Separately, a **learned** gate is not bitwise zero under powers —
+  224 of 12,000 `(seed, k, row)` leak values are nonzero, in 4 of 5 seeds; only
+  the seed whose learned `m_b` happens to be exact survives all eight.
+
+  What survives, narrowed: a path product forces cross-row agreement
+  *structurally*, 1500 of 1500 held-out sequences exactly consistent against
+  sparsemax's 1352 of 1500, with a tail to spread 20 of 24 positions. It pays an
+  exactly enumerated price — `i` reachable zero patterns against sparsemax's
+  `2^i − 1`, every gate pattern a strict subset, `31.875×` at `i=8`. At `i=5`
+  sparsemax reaches support `{0, 2, 4}`, holes at 1 and 3, which no gate
+  configuration can produce, because one `m_k` multiplies every pair spanning
+  it. That measurement uses a **hand-set** boundary at a single application, and
+  is not evidence that a model can learn where to place the zero.
+
 ---
 
 ## 2. Currently broken
