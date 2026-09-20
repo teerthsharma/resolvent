@@ -1754,7 +1754,55 @@ repository.</p>
   encoder satisfies it BETTER (<code>7.772e-16</code> vs <code>2.290e-13</code>). Recorded in
   <code>docs/ARCHITECTURE_OPTIONS.md:288-289</code>, which is untracked.</p>
 </li>
+<li>
+<p><strong>"<code>exp</code> is never zero, so the attention family cannot represent a closed
+  class; an exact-zero gate can." RETRACTED 2026-09-20, by construction.</strong>
+  Under a causal mask any row-stochastic matrix is lower-triangular, so its
+  eigenvalues are exactly its diagonal and "closed class" collapses to
+  <code>P_ii == 1.0</code>. A real sparsemax projection (Martins–Astudillo, sort-based,
+  not the identity shortcut) on logits <code>[10.0]</code>, <code>[0.5, 0.5]</code>, <code>[-5,-5,5]</code>,
+  <code>[-5,-5,0.5,0.5]</code> returns <code>diag(P) = [1.0, 0.5, 1.0, 0.5]</code> bitwise, and
+  <code>eigvals</code> gives <code>(1+0j)</code> with multiplicity 2. All 14 nonempty proper subsets
+  were checked with <code>det(I-Q)</code> computed twice — exact <code>Fraction</code> arithmetic and
+  float64 — agreeing bitwise on every one: 11 complements closed, 3 genuinely
+  transient. That 11-vs-3 split is what shows the test discriminates rather
+  than returning zero everywhere. A second construction gives six simultaneous
+  closed classes at <code>n=6</code>. The Lean theorems <code>softmax_unique_absorbing</code> and
+  <code>gate_zero_second_absorbing</code> remain true and both still typecheck at 0
+  <code>sorry</code>, but they bind <code>exp</code>-based scores only; sparsemax, entmax and top-k
+  routing are not built from <code>exp</code> and <code>Real.exp_pos</code> does not reach them.</p>
+</li>
+<li>
+<p><strong>"A mask closes by position, a learned gate closes by content, and that
+  separates the two families." RETRACTED the same day.</strong> The sparse-attention
+  family also produces exact, learned, content-dependent zeros at positions
+  unknown before the input arrives. Measured against a rival given every
+  advantage — hidden width 64 against the gate's 8, a feature handing it
+  segment identity almost directly, and a learning-rate sweep the gate did not
+  get — sparsemax <strong>won</strong> per-row boundary accuracy, <code>0.9919</code> against <code>0.9845</code>,
+  ahead on 3 of 5 seeds.</p>
+</li>
+<li>
+<p><strong>"Cross-row disagreement is invisible at <code>k=1</code> and becomes a corridor under
+  composition." RETIRED 2026-09-20.</strong> The leak does grow under powers, from
+  <code>0.000895</code> at <code>k=1</code> to <code>0.732453</code> at <code>k=8</code>, crossing its <code>0.0043</code> bar. But
+  the confinement the hypothesis requires is absent: sequences whose rows
+  <em>agree</em> leak <code>0.676408</code> at <code>k=8</code>, within <code>1.08×</code> of the disagreeing ones. That
+  is generic <code>A^k</code> mixing of a stochastic matrix, not a corridor at the
+  boundary. Separately, a <strong>learned</strong> gate is not bitwise zero under powers —
+  224 of 12,000 <code>(seed, k, row)</code> leak values are nonzero, in 4 of 5 seeds; only
+  the seed whose learned <code>m_b</code> happens to be exact survives all eight.</p>
+</li>
 </ul>
+<p>What survives, narrowed: a path product forces cross-row agreement
+  <em>structurally</em>, 1500 of 1500 held-out sequences exactly consistent against
+  sparsemax's 1352 of 1500, with a tail to spread 20 of 24 positions. It pays an
+  exactly enumerated price — <code>i</code> reachable zero patterns against sparsemax's
+  <code>2^i − 1</code>, every gate pattern a strict subset, <code>31.875×</code> at <code>i=8</code>. At <code>i=5</code>
+  sparsemax reaches support <code>{0, 2, 4}</code>, holes at 1 and 3, which no gate
+  configuration can produce, because one <code>m_k</code> multiplies every pair spanning
+  it. That measurement uses a <strong>hand-set</strong> boundary at a single application, and
+  is not evidence that a model can learn where to place the zero.</p>
 <hr />
 <h2 id="2-currently-broken">2. Currently broken<a class="headerlink" href="#2-currently-broken" title="Permanent link">#</a></h2>
 <p>Reproduced directly against this tree while writing this file. Commands,
