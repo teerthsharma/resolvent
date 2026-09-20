@@ -78,3 +78,10 @@ docs/CEQ_JEPA_PLAN.md
 
 # MkDocs build output; the site is deployed to the gh-pages branch by `mkdocs gh-deploy`.
 site/
+
+# session exhaust: collect dumps, coverage artefacts, one-off run results
+.coverage_two
+bounded_run_result.json
+errors_list.txt
+full_collect.txt
+pytest_collect.txt

@@ -65,10 +65,23 @@ import pytest
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 
 # The importer and a shadowing file from a different test directory. Both are
-# tracked; neither is a fixture of this test. Chosen because tests/w6/conftest.py
-# is a bare pytest.fixture shim with none of tests/chase/conftest.py's symbols.
+# tracked; neither is a fixture of this test.
+#
+# SHADOWER was tests/w6/test_w6_attention.py. `git show --stat -M 228a048` shows
+# that commit MOVED it to attic/tests/w6/test_w6_attention.py (a rename, not the
+# delete an earlier report claimed from running --diff-filter=D without -M), and
+# c71527a then deleted the attic copy outright (`git show --stat c71527a` shows
+# `attic/tests/w6/test_w6_attention.py | 252 -------`). It exists at neither path
+# now, so `shadower_path()`'s attic fallback below can never find it again --
+# retargeting the constant, not extending the fallback, is the fix. Retargeted to
+# tests/w2/test_w2_nonnormal.py: tests/w2/conftest.py is the same shape tests/w6's
+# was, a bare pytest.fixture shim with none of tests/chase/conftest.py's symbols,
+# and it is the cheapest live candidate measured -- `pytest tests/w2/test_w2_nonnormal.py
+# --collect-only -q` read 0.18s against 20 other directories checked the same way,
+# all between 0.97s and 2.92s -- cheap collection being the property this guard
+# was built to keep (see THE ROUTE above).
 IMPORTER = "tests/chase/test_kernel_contracts.py"
-SHADOWER = "tests/w6/test_w6_attention.py"
+SHADOWER = "tests/w2/test_w2_nonnormal.py"
 
 def bare_conftest_importers() -> list[str]:
     """Every tracked test file that reaches `conftest` as a plain module.
@@ -102,6 +115,36 @@ def bare_conftest_importers() -> list[str]:
 BARE_CONFTEST_IMPORTERS = bare_conftest_importers()
 
 
+def test_the_scanner_still_recognizes_a_bare_conftest_import():
+    """Canary for the REGEX, not the tree. Read this before trusting a zero.
+
+    BARE_CONFTEST_IMPORTERS is empty right now. That is a real count: the seven
+    files it used to find -- `test_ceq_hub_package.py`, `test_hf_shipping.py`,
+    `test_hub_package_hardening.py`, `test_kernel_contracts.py`,
+    `test_rollback_flex_attention.py`, `test_schedule_rebuild.py`,
+    `test_stochastic_P.py`, all still bare-importing `conftest` at HEAD -- were
+    rewritten on disk (uncommitted) to import `tests/chase/_chase_env.py`
+    instead, a module name no other test directory defines, so it cannot be
+    shadowed the way `conftest` was. Grepping the tracked tree for
+    `^\\s*(from conftest import|import conftest)` outside `attic/` and this
+    file's own docstring confirms zero hits. That is coverage correctly
+    reporting a fixed tree, not coverage lost.
+
+    But an empty parametrize list looks IDENTICAL whether the tree is clean or
+    the regex itself broke -- pytest reports one `[NOTSET]` skip either way,
+    so a typo'd pattern would sit there silently agreeing with a clean tree
+    forever. This runs `bare_conftest_importers`'s own pattern against a
+    string built to trip it, so a future zero keeps meaning "the tree has no
+    offenders" instead of "the scanner stopped looking."
+    """
+    live_sample = "import torch\n    from conftest import run_isolated\n"
+    assert re.search(r"^\s*(from conftest import|import conftest)", live_sample, re.M), (
+        "the bare-import pattern no longer matches a known-bad line -- an "
+        "empty BARE_CONFTEST_IMPORTERS would silently mean nothing. Fix the "
+        "regex in bare_conftest_importers() before trusting a zero from it."
+    )
+
+
 def collect(*rel_paths: str) -> subprocess.CompletedProcess[str]:
     """Run pytest's collector only. No test body executes, so this is cheap.
 
@@ -124,8 +167,34 @@ def collect(*rel_paths: str) -> subprocess.CompletedProcess[str]:
     )
 
 
+def require_fixture(rel_path: str) -> None:
+    """Fail as a MISSING FIXTURE, by name, before `collect()` can misreport it as a collision.
+
+    THE FALSE RED THIS GUARDS AGAINST. `collect()` hands pytest a path that does not
+    exist and pytest reports "file or directory not found", returncode 4. The two
+    assertions that used to call `collect()` directly could not tell that apart from
+    a genuine conftest binding collision (also a nonzero returncode) and asserted the
+    collision message either way -- so `test_the_shadowing_file_collects_when_it_is_alone`
+    and `test_collecting_the_pair_together_does_not_break_the_import` both read
+    "`conftest` bound to the wrong directory" while the real stderr said
+    `ERROR: file or directory not found: ...\\tests\\w6\\test_w6_attention.py`, rc=4.
+    Whoever reads that failure next goes looking for an import-shadowing bug that
+    is not there. Checking existence first, and failing here with the absent path
+    named, keeps the two defects from being reported as each other.
+    """
+    if resolve(rel_path) is None:
+        pytest.fail(
+            f"MISSING FIXTURE, not a binding collision: {rel_path} resolves to no "
+            "file, at its own path or under attic/. A subprocess collect against a "
+            "path that does not exist returns nonzero for that reason alone -- "
+            "restore the file, retarget the constant that names it, or retire the "
+            "test that needs it before trusting a red from collect() here."
+        )
+
+
 def test_the_importer_collects_when_it_is_alone():
     """Premise bind. If this fails the file is broken outright and the pair test proves nothing."""
+    require_fixture(IMPORTER)
     r = collect(IMPORTER)
     assert r.returncode == 0, f"{IMPORTER} does not collect even alone:\n{r.stdout[-2000:]}"
 
@@ -133,14 +202,19 @@ def test_the_importer_collects_when_it_is_alone():
 def shadower_path() -> str:
     """The shadower at its own path, or where iteration 4's attic move put it.
 
-    `tests/w6/test_w6_attention.py` was one of the 33 rows retired at iteration 4,
-    so immediately after the move this premise bind failed -- correctly, and that is
-    what a premise bind is for: it reported that its own precondition had moved
-    rather than passing on a file that was no longer there.
+    `tests/w6/test_w6_attention.py` (the SHADOWER before this constant was
+    retargeted) was one of the 33 rows retired at iteration 4, so immediately after
+    the move this premise bind failed -- correctly, and that is what a premise bind
+    is for: it reported that its own precondition had moved rather than passing on
+    a file that was no longer there. c71527a then deleted the attic copy outright,
+    so for that specific path the fallback below now finds nothing either -- SHADOWER
+    was retargeted to a live file instead of teaching this function a third place to
+    look for one that is gone from the tree.
 
-    The defect it supports is unchanged by the retirement. Any `tests/w6` file whose
-    conftest lacks `run_isolated` shadows `tests/chase`'s when both are collected in
-    one command, retired or not, because pytest inserts the collected file's
+    The fallback itself stays: the defect this test supports is unchanged by a future
+    retirement of WHATEVER file SHADOWER names. Any test file, in a directory whose
+    conftest lacks `run_isolated`, shadows `tests/chase`'s when both are collected in
+    one command, retired-to-attic or not, because pytest inserts the collected file's
     directory onto `sys.path` either way.
     """
     for candidate in (SHADOWER, f"attic/{SHADOWER}"):
@@ -151,17 +225,25 @@ def shadower_path() -> str:
 
 def test_the_shadowing_file_collects_when_it_is_alone():
     """Premise bind, other half. Neither file is individually broken."""
-    r = collect(shadower_path())
-    assert r.returncode == 0, f"{shadower_path()} does not collect even alone:\n{r.stdout[-2000:]}"
+    path = shadower_path()
+    require_fixture(path)
+    r = collect(path)
+    assert r.returncode == 0, f"{path} does not collect even alone:\n{r.stdout[-2000:]}"
 
 
 def test_collecting_the_pair_together_does_not_break_the_import():
     """THE DEFECT. Two files that each collect alone must collect together.
 
     Red while `conftest` resolves through sys.path; green once the shared symbols
-    live in a module whose name is not claimed by 24 other directories.
+    live in a module whose name is not claimed by 24 other directories. Both
+    fixtures are checked to exist before `collect()` runs, so a red here is that
+    collision and not the missing-file rc=4 `collect()` cannot tell apart on its
+    own -- see `require_fixture`.
     """
-    r = collect(IMPORTER, shadower_path())
+    path = shadower_path()
+    require_fixture(IMPORTER)
+    require_fixture(path)
+    r = collect(IMPORTER, path)
     assert r.returncode == 0, (
         "collecting two individually-collectable files together fails.\n"
         "`conftest` bound to the wrong directory:\n" + r.stdout[-2000:]

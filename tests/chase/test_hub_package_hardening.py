@@ -649,7 +649,7 @@ def test_the_gate_registers_both_the_attention_and_its_mask(device):
 def test_the_smoke_test_passes_on_a_cuda_free_interpreter(device):
     """One command, CPU only, no Triton, no network. Run in a fresh interpreter
     with CUDA hidden, because that is the machine that downloads this."""
-    from conftest import run_isolated
+    from _chase_env import run_isolated
     rc, out, err = run_isolated("""
         import os, subprocess, sys
         os.environ["CUDA_VISIBLE_DEVICES"] = ""

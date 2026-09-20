@@ -226,6 +226,7 @@ import os
 import pickle
 import sys
 import time
+import zlib
 
 import numpy as np
 import torch
@@ -645,6 +646,8 @@ def race(n_test=100, n_train=20, epochs=EPOCHS, seed=SEED, floor=gf.FLOOR,
         opt = torch.optim.Adam(net.parameters(), lr=LR)
         order = np.random.default_rng(seed).permutation(
             np.tile(np.arange(n_train), epochs))
+        order_crc = zlib.crc32(order.tobytes())
+        run_key = [seed, n_train, epochs, pool]
         curve = []
         # RESUME, AND WHY IT CHANGES NO NUMBER. `order` is drawn from the seed
         # and not from the process, the init is seeded, and Adam's whole state
@@ -660,7 +663,14 @@ def race(n_test=100, n_train=20, epochs=EPOCHS, seed=SEED, floor=gf.FLOOR,
             net.load_state_dict(st["net"])
             opt.load_state_dict(st["opt"])
             curve, done = st["curve"], st["step"]
-            assert st["order_hash"] == int(order.sum()), "resumed a different run"
+            for field, want, got in zip(
+                    ("seed", "n_train", "epochs", "pool"), run_key, st["key"]):
+                assert want == got, (
+                    "resumed a different run: %s was %r here, %r in the "
+                    "checkpoint" % (field, want, got))
+            assert st["order_crc"] == order_crc, (
+                "resumed a different run: order_crc was %r here, %r in the "
+                "checkpoint" % (order_crc, st["order_crc"]))
             if verbose:
                 print("  %s RESUMED at step %d/%d" % (name, done, order.size),
                       flush=True)
@@ -681,15 +691,34 @@ def race(n_test=100, n_train=20, epochs=EPOCHS, seed=SEED, floor=gf.FLOOR,
                 tmp = cpath + ".tmp"
                 torch.save(dict(net=net.state_dict(), opt=opt.state_dict(),
                                 curve=curve, step=step + 1,
-                                order_hash=int(order.sum())), tmp)
+                                order_crc=order_crc, key=run_key), tmp)
                 os.replace(tmp, cpath)
         nets[name] = (net, dpt, h, npar, glob)
         losses[name] = [float(np.mean(curve[:20])), float(np.mean(curve[-40:]))]
 
+    # ---- THE MANDATORY CONTROL: same architecture and parameter count as
+    # attn-2, weights never updated, eval-only. ceilings() already supplies
+    # the trivial baseline ON THE TARGET (marginal/lookup/heuristic); this is
+    # the other half -- a trivial baseline ON THE MODEL. If an untrained arm
+    # scores near a trained one, the metric is not measuring training and
+    # every trained-arm number above is void, so this runs whenever the
+    # trained arms do, at no optimiser cost.
+    if train_stacks:
+        h, npar = width_for(2, f, budget=budget, use_global=False)
+        torch.manual_seed(seed)
+        frozen = Stack(2, h, f, False).eval()
+        for p in frozen.parameters():
+            p.requires_grad_(False)
+        nets["frozen-random"] = (frozen, 2, h, npar, False)
+        losses["frozen-random"] = [float("nan"), float("nan")]
+
     # ---- ONE pass over the unseen goals, every arm scored on the same rows --
-    names = ["solve"] + ["trunc-%d" % d for d in DEPTHS] + [c[0] for c in cfg]
+    names = (["solve"] + ["trunc-%d" % d for d in DEPTHS] + [c[0] for c in cfg]
+             + (["frozen-random"] if train_stacks else []))
     depth_of = dict({"solve": 1}, **{"trunc-%d" % d: d for d in DEPTHS})
     depth_of.update({c[0]: c[1] for c in cfg})
+    if train_stacks:
+        depth_of["frozen-random"] = 2
     sc = {n: Score(depth_of[n]) for n in names}
     sc_tr = {n: Score(depth_of[n]) for n in names}
     hop_far = {d: 0.0 for d in DEPTHS}
@@ -728,8 +757,11 @@ def race(n_test=100, n_train=20, epochs=EPOCHS, seed=SEED, floor=gf.FLOOR,
             _, dpt, h, npar, glob = nets[nm]
             extra = dict(n_params=npar, width=h, loss_first=losses[nm][0],
                          loss_last=losses[nm][1],
-                         note=("global token: breaks one-hop-per-layer" if glob
-                               else "%d hops of P" % dpt))
+                         note=("untrained control: eval-only, weights never "
+                               "updated, same architecture as attn-2"
+                               if nm == "frozen-random"
+                               else "global token: breaks one-hop-per-layer"
+                               if glob else "%d hops of P" % dpt))
         else:
             extra = dict(n_params=2, note=("one triangular solve" if nm == "solve"
                                            else "exact %s-hop truncation"
@@ -754,9 +786,11 @@ def race(n_test=100, n_train=20, epochs=EPOCHS, seed=SEED, floor=gf.FLOOR,
 
 
 def demo(n_test=100, n_train=20, epochs=EPOCHS, seed=SEED, verbose=False,
-         budget=PARAM_BUDGET, depths=DEPTHS):
+         budget=PARAM_BUDGET, depths=DEPTHS, train_stacks=True, pool=None,
+         ckpt=None, cache=None, with_global=True):
     r = race(n_test, n_train, epochs, seed, verbose=verbose, budget=budget,
-             depths=depths)
+             depths=depths, train_stacks=train_stacks, pool=pool, ckpt=ckpt,
+             cache=cache, with_global=with_global)
     print("PROVENANCE     python -m ceqjepa.depth_race --draws %d --train %d "
           "--epochs %d   seed=%d  floor=%s"
           % (n_test, n_train, epochs, seed, r["floor"]))
@@ -789,7 +823,10 @@ def demo(n_test=100, n_train=20, epochs=EPOCHS, seed=SEED, verbose=False,
     return r
 
 
-if __name__ == "__main__":
+def _cli(argv=None):
+    """Split out from `__main__` so a test can drive the parser without
+    spawning a subprocess. Every flag's default matches `race`'s own, so
+    running with none of the new ones changes no recorded run's meaning."""
     ap = argparse.ArgumentParser()
     ap.add_argument("--draws", type=int, default=100)
     ap.add_argument("--train", type=int, default=20)
@@ -798,7 +835,20 @@ if __name__ == "__main__":
     ap.add_argument("--verbose", action="store_true")
     ap.add_argument("--budget", type=int, default=PARAM_BUDGET)
     ap.add_argument("--depths", type=int, nargs="*", default=list(DEPTHS))
-    a = ap.parse_args()
-    demo(a.draws, a.train, a.epochs, a.seed, a.verbose,
-         budget=a.budget, depths=tuple(a.depths))
+    ap.add_argument("--pool", type=int, default=None)
+    ap.add_argument("--ckpt", default=None)
+    ap.add_argument("--cache", default=None)
+    ap.add_argument("--train-stacks", action=argparse.BooleanOptionalAction,
+                     default=True)
+    ap.add_argument("--with-global", action=argparse.BooleanOptionalAction,
+                     default=True)
+    a = ap.parse_args(argv)
+    return demo(a.draws, a.train, a.epochs, a.seed, a.verbose,
+                budget=a.budget, depths=tuple(a.depths), pool=a.pool,
+                ckpt=a.ckpt, cache=a.cache, train_stacks=a.train_stacks,
+                with_global=a.with_global)
+
+
+if __name__ == "__main__":
+    _cli()
     sys.exit(0)

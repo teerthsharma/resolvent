@@ -79,6 +79,7 @@ import os
 for _v in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS"):
     os.environ.setdefault(_v, "1")
 
+import math
 import subprocess
 import sys
 import time
@@ -90,6 +91,10 @@ import scipy.linalg as sla
 # (Lq)_i = 0 on the interior with q = 0 on A and q = 1 on B, by a dense LU.
 # With L = P - I that is exactly q = Pq on the transient set.
 from ceq.beds.bed_1 import committor as exact_committor
+
+# The cross-entropy identity, imported rather than reimplemented: `score()`
+# below scores a committor against REALIZED absorption labels through this.
+from ceqjepa import sharpness
 
 D_STATES = 16
 A_SET = [0, 1]          # absorbing, q = 0
@@ -277,6 +282,176 @@ def monte_carlo_committor(P, transient, B, n_paths=4000, seed=SEED + 3, max_step
             raise AssertionError("%d paths from %d never absorbed" % ((~done).sum(), i))
         out[i] = in_B[cur].mean()
     return out
+
+
+# ---------------------------------------------------------------------------
+# the estimated operator, scored against REALIZED labels (round two). No arm
+# below is ever handed P: `simulate` emits the observed stream, an estimator
+# reads it, the exact solve pushes the read through -- the labels come from
+# the environment, not from the operator.
+# ---------------------------------------------------------------------------
+
+def rollout_labels(P, transient, B, n, seed, max_steps=20000):
+    """n rollouts of the TRUE chain from uniform transient starts, kept PER
+    PATH -- the same vectorized cdf/searchsorted rollout `monte_carlo_committor`
+    already runs, minus the average it discards the outcome into.
+    y = 1 iff the path absorbed into B."""
+    rng = np.random.default_rng(seed)
+    cdf = np.cumsum(P, axis=1)
+    absorbing = np.where(np.diag(P) == 1.0)[0]
+    in_B = np.zeros(P.shape[0], dtype=bool)
+    in_B[B] = True
+    start = rng.choice(transient, size=n)
+    cur, done = start.copy(), np.zeros(n, dtype=bool)
+    for _ in range(max_steps):
+        live = ~done
+        if not live.any():
+            break
+        u = rng.random(int(live.sum()))
+        cur[live] = (cdf[cur[live]] < u[:, None]).sum(1)
+        done |= np.isin(cur, absorbing)
+    if not done.all():
+        raise AssertionError("%d/%d rollouts never absorbed" % (int((~done).sum()), n))
+    return start, in_B[cur].astype(np.int64)
+
+
+def _read(qvec, start, y, eps):
+    """qvec is a committor (P(absorb into B)); q = [1-p, p] against the
+    REALIZED absorption y is the K=2 simplex read the prediction row is a
+    solve of. Shared by `score` and `stream_se`, which need different slices
+    of the same (q, y)."""
+    p = np.clip(np.asarray(qvec)[start], eps, 1.0 - eps)
+    return np.stack([1.0 - p, p], axis=1), np.asarray(y, dtype=np.int64)
+
+
+def score(qvec, start, y, eps=1e-6, construction_property=False):
+    """(qvec[start], y) as the K=2 read sharpness.py's identity is built for
+    -- imported, not reimplemented.
+
+    `construction_property` (C4 item 4, carrying C1's live gap forward):
+    propagates sharpness.py's own ASSAY C1 tag into `decompose`'s dict. The
+    oracle committor (q from the TRUE P, given not fit -- see section (10)'s
+    call) is tagged True; every fit arm (RLS, Hebbian, shuffled, rank-r)
+    stays at the default False. When True, `passes_bar`/`kill_fired` below
+    are called anyway -- not skipped -- so the guard actually runs on this
+    LIVE figure rather than being dodged; `ConstructionPropertyAsBarError`
+    is caught here and reported as `guard_fired`, with `passes_bar` and
+    `kill_fired` coming back None rather than a verdict the guard just
+    refused to give. This is the first call site outside sharpness.py's own
+    synthetic self-check (case (g)) where that guard fires on something
+    real; see also demo()'s section (11), where it is called again on real
+    fit arms and correctly does NOT fire.
+    """
+    q, y = _read(qvec, start, y, eps)
+    d = sharpness.decompose(q, y, 2, construction_property=construction_property)
+    se = sharpness.bootstrap_se(q, y, 2)
+    try:
+        passes_bar, kill_fired, guard_fired = (
+            sharpness.passes_bar(d, se), sharpness.kill_fired(d, se), False)
+    except sharpness.ConstructionPropertyAsBarError:
+        passes_bar, kill_fired, guard_fired = None, None, True
+    return dict(d, **se,
+                margin_sigma=sharpness.margin_sigma(d, se),
+                passes_bar=passes_bar,
+                kill_fired=kill_fired,
+                guard_fired=guard_fired,
+                accuracy=float((q.argmax(1) == y).mean()))
+
+
+def rls_committor(bed, E, T, seed, shuffle=False):
+    """Fit RLS on one T-transition stream (optionally with dst permuted -- a
+    zero-information negative control) and push the decode through the exact
+    solve. `bed` is build_chain(...)'s dict, `E` build_embedding(...)'s array."""
+    src, dst = simulate(bed["P"], T, bed["transient"], bed["absorbing"], seed=seed)
+    if shuffle:
+        dst = np.random.default_rng(seed + 999_999).permutation(dst)
+    K, V = E[:, src].T, E[:, dst].T
+    P_hat, _ = decode(rls_sherman_morrison(K, V), E)
+    q, _ = solve_committor(P_hat, bed["A"], bed["B"])
+    return q
+
+
+# ---------------------------------------------------------------------------
+# C4 (round two): the opponent condition, replaced. C4-as-written demanded
+# mle_gap > 0 before any number may be read; that RED is struck because
+# line 526 below already asserts mle_gap < 1e-6 for the RLS arm, correctly
+# -- mle_gap measures whether an estimator IS the empirical MLE D^-1 N, not
+# whether it has estimation error against the true operator (op_err_D,
+# reported separately, is positive at finite T regardless). The replacement:
+# an arm is an OPPONENT only when it CANNOT represent the MLE -- strictly
+# fewer free parameters than the unconstrained D_STATES x D_STATES table.
+# ---------------------------------------------------------------------------
+
+def free_params(rank: int, d: int = D_STATES) -> int:
+    """Free-parameter count of a rank-`rank` factorisation of a d x d
+    operator estimate: U (d x rank) and V (d x rank) minus the GL(rank)
+    reparametrisation freedom, i.e. rank*(2*d - rank). At rank == d this is
+    exactly d*d, the unconstrained transition table -- a full-rank arm buys
+    no capacity reduction no matter how it was fit."""
+    r = int(rank)
+    if not 0 <= r <= d:
+        raise ValueError("rank must be in [0, d], got %d" % r)
+    return r * (2 * d - r)
+
+
+def is_capacity_opponent(rank: int, d: int = D_STATES) -> bool:
+    """C4's admission condition: True iff an arm at this rank has strictly
+    fewer free parameters than the unconstrained d*d table, i.e. it CANNOT
+    represent the empirical MLE. This is independent of mle_gap: a full-rank
+    arm can have mle_gap == 0.0 (it IS the MLE) and still be refused here,
+    because refusal is about representational capacity, not about which
+    point in that capacity the fit happened to land on."""
+    return free_params(rank, d) < d * d
+
+
+def rank_r_committor(bed, E, T, seed, rank, shuffle=False):
+    """The admitted opponent: RLS's own fitted operator S_D, truncated to
+    `rank` by SVD before decode -- same stream, same decode, same exact
+    solve as `rls_committor`. At rank == E.shape[0] this reduces to the
+    untruncated RLS arm (free_params == d*d, refused by
+    `is_capacity_opponent`). Returns (q, P_hat) so op_err_D = max|P_hat-P|
+    over transient rows can be read at the caller without refitting."""
+    src, dst = simulate(bed["P"], T, bed["transient"], bed["absorbing"], seed=seed)
+    if shuffle:
+        dst = np.random.default_rng(seed + 999_999).permutation(dst)
+    K, V = E[:, src].T, E[:, dst].T
+    S = rls_sherman_morrison(K, V)
+    d = E.shape[0]
+    if rank < d:
+        U, s, Vt = np.linalg.svd(S)
+        S = (U[:, :rank] * s[:rank]) @ Vt[:rank]
+    P_hat, _ = decode(S, E)
+    q, _ = solve_committor(P_hat, bed["A"], bed["B"])
+    return q, P_hat
+
+
+def stream_se(seed, n_streams=12, T=10_000, shuffle=False, n_holdout=20_000):
+    """The decision SE for a FIT arm. Chain, embedding and the held-out
+    rollout are PINNED; only the T-transition stream is redrawn, n_streams
+    times, RLS refit every time; returns the SD of the margin across streams.
+
+    Not the item bootstrap: bootstrap_se resamples ITEMS at one fixed q-hat,
+    which is blind to the noise of FITTING that q-hat -- the dominant term
+    for any arm whose read is estimated rather than given. Each refit needs
+    only its point margin (decompose, no bootstrap): the SD across streams IS
+    the SE this function exists to supply, so re-bootstrapping every refit
+    would spend 200x the work computing a number this function discards.
+    """
+    bed = build_chain(seed)
+    E = build_embedding(cond=10.0, seed=seed + 1)
+    start, y = rollout_labels(bed["P"], bed["transient"], bed["B"], n_holdout, seed=seed + 500)
+    margins = np.empty(n_streams)
+    for i in range(n_streams):
+        qvec = rls_committor(bed, E, T, seed=seed + 1000 + i, shuffle=shuffle)
+        q, yy = _read(qvec, start, y, eps=1e-6)
+        margins[i] = sharpness.decompose(q, yy, 2)["margin"]
+    return float(np.std(margins, ddof=1))
+
+
+def sigma_total(margin, se_item, sd_stream):
+    """The decision rule for a FIT arm: item SE and across-stream SD combined
+    in quadrature. Nothing else."""
+    return margin / math.sqrt(se_item ** 2 + sd_stream ** 2)
 
 
 # ---------------------------------------------------------------------------
@@ -480,6 +655,83 @@ def demo() -> None:
         tm = timings(n=n, reps=reps)
         print("    n = %3d, %4d reps: LU %8.3f us, triangular %8.3f us, ratio %.2fx"
               % (tm["n"], tm["reps"], tm["lu_us"], tm["tri_us"], tm["ratio"]))
+
+    print("\n(10) THE ESTIMATED OPERATOR AGAINST REALIZED LABELS -- the prediction row")
+    print("     PINNED: chain, embedding, held-out rollout. VARIED: which arm reads the stream.")
+    print("     NOT the oracle rows above -- q_star here scores the TRUE P, which is given, "
+          "not fit;\n     it is reported for the capture ratio, never as a prediction-row win.")
+    bed10 = build_chain(SEED)
+    E10 = build_embedding(cond=10.0, seed=SEED + 1)
+    start10, y10 = rollout_labels(bed10["P"], bed10["transient"], bed10["B"], 20_000, seed=SEED + 500)
+    q_star10, _ = solve_committor(bed10["P"], bed10["A"], bed10["B"])
+    q_D10 = rls_committor(bed10, E10, T_DEFAULT, seed=SEED + 2, shuffle=False)
+    src2, dst2 = simulate(bed10["P"], T_DEFAULT, bed10["transient"], bed10["absorbing"], seed=SEED + 2)
+    P_H10, _ = decode(hebbian(E10[:, src2].T, E10[:, dst2].T), E10)
+    q_H10, _ = solve_committor(P_H10, bed10["A"], bed10["B"])
+    q_shuf10 = rls_committor(bed10, E10, T_DEFAULT, seed=SEED + 2, shuffle=True)
+
+    # q_star10 is the TRUE P's committor, given not fit: ASSAY C1's own
+    # construction-property class (C4 item 4). Tagged and scored separately
+    # so the guard runs on it for real, rather than sharing the untagged
+    # call the three genuine fit arms use.
+    d_star = score(q_star10, start10, y10, construction_property=True)
+    d_D, d_H, d_shuf = (score(q, start10, y10) for q in (q_D10, q_H10, q_shuf10))
+    sd_D, sd_shuf = stream_se(SEED, shuffle=False), stream_se(SEED, shuffle=True)
+    sig_D = sigma_total(d_D["margin"], d_D["se_margin"], sd_D)
+    sig_shuf = sigma_total(d_shuf["margin"], d_shuf["se_margin"], sd_shuf)
+
+    for name, d in (("true P (oracle)", d_star), ("RLS", d_D), ("Hebbian", d_H), ("shuffled", d_shuf)):
+        print("    %-16s margin %+.4f +/- %.4f (item)  sigma_item %+.1f  acc %.4f"
+              % (name, d["margin"], d["se_margin"], d["margin_sigma"], d["accuracy"]))
+    print("    RLS      sd_stream(12 refits) = %.4f  sigma_total = %+.1f" % (sd_D, sig_D))
+    print("    shuffled sd_stream(12 refits) = %.4f  sigma_total = %+.1f" % (sd_shuf, sig_shuf))
+    print("    capture ratio (margin_RLS / margin_oracle) = %.3f  |  mle_gap = %.1f (RLS is the empirical MLE)"
+          % (d_D["margin"] / d_star["margin"], 0.0))
+    print("    oracle score guard_fired = %s (passes_bar/kill_fired refused the given-not-fit read; "
+          "see `score`'s own passes_bar/kill_fired call, C4 item 4's first site "
+          "(line 335-336 before round two's edits) -- ASSAY C1's guard, live)"
+          % d_star["guard_fired"])
+    assert d_star["guard_fired"], "the oracle read is construction-property and must trip the guard"
+
+    # THE TWO CALL SITES C4 ITEM 4 NAMES. 335-336 (inside `score`, above) is
+    # one; this is the other -- the sigma_total bar/kill verdict on the two
+    # FIT arms, now read through the SAME guarded sharpness.passes_bar /
+    # kill_fired rather than a bare `sig > BAR_SIGMA` comparison, so the
+    # guard is actually a call site here too, not bypassed. se_total folds
+    # sd_stream into se_margin (sigma_total's own denominator), so the
+    # verdict is numerically identical to the bare comparison it replaces.
+    se_D_total = dict(se_margin=math.sqrt(d_D["se_margin"] ** 2 + sd_D ** 2))
+    se_shuf_total = dict(se_margin=math.sqrt(d_shuf["se_margin"] ** 2 + sd_shuf ** 2))
+    assert sharpness.passes_bar(d_D, se_D_total), "RLS should clear the bar under sigma_total"
+    assert not sharpness.passes_bar(d_shuf, se_shuf_total), "the shuffled arm should NOT pass under sigma_total"
+    print("    guard_fired at demo()'s sigma_total bar (C4 item 4's second site, "
+          "line 610-611 before round two's edits) = False "
+          "(armed, correctly does not refuse a genuine model read)")
+
+    print("\n(11) THE CAPACITY CONDITION (C4) -- opponent = cannot represent the MLE, not mle_gap > 0")
+    print("     mle_gap asks whether an arm IS the empirical MLE (see (3): RLS mle_gap = 0.0, by algebra);")
+    print("     free_params/is_capacity_opponent ask whether it COULD represent one at all.")
+    RANK_ADMITTED = 4
+    full_params = free_params(D_STATES)
+    r_params = free_params(RANK_ADMITTED)
+    print("    RLS (transition-counting, rank %d): free_params = %d  mle_gap = %.1f  capacity_opponent = %s"
+          % (D_STATES, full_params, 0.0, is_capacity_opponent(D_STATES)))
+    q_r10, P_r10 = rank_r_committor(bed10, E10, T_DEFAULT, seed=SEED + 2, rank=RANK_ADMITTED)
+    op_err_r = float(np.abs(P_r10 - bed10["P"])[bed10["transient"]].max())  # dtype: float64
+    d_r = score(q_r10, start10, y10)
+    print("    rank-%d arm: free_params = %d (dtype int)  op_err_D = %.6f (dtype %s)  capacity_opponent = %s"
+          % (RANK_ADMITTED, r_params, op_err_r, P_r10.dtype, is_capacity_opponent(RANK_ADMITTED)))
+    print("    rank-%d arm scored against realized labels: margin %+.4f +/- %.4f  sigma %+.1f"
+          % (RANK_ADMITTED, d_r["margin"], d_r["se_margin"], d_r["margin_sigma"]))
+    # MUST-FIRE (item 2): this exact bed both refuses the arm that CAN
+    # represent the MLE and admits the one that cannot -- a condition that
+    # admitted both would be vacuous, not met.
+    assert not is_capacity_opponent(D_STATES), (
+        "the full-rank (256-param) RLS arm must be REFUSED by the capacity condition")
+    assert is_capacity_opponent(RANK_ADMITTED), (
+        "the rank-%d (%d-param) arm must be ADMITTED by the capacity condition" % (RANK_ADMITTED, r_params))
+    print("    MUST-FIRE: full-rank REFUSED, rank-%d ADMITTED -- the condition discriminates, not vacuous"
+          % RANK_ADMITTED)
 
     print("\nALL SELF-CHECKS PASSED")
 

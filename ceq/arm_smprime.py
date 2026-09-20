@@ -233,7 +233,28 @@ def numerator(q: torch.Tensor, k: torch.Tensor,
     uu = torch.ones(n, dtype=du, device=dev) if u is None else u
     tt = torch.zeros(n, dtype=du, device=dev) if theta is None else theta
     gh, rh = hop(uu, tt, g=g, route=route)
-    return gh * e.to(gh.dtype), rh * e
+    #: DEAD-ENTRY GUARD. `rh` (`R_ij`) is exactly `0` wherever the gate
+    #: already killed the entry (clause 4); if that same entry also carries
+    #: a masked logit past float64's overflow edge, `e` there is `inf`, and
+    #: `0 * inf` is `nan` -- sited on an entry that was supposed to be
+    #: annihilated, not on a live one. Masking `e` to `0` there is enough:
+    #: `gh == 0` exactly wherever `rh == 0` too, so `gh * 0` is `0 * 0`, never
+    #: `0 * inf`. Live entries (`rh > 0`) are untouched -- `torch.where`
+    #: returns the ORIGINAL `e` there, bitwise, so this changes nothing any
+    #: finite bed was already reading correctly.
+    live = rh > 0
+    e = torch.where(live, e, torch.zeros_like(e))
+    #: `gh.imag` is EXACTLY `0` on the diagonal (the empty path product is
+    #: `1 + 0j`) and wherever the phase product lands on a real value. There
+    #: `gh * e.to(complex)` runs the general complex multiply and evaluates
+    #: `0 * e` in the imaginary lane, which is `nan` whenever `e` is `inf` --
+    #: a `nan` manufactured AFTER the exponential, by the multiply, on a LIVE
+    #: entry. Max-subtraction acts on the exponent and cannot reach it.
+    #: Forcing that lane to `0` is bitwise a no-op wherever `e` is finite:
+    #: the complex product there is already `(a*e - b*0, a*0 + b*e)`.
+    zero = torch.zeros_like(gh.imag)
+    im = torch.where(gh.imag == 0, zero, gh.imag * e)
+    return torch.complex(gh.real * e, im), rh * e
 
 
 def operator(q: torch.Tensor, k: torch.Tensor,
@@ -267,6 +288,93 @@ def readout(q: torch.Tensor, k: torch.Tensor, v: torch.Tensor,
     """
     a = operator(q, k, u, theta, beta=beta, qk=qk, g=g, route=route)
     return a @ v.to(a.dtype)
+
+
+# ------------------------------------------------------------- the survivor
+
+def block_summary(q: torch.Tensor, k: torch.Tensor, v: torch.Tensor,
+                   u: torch.Tensor | None = None,
+                   theta: torch.Tensor | None = None, *, block: int,
+                   qk=1.0, g=1.0, route: str = "product") -> tuple:
+    """`(m, l, o, carry)`, one column-block wide: THE SURVIVOR's per-block
+    summary, `read_summary`'s job to re-merge at any `beta` off this ONE call.
+
+    `m_b = max` over the LIVE set (`R_ij > 0`, `j <= i`) of `log R_ij + s_ij`
+    -- `s_ij` the masked QK logit `numerator` (`ceq/arm_smprime.py:228-232`)
+    also computes, kept in LOG DOMAIN and never exponentiated here. That is
+    the whole repair: `s_ij` alone reaches `800` on the beta-floor bed, and
+    `exp(800)` overflows float64 before any later `log` could get it back --
+    `numerator` cannot be called for this, because it returns `exp(s_ij)`
+    already applied. `carry = sum_j R_ij` is UNSHIFTED and always safe
+    (`R_ij` in `[0, 1]`, `hop`'s own modulus row): the aliveness ground truth
+    a caller checks (`carry > 0`), never `m`, whose value on a wholly-dead
+    block is a bare `NEG` placeholder. `l` (real) and `o` (complex, `V`
+    -weighted) are `m`-shifted per-block sums, each live term `<= 1` because
+    `m_b` is that block's own row's max.
+    """
+    n = q.shape[-2]
+    if n % block:
+        raise ValueError(f"seq {n} is not a multiple of block {block}")
+    nb = n // block
+    dev, du = q.device, q.dtype
+    uu = torch.ones(n, dtype=du, device=dev) if u is None else u
+    tt = torch.zeros(n, dtype=du, device=dev) if theta is None else theta
+    gh, rh = hop(uu, tt, g=g, route=route)
+
+    #: `numerator`'s own masked logit, pre-`exp`.
+    s = qk * ((q @ k.transpose(-2, -1)) / math.sqrt(q.shape[-1]))
+    up = torch.ones(n, n, dtype=torch.bool, device=dev).triu(1)
+    s = s.masked_fill(up, NEG)
+
+    live = rh > 0
+    rh_nz = torch.where(live, rh, torch.ones_like(rh))
+    logmod = torch.where(live, torch.log(rh_nz) + s, torch.full_like(s, NEG))
+
+    live = live.reshape(*live.shape[:-1], nb, block)
+    logmod = logmod.reshape(*logmod.shape[:-1], nb, block)
+    rh = rh.reshape(*rh.shape[:-1], nb, block)
+    gh = gh.reshape(*gh.shape[:-1], nb, block)
+    s = s.reshape(*s.shape[:-1], nb, block)
+
+    carry = rh.sum(-1)
+    m = logmod.amax(-1)
+    m_safe = torch.where(carry > 0, m, torch.zeros_like(m))
+    #: `rh_j * e^{s_j - m_safe}` and `gh_j * e^{s_j - m_safe}` -- the SAME
+    #: shifted factor the dense `numerator` multiplies by `1`, computed
+    #: directly off `rh`/`gh` rather than back through `logmod`'s own `log`,
+    #: which is closer to dense's own rounding and is what
+    #: `test_e_exact_...`'s `1e-12` bar actually asks for. `live` still
+    #: guards the multiply: a dead entry's `s_j` is unrelated to `m_safe` and
+    #: `e^{s_j - m_safe}` alone is not guaranteed finite, but `rh_j = gh_j =
+    #: 0` there makes the guarded branch exactly `0`, never `0 * inf`.
+    shifted = torch.exp(s - m_safe.unsqueeze(-1))
+    sc = torch.where(live, rh * shifted, torch.zeros_like(rh))
+    l = sc.sum(-1)
+    o_contrib = torch.where(live, gh * shifted, torch.zeros_like(gh))
+    v_b = v.reshape(*v.shape[:-2], nb, block, v.shape[-1])
+    o = (o_contrib.unsqueeze(-1) * v_b.unsqueeze(-4)).sum(-2)
+    return m, l, o, carry
+
+
+def read_summary(m: torch.Tensor, l: torch.Tensor, o: torch.Tensor,
+                  carry: torch.Tensor, beta=1.0) -> torch.Tensor:
+    """`out_i(beta) = e^{(1-beta) M} o_tot / l_tot^beta`, off ONE
+    `block_summary` call -- the SECOND shift, this time across the block
+    axis: `carry > 0` (not `m`) says which blocks are alive, `M` is their
+    max, and `e^{(1-beta) M}` is the one factor
+    `test_e_summ_must_fire_dropping_the_shift_breaks_every_beta_but_one`'s
+    planted negative drops to show it is load-bearing at every `beta != 1`.
+    """
+    alive = carry > 0
+    m_used = torch.where(alive, m, torch.full_like(m, NEG))
+    M = m_used.amax(-1)
+    Msafe = torch.where(torch.isfinite(M), M, torch.zeros_like(M))
+    sc = torch.exp(m_used - Msafe.unsqueeze(-1))
+    l_tot = (l * sc).sum(-1)
+    o_tot = (o * sc.unsqueeze(-1).to(o.dtype)).sum(-2)
+    zb = (l_tot ** beta).unsqueeze(-1)
+    shift = torch.exp((1 - beta) * Msafe).unsqueeze(-1)
+    return shift * o_tot / zb
 
 
 # ------------------------------------------------------------- the (L) setting
@@ -620,6 +728,7 @@ class ArmSMPrime(nn.Module):
 __all__ = ["NAME", "VARIANT", "ROUTES", "MUTATIONS", "SMP_FIELDS",
            "GATE_INIT_OFF", "magnitude",
            "blend", "gate", "path_product", "hop_scan", "hop", "numerator",
-           "operator", "readout", "oracle_heads", "bedm_draw", "band_draw",
+           "operator", "readout", "block_summary", "read_summary",
+           "oracle_heads", "bedm_draw", "band_draw",
            "chain_label", "mutate", "label_cell", "cell_manifest",
            "annihilation_mcc", "gradient_finiteness", "ArmSMPrime"]

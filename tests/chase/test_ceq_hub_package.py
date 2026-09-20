@@ -108,7 +108,7 @@ def test_the_model_forwards_on_cpu_in_a_subprocess_with_cuda_hidden(device):
     `CUDA_VISIBLE_DEVICES=""` is the closest available approximation and it is
     the same probe `conftest._has_cuda` was written to survive.
     """
-    from conftest import run_isolated
+    from _chase_env import run_isolated
     rc, out, err = run_isolated("""
         import os
         os.environ["CUDA_VISIBLE_DEVICES"] = ""   # before torch is imported

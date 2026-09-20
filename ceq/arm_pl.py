@@ -312,7 +312,8 @@ def brute_force_path_sums(a: torch.Tensor) -> torch.Tensor:
     """
     m = a.detach().cpu().numpy()
     n = m.shape[0]
-    r = np.eye(n)
+    r = np.eye(n, dtype=m.dtype)  # was np.eye(n) (float64): silently
+    # truncated the imaginary part of `total` on assignment for complex `A`.
     for i in range(n):
         for j in range(i):
             total = 0.0

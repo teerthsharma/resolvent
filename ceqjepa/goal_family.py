@@ -316,6 +316,23 @@ INTERIOR_MIN = 15000
 Q_TOL = 1e-14
 MAX_ITERS = 200000
 
+#: V-12 (MISTAKES.md): a draw whose B'/C admit only one reachable outcome from
+#: every interior orbit solves to a committor that is constant on the interior.
+#: In THIS family the degenerate sd is exactly 0.0, not a small nonzero
+#: number: three draws at pool=160 seed 0 (interiors 37,655 / 34,673 / 29,262)
+#: each have ZERO interior orbits able to reach B' by any number of hops, so
+#: q == 0 identically -- the label is absent, not merely small. (`1.11e-14`
+#: is the `99777ab:DONE.md:1228` single-absorbing-target incident's number,
+#: not a measurement in this family; it does not belong in this comparison.)
+#: `lookup_ceiling` and every per-draw R^2 in this file then divide by that
+#: draw's own SS = 0 (ZeroDivisionError, not a small score). The separation
+#: that is actually measured: 1e-9 sits 7.3 orders BELOW the smallest real
+#: label sd ever drawn, 0.019931 (ss 15.062), seen at both pool 80 and pool
+#: 160, seed 0 -- the family is bimodal (exactly-0 or >= 0.02), nothing
+#: between the two, so 1e-9 separates them with no scale it has to be tuned
+#: against.
+LABEL_SD_MIN = 1e-9
+
 #: Ridge, relative to mean(diag(X'X)). Present only so the degree-2 normal
 #: equations are solvable; it is 1e-8 and moves no reported digit.
 RIDGE = 1e-8
@@ -536,20 +553,48 @@ def draw_test_goal(rng, absorbing, P, train_q, floor=FLOOR):
     training goals, computable before a reader exists.
 
     Returns (B, C, interior, q, residual, iterations, ceilings, n_tries).
+
+    A degenerate draw (V-12: constant committor on the interior) is redrawn
+    exactly like a floor rejection -- it is inadmissible for the same reason a
+    too-small interior is: it answers nothing about the model -- and counts
+    against the same `tries` budget.
     """
+    n_degenerate = 0
     for tries in range(1, MAX_DRAW_TRIES + 1):
         B, C, interior = draw_goal(rng, absorbing)
-        q, res, iters = committor(P, B, C, interior)
+        try:
+            q, res, iters = committor(P, B, C, interior)
+        except DegenerateLabelError:
+            n_degenerate += 1
+            continue
         ceil = lookup_ceiling(train_q, interior, q[interior])
         if ceil[0] <= floor:
             return B, C, interior, q, res, iters, ceil, tries
     raise AssertionError(f"the floor {floor} rejected {MAX_DRAW_TRIES} "
-                         f"consecutive draws: the family has been eaten")
+                         f"consecutive draws ({n_degenerate} of them "
+                         f"degenerate-label redraws): the family has been eaten")
 
 
 # ---------------------------------------------------------------------------
 # THE EXACT LABEL, AND THE TRUNCATIONS OF IT
 # ---------------------------------------------------------------------------
+
+class DegenerateLabelError(RuntimeError):
+    """The committor just solved is constant on the interior (V-12): every
+    caller reads `q[interior]` as a label with variance, and a constant label
+    has none, so this is raised AT THE SOLVE -- the label's one builder -- and
+    never caught to produce a number. Callers that can redraw (`draw_test_goal`,
+    `report`) catch it and try the next goal; a caller that cannot is meant to
+    stop, loudly, rather than hand a downstream `SS = 0` to a division."""
+
+    def __init__(self, sd, n):
+        self.sd, self.n = sd, n
+        super().__init__(f"committor is constant on {n} interior orbits "
+                         f"(sd={sd:.3e} < LABEL_SD_MIN={LABEL_SD_MIN:.0e}): "
+                         f"this draw's B'/C leave the interior no way to "
+                         f"disagree, so its label is undefined for R^2, not "
+                         f"small -- redraw, do not score it")
+
 
 def committor(P, B, C, interior, tol=Q_TOL, exact=False):
     """q = 1 on B', 0 on C and on every terminal, harmonic on the interior.
@@ -563,6 +608,11 @@ def committor(P, B, C, interior, tol=Q_TOL, exact=False):
 
     The returned residual is measured on the solution that was reached, never on
     the tolerance that was requested.
+
+    Raises `DegenerateLabelError` (V-12) when `x`, the label on the interior,
+    is constant to LABEL_SD_MIN: printed here, at construction, because every
+    reading of this label divides by its own SS and a guard placed at any one
+    of those readings leaves every sibling reader still unguarded.
     """
     idx = np.flatnonzero(interior)
     A = sparse.csr_matrix(P[idx][:, idx])
@@ -581,6 +631,9 @@ def committor(P, B, C, interior, tol=Q_TOL, exact=False):
         else:
             raise AssertionError(f"committor did not converge in {MAX_ITERS} "
                                  f"iterations (last step {step:.3e})")
+    sd = float(x.std())
+    if sd < LABEL_SD_MIN:
+        raise DegenerateLabelError(sd, idx.size)
     q = np.zeros(P.shape[0])
     q[B] = 1.0
     q[idx] = x
@@ -753,10 +806,15 @@ def report(n_test=N_TEST, n_train=N_TRAIN, seed=SEED, verbose=False,
     # from and what the floor rejects against, so they cannot be drawn after
     # the draws they have to filter.
     res_max, iter_max = 0.0, 0
-    train = []
+    train, n_degenerate_train = [], 0
     for k in range(n_train):
-        B, C, interior = draw_goal(rng, absorbing)
-        q, res, iters = committor(P, B, C, interior)
+        while True:
+            B, C, interior = draw_goal(rng, absorbing)
+            try:
+                q, res, iters = committor(P, B, C, interior)
+                break
+            except DegenerateLabelError:  # V-12: redraw, same as a bad interior
+                n_degenerate_train += 1
         res_max, iter_max = max(res_max, res), max(iter_max, iters)
         train.append((B, C, interior, q))
     train_q = [d[3] for d in train]
@@ -930,6 +988,7 @@ def report(n_test=N_TEST, n_train=N_TRAIN, seed=SEED, verbose=False,
         r2_linear_per_draw=np.array(per_lin), r2_quadratic_per_draw=np.array(per_quad),
         ceiling_marginal=0.0,
         floor=floor, n_candidate_draws=n_candidates, n_rejected_draws=n_rejected,
+        n_degenerate_train_draws=n_degenerate_train,
         acceptance_rate=n_test / n_candidates,
         ceiling_lookup_raw=float(np.mean(ceil_lookup_raw)),
         ceiling_lookup_raw_max=float(np.max(ceil_lookup_raw)),

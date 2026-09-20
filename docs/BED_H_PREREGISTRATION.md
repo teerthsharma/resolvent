@@ -340,6 +340,9 @@ crossing the absolute anchor. Neither metric alone characterises a refusal
 channel, which is why both were demanded in advance. A scorer reporting only one
 of the two would have called each of these arms a success.
 
-**The real bar for any arm round is the prior-mean-P baseline at 0.0852**, not
-window-4 at 0.1440. No baseline built here reaches it, so in-context
-identification on this bed is open rather than settled.
+**The real bar for any arm round is the ordering `arm_TV < prior_mean_TV`**, not
+a bare magnitude: the prior-mean-P baseline (`ceqjepa/beds/bed_h.py:622-635`)
+costs **0.0802** per-position total variation on 32 instances of the strong
+form, against 0.1118 for a random other draw, so 0.0802 is the floor an arm
+must clear — not window-4 at 0.1440. No baseline built here reaches it, so
+in-context identification on this bed is open rather than settled.

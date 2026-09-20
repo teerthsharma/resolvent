@@ -16,7 +16,7 @@ hide:
       <span class="pill">Lean 4 <b>v4.7.0</b></span>
       <span class="pill"><b>134</b> theorems + <b>41</b> lemmas</span>
       <span class="pill">sorry <b>0</b></span>
-      <span class="pill">corner tests <b>69/69</b></span>
+      <span class="pill">corner tests <b>78/78</b></span>
       <span class="pill">Apache-2.0</span>
     </p>
     <a class="cta" href="#experiment">Read the experiment</a><a class="cta ghost" href="https://github.com/teerthsharma/resolvent">github.com/teerthsharma/resolvent</a>
@@ -86,14 +86,14 @@ hide:
         <rect class="hit" data-hit="7" x="566" y="124" width="28" height="52" rx="6" role="button" tabindex="0" aria-pressed="false" aria-label="gate m7"/>
         <rect class="hit" data-hit="8" x="646" y="124" width="28" height="52" rx="6" role="button" tabindex="0" aria-pressed="false" aria-label="gate m8"/>
       </svg>
-      <figcaption>Each gate passes a fraction of what crosses it, so the weight from <var>t</var><sub>8</sub> to <var>t<sub>j</sub></var> is the product of the gates between them — <var>G<sub>ij</sub></var> = ∏<sub><var>k</var>=<var>j</var>+1..<var>i</var></sub> <var>m<sub>k</sub></var> <var>e</var><sup><var>i</var>θ<sub><var>k</var></sub></sup>. Closing one gate sends every path across it to zero exactly, not approximately.<br>A prefix scan in the logit cannot do this: it contributes <var>e</var><sup><var>C<sub>i</sub></var>−<var>C<sub>j</sub></var></sup>, and that is never zero. Lean theorem <code>no_prefix_scan_represents_a_zero_gate</code>.</figcaption>
+      <figcaption>Each gate passes a fraction of what crosses it, so the weight from <var>t</var><sub>8</sub> to <var>t<sub>j</sub></var> is the product of the gates between them — <var>G<sub>ij</sub></var> = ∏<sub><var>k</var>=<var>j</var>+1..<var>i</var></sub> <var>m<sub>k</sub></var>. This demo runs the real magnitude gate only, with no complex phase anywhere in it (the full operator also carries an <var>e</var><sup><var>i</var>θ<sub><var>k</var></sub></sup> term, shown in <a href="#operator">the cube below, §3</a>). Closing one gate sends every path across it to zero exactly, not approximately.<br>A prefix scan in the logit cannot do this: it contributes <var>e</var><sup><var>C<sub>i</sub></var>−<var>C<sub>j</sub></var></sup>, and that is never zero. Lean theorem <code>no_prefix_scan_represents_a_zero_gate</code>.</figcaption>
     </figure>
 
 <pre class="result" aria-label="Measured results">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
  <span class="g">resolvent</span> · measured 2026-09-11 · Windows 11 · Python 3.11.9 · torch 2.14.0 (CPU)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
  Lean 4 proofs          13 files · 134 theorems + 41 lemmas · <span class="g">0 sorry</span> · build exit 0
- Corners in code        <span class="g">69 / 69</span> tests pass            <span class="r">tests/arm_smprime, tests/arm_pl</span>
+ Corners in code        <span class="g">78 / 78</span> tests pass            <span class="r">tests/arm_smprime, tests/arm_pl</span>
  Softmax corner         max |Δ| vs causal softmax     <span class="g">0.000e+00</span>
  Committor closed form  max |Δ|                       <span class="g">4.441e-16</span>
  Curl vs node models    share left unrepresented      mixed 0.6720 · pure curl 1.0000
@@ -126,6 +126,29 @@ hide:
 <section id="experiment">
   <h2 class="sec"><span class="num">1</span>The experiment</h2>
   <p class="lede">Transformer attention mixes information across positions. Recurrences and Markov chains pass values along paths. The experiment asks whether one attention head can do both — and whether the path-following half gives a model something softmax attention lacks: reasoning about the consequences of an intervention.</p>
+
+  <div class="rs fig" data-rs="row">
+    <figure>
+      <svg viewBox="0 0 640 190"></svg>
+    </figure>
+    <div class="ctl">
+      <label>query position <input type="range" data-ctl="qpos" min="0" max="8" step="1" value="5"></label>
+      <output data-out="qpos"></output>
+    </div>
+    <p class="cap">Drag the query slider; the row redraws. Attention is one row of weights over the past, and nothing more.</p>
+  </div>
+
+  <div class="rs fig" data-rs="beta">
+    <figure>
+      <svg viewBox="0 0 640 190"></svg>
+    </figure>
+    <div class="ctl">
+      <label>β <input type="range" data-ctl="beta" min="0" max="1" step="0.01" value="1"></label>
+      <span>divisor <output data-out="z"></output></span>
+      <span>row sum <output data-out="rowsum"></output></span>
+    </div>
+    <p class="cap">Move β from 0 to 1; the divisor shrinks every weight by the same factor. Softmax's normalization is a setting, not a law — this is the single most important idea on the page (illustrative values).</p>
+  </div>
 
   <p><strong>The object.</strong> One causal head, <var>W<sub>ij</sub></var> = <var>G<sub>ij</sub></var> · exp(<var>qk</var> · <var>q<sub>i</sub></var>·<var>k<sub>j</sub></var>) ⁄ <var>Z<sub>i</sub></var><sup><var>β</var></sup>, with three switches: <code>β</code> (normalizer on or off), <code>g</code> (a multiplicative gate whose path product can close exactly) and <code>qk</code> (content comparison on or off). Three settings of those switches are three known operators, and that is a theorem rather than an analogy (<a href="#operator">§3</a>).</p>
 
@@ -270,7 +293,7 @@ hide:
         <text x="442" y="268">(the path-product gate)</text>
       </g>
     </svg>
-    <figcaption>The three switches as the axes of a cube. The named operators are two corners and one edge of it, and all three settings are live trainable parameters on the shipped module. Lean: <code>three_corners_containment</code>, <code>corners_are_distinct</code>.</figcaption>
+    <figcaption>The three switches as the axes of a cube. The named operators are two corners and one edge of it, and all three settings are live trainable parameters on the shipped module — but a trainable axis is not the same as one that buys something. The gate axis&rsquo;s complex-phase part is real and trains, and it is also gauge-trivial on every bed this page shows: the read graph is a path, so its first Betti number is 0, a tree gauge removes the phase to 9.602627e-15, and paying for it at all costs 2.61x against a real signed gate that reproduces the same gated product to 1.347111e-15. The separation this axis exists for needs a genuine cycle, which no bed on this page has. Lean: <code>three_corners_containment</code>, <code>corners_are_distinct</code>.</figcaption>
   </figure>
 
   <h3>What each switch decides</h3>
@@ -309,6 +332,17 @@ hide:
 
   <h3>4.1 The resolvent read — one triangular solve</h3>
   <p><code>ceqjepa/operator.py</code> builds a causal row-stochastic softmax matrix <var>P</var>, declares some rows absorbing, and solves. Making a row absorbing means replacing it with a row that keeps all its probability on itself: the process, on arriving there, stops. Choosing which rows to absorb is how a question is posed — the absorbing rows are the outcomes whose competition the read is about.</p>
+
+  <div class="rs fig" data-rs="absorb">
+    <figure>
+      <svg viewBox="0 0 640 160"></svg>
+    </figure>
+    <div class="ctl">
+      <span><output data-out="pa"></output> to A</span>
+    </div>
+    <p class="cap">Click a starting state; the read shows the probability of ending in A rather than B. The resolvent answers where a process ends up, which is the question the whole project is about (illustrative values).</p>
+  </div>
+
   <div class="eq" role="math" aria-label="The resolvent read">
     <div class="row"><span class="lhs">state read</span><span><var>z</var> = (<var>I</var> − <var>g</var><var>P</var>)<sup>−1</sup> <var>Ṽ</var></span></div>
     <div class="row"><span class="lhs">committor</span><span><var>q</var> = (<var>I</var> − <var>Q</var>)<sup>−1</sup> <var>R</var></span><span class="note">probability of ending in each boundary state</span></div>
@@ -316,6 +350,17 @@ hide:
   <p>The committor line is the whole causal claim in one equation. <var>Q</var> holds the steps among ordinary positions and <var>R</var> the steps into the declared outcomes; the inverse sums over every route of every length; the product with <var>R</var> collects, for each starting position, the probability that it reaches each outcome first. Because the causal mask makes <var>Q</var> strictly lower triangular, this is not an approximation and not an iteration — a single forward substitution returns it, and the published self-check matches the closed form to <code>4.441e-16</code>, at the float64 floor. With <code>teleport = 0</code> the same operator matches causal softmax to <code>0.000e+00</code>: the read adds a question without changing the attention it is asked about.</p>
 
   <h4>Refusal as an output</h4>
+
+  <div class="rs fig" data-rs="fold">
+    <figure>
+      <svg></svg>
+    </figure>
+    <div class="ctl">
+      <label>a <input type="range" data-ctl="a" min="0.25" max="0.6" step="0.001" value="0.3"></label>
+    </div>
+    <p class="cap">Move the slider for a; where the line and curve meet, c = eᵃᶜ has a solution. A solution stops existing — it does not get worse, it stops (illustrative curve, redrawn per a).</p>
+  </div>
+
   <p>A counterfactual can be meaningless rather than merely uncertain. If the state a question asks about cannot be reached at all, there is no distribution to report, and a model that answers anyway is guessing with a confident face. The read separates the two cases in the solve itself: a singular transient block raises <code>SingularTransientBlockError</code> rather than returning a number, and a non-finite logit raises <code>ValueError</code> rather than letting NaN spread into <var>q</var>. Every counterfactual then receives one of three verdicts — <strong>UNDEFINED</strong>, refused with its reason; <strong>NULL</strong>, answered with an exact zero; <strong>DEFINED</strong>, answered.</p>
   <p>Scoring a refusal rule needs the two trivial rules beside it, because each of them scores perfectly on one axis alone:</p>
   <div class="tw"><table class="t">
@@ -400,7 +445,7 @@ hide:
     <li class="dead">
       <span class="when">2026-09-14 · 23 commits · 468bc85 → 88a7388</span>
       <h4>Component rounds: every lead met its counter</h4>
-      <p>The gate ties softmax at 1.91–2.84× the cost. An encoder change closed 91.7161% of the committor gap. The consequence-swap headline's zero was an identity of the definition. The depth ladder turned out to measure optimiser steps, not depth. On BED-H a GRU abstaining on its own entropy matched the read's refusal. One lead survived: an estimated operator becomes solvable once whitened, 0.030243 against 0.348321.</p>
+      <p>The gate ties softmax at 1.91–2.84× the cost. An encoder change closed 91.7161% of the committor gap. The consequence-swap headline's zero was an identity of the definition. The depth ladder turned out to measure optimiser steps, not depth. On BED-H a GRU abstaining on its own entropy matched the read's refusal. One lead survived: an estimated operator becomes solvable once whitened, 0.030243 against 0.348321 (commit <code>82eb2d4</code>; no tracked file prints the Hebbian figure).</p>
       <span class="num">2-layer stack 0.0555 → 0.3005 from optimiser steps alone · GRU recall 0.8959</span>
     </li>
     <li class="dead">
@@ -408,6 +453,21 @@ hide:
       <h4>Issue closeouts</h4>
       <p>The logit-Nash stance was retired over five seeds, including with both of its known defects repaired; one of those defects was a learned parameter no code ever read. The SPRT became torch-free.</p>
       <span class="num">nash 5.2888 ± 0.6041 against signed 2.7333 ± 1.0235, 0/5 seeds</span>
+    </li>
+    <li class="built">
+      <span class="when">2026-09-20 · ceq/arm_smprime.py</span>
+      <h4>The gate-kill NaN is fixed</h4>
+
+      <div class="rs fig" data-rs="blocks">
+        <figure>
+          <svg viewBox="0 0 620 260"></svg>
+        </figure>
+        <div class="ctl"></div>
+        <p class="cap">Closing a gate zeroes every block before it in the merge, exactly, not approximately. A live diagonal entry that overflows gives an honest infinity instead, not a zero (illustrative values). 173 nan became inf, the nan count went from 173 to 0, and the non-finite count held at exactly 339.</p>
+      </div>
+
+      <p>The dead set is now masked before the complex multiply. The dead-shift bed returns <code>[(1+0j), (1.5+0j), (3+0j)]</code>, bitwise equal to the block summary, where dense attention had returned <code>(nan+nanj)</code>; the live-diagonal artifact <code>inf+nan*j</code> became <code>inf+0j</code>. <code>tests/arm_smprime/</code> reads 61 passed.</p>
+      <span class="num">173 nan became inf; the nan count went 173 to 0, non-finite count held at exactly 339</span>
     </li>
     <li class="open">
       <span class="when">now</span>
@@ -420,6 +480,18 @@ hide:
 <section id="died">
   <h2 class="sec"><span class="num">6</span>What died, and what killed it</h2>
   <p class="lede">A result nobody can check is worth nothing, so the failures are published with the same precision as the successes. Each row below was a claim this repository made, and each was withdrawn by its own instruments.</p>
+
+  <div class="rs fig" data-rs="wall">
+    <figure>
+      <svg viewBox="0 0 640 170"></svg>
+    </figure>
+    <div class="ctl">
+      <label>x <input type="range" data-ctl="x" min="-20" max="720" step="0.5" value="40"></label>
+      <span>float32/bf16 <output data-out="f32"></output></span>
+      <span>float64 <output data-out="f64"></output></span>
+    </div>
+    <p class="cap">Move x to see exp(x) grow and where it becomes infinite. The wall is a property of the dtype, not the value — but bf16 and float32 do not share one: bf16 overflows first, at 88.71892521235186, against float32 at 88.72283905206835, and the two disagree across that whole interval (at x = 88.7215, float32&rsquo;s exp is 3.3982583016316987e+38, finite, while the same result cast to bf16 reads inf). float64 moves the wall out to 709.782712893384. Reproduced with <code>python -c "import torch; print(torch.log(torch.tensor(torch.finfo(torch.float32).max, dtype=torch.float64)).item(), torch.log(torch.tensor(torch.finfo(torch.bfloat16).max, dtype=torch.float64)).item())"</code> on torch 2.14.0+cpu.</p>
+  </div>
 
   <div class="tw"><table class="t">
     <thead><tr><th>claim</th><th>what killed it</th><th>the number</th></tr></thead>
@@ -438,6 +510,9 @@ hide:
       <tr><td>The read adds an architectural refusal channel</td><td>pre-registered counter held: a GRU's own entropy does it</td><td class="n">recall 0.8959 @ 0.8903</td></tr>
       <tr><td>A logit-Nash stance composes two sign flips</td><td>both kills, 5/5 seeds, every configuration</td><td class="n">5.2888 vs 2.7333</td></tr>
       <tr><td>Smoothing Sherman–Morrison with a teleport is harmless</td><td>it attenuates the interventional signal</td><td class="n">−43.1%</td></tr>
+      <tr><td>Capacity on the cube is an area — coexisting basins can be counted</td><td>basins never coexist across the swept range</td><td class="n">disjoint at [0.5436, 0.7250], [1.0872, 1.6236], [2.1745, unclosed past 120]; sequence 0-1-0-1-0-1</td></tr>
+      <tr><td>bf16 widens the overflow ceiling</td><td>bf16 shares float32's 8-bit exponent but carries fewer mantissa bits, so its own max is smaller — the wall narrows, it does not move outward</td><td class="n">float32 wall 88.72283905206835, bf16 wall 88.71892521235186 (bf16 overflows first); headroom 47.31×, 46.24×, 23.19× over 200 AdamW steps</td></tr>
+      <tr><td>bf16 and float32 share the overflow wall, at 88.72283935546875</td><td>this page's own published constant was wrong twice over — wrong in the eighth decimal against the true float32 value, and wrong in kind, since bf16 does not share float32's wall at all</td><td class="n">corrected 2026-09-20 to float32 88.72283905206835, bf16 88.71892521235186</td></tr>
     </tbody>
   </table></div>
 
@@ -467,9 +542,9 @@ hide:
     <thead><tr><th>front</th><th>the standing bar</th><th>state</th></tr></thead>
     <tbody>
       <tr><td>Prediction leg of the north star</td><td>beat a trivial baseline at the family's own prediction task</td><td><span class="chip unmet">open</span></td></tr>
-      <tr><td>BED-H in-context identification</td><td>the prior-mean-P baseline, 0.0852; no baseline built so far reaches it</td><td><span class="chip open">open</span></td></tr>
+      <tr><td>BED-H in-context identification</td><td>reported magnitudes of the 2026-09-14 draw, not asserted thresholds (<code>tests/beds/test_bed_h.py:461-462</code>): per-position total variation <strong>0.0802</strong> for the strong form, measured on 32 instances (<code>ceqjepa/beds/bed_h.py:622-635</code>), against 0.1118 for a random other draw. The bar the test asserts is the ordering mean(mean_tv) &lt; mean(draw_tv) (<code>tests/beds/test_bed_h.py:475</code>)</td><td><span class="chip open">open</span></td></tr>
       <tr><td>The one-solve claim's loss condition</td><td>a stack of depth ≤ 2 reaching 0.90; the best so far reads 0.4858</td><td><span class="chip open">not fired</span></td></tr>
-      <tr><td>Depth race, 160-goal point</td><td>extrapolated 0.4810, asymptote ≈ 0.4923 against the solve's 1.0000</td><td><span class="chip open">not run</span></td></tr>
+      <tr><td>Depth race, 160-goal point</td><td>reach the oracle solve's 1.0000</td><td><span class="chip open">crashed</span></td></tr>
       <tr><td>Committor read, component P3</td><td>+0.8851; the encoder's widest layer reads +0.8424</td><td><span class="chip open">open</span></td></tr>
       <tr><td>Joint-training gate</td><td>P1 pass, P2 and P3 answered, P4 fails at 0.9997, so joint training stays blocked</td><td><span class="chip part">blocked</span></td></tr>
       <tr><td>Canon books 00 and 07</td><td>listed in the charter as the north-star decision tree and the consolidated attacks</td><td><span class="chip open">unwritten</span></td></tr>
@@ -477,10 +552,12 @@ hide:
     </tbody>
   </table></div>
 
+  <p>The 160-goal point crashed on a constant-label draw: a single absorbing target makes the label constant, and the builder divides by its variance. <code>ZeroDivisionError</code> at <code>ceqjepa/goal_family.py:525</code>, catalogued as <a href="ledgers/mistakes/">MISTAKES V-12</a>. The guard belongs in the builder. Whether near-degenerate draws already reached the published depth-race points is an open audit, not yet settled. The extrapolated 0.4810 and asymptote ≈ 0.4923 are two increments of arithmetic, not a measurement (<code>ceqjepa/depth_race.py:184-185,215</code>).</p>
+
   <div class="note open">
     <p style="font:600 .62rem var(--rs-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--rs-open);margin:0 0 .5rem">The next move</p>
-    <p><strong>Race an estimated operator, not the true one.</strong> Every exact-read win on this page was handed the true operator. That makes the solve an oracle rather than a model, which the error ledger files as D-2, so none of those wins can tick the prediction row. The next run estimates the operator from the same transition stream the opponent trains on — the whitened recursive-least-squares estimator already measured at its sampling floor, 0.030243 against Hebbian 0.348321 on a 10,000-transition stream — and races one exact solve on that estimate against a masked attention stack at matched parameters, on goals neither has seen.</p>
-    <p><strong>Registered before it runs:</strong> the bar is the best stack published so far on that bed, 0.4858, at matched transitions across five seeds; the kill is the estimated solve at or below it; the planted negative is a shuffled stream, which must drive the solve to the floor; the ceiling is the true-operator solve at 1.0000.</p>
+    <p><strong>Race an estimated operator, not the true one.</strong> Every exact-read win on this page was handed the true operator. That makes the solve an oracle rather than a model, which the error ledger files as D-2, so none of those wins can tick the prediction row. The next run estimates the operator from the same transition stream the opponent trains on — the whitened recursive-least-squares estimator already measured at its sampling floor, 0.030243 against Hebbian 0.348321 on a 10,000-transition stream (both figures from commit <code>82eb2d4</code>; the tracked test <code>tests/curvature/test_lstd_bed.py:54-56</code> carries the 0.030243 and describes it as the sampling floor, and no tracked file prints the Hebbian figure) — and races one exact solve on that estimate against a masked attention stack at matched parameters, on goals neither has seen.</p>
+    <p><strong>Registered before it runs:</strong> the bar is the best stack published so far on that bed, 0.4858, at matched transitions across five seeds; the kill is the estimated solve at or below it; the planted negative is a shuffled stream, which must drive the solve to the floor; the ceiling is the true-operator solve at 1.0000. <strong>Corrected 2026-09-20:</strong> that negative was necessary and not sufficient, because the <em>grading</em> was blind to it. An item bootstrap resamples at a fixed fitted read and cannot see the noise of the fit itself, which dominates whenever the read is fit rather than given — measured on the null arm at item SE 0.0003 against an across-stream SD of 0.0011, 3.33× larger, so under the item bootstrap alone (n_streams=12) a zero-information arm's read swings from −12.55σ to +1.73σ across the same five seeds, while under σ<sub>total</sub> (n_streams=12) the same arm reads −1.56σ to +0.32σ — noise from fitting the read, not signal in the stream. Any fit arm is now graded by σ<sub>total</sub> = margin ⁄ √(se<sub>item</sub>² + sd<sub>stream</sub>²), with sd<sub>stream</sub> taken across independent refits at pinned chain, embedding and items. Under it the shuffled arm reads +0.2σ<sub>total</sub> and the live arm falls from +8.3σ<sub>item</sub> to +8.1σ<sub>total</sub>, against the oracle's +9.1; the regression guard is <code style="white-space:normal;overflow-wrap:break-word">tests/cameron/test_estimated_operator_margin.py::test_shuffled_stream_is_null_under_sigma_total_not_item_se</code>, whose primary-seed bed asserts this σ<sub>total</sub> stays within 2 and goes red the moment the stream permutation is left a no-op. The arm behind these numbers is transition-counting RLS at full rank — 256 free parameters, the entire 16×16 transition table — which the capacity condition in <code>ceqjepa/lstd_bed.py</code> refuses opponent status because it can represent the empirical MLE outright; it is the row's floor, not its opponent, and the prediction row is not ticked.</p>
     <p><strong>Why this one.</strong> It is the only open comparison that could put a tick in the prediction row honestly — a named opponent, a named task, no oracle — and it tests the step where the recent kills have landed: from a given operator to a learned one. It is also cheap: an estimator, a triangular solve and a stack that already has a pinned test set all run on a CPU. If it wins, the family has its first prediction result. If it dies, the record learns that the read's exactness does not survive estimation, and the claim settles where the README already puts it: strictly more reachable, not more accurate.</p>
   </div>
 </section>
@@ -519,7 +596,7 @@ hide:
 <pre><code>git clone https://github.com/teerthsharma/resolvent &amp;&amp; cd resolvent
 pip install -r requirements.txt
 
-python -m pytest tests/arm_smprime tests/arm_pl -q   # 69 passed: the Lean corners, in code
+python -m pytest tests/arm_smprime tests/arm_pl -q   # 78 passed: the Lean corners, in code
 python -m ceqjepa.operator                           # ALL SELF-CHECKS PASSED
 python -m ceqjepa.dr1                                # ALL SELF-CHECKS PASSED
 python scripts/lean_count.py                         # 13 files: 134 theorems + 41 lemmas = 175

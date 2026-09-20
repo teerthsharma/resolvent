@@ -2,7 +2,7 @@
   <img alt="Lean 4 v4.7.0" src="https://img.shields.io/badge/Lean_4-v4.7.0-blue?style=flat-square" />
   <img alt="134 theorems and 41 lemmas" src="https://img.shields.io/badge/theorems_%2B_lemmas-134_%2B_41-success?style=flat-square" />
   <img alt="sorry: 0" src="https://img.shields.io/badge/sorry-0-success?style=flat-square" />
-  <img alt="corner tests: 69 passing" src="https://img.shields.io/badge/corner_tests-69_passing-success?style=flat-square" />
+  <img alt="corner tests: 78 passing" src="https://img.shields.io/badge/corner_tests-78_passing-success?style=flat-square" />
   <img alt="License: Apache-2.0" src="https://img.shields.io/badge/license-Apache--2.0-blue?style=flat-square" />
   <a href="https://teerthsharma.github.io/resolvent/"><img alt="Docs: GitHub Pages" src="https://img.shields.io/badge/docs-GitHub_Pages-6ee7b7?style=flat-square" /></a>
 </p>
@@ -64,12 +64,14 @@ prediction · formal verification · Lean 4
  resolvent · measured 2026-09-11 · Windows 11 · Python 3.11.9 · torch 2.14.0 (CPU)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
  Lean 4 proofs          13 files · 134 theorems + 41 lemmas · 0 sorry · build exit 0
- Corners in code        69 / 69 tests pass            tests/arm_smprime, tests/arm_pl
+ Corners in code        78 / 78 tests pass            tests/arm_smprime, tests/arm_pl
  Softmax corner         max |Δ| vs causal softmax     0.000e+00
  Committor closed form  max |Δ|                       4.441e-16
  Curl vs node models    share left unrepresented      mixed 0.6720 · pure curl 1.0000
  Planted negative       pure-gradient target          6.5e-16
  Refusal                sensitivity · specificity     100.00% · 100.00%  (138 + 262)
+ Block summary (E1/E2)  worst E-EXACT vs 1e-12 bar    2.085e-15  (measured 2026-09-20)
+ Gate-kill mask fix     co-siting bed nan-count       173 → 0  (339 non-finite held exact) (measured 2026-09-20)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
@@ -79,7 +81,7 @@ prediction · formal verification · Lean 4
 git clone https://github.com/teerthsharma/resolvent && cd resolvent
 pip install -r requirements.txt
 
-python -m pytest tests/arm_smprime tests/arm_pl -q   # 69 passed: the Lean corners, in code
+python -m pytest tests/arm_smprime tests/arm_pl -q   # 78 passed: the Lean corners, in code
 python -m ceqjepa.operator                           # ALL SELF-CHECKS PASSED
 python -m ceqjepa.dr1                                # ALL SELF-CHECKS PASSED
 python scripts/lean_count.py                         # 13 files: 134 theorems + 41 lemmas = 175
@@ -189,7 +191,7 @@ The theorems live in `lean/CEQ/V16Domain.lean` and `lean/CEQ/V15Fork.lean`;
 tree is 13 files and builds clean:
 
 ```bash
-python -m pytest tests/arm_smprime tests/arm_pl -q   # 69 passed
+python -m pytest tests/arm_smprime tests/arm_pl -q   # 78 passed
 python scripts/lean_count.py                         # 13 files: 134 theorems + 41 lemmas = 175
 grep -n sorry lean/CEQ/*.lean lean/CEQ.lean          # 7 hits, each the words "No `sorry`" in a doc comment
 ```
@@ -304,6 +306,9 @@ built.
 | An absence proof (`git log -S` across all refs) began finding the audit's own recordings. | Every absence search now ships with a control symbol the same search must find (`docs/canon/CORRECTIONS.md`, row C5). |
 | The per-coordinate corner rule `β = 1 − α` assigned each latent coordinate its own corner from a measured exponent. On the encoder that exponent is zero by construction; on a null that enumerates all 35 arrangements with the refused coordinates pinned, the assignment ranked 21st; and on the value axis `α` moves with the `β` it is measured at, at slope `−1.0027`, so `β = 1 − α` reduces to `0 = 1 − α₀` and has no solution. | [docs/CORNER_RULE_RETIREMENT.md](docs/CORNER_RULE_RETIREMENT.md), and the three laws in [MISTAKES.md](MISTAKES.md) that the round paid for: **L-PROSE** (a number in prose carries its producer, and a report publishes its bound-over-reported ratio), **L-NULL** (a permutation names everything it varies and everything it pins), **L-SURFACE** (a check that prints and then aborts is a failed check). |
 | A GPU run scored the model against human moves and lost to a zero-parameter heuristic. The deeper defect was the metric: top-1 next move is next-token prediction, which the project's own north star rules out in favour of the next state toward equilibrium. | [docs/PI_JEPA_KAGGLE_CARD.md](docs/PI_JEPA_KAGGLE_CARD.md), which opens on the heuristic winning, and [docs/COMPONENT_LEDGER.md](docs/COMPONENT_LEDGER.md), which gates joint training on each component clearing its own bar and fixes two columns every future run carries: a frozen-random arm, and a trivial baseline on the real target. |
+| The dense readout has no answer once one logit overflows: with a single planted logit of `800`, `exp(800)` overflows float64 and row 3 reads `nan` at every `β`, on every bed the survivor shift was built to cover. | `block_summary`/`read_summary` (`ceq/arm_smprime.py`, the E1/E2 merge) carry the same row in log domain and return the closed form `e^{800(1−β)}` there instead, to relative error `≤ 1e-13`. Priced honestly, it is not a memory or generality win — it is the row-gain identity written longhand. What it buys is range: an answer where dense has none. |
+| A dead gate (`u == 0`) sharing a causal cell with an overflowing masked logit poisoned itself anyway: the complex multiply's imaginary lane read `0 * inf = nan`, turning a live diagonal `inf` into `inf + nan·j` on 173 of a bed's 339 non-finite causal cells (of 16,640). | The dead set's imaginary lane is masked to exactly `0` before the complex multiply (`ceq/arm_smprime.py`): the same 339 non-finite cells remain, now all honest overflow (`inf + 0j`), zero of them `nan`. The fix is a bitwise no-op everywhere else, and a separate, unrelated bed used to pin the mask (`u == 0`, no overflow) reads the same `[1.0, 1.5, 3.0]` before and after. |
+| The prediction row had no honest number: every exact win on this page used the true operator, an oracle, not a model. | `python -m ceqjepa.lstd_bed` fits an arm from `T = 10,000` observed transitions and grades it `sigma_total = margin / sqrt(se_item² + sd_stream²)` against a held-out rollout: it captures 92.2% of the oracle's margin at `+8.1σ`, against a shuffled-stream (zero-information) control at `+0.2σ`. Its `mle_gap` is `0.0` — the arm is the empirical MLE, i.e. transition counting, the floor for the row and not the opponent. `tests/cameron/test_estimated_operator_margin.py` pins the same arm across five seeds (7 passed): it clears the `≥2σ` bar with `≥0.5` capture on `≥4` of them. The registered race at bar `0.4858` has not been run. |
 
 The full record, with every number, is in [docs/FAILS.md](docs/FAILS.md),
 [MISTAKES.md](MISTAKES.md) and [STRUCK.md](STRUCK.md).

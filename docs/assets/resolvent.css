@@ -125,6 +125,28 @@
 .rs .stop text{transition:opacity .35s ease}
 .rs .stop:not(.on) text{opacity:.5}
 
+/* ---------- the six teaching figures (row, beta, absorb, wall, fold, blocks) ----------
+   Each is a self-contained <div class="rs fig" data-rs="…"> with a <figure> (styled
+   already, above), an optional .ctl control strip, and a .cap caption in place of a
+   figcaption. Their SVGs reuse the classes above (.tok, .live, .dead, .edge, .marker,
+   .stop, .hit, .out, .t-mono, .t-dim, .gatetick) rather than inventing new ones. */
+.rs.fig{margin:1.3rem 0}
+.rs.fig figure{margin:0 0 .7rem}
+.rs.fig .ctl{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem 1.1rem;
+  padding:.6rem .9rem;background:var(--rs-panel);border:1px solid var(--rs-line);
+  border-radius:.6rem;font-size:.78rem}
+.rs.fig .ctl label{display:flex;align-items:center;gap:.5rem;color:var(--rs-dim);white-space:nowrap}
+.rs.fig input[type=range][data-ctl]{width:9rem;max-width:40vw;accent-color:var(--rs-proved);cursor:pointer}
+.rs.fig input[type=range][data-ctl]:focus-visible{outline:2px solid var(--rs-link);outline-offset:3px;border-radius:.3rem}
+.rs.fig output[data-out]{font:600 .78rem var(--rs-mono);color:var(--rs-proved);white-space:nowrap}
+.rs.fig .cap{color:var(--rs-dim);font-size:.72rem;line-height:1.55;margin:.6rem 0 0;text-align:center}
+/* A caption's inline <code> (e.g. a reproduction command) must never force the
+   figure — and via it, the document — wider than the viewport. Wrap it like
+   any other caption text instead of the site-wide nowrap in .rs code; this
+   only changes line breaks, not the copyable text, so the command still
+   pastes as one line. overflow-wrap covers a token with no spaces to break on. */
+.rs .cap code{white-space:normal;overflow-wrap:break-word;word-break:break-word}
+
 /* ---------- the compact index ---------- */
 .rs .index{margin:1.2rem 0 .8rem}
 .rs .ix{display:grid;grid-template-columns:8.5rem 1fr;gap:.3rem 1.1rem;align-items:baseline;

@@ -90,6 +90,72 @@ def test_the_version_record_reports_this_boxs_gpu_as_usable():
     assert rec["device_usable"] is True, rec
 
 
+def test_every_pin_in_requirements_txt_is_the_installed_version():
+    """requirements.txt opens with a falsifiable claim about this box, and until
+    now nothing read it.
+
+    Its first line is `# Pins are the exact versions installed and exercised in
+    this environment`. That was false for three of its pins: it named
+    torch==2.5.1, numpy==1.26.4 and huggingface_hub==1.7.1 while this
+    interpreter runs 2.14.0+cpu, 2.4.6 and 1.30.0. No file opened it --
+    `grep -rln requirements.txt --include=*.py tests/ scripts/ ceq/` returned
+    nothing -- so a stack could drift arbitrarily far from its own pin file
+    without one check firing, which is how a number gets compared across a
+    silent version change.
+
+    This is deliberately NOT `compat.matches_reference`. That flag compares this
+    box to the stack the SHIPPED FIGURES were measured on (`compat.REFERENCE`,
+    torch 2.5.1+cu121) and `ceq/compat.py:211-214` makes a False there
+    informational by design -- a cross-stack `|Delta|` warning, not a failure --
+    so it is not asserted anywhere and must not be. This test asks the narrower
+    and fully decidable question instead: does the install list describe this
+    install. The two files are expected to disagree with each other for exactly
+    as long as the box is not the reference box.
+
+    The local version segment is excluded from the comparison because
+    requirements.txt pins the bare version on purpose: `+cpu` / `+cu121` is only
+    resolvable from download.pytorch.org, so pinning it verbatim would break
+    `pip install -r requirements.txt` on plain PyPI.
+    """
+    import importlib.metadata as md
+    import pathlib
+
+    req = pathlib.Path(__file__).resolve().parents[2] / "requirements.txt"
+    assert req.is_file(), req
+
+    pins = {}
+    for raw in req.read_text(encoding="utf-8").splitlines():
+        line = raw.split("#", 1)[0].strip()
+        if "==" not in line:
+            continue
+        spec, _, marker = line.partition(";")
+        if "win32" in marker and sys.platform != "win32":
+            continue                      # an environment marker this box is not
+        name, _, want = spec.partition("==")
+        pins[name.strip()] = want.strip()
+
+    # Vacuity guard: a parser that silently matches nothing turns this into a
+    # test that passes on an empty file. The pin count is the planted negative.
+    assert len(pins) >= 8, ("parsed %d pins out of requirements.txt, expected at "
+                            "least 8 -- the parse broke, not the pins: %r"
+                            % (len(pins), pins))
+
+    wrong = {}
+    for name, want in pins.items():
+        try:
+            have = md.version(name)
+        except md.PackageNotFoundError:
+            wrong[name] = (want, "NOT INSTALLED")
+            continue
+        if have.split("+", 1)[0] != want:
+            wrong[name] = (want, have)
+
+    assert not wrong, (
+        "requirements.txt claims to name the versions installed here; these do "
+        "not match this interpreter, as {package: (pinned, installed)} = %r"
+        % (wrong,))
+
+
 # ------------------------------------------- 2. the six private HF attributes
 
 def test_all_six_private_attributes_are_reported():

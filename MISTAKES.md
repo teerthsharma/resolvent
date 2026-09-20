@@ -2798,6 +2798,19 @@ row. The gate is measured exactly `m = 1, theta = 0` on that path — `u` and
 `theta` are hardwired to `None` and defaulted to ones and zeros — so the
 message is false by construction, not merely unhelpful.
 
+**Correction, 2026-09-20: the figure above is wrong.** `w = 88.72283554077147`
+is not float32's overflow wall — it is a third, separately-wrong value,
+distinct from both the retracted claim and the measured one. The measured
+float32 wall is `88.72283905206835`; bfloat16's is a smaller, distinct
+`88.71892521235186`. Both come from one command, on torch 2.14.0+cpu:
+`python -c "import torch; print(torch.log(torch.tensor(torch.finfo(torch.float32).max, dtype=torch.float64)).item(), torch.log(torch.tensor(torch.finfo(torch.bfloat16).max, dtype=torch.float64)).item())"`.
+The claim this figure traces to — that bf16 and float32 share one overflow
+wall because they share an 8-bit exponent — is retracted: they share the
+exponent, not the ceiling, because bf16 carries fewer mantissa bits, so its
+largest finite value is smaller and it overflows *first*, not at the same
+point. `house-events.jsonl:1791,1819,1875,1877` carried the same retracted
+claim and a correction is appended there.
+
 **Three corrections to how this defect was first described here, each measured.**
 The width is not the variable: the fire rate across widths 3, 4, 5, 6, 7, 8, 9
 and 16 reads `0, 0, 20, 0, 154, 140, 11, 0` out of 1,500 probe batches —
@@ -2898,3 +2911,74 @@ line-pinned citation invalidated by an insertion above it — all three are chai
 where every link resolves and the claim at the end is still wrong. This one is
 the most dangerous of the three because the wrongness is introduced by a tool
 rather than by drift, and arrives already formatted as a finding.
+
+### L-PIN — a test that pins a defect must say so in its own docstring, or the fix that kills the defect reads as the regression
+
+Filed 2026-09-20, on the third instance in one day. The mechanism: a test is
+written to characterise a real defect and asserts that defect's own output as
+the expected value. It goes green, and nothing in a green run distinguishes it
+from a test that guards *correct* behaviour — until someone fixes the defect,
+at which point the characterisation test goes red on the person who just did
+the repair, and reads exactly like their regression.
+
+**Instance 1.** `tests/curvature/test_bucket_numerics.py:415`,
+`test_an_overflowing_logit_on_a_DEAD_entry_makes_the_dense_numerator_nan`,
+asserted `mod[2, 0] != mod[2, 0]` — that the value on a gate-killed entry IS
+NaN. `ceq/arm_smprime.py`'s dead-entry guard (masking `e` to `0` wherever
+`rh == 0`, before the `gh * e` complex multiply, around `:236`) now makes that
+entry contribute exactly `0.0`, and the pinned assertion fails on the fix:
+
+```
+$ python -m pytest tests/curvature/test_bucket_numerics.py --tb=short -q
+AssertionError: [0.0, 0.0, 2.3245822930325816e-50]
+assert tensor(0., dtype=torch.float64) != tensor(0., dtype=torch.float64)
+2 failed, 65 passed in 10.40s
+```
+(measured on this box just now, float64 throughout). The third value,
+`2.3245822930325816e-50`, is a live, gradually-underflowed entry and is
+unaffected — the only assertion that fails is the NaN-on-a-dead-entry one, and
+a dead entry should contribute nothing.
+
+**Instance 2.** `tests/arm_smprime/test_bf16_ceiling.py` pinned the pre-fix NaN
+on the live diagonal of the co-siting bed and had to be inverted this morning.
+Its corrected form asserts the opposite of what it asserted before: `f64
+["nan_total"] == 0` (`:340`), `nan_on_diagonal == 0` (`:341`), `inf_only > 0`
+(`:343`), and the bf16 branch the same way (`:349`-`352`) — confirmed live,
+`4 passed in 38.05s` (dtype torch.float64 and torch.bfloat16 across the two
+branches the test names).
+
+**Instance 3.** `tests/arm_smprime/test_gate_kill_mask.py` needed cases
+rewritten for the same fix. Its corrected form
+(`test_the_complex_multiply_artifact_becomes_inf_not_nan_on_the_cositing_bed`,
+`:174`-`251`) is the antidote worth naming rather than another casualty: the
+pre-fix arithmetic is reproduced in a function named
+`_reference_pre_imag_fix_numerator`, its own docstring calls it "THE PRE-FIX
+FORMULA", and it alone is asserted to still produce 173 NaNs (`ref_nan.sum()
+== 173`). The live path, `smp.numerator`, is asserted to produce zero
+(`new_nan.sum() == 0`). No assertion anywhere claims the live code is wrong —
+confirmed live, `5 passed in 42.78s`.
+
+**Rule.** A test whose assertion encodes a known-wrong value — a NaN, an
+overflowed `inf`, a stale count — as the expected result must say so in its own
+docstring, in words a grep can find: "PRE-FIX FORMULA", "pins current-and-wrong
+behaviour", "exists to pin" — the way instance 3's reference function already
+does. A defect-characterisation test earns that label only by computing the
+defect's arithmetic in a function or branch *named for the defect*
+(`_reference_pre_imag_fix_numerator`, never `smp.numerator` itself);
+asserting the wrong value directly of the *live* code path, with no such
+label, is what turned instances 1 and 2 into traps. The check: grep every test
+file for a NaN self-inequality (`x != x`) or a hardcoded `inf`/known-bad
+literal asserted as the expected value, and require the enclosing docstring or
+function name to carry a pre-fix/defect label; a hit with neither is filed as
+an instance of this class, not treated as a bug in the code it tests.
+Falsifiability, so the check is not itself vacuous: revert the dead-entry
+guard in `ceq/arm_smprime.py` (stop masking `e` to `0` on `rh == 0` before the
+complex multiply) and instance 1's *inverted* assertion — `mod[2, 0] ==
+mod[2, 0]` — must go red again; an inverted assertion that stays green under
+the reintroduced defect would itself be a new instance of `V-3`, not a fix.
+
+**Kin.** `V-4` is a control that fires for the wrong reason; this is worse — a
+control built to fire *for* the defect, which then fires *on* whoever removes
+it. `M-17` is a census that classified a correction record as the defect it
+corrected; this is the same inversion at the level of one assertion instead of
+a whole document.

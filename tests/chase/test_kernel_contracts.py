@@ -22,12 +22,12 @@ import torch
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import k22  # noqa: E402
-from conftest import run_isolated  # noqa: E402
+from _chase_env import run_isolated  # noqa: E402
 
-# routed through conftest: torch.cuda.is_available() alone still reports True
+# routed through _chase_env: torch.cuda.is_available() alone still reports True
 # under CUDA_VISIBLE_DEVICES="" while device_count() is 0, so these did not skip
 # on a CPU-only box -- they ran and failed.
-from conftest import HAS_CUDA  # noqa: E402
+from _chase_env import HAS_CUDA  # noqa: E402
 
 cuda = pytest.mark.skipif(not HAS_CUDA, reason="kernel is CUDA-only")
 

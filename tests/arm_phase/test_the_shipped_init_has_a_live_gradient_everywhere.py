@@ -1,4 +1,4 @@
-"""The same guard as `tests/curvature/test_the_shipped_init_has_a_live_gradient_everywhere.py`, pointed at ARM PHASE.
+"""The same guard as `tests/curvature/test_the_shipped_init_has_a_live_gradient_everywhere_smprime.py`, pointed at ARM PHASE.
 
 `MISTAKES.md` V-29 closes by naming this module as the LIVE half of the defect:
 *"THE DEFECT IS LIVE IN A SIBLING ARM, unfixed at the time of writing."* The

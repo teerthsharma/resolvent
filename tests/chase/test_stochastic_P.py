@@ -161,7 +161,7 @@ def test_resolvent_solve_is_cheap_at_1b_scale():
     """A 1B model has d ~ 2048. THEORY.md §6 puts one resolvent solve in the pipeline.
     Row-stochastic P via softmax is DENSE, so this is a dense d x d solve."""
     d = 2048
-    from conftest import HAS_CUDA
+    from _chase_env import HAS_CUDA
     dev = "cuda" if HAS_CUDA else "cpu"
     P = rows_softmax(torch.randn(d, d, device=dev, dtype=torch.float32))
     b = torch.randn(d, 1, device=dev, dtype=torch.float32)

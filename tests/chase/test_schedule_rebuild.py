@@ -164,7 +164,7 @@ def test_schedule_rebuild_is_cheaper_than_the_attention_it_schedules():
     """§4's premise: "Recomputing a hierarchical partition every token is wasteful;
     recomputing it when the regime changes is not." That only holds if a rebuild is
     cheap relative to a forward pass."""
-    from conftest import HAS_CUDA
+    from _chase_env import HAS_CUDA
     if not HAS_CUDA:
         pytest.skip("needs the CUDA kernel")
     import k22

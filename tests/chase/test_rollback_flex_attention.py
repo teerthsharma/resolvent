@@ -33,7 +33,7 @@ import torch
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from conftest import HAS_CUDA  # noqa: E402
+from _chase_env import HAS_CUDA  # noqa: E402
 
 pytestmark = pytest.mark.skipif(not HAS_CUDA, reason="CUDA required")
 

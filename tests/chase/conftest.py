@@ -31,9 +31,7 @@ change the result of another test.
 """
 
 import os
-import subprocess
 import sys
-import textwrap
 
 import pytest
 import torch
@@ -41,44 +39,19 @@ import torch
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
-def _has_cuda():
-    """`is_available()` alone is not enough.
-
-    With CUDA_VISIBLE_DEVICES="" this torch build still reports
-    `is_available() == True` while `device_count() == 0`, and the next call to
-    `get_device_capability(0)` raises "Invalid device id" -- from conftest, at
-    import time, which takes the WHOLE directory down before a single test runs.
-    A CPU-only machine is the common case for a reader reproducing this, so the
-    probe has to survive it.
-    """
-    try:
-        return torch.cuda.is_available() and torch.cuda.device_count() > 0
-    except Exception:  # noqa: BLE001
-        return False
-
-
-HAS_CUDA = _has_cuda()
-DEVICES = ["cpu"] + (["cuda"] if HAS_CUDA else [])
-
-
-def has_triton():
-    if not HAS_CUDA:
-        return False
-    try:
-        import triton  # noqa: F401
-    except ImportError:
-        return False
-    try:
-        return torch.cuda.get_device_capability(0)[0] >= 8
-    except Exception:  # noqa: BLE001
-        return False
-
-
-HAS_TRITON = has_triton()
-
-requires_cuda = pytest.mark.skipif(not HAS_CUDA, reason="CUDA not available")
-requires_triton = pytest.mark.skipif(
-    not HAS_TRITON, reason="Triton needs CUDA with compute capability >= 8.0"
+# `_has_cuda`, `HAS_CUDA`, `DEVICES`, `has_triton`, `HAS_TRITON`, `requires_cuda`,
+# `requires_triton` and `run_isolated` live in `_chase_env.py`, not here -- see
+# that module's docstring. Imported back for this file's own fixtures below and
+# so `conftest.X` still resolves for anything still spelling it that way.
+from _chase_env import (  # noqa: E402
+    _has_cuda,
+    HAS_CUDA,
+    DEVICES,
+    has_triton,
+    HAS_TRITON,
+    requires_cuda,
+    requires_triton,
+    run_isolated,
 )
 
 
@@ -102,27 +75,6 @@ def _restore_global_torch_state():
     finally:
         torch.set_default_dtype(dtype if dtype is not None else _PRISTINE_DTYPE)
         torch.set_default_dtype(_PRISTINE_DTYPE)
-
-
-# ------------------------------------------------------- 3. subprocess isolation
-
-
-def run_isolated(source, timeout=180):
-    """Run `source` in a fresh interpreter. Returns (returncode, stdout, stderr).
-
-    For probes that can trigger a CUDA illegal memory access. An IMA poisons the
-    context for the whole process, so the only way to assert on one without
-    destroying the rest of the run is to give it its own process.
-    """
-    root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-    here = os.path.dirname(os.path.abspath(__file__))
-    prelude = f"import sys; sys.path.insert(0, r{root!r}); sys.path.insert(0, r{here!r})\n"
-    env = dict(os.environ, CUDA_LAUNCH_BLOCKING="1")
-    proc = subprocess.run(
-        [sys.executable, "-c", prelude + textwrap.dedent(source)],
-        capture_output=True, text=True, timeout=timeout, env=env,
-    )
-    return proc.returncode, proc.stdout, proc.stderr
 
 
 # --------------------------------------------------------- 4. known-red ledger

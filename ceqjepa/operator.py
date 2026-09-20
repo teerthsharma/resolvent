@@ -62,9 +62,20 @@ __all__ = [
     "state_solve",
     "committor",
     "q_floor_closed_form",
+    "hitting_time_read",
+    "VERDICT_DEFINED",
+    "VERDICT_NEVER",
+    "VERDICT_UNDEFINED",
     "TELEPORT",
     "KAPPA_DESIGN_BOUND_F32",
 ]
+
+#: LAW L-NEVER verdicts (Addendum F-N). String constants, not free-typed
+#: literals, so a caller building a table against hitting_time_read() can't
+#: typo a comparison silently.
+VERDICT_DEFINED = "DEFINED"
+VERDICT_NEVER = "NEVER"
+VERDICT_UNDEFINED = "UNDEFINED"
 
 
 class SingularTransientBlockError(RuntimeError):
@@ -355,6 +366,149 @@ def q_floor_closed_form(n, absorbing_idx, dtype=torch.float64, device=None,
     return q
 
 
+def hitting_time_read(W, T, i=None, gamma_abel=None, r_tol=1e-3, kappa_max=1e12):
+    """LAW L-NEVER (Addendum F-N) -- the read. Implements the specification
+    exactly, term by term:
+
+        Q_T        = W with T's rows AND COLUMNS removed (both -- removing
+                     only rows leaves columns into T, which is a different,
+                     wrong chain).
+        r_gamma(i) = (1 - gamma) * [(I - gamma*Q_T)^-1 . 1]_i
+        Abel's theorem: r_gamma -> P_i(tau_T = infinity) as gamma -> 1^-.
+        E[tau]     = [(I - Q_T)^-1 . 1]_i, ONLY when r_gamma < r_tol;
+                     otherwise verdict is NEVER and E is not computed (a
+                     mean over an event this read has just measured as not
+                     converging within gamma_abel of 1 is not a number).
+        cond(I - Q_T) > kappa_max gives UNDEFINED for every queried state,
+        with the exact 2-norm condition number logged to
+        hitting_time_read.last_condition_number, and NO solve attempted --
+        a NaN/Inf out of a near-singular solve is a void instrument, never
+        a result (the same rule committor() and build_operator() already
+        enforce elsewhere in this file).
+
+    gamma_abel is a FIXED practical stand-in for the gamma -> 1 limit, not
+    the limit itself (no code computes an exact symbolic limit). Default
+    1 - 1e-6 sits three orders of magnitude closer to 1 than the r_tol=1e-3
+    decision boundary, so a chain's spectral radius has to be within about
+    1e-3 of 1 (an enormous, practically-never mean hitting time even where
+    finite) before the choice of gamma_abel itself could flip DEFINED vs
+    NEVER. That is the intended behavior, not a numerical artifact: a state
+    whose escape is this close to certain-never is reported NEVER even if
+    its true limiting P(never) is exactly 0, because within any horizon a
+    caller can afford to solve at, it is indistinguishable from never.
+
+    MASS WALL: for any row-stochastic W (rows sum to 1, the construction
+    every chain in this file produces), a transient block whose rows always
+    carry positive mass toward T has P(never) = 0 identically -- that is
+    not this function inferring the hypothesis class, it is what an honest
+    r_gamma measurement returns for it. A caller tabulating results across
+    hypothesis classes must record that a class is built this way, per the
+    house rule, rather than score a correct 0 as if it were a finding.
+
+    Runs entirely in float64 (cast on entry regardless of W's dtype): the
+    whole point of this read is condition-number and near-gamma=1 accuracy,
+    where float32 rounding would move the r_tol decision boundary itself.
+
+    W: [n, n], no batch dim -- every caller in this repo reads one chain at
+       a time; add a batch dim when one actually needs it.
+    T: sequence of int indices, the target/absorbing set to hit.
+    i: None -> every state not in T, ascending original index; or a single
+       int / sequence of original W-space indices. None of them may be in
+       T (tau_T is trivially 0 there, not this read's job).
+    r_tol, kappa_max: the two thresholds the LAW specifies (1e-3, 1e12).
+
+    Returns a list of dicts, one per queried state, in query order:
+        {"i": <original index>, "E": float | None, "p_never": float | None,
+         "verdict": VERDICT_DEFINED | VERDICT_NEVER | VERDICT_UNDEFINED,
+         "kappa": float}
+    kappa is the exact cond(I - Q_T) for the whole read (shared across all
+    queried states in this call), so a caller never has to re-derive why
+    UNDEFINED fired.
+    """
+    if not torch.isfinite(W).all():
+        raise ValueError(
+            "hitting_time_read: W contains non-finite entries (NaN/Inf); "
+            "refusing to build Q_T, for the same reason build_operator() "
+            "refuses non-finite logits -- a NaN would pass every downstream "
+            "threshold check silently"
+        )
+    if gamma_abel is None:
+        gamma_abel = 1.0 - 1e-6
+    W = W.to(torch.float64)
+    n = W.shape[-1]
+    device = W.device
+
+    T_idx = torch.as_tensor(sorted(set(int(t) for t in T)), dtype=torch.long, device=device)
+    is_target = torch.zeros(n, dtype=torch.bool, device=device)
+    is_target[T_idx] = True
+    transient_idx = torch.nonzero(~is_target, as_tuple=True)[0]   # ascending original index
+    nT = transient_idx.numel()
+
+    if i is None:
+        query_orig = transient_idx
+    else:
+        query_orig = torch.as_tensor([i] if isinstance(i, int) else list(i),
+                                      dtype=torch.long, device=device)
+        bad = query_orig[is_target[query_orig]]
+        if bad.numel() > 0:
+            raise ValueError(
+                "hitting_time_read: state(s) %s are in T; tau_T is trivially "
+                "0 there, not this read's job" % bad.tolist()
+            )
+
+    if nT == 0:
+        hitting_time_read.last_condition_number = 0.0
+        return []
+
+    pos_of = torch.full((n,), -1, dtype=torch.long, device=device)
+    pos_of[transient_idx] = torch.arange(nT, device=device)
+    query_pos = pos_of[query_orig]
+
+    Q_T = W[transient_idx][:, transient_idx]
+    eye = torch.eye(nT, dtype=torch.float64, device=device)
+    M1 = eye - Q_T
+
+    kappa = float(torch.linalg.cond(M1))
+    hitting_time_read.last_condition_number = kappa
+
+    # An exactly (or numerically) singular M1 can make the SVD ratio a NaN
+    # (0/0), not the +inf a caller would expect -- `nan > kappa_max` is
+    # False, so the bare comparison would silently let a singular block
+    # through. Route NaN/Inf through the same UNDEFINED branch as "too big".
+    if not (kappa == kappa) or kappa == float("inf") or kappa > kappa_max:
+        return [{"i": int(q), "E": None, "p_never": None, "verdict": VERDICT_UNDEFINED,
+                 "kappa": kappa} for q in query_orig.tolist()]
+
+    ones = torch.ones(nT, 1, dtype=torch.float64, device=device)
+    Mg = eye - gamma_abel * Q_T
+    try:
+        r_gamma_all = ((1.0 - gamma_abel) * torch.linalg.solve(Mg, ones)).squeeze(-1)
+        E_all = torch.linalg.solve(M1, ones).squeeze(-1)
+    except torch.linalg.LinAlgError:
+        # cond() said "invertible enough" but the solver itself refused --
+        # a void instrument, never a result. UNDEFINED, kappa already logged.
+        return [{"i": int(q), "E": None, "p_never": None, "verdict": VERDICT_UNDEFINED,
+                 "kappa": kappa} for q in query_orig.tolist()]
+
+    if not (torch.isfinite(r_gamma_all).all() and torch.isfinite(E_all).all()):
+        # cond() said "invertible enough" but the solve disagreed -- a void
+        # instrument, never a result. Route to UNDEFINED rather than let a
+        # NaN/Inf leak out labeled DEFINED or NEVER.
+        return [{"i": int(q), "E": None, "p_never": None, "verdict": VERDICT_UNDEFINED,
+                 "kappa": kappa} for q in query_orig.tolist()]
+
+    results = []
+    for orig, p in zip(query_orig.tolist(), query_pos.tolist()):
+        r = float(r_gamma_all[p])
+        if r < r_tol:
+            results.append({"i": orig, "E": float(E_all[p]), "p_never": r,
+                             "verdict": VERDICT_DEFINED, "kappa": kappa})
+        else:
+            results.append({"i": orig, "E": None, "p_never": r,
+                             "verdict": VERDICT_NEVER, "kappa": kappa})
+    return results
+
+
 if __name__ == "__main__":
     torch.manual_seed(0)
 
@@ -493,5 +647,43 @@ if __name__ == "__main__":
     assert z.shape == (n, 8) and O.shape == (n, 8)
     assert torch.isfinite(z).all() and torch.isfinite(O).all()
     print("(bonus) state_solve: z, O finite, correct shape. route=solve_triangular, delta=0.0")
+
+    # -----------------------------------------------------------------------
+    # (g) LAW L-NEVER read: DEFINED cross-checked against a dense inverse,
+    # NEVER on a near-degenerate escape, UNDEFINED on an exactly-singular
+    # transient block with the condition number logged and NO solve leaking
+    # a NaN/Inf out as if it were a result.
+    # -----------------------------------------------------------------------
+    g_res = hitting_time_read(P_uniform, absorbing_idx)
+    g_kappa = hitting_time_read.last_condition_number
+    T_g = torch.tensor([i for i in range(n) if i not in absorbing_idx])
+    Q_g = P_uniform[T_g][:, T_g].to(torch.float64)
+    E_dense = (torch.linalg.inv(torch.eye(len(T_g), dtype=torch.float64) - Q_g)
+               @ torch.ones(len(T_g), 1, dtype=torch.float64)).squeeze(-1)
+    max_E_err = max(abs(r["E"] - float(E_dense[k])) for k, r in enumerate(g_res))
+    print("(g1) L-NEVER DEFINED: %d/%d states, cond(I-Q_T)=%.3f, max |E - dense inverse| = %.3e"
+          % (sum(r["verdict"] == VERDICT_DEFINED for r in g_res), len(g_res), g_kappa, max_E_err))
+    assert all(r["verdict"] == VERDICT_DEFINED for r in g_res)
+    assert all(r["p_never"] < 1e-3 for r in g_res)
+    assert max_E_err < 1e-9
+
+    p_stall = 0.9999
+    W_never = torch.tensor([[p_stall, 1.0 - p_stall], [0.0, 1.0]], dtype=torch.float64)
+    r_never = hitting_time_read(W_never, [1], i=0)[0]
+    print("(g2) L-NEVER NEVER: p_stall=%.4f, p_never (r_gamma) = %.6f (>= 1e-3 required), "
+          "E withheld = %s" % (p_stall, r_never["p_never"], r_never["E"] is None))
+    assert r_never["verdict"] == VERDICT_NEVER
+    assert r_never["E"] is None and r_never["p_never"] >= 1e-3
+
+    W_sing = torch.tensor([[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [1.0, 0.0, 0.0]], dtype=torch.float64)
+    r_undef = hitting_time_read(W_sing, [2])
+    print("(g3) L-NEVER UNDEFINED: exactly-singular transient block, cond logged = %s, "
+          "E/p_never withheld for all %d queried states"
+          % (hitting_time_read.last_condition_number, len(r_undef)))
+    assert all(r["verdict"] == VERDICT_UNDEFINED and r["E"] is None and r["p_never"] is None
+               for r in r_undef)
+    _kappa_g3 = hitting_time_read.last_condition_number
+    assert _kappa_g3 != _kappa_g3 or _kappa_g3 > 1e12, \
+        "an exactly-singular block must log NaN or a huge cond, not a finite plausible one"
 
     print("ALL SELF-CHECKS PASSED")

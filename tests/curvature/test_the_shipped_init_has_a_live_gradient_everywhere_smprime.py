@@ -10,7 +10,7 @@ initialisation must give `|grad| > 0`.
 Written first against `identity_heads`, which was the initialisation arms were
 being trained from, it failed verbatim at commit `62cb8e0` on `WIN-16QAL06O9GB`,
 python 3.11.9, torch 2.14.0+cpu, exit 1, under
-`python -m pytest tests/curvature/test_the_shipped_init_has_a_live_gradient_everywhere.py -q`:
+`python -m pytest tests/curvature/test_the_shipped_init_has_a_live_gradient_everywhere_smprime.py -q`:
 
     E  AssertionError: ArmSMPrime.identity_heads() declares 15 trainable
     E  tensors and 5 of them receive an EXACTLY ZERO gradient: g,

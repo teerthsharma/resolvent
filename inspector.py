@@ -54,6 +54,23 @@ import sys
 
 ROOT = pathlib.Path(__file__).resolve().parent
 
+
+def _read(path: pathlib.Path) -> tuple[str | None, str]:
+    """Read `path` as text, or (None, why) if it is not there.
+
+    Every check below that reads a file the repo does not guarantee to exist
+    routes through this, so a deleted file becomes a stated INDETERMINATE --
+    "this could not be measured, and here is what is missing" -- instead of an
+    uncaught FileNotFoundError. STATE.md and CHECKLIST.md were retired
+    deliberately (c71527a); a guard is not a reason to invent them back."""
+    if not path.is_file():
+        try:
+            rel = path.relative_to(ROOT)
+        except ValueError:
+            rel = path
+        return None, f"{rel} is missing -- not measured"
+    return path.read_text(encoding="utf-8"), ""
+
 #: The calibration table. `run_calib.py` owns these too, but this checks them by
 #: invoking `bench` directly -- its comparison logic is what broke as #12.
 CALIB = [("signed", 3, 0.046875), ("sgate", 1, 0.0234375),
@@ -175,8 +192,14 @@ def _m2_slice(text: str) -> str:
 
 
 def check_lock() -> None:
-    live = _m2_slice((ROOT / "CHECKLIST.md").read_text(encoding="utf-8"))
-    archived = (ROOT / "results/m2_item_text.txt").read_text(encoding="utf-8").strip()
+    live_raw, why_live = _read(ROOT / "CHECKLIST.md")
+    arch_raw, why_arch = _read(ROOT / "results/m2_item_text.txt")
+    if live_raw is None or arch_raw is None:
+        check(f"LOCK M2 {LOCK_M2}", INDET,
+              " and ".join(w for w in (why_live, why_arch) if w))
+        return
+    live = _m2_slice(live_raw)
+    archived = arch_raw.strip()
     h = hashlib.sha256(live.encode()).hexdigest()[:12]
     check(f"LOCK M2 {LOCK_M2}", live == archived and h == LOCK_M2, f"hash={h}")
     # MUST-FIRE: a single character changed must break both the compare and hash.
@@ -240,8 +263,12 @@ def check_replay(iteration: int) -> None:
     import torch
     torch.set_num_threads(JOURNAL_THREADS)
     from scale.m2_units import compute, units
+    journal_text, why = _read(ROOT / "results/m2.jsonl")
+    if journal_text is None:
+        check(f"replay of {'/'.join(REPLAY_ASSERTED)}", INDET, why)
+        return
     journal = {}
-    for line in (ROOT / "results/m2.jsonl").read_text().splitlines():
+    for line in journal_text.splitlines():
         if line.strip():
             j = json.loads(line)
             journal[j["key"]] = j
@@ -348,12 +375,22 @@ def check_published(iteration: int) -> None:
         # draws are NOT journalled -- `results/` holds no unit with n=751 or
         # n=549 -- so this is a consistency check across three documents, not a
         # replay of a measurement. That gap is the finding, not a caveat.
-        tab = _m2_table((ROOT / M2_DOC).read_text(encoding="utf-8"))
+        doc_text, why = _read(ROOT / M2_DOC)
+        if doc_text is None:
+            check("published: M2 slope RE-DERIVED from the shipped table",
+                  INDET, why)
+            return
+        tab = _m2_table(doc_text)
         cols = all(abs(k / n - r) < 5e-6 for k, n, r in tab.values())
         got = _m2_slope(tab)
         head = _m2_headline(tab)
-        agree = {f: head in (ROOT / f).read_text(encoding="utf-8")
-                 for f in ("README.md", "MODEL_CARD.md")}
+        doc_reads = {f: _read(ROOT / f) for f in ("README.md", "MODEL_CARD.md")}
+        missing = [f for f, (t, _) in doc_reads.items() if t is None]
+        if missing:
+            check("published: M2 slope RE-DERIVED from the shipped table", INDET,
+                  " and ".join(doc_reads[f][1] for f in missing))
+            return
+        agree = {f: head in t for f, (t, _) in doc_reads.items()}
         ok = cols and all(agree.values()) and abs(got - (-1.2977)) < 5e-4
         check("published: M2 slope RE-DERIVED from the shipped table", ok,
               f"{got:.4f} vs -1.2977 | rate col={cols} | "
@@ -444,8 +481,13 @@ def check_lean() -> None:
         check("lake build CEQ (unmasked exit) + zero sorry", INDET,
               f"lake not runnable: {type(e).__name__}: {e}")
         return
-    sorries = sum(len(re.findall(r"\bsorry\b", p.read_text(encoding="utf-8", errors="ignore")))
-                  for p in (lean / "CEQ").rglob("*.lean"))
+    try:
+        sorries = sum(len(re.findall(r"\bsorry\b", p.read_text(encoding="utf-8", errors="ignore")))
+                      for p in (lean / "CEQ").rglob("*.lean"))
+    except FileNotFoundError as e:            # a .lean file vanished mid-scan
+        check("lake build CEQ (unmasked exit) + zero sorry", INDET,
+              f"file listed by rglob was gone by the time it was read: {e}")
+        return
     check("lake build CEQ (unmasked exit) + zero sorry", rc == 0 and sorries == 0,
           f"exit={rc} sorry={sorries}")
 
@@ -456,9 +498,13 @@ def check_struck() -> None:
                    "-p", "no:cacheprovider"])
     check("struck-constant absence (9 documents + shipped code)",
           *pytest_state(rc, out))
+    registry_text, why = _read(ROOT / "tests/loop/test_no_struck_constant_ships.py")
+    if registry_text is None:
+        check("struck registry readable (guards the non-empty control below)",
+              INDET, why)
+        return
     control("struck registry is non-empty",
-            bool(re.search(r"-1\.389", (ROOT / "tests/loop/test_no_struck_constant_ships.py")
-                           .read_text(encoding="utf-8"))))
+            bool(re.search(r"-1\.389", registry_text)))
 
 
 # ------------------------------------------------------------- 8 attribution
@@ -558,8 +604,16 @@ def main() -> int:
     if len(sys.argv) > 1:
         iteration, resolved = int(sys.argv[1]), True
     else:
-        iteration, resolved = _iteration_from_state(
-            (ROOT / "STATE.md").read_text(encoding="utf-8"))
+        state_path = ROOT / "STATE.md"
+        if state_path.is_file():
+            iteration, resolved = _iteration_from_state(
+                state_path.read_text(encoding="utf-8"))
+        else:
+            # STATE.md was retired for good in the round-report declutter
+            # (c71527a) -- its absence is now the ordinary state, not a failed
+            # read of a file that should be there, so it defaults the same way
+            # an explicit ITERATION argument would: resolved, not INDETERMINATE.
+            iteration, resolved = 0, True
 
     print(f"HEALTH INSPECTOR  iteration {iteration}\n")
     check_rotation(iteration, resolved)

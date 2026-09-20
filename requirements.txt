@@ -15,18 +15,82 @@
 # and can install a transformers that silently drops one of these overrides.
 transformers==5.3.0
 
-# torch: installed build is 2.5.1+cu121 (CUDA 12.1 wheel), but this repo's
-# measurement loop is CPU-only (CUDA is owned by a separate process/nurse
-# here, and tests/*/conftest.py already skip every CUDA-only test when
-# torch.cuda.is_available() is False). The local version segment "+cu121" is
-# only resolvable from https://download.pytorch.org/whl/cu121, not plain
-# PyPI, so pinning it verbatim would break `pip install -r requirements.txt`
-# for anyone without that extra index. Pinning the bare version instead --
-# installable as either the CPU or a matching CUDA wheel depending on the
-# installer's index.
-torch==2.5.1
+# torch: installed build reads 2.14.0+cpu. The local version segment is only
+# resolvable from download.pytorch.org, not plain PyPI, so the bare version is
+# pinned instead -- installable as either the CPU or a matching CUDA wheel
+# depending on the installer's index.
+#
+# This line read `torch==2.5.1` until this edit, while the interpreter ran
+# 2.14.0+cpu, so the file's first sentence above was false for three of its
+# pins (torch, numpy, huggingface_hub). Re-derived here with the command that
+# sentence prescribes: `python -c "import torch,transformers,numpy,scipy;
+# print(torch.__version__, transformers.__version__, numpy.__version__,
+# scipy.__version__)"` reads `2.14.0+cpu 5.3.0 2.4.6 1.17.1`, and
+# `python -m pip freeze` reads `huggingface_hub==1.30.0`.
+#
+# This file and `ceq/compat.py`'s REFERENCE answer DIFFERENT questions and are
+# expected to disagree. REFERENCE names the stack the shipped figures were
+# MEASURED on (torch 2.5.1+cu121, RTX 4060) and is provenance for those numbers,
+# so it is not edited here. This file names what to install to run TODAY.
+# `compat.version_record()["matches_reference"]` reads False on this box; by
+# ceq/compat.py:211-214 that is a flag, not a failure, and it means no figure
+# measured under REFERENCE is reproducible here until one of the two moves.
+torch==2.14.0
 
-numpy==1.26.4
+# torchvision / torchaudio are NOT dependencies of this repository and are
+# deliberately absent from the pins: `grep -rn "torchvision\|AutoImageProcessor\|
+# AutoProcessor\|image_processing\|feature_extraction" --include=*.py .` returns
+# zero matches across ceq/, scale/, scripts/ and tests/.
+#
+# They are nevertheless INSTALLED on this box as torchvision 0.20.1+cu121 and
+# torchaudio 2.5.1+cu121 -- stranded leftovers of the torch 2.5.1+cu121 install
+# that the 2.14.0 upgrade did not replace. torchvision 0.20.1's C++ extension is
+# built against torch 2.5.1, so `import torchvision` raises
+# `RuntimeError: operator torchvision::nms does not exist`, and that breaks 8
+# test files at collection (re-measured 2026-09-20, WIN-16QAL06O9GB, python
+# 3.11.9, torch 2.14.0+cpu, pytest 9.0.3; was documented as 10 here, but two of
+# the original ten are gone from the tree and were never re-counted):
+#   tests/chase/test_resume_checkpoint.py
+#   tests/chase/test_scale_hazards.py
+#   tests/gate0/test_g02_resume.py
+#   tests/gate0/test_g03_persist.py
+#   tests/gate0/test_g12_train_operator.py
+#   tests/gate0/test_g13_beta_learnable.py
+#   tests/gate0/test_g15_noise_floor.py
+#   tests/gate0/test_g16_lrt_pinned.py
+# Re-derive this list with (confirmed 2026-09-20, WIN-16QAL06O9GB, python
+# 3.11.9, pytest 9.0.3, to return exactly these 8):
+#   python -m pytest tests/chase tests/gate0 -q --collect-only 2>&1 | grep ^ERROR
+# A grep for the string "torchvision" (or AutoImageProcessor/AutoProcessor)
+# across tests/ is NOT a re-derivation: it returns zero matches (rc=1), same
+# as the zero above for ceq/, scale/ and scripts/, because all 8 files reach
+# torchvision transitively through transformers and never name it themselves.
+# transformers 5.3.0 reaches torchvision
+# unconditionally through modeling_utils -> loss.loss_utils -> loss_d_fine ->
+# loss_for_object_detection -> image_transforms -> image_utils:53
+# (`from torchvision.transforms import InterpolationMode`), so
+# `from transformers import PreTrainedModel` fails behind it. The gate
+# `is_torchvision_available()` tests only `find_spec("torchvision")`, which
+# succeeds for a package that is present but unimportable, so no env var averts
+# it: TRANSFORMERS_NO_TORCHVISION does not exist in 5.3.0 (zero grep hits in the
+# installed package) and USE_TORCH/USE_TF do not gate this path.
+#
+# The repair is `pip uninstall torchvision torchaudio` -- removing packages
+# nothing here imports -- NOT a pin, because no torchvision that matches torch
+# 2.14.0 is present and installing one is out of scope for a file edit. Until
+# then the 8 files above are RED and named; pytest.ini carries the count and
+# the three causes.
+#
+# A collect-only count of this strand UNDERSTATES the true error total: as of
+# 2026-09-20, tests/curvature/test_chess_probe_protocol.py yields 8 SETUP
+# errors (`python -m pytest tests/curvature/test_chess_probe_protocol.py -q
+# --tb=no` reads "8 errors in 1.70s, 0 passed, 0 skipped"), not the 1
+# collection error a naive reading of "collect-only" would assume, because
+# pi_jepa_chess.py is unstaged in this checkout. Any record that adds a
+# collect-only number to this file's 8 and calls the sum the total error count
+# is wrong by 8.
+
+numpy==2.4.6
 scipy==1.17.1
 
 # Used by tests/foreman/test_topology_washout.py as the ripser/persim
@@ -37,7 +101,7 @@ persim==0.3.8
 # ceq/hf/train.py: `from datasets import load_dataset` / `from
 # huggingface_hub import HfApi`.
 datasets==4.8.4
-huggingface_hub==1.7.1
+huggingface_hub==1.30.0
 
 pytest==9.0.3
 

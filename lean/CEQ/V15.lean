@@ -241,6 +241,69 @@ theorem gate_zero_not_stochastic (g : ℕ → ℝ) (hg : ∀ k, g k = 0) {i : �
   intro hc
   linarith
 
+/-- **`softmax_unique_absorbing`, wall (b) — the ZERO WALL.**
+
+    Two facts about the raw exponential score, for ANY gate `g`, no hypothesis
+    needed on `g` at all:
+
+    * row `0` is absorbing purely from the causal mask — the only column
+      row `0` can see is `j = 0` itself, so `Wc g 0 j` is the indicator of
+      `j = 0`, exactly `Asink`'s BOS-sink slot and exactly the
+      `P[0, 0] == 1 always` refusal `ceqjepa/operator.py`'s module docstring
+      states for any causal mask;
+    * every OTHER row `i ≥ 1` leaks a strictly positive amount back to column
+      `0`: `Wc g i 0 = W g i 0 = exp(scan g i − scan g 0)`, and `exp` is
+      strictly positive for every finite real (`Real.exp_pos`).
+
+    Read together: on a causal chain built from `exp`, index `0` is the only
+    row that can be a closed absorbing class. No other single row `i ≥ 1` can
+    be closed on its own, because it always sends positive mass to `0`. That
+    is the uniqueness `gate_zero_second_absorbing` below shows the raw score
+    cannot escape by itself — only an explicit gate can. -/
+theorem softmax_unique_absorbing (g : ℕ → ℝ) :
+    (∀ j, Wc g 0 j = if j = 0 then 1 else 0) ∧ ∀ i, 1 ≤ i → 0 < Wc g i 0 := by
+  refine ⟨fun j => ?_, fun i _ => ?_⟩
+  · by_cases hj : j = 0
+    · subst hj
+      simp [Wc, W]
+    · have hjpos : ¬ j ≤ 0 := fun h => hj (Nat.le_zero.mp h)
+      simp [Wc, hjpos, hj]
+  · have h0i : (0 : ℕ) ≤ i := Nat.zero_le i
+    simp only [Wc, if_pos h0i]
+    exact Real.exp_pos _
+
+/-- A boundary-overwrite gate on top of the causal hop: `m i j` multiplies the
+    `(i, j)` entry of `Wc`, independently of the score `g`. This is the Lean
+    shape of `ceqjepa/operator.py`'s `build_operator` boundary overwrite —
+    "declared absorbing rows are overwritten to identity ROWS ... AFTER the
+    softmax" — factored as a multiplicative mask so the causal zeros of `Wc`
+    (every `j > i`) survive untouched no matter what `m` says there. -/
+noncomputable def Wgate (g : ℕ → ℝ) (m : ℕ → ℕ → ℝ) (i j : ℕ) : ℝ := m i j * Wc g i j
+
+/-- **`gate_zero_second_absorbing`.**
+
+    `softmax_unique_absorbing` shows the raw score alone can never make row
+    `1` absorbing: `Wc g 1 0 > 0` for every `g`, by the ZERO WALL. An
+    explicit gate `m`, independent of `g`, can. Zeroing exactly the one edge
+    `m 1 0 = 0` and leaving the diagonal `m 1 1 = 1` untouched collapses row
+    `1` to `e_1` — the identity row — for EVERY score `g`: the causal mask
+    already zeroes every `j > 1` inside `Wc` regardless of `m`, so the two
+    edges `m` actually reaches (`j = 0` and `j = 1`) are the entire row. Row
+    `1` becomes a SECOND closed absorbing class, bought entirely by the gate.
+    This is exactly what strict positivity of `exp` forbids the plain
+    softmax score from doing on its own. -/
+theorem gate_zero_second_absorbing (g : ℕ → ℝ) (m : ℕ → ℕ → ℝ)
+    (h0 : m 1 0 = 0) (h1 : m 1 1 = 1) (j : ℕ) :
+    Wgate g m 1 j = if j = 1 then 1 else 0 := by
+  by_cases hj1 : j = 1
+  · subst hj1
+    simp [Wgate, Wc, h1, W]
+  · have hcase : ¬ j ≤ 1 ∨ j = 0 := by omega
+    rcases hcase with hgt | hz
+    · simp [Wgate, Wc, hgt, hj1]
+    · subst hz
+      simp [Wgate, Wc, h0, hj1]
+
 /-- **#5, the reading that actually delivers parity.**
 
     Take the gate into the logits ADDITIVELY, on top of whatever logits `q` the

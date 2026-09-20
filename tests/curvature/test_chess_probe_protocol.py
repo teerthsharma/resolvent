@@ -1,7 +1,7 @@
 """RED-first: what the staged chess probe protocol measures that it does not name.
 
 Target: the Kaggle entry script `kaggle_pkg/pi_jepa_chess.py`. Point
-CEQ_KAGGLE_PKG at the directory holding it (default: the session scratchpad copy).
+CEQ_KAGGLE_PKG at the directory holding it (default: <repo>/kaggle_pkg).
 
 Each test names one way the run can emit a number that reads like a result:
 
@@ -38,30 +38,42 @@ import sys
 import numpy as np
 import pytest
 
-_DEFAULT_PKG = (r"C:\Users\seal\AppData\Local\Temp\claude"
-                r"\C--Users-seal-Desktop-New-folder--32-"
-                r"\bb16374f-0874-425e-b13e-7a1d3ce67564\scratchpad\kaggle_pkg")
-KPKG = pathlib.Path(os.environ.get("CEQ_KAGGLE_PKG", _DEFAULT_PKG))
 REPO = pathlib.Path(__file__).resolve().parents[2]
+_DEFAULT_PKG = str(REPO / "kaggle_pkg")
+KPKG = pathlib.Path(os.environ.get("CEQ_KAGGLE_PKG", _DEFAULT_PKG))
 PGN = pathlib.Path(os.environ.get("CEQ_PGN", str(KPKG / "_smoke_prefix.pgn")))
 
-if not (KPKG / "pi_jepa_chess.py").exists():
-    # L-SURFACE. A check that cannot run is a FAILED check, never a skipped one.
-    # This was a module-level skip, allowed at collection time, which reported
-    # `1 skipped in 0.24s`, exit status 5, on every machine but the one that
-    # staged the kernel -- and exit 5 reads as "nothing to run" rather than as
-    # "eight REDs did not execute". Raising makes the absence red and named.
-    raise AssertionError(
-        "the subject of this file is absent: no pi_jepa_chess.py under %s. "
-        "Set CEQ_KAGGLE_PKG to the directory holding the staged kernel, or "
-        "track the kernel. These eight checks are RED by intent; they must "
-        "never report as skipped, because a skip is indistinguishable from a "
-        "suite that has nothing to say." % KPKG)
-sys.path.insert(0, str(KPKG))
+# L-SURFACE. A check that cannot run is a FAILED check, never a skipped one.
+# A module-level raise here reads as a collection error and takes the whole
+# session down with it; a module-level skip reported `1 skipped`, exit status
+# 5, which reads as "nothing to run" rather than "eight REDs did not execute".
+# So collection never fails on the kernel's absence -- only the fixture below
+# does, the same pytest.fail idiom the `pipeline` fixture already uses -- and
+# every one of the eight tests goes red on its own setup.
+_KERNEL_PRESENT = (KPKG / "pi_jepa_chess.py").exists()
+_KERNEL_MSG = (
+    "the subject of this file is absent: no pi_jepa_chess.py under %s. "
+    "Set CEQ_KAGGLE_PKG to the directory holding the staged kernel, or "
+    "track the kernel. These eight checks are RED by intent; they must "
+    "never report as skipped, because a skip is indistinguishable from a "
+    "suite that has nothing to say." % KPKG)
 
-import pi_jepa_chess as K  # noqa: E402
+if _KERNEL_PRESENT:
+    sys.path.insert(0, str(KPKG))
+    import pi_jepa_chess as K  # noqa: E402
+else:
+    K = None
 
 torch = pytest.importorskip("torch")
+
+
+@pytest.fixture(scope="module", autouse=True)
+def _require_kernel():
+    """Autouse fixtures run first within their scope, ahead of `pipeline`, so
+    this is what every test in the module hits when the kernel is absent."""
+    if not _KERNEL_PRESENT:
+        pytest.fail(_KERNEL_MSG)
+
 
 S_LEN, HORIZON = 16, 4
 LENGTHS = [16, 64, 128]

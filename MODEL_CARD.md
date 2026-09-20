@@ -1,5 +1,5 @@
 ---
-license: mit
+license: apache-2.0
 library_name: transformers
 pipeline_tag: text-generation
 language:

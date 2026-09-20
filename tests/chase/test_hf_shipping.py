@@ -125,7 +125,7 @@ def test_triton_is_importable_without_cuda():
 def test_kernel_covers_the_gpus_a_1b_model_is_actually_run_on():
     """k22 hardcodes num_warps=4 and has no @triton.autotune; the PR benchmarked one
     device. Triton's own compatibility statement is NVIDIA compute capability 8.0+."""
-    from conftest import HAS_CUDA
+    from _chase_env import HAS_CUDA
     if not HAS_CUDA:
         pytest.skip("no GPU")
     cc = torch.cuda.get_device_capability(0)

@@ -166,12 +166,13 @@ from ceq import arm_smprime as arm
 
 from . import curvature as cv
 from . import pi_assign as pa
+from . import sharpness
 
 __all__ = [
     "SEED", "D_LATENT", "S_LEN", "BATCH", "X_DIM", "HORIZON", "N_STEPS",
-    "TAU", "LR", "N_ACTIONS", "DK", "HIDDEN",
+    "TAU", "PIN_BETA", "LR", "N_ACTIONS", "DK", "HIDDEN",
     "BETA_INTERIOR", "EQUIV_BETAS", "EQUIV_TOL", "ROW_SUM_TOL",
-    "COLLAPSE_STD_MIN", "COLLAPSE_ERANK_MIN", "COLLAPSE_PLANTS",
+    "COLLAPSE_STD_MIN", "COLLAPSE_ERANK_MIN", "COLLAPSE_PLANTS", "RANK_BURN_IN",
     "LAM", "MU", "NU", "COV_SWEEP", "BASELINE_ORDER", "MASK_AXIS",
     "Refusal", "is_refusal", "REASON_COLLAPSE", "REASON_REFUSED_COORD",
     "measured_mask", "beta_vector", "beta_for", "read_refused_column",
@@ -181,7 +182,7 @@ __all__ = [
     "DRIFT", "draw_bed", "bed_rank_check", "shipped_equivalence", "corner_identities", "refusal_channel",
     "collapse_must_fire", "stopgrad_must_fire", "ema_identity", "init_check",
     "std_term_probe", "PiJepa", "build", "fit", "default_batches",
-    "train_run", "baseline_detail", "baselines",
+    "train_run", "baseline_detail", "baselines", "pin_vs_ema_report",
     "covariance_sweep", "roundtrip_check", "roundtrip_without_mask",
     "theorem_hypotheses", "action_report", "provenance", "docstring_numbers",
     "report",
@@ -199,6 +200,7 @@ X_DIM = 12                #: observation width
 HORIZON = 4               #: h, the prediction horizon in positions
 N_STEPS = 120             #: optimiser steps; a CPU budget, not a scale claim
 TAU = 0.99                #: EMA momentum for the target encoder
+PIN_BETA = 1.0            #: the parameter-free target's corner: beta=1 is softmax
 LR = 3e-3
 N_ACTIONS = 4
 DK = 8                    #: query/key width inside the predictor
@@ -223,6 +225,29 @@ COLLAPSE_STD_MIN = 1e-3
 #: enough to catch that would refuse this bed's own healthy run.
 COLLAPSE_ERANK_MIN = 1.5
 COLLAPSE_PLANTS = ("healthy", "planted", "rank_one")
+
+#: THE RANK LEG'S BURN-IN, SET FROM THE SAME SIDE THE LEG NOW READS FOR BOTH
+#: ARMS. Once the detector reads the ONLINE representation for the EMA arm too
+#: (fit() no longer special-cases pin_target), it meets a transient the online
+#: encoder enters early under EITHER target and leaves before training ends:
+#: measured on seeds 5501-5505, both pin_target settings, 120 steps each (10
+#: runs), the online effective rank dips below COLLAPSE_ERANK_MIN and
+#: recovers, and the LATEST step at which any of THOSE 10 runs was still below
+#: the floor is step 54 (seed 5503, pin_target=True). Step 54 IS A PROPERTY OF
+#: SEEDS 5501-5505, NOT OF THE BED: on fresh seeds 6002 (EMA arm, erank 1.2062
+#: at step 55) and 6005 (pinned arm, erank 1.4176 at step 55) the dip is still
+#: live at the step this burn-in stops gating, so a caller relying on 55 as a
+#: universal recovery step will still see the rank leg raise past it -- 55 is
+#: not re-measured here, only its origin is stated correctly. The std leg is
+#: unaffected and still runs from step 0: this burn-in gates the rank leg
+#: only, because the dip is a rank-leg-shaped transient, not a sign the
+#: variance leg's own floor needs delaying too. A CALLER PASSING steps <= 55
+#: gets a ONE-LEGGED DETECTOR for the whole run: active_erank_min in fit() stays
+#: 0.0 for every step < RANK_BURN_IN, so the rank leg never activates and only
+#: the std leg (a COMPLETE collapse) is checked -- fit(..., steps=55) can
+#: complete on a representation whose effective rank is 1.0000 on every step
+#: without raising, because the loop never reaches step 55.
+RANK_BURN_IN = 55
 
 #: invariance, variance, covariance. NU IS 100 AND THE DEFAULT 1.0 IS MEASURED TO
 #: FAIL HERE -- see covariance_sweep(). At nu = 1.0 the effective rank bottoms at
@@ -485,21 +510,60 @@ def ema_update(target, online, tau):
 
 
 # ---------------------------------------------------------------------------
-# 4. THE COLLAPSE DETECTOR, TWO LEGS, RUN EVERY STEP
+# 4. THE COLLAPSE DETECTOR, THREE LEGS (THE THIRD OPT-IN), RUN EVERY STEP
 # ---------------------------------------------------------------------------
 
-def collapse_report(s, std_min=COLLAPSE_STD_MIN, erank_min=COLLAPSE_ERANK_MIN):
-    """Per-coordinate spread AND effective rank of a representation.
+def collapse_report(s, std_min=COLLAPSE_STD_MIN, erank_min=COLLAPSE_ERANK_MIN,
+                    q=None, y=None, K=None, n_boot=200, boot_seed=0,
+                    construction_property=False):
+    """Per-coordinate spread, effective rank, AND (opt-in) a label-aware leg.
 
-    Two legs because the failure has two shapes. The variance leg reads the
+    THREE LEGS BECAUSE TWO ARE NOT ENOUGH. THE GEOMETRIC GAP ITSELF -- a
+    frozen-random encoder reading HEALTHIER on both legs than one that learned
+    its labels -- is proven, not argued, by tests/cameron/test_third_collapse_
+    leg.py's frozen-random plant: MEASURED, that file now routes 5 guarded
+    entries through THIS function's q/y interface (not a direct sharpness
+    call) and fires the label leg twice, so it exercises the shipped leg
+    below, end to end, on a frozen-random encoder read against real labels.
+    This module's own demo() (section (h)) additionally self-checks the same
+    leg's arithmetic on a synthetic informative-vs-frozen plant; that
+    self-check is not a downstream probe and is labelled as a self-check where
+    it runs. The variance leg reads the
     smallest per-coordinate standard deviation over the batch, which a COMPLETE
     collapse drives to zero. The rank leg reads the participation ratio of the
     covariance spectrum, (sum lambda)^2 / sum lambda^2, which is the axis count a
     DIMENSIONAL collapse destroys while leaving every per-coordinate variance
-    healthy. A detector with only the first leg passes the second failure, which
-    is measured here rather than argued.
+    healthy. Both read s ALONE, so neither can ever depend on whether s carries
+    information about the task's actual label: a frozen-random encoder spreads
+    across every direction it was never trained to compress out of, so it reads
+    healthy on both -- while carrying nothing. The label leg closes that gap by
+    reading the label instead of the geometry.
 
-    Returns a Refusal when either leg fires, because a warning is something a
+    THE LABEL LEG IS OPT-IN. Pass q [n,K] class probabilities and y [n] int
+    labels (K inferred from q when omitted) to activate it; every existing
+    caller in this file passes neither, so every existing caller's behaviour is
+    unchanged -- `leg` is still only ever None, "std" or "rank" for them, and
+    `label` in the returned dict is None. When q and y ARE given, this reuses
+    ceqjepa/sharpness.py's own PREREG bar rather than inventing a fourth
+    threshold: sharpness.decompose(q, y, K) and sharpness.bootstrap_se(q, y, K)
+    feed sharpness.kill_fired(d, se), which is margin <= 1 bootstrap SE -- not
+    even confidently better than a predictor that never looked at the input.
+    That is the same reachable plant a frozen-random encoder scored against its
+    real labels exhibits: both geometric legs green, kill_fired True.
+
+    construction_property IS THE CALLER'S TAG, NOT A GUESS MADE HERE. Pass
+    True when q was built FROM y (a nearest-centroid read of an s constructed
+    as centroid[y] + noise, a hand-picked oracle demo, any read where the
+    label was baked into q rather than earned by a model) -- house rule: "a
+    construction property is never a bar." When True, this function propagates
+    the tag into sharpness.decompose's returned dict but does NOT call
+    sharpness.kill_fired on it (that call raises ConstructionPropertyAsBarError
+    by design, see sharpness.py), so `label["kill_fired"]` is None (not
+    evaluated, not False) and `leg` can never become "label" from an oracle
+    read. Default False is for a genuine read: a q earned by scoring actual
+    model output against labels it never saw baked in.
+
+    Returns a Refusal when any leg fires, because a warning is something a
     training loop steps over.
     """
     z = s.detach().reshape(-1, s.shape[-1]).double()
@@ -515,8 +579,40 @@ def collapse_report(s, std_min=COLLAPSE_STD_MIN, erank_min=COLLAPSE_ERANK_MIN):
         leg = "std"
     elif erank < erank_min:
         leg = "rank"
+    # THE THIRD LEG, LABEL-AWARE AND OPT-IN: only evaluated when the caller
+    # hands in q AND y, so a caller that has neither (every call site in this
+    # file, today) sees no change in behaviour at all.
+    label = None
+    if q is not None and y is not None:
+        d = sharpness.decompose(q, y, K, construction_property=construction_property)
+        se = sharpness.bootstrap_se(q, y, K, n_boot=n_boot, seed=boot_seed)
+        # RULE: a construction property never reaches the bar API. kill_fired
+        # raises ConstructionPropertyAsBarError on a tagged d (sharpness.py),
+        # so it is never CALLED here for one -- the verdict is None (not
+        # evaluated), not False, and `leg` can therefore never become "label"
+        # from an oracle read.
+        kill_fired = (None if construction_property
+                      else sharpness.kill_fired(d, se))
+        label = dict(i_q=d["i_q"], se_i_q=se["se_i_q"], margin=d["margin"],
+                     se_margin=se["se_margin"],
+                     margin_sigma=sharpness.margin_sigma(d, se),
+                     construction_property=construction_property,
+                     kill_fired=kill_fired)
+        if leg is None and label["kill_fired"]:
+            leg = "label"
     ref = None
-    if leg is not None:
+    if leg == "label":
+        ref = Refusal(REASON_COLLAPSE,
+                      "the label leg fired: I_q %.4e at bootstrap se %.4e "
+                      "(%.2f sigma margin over the marginal predictor) while "
+                      "smallest per-coordinate sd %.4e and effective rank %.4f "
+                      "of %d both read healthy against their own floors -- a "
+                      "representation this uninformative about its label "
+                      "predicts nothing, and every number downstream of it is "
+                      "about the label leak the other two legs cannot see"
+                      % (label["i_q"], label["se_i_q"], label["margin_sigma"],
+                         smin, erank, z.shape[1]))
+    elif leg is not None:
         ref = Refusal(REASON_COLLAPSE,
                       "the %s leg fired: smallest per-coordinate sd %.4e against "
                       "%.4g, effective rank %.4f of %d against %.4g -- a "
@@ -524,7 +620,7 @@ def collapse_report(s, std_min=COLLAPSE_STD_MIN, erank_min=COLLAPSE_ERANK_MIN):
                       "number downstream of it is about the degeneracy"
                       % (leg, smin, std_min, erank, z.shape[1], erank_min))
     return dict(std_min=smin, std_med=smed, erank=erank, n_coords=int(z.shape[1]),
-                collapsed=leg is not None, leg=leg, refusal=ref)
+                collapsed=leg is not None, leg=leg, refusal=ref, label=label)
 
 
 def vicreg_terms(s, s_hat, s_tgt, lam=LAM, mu=MU, nu=NU):
@@ -823,11 +919,27 @@ class PiJepa(nn.Module):
     a run is FOR; trainable_parameters() is what an optimiser gets, and it is
     filtered on requires_grad, so a frozen encoder is excluded by the same rule
     that excludes the target.
+
+    pin_target=True SWAPS THE TARGET FOR A PARAMETER-FREE READ AND NOTHING ELSE.
+    The EMA target (self.target, ema_update) is not independent of its own
+    encoder: it is a copy of online's OWN weights, walked toward online's CURRENT
+    weights every step, so its output over a FIXED input necessarily drifts as
+    online trains. The pinned read instead reads the raw tokens directly through
+    read_per_coordinate at the beta=1 corner (softmax, and the exponent 1 makes
+    Z**1 == Z, so the read is Z-normalised attention over x with no linear layer
+    and no parameter of any kind in it). Because default_batches hands fit() the
+    SAME (ctx, tgt, a) at every step, a target that is a pure function of tgt
+    reads bit-for-bit the same representation at step 0 and step N -- drift is
+    1.0000 not because nothing moved but because nothing in the read's path CAN
+    move. self.target and ema_update still exist and still run when pin_target
+    is False, unchanged, so the two arms are the same class and the same fit()
+    loop with one flag between them.
     """
 
     def __init__(self, beta, x_dim=X_DIM, d=None, dk=DK, hidden=HIDDEN,
-                 n_actions=N_ACTIONS, device=None):
+                 n_actions=N_ACTIONS, device=None, pin_target=False):
         super().__init__()
+        self.pin_target = bool(pin_target)
         d = len(beta) if d is None else int(d)
         if d != len(beta):
             raise ValueError("d is %d but the mask carries %d coordinates: the "
@@ -882,10 +994,28 @@ class PiJepa(nn.Module):
 
     @torch.no_grad()
     def target_repr(self, x):
-        """The EMA target's representation at the last position. The no-grad
+        """The target representation at the last position: the EMA encoder, or
+        the pinned beta=1 read of x itself when pin_target is set. The no-grad
         decorator IS the stop-grad, and stopgrad_must_fire() removes it to show
         the check can tell the two wirings apart."""
+        if self.pin_target:
+            return self._pinned_target_repr(x)
         return self.target(x)[:, -1, :]
+
+    def _pinned_target_repr(self, x):
+        """O_{i,c} = (num @ v)_{i,c} / Z_i, read directly off the raw tokens x
+        with beta pinned to 1 for every coordinate -- no online encoder, no
+        target encoder, no linear projection: q, k are x itself and v is x's
+        first axis_len channels, so the whole read is a deterministic function
+        of x and self.axis_len, with no torch.nn.Parameter anywhere in its path.
+        """
+        v = x[..., :self.axis_len].to(x.dtype)
+        ro = read_per_coordinate(x, x, v, [PIN_BETA] * self.axis_len)
+        out = ro.out
+        if float(out.imag.detach().abs().max()) != 0.0:
+            raise AssertionError("the pinned read carries a nonzero imaginary "
+                                 "part: the gate is no longer m = 1, theta = 0")
+        return out.real[:, -1, :]
 
 
 def build(seed=SEED, beta=None, **kw):
@@ -911,30 +1041,88 @@ def fit(model, batches=None, steps=N_STEPS, lr=LR, tau=TAU, nu=NU, lam=LAM,
     unchanged while a caller can drive a different size, a longer run and its own
     data without editing this file.
 
-    The collapse detector runs on the TARGET representation on EVERY step. With
-    `detector` on its refusal is RAISED rather than logged, because a run that
-    collapsed is not a run whose loss curve means anything; with it off, the step
-    it would have fired at is recorded instead, which is how covariance_sweep()
-    measures a setting that fails.
+    The collapse detector runs on EVERY step and reads the ONLINE representation
+    FOR BOTH ARMS -- pin_target no longer special-cases which side it checks.
+    Checking the target side used to differ by arm: for the EMA arm it is the
+    EMA-walked target, live every step; for the PINNED arm target_repr(tgt) is
+    a pure function of tgt with no nn.Parameter in its path
+    (PiJepa._pinned_target_repr), and default_batches hands fit() the SAME
+    (ctx, tgt, a) at every step, so that target is one constant tensor for the
+    whole run -- measured, 1 unique std_min and 1 unique erank in a 120-step
+    trace. Checking a constant 120 times is not a running detector, so the
+    pinned arm's detector was already reading the online side; checking the
+    EMA-target side for the OTHER arm meant the two arms were never checked on
+    the same object, which is what manufactured the asymmetry pi_jepa.py's own
+    history recorded (a 3/5-seed false collapse on the pinned arm's detector
+    while the EMA arm's never fired, on a bed where an EQUAL-FOOTING read of
+    the online side shows neither arm's online effective rank ever below the
+    other's by more than a transient dip both leave). The online encoder is
+    the only thing that trains in the pinned arm and is common to both arms, so
+    it is the one honest side to check either way. `detector_side` in the
+    return dict is now always "online", kept as a field rather than removed so
+    a caller reading it does not silently get a stale value.
+
+    THE RANK LEG IS SILENT UNTIL RANK_BURN_IN, THE STD LEG IS NOT. Reading the
+    online side from step 0 meets a transient both arms enter early and leave
+    -- see RANK_BURN_IN's own comment for the seeds and steps it was measured
+    from. Only the rank leg is delayed; a COMPLETE collapse (the std leg) is
+    not the transient shape and is caught from step 0 as before.
+
+    THIS LOOP IS HONESTLY TWO-LEGGED, AND IS BLIND TO THE LABEL-LEAK INVERSION.
+    Every step's collapse_report call above passes std_min/erank_min and
+    NOTHING ELSE -- no q, no y -- because `batches` hands this loop (ctx, tgt,
+    a), never a label, and fabricating one here just to switch the third leg
+    on would hand collapse_report a construction property wearing a model's
+    q, which is exactly what this function's construction_property guard
+    exists to refuse. So a frozen-random encoder that carries zero information
+    about any downstream
+    label but spreads healthily across every axis (measured in demo()'s
+    section (h) and in tests/cameron/test_third_collapse_leg.py) reads exactly
+    as healthy to THIS loop as an encoder that actually learned something --
+    the geometric legs cannot tell the two apart, by construction, and this
+    loop never calls the third leg that could. Read this training run's
+    "never collapsed" as a claim about variance and rank ONLY, never as a
+    claim that its representation is informative about a label. The third leg
+    exists and is exercised (see collapse_report's own docstring), but only by
+    callers that have a genuine, non-construction q sitting beside real y --
+    which no path in this repository currently produces from THIS loop's own
+    online encoder at a point where this detector runs.
+
+    With `detector` on its refusal is RAISED rather than logged, because a run
+    that collapsed is not a run whose loss curve means anything; with it off,
+    the step it would have fired at is recorded instead, which is how
+    covariance_sweep() measures a setting that fails.
 
     THE THRESHOLDS ARE PARAMETERS AND THEY HAVE TO BE. COLLAPSE_ERANK_MIN is 1.5
     because that separates this bed's healthy run from a rank-one plant at this
     bed's width; a caller at a narrower one, whose healthy representation sits
     under that floor for no reason but its axis length, would be refused by it.
     An absolute floor is not portable across widths, and pretending otherwise
-    would push the defect into every caller.
+    would push the defect into every caller. RANK_BURN_IN is likewise a
+    property of this bed's own transient, not portable to another width or
+    horizon without being re-measured there.
     """
     if batches is None:
         batches = default_batches(seed)
     opt = torch.optim.Adam(model.trainable_parameters(), lr=lr)
     trace, std_trace, erank_trace = [], [], []
     collapsed_at, checked, cols = None, 0, model.cols.tolist()
+    detector_side = "online"
     for step in range(steps):
         ctx, tgt, a = batches(step)
         s = model.online(ctx)
         s_tgt = model.target_repr(tgt)
-        chk = collapse_report(s_tgt, std_min=std_min,
-                              erank_min=erank_min)
+        # THE DETECTOR READS THE ONLINE SIDE FOR BOTH ARMS -- see fit()'s own
+        # docstring for why checking the target side asymmetrically was the
+        # bug, not a feature of the pinned arm.
+        chk_input = s[:, -1, :]
+        # THE RANK LEG IS GATED BY RANK_BURN_IN; THE STD LEG IS NOT. Passing
+        # erank_min=0.0 before the burn-in cannot fire the rank leg (erank is
+        # never negative) while std_min is unchanged, so a genuine COMPLETE
+        # collapse is still caught immediately.
+        active_erank_min = erank_min if step >= RANK_BURN_IN else 0.0
+        chk = collapse_report(chk_input, std_min=std_min,
+                              erank_min=active_erank_min)
         checked += 1
         if chk["collapsed"]:
             if detector:
@@ -949,19 +1137,43 @@ def fit(model, batches=None, steps=N_STEPS, lr=LR, tau=TAU, nu=NU, lam=LAM,
         opt.zero_grad(set_to_none=True)
         loss.backward()
         opt.step()
-        ema_update(model.target, model.online, tau)
+        if not model.pin_target:            # pinned target has no EMA weights
+            ema_update(model.target, model.online, tau)     # to walk toward online
         trace.append(parts["inv"])
+    # erank_min SUMMARISES THE SAME WINDOW THE RANK LEG ACTUALLY READS. The
+    # full per-step record is still erank_trace, unabridged; this field is
+    # what the rank leg was checking during the run, so a caller comparing it
+    # against COLLAPSE_ERANK_MIN (as covariance_sweep()'s report and demo()'s
+    # self-check both do) is comparing against the same window the pass/fail
+    # decision above used, not against the burn-in transient every arm enters
+    # and leaves regardless of nu or pin_target.
+    # THE MEANING CHANGE, NAMED: the two lines below turned the returned
+    # erank_min from "minimum erank over the WHOLE run" into "minimum erank
+    # over erank_trace[RANK_BURN_IN:]" -- a different quantity under the same
+    # key. demo()'s self-check and covariance_sweep() both read erank_min and
+    # both were updated with this change, so python -m ceqjepa.pi_jepa is not
+    # broken by it; but any caller OUTSIDE this file that reads fit()'s
+    # erank_min expecting the old "minimum over the whole run" is now silently
+    # comparing a different number under the same name.
+    post_burn_in = erank_trace[RANK_BURN_IN:]
+    erank_min_report = min(post_burn_in) if post_burn_in else min(erank_trace)
     return dict(loss_first=trace[0], loss_last=trace[-1], loss_trace=trace,
                 std_min_trace=std_trace, std_min_last=std_trace[-1],
-                erank_trace=erank_trace, erank_min=min(erank_trace),
+                erank_trace=erank_trace, erank_min=erank_min_report,
                 erank_last=erank_trace[-1], steps_checked=checked,
                 collapsed_at=collapsed_at, cols=cols,
-                n_refused=len(model.refusals), model=model)
+                n_refused=len(model.refusals), detector_side=detector_side,
+                model=model)
 
 
-def train_run(seed=SEED, steps=N_STEPS, nu=NU, train_encoder=True, detector=True):
-    """The demo's run. NOT memoised: re-running it is how determinism is shown."""
-    model = build(seed)
+def train_run(seed=SEED, steps=N_STEPS, nu=NU, train_encoder=True, detector=True,
+              pin_target=False):
+    """The demo's run. NOT memoised: re-running it is how determinism is shown.
+
+    pin_target selects the target arm: False (default) is the shipped EMA
+    target, True is the parameter-free beta=1 read -- see PiJepa's docstring.
+    """
+    model = build(seed, pin_target=pin_target)
     if not train_encoder:
         for p in model.online.parameters():
             p.requires_grad_(False)
@@ -1029,6 +1241,54 @@ def baselines(seed=SEED):
     run this file exists to make safe, not another CPU baseline here.
     """
     return OrderedDict((k, v["nrmse"]) for k, v in baseline_detail(seed).items())
+
+
+def pin_vs_ema_report(seed=SEED, steps=N_STEPS):
+    """THE EMA TARGET AGAINST THE PINNED beta=1 READ, SAME SEED, SAME STEPS.
+
+    target_rms_ratio is the target's own RMS after training over its RMS before
+    training, on the SAME fixed batch default_batches hands every step -- so for
+    the pinned arm this is measuring whether the thing that removed the drift
+    was actually wired in, and it CANNOT read anything but 1.0000: the read has
+    no parameter for training to move. It is a wiring check, not evidence, and
+    is named construction_check for exactly that reason.
+
+    target_std_min and target_erank are a SECOND construction check, not
+    evidence, and ONLY for the pinned arm: target_repr(tgt) there is one
+    constant tensor for the whole run (same reasoning as target_rms_ratio
+    above), so its collapse_report is a report on the bed draw read once
+    through softmax, not on anything a trained run produced -- measured, 1
+    unique value across a 120-step trace. For the EMA arm the same fields ARE
+    live, because the EMA target walks toward the online encoder every step.
+
+    online_std_min and online_erank are NOT wiring checks, for EITHER arm. They
+    are the eps-free Std leg and the effective-rank leg of collapse_report()
+    read off the ONLINE representation at the LAST training step -- the only
+    representation that trains in the pinned arm, and fit()'s own detector now
+    checks this same side for BOTH arms (see `detector_side` in fit()'s return
+    dict, always "online"). Either leg can fail: a frozen target is the
+    standard collapse failure mode EMA exists to prevent, so an online encoder
+    that reads healthy on both legs is the actual claim, not the ratio or the
+    target-side pair above it.
+    """
+    batches = default_batches(seed)
+    ctx, tgt, _ = batches(0)
+    out = OrderedDict()
+    for name, pin in (("ema", False), ("pinned", True)):
+        model = build(seed, pin_target=pin)
+        rms_before = float(model.target_repr(tgt).pow(2).mean().sqrt())
+        res = fit(model, batches=batches, steps=steps, seed=seed)
+        rms_after = float(model.target_repr(tgt).pow(2).mean().sqrt())
+        with torch.no_grad():
+            online_chk = collapse_report(model.online(ctx)[:, -1, :])
+        target_chk = collapse_report(model.target_repr(tgt))
+        out[name] = dict(
+            target_rms_before=rms_before, target_rms_after=rms_after,
+            target_rms_ratio=rms_after / rms_before,
+            online_std_min=online_chk["std_min"], online_erank=online_chk["erank"],
+            target_std_min=target_chk["std_min"], target_erank=target_chk["erank"],
+            detector_side=res["detector_side"], dtype=str(tgt.dtype))
+    return out
 
 
 def covariance_sweep(seed=SEED):
@@ -1651,6 +1911,82 @@ def demo():
         % (cov["n_docstrings"], cov["n_numbers"]))
     br = {row["drift"]: row["erank"] for row in r["bed_rank"]}
     assert br[0.6] < br[DRIFT],         "the rejected bed is no longer the degenerate one: %r" % (br,)
+
+    # (h) A SYNTHETIC SELF-CHECK OF THE LABEL LEG'S ARITHMETIC. NOT EVAL TIME,
+    # NOT A DOWNSTREAM PROBE, NOT A TRAINED MODEL. Everything below is built by
+    # hand inside this self-check: l_s_info, l_s_frozen and l_y never touch
+    # fit(), a trained encoder, or any eval path in this repository. fit() has
+    # no labels to hand collapse_report -- every batch it sees is (ctx, tgt,
+    # a) -- and no downstream probe with real labels beside a trained read of
+    # THIS module's own online encoder exists anywhere in this repository
+    # today (see fit()'s own docstring for that gap, stated plainly rather
+    # than implied away). What this self-check DOES verify, honestly: the
+    # label leg's arithmetic distinguishes an informative construction from a
+    # frozen-random one when both are run through the SAME hand-built
+    # nearest-centroid readout, on the SAME construction
+    # tests/cameron/test_third_collapse_leg.py carries as ASSAY C2 (K=4 group
+    # centroids at 2*eye(K), real grp never permuted or resampled). l_s_info IS
+    # a construction property -- built directly as centroid[l_y] + N(0,
+    # 0.05^2), so its nearest-centroid q reconstructs l_y by construction, not
+    # by reading anything -- and is tagged construction_property=True below;
+    # its margin_sigma is an ORACLE figure, printed as one, and never asked to
+    # pass or fail a bar (collapse_report skips kill_fired entirely for a
+    # tagged read; see collapse_report's own docstring). l_s_frozen is NOT a
+    # construction property -- N(0, I_K), independent of l_y -- so it is the
+    # one genuine read here, on equal footing with a frozen-random encoder
+    # that never received a gradient. THE SAME hand-built nearest-centroid
+    # readout -- q = softmax(-||s - centroid||^2) -- is applied to both, and
+    # the SAME real l_y labels both; only s varies. That isolates what the
+    # label leg's arithmetic reads: the frozen-random s scores a HIGHER
+    # effective rank than the informative one (clustering IS anisotropy;
+    # isotropic noise is not), so both geometric legs call it the healthier
+    # representation while it carries nothing about l_y.
+    lg = torch.Generator().manual_seed(SEED)
+    l_n, l_k = 2000, 4
+    l_centroids = 2.0 * torch.eye(l_k, dtype=torch.float64)
+    l_y = torch.randint(l_k, (l_n,), generator=lg)
+    l_s_info = l_centroids[l_y] + 0.05 * torch.randn(l_n, l_k, generator=lg, dtype=torch.float64)
+    l_s_frozen = torch.randn(l_n, l_k, generator=lg, dtype=torch.float64)
+
+    def _nearest_centroid_q(s):
+        d2 = ((s[:, None, :] - l_centroids[None, :, :]) ** 2).sum(-1)
+        return torch.softmax(-d2, dim=1)
+
+    rep_info = collapse_report(l_s_info, q=_nearest_centroid_q(l_s_info),
+                               y=l_y, K=l_k, boot_seed=SEED,
+                               construction_property=True)
+    rep_frozen = collapse_report(l_s_frozen, q=_nearest_centroid_q(l_s_frozen),
+                                 y=l_y, K=l_k, boot_seed=SEED)
+    assert rep_info["std_min"] > COLLAPSE_STD_MIN and rep_info["erank"] > COLLAPSE_ERANK_MIN
+    assert rep_frozen["std_min"] > COLLAPSE_STD_MIN and rep_frozen["erank"] > COLLAPSE_ERANK_MIN, (
+        "the frozen-random plant must stay geometrically healthy, or it is not "
+        "the gap the label leg exists to close")
+    assert rep_frozen["erank"] > rep_info["erank"], (
+        "the geometric inversion did not reproduce: the frozen-random encoder "
+        "must read a HIGHER effective rank than the informative one, or the "
+        "plant is not exhibiting the mechanism the label leg is for")
+    assert rep_info["leg"] is None and rep_info["label"]["construction_property"] and \
+           rep_info["label"]["kill_fired"] is None, (
+        "the oracle read must never be handed to the bar API: kill_fired "
+        "should be None (not evaluated), not True or False: %r" % (rep_info,))
+    assert rep_frozen["leg"] == "label" and rep_frozen["collapsed"] and \
+           rep_frozen["label"]["kill_fired"] is True, (
+        "the label leg did not fire on the frozen-random encoder against real "
+        "labels, with both geometric legs reading healthy: %r"
+        % (rep_frozen["label"],))
+    say("\n(h) SYNTHETIC SELF-CHECK OF THE LABEL LEG'S ARITHMETIC (not eval "
+        "time, not a downstream probe). informative encoder [ORACLE -- q "
+        "reconstructs y by construction, never passed to the bar]: "
+        "margin_sigma=%+.4f (kill_fired not evaluated); frozen-random encoder "
+        "on the SAME real labels [genuine read]: leg=%r kill_fired=%s "
+        "margin_sigma=%+.4f -- erank %.4f informative vs %.4f frozen (the "
+        "inversion), both geometric legs green either way; only the label leg "
+        "tells them apart."
+        % (rep_info["label"]["margin_sigma"],
+           rep_frozen["leg"], rep_frozen["label"]["kill_fired"],
+           rep_frozen["label"]["margin_sigma"],
+           rep_info["erank"], rep_frozen["erank"]))
+
     assert dt < 300.0
     say("\nALL SELF-CHECKS PASSED")
     return r["published"]
