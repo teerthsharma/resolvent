@@ -2061,6 +2061,35 @@ returned "no."</p>
 <h2 id="5-never-verified">5. Never verified<a class="headerlink" href="#5-never-verified" title="Permanent link">#</a></h2>
 <p>Claims with no producer located, stated as such rather than silently dropped.</p>
 <ul>
+<li><strong>"This repository's instruments measure its models rather than its beds."
+  UNTESTED as of 2026-09-20, and the bed built to settle it cannot.</strong> Five
+  instruments failed this on the same day, each scoring a property of the draw:
+  effective rank prefers a frozen-random encoder by <code>22.08×</code> at <code>D=64</code>; a
+  hitting-time R² window is 89% draw geometry, with arm error differing <code>1.06×</code>
+  between draws where counting won and broke while the label's own spread
+  differs <code>5.16×</code>; an unscoreable gate sits flat at <code>0.89</code> across four decades
+  of budget because it counts the sealed share of the draw; a refusal head is
+  beaten <code>7.3×</code> on recall by a one-line non-causal shortcut reading no
+  structure; and BED-H's magnitudes are draw properties with only their
+  ordering assertable.</li>
+</ul>
+<p>The proposed cure — score every instrument as <code>f(model, draw) − f(null, draw)</code>
+  on the same seed, so additive draw terms cancel — regressed at slope
+  <code>−1.4513</code>, se <code>0.8439</code>, <code>t(3) = −1.7198</code>, <code>corr = −0.7046</code>, <code>n = 5</code>. The
+  follow-up hypothesis was that this is what <em>additive</em> pairing of a
+  <em>multiplicative</em> effect looks like, and that a log-ratio would cancel where a
+  subtraction did not. <strong>That could not be evaluated.</strong> At the refusal bed the
+  null fires on zero instances at all five seeds, so its precision is undefined
+  and its recall is exactly <code>0.0</code>; <code>0 of 5</code> seeds pass the strict-positivity a
+  ratio requires. The model side is well defined throughout — precision
+  <code>1.0000, 0.8333, 1.0000, 0.6667, 0.6667</code> — so the failure is the twin, not the
+  transform. The episodic-restart fix already in the tree guarantees eventual
+  sink access, which is what makes the shortcut silent.</p>
+<p>Recorded rather than resolved: the additive slope's 95% interval at <code>n = 5</code>
+  spans roughly <code>[−3.7, +0.8]</code>, containing zero, no effect and a doubling, so it
+  is a statement about power and not a measurement. A bed with a null that
+  scores something is a precondition for answering this at all.</p>
+<ul>
 <li>
 <p><strong>The pre-rewrite README's corner floats <code>4.472918</code> / <code>1.144938</code> / <code>5.335671</code>.</strong> A
   tree-wide search of <code>.py</code>, <code>.lean</code>, <code>.json</code>, <code>.jsonl</code>, <code>.txt</code> (re-run while
