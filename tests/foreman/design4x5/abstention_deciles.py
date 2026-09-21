@@ -11,7 +11,7 @@ so the thresholds cannot be chosen after seeing the answer:
   d_t  = per-token NLL of the softmax twin (a) minus that of the gated arm (f),
          on the SAME held-out tokens. Positive means the gated arm is better
          at that token.
-  a_t  = 1 - mean over heads and over layers 1..3 of |sum_j W_tj|, read off the
+  a_t  = 1 - mean over heads and over every layer but 0 of |sum_j W_tj|, read off the
          gated arm at query position t. Layer 0 is excluded: its exact-zero
          fraction was measured at 100% float32 underflow of the path product,
          which is a different mechanism from gate closure.
@@ -49,7 +49,12 @@ from ceq.hf.modeling_ceq import CEQAttention  # noqa: E402
 
 SPLIT_SEED = 0
 SEED = 0
-LAYERS_FOR_MASS = (1, 2, 3)     # layer 0 excluded: underflow, not closure
+# AMENDED before any output was computed: the registration read "layers 1..3",
+# copied from the 4-layer Step 0 checkpoint; the grid model has D.LAYERS = 3
+# (indices 0..2) and the first run raised IndexError on layer 3 before a single
+# d_t was summarized. The registered PRINCIPLE -- every layer except 0, whose
+# zeros are float32 underflow -- is kept; only its spelling is corrected.
+LAYERS_FOR_MASS = tuple(range(1, D.LAYERS))   # layer 0 excluded: underflow, not closure
 OUT = os.path.join(HERE, "abstention_deciles.json")
 BOARD = os.path.join(REPO, "house-events.jsonl")
 
