@@ -179,7 +179,7 @@ def train_with_eval(*, out_dir, steps, batch, seq, hidden_size, n_layers, n_head
                      device="cuda", vocab_size=256, data_path=None,
                      max_bytes=64 * 1024 * 1024, lr=3e-4, seed=0, clip=1.0,
                      val_frac=0.1, split_seed=None, eval_every=50, eval_batches=4,
-                     log_every=50, **overrides):
+                     log_every=50, save_model=False, **overrides):
     """`ceq.hf.train.train()`, minus checkpoint resume/save_every (not needed
     for these short scratchpad runs -- see r3_eval.md for the full-feature
     diff proposed against the real function), plus:
@@ -271,6 +271,20 @@ def train_with_eval(*, out_dir, steps, batch, seq, hidden_size, n_layers, n_head
         os.makedirs(out_dir, exist_ok=True)
         with open(os.path.join(out_dir, "run_record.json"), "w") as fh:
             json.dump(record, fh, indent=2)
+        if save_model:
+            # This function's docstring drops `save_every` deliberately, as
+            # "not needed for these short scratchpad runs". That reduction
+            # turned out to matter: every arm trained here was discarded
+            # in-process, so no analysis needing weights -- row mass, per-token
+            # abstention -- could run on the arm that produced the headline
+            # number. A single save at the end restores that without restoring
+            # periodic checkpointing. Off by default: no existing caller changes.
+            torch.save({"state_dict": model.state_dict(),
+                        "n_params": n_params,
+                        "operator": model.config.operator,
+                        "seed": seed, "split_seed": split_seed},
+                       os.path.join(out_dir, "model.pt"))
+            record["model_path"] = os.path.join(out_dir, "model.pt")
     return record
 
 
