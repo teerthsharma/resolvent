@@ -689,7 +689,89 @@ on that figure and it is recorded as disputed rather than settled.
 
 ---
 
-## 13. Rows still out
+## 13. The L-REFLECTOR audit: 32 tables, and two mechanisms
+
+Every published table in `PHASE_G`, `PHASE_H`, `PHASE_I` and `PHASE_I1`, and the
+producers under them, was audited against its own fixed structure — initializer,
+parameterization, corpus regime, scorer functional, bin scheme, dtype path, torch
+build, eval subsample size — before anything it scored.
+
+**32 tables: 9 VOID, 10 RESTATED, 13 SURVIVE.**
+
+The result that matters is not the count. It is that **seven of the nine voids
+trace to exactly two mechanisms.**
+
+| mechanism | tables |
+|---|---|
+| **scorer and ceiling are different functionals** | chess resolution at 10 fixed-width bins against an unbinned per-class variance (`I1 §8`); frozen readout scored against trained weights (`I1 §9`); the Murphy residual checked against its own inputs (`I §1`); order-free composition scored by L2 on a sphere, where geometry forces chance regardless of order (`H §5`) |
+| **the regime forbids the sentence** | every prior LM comparison at 5.4×–28.3× corpus repetition (`I1 §2`); a bar set from one non-monotone checkpoint that the curve crosses in both directions (`I §6`); a density account explaining a table that ran at `0.018250` rather than the `0.50` it assumed (`I1 §7`) |
+
+The remaining two voids are a Fourier reproduction bar that fails its own
+pre-registered 150-step threshold by `0.0063` nats (`G §5`), and the eval-only
+freeze prescription, which is the same functional mismatch appearing a second
+time on a different bed.
+
+### Both live verdicts survive their own fixed structure
+
+**The I-AUT confound-removed race SURVIVES** — the pre-registered kill against the
+commuting-diagonal control did not fire, 5 of 5 seeds pairwise, no overlap of the
+spreads, on a generator handed over as bare integers.
+
+**The chess ceiling at `max_plies` 80 → 400 SURVIVES** — the same oracle-resolution
+functional computes both the ceiling and the arm, and the intervals are
+non-overlapping at 202×.
+
+**The committor row is RESTATED, not void.** It beats a base rate and loses to a
+summary of its own input, and the correct sentence is *undertrained*, not *not
+predictive*.
+
+Ten further tables are restated rather than struck, including the head-dim cliff
+— corrected from `31.8×` to `12.22×` and scoped to bfloat16 only — and the
+host-spill guard, downgraded to signed at depths 1 through 4 only.
+
+### The hop gate, and it discriminates
+
+Both exemplars that beat this project's own leap seat share a shape: **audit the
+object that cannot move under the model's own rules — the reflector's involution,
+the S-matrix's unitarity — then treat what survives elimination as the answer.**
+A structural NEVER is not a refusal; it is what the Bombe searched on.
+
+Five conditions, and a leap is not dispatched for binding until it meets them:
+
+1. **Names which quantity is fixed structure and which is trainable, in that
+   order, before the trainable part is scored.**
+2. **Grounded in fetched prior art with exact figures** — page, section, quoted
+   line, never a paraphrase from memory.
+3. **Reframes an existing object rather than patching one** — states what the
+   thing provably is, not a special case kept alive to save an old story.
+4. **Falsifiable by a measurement that already exists**, or names the one that
+   would falsify it.
+5. **The proposer ran their own instance and reported it when it failed**, in the
+   record, before dispatch — not only the passing numbers.
+
+Applied to the four leaps this project has produced:
+
+| leap | score | outcome it had |
+|---|---|---|
+| Chebyshev degree law | **5/5** | exact — reproduced 11/34/130 with no fitted constant |
+| segment bit | 4/5 | bound by RED test, then conceded as Blelloch 1989 |
+| three-channel dtype gate | 4/5 | half alive — bf16 mantissa died at S = 75 |
+| zero-density account | **2/5** | refuted by the table it was built to explain |
+
+**The gate retrodicts the outcomes**, which is the only evidence that it is a gate
+and not a preference. Condition 5 is the one the project has never enforced and
+the one both exemplars satisfy: the S-matrix instance that diverged at
+`ρ = 1.6688`, with `E` inside the band, was reported corrected and **unscored**
+rather than quietly moved.
+
+The band-position leap now awaiting its free kill scores **3/5 pending fetch** —
+it names fixed against trainable explicitly, it reframes, and its step 0 is
+falsifiable off an existing checkpoint, but six of its citations are from memory
+and unfetched, and it borrows another instance rather than running its own.
+
+---
+
+## 14. Rows still out
 
 `R1` gate parameterization (straight-through against hard-concrete, with the
 four-condition must-fire); `R3` held-out eval path by document and `R4`
