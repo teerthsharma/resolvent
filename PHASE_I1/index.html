@@ -1,0 +1,3576 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="One causal head, three switches. Softmax attention, unnormalized-kernel attention and the exact path product of a Markov chain as settings of one operator, proved in Lean 4, with every failure kept on the record.">
+      
+      
+        <meta name="author" content="Teerth Sharma">
+      
+      
+        <link rel="canonical" href="https://teerthsharma.github.io/resolvent/PHASE_I1/">
+      
+      
+        <link rel="prev" href="../PHASE_I/">
+      
+      
+        <link rel="next" href="../ledgers/mistakes/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/logo.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Phase I.1: repair - resolvent</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../assets/resolvent.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#phase-i1-repair" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="resolvent" class="md-header__button md-logo" aria-label="resolvent" data-md-component="logo">
+      
+  <img src="../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            resolvent
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Phase I.1: repair
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/teerthsharma/resolvent" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    teerthsharma/resolvent
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../NORTH_STAR/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  North Star: the forward S-matrix reconciliation
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../FAILS/" class="md-tabs__link">
+          
+  
+  
+  The record
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../ledgers/mistakes/" class="md-tabs__link">
+          
+  
+  
+  Ledgers
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../canon/CHARTER/" class="md-tabs__link">
+          
+  
+  
+  Canon
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../CEQ_SHAPE/" class="md-tabs__link">
+          
+  
+  
+  Paper
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="resolvent" class="md-nav__button md-logo" aria-label="resolvent" data-md-component="logo">
+      
+  <img src="../assets/logo.svg" alt="logo">
+
+    </a>
+    resolvent
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/teerthsharma/resolvent" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    teerthsharma/resolvent
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../NORTH_STAR/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    North Star: the forward S-matrix reconciliation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The record
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    The record
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../FAILS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Everything retracted, broken or open
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../COMPONENT_LEDGER/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Component ledger
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PLAN/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Research plan
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CORNER_RULE_RETIREMENT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Corner rule retirement
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PI_JEPA_KAGGLE_CARD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kaggle card
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DR2_CARD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DR2 card
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BED_H_PREREGISTRATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pre-registration: BED-H
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../prereg/REMOVAL_ECHO_v1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pre-registration: REMOVAL-ECHO v1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../C9_NEVER_RESIDUE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Certificate C9: the NEVER residue
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SESSION_ERRORS_2026_09_20/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What the dispatcher got wrong, 2026-09-20
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PHASE_G/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Phase G: spectral
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PHASE_H/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Phase H: bind
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PHASE_I/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Phase I: calibrate and cost
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Phase I.1: repair
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Phase I.1: repair
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-the-clamp-is-the-freeze" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. The clamp is the freeze
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-the-corpus-that-ends-the-memorization-regime" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. The corpus that ends the memorization regime
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. The corpus that ends the memorization regime">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-decision-full-tinystories-and-it-was-derived-rather-than-recalled" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The decision: full TinyStories, and it was derived rather than recalled
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-certificate-shape" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The certificate shape
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-the-audit-four-kills-and-a-search-that-could-not-find-them" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. The audit: four kills, and a search that could not find them
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. The audit: four kills, and a search that could not find them">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-standing-catalogue-of-checks-that-cannot-fail" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The standing catalogue of checks that cannot fail
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-second-signatures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Second signatures
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-the-guards-and-three-contract-numbers-that-do-not-hold-here" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. The guards, and three contract numbers that do not hold here
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. The guards, and three contract numbers that do not hold here">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#three-numbers-from-the-contract-did-not-reproduce" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Three numbers from the contract did not reproduce
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-memory-law-reproduced" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The memory law reproduced
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-the-eval-path-and-what-the-determinism-null-did-not-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. The eval path, and what the determinism null did not test
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. The eval path, and what the determinism null did not test">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-determinism-null-is-a-null-about-the-wrong-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The determinism null is a null about the wrong model
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-r1-the-kill-fires-and-exactness-becomes-eval-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. R1: the kill fires, and exactness becomes eval-only
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. R1: the kill fires, and exactness becomes eval-only">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-result-the-must-fire-does-not-capture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The result the must-fire does not capture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-zero-density-account-was-tested-and-is-dead" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The zero-density account was tested and is dead
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#r7-is-clean-and-the-instrument-was-validated-before-it-was-trusted" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        R7 is clean, and the instrument was validated before it was trusted
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#two-more-checks-that-could-not-fail" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Two more checks that could not fail
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-s1-the-kill-fires-on-the-point-and-its-reading-does-not-survive-the-floor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. S1: the kill fires on the point, and its reading does not survive the floor
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-s2-the-eval-only-prescription-is-dead" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. S2: the eval-only prescription is dead
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-kaggle-the-seed-variance-interval-that-did-not-exist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Kaggle: the seed-variance interval that did not exist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-c26-the-floors-and-two-figures-that-do-not-clear-them" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. C26: the floors, and two figures that do not clear them
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="11. C26: the floors, and two figures that do not clear them">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-subsample-is-retired-by-a-flag-not-a-diff" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The subsample is retired by a flag, not a diff
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pid-9000-is-defunct-and-the-reboot-clause-does-not-apply" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PID 9000 is defunct, and the reboot clause does not apply
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-rebuild-gate-was-anchored-to-the-wrong-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The rebuild gate was anchored to the wrong file
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-c25-the-rule-holds-and-the-first-implementation-of-it-broke-the-rule" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. C25: the rule holds, and the first implementation of it broke the rule
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="12. C25: the rule holds, and the first implementation of it broke the rule">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-wrapper-can-fire-both-verdicts-but-not-by-the-demonstration-offered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The wrapper can fire both verdicts — but not by the demonstration offered
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#score_vs_ceiling-is-dead-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        score_vs_ceiling() is dead code
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-binned-ceiling-reproduces-the-unbinned-one" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The binned ceiling reproduces the unbinned one
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#two-defects-that-void-any-verdict-the-wrapper-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Two defects that void any verdict the wrapper issues
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#and-the-published-rows-cannot-be-re-scored-at-all" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        And the published rows cannot be re-scored at all
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13-the-l-reflector-audit-32-tables-and-two-mechanisms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13. The L-REFLECTOR audit: 32 tables, and two mechanisms
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="13. The L-REFLECTOR audit: 32 tables, and two mechanisms">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#both-live-verdicts-survive-their-own-fixed-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Both live verdicts survive their own fixed structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-hop-gate-and-it-discriminates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The hop gate, and it discriminates
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#14-rows-still-out" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14. Rows still out
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ledgers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Ledgers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ledgers/mistakes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Failure mechanisms
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ledgers/struck/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Struck constants
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ledgers/mathematics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mathematics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ledgers/model-card/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model card
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ledgers/costs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Costs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ledgers/v17k-rulings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    V17K rulings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ledgers/v16-calibration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    V16 calibration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Canon
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Canon
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../canon/CHARTER/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Charter
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../canon/01_THEORY_ACCURACY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01 Theory of accuracy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../canon/02_THEORY_TRAINING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    02 Theory of training
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../canon/03_KERNEL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03 Kernel
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../canon/04_BEDS_AND_INSTRUMENTS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    04 Beds and instruments
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../canon/05_REPAIRS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05 Repairs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../canon/06_PREDICTIONS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    06 Predictions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../canon/08_ARCHITECTURE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    08 Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../canon/09_CHESS_AND_MARKETS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    09 Chess and markets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../canon/CORRECTIONS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Corrections
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Paper
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Paper
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CEQ_SHAPE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The shape of CEQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sources/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Paper sources
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BIB_AUDIT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bibliography audit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BIB_ALIASES/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bibliography aliases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-the-clamp-is-the-freeze" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. The clamp is the freeze
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-the-corpus-that-ends-the-memorization-regime" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. The corpus that ends the memorization regime
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. The corpus that ends the memorization regime">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-decision-full-tinystories-and-it-was-derived-rather-than-recalled" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The decision: full TinyStories, and it was derived rather than recalled
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-certificate-shape" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The certificate shape
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-the-audit-four-kills-and-a-search-that-could-not-find-them" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. The audit: four kills, and a search that could not find them
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. The audit: four kills, and a search that could not find them">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-standing-catalogue-of-checks-that-cannot-fail" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The standing catalogue of checks that cannot fail
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-second-signatures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Second signatures
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-the-guards-and-three-contract-numbers-that-do-not-hold-here" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. The guards, and three contract numbers that do not hold here
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. The guards, and three contract numbers that do not hold here">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#three-numbers-from-the-contract-did-not-reproduce" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Three numbers from the contract did not reproduce
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-memory-law-reproduced" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The memory law reproduced
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-the-eval-path-and-what-the-determinism-null-did-not-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. The eval path, and what the determinism null did not test
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. The eval path, and what the determinism null did not test">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-determinism-null-is-a-null-about-the-wrong-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The determinism null is a null about the wrong model
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-r1-the-kill-fires-and-exactness-becomes-eval-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. R1: the kill fires, and exactness becomes eval-only
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. R1: the kill fires, and exactness becomes eval-only">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-result-the-must-fire-does-not-capture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The result the must-fire does not capture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-zero-density-account-was-tested-and-is-dead" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The zero-density account was tested and is dead
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#r7-is-clean-and-the-instrument-was-validated-before-it-was-trusted" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        R7 is clean, and the instrument was validated before it was trusted
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#two-more-checks-that-could-not-fail" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Two more checks that could not fail
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-s1-the-kill-fires-on-the-point-and-its-reading-does-not-survive-the-floor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. S1: the kill fires on the point, and its reading does not survive the floor
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-s2-the-eval-only-prescription-is-dead" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. S2: the eval-only prescription is dead
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-kaggle-the-seed-variance-interval-that-did-not-exist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Kaggle: the seed-variance interval that did not exist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-c26-the-floors-and-two-figures-that-do-not-clear-them" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. C26: the floors, and two figures that do not clear them
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="11. C26: the floors, and two figures that do not clear them">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-subsample-is-retired-by-a-flag-not-a-diff" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The subsample is retired by a flag, not a diff
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pid-9000-is-defunct-and-the-reboot-clause-does-not-apply" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PID 9000 is defunct, and the reboot clause does not apply
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-rebuild-gate-was-anchored-to-the-wrong-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The rebuild gate was anchored to the wrong file
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-c25-the-rule-holds-and-the-first-implementation-of-it-broke-the-rule" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. C25: the rule holds, and the first implementation of it broke the rule
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="12. C25: the rule holds, and the first implementation of it broke the rule">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-wrapper-can-fire-both-verdicts-but-not-by-the-demonstration-offered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The wrapper can fire both verdicts — but not by the demonstration offered
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#score_vs_ceiling-is-dead-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        score_vs_ceiling() is dead code
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-binned-ceiling-reproduces-the-unbinned-one" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The binned ceiling reproduces the unbinned one
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#two-defects-that-void-any-verdict-the-wrapper-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Two defects that void any verdict the wrapper issues
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#and-the-published-rows-cannot-be-re-scored-at-all" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        And the published rows cannot be re-scored at all
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13-the-l-reflector-audit-32-tables-and-two-mechanisms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13. The L-REFLECTOR audit: 32 tables, and two mechanisms
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="13. The L-REFLECTOR audit: 32 tables, and two mechanisms">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#both-live-verdicts-survive-their-own-fixed-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Both live verdicts survive their own fixed structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-hop-gate-and-it-discriminates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The hop gate, and it discriminates
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#14-rows-still-out" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14. Rows still out
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="phase-i1-repair">Phase I.1 — Repair<a class="headerlink" href="#phase-i1-repair" title="Permanent link">#</a></h1>
+<p>Every gate number in this repository was taken from a start where half to 98% of
+the gate was closed by an initialiser nobody chose, on a corpus 14–28× too small
+for the models, on a torch build that never touched the card. This phase repairs
+the instrument before any further number.</p>
+<p>The rows below land as they are measured. Rows still out are named in §4.</p>
+<hr />
+<h2 id="1-the-clamp-is-the-freeze">1. The clamp is the freeze<a class="headerlink" href="#1-the-clamp-is-the-freeze" title="Permanent link">#</a></h2>
+<p><code>ceq/arm_smprime.py</code>'s <code>magnitude</code> is <code>clamp(u, 0, 1)</code>, whose gradient is <strong>zero
+outside the open interval</strong>. On LayerNorm-normalised rows at <code>d = 512</code>, weights
+<code>N(0, 1/d)</code>, 20,000 samples, float64:</p>
+<table>
+<thead>
+<tr>
+<th>start</th>
+<th>at exact 0</th>
+<th>at exact 1</th>
+<th>carrying gradient</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>bias 0</td>
+<td><strong>0.501</strong></td>
+<td>0.160</td>
+<td><strong>33.8%</strong></td>
+</tr>
+<tr>
+<td>bias 0.999</td>
+<td>—</td>
+<td><strong>0.498</strong></td>
+<td><strong>34.3%</strong></td>
+</tr>
+</tbody>
+</table>
+<p>The bias gradient is a mean over per-gate gradients, so with two thirds of the
+gates dead at <em>either</em> start it is small in both directions. That is why two
+training runs ended with <code>m_head.bias</code> within <code>0.02</code> of wherever it began — from
+<code>0</code> to <code>−0.0172 / −0.0021 / +0.0068 / −0.0101</code>, and from <code>0.999</code> to
+<code>0.9797 / 0.9987 / 0.9908 / 0.9990</code>. <strong>"Frozen at initialisation" is the clamp,
+not the data.</strong></p>
+<p>And the sharper consequence, for the refusal channel this project is built on: a
+gate that reaches exactly zero under a clamp has no gradient to leave by, so it
+<strong>never reopens</strong>. It is dead rather than closed, and a refusal that cannot be
+revised is a different object from a refusal the model chose.</p>
+<p>Every gate row in <code>docs/PHASE_I.md</code>, <code>tests/foreman/gated/</code> and
+<code>tests/chase/cogs/</code> carries a provisional banner until re-measured under a
+parameterisation that keeps exact endpoints reachable with a live gradient.</p>
+<hr />
+<h2 id="2-the-corpus-that-ends-the-memorization-regime">2. The corpus that ends the memorization regime<a class="headerlink" href="#2-the-corpus-that-ends-the-memorization-regime" title="Permanent link">#</a></h2>
+<p>The regime was never labelled, and every language-model comparison this project
+has made sits inside it. <code>data/tinystories_20k.txt</code> is 18,167,706 byte-level
+tokens; at 20 tokens per parameter the zero-repetition ceiling is <strong>908,385
+parameters</strong>. The measured configurations need far more:</p>
+<table>
+<thead>
+<tr>
+<th>row</th>
+<th>params</th>
+<th>tokens at 20/param</th>
+<th>repetition on the 18.2M file</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>12M</td>
+<td>13,107,200</td>
+<td>262,144,000</td>
+<td><strong>14.43×</strong></td>
+</tr>
+<tr>
+<td>25M</td>
+<td>25,690,112</td>
+<td>513,802,240</td>
+<td><strong>28.28×</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>A gate that helps or hurts memorization says nothing about generalization.</strong></p>
+<h3 id="the-decision-full-tinystories-and-it-was-derived-rather-than-recalled">The decision: full TinyStories, and it was derived rather than recalled<a class="headerlink" href="#the-decision-full-tinystories-and-it-was-derived-rather-than-recalled" title="Permanent link">#</a></h3>
+<p><code>data/README.md</code> records <code>tinystories_20k.txt</code> as a head of the TinyStories train
+split at 20,000 rows. <code>wc -c</code> gives <code>18,167,706</code> bytes, so <code>908.39 B/row</code>. The
+fetched train split is <code>2,141,709</code> rows, putting the full split at
+<code>2,141,709 × 908.39 = 1.945e9</code> bytes.</p>
+<table>
+<thead>
+<tr>
+<th>row</th>
+<th>repetition on full TinyStories</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>12M</td>
+<td><strong>0.135×</strong></td>
+</tr>
+<tr>
+<td>25M</td>
+<td><strong>0.264×</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Both below 1×. The sensitivity is stated rather than assumed: the 25M row fails
+only below 565,617 rows, so the fetched count would have to be overstated
+<strong>3.79×</strong>; at half the head's mean row size it still clears by 1.9×. Licence
+<code>cdla-sharing-1.0</code>.</p>
+<p><strong>It stays <code>[U]</code> — no digest, no revision hash — so the pin is enforced as a gate
+on the run rather than a promise.</strong> The training lane prints <code>bytes_total</code>,
+<code>tokens</code> and <code>repetition = tokens_needed / bytes_total</code> beside the loss, and
+labels the row <strong>MEMORIZATION REGIME</strong> whenever <code>repetition ≥ 1</code>.</p>
+<p>Rejected with reasons. <strong>WikiText-103</strong> (191.98 MB, CC BY-SA 4.0) clears neither
+budget, and pairing a second corpus buys a genre mixture no existing row used.
+<strong>FineWeb-Edu</strong> <code>sample-10BT</code> (~10B GPT-2 tokens, <code>odc-by</code>) clears both by an
+order of magnitude but is <strong>UNREACHED</strong> on the specific question of
+unauthenticated reachability from this box, and is the largest domain shift — it
+asks whether the operator generalizes to web text, which is a different
+experiment rather than a continuation.</p>
+<p>If the pin fails, nothing reachable in-domain clears 514M tokens, and the honest
+move is the certificate programme below on the file that exists.</p>
+<h3 id="the-certificate-shape">The certificate shape<a class="headerlink" href="#the-certificate-shape" title="Permanent link">#</a></h3>
+<div class="highlight"><pre><span></span><code>d_model=128, n_heads=8 (d_head=16), n_layers=3, seq=512, vocab=256
+-&gt; 720,896 params, 79.4% of the 908,385 ceiling, repetition 0.79x
+</code></pre></div>
+<p><code>P = 12·L·d² + 2·vocab·d + seq·d</code>, reverse-derived and confirmed exact on both
+existing shapes (<code>d=512, L=8 → 25,690,112</code>; <code>d=512, L=4 → 13,107,200</code>).
+Per-layer LayerNorm parameters add <code>4·L·d = 1,536</code>, so the real count is
+<code>~722,432</code>, still under the ceiling.</p>
+<p><code>n_heads</code> is <strong>8, not 16</strong>, at identical parameter count — attention is <code>d²</code>
+regardless of head count, <code>d_head = 16</code> still satisfies the multiple-of-8 rule,
+and 8 matches both existing shapes, so the certificate row changes <code>d_model</code> and
+<code>n_layers</code> and nothing else. Depth is maximal: <code>d=128, L=4</code> costs 917,504, over
+the ceiling; the only competitor is <code>d=160, L=2</code> at 778,240, and <code>L=3</code> beats
+<code>L=2</code> for a project whose claim is about composition.</p>
+<p><strong>This is the first language-model row in the project entitled to a
+generalization sentence.</strong></p>
+<hr />
+<h2 id="3-the-audit-four-kills-and-a-search-that-could-not-find-them">3. The audit: four kills, and a search that could not find them<a class="headerlink" href="#3-the-audit-four-kills-and-a-search-that-could-not-find-them" title="Permanent link">#</a></h2>
+<p>The round's known process failure was one lane's checker running <code>taskkill /F</code> on
+two GPU PIDs and destroying a sibling lane's training run. The audit found three
+more, and struck its own first pass on the way.</p>
+<p><strong>The ground pass reported zero occurrences of <code>taskkill</code> in the board log.</strong> The
+incident <em>was</em> logged — <code>house-events.jsonl:4084</code>, agent Cameron, kind
+<code>incident</code>, severity high. The grep searched for <code>taskkill</code> against a line that
+says <code>Killed PIDs</code>. <strong>A search with no true-positive path: a check that cannot
+fail, found inside the audit for checks that cannot fail.</strong></p>
+<p><strong>And the session's own watchdog reported three kills that did not happen.</strong>
+<code>scratchpad/deadline_kill.sh</code> ran <code>Stop-Process -Force -ErrorAction
+SilentlyContinue</code>, swallowed the refusal, counted the attempt, and printed
+<code>killed $n process(es)</code>. PID 9000 — <code>python -m ceqjepa.hbucket</code>, started
+2026-09-20 13:28:47 — was reported killed three times and is <strong>still running</strong>.
+Repaired: the loop now verifies the process is gone before counting it, reports
+<code>attempted</code> and <code>verified killed</code> separately, and logs <code>REFUSED</code> with the PID
+when <code>Stop-Process -Force</code> does not take.</p>
+<h3 id="the-standing-catalogue-of-checks-that-cannot-fail">The standing catalogue of checks that cannot fail<a class="headerlink" href="#the-standing-catalogue-of-checks-that-cannot-fail" title="Permanent link">#</a></h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>check</th>
+<th>why it could not fail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>load-bearing gate control</td>
+<td>added a <strong>constant</strong> to every <code>m_head</code> weight; <code>m_head</code> consumes a LayerNorm output whose row sum is zero, so the shift lay <strong>exactly in the null space</strong>. Measured <code>3.5e-6</code>; a random perturbation moves logits <code>0.716</code></td>
+</tr>
+<tr>
+<td>2</td>
+<td>control reproduction</td>
+<td>compared against <code>0.02930</code> at <code>1e-9</code> tolerance; the on-disk value is <code>0.029296875</code>, so a bitwise-perfect reproduction differs by <code>3.1e-6</code></td>
+</tr>
+<tr>
+<td>3</td>
+<td>generalization reproduction</td>
+<td><code>\|0 − 0.029297\| = 0.0293 &lt; 0.03</code>, so a model scoring <strong>exactly zero</strong> passes</td>
+</tr>
+<tr>
+<td>4</td>
+<td>memory-wall detector</td>
+<td>caught only <code>torch.cuda.OutOfMemoryError</code>, so it could not see a host spill that halves throughput while raising nothing</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>tests/beds/test_target_pin.py</code></td>
+<td>two construction checks — a threshold on a bed-constant tensor, and <code>trained_std ≥ frozen_std</code> on the literal same bitwise tensor (<code>x ≥ x</code>). Self-corrected by the project before this sweep reached it</td>
+</tr>
+<tr>
+<td>6</td>
+<td>kill audit grep</td>
+<td>searched <code>taskkill</code> against text reading <code>Killed PIDs</code></td>
+</tr>
+<tr>
+<td>7</td>
+<td>watchdog kill count</td>
+<td>counted attempts, not verified deaths</td>
+</tr>
+</tbody>
+</table>
+<p>| 8 | straight-through forward check | compared <code>torch.clamp</code> to <code>torch.clamp</code>; could not detect a changed forward |
+| 9 | pairing's shuffled control | vacuous as constructed; pairing held on other evidence |
+| 10 | Kaggle notebook's rebuild gate | numpy-only; executed none of <code>magnitude_clamp</code>, <code>path_product</code>, <code>hop</code>, <code>operator</code>, <code>readout</code> or <code>GatedBlock</code>, so it would pass with the whole torch rebuild wrong |
+| 11 | freeze verifier | compared <code>clamp(u_raw,0,1)</code> while <code>blend()</code> computes <code>magnitude(lerp(1,u,g))</code> with <code>g</code> trainable and drifted to <code>0.8699</code>; halted a row on a false alarm |
+| 12 | span-containment curve | tracks <code>1 − (1−p)^L</code> to three decimals, so it measures the density it was handed rather than a mechanism |
+| 13 | C27 rebuild gate anchor | specified against <code>ceq/arm_pl.py</code> and <code>ceq/arm_phase.py</code>, which contain neither <code>path_product</code> nor <code>hop</code> — a gate pointed at a file without the functions it compares |
+| 14 | C25 check-the-check | read ORDERING UNSTABLE from <code>sorted()</code>'s alphabetical tie-break between two arms both scoring <code>RES = 0.000000</code> |
+| 15 | <code>score_vs_ceiling()</code> | the matched-functional enforcer, defined and never called; the ceiling script prints a binned numerator over an unbinned published value |</p>
+<p><strong>Open.</strong> Roughly 140 further tolerance assertions across <code>tests/cameron</code>,
+<code>tests/curvature</code>, <code>tests/foreman</code> and <code>tests/lorasort</code> were located by the same
+sweep and <strong>not</strong> individually verified; five were spot-checked and none was
+decorative. That is recorded as an open sweep item rather than as a clean bill.</p>
+<hr />
+<h2 id="4-second-signatures">4. Second signatures<a class="headerlink" href="#4-second-signatures" title="Permanent link">#</a></h2>
+<p><strong>Verdict 1 — the operator represents non-commutative composition. Signed, with
+scope.</strong> I-AUT with the generator handed over as bare integers: operator <code>0.8620
+± 0.0556</code> against a commuting-diagonal control at <code>0.2860 ± 0.0150</code>, matched at
+404 parameters by <code>numel()</code>, the control saturated within <code>0.031</code> of its own
+multiset ceiling of <code>0.3110</code>. The scope that belongs in the signature: <strong>one
+parameter budget, one word length, no length-generalisation check.</strong></p>
+<p><strong>Verdict 2 — the operator predicts. Not signed.</strong> Recalibrated resolution
+<code>0.001469</code> against an oracle ceiling of <code>0.10117</code> is <strong>1.45% of the resolution
+the bed offers</strong>. The contract's re-reading is endorsed: this is <strong>not a tie at
+the ceiling, it is both arms at the floor</strong>, and the row's verdict is
+<em>undertrained</em>. Its next measurement is a size sweep, not a new architecture.</p>
+<hr />
+<h2 id="5-the-guards-and-three-contract-numbers-that-do-not-hold-here">5. The guards, and three contract numbers that do not hold here<a class="headerlink" href="#5-the-guards-and-three-contract-numbers-that-do-not-hold-here" title="Permanent link">#</a></h2>
+<p>Six guards built; five fire when an independent checker triggers them rather than
+reading a report. Every proposed change is a diff in <code>r5_guards.md</code>; none is
+applied to <code>ceq/</code>.</p>
+<table>
+<thead>
+<tr>
+<th>guard</th>
+<th>fires</th>
+<th>silent</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>head dim <code>% 8</code></td>
+<td><code>d_head</code> 44, 33, 12</td>
+<td>32, 64</td>
+</tr>
+<tr>
+<td>forced-fused SDPA</td>
+<td><code>d_head=44</code> bf16 — <code>can_use_efficient_attention</code> False, verified live</td>
+<td>64 bf16; 32 and 64 fp32</td>
+</tr>
+<tr>
+<td>host spill</td>
+<td>L=9: peak <code>8578.1 MiB</code> against a <code>8187.5 MiB</code> card, <strong>no <code>OutOfMemoryError</code></strong>, status <code>ran</code></td>
+<td>L=6, L=7</td>
+</tr>
+<tr>
+<td>depth default</td>
+<td>refuses L=7 without <code>acknowledge_headroom=True</code>, hard-refuses L=8 even with it</td>
+<td>L=6</td>
+</tr>
+<tr>
+<td>dtype refusal</td>
+<td>bf16 and fp16 at construction, naming <code>torch.polar</code> and <code>_ctype</code></td>
+<td>fp32; <code>sgate</code>; <code>signed</code></td>
+</tr>
+</tbody>
+</table>
+<p>The dtype guard raises at construction through an <code>_apply</code> override, because HF
+modules are <strong>cast after construction</strong> rather than given a dtype at <code>__init__</code> —
+a <code>__init__</code> check would never see the dtype that crashes. The two crashes it
+replaces both reproduce verbatim without it: <code>double != struct c10::Half</code> for
+fp16, and <code>Expected both inputs to be Half, Float or Double ... but got BFloat16</code>
+for bf16. A runtime spy confirms the shipped <code>gate()</code> calls <code>torch.polar</code> while
+the three-channel path never does.</p>
+<p><strong>The host-spill guard is signed at L=1–4 only.</strong> The checker could not
+re-observe the L=9 fire: the card sat at <code>7837/8188 MiB</code> under two sibling lanes
+and the runs starved past 25 minutes. <strong>He killed nothing and waited</strong>, which is
+the correct behaviour under the standing prohibition and is recorded rather than
+worked around. The L=9 fire therefore rests on one agent's observation and is
+labelled as such.</p>
+<h3 id="three-numbers-from-the-contract-did-not-reproduce">Three numbers from the contract did not reproduce<a class="headerlink" href="#three-numbers-from-the-contract-did-not-reproduce" title="Permanent link">#</a></h3>
+<p><strong>The head-dim penalty is a bfloat16 defect, not an fp32 one.</strong> At fp32,
+<code>d_head=44</code> is <strong>1.41× slower, not 31.8×</strong>, because memory-efficient attention
+<em>accepts</em> it on this box. The reproducing case is <strong>bf16 <code>d_head=44</code> at 12.22×</strong>,
+peak <code>183.4 MiB</code> against <code>16.1</code>. And <strong>flash attention is never compiled into this
+Windows build at any shape or dtype</strong>, so no guard can assert its presence. The
+substitution was made rather than the contract's figure reported as a measurement.</p>
+<p><strong>The <code>exp(S·5.2e-4) − 1</code> rounding law is wrong in functional form.</strong> Re-measured
+relative error is <code>0.079524 / 0.281715 / 0.734220 / 0.995026</code> at
+S = 64 / 256 / 1024 / 4096 — it <strong>saturates toward 1.0</strong> rather than growing to
+<code>7.41</code>. The S=4096 point matches the independently recorded <code>gate3.md</code> Cell A
+figure of <code>0.99510</code> to four significant figures, which is why the re-measurement
+is trusted over the formula.</p>
+<p><strong>And the crossover is S = 75, not S = 256.</strong> The first pass reported 256 as "the
+first S over the 0.094 bound", but that was an artefact of testing only four
+powers of four. Bisected, the bound is crossed at <strong>S = 75</strong>.</p>
+<p>That settles R6. A bf16 mantissa fails below any sequence length this project
+runs, so the three-channel path is <strong>fp32-mantissa permanently</strong> — <code>torch.polar</code>
+still leaves the hot path, and no complex tensor is created, but the bf16 saving
+is not available.</p>
+<h3 id="the-memory-law-reproduced">The memory law reproduced<a class="headerlink" href="#the-memory-law-reproduced" title="Permanent link">#</a></h3>
+<p>Re-fit live from L=6, 7 and 9: <code>peak_mib = 929.96·L + 208.56</code>,
+R² <code>0.9999999458</code> — within <code>0.06 MiB</code> per layer of the contract's
+<code>929.9·L + 208.3</code>. Default depth <strong>L = 6</strong>; L = 7 by explicit override; L = 8
+refused, which changes <code>ceq/hf/train.py::DEFAULTS</code> from 8 to 6.</p>
+<p>One incidental defect, fixed in place and reported rather than patched over: the
+run's own board logging raised on a <code>numpy.bool_</code> that <code>json.dumps</code> refuses.</p>
+<hr />
+<h2 id="6-the-eval-path-and-what-the-determinism-null-did-not-test">6. The eval path, and what the determinism null did not test<a class="headerlink" href="#6-the-eval-path-and-what-the-determinism-null-did-not-test" title="Permanent link">#</a></h2>
+<p><strong>R3 is closed.</strong> <code>ceq/hf/train.py</code> had no held-out quantity of any kind —
+<code>grep -ic eval</code> returned 0, <code>ByteBatches.val</code> was built and never requested. It
+now splits <strong>by document</strong>, 105,095 blank-line-separated stories seeded through
+<code>split_seed</code>, giving 94,585 train and 10,510 val with <strong>zero document overlap</strong>,
+and writes <code>eval_losses</code> to <code>run_record.json</code> alongside <code>val_frac</code> and
+<code>split_seed</code>. Proposed as a diff; not applied.</p>
+<p><strong>The split was checked by searching for the leak rather than by reading the
+code.</strong> Held-out documents were searched against the concatenated train split:
+<strong>0 of 96</strong> mid-document 200-character windows appear in train. Two of 200 whole
+held-out documents match verbatim and both are corpus fragments — <code>"The end."</code> at
+8 characters and <code>"Are you OK?" Lily asked.</code> at 25 — not stories. The val split is
+not a contiguous tail, and <code>split_seed</code> 0 against 1 produces different val md5s,
+so the seed genuinely redraws.</p>
+<p><strong>And the leak it closes is 56 bytes.</strong> The stock byte-offset cut at 16,160,346
+does land 114 bytes into a 170-byte story exactly as predicted, so 56 bytes of one
+story crossed into val — <strong>0.0031% of the 1,795,595-byte val split</strong>. Corpus-wide
+there are 704 duplicate document copies, 0.67%, of which only 2 are 100 characters
+or longer, so duplication is not a second leak channel. The by-document split is
+correct and the defect it closes was small; both are stated.</p>
+<p><strong>The seed bug is fixed and the fix is demonstrated.</strong> <code>eval_indices(3920, 256,
+seed=1)</code> and <code>seed=2</code> returned byte-identical index lists against the live
+unedited function. Folding the seed into the formula —
+<code>manual_seed(20260825 + n_test + seed)</code> — makes 1 and 2 diverge while keeping
+<strong>seed 0 byte-identical</strong>, so every existing seed-0 result, including the COGS
+control curve, is unmoved.</p>
+<h3 id="the-determinism-null-is-a-null-about-the-wrong-model">The determinism null is a null about the wrong model<a class="headerlink" href="#the-determinism-null-is-a-null-about-the-wrong-model" title="Permanent link">#</a></h3>
+<p>Six runs — two without the flags, two with, two for the must-fire — returned
+<strong>bit-identical</strong> eval-loss trajectories, final <code>2.249588042497635</code> in every one.
+The flags cost 7.6% peak memory and removed nothing.</p>
+<p>That reads as "determinism was already free", and it is not what was measured.
+The <code>0.113</code> swing this row exists to explain lives in <code>ceq.lm</code>'s literal
+scaled-dot-product attention path, and <code>CEQForCausalLM</code> has <strong>zero
+<code>scaled_dot_product_attention</code> call sites</strong>. The model used here cannot exhibit
+the mechanism. <strong>The 0.113 swing is untested, not unremoved</strong>, and the R5 fused-
+backend assertion is likewise not applicable to this module for the same reason.</p>
+<p>The must-fire needs the same correction: its band was set from repeat-determinism
+variance, because <strong>no seed was varied across the six runs</strong>. It measures that one
+seed reproduces itself, which it does exactly, rather than that eval loss
+reproduces inside seed variance. The threshold was set before the confirmation
+pair was inspected, so the procedure was sound; the quantity was the wrong one.</p>
+<p>Every row here is labelled up front rather than caveated afterwards:
+<code>n_params = 4,929,536</code> against the 908,385 ceiling gives a repetition factor of
+<strong>5.4267×</strong>, <strong>MEMORIZATION REGIME</strong>, and no generalization sentence is made about
+any of them.</p>
+<p><strong>Kaggle's blocker is now closed</strong>: a remote run has a held-out quantity to score.
+What it does not yet have is a seed-variance estimate on a model that can vary.</p>
+<hr />
+<h2 id="7-r1-the-kill-fires-and-exactness-becomes-eval-only">7. R1: the kill fires, and exactness becomes eval-only<a class="headerlink" href="#7-r1-the-kill-fires-and-exactness-becomes-eval-only" title="Permanent link">#</a></h2>
+<p>The pre-registered kill was written before any number: <em>if both parameterisations
+fail the must-fire, the closed-magnitude gate cannot be trained with live
+gradients at exact endpoints; exactness becomes eval-only and the page says so.</em></p>
+<p><strong>Both fail.</strong></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>(i) live gradient ≥ 0.95</th>
+<th>(ii) bias moves ≥ 0.05</th>
+<th>(iii) init zeros &lt; 0.05</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>straight-through</td>
+<td>PASS <code>1.0000 / 1.0000</code></td>
+<td><strong>FAIL <code>0.01923</code></strong></td>
+<td>PASS <code>0.01825</code></td>
+</tr>
+<tr>
+<td>hard-concrete</td>
+<td>PASS <code>0.9978 / 0.9863</code></td>
+<td><strong>FAIL <code>0.02757</code></strong></td>
+<td>PASS <code>0.00000</code></td>
+</tr>
+</tbody>
+</table>
+<p>Both move <code>m_head.bias</code> <strong>inside the same <code>~0.02</code> band the zero-gradient clamp
+itself moved in</strong>. Giving every gate a live gradient did not unfreeze the bias.</p>
+<p><strong>Exactness was therefore prescribed as eval-only: train with hard-concrete,
+freeze to clamp at eval.</strong> No form is set as the default, because the bar written
+first endorses neither as trainable-with-live-gradient.</p>
+<blockquote>
+<p><strong>That prescription is dead. See §9.</strong> Freezing to clamp at eval is not a
+freeze — it is a substitution of a different function, and it reconstructs the
+defect it was written to escape.</p>
+</blockquote>
+<p>The dead-zone diagnosis reproduces exactly and is not a seed artefact.
+At bias 0, <code>P(u ≤ 0) = 0.5014</code>, <code>P(u ≥ 1) = 0.1602</code>, <code>33.84%</code> carrying gradient;
+at bias 0.999, <code>P(u ≥ 1) = 0.4982</code>, <code>34.33%</code>. Independently re-derived, matched
+against the closed form <code>Φ(1) − Φ(0) = 0.34134</code> and
+<code>Φ(0.001) − Φ(−0.999) = 0.34150</code>, and stable to swapping the draw order
+(<code>0.50135 / 0.16125</code>). Hard-concrete at bias 0 puts <code>0.855%</code> at exact zero and
+<code>0.860%</code> at exact one.</p>
+<h3 id="the-result-the-must-fire-does-not-capture">The result the must-fire does not capture<a class="headerlink" href="#the-result-the-must-fire-does-not-capture" title="Permanent link">#</a></h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>last-50 loss</th>
+<th>trained exact-zero</th>
+<th>backward reach mean / median / max</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>repaired clamp</td>
+<td><code>1.2665 ± 0.0399</code></td>
+<td><code>0.3121</code></td>
+<td><code>2.146 / 1 / 42</code></td>
+</tr>
+<tr>
+<td>straight-through</td>
+<td><code>1.2999 ± 0.0439</code></td>
+<td><code>0.4050</code></td>
+<td><code>1.209 / 1 / 13</code></td>
+</tr>
+<tr>
+<td><strong>hard-concrete</strong></td>
+<td><strong><code>1.1391 ± 0.0401</code></strong></td>
+<td><strong><code>0.0006</code></strong></td>
+<td><strong><code>241.4 / 234 / 512</code></strong></td>
+</tr>
+</tbody>
+</table>
+<p>Trained exact-zero fractions are reported with no threshold, as condition (iv)
+requires.</p>
+<p><strong>Straight-through gives every gate an unbounded live gradient and the gate still
+closes — to <code>0.4050</code>, worse than the <code>0.3121</code> of the clamp it was built to
+rescue, and to a loss worse than that clamp's.</strong> So the collapse is <em>not</em> only the
+dead zone. Something in the objective prefers the gate shut, and that is a
+different question from the one this row answered.</p>
+<p><strong>Hard-concrete ends at a median backward reach of 234 at sequence length 512</strong>,
+against <code>1</code> for both other forms, at the lowest loss of the three.</p>
+<p><strong>It does not achieve that reach — it preserves it.</strong> Measured at
+initialisation, hard-concrete already reads <code>256.5</code> and the other two read median
+<code>52</code>, mean <code>79.07</code>. So training moves hard-concrete <code>256.5 → 234</code> and moves the
+other two <code>52 → 1</code>. The honest statement is that <strong>two forms destroy their initial
+reach and one does not</strong>, which is a different claim from the one an earlier draft
+of this section made.</p>
+<h3 id="the-zero-density-account-was-tested-and-is-dead">The zero-density account was tested and is dead<a class="headerlink" href="#the-zero-density-account-was-tested-and-is-dead" title="Permanent link">#</a></h3>
+<p>A leap proposed that the whole effect is the <strong>density of exact zeros at step 0</strong>,
+made permanent because <code>∂G_ij/∂m_k = ∏_{l≠k} m_l</code> — one zero in a span silencing
+every gate in it. A crossed design was built to separate form from density, and
+the account died before either cell finished, on two independent grounds.</p>
+<p><strong>It explains a table it is not about.</strong> All three rows above ran at
+<code>m_head.bias = 0.999</code> (<code>tests/chase/gate/r1_gate.py:260</code>), whose measured init
+zero densities are <code>0.018250 / 0.018250 / 0.000000</code> — <strong>not 0.50</strong>. The premise
+"at bias 0 the clamp puts a zero every second token" describes the <strong>pre-repair</strong>
+init, measured here at <code>0.491455</code>, and the pre-repair run is not in this table.</p>
+<p><strong>And the table refutes it without new training.</strong> Straight-through's forward is
+<em>bitwise</em> clamp, so at seed 0 it carries the identical init density <code>0.018250</code>,
+the identical span curve and the identical init reach <code>52 / 79.07</code> as the repaired
+clamp — then ends at a different trained zero fraction (<code>0.4050</code> against
+<code>0.3121</code>), a different max reach (<code>13</code> against <code>42</code>) and a different loss, off a
+<strong>bitwise-identical step-0 loss</strong>. Same step-0 density, different endpoint, so
+step-0 density is not the effect.</p>
+<p><strong>The crossed cell was also void by construction.</strong> Clamp at <code>bias = +3.0</code> does
+reach zero density <code>0.0</code> — with <code>m == 1.0</code> at <strong>100% of positions</strong> and
+<code>frac_grad_nonzero = 0.0000</code>, pinning every gate at the <em>other</em> saturating
+endpoint and removing all decay from the path product. At the measured
+<code>u_std = 0.443641</code> the clamp's live interval <code>(0,1)</code> is <strong>2.254σ</strong> wide, so the
+lowest bias reaching hard-concrete's density is <code>1.336</code>, where <strong>77.6% of gates
+are already dead at m = 1</strong>. No clamp cell holds that density with a live
+gradient at this init scale.</p>
+<p><strong>The span curve is arithmetic, not evidence.</strong> It tracks <code>1 − (1−p)^L</code> to three
+decimals, so it measures the density it was handed. At the density the table
+actually ran, <code>L8 = 0.088</code> and <code>L32 = 0.302</code> — <strong>70% of length-32 spans carry no
+zero at init</strong>. And the clamp row's zeros <strong>grew</strong> under training,
+<code>0.018250 → 0.3121</code>, so they are the consequence rather than the cause.</p>
+<p><strong>What survives.</strong> The R1 kill stands on its own measurement. Why the gate closes
+is open, and the two accounts offered so far — gradient starvation, and step-0
+zero density — are both refuted by the same table.</p>
+<h3 id="r7-is-clean-and-the-instrument-was-validated-before-it-was-trusted">R7 is clean, and the instrument was validated before it was trusted<a class="headerlink" href="#r7-is-clean-and-the-instrument-was-validated-before-it-was-trusted" title="Permanent link">#</a></h3>
+<p><strong>Zero spurious zeros on every measured cell</strong> — both forms, at init and trained —
+via flag and cumsum against the float path product. The instrument was self-tested
+on a synthetic <code>S=16</code> case with one true zero (<code>n_true_zero = 55</code>, exact), then
+cross-validated against this project's own recorded defect: constant <code>m = 0.5</code>,
+<code>S = 4096</code>, float64, <strong>measured 4,564,731 spurious zeros, an exact match</strong> to the
+recorded count, with <code>S = 64</code> float64 correctly reading 0.</p>
+<h3 id="two-more-checks-that-could-not-fail">Two more checks that could not fail<a class="headerlink" href="#two-more-checks-that-could-not-fail" title="Permanent link">#</a></h3>
+<p>The race's straight-through forward-identity check <strong>compared <code>torch.clamp</code> to
+<code>torch.clamp</code></strong> — it could not have detected a changed forward. Forward identity
+is nonetheless established by a different route: the init exact-zero fraction
+<code>0.01824951171875</code> is bit-identical to the repaired-clamp reference's <code>299/16384</code>,
+and <code>loss_first = 5.670821666717529</code> is bitwise identical to that run's.</p>
+<p>And the shuffled control that was supposed to prove pairing is <strong>vacuous</strong>.
+Pairing holds on stronger evidence — a bitwise-identical step-0 loss against the
+reference — with the detrended correlation at <code>0.9621</code> against <code>−0.0298</code>.</p>
+<p>The <code>(ii)</code> failure was confirmed on <strong>all four layers read out of the
+safetensors</strong>, not the single scalar the race reported.</p>
+<hr />
+<h2 id="8-s1-the-kill-fires-on-the-point-and-its-reading-does-not-survive-the-floor">8. S1: the kill fires on the point, and its reading does not survive the floor<a class="headerlink" href="#8-s1-the-kill-fires-on-the-point-and-its-reading-does-not-survive-the-floor" title="Permanent link">#</a></h2>
+<p><code>RES/ceiling</code> at ~200k parameters reads <code>0.02495</code> at <strong>both</strong> seeds, below the
+pre-registered <code>0.05</code>, so the encoding kill fires and replicates. Three things
+stop it meaning what it was written to mean.</p>
+<p><strong>The interval contains the bar.</strong> <code>[0.00415, 0.07521]</code> of ceiling at seed 0,
+<code>[0.00436, 0.08228]</code> at seed 1. It fires on the point estimate, not at CI.</p>
+<p><strong>The scorer and the ceiling are different functionals.</strong> Resolution is scored
+over <strong>10 fixed-width one-vs-rest bins</strong>; the ceiling is an <strong>unbinned per-class
+variance</strong>. <code>white_win</code> and <code>black_win</code> contribute <code>res_k</code> of <strong>exactly 0</strong> at
+both seeds, because every recalibrated forecast lands in bin 0 — the scorer is
+blind to rare-class resolution while the ceiling counts all four classes.</p>
+<p><strong>And re-binning inverts the ordering.</strong> At tier 2, seed 0:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>fixed-width (10)</th>
+<th>equal-count (10 / 200)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>operator</td>
+<td>0.002155</td>
+<td>0.003769</td>
+</tr>
+<tr>
+<td>twin</td>
+<td>0.001102</td>
+<td>0.001721</td>
+</tr>
+<tr>
+<td><strong>piece-count floor</strong></td>
+<td>0.006761</td>
+<td><strong>0.006993</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Under fixed-width the operator sits <code>2.3×</code> <strong>above</strong> the floor; under equal-count
+it sits <code>3.1×</code> <strong>below</strong> it, and the floor reaches <code>0.069</code> of ceiling — <strong>above
+the 0.05 bar the operator fails</strong>. A strictly-less-informative 8-bin summary of
+the operator's own input clears the bar the operator misses. <strong>That is the model
+failing to reach what its own encoding already supports, not the encoding being
+the ceiling, and <code>fen_to_vec</code> must not be touched on this evidence.</strong></p>
+<p>Three further claims of the sweep do not hold. <code>RES/ceiling</code> <strong>does not rise with
+size</strong>: at seed 0 the operator rises and the twin falls, at seed 1 both reverse,
+and every per-arm trend direction flips between seeds while each tier's CI
+contains the others' points. The arms <strong>separate at zero of three sizes</strong>, and
+the operator-minus-twin gap <strong>sign-flips at all three tiers</strong> between seeds. And
+"trained to convergence" means the early-stop became eligible only past
+<code>0.8 × budget</code>, with all twelve runs stopping within ~180 steps of eligibility —
+<code>converged=True</code> records that the budget nearly ran out. At tier 1 the operator's
+final <code>L_q</code> is <code>0.985</code> against the twin's <code>0.082</code> on the identical objective.</p>
+<p>Scope, stated: 300 games of the pre-registered 5,900, two seeds, and a 2k tier
+that is <strong>architecturally unreachable</strong> — <code>x_dim = 769</code> floors <code>TinyCEQ</code> at 8,289
+parameters.</p>
+<hr />
+<h2 id="9-s2-the-eval-only-prescription-is-dead">9. S2: the eval-only prescription is dead<a class="headerlink" href="#9-s2-the-eval-only-prescription-is-dead" title="Permanent link">#</a></h2>
+<p>R1 prescribed training with hard-concrete and freezing to clamp at eval. Scored
+on COGS, that arm reads <strong>in-distribution <code>0.0000</code>, 0 of 256</strong>, against
+<code>RESOLUTION_FLOOR = 0.20</code> — <strong>below the broken bare-clamp arm's own <code>0.16797</code></strong>.
+It fails the admission gate, so the row stops and no generalization curve exists.</p>
+<p><strong>The same weights, scored under the training form, read <code>0.3125</code> and clear the
+floor.</strong> One set of parameters, two readouts:</p>
+<table>
+<thead>
+<tr>
+<th>readout</th>
+<th>annihilated</th>
+<th>live keys / 192</th>
+<th>median backward reach</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>frozen clamp</td>
+<td><strong>98.3579%</strong></td>
+<td><strong>1.5846</strong></td>
+<td>2</td>
+</tr>
+<tr>
+<td>hard-concrete</td>
+<td><strong>0.0%</strong></td>
+<td><strong>96.5</strong></td>
+<td>92</td>
+</tr>
+</tbody>
+</table>
+<p>Training drives <code>u</code> below zero, where hard-concrete still passes signal
+(exact-zero fraction <code>0.0011</code>) and the clamp annihilates (<code>0.3490</code>). <strong>So "freeze
+to clamp at eval" is not a freeze — it is a substitution of a different
+function</strong>, and it reconstructs the broken arm's <code>97.99% / 1.93</code> almost exactly.</p>
+<p>The arm remains a milder underfit — train loss <code>0.3494</code> against the control's
+<code>0.2731</code> at identical budget — and that is <strong>not</strong> the cause of the zero, since
+the same weights score <code>0.3125</code> when read with the function they were trained
+under.</p>
+<p><strong>The freeze verification was itself defective, and predicted before the run
+reached step 3000.</strong> <code>blend()</code> computes <code>magnitude(lerp(ones, u, g))</code>
+(<code>ceq/arm_smprime.py:134</code>) while the verifier compared against
+<code>clamp(u_raw, 0, 1)</code>; <code>g</code> is a trainable <code>nn.Parameter</code> (line 725) inside AdamW
+and had drifted to <code>0.8699419498443604</code>. The check read <code>freeze_took = false</code> at
+max difference <code>0.1299</code> and <strong>halted the row on a false alarm</strong>. Compared on the
+blended argument instead: <code>bitwise_equal_to_clamp_forward = true</code>, max difference
+<code>0.0</code> over n = 768 captured from a real eval forward, and
+<code>differs_from_hardconcrete_forward = true</code> at <code>0.49994</code>. The freeze is real; the
+instrument was not.</p>
+<p>One seed. On a bed with a measured <code>0.113</code> fixed-seed swing, that is a data point.</p>
+<hr />
+<h2 id="10-kaggle-the-seed-variance-interval-that-did-not-exist">10. Kaggle: the seed-variance interval that did not exist<a class="headerlink" href="#10-kaggle-the-seed-variance-interval-that-did-not-exist" title="Permanent link">#</a></h2>
+<p>Run on a <strong>Tesla T4</strong>, <code>melowdramtic/kg-wide-breadth-row</code>, self-contained — no
+repository file, no project data, no token. Eight seeds of the SDPA-literal arm,
+the only path in this project carrying a real <code>scaled_dot_product_attention</code> call
+site, which is why the local determinism null could not see anything:</p>
+<div class="highlight"><pre><span></span><code>finals  2.2976 2.2973 2.2973 2.3029 2.2981 2.2982 2.2981 2.3010
+swing   0.005563836097717267
+stdev   0.001885094358229673
+</code></pre></div>
+<p><strong>Across-seed swing is <code>0.0056</code>.</strong> The COGS figure quoted throughout this phase is
+<code>0.113</code> — <strong>twenty times larger, at a fixed seed.</strong></p>
+<p>The two measure different things and the comparison is suggestive rather than
+decisive: this is <em>different</em> seeds on a byte-level language model scored by loss,
+while the <code>0.113</code> was the <em>same</em> seed four times on COGS scored by exact match.
+But it locates the problem. If changing the seed entirely moves this model by
+<code>0.0056</code>, then a <code>0.113</code> fixed-seed swing is not ordinary kernel
+nondeterminism. At 512 evaluation items with a quantization floor of
+<code>1/512 = 0.00195</code>, <code>0.113</code> is <strong>58 items flipping</strong> — which points at the
+evaluation subsample and the exact-match scorer rather than at training, and the
+local sweep looked at training.</p>
+<p><strong>The session then ran out of memory</strong> — <code>512.00 MiB</code> requested against
+<code>424.81 MiB</code> free on a 14.56 GiB card — before Q2, the certificate row, and Q3,
+the gate sweep at breadth. Incremental writes meant the tail was lost rather than
+the run: 33 rows landed and Q1 completed.</p>
+<p>Three defects were repaired before the push, and the first would have inverted the
+finding the row exists for. The notebook computed
+<code>repetition = tokens_seen / (20·n_params)</code> — the <strong>reciprocal</strong> of the row's
+definition, with the wrong numerator — so a <strong>larger</strong> model scored a <strong>lower</strong>
+factor and would have been labelled generalization-admissible. Corrected to
+<code>(20·n_params) / corpus_tokens</code> and checked against the row's own four values:
+<code>0.7936 / 0.6963 / 14.43 / 28.28</code>. <code>torch.manual_seed</code> ran <strong>after</strong> model
+construction at every call site, so a logged seed reproduced the batch order and
+not the initialisation — inside the seed-variance question itself. And the
+certificate shape is <strong>632,496</strong> parameters rather than the 720,896 the closed
+form predicted, a 12.3% shortfall moving its repetition factor to <code>0.696</code>.</p>
+<hr />
+<h2 id="11-c26-the-floors-and-two-figures-that-do-not-clear-them">11. C26: the floors, and two figures that do not clear them<a class="headerlink" href="#11-c26-the-floors-and-two-figures-that-do-not-clear-them" title="Permanent link">#</a></h2>
+<p>Every exact-match number carries <code>n</code> and its quantization floor <code>1/n</code>, and <strong>a
+swing smaller than <code>3/n</code> is not a swing.</strong> Fourteen published figures were swept
+against that rule. Twelve survive. Two do not, and both are new.</p>
+<p><strong><code>cogs_curve.jsonl</code>, in-distribution, step 9,000 → 12,000: the delta is
+<code>0.00390625</code> — exactly <code>1/256</code>, one item — against a floor of <code>3/256 = 0.01172</code>.</strong>
+The apparent movement in that leg of the curve is subsample noise. The curve's
+generalization column is unaffected: its deltas are <code>0.11523</code>, <code>0.00977</code> and
+<code>−0.04883</code> at <code>n = 512</code>, all clear of <code>3/512 = 0.00586</code>.</p>
+<p><strong><code>addprim_jump</code>, softmax, per-seed swing <code>0.005859375</code> — sitting exactly on the
+<code>3/512</code> boundary.</strong> It is the smallest value the rule admits as a swing at all,
+and it has been read as neither signal nor noise anywhere.</p>
+<p>The known instance reproduces: the COGS <code>0.113</code> at <code>n = 512</code> is 58 items against
+a <code>0.00586</code> floor, and survives comfortably.</p>
+<h3 id="the-subsample-is-retired-by-a-flag-not-a-diff">The subsample is retired by a flag, not a diff<a class="headerlink" href="#the-subsample-is-retired-by-a-flag-not-a-diff" title="Permanent link">#</a></h3>
+<p><code>ceq/harness.py::eval_indices</code> already returns <code>range(n_test)</code> whenever
+<code>max_eval ≥ n_test</code>, and <code>ceq/capability.py</code> already exposes <code>--max-eval</code>. So</p>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>ceq.capability<span class="w"> </span>--split<span class="w"> </span>cogs<span class="w"> </span>--max-eval<span class="w"> </span><span class="m">21000</span>
+</code></pre></div>
+<p>scores the <strong>full</strong> 21,000-item generalization split today. Priced from the four
+measured <code>eval_seconds</code> in <code>cogs_curve.jsonl</code> — a per-item range of
+<code>0.00951</code>–<code>0.04570</code> s — that is <strong>3.3 to 16.0 minutes per checkpoint</strong>, against a
+training wall clock of <code>1737.9</code> s already recorded for the same split. The
+subsample costs more in credibility than it saves in time.</p>
+<h3 id="pid-9000-is-defunct-and-the-reboot-clause-does-not-apply">PID 9000 is defunct, and the reboot clause does not apply<a class="headerlink" href="#pid-9000-is-defunct-and-the-reboot-clause-does-not-apply" title="Permanent link">#</a></h3>
+<p><code>Get-Process -Id 9000</code> fails — <em>"Cannot find a process with the process
+identifier 9000"</em> — while <code>tasklist</code> and <code>Get-CimInstance Win32_Process</code> both
+still list it as <code>python.exe -m ceqjepa.hbucket</code>, created 2026-09-20 13:28:47.
+<strong>That three-way split is the mechanism behind <code>taskkill</code>'s "no running instance"
+against a PID <code>tasklist</code> still prints.</strong> <code>nvidia-smi</code> reads <code>0 MiB / 8188 MiB</code>
+with no running compute processes.</p>
+<p><strong>The memory is not held.</strong> An earlier reading of 1,779 MiB at 95% utilisation
+was the sibling lanes, not this entry, and the claim that a day-old orphan was
+starving the box is withdrawn. The contract clause <em>not released means reboot
+before any timing row</em> does not apply; no reboot was performed or proposed.</p>
+<h3 id="the-rebuild-gate-was-anchored-to-the-wrong-file">The rebuild gate was anchored to the wrong file<a class="headerlink" href="#the-rebuild-gate-was-anchored-to-the-wrong-file" title="Permanent link">#</a></h3>
+<p>C27's torch-executing rebuild gate — the check that exists precisely to catch a
+wrong rebuild — was specified against <code>ceq/arm_pl.py</code> and <code>ceq/arm_phase.py</code>,
+<strong>neither of which contains <code>path_product</code> or <code>hop</code>.</strong> The correct anchor is
+<code>ceq/arm_smprime.py</code>, and the gate was rewritten and run against it. A gate
+pointed at a file without the functions it compares is the thirteenth entry in
+the catalogue below.</p>
+<hr />
+<h2 id="12-c25-the-rule-holds-and-the-first-implementation-of-it-broke-the-rule">12. C25: the rule holds, and the first implementation of it broke the rule<a class="headerlink" href="#12-c25-the-rule-holds-and-the-first-implementation-of-it-broke-the-rule" title="Permanent link">#</a></h2>
+<p>A scorer and its ceiling must be the <strong>same functional</strong>. A row whose scorer and
+ceiling differ is <strong>void, not inverted</strong> — the distinction matters because an
+inverted row invites you to pick the flattering binning and a void row does not.
+Resolution is computed at equal-count 200, equal-count 50 and fixed-width 10, and
+<strong>the ordering of arms must agree across all three or the row carries no
+verdict.</strong></p>
+<h3 id="the-wrapper-can-fire-both-verdicts-but-not-by-the-demonstration-offered">The wrapper can fire both verdicts — but not by the demonstration offered<a class="headerlink" href="#the-wrapper-can-fire-both-verdicts-but-not-by-the-demonstration-offered" title="Permanent link">#</a></h3>
+<p>A real instability was constructed and fired: a narrow-band arm with
+excess-over-null <code>0.134</code> that fixed-width-10 ranks <strong>last</strong>, at <code>res_k</code> of exactly
+<code>0.000000</code> with all 8,000 forecasts in one bin, while <strong>both</strong> equal-count schemes
+rank it <strong>first</strong>.</p>
+<p>The row's own UNSTABLE demonstration did not establish that. At <code>equal_count_50</code>
+<strong>both arms score <code>RES = 0.000000</code> exactly</strong>, and the reported ordering is
+<code>sorted()</code>'s alphabetical tie-break rather than a measurement; at
+<code>equal_count_200</code> the winning margin of <code>3.28182e-05</code> comes from a class with
+<strong>zero populated bins</strong> and a residual of <code>2.09e-01</code>. A check-the-check that reads
+unstable from an alphabetical tie is the fourteenth entry in the catalogue.</p>
+<h3 id="score_vs_ceiling-is-dead-code"><code>score_vs_ceiling()</code> is dead code<a class="headerlink" href="#score_vs_ceiling-is-dead-code" title="Permanent link">#</a></h3>
+<p>It is defined at <code>c25_scorer.py:132</code> and <strong>called from nowhere in the tree.</strong> The
+one function whose entire job is to enforce the matched functional never runs.
+What the ceiling script actually prints is a <strong>binned numerator over the published
+unbinned <code>0.10116955630126778</code></strong>, at a different <code>n</code>, on different data — the void
+condition, rebuilt inside the fix for it.</p>
+<h3 id="the-binned-ceiling-reproduces-the-unbinned-one">The binned ceiling reproduces the unbinned one<a class="headerlink" href="#the-binned-ceiling-reproduces-the-unbinned-one" title="Permanent link">#</a></h3>
+<p>This is the opposite of what was anticipated. The headline that the binned ceiling
+<strong>exceeds</strong> the unbinned one by <code>1.6×</code>–<code>2.4×</code> is <strong>38–49% uncorrected bin-count
+bias</strong>; once that floor is subtracted the binned ceiling reproduces the unbinned
+one to within 10%. <strong>The correction was already in the file the row imported
+from</strong> — <code>wil_chess400_results.json</code> records
+<code>shuffle_null_analytic_B_minus_1_UNC_over_N = 0.0006843155567724138</code>.</p>
+<p>So no RES-over-ceiling ratio needs restating on ceiling grounds, and the earlier
+warning that they might is withdrawn.</p>
+<h3 id="two-defects-that-void-any-verdict-the-wrapper-issues">Two defects that void any verdict the wrapper issues<a class="headerlink" href="#two-defects-that-void-any-verdict-the-wrapper-issues" title="Permanent link">#</a></h3>
+<p><strong>A degenerate edge set silently drops every item.</strong> A constant forecast collapses
+<code>torch.unique(edges)</code> to a single edge, <code>_score_one_class</code> loops over <code>range(0)</code>,
+and all 6,000 items vanish: reliability falls from a correct <code>0.00637584</code> at
+fixed-width to <code>0.0</code>, the residual jumps to <code>6.38e-03</code>, and <strong>nothing raises.</strong>
+The resulting <code>RES = 0</code> is correct by accident — a constant forecast does have
+zero resolution — so the ordering survives a bug rather than being produced by the
+scorer.</p>
+<p><strong>There is no tie handling.</strong> Two arms with identical resolution are ordered by
+dictionary insertion, confirmed by scoring one forecast array under the names
+<code>zzz</code> and <code>aaa</code> and receiving a STABLE verdict on a pure tie. Both fixes are
+named: place all items in one bin when the edges degenerate, and return
+<strong>ORDERING TIED</strong> rather than a name-sorted ordering.</p>
+<h3 id="and-the-published-rows-cannot-be-re-scored-at-all">And the published rows cannot be re-scored at all<a class="headerlink" href="#and-the-published-rows-cannot-be-re-scored-at-all" title="Permanent link">#</a></h3>
+<p>Only aggregates are saved in the tree, not raw per-item forecast arrays, so the
+chess400 and tier-2 rows <strong>cannot be re-scored under any other bin scheme.</strong> That
+is a fixed-structure defect of exactly the class L-REFLECTOR exists to catch: the
+decision about what to persist was made once, never revisited, and it forecloses
+every later audit.</p>
+<p>One premise carried from the earlier sweep is also misattributed — <code>white_win</code> and
+<code>black_win</code> are <strong>not</strong> zero on the recalibrated operator arm. Two lanes disagree
+on that figure and it is recorded as disputed rather than settled.</p>
+<hr />
+<h2 id="13-the-l-reflector-audit-32-tables-and-two-mechanisms">13. The L-REFLECTOR audit: 32 tables, and two mechanisms<a class="headerlink" href="#13-the-l-reflector-audit-32-tables-and-two-mechanisms" title="Permanent link">#</a></h2>
+<p>Every published table in <code>PHASE_G</code>, <code>PHASE_H</code>, <code>PHASE_I</code> and <code>PHASE_I1</code>, and the
+producers under them, was audited against its own fixed structure — initializer,
+parameterization, corpus regime, scorer functional, bin scheme, dtype path, torch
+build, eval subsample size — before anything it scored.</p>
+<p><strong>32 tables: 9 VOID, 10 RESTATED, 13 SURVIVE.</strong></p>
+<p>The result that matters is not the count. It is that <strong>seven of the nine voids
+trace to exactly two mechanisms.</strong></p>
+<table>
+<thead>
+<tr>
+<th>mechanism</th>
+<th>tables</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>scorer and ceiling are different functionals</strong></td>
+<td>chess resolution at 10 fixed-width bins against an unbinned per-class variance (<code>I1 §8</code>); frozen readout scored against trained weights (<code>I1 §9</code>); the Murphy residual checked against its own inputs (<code>I §1</code>); order-free composition scored by L2 on a sphere, where geometry forces chance regardless of order (<code>H §5</code>)</td>
+</tr>
+<tr>
+<td><strong>the regime forbids the sentence</strong></td>
+<td>every prior LM comparison at 5.4×–28.3× corpus repetition (<code>I1 §2</code>); a bar set from one non-monotone checkpoint that the curve crosses in both directions (<code>I §6</code>); a density account explaining a table that ran at <code>0.018250</code> rather than the <code>0.50</code> it assumed (<code>I1 §7</code>)</td>
+</tr>
+</tbody>
+</table>
+<p>The remaining two voids are a Fourier reproduction bar that fails its own
+pre-registered 150-step threshold by <code>0.0063</code> nats (<code>G §5</code>), and the eval-only
+freeze prescription, which is the same functional mismatch appearing a second
+time on a different bed.</p>
+<h3 id="both-live-verdicts-survive-their-own-fixed-structure">Both live verdicts survive their own fixed structure<a class="headerlink" href="#both-live-verdicts-survive-their-own-fixed-structure" title="Permanent link">#</a></h3>
+<p><strong>The I-AUT confound-removed race SURVIVES</strong> — the pre-registered kill against the
+commuting-diagonal control did not fire, 5 of 5 seeds pairwise, no overlap of the
+spreads, on a generator handed over as bare integers.</p>
+<p><strong>The chess ceiling at <code>max_plies</code> 80 → 400 SURVIVES</strong> — the same oracle-resolution
+functional computes both the ceiling and the arm, and the intervals are
+non-overlapping at 202×.</p>
+<p><strong>The committor row is RESTATED, not void.</strong> It beats a base rate and loses to a
+summary of its own input, and the correct sentence is <em>undertrained</em>, not <em>not
+predictive</em>.</p>
+<p>Ten further tables are restated rather than struck, including the head-dim cliff
+— corrected from <code>31.8×</code> to <code>12.22×</code> and scoped to bfloat16 only — and the
+host-spill guard, downgraded to signed at depths 1 through 4 only.</p>
+<h3 id="the-hop-gate-and-it-discriminates">The hop gate, and it discriminates<a class="headerlink" href="#the-hop-gate-and-it-discriminates" title="Permanent link">#</a></h3>
+<p>Both exemplars that beat this project's own leap seat share a shape: <strong>audit the
+object that cannot move under the model's own rules — the reflector's involution,
+the S-matrix's unitarity — then treat what survives elimination as the answer.</strong>
+A structural NEVER is not a refusal; it is what the Bombe searched on.</p>
+<p>Five conditions, and a leap is not dispatched for binding until it meets them:</p>
+<ol>
+<li><strong>Names which quantity is fixed structure and which is trainable, in that
+   order, before the trainable part is scored.</strong></li>
+<li><strong>Grounded in fetched prior art with exact figures</strong> — page, section, quoted
+   line, never a paraphrase from memory.</li>
+<li><strong>Reframes an existing object rather than patching one</strong> — states what the
+   thing provably is, not a special case kept alive to save an old story.</li>
+<li><strong>Falsifiable by a measurement that already exists</strong>, or names the one that
+   would falsify it.</li>
+<li><strong>The proposer ran their own instance and reported it when it failed</strong>, in the
+   record, before dispatch — not only the passing numbers.</li>
+</ol>
+<p>Applied to the four leaps this project has produced:</p>
+<table>
+<thead>
+<tr>
+<th>leap</th>
+<th>score</th>
+<th>outcome it had</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Chebyshev degree law</td>
+<td><strong>5/5</strong></td>
+<td>exact — reproduced 11/34/130 with no fitted constant</td>
+</tr>
+<tr>
+<td>segment bit</td>
+<td>4/5</td>
+<td>bound by RED test, then conceded as Blelloch 1989</td>
+</tr>
+<tr>
+<td>three-channel dtype gate</td>
+<td>4/5</td>
+<td>half alive — bf16 mantissa died at S = 75</td>
+</tr>
+<tr>
+<td>zero-density account</td>
+<td><strong>2/5</strong></td>
+<td>refuted by the table it was built to explain</td>
+</tr>
+</tbody>
+</table>
+<p><strong>The gate retrodicts the outcomes</strong>, which is the only evidence that it is a gate
+and not a preference. Condition 5 is the one the project has never enforced and
+the one both exemplars satisfy: the S-matrix instance that diverged at
+<code>ρ = 1.6688</code>, with <code>E</code> inside the band, was reported corrected and <strong>unscored</strong>
+rather than quietly moved.</p>
+<p>The band-position leap now awaiting its free kill scores <strong>3/5 pending fetch</strong> —
+it names fixed against trainable explicitly, it reframes, and its step 0 is
+falsifiable off an existing checkpoint, but six of its citations are from memory
+and unfetched, and it borrows another instance rather than running its own.</p>
+<hr />
+<h2 id="14-rows-still-out">14. Rows still out<a class="headerlink" href="#14-rows-still-out" title="Permanent link">#</a></h2>
+<p><code>R1</code> gate parameterization (straight-through against hard-concrete, with the
+four-condition must-fire); <code>R3</code> held-out eval path by document and <code>R4</code>
+determinism; <code>R5</code> hardware assertions and <code>R6</code> dtype guards, each of which must
+be demonstrated firing rather than described.</p>
+<p><strong>Kaggle remains closed</strong> on the verified absence of any held-out quantity, until
+<code>R3</code> lands.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../PHASE_I/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Phase I: calibrate and cost">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Phase I: calibrate and cost
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../ledgers/mistakes/" class="md-footer__link md-footer__link--next" aria-label="Next: Failure mechanisms">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Failure mechanisms
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Invented by <a href="https://teerthsharma.vercel.app/">Teerth Sharma</a> · Apache License 2.0
+    </div>
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/teerthsharma/resolvent" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://teerthsharma.vercel.app/" target="_blank" rel="noopener" title="teerthsharma.vercel.app" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M351.9 280H161c2.9 64.5 17.2 123.9 37.5 167.4 11.4 24.5 23.7 41.8 35.1 52.4 11.2 10.5 18.9 12.2 22.9 12.2s11.7-1.7 22.9-12.2c11.4-10.6 23.7-28 35.1-52.4 20.3-43.5 34.6-102.9 37.5-167.4zm-191-48h190.9c-2.8-64.5-17.1-123.9-37.4-167.4-11.4-24.4-23.7-41.8-35.1-52.4C268.1 1.7 260.4 0 256.4 0s-11.7 1.7-22.9 12.2c-11.4 10.6-23.7 28-35.1 52.4-20.3 43.5-34.6 102.9-37.5 167.4m-48 0c3.5-85.6 25.6-165.1 57.9-217.3C78.7 47.3 10.9 131.2 1.5 232zM1.5 280c9.4 100.8 77.2 184.7 169.3 217.3-32.3-52.2-54.4-131.7-57.9-217.3zm398.4 0c-3.5 85.6-25.6 165.1-57.9 217.3 92.1-32.7 159.9-116.5 169.3-217.3zm111.4-48C501.9 131.2 434.1 47.3 342 14.7c32.3 52.2 54.4 131.7 57.9 217.3z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+        <script src="../assets/resolvent.js"></script>
+      
+    
+  </body>
+</html>
