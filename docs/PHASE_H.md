@@ -353,6 +353,46 @@ measures that the generator's own form fits its own generator. What this bed
 cannot separate is *non-commutative operator* from *the generator's exact operator
 family*, because on this bed they are the same thing by construction.
 
+### The confound was removed, and the result survived it
+
+The limit above was tested rather than left standing. The same five arms — the
+four above plus the commuting-diagonal control — were re-raced on S5's certified
+120-state automaton **presented only as integer symbol ids**: no permutation
+matrices, no transition table, no group structure reaches any arm, so no arm's
+forward pass can be the generator by construction. Krohn–Rhodes guarantees the
+target is reachable at some dimension; nothing tells an arm the parameterisation.
+
+The kill was pre-registered before the numbers: *if the operator arm does not beat
+the diagonal control at matched parameters on a generator it was never handed,
+the 84.9% attribution was the arm being the generator.* **It did not fire.**
+
+| arm | params | mean | std |
+|---|---|---|---|
+| a vectors + softmax | 460 | 0.2285 | 0.0176 |
+| b scalar gate | 460 | 0.2305 | 0.0190 |
+| **c operator, invertible** | **404** | **0.8620** | 0.0556 |
+| d operator + projector | 398 | 0.6975 | 0.1034 |
+| DIAG commuting control | **404** | 0.2860 | 0.0150 |
+
+An independent re-run from a clean directory returned `c = 0.8817 ± 0.0869`
+against `DIAG = 0.2803 ± 0.0104`, with (c) ahead on **5 of 5 seeds pairwise** and
+no overlap — worst case `0.7300` against `0.2937`.
+
+The floor that binds a commuting arm is not the one the row shipped. A commuting
+gate sees only the **multiset**, which for a length-14 binary word is the count of
+symbol 1 — fifteen values. That ceiling measures `0.2898` fitted honestly and
+`0.3110` as an oracle fit on the eval split itself. DIAG scored `0.2803`, within
+`0.031` of its absolute upper bound, so **the control is saturated rather than
+undertrained** and the separation is not a training artefact. Against the real
+tightest floor of `0.3110`, the operator arm's worst seed is still `2.35×`.
+
+Arms (a) and (b) sit at `0.23`, **below** that ceiling, so they are underfit
+against a baseline this row did not measure; their scores bound the vector side
+from above rather than measuring it. One parameter budget and one word length
+were swept, with no length-generalisation check.
+
+Producer and full caveats: `tests/foreman/iaut/`, one command.
+
 An earlier draft of this row called the floors "trivial closed-form" baselines.
 That is wrong and understates them: `last_op_only`, `last_two_ops`, the
 order-free replay and the bag predictor are all handed the true entities and the
