@@ -1,0 +1,70 @@
+--- ceq/lm.py	2026-08-25 08:42:43.447174400 +0530
++++ C:\Users\seal\AppData\Local\Temp\claude\C--Users-seal-Desktop-New-folder--32-\870edeb1-6409-4414-98e7-00d0537b75dd\scratchpad\lm_patched.py	2026-09-21 14:15:40.782197400 +0530
+@@ -58,15 +58,38 @@
+         return x.to(device), y.to(device)
+ 
+ 
++#: CHASE, COGS bar (house-events.jsonl). `smprime` was never in the kind list
++#: lm.py:66 asserts, so capability.py has never scored `ceq.arm_smprime`'s gate
++#: -- only `sgate`, a different, unrelated difference-of-softmaxes object (see
++#: `Attention.operator`'s own docstring). This wiring MIRRORS the precedent
++#: already shipped and tested in `ceq/hf/modeling_ceq.py::CEQAttention` (the
++#: `operator="smprime"` branch, `SMPRIME_CORNER = (1.0, 1.0, 1.0)`,
++#: `2*(d+1) + 3` extra params per block, heads shared across n_heads,
++#: `smprime_readout(...).real`, no path sum because the arm's read-out is one
++#: application `O = A V`) rather than inventing a second parametrization.
++#: `ceq/arm_smprime.py` imported lazily, same reason `modeling_ceq.py` gives:
++#: this file should still import at every other kind if the arm module ever
++#: fails to import.
++SMPRIME_CORNER = (1.0, 1.0, 1.0)  # (beta, qk, g), ArmSMPrime.__init__'s own corner
++
++
+ class Attention(nn.Module):
+     """One attention block. `kind` selects the operator and nothing else."""
+ 
+     def __init__(self, kind: str, d: int, n_heads: int):
+         super().__init__()
+-        assert kind in ("softmax", "softmax_x", "signed", "sgate", "sgate_nores")
++        assert kind in ("softmax", "softmax_x", "signed", "sgate", "sgate_nores",
++                        "smprime")
+         self.kind, self.n_heads, self.d_head = kind, n_heads, d // n_heads
+         self.qkv = nn.Linear(d, 3 * d, bias=False)
+         self.proj = nn.Linear(d, d, bias=False)
++        if kind == "smprime":
++            beta, qk, g = SMPRIME_CORNER
++            self.m_head = nn.Linear(d, 1)
++            self.theta_head = nn.Linear(d, 1)
++            self.beta = nn.Parameter(torch.tensor(float(beta)))
++            self.qk = nn.Parameter(torch.tensor(float(qk)))
++            self.g = nn.Parameter(torch.tensor(float(g)))
+ 
+     def operator(self, q: torch.Tensor, k: torch.Tensor | None = None) -> torch.Tensor:
+         """The signed, strictly causal coupling matrix.
+@@ -168,12 +191,27 @@
+         shape = lambda t: t.view(b, s, self.n_heads, self.d_head).transpose(1, 2)
+         return shape(q), shape(k), shape(v)
+ 
++    def _smprime(self, q, k, v, x):
++        """Bitwise `ceq/hf/modeling_ceq.py::CEQAttention._smprime`: the arm's
++        own `readout`, called not reimplemented, heads shared across
++        `n_heads` (`[B,S] -> [B,1,S]`, broadcasting over the head dim of the
++        `[B,H,S,S]` operator), `.real` because that is `ArmSMPrime.forward`'s
++        own read-out of the complex output. NO path sum -- the arm's read-out
++        is `O_i = sum_j W_ij V_j`, one application, not a truncated series."""
++        from ceq.arm_smprime import readout as smprime_readout
++        u = self.m_head(x).squeeze(-1).unsqueeze(-2)
++        th = self.theta_head(x).squeeze(-1).unsqueeze(-2)
++        return smprime_readout(q, k, v, u, th,
++                               beta=self.beta, qk=self.qk, g=self.g).real
++
+     def forward(self, x: torch.Tensor) -> torch.Tensor:
+         b, s, d = x.shape
+         q, k, v = self.qkv_heads(x)
+ 
+         if self.kind == "softmax":
+             o = F.scaled_dot_product_attention(q, k, v, is_causal=True)
++        elif self.kind == "smprime":
++            o = self._smprime(q, k, v, x)
+         elif self.kind == "softmax_x":
+             o = path_sum_terms(self.operator(q, k), v, SMX_HOPS,
+                                include_identity=SMX_ID)

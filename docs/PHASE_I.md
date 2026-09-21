@@ -442,11 +442,40 @@ SDPA kernel selection and embedding-gradient scatter-add. And
 off `n_test` alone, so checkpoint comparisons are perfectly paired but no
 subsample-luck estimate is reachable.
 
-The gated arm was not raced against an unsettled bar. Measured separately, it
-reads generalization `0.0` and in-distribution `0.16797` — below the bed's own
-`RESOLUTION_FLOOR` — so it fails the admission gate and dies under any bar.
+### And the gate is dead on that bed, under any bar
 
-Producer: `tests/chase/cogs/`.
+The arm was raced anyway, because a null this large does not depend on where the
+bar sits. **Exact match `0.0000` on COGS generalization at all three seeds — 0 of
+1,536 items** — against the void `0.04930` and a parameter-matched softmax
+control at `0.0260`. If the arm's true rate were the bar,
+`P(0 of 1536) = exp(−1536 × 0.0506) ≈ 1e-34`. It scores below the control's
+*worst* run, `0.021484`, and the bed's floor held for the control throughout
+(in-distribution `0.8125–0.93359` against `0.20`), so the null is real.
+
+The arm was verified to be the gated one at runtime rather than from config:
+`ceq.arm_smprime.readout` instrumented with a counter fires exactly `n_layers`
+times per forward with no fallthrough to `scaled_dot_product_attention`; all 28
+new tensors receive nonzero gradients; and loading the smprime state dict into
+the softmax arm shifts logits by `1.128` against an RMS of `0.579`, so the
+difference is the operator and not the weights.
+
+**The mechanism is the initialisation, measured at the COGS shape: 97.99% of the
+causal operator's entries are annihilated by a closed gate before training
+starts, and each query sees 1.93 of 192 keys.** The failure is an *underfit*, not
+a generalization failure — train loss `0.407–0.485` against the control's
+`0.273–0.288` at identical budget. `magnitude` is `clamp(u, 0, 1)` and
+`u = m_head(x)` at `nn.Linear` default init is centred at zero.
+
+Two checking defects worth more than the verdict. A first load-bearing test added
+a **constant** `0.5` to every `m_head` weight and measured a `3.5e-6` delta,
+reading as an inert gate — wrong, because `m_head` consumes a LayerNorm output
+whose row sum is zero (`8.1e-6` absmax), so a constant shift lies **exactly in
+LayerNorm's null space**; a random perturbation moves logits `0.716`. And the
+control-reproduction check compared against `0.02930` with `abs(x − recorded) <
+1e-9` while the disk value is `0.029296875`, so a bitwise-perfect reproduction
+differs by `3.1e-6` and that verdict field could never read True.
+
+Producers: `tests/chase/cogs/`.
 ---
 
 ## Limits
