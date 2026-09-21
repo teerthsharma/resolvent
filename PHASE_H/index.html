@@ -975,6 +975,67 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#11-h1-three-repairs-one-of-which-is-progress" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. H.1 — three repairs, one of which is progress
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="11. H.1 — three repairs, one of which is progress">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-krohnrhodes-bed-is-alive" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Krohn–Rhodes bed is alive
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-line-gate-is-still-a-length-filter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The line gate is still a length filter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-recall-bar-clears-its-floors-and-still-measures-the-wrong-thing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The recall bar clears its floors and still measures the wrong thing
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-h1-two-certificates-and-the-end-of-the-exactness-claim" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. H.1 — two certificates, and the end of the exactness claim
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#limits" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1948,6 +2009,67 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#11-h1-three-repairs-one-of-which-is-progress" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. H.1 — three repairs, one of which is progress
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="11. H.1 — three repairs, one of which is progress">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-krohnrhodes-bed-is-alive" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Krohn–Rhodes bed is alive
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-line-gate-is-still-a-length-filter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The line gate is still a length filter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-recall-bar-clears-its-floors-and-still-measures-the-wrong-thing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The recall bar clears its floors and still measures the wrong thing
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-h1-two-certificates-and-the-end-of-the-exactness-claim" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. H.1 — two certificates, and the end of the exactness claim
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#limits" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2489,6 +2611,167 @@ the way a sinusoid does.</p>
 certified resolvent — is a property a representation-learning loss or a downstream
 probe can query.</strong> If that holds, the encoder slot is not where this contribution
 belongs, and knowing that is worth more than an interface nobody would use.</p>
+<hr />
+<h2 id="11-h1-three-repairs-one-of-which-is-progress">11. H.1 — three repairs, one of which is progress<a class="headerlink" href="#11-h1-three-repairs-one-of-which-is-progress" title="Permanent link">#</a></h2>
+<p>Three rows struck earlier in the phase were rebuilt. One became a real row; two
+became struck rows with better prose, and are recorded as that.</p>
+<h3 id="the-krohnrhodes-bed-is-alive">The Krohn–Rhodes bed is alive<a class="headerlink" href="#the-krohnrhodes-bed-is-alive" title="Permanent link">#</a></h3>
+<p>It had shipped no null at all. It now carries two, both scored on the task's own
+argmax label metric rather than on finiteness, at n = 2000 per seed:</p>
+<table>
+<thead>
+<tr>
+<th>null</th>
+<th>per-seed error</th>
+<th>correct construction</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>shuffled operator assignment</td>
+<td>0.5045 / 0.4970 / 0.5175 / 0.5170 / 0.5160</td>
+<td>0.0000</td>
+</tr>
+<tr>
+<td>orthogonal reset substitute, <code>det = 1</code></td>
+<td>0.5445 / 0.5465 / 0.5445 / 0.5420 / 0.4645</td>
+<td>0.0000</td>
+</tr>
+</tbody>
+</table>
+<p>The second null is the one that matters, because the property under test turned
+out to be contraction rather than singularity, and a <em>near-singular</em> invertible
+matrix would pass the task and prove nothing. To rule out a lucky draw the entire
+2×2 orthogonal family was swept — 721 angles, both determinant signs, singular
+values exactly <code>[1, 1]</code> — and the best member still errs between <strong>0.393 and
+0.544</strong> on every seed.</p>
+<p>The contraction reading is confirmed from the other side too: <code>R_ε = (1−ε)P + εI</code>
+scores <strong>exactly zero label error at every ε tested</strong>, from 0.4999 down to
+<code>1e−15</code>. Against the same sequences, an orthogonal substitute errs 0.4175–0.572
+while the contracting one errs 0.0.</p>
+<p>One sentence of this project's own correction was itself incomplete. The failing
+pairs under the pseudo-inverse prefix form require <strong>both indices past the
+projector</strong>, not one — a pseudo-inverse cannot undo a rank-one projection at
+either end.</p>
+<h3 id="the-line-gate-is-still-a-length-filter">The line gate is still a length filter<a class="headerlink" href="#the-line-gate-is-still-a-length-filter" title="Permanent link">#</a></h3>
+<p>The replacement is a two-level model — a character trigram and a word bigram,
+each with its own placebo — and it passes both placebo tests that the original
+failed. Letter-shuffle passes the character level <strong>0.00%</strong> of the time;
+word-salad passes the word level <strong>2.40%</strong>, both under the 5% void line.</p>
+<p>It also reproduces the expected division of labour at real corpus size: the
+character level kills letter-shuffle but is <strong>68.5% blind to salad</strong>, while the
+word level kills salad and kills letter-shuffle as well through unknown tokens.</p>
+<p>But the confound that struck the original is <strong>worse</strong>, not better:</p>
+<table>
+<thead>
+<tr>
+<th>line length</th>
+<th>rejected</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>under 40 chars</td>
+<td><strong>60.0%</strong></td>
+</tr>
+<tr>
+<td>40–100</td>
+<td>18.78%</td>
+</tr>
+<tr>
+<td>100–250</td>
+<td>2.7%</td>
+</tr>
+<tr>
+<td>over 250</td>
+<td><strong>0.0%</strong></td>
+</tr>
+</tbody>
+</table>
+<p>A spread of 0.60 against the struck gate's 0.4172. The mechanism is genuinely
+different — this gate is order-sensitive where an index of coincidence is a
+letter-multiset statistic — but the symptom is identical and larger. It is a
+better-behaved length filter. The within-bucket control that would settle whether
+anything else is being measured was not run.</p>
+<h3 id="the-recall-bar-clears-its-floors-and-still-measures-the-wrong-thing">The recall bar clears its floors and still measures the wrong thing<a class="headerlink" href="#the-recall-bar-clears-its-floors-and-still-measures-the-wrong-thing" title="Permanent link">#</a></h3>
+<p>Cross-tagger agreement reproduces exactly: <strong>0.8262</strong> (404/489), Wilson 95%
+interval <strong>[0.7901, 0.8572]</strong>, between a dependency parser's root verb and an
+independent part-of-speech tagger's first verb-tagged token.</p>
+<p>It clears four no-parsing floors without interval overlap — the strongest being a
+first <code>-ing</code>/<code>-ed</code> heuristic at 0.3579 [0.3166, 0.4013], then longest word at
+0.0716, first alphabetic token at 0.0102, sentence-final token at 0.0041. The
+system beats the strongest by 0.4683, and 0.4013 &lt; 0.7901.</p>
+<p>The old bar of ≥ 0.95 is unreachable against an independent tagger and was only
+ever met by the tautology it replaced. A defensible bar is the measurement's own
+lower bound, 0.7901.</p>
+<p>What it cannot do is the thing a bar is for. Two imperfect taggers disagree on
+<strong>17.4%</strong> of lines when nothing is broken at all, driven by participles used as
+adjectives, copulas and fronted adjuncts. So a below-bar reading cannot separate
+an extraction bug from ordinary tagger ambiguity: it measures concordance, not
+correctness. It is an honest number and a weak bar.</p>
+<hr />
+<h2 id="12-h1-two-certificates-and-the-end-of-the-exactness-claim">12. H.1 — two certificates, and the end of the exactness claim<a class="headerlink" href="#12-h1-two-certificates-and-the-end-of-the-exactness-claim" title="Permanent link">#</a></h2>
+<p>Both certificates pass, and neither is a result. They are theorems with checks,
+and the page says so rather than counting them.</p>
+<p><strong>The dilation identity holds with four orders of slack.</strong> Across r ∈ {2, 4, 8} at
+five seeds, with σ = 0 and σ = 1 included deliberately rather than left to a
+random draw, the doubled-space operator is orthogonal to a maximum of
+<code>2.220446049250313e-16</code> against a bar of <code>1e−12</code>, its top-left block equals Σ
+<strong>bitwise</strong> in every run, and the reconstruction error is <code>0.0</code> exactly.</p>
+<p>Two things the hunt for a failure turned up. An earlier draft claimed the
+angle route and the direct-product route diverge at σ = 1; they diverge at
+<strong>σ = 0</strong>, because <code>arccos(0) = π/2</code> and <code>cos(π/2) = 6.123233995736766e-17</code>, not
+zero — σ = 1 round-trips exactly. The implementation this repository ships is the
+direct-product route, which never calls either function and is therefore exact at
+both corners. And the naive <code>√(1−σ²)</code> loses against the stable
+<code>√((1−σ)(1+σ))</code> by a relative <code>2.756e−10</code> at σ = 0.99999999, but orthogonality
+never degrades past <code>1.1e−16</code> there: the precision loss lives in a scalar erasure
+formula, not in the defining identity.</p>
+<p>The attribution is Halmos 1950 for the block form and Sz.-Nagy 1953 for power
+dilations. Stinespring 1955 concerns completely positive maps on C*-algebras and
+is not the citation. The parallel with a groups-and-flip-flops decomposition over
+finite semigroups is a resemblance between different mathematical settings and is
+not claimed as a theorem.</p>
+<p><strong>And the last named structural difference is dead on the bed built to show it.</strong></p>
+<p>The resolvent read is the successor representation applied to a reward, which is
+prior art, and it agrees with the temporal-difference fixed point to
+<code>8.882e−15</code> at worst across five seeds against a <code>1e−12</code> bar, with successor-
+representation row sums exactly <code>10.000000</code>.</p>
+<p>The only difference this project still claimed for it was exactness at absorbing
+states — a gate reaching exactly zero where a sigmoid only approaches it. On a
+six-state chain with one absorbing state:</p>
+<table>
+<thead>
+<tr>
+<th>route</th>
+<th>value at the absorbing state</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>resolvent read</td>
+<td><code>0.0</code> exact</td>
+</tr>
+<tr>
+<td>TD(0) after 20,000 sweeps</td>
+<td><code>2.470e−323</code></td>
+</tr>
+<tr>
+<td>sigmoid gate after 20,000 steps</td>
+<td><code>0.03817905137506084</code></td>
+</tr>
+</tbody>
+</table>
+<p>The gap between the exact read and TD(0) is a <strong>subnormal float64 value</strong>. No
+tolerance anyone would set can register it.</p>
+<p>The sigmoid's <code>0.038</code> is not a rescue, and the measurement says why: it comes from
+gradient starvation as the argument approaches zero, which is a fact about
+gradient descent on a sigmoid rather than about value estimation. It is not the
+mechanism being contrasted.</p>
+<p>So exactness at absorbing states buys nothing measurable against the method it was
+supposed to beat. That is consistent with this project's own earlier concession
+that the closed-versus-open distinction is a parameterisation default rather than
+a novelty; it is now measured rather than conceded.</p>
 <hr />
 <h2 id="limits">Limits<a class="headerlink" href="#limits" title="Permanent link">#</a></h2>
 <p>No result tables appear on this page yet; the rows that would fill them were
