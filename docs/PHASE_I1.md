@@ -145,7 +145,8 @@ when `Stop-Process -Force` does not take.
 | 8 | straight-through forward check | compared `torch.clamp` to `torch.clamp`; could not detect a changed forward |
 | 9 | pairing's shuffled control | vacuous as constructed; pairing held on other evidence |
 | 10 | Kaggle notebook's rebuild gate | numpy-only; executed none of `magnitude_clamp`, `path_product`, `hop`, `operator`, `readout` or `GatedBlock`, so it would pass with the whole torch rebuild wrong |
-| 11 | span-containment curve | tracks `1 − (1−p)^L` to three decimals, so it measures the density it was handed rather than a mechanism |
+| 11 | freeze verifier | compared `clamp(u_raw,0,1)` while `blend()` computes `magnitude(lerp(1,u,g))` with `g` trainable and drifted to `0.8699`; halted a row on a false alarm |
+| 12 | span-containment curve | tracks `1 − (1−p)^L` to three decimals, so it measures the density it was handed rather than a mechanism |
 
 **Open.** Roughly 140 further tolerance assertions across `tests/cameron`,
 `tests/curvature`, `tests/foreman` and `tests/lorasort` were located by the same
@@ -313,9 +314,13 @@ gradients at exact endpoints; exactness becomes eval-only and the page says so.*
 Both move `m_head.bias` **inside the same `~0.02` band the zero-gradient clamp
 itself moved in**. Giving every gate a live gradient did not unfreeze the bias.
 
-**Exactness is therefore eval-only: train with hard-concrete, freeze to clamp at
-eval.** No form is set as the default, because the bar that was written first does
-not endorse either as trainable-with-live-gradient.
+**Exactness was therefore prescribed as eval-only: train with hard-concrete,
+freeze to clamp at eval.** No form is set as the default, because the bar written
+first endorses neither as trainable-with-live-gradient.
+
+> **That prescription is dead. See §9.** Freezing to clamp at eval is not a
+> freeze — it is a substitution of a different function, and it reconstructs the
+> defect it was written to escape.
 
 The dead-zone diagnosis reproduces exactly and is not a seed artefact.
 At bias 0, `P(u ≤ 0) = 0.5014`, `P(u ≥ 1) = 0.1602`, `33.84%` carrying gradient;
@@ -418,7 +423,138 @@ safetensors**, not the single scalar the race reported.
 
 ---
 
-## 8. Rows still out
+## 8. S1: the kill fires on the point, and its reading does not survive the floor
+
+`RES/ceiling` at ~200k parameters reads `0.02495` at **both** seeds, below the
+pre-registered `0.05`, so the encoding kill fires and replicates. Three things
+stop it meaning what it was written to mean.
+
+**The interval contains the bar.** `[0.00415, 0.07521]` of ceiling at seed 0,
+`[0.00436, 0.08228]` at seed 1. It fires on the point estimate, not at CI.
+
+**The scorer and the ceiling are different functionals.** Resolution is scored
+over **10 fixed-width one-vs-rest bins**; the ceiling is an **unbinned per-class
+variance**. `white_win` and `black_win` contribute `res_k` of **exactly 0** at
+both seeds, because every recalibrated forecast lands in bin 0 — the scorer is
+blind to rare-class resolution while the ceiling counts all four classes.
+
+**And re-binning inverts the ordering.** At tier 2, seed 0:
+
+| | fixed-width (10) | equal-count (10 / 200) |
+|---|---|---|
+| operator | 0.002155 | 0.003769 |
+| twin | 0.001102 | 0.001721 |
+| **piece-count floor** | 0.006761 | **0.006993** |
+
+Under fixed-width the operator sits `2.3×` **above** the floor; under equal-count
+it sits `3.1×` **below** it, and the floor reaches `0.069` of ceiling — **above
+the 0.05 bar the operator fails**. A strictly-less-informative 8-bin summary of
+the operator's own input clears the bar the operator misses. **That is the model
+failing to reach what its own encoding already supports, not the encoding being
+the ceiling, and `fen_to_vec` must not be touched on this evidence.**
+
+Three further claims of the sweep do not hold. `RES/ceiling` **does not rise with
+size**: at seed 0 the operator rises and the twin falls, at seed 1 both reverse,
+and every per-arm trend direction flips between seeds while each tier's CI
+contains the others' points. The arms **separate at zero of three sizes**, and
+the operator-minus-twin gap **sign-flips at all three tiers** between seeds. And
+"trained to convergence" means the early-stop became eligible only past
+`0.8 × budget`, with all twelve runs stopping within ~180 steps of eligibility —
+`converged=True` records that the budget nearly ran out. At tier 1 the operator's
+final `L_q` is `0.985` against the twin's `0.082` on the identical objective.
+
+Scope, stated: 300 games of the pre-registered 5,900, two seeds, and a 2k tier
+that is **architecturally unreachable** — `x_dim = 769` floors `TinyCEQ` at 8,289
+parameters.
+
+---
+
+## 9. S2: the eval-only prescription is dead
+
+R1 prescribed training with hard-concrete and freezing to clamp at eval. Scored
+on COGS, that arm reads **in-distribution `0.0000`, 0 of 256**, against
+`RESOLUTION_FLOOR = 0.20` — **below the broken bare-clamp arm's own `0.16797`**.
+It fails the admission gate, so the row stops and no generalization curve exists.
+
+**The same weights, scored under the training form, read `0.3125` and clear the
+floor.** One set of parameters, two readouts:
+
+| readout | annihilated | live keys / 192 | median backward reach |
+|---|---|---|---|
+| frozen clamp | **98.3579%** | **1.5846** | 2 |
+| hard-concrete | **0.0%** | **96.5** | 92 |
+
+Training drives `u` below zero, where hard-concrete still passes signal
+(exact-zero fraction `0.0011`) and the clamp annihilates (`0.3490`). **So "freeze
+to clamp at eval" is not a freeze — it is a substitution of a different
+function**, and it reconstructs the broken arm's `97.99% / 1.93` almost exactly.
+
+The arm remains a milder underfit — train loss `0.3494` against the control's
+`0.2731` at identical budget — and that is **not** the cause of the zero, since
+the same weights score `0.3125` when read with the function they were trained
+under.
+
+**The freeze verification was itself defective, and predicted before the run
+reached step 3000.** `blend()` computes `magnitude(lerp(ones, u, g))`
+(`ceq/arm_smprime.py:134`) while the verifier compared against
+`clamp(u_raw, 0, 1)`; `g` is a trainable `nn.Parameter` (line 725) inside AdamW
+and had drifted to `0.8699419498443604`. The check read `freeze_took = false` at
+max difference `0.1299` and **halted the row on a false alarm**. Compared on the
+blended argument instead: `bitwise_equal_to_clamp_forward = true`, max difference
+`0.0` over n = 768 captured from a real eval forward, and
+`differs_from_hardconcrete_forward = true` at `0.49994`. The freeze is real; the
+instrument was not.
+
+One seed. On a bed with a measured `0.113` fixed-seed swing, that is a data point.
+
+---
+
+## 10. Kaggle: the seed-variance interval that did not exist
+
+Run on a **Tesla T4**, `melowdramtic/kg-wide-breadth-row`, self-contained — no
+repository file, no project data, no token. Eight seeds of the SDPA-literal arm,
+the only path in this project carrying a real `scaled_dot_product_attention` call
+site, which is why the local determinism null could not see anything:
+
+```
+finals  2.2976 2.2973 2.2973 2.3029 2.2981 2.2982 2.2981 2.3010
+swing   0.005563836097717267
+stdev   0.001885094358229673
+```
+
+**Across-seed swing is `0.0056`.** The COGS figure quoted throughout this phase is
+`0.113` — **twenty times larger, at a fixed seed.**
+
+The two measure different things and the comparison is suggestive rather than
+decisive: this is *different* seeds on a byte-level language model scored by loss,
+while the `0.113` was the *same* seed four times on COGS scored by exact match.
+But it locates the problem. If changing the seed entirely moves this model by
+`0.0056`, then a `0.113` fixed-seed swing is not ordinary kernel
+nondeterminism. At 512 evaluation items with a quantization floor of
+`1/512 = 0.00195`, `0.113` is **58 items flipping** — which points at the
+evaluation subsample and the exact-match scorer rather than at training, and the
+local sweep looked at training.
+
+**The session then ran out of memory** — `512.00 MiB` requested against
+`424.81 MiB` free on a 14.56 GiB card — before Q2, the certificate row, and Q3,
+the gate sweep at breadth. Incremental writes meant the tail was lost rather than
+the run: 33 rows landed and Q1 completed.
+
+Three defects were repaired before the push, and the first would have inverted the
+finding the row exists for. The notebook computed
+`repetition = tokens_seen / (20·n_params)` — the **reciprocal** of the row's
+definition, with the wrong numerator — so a **larger** model scored a **lower**
+factor and would have been labelled generalization-admissible. Corrected to
+`(20·n_params) / corpus_tokens` and checked against the row's own four values:
+`0.7936 / 0.6963 / 14.43 / 28.28`. `torch.manual_seed` ran **after** model
+construction at every call site, so a logged seed reproduced the batch order and
+not the initialisation — inside the seed-variance question itself. And the
+certificate shape is **632,496** parameters rather than the 720,896 the closed
+form predicted, a 12.3% shortfall moving its repetition factor to `0.696`.
+
+---
+
+## 11. Rows still out
 
 `R1` gate parameterization (straight-through against hard-concrete, with the
 four-condition must-fire); `R3` held-out eval path by document and `R4`

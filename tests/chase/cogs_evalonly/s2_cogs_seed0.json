@@ -1,0 +1,99 @@
+{
+ "seed": 0,
+ "gate_init": {
+  "form": "hard_concrete_at_init",
+  "magnitude_fn": "magnitude_hardconcrete",
+  "seq": 192,
+  "batch": 32,
+  "frac_annihilated_layer0": 0.0,
+  "mean_live_keys_per_query_layer0": 96.5,
+  "exact_zero_frac_all_layers": 0.0,
+  "backward_reach_all_layers": {
+   "n": 24576,
+   "mean": 96.5,
+   "median": 96.5,
+   "p95": 183.0,
+   "max": 192.0
+  },
+  "spurious_layer0": {
+   "n_pairs": 592896,
+   "n_float_zero": 0,
+   "n_true_zero": 0,
+   "n_spurious": 0
+  }
+ },
+ "freeze_verify": {
+  "magnitude_is_orig_clamp": true,
+  "bitwise_equal_to_clamp_forward": true,
+  "differs_from_hardconcrete_forward": true,
+  "n": 768,
+  "g_at_freeze": 0.8699419498443604,
+  "max_abs_diff_vs_clamp": 0.0,
+  "max_abs_diff_vs_hardconcrete": 0.49994322657585144,
+  "freeze_took": true
+ },
+ "admission_gate": {
+  "step": 3000,
+  "in_distribution": 0.0,
+  "n_solved": 0,
+  "n_eval": 256,
+  "resolution_floor": 0.2,
+  "clears_floor": false,
+  "broken_arm_in_distribution_3000": 0.16797,
+  "train_seconds": 245.6
+ },
+ "halted": "admission_gate_fails",
+ "train_loss_at_halt": 0.34942787885665894,
+ "control_train_loss_3000": 0.27306613326072693,
+ "broken_arm_train_loss_range": [
+  0.407,
+  0.485
+ ],
+ "trained_gate_shape": {
+  "clamp": {
+   "form": "clamp_frozen_at_3000",
+   "magnitude_fn": "magnitude",
+   "seq": 192,
+   "batch": 32,
+   "frac_annihilated_layer0": 0.9835789075993091,
+   "mean_live_keys_per_query_layer0": 1.5846354166666667,
+   "exact_zero_frac_all_layers": 0.3489583333333333,
+   "backward_reach_all_layers": {
+    "n": 24576,
+    "mean": 18.355224609375,
+    "median": 2.0,
+    "p95": 120.0,
+    "max": 186.0
+   },
+   "spurious_layer0": {
+    "n_pairs": 592896,
+    "n_float_zero": 583160,
+    "n_true_zero": 583160,
+    "n_spurious": 0
+   }
+  },
+  "hard_concrete": {
+   "form": "hard_concrete_at_3000",
+   "magnitude_fn": "magnitude_hardconcrete",
+   "seq": 192,
+   "batch": 32,
+   "frac_annihilated_layer0": 0.0,
+   "mean_live_keys_per_query_layer0": 96.5,
+   "exact_zero_frac_all_layers": 0.0010986328125,
+   "backward_reach_all_layers": {
+    "n": 24576,
+    "mean": 92.75382486979167,
+    "median": 92.0,
+    "p95": 181.0,
+    "max": 192.0
+   },
+   "spurious_layer0": {
+    "n_pairs": 592896,
+    "n_float_zero": 0,
+    "n_true_zero": 0,
+    "n_spurious": 0
+   }
+  }
+ },
+ "in_distribution_under_training_form": 0.3125
+}
