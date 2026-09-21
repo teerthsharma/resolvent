@@ -399,6 +399,54 @@ know where the underflow window sits. The architecture argument needs a trained
 gate to have anything to score. One gated checkpoint, trained and saved, converts
 all three from argument into measurement, and nothing else in this phase does.
 
+
+---
+
+## 6. The one bed with a live floor has a void bar
+
+COGS is the only capability split here whose floor holds — in-distribution
+softmax `0.92578` against `RESOLUTION_FLOOR = 0.20` — so it was the one bed where
+a null would mean something. `ceq/capability.py:39-40` sets `WIN_MARGIN = 0.02`
+over a recorded control generalization of `0.02930`, giving a pre-registered win
+bar of `0.04930`.
+
+That control ran 3,000 steps: **3.97 epochs** of the 24,155-item train split.
+Trained longer at identical settings and `3,652,096` parameters:
+
+| step | in-distribution | generalization |
+|---|---|---|
+| 3,000 | 0.93359 | **0.02148** |
+| 6,000 | 0.94531 | **0.13672** |
+| 9,000 | 0.94531 | **0.14648** |
+| 12,000 | 0.94922 | **0.09766** |
+
+**The control sits 2.0×–3.0× above its own challenger bar from 6,000 steps on**,
+so `0.04930` measures training length rather than architecture, and any
+challenger that cleared it would lose to the control given more budget. The curve
+is a property of the weights — all four checkpoints re-scored in a separate
+process returned the same counts, and paired worst-case McNemar puts the 3k→6k
+rise at `χ² ≥ 43.0`, `p < 1e-10`.
+
+**No replacement bar can be set.** The curve has not flattened by 12,000 steps
+and it is non-monotone, peaking at 9,000 and falling at 12,000, so every candidate
+value is a point the run has already crossed in both directions.
+
+Three defects surfaced in the checking rather than the result. The reproduction
+check is only **half** able to fail: `|0 − 0.029297| = 0.0293 < 0.03`, so a model
+scoring exactly `0.0` on generalization would "reproduce" the control — the
+in-distribution half is two-sided and did fire live, halting on a `−0.11328`
+miss. Training is **not reproducible run to run**: three of four seed-0 CUDA runs
+of the identical recipe land inside `±0.03` and one swings `0.113` absolute, from
+SDPA kernel selection and embedding-gradient scatter-add. And
+`ceq/harness.py:313`'s `eval_indices` **ignores its own seed argument**, seeding
+off `n_test` alone, so checkpoint comparisons are perfectly paired but no
+subsample-luck estimate is reachable.
+
+The gated arm was not raced against an unsettled bar. Measured separately, it
+reads generalization `0.0` and in-distribution `0.16797` — below the bed's own
+`RESOLUTION_FLOOR` — so it fails the admission gate and dies under any bar.
+
+Producer: `tests/chase/cogs/`.
 ---
 
 ## Limits
