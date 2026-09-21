@@ -142,6 +142,9 @@ when `Stop-Process -Force` does not take.
 | 6 | kill audit grep | searched `taskkill` against text reading `Killed PIDs` |
 | 7 | watchdog kill count | counted attempts, not verified deaths |
 
+| 8 | straight-through forward check | compared `torch.clamp` to `torch.clamp`; could not detect a changed forward |
+| 9 | pairing's shuffled control | vacuous as constructed; pairing held on other evidence |
+
 **Open.** Roughly 140 further tolerance assertions across `tests/cameron`,
 `tests/curvature`, `tests/foreman` and `tests/lorasort` were located by the same
 sweep and **not** individually verified; five were spot-checked and none was
@@ -292,7 +295,84 @@ What it does not yet have is a seed-variance estimate on a model that can vary.
 
 ---
 
-## 7. Rows still out
+## 7. R1: the kill fires, and exactness becomes eval-only
+
+The pre-registered kill was written before any number: *if both parameterisations
+fail the must-fire, the closed-magnitude gate cannot be trained with live
+gradients at exact endpoints; exactness becomes eval-only and the page says so.*
+
+**Both fail.**
+
+| | (i) live gradient ≥ 0.95 | (ii) bias moves ≥ 0.05 | (iii) init zeros < 0.05 |
+|---|---|---|---|
+| straight-through | PASS `1.0000 / 1.0000` | **FAIL `0.01923`** | PASS `0.01825` |
+| hard-concrete | PASS `0.9978 / 0.9863` | **FAIL `0.02757`** | PASS `0.00000` |
+
+Both move `m_head.bias` **inside the same `~0.02` band the zero-gradient clamp
+itself moved in**. Giving every gate a live gradient did not unfreeze the bias.
+
+**Exactness is therefore eval-only: train with hard-concrete, freeze to clamp at
+eval.** No form is set as the default, because the bar that was written first does
+not endorse either as trainable-with-live-gradient.
+
+The dead-zone diagnosis reproduces exactly and is not a seed artefact.
+At bias 0, `P(u ≤ 0) = 0.5014`, `P(u ≥ 1) = 0.1602`, `33.84%` carrying gradient;
+at bias 0.999, `P(u ≥ 1) = 0.4982`, `34.33%`. Independently re-derived, matched
+against the closed form `Φ(1) − Φ(0) = 0.34134` and
+`Φ(0.001) − Φ(−0.999) = 0.34150`, and stable to swapping the draw order
+(`0.50135 / 0.16125`). Hard-concrete at bias 0 puts `0.855%` at exact zero and
+`0.860%` at exact one.
+
+### The result the must-fire does not capture
+
+| | last-50 loss | trained exact-zero | backward reach mean / median / max |
+|---|---|---|---|
+| repaired clamp | `1.2665 ± 0.0399` | `0.3121` | `2.146 / 1 / 42` |
+| straight-through | `1.2999 ± 0.0439` | `0.4050` | `1.209 / 1 / 13` |
+| **hard-concrete** | **`1.1391 ± 0.0401`** | **`0.0006`** | **`241.4 / 234 / 512`** |
+
+Trained exact-zero fractions are reported with no threshold, as condition (iv)
+requires.
+
+**Straight-through gives every gate an unbounded live gradient and the gate still
+closes — to `0.4050`, worse than the `0.3121` of the clamp it was built to
+rescue, and to a loss worse than that clamp's.** So the collapse is *not* only the
+dead zone. Something in the objective prefers the gate shut, and that is a
+different question from the one this row answered.
+
+**Hard-concrete reaches a median backward reach of 234 at sequence length 512**,
+against `1` for both other forms, at the lowest loss of the three. It is the first
+configuration in which this operator has had real reach — and it reaches it by
+having almost no exact zeros at all, which is the property the refusal certificate
+depends on.
+
+### R7 is clean, and the instrument was validated before it was trusted
+
+**Zero spurious zeros on every measured cell** — both forms, at init and trained —
+via flag and cumsum against the float path product. The instrument was self-tested
+on a synthetic `S=16` case with one true zero (`n_true_zero = 55`, exact), then
+cross-validated against this project's own recorded defect: constant `m = 0.5`,
+`S = 4096`, float64, **measured 4,564,731 spurious zeros, an exact match** to the
+recorded count, with `S = 64` float64 correctly reading 0.
+
+### Two more checks that could not fail
+
+The race's straight-through forward-identity check **compared `torch.clamp` to
+`torch.clamp`** — it could not have detected a changed forward. Forward identity
+is nonetheless established by a different route: the init exact-zero fraction
+`0.01824951171875` is bit-identical to the repaired-clamp reference's `299/16384`,
+and `loss_first = 5.670821666717529` is bitwise identical to that run's.
+
+And the shuffled control that was supposed to prove pairing is **vacuous**.
+Pairing holds on stronger evidence — a bitwise-identical step-0 loss against the
+reference — with the detrended correlation at `0.9621` against `−0.0298`.
+
+The `(ii)` failure was confirmed on **all four layers read out of the
+safetensors**, not the single scalar the race reported.
+
+---
+
+## 8. Rows still out
 
 `R1` gate parameterization (straight-through against hard-concrete, with the
 four-condition must-fire); `R3` held-out eval path by document and `R4`
