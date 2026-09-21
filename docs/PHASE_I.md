@@ -117,11 +117,52 @@ generator, same seed, `80 → 400`: the ceiling moves to `0.101170`, CI95
 `18.0%`, and the same arm clears the null at `3.99×`, `p = 0.000`. The cost is
 **636 seconds**.
 
-Nothing in this tree has ever computed reliability and resolution on the
-operator's own `committor` output. The Murphy code has zero `ceqjepa` imports and
-has only ever run on synthetic Beta(2,2) data. That is still true at the end of
-this phase; what changed is that it is now known which bed to run it on, and at
-what setting.
+### The measurement was run, and the operator has no resolution worth the name
+
+The bed was rebuilt at `max_plies=400` and its ceiling reproduced **bit for
+bit** — `0.10116955630126778` against the recorded `0.101170` — with SINK down
+from 98.67% to 26.0% and the shuffle null cleared at `3.995×`, `p = 0.000`. So
+the instrument works, which is what makes what follows a result rather than a
+shrug.
+
+Murphy's decomposition was then computed on `ceqjepa.operator.committor`'s own
+output for the first time, held out **by game**, on a 1,973-parameter `TinyCEQ`
+trained 4,000 steps. Recalibrated resolution is `0.001469`, game-paired CI95
+`[0.001041, 0.004009]`:
+
+| against | RES gap | CI95 |
+|---|---|---|
+| base rate | **+0.001469** | [+0.001041, +0.004009] |
+| pre-registered bar `0.00506` | — | **29% of it** |
+| ply-bucket histogram | **−0.014518** | [−0.020625, −0.006879] |
+| piece-count histogram | **−0.000662** | [−0.002380, +0.001812] |
+
+It beats a constant base rate — the interval excludes zero — by 1.45% of the
+bed's own ceiling, and it clears nothing else. The ply-bucket arm beats it 11×,
+though that arm reads game depth which `fen_to_vec`
+(`ceqjepa/beds/chess.py:83`) drops from the operator's input, so that row prices
+the encoding rather than the operator.
+
+**The row that decides it is the piece-count arm.** Eight bins of the total piece
+count, computed from the operator's own 769-float input — strictly *less*
+information than the operator is handed — ties it on resolution with the point
+estimate in the histogram's favour, and beats it on Brier, `0.5020` against
+`0.6334`. Even after temperature recalibration at `T = 2.9395` (NLL
+`1.6336 → 1.1052`) the operator's reliability is `0.130097` against the marginal
+predictor's `0.001334`, a factor of 98, and its raw Brier is worse than
+predicting the base rate.
+
+1,973 parameters and 4,000 steps bought nothing over one scalar summary of the
+operator's own input.
+
+The binned decomposition's identity residual is `0.00188`, 0.26% of Brier — **not
+machine epsilon**, and reported as a real discretization gap from finite bin
+width rather than smoothed over. It is not an arithmetic fault: the
+marginal-predictor row on the same code path residuals at `1e-16`, because it is
+piecewise constant. The full pre-registered race — 5,900 games, isotonic
+recalibration on both arms, against a `G ≡ 1` softmax baseline — was **not** run,
+so this is a first measurement in a fifty-minute window and not the settled
+comparison.
 
 ---
 

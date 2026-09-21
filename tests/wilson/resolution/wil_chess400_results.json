@@ -1,0 +1,145 @@
+{
+  "part1_bed_floor": {
+    "n_games": 1000,
+    "seed": 0,
+    "max_plies_400": {
+      "build_seconds": 78.60933017730713,
+      "n_rows": 308561,
+      "n_games_actual": 1000,
+      "outcome_counts": {
+        "white_win": 88,
+        "draw": 597,
+        "black_win": 77,
+        "sink": 238
+      },
+      "sink_fraction": 0.238,
+      "oracle_ceiling_RES": 0.024116693788186205,
+      "UNC": 0.5292057456472501,
+      "RES_over_UNC": 0.04557148894649671,
+      "oracle_ceiling_CI95": [
+        0.021846613849148978,
+        0.026467770996714383
+      ],
+      "shuffle_null_mean": 0.000685892805853475,
+      "shuffle_null_std": 3.679749817986772e-05,
+      "shuffle_null_analytic_B_minus_1_UNC_over_N": 0.0006843155567724138,
+      "n_bins_v_idx": 400
+    },
+    "max_plies_80_crosscheck": {
+      "build_seconds": 24.00846529006958,
+      "n_rows": 79203,
+      "n_games_actual": 1000,
+      "outcome_counts": {
+        "white_win": 13,
+        "draw": 0,
+        "black_win": 11,
+        "sink": 976
+      },
+      "sink_fraction": 0.976
+    },
+    "prior_claim_reference": {
+      "sink_frac_80": "98.67%",
+      "ceiling_400": "0.101170",
+      "note": "prior numbers' generating code is confirmed absent from the tracked tree (docs/PHASE_I.md sec 1); this run defines its own oracle-ceiling methodology (v_idx-binned) rather than guessing at a lost one, and reports the SINK-fraction cross-check as the cheap, exact, methodology-independent reproducibility gate."
+    }
+  },
+  "part2_operator_murphy": {
+    "n_games": 1000,
+    "seed": 0,
+    "steps": 4000,
+    "batch_size": 64,
+    "model": {
+      "n": 16,
+      "nA": 4,
+      "d_enc": 32,
+      "x_dim": 769,
+      "z_dim_state": 8,
+      "rank": 8,
+      "lr": 0.003,
+      "n_params": 46349
+    },
+    "split_note": "800 train groups / 200 held-out groups (games), 247174 / 61387 rows, split seed 1, ASSERTED disjoint on groups and on rows; 594/61387 held-out rows (0.97%) are a position that also occurs in training (transpositions and the shared start position -- a game split does not and cannot remove these)",
+    "train_seconds": 57.715208530426025,
+    "L_q_first": 2.249340295791626,
+    "L_q_last": 0.8473094701766968,
+    "n_eval": 6000,
+    "n_train_for_marginal": 20000,
+    "operator_committor": {
+      "REL": 0.2456349229058179,
+      "RES": 0.0012548892290271023,
+      "UNC": 0.4889873888888889,
+      "brier_direct": 0.7352463824522298,
+      "brier_decomp": 0.7333674225656797,
+      "residual": 0.00187895988655018,
+      "per_class": [
+        {
+          "cls": "white_win",
+          "pi_k": 0.028166666666666666,
+          "rel_k": 0.015790435236634273,
+          "res_k": 3.0527858572584164e-05,
+          "unc_k": 0.027373305555555554
+        },
+        {
+          "cls": "draw",
+          "pi_k": 0.6596666666666666,
+          "rel_k": 0.11747701605712146,
+          "res_k": 0.0004429054379363178,
+          "unc_k": 0.22450655555555557
+        },
+        {
+          "cls": "black_win",
+          "pi_k": 0.04133333333333333,
+          "rel_k": 0.016515879845502256,
+          "res_k": 8.026802314711182e-05,
+          "unc_k": 0.03962488888888889
+        },
+        {
+          "cls": "sink",
+          "pi_k": 0.2708333333333333,
+          "rel_k": 0.09585159176655991,
+          "res_k": 0.0007011879093710884,
+          "unc_k": 0.1974826388888889
+        }
+      ]
+    },
+    "marginal_baseline": {
+      "REL": 0.005205662777777779,
+      "RES": 0.0,
+      "UNC": 0.4889873888888889,
+      "brier_direct": 0.49419305166666655,
+      "brier_decomp": 0.49419305166666666,
+      "residual": -1.1102230246251565e-16
+    },
+    "comparison_bootstrap": {
+      "res_a_ci95": [
+        0.0011250159773390127,
+        0.0030016341301596634
+      ],
+      "res_b_ci95": [
+        0.0,
+        0.0
+      ],
+      "gap_mean": 0.001934666269042538,
+      "gap_se": 0.00048811027309902884,
+      "gap_ci95": [
+        0.0011250159773390127,
+        0.0030016341301596634
+      ],
+      "n_boot": 400
+    },
+    "bar_check": {
+      "marginal_RES": 0.0,
+      "UNC": 0.4889873888888889,
+      "threshold_2pct_UNC": 0.009779747777777778,
+      "bar_fires": true
+    },
+    "operator_beats_marginal": {
+      "gap": 0.001934666269042538,
+      "gap_ci95": [
+        0.0011250159773390127,
+        0.0030016341301596634
+      ],
+      "beats": true
+    }
+  }
+}
