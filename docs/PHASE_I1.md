@@ -1023,7 +1023,146 @@ a second validation draw.**
 
 ---
 
-## 18. Rows still out
+## 18. The mass-gate arm is a replication, and the page says so first
+
+Arm (a2) — an SDPA twin plus a per-head sigmoid output gate — was gated behind
+three citations reaching the page **before** it ran. The reason is not ceremony:
+if the 0.247 nats turns out to be normalization, then it is published work, and a
+project that measures first and discovers that second has nothing to say.
+
+All three are now fetched and quoted.
+
+**Qwen Team et al., arXiv:2505.06708v1 (10 May 2025), NeurIPS 2025 Oral —
+"Gated Attention for Large Language Models: Non-linearity, Sparsity, and
+Attention-Sink-Free".** Abstract, verbatim: *"Our central finding is that a
+simple modification — applying a head-specific sigmoid gate after the Scaled
+Dot-Product Attention (SDPA) — consistently improves performance."*
+
+Their §2.2 and Figure 1 place the gate at position **G1**: after the SDPA outputs
+are concatenated across heads and **before the output projection `W_o`**. A
+separate position G5 applies it *after* `W_o`, and their own ablation finds G1
+the stronger of the two. **Before-versus-after `o_proj` is the axis their paper
+turns on, and (a2) sits on their winning side.**
+
+**So (a2) is a replication, close to an exact one**, and `C_mass` prices a known
+mechanism at toy scale on a different bed. That sentence is on the page before
+the arm runs rather than after it reports.
+
+**Evan Miller, "Attention Is Off By One" (24 July 2023)** — an essay, not a
+paper. `softmax₁(x)ᵢ = exp(xᵢ) / (1 + Σⱼ exp(xⱼ))`, and verbatim: *"All I did was
+added one to the denominator. This lets the vector as a whole tend to zero if it
+wants."* The source's own non-standard grammar is preserved, and was used as
+evidence the line is quoted rather than paraphrased.
+
+**Xiao et al., arXiv:2309.17453v4 — attention sinks.** Fetched directly after the
+first attempt declined it.
+
+**Donsker–Varadhan** — Dupuis and Ellis, *A Weak Convergence Approach to the
+Theory of Large Deviations*, Springer 2011, **Lemma 1.4.3, p. 405**.
+
+### A confound in the contrast, found before the night rather than after
+
+**(a) and (a2) are not parameter-matched**: `724,608` against `727,704`, a
+difference of **3,096 parameters, +0.43%**. Arms (f) and (f0) *are* matched at
+`725,391` either side.
+
+So `C_mass` as built prices **gate plus parameters**, not the gate alone. The
+night runs with that stated beside the contrast rather than delayed to construct
+a dead-gate parameter-matched (a): 0.43% of parameters against an effect of
+roughly 0.25 nats is a weak confound, and naming it costs nothing while stalling
+costs a night.
+
+### A dispatch defect, recorded because it is recurring
+
+One fetch was **declined outright** by a lane that read a mid-turn message
+addressed to the orchestrator as its own instruction, and reported the source as
+not attempted. It was overridden and fetched. This is the fifth instance this
+session of a relayed message reaching a lane's prompt and displacing its task.
+The defect is in the dispatch template, not in the lane.
+
+---
+
+## 19. Step 0: row mass is not one, and closure is not the gate
+
+The question was whether arm (f)'s advantage could be an un-normalized degree of
+freedom. `W_ij = G_ij·e^{s_ij} / Z_i^β` with `Z_i = Σ_j |G_ij| e^{s_ij}` — the
+numerator complex, the denominator summing the modulus — confirmed in source at
+`arm_smprime.py:302, :324, :345`. At β = 1 a row sums to one only when every
+phase in it is equal.
+
+**It does not sum to one.**
+
+| layer | 0 | 1 | 2 | 3 |
+|---|---|---|---|---|
+| mean row mass | 0.9607 | **0.7930** | **0.7971** | **0.7423** |
+| deficit | 0.039 | 0.207 | 0.203 | 0.258 |
+| rows below half mass | — | **13.2%** | **11.3%** | **16.5%** |
+
+Minimum row mass **0.0023**. At layer 3, **190 rows sit in [0.0, 0.1)** and only
+**2,510 of 32,768** rows exceed 0.99. This is not a rounding tail.
+
+A genuine `scaled_dot_product_attention` row sums to exactly one **by
+construction**, so arm (f) owns a learned, per-position, un-normalized channel
+the twin cannot represent at any setting.
+
+### β is a second mass channel, and it was never priced
+
+```
+beta   L0 1.090703   L1 0.961642   L2 0.962446   L3 0.991261
+```
+
+The direction is consistent across **all five seeds**: L0 rises in every one
+(1.0683–1.1062), L1–L3 fall in every one (0.946–0.983). `beta_census` runs
+10.5–24.5 per layer per seed, so the dial was exercised rather than left pinned
+for want of signal. `qk` moved to 0.894–1.064 and `g` to 0.941–0.973.
+
+Since `Z_i` is a data-dependent positive row sum, **β ≠ 1 rescales every row by
+`Z_i^{1−β}`** on top of the phase-cancellation deficit — a second multiplicative
+per-row mass channel, also outside softmax's reach.
+
+### Closure is underflow; mass is phase
+
+The exact-zero fraction of the gate `m` itself reads `0.0, 0.0024, 0.0, 0.0` by
+layer — **the gate barely closes**. Yet **59–75% of causal `W` entries are
+exactly zero**, and at layer 0 that is **100% float32 underflow of the path
+product**, since `m` has no exact zeros there at all.
+
+**These are two different mechanisms and the project has been treating them as
+one.** The refusal channel this operator is named for is, in a trained model,
+floating-point underflow of a product — the same defect §2 measured in isolation,
+now measured in place.
+
+And **56.7 / 72.8 / 78.5 / 79.2 percent of row-mass variance sits on the head
+axis** while `m_head` and `theta_head` are `nn.Linear(d, 1)` and **head-blind**.
+The per-head `exp(qk·q·k)` factor is what splits it, so the mass channel is not
+purely a gate property either.
+
+### The prediction, logged before the night runs
+
+`C_phase` and `C_mass` are predicted **non-zero**. Row mass departs from one by
+0.04 to 0.26 by layer with a minimum near zero, and β has moved off one in a
+consistent direction at every seed, so both the phase channel and an output
+mass-gate have something real to price. Had row mass come back pinned at 1.000
+this would have been dead for free; it did not.
+
+### Two defects found on the way
+
+**`train_with_eval` never saves a checkpoint.** `torch.save` does not appear in
+it — grep-confirmed — so all five arm (f) models from the certificate row were
+discarded in-process, and the five `q2_ckpt_hardconcrete_seed*` directories hold
+only `run_record.json`. The numbers above are therefore read from the **gate-sweep**
+checkpoint, not from the arm that produced the 0.247, and that substitution is
+stated rather than glossed. Any future row wanting arm (f)'s own weights must
+re-train.
+
+**The row stopped rather than rebuilding.** Told no checkpoint existed, the lane
+reported it and halted with a non-zero exit instead of reconstructing a model and
+reading numbers off it. A rebuilt model would have produced plausible figures for
+an arm that no longer exists.
+
+---
+
+## 20. Rows still out
 
 `R1` gate parameterization (straight-through against hard-concrete, with the
 four-condition must-fire); `R3` held-out eval path by document and `R4`
