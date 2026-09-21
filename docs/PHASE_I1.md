@@ -166,7 +166,73 @@ the ceiling, it is both arms at the floor**, and the row's verdict is
 
 ---
 
-## 5. Rows still out
+## 5. The guards, and three contract numbers that do not hold here
+
+Six guards built; five fire when an independent checker triggers them rather than
+reading a report. Every proposed change is a diff in `r5_guards.md`; none is
+applied to `ceq/`.
+
+| guard | fires | silent |
+|---|---|---|
+| head dim `% 8` | `d_head` 44, 33, 12 | 32, 64 |
+| forced-fused SDPA | `d_head=44` bf16 — `can_use_efficient_attention` False, verified live | 64 bf16; 32 and 64 fp32 |
+| host spill | L=9: peak `8578.1 MiB` against a `8187.5 MiB` card, **no `OutOfMemoryError`**, status `ran` | L=6, L=7 |
+| depth default | refuses L=7 without `acknowledge_headroom=True`, hard-refuses L=8 even with it | L=6 |
+| dtype refusal | bf16 and fp16 at construction, naming `torch.polar` and `_ctype` | fp32; `sgate`; `signed` |
+
+The dtype guard raises at construction through an `_apply` override, because HF
+modules are **cast after construction** rather than given a dtype at `__init__` —
+a `__init__` check would never see the dtype that crashes. The two crashes it
+replaces both reproduce verbatim without it: `double != struct c10::Half` for
+fp16, and `Expected both inputs to be Half, Float or Double ... but got BFloat16`
+for bf16. A runtime spy confirms the shipped `gate()` calls `torch.polar` while
+the three-channel path never does.
+
+**The host-spill guard is signed at L=1–4 only.** The checker could not
+re-observe the L=9 fire: the card sat at `7837/8188 MiB` under two sibling lanes
+and the runs starved past 25 minutes. **He killed nothing and waited**, which is
+the correct behaviour under the standing prohibition and is recorded rather than
+worked around. The L=9 fire therefore rests on one agent's observation and is
+labelled as such.
+
+### Three numbers from the contract did not reproduce
+
+**The head-dim penalty is a bfloat16 defect, not an fp32 one.** At fp32,
+`d_head=44` is **1.41× slower, not 31.8×**, because memory-efficient attention
+*accepts* it on this box. The reproducing case is **bf16 `d_head=44` at 12.22×**,
+peak `183.4 MiB` against `16.1`. And **flash attention is never compiled into this
+Windows build at any shape or dtype**, so no guard can assert its presence. The
+substitution was made rather than the contract's figure reported as a measurement.
+
+**The `exp(S·5.2e-4) − 1` rounding law is wrong in functional form.** Re-measured
+relative error is `0.079524 / 0.281715 / 0.734220 / 0.995026` at
+S = 64 / 256 / 1024 / 4096 — it **saturates toward 1.0** rather than growing to
+`7.41`. The S=4096 point matches the independently recorded `gate3.md` Cell A
+figure of `0.99510` to four significant figures, which is why the re-measurement
+is trusted over the formula.
+
+**And the crossover is S = 75, not S = 256.** The first pass reported 256 as "the
+first S over the 0.094 bound", but that was an artefact of testing only four
+powers of four. Bisected, the bound is crossed at **S = 75**.
+
+That settles R6. A bf16 mantissa fails below any sequence length this project
+runs, so the three-channel path is **fp32-mantissa permanently** — `torch.polar`
+still leaves the hot path, and no complex tensor is created, but the bf16 saving
+is not available.
+
+### The memory law reproduced
+
+Re-fit live from L=6, 7 and 9: `peak_mib = 929.96·L + 208.56`,
+R² `0.9999999458` — within `0.06 MiB` per layer of the contract's
+`929.9·L + 208.3`. Default depth **L = 6**; L = 7 by explicit override; L = 8
+refused, which changes `ceq/hf/train.py::DEFAULTS` from 8 to 6.
+
+One incidental defect, fixed in place and reported rather than patched over: the
+run's own board logging raised on a `numpy.bool_` that `json.dumps` refuses.
+
+---
+
+## 6. Rows still out
 
 `R1` gate parameterization (straight-through against hard-concrete, with the
 four-condition must-fire); `R3` held-out eval path by document and `R4`
