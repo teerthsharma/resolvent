@@ -828,7 +828,7 @@ returned as blocked rather than approximated.
 |---|---|---|
 | Anderson 1958, Phys. Rev. **109**, 1492 | confirmed, title exact | abstract confirms localization; the *locator-expansion* phrasing is **UNREACHED**, full text paywalled |
 | Weinberg 1963, Phys. Rev. **131**, 440 | confirmed, "Quasiparticles and the Born Series" | **abstract confirms** the paraphrase — the series fails when bound states are present |
-| Combes–Thomas 1973, Commun. Math. Phys. **34**, 251–270 | confirmed — **volume and pages were unstated in the leap and are supplied here for the first time** | **UNREACHED**, 403 |
+| Combes–Thomas 1973, Commun. Math. Phys. **34**, 251–270 | confirmed — **volume and pages were unstated in the leap and are supplied here for the first time** | UNREACHED at this pass — **later reached via Project Euclid and found MISATTRIBUTED, see §15** |
 | Lewontin–Cohen 1969, PNAS **62**, 1056–1060 | confirmed, title exact | **UNREACHED**, 403 |
 | Ash–Nicholls 1972, Nature **237**, 510–512 | confirmed, exact pages | **UNREACHED**, login wall |
 | Synge 1928 | **UNREACHED** — no direct source found | — |
@@ -838,9 +838,76 @@ the two load-bearing claims, Combes–Thomas exponential decay off-spectrum and 
 Lewontin–Cohen drift correction, remain unverified beyond their titles. Neither
 enters a numeric argument until it is read.
 
+> **§15 supersedes this row.** Both were re-fetched through open archives. One is
+> misattributed outright; the other splits, with its qualitative claim verified
+> from its own abstract and its quantity still unreached.
+
 ---
 
-## 15. Rows still out
+## 15. The open archives, and the sixth misattribution
+
+The first fetch confirmed five citations bibliographically and stopped at
+publisher paywalls on content. Mathematics of that age is open — PNAS 1969 is on
+PubMed Central, Communications in Mathematical Physics 1973 is on Project Euclid
+— so the rule gains a clause: **for an old paper the publisher is the last route,
+not the first, and `UNREACHED` is only honest after the open archive has failed
+too.**
+
+Project Euclid opened. It produced a misattribution.
+
+### Combes–Thomas 1973 does not state the claim attached to it
+
+The full 20-page PDF was retrieved and searched. **`pdftotext -layout` plus a
+whole-document grep for `resolvent`, `kernel` and `Green` returns zero hits for
+all three.** The paper never states a bound of the form
+`|G(x,y;E)| ≤ C·e^{−κ|x−y|}` for the resolvent kernel at energies off the
+spectrum.
+
+What it proves is **exponential decay of eigenfunctions**. Theorem 1, p. 257: if
+two-body interactions are boost-analytic and `ψ` satisfies `Hψ = Eψ` with
+`E < E₀ = inf σ_e(H)`, then `ψ ∈ D(e^{θ√(2M(E₀−E))R})` for any `0 ≤ θ < 1`.
+Theorem 2 extends the rate to the distance from the nearest threshold. That is
+decay of bound-state wavefunctions **at their own eigenvalues**, established
+through dilation-analytic continuation and the meromorphy of `(H(γ) − z)⁻¹`.
+
+**The resolvent-kernel bound is a later generalization that carries their name.**
+The "Combes–Thomas estimate" is a real and standard result; this 1973 paper is
+not where it is stated. The leap cited the name correctly and the paper
+incorrectly — **the sixth misattribution in five days, by the same mechanism
+every time: repeating what a thing is called instead of reading what it says.**
+
+The load-bearing claim therefore has no verified primary source yet, and no
+numeric argument may rest on it until the actual source of the resolvent bound is
+fetched.
+
+### Lewontin–Cohen splits
+
+**Verified, primary** — the abstract, read independently on PubMed Central and on
+PNAS: extinction probability approaches unity even as expected population size
+grows without limit, *"owing to the difference between the geometric and
+arithmetic mean growth rates."*
+
+**UNREACHED** — the `σ²/2` drift correction. Pages 1057–1060 exist on both hosts
+only as non-OCR scanned images, and every route to the PDF hit bot detection: a
+proof-of-work and reCAPTCHA gate on PMC, a Cloudflare check on PNAS. **Those were
+not bypassed**, correctly. Nine routes were tried and recorded, including a
+Wayback snapshot that carries the same un-OCR'd images and a Europe PMC render
+endpoint that returns 403 server-side and a 537-byte empty payload in a browser.
+
+So the qualitative claim — a positive arithmetic mean is compatible with certain
+extinction — **stands on its own paper's abstract**. The quantity does not, and
+the leap's use of `σ²/2` is unsourced until those four pages are read.
+
+### One route fact worth keeping
+
+**Project Euclid's landing page states the article is available only to
+subscribers, while the direct PDF URL on the same domain serves the full
+document.** The paywall was in the page, not in the file. A lane that reads only
+the landing page records `UNREACHED` for an open paper.
+
+---
+
+## 16. Rows still out
 
 `R1` gate parameterization (straight-through against hard-concrete, with the
 four-condition must-fire); `R3` held-out eval path by document and `R4`
