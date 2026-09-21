@@ -487,6 +487,146 @@ The sceptical finding is the one that matters, and it is stated rather than buri
 certified resolvent — is a property a representation-learning loss or a downstream
 probe can query.** If that holds, the encoder slot is not where this contribution
 belongs, and knowing that is worth more than an interface nobody would use.
+
+---
+
+## 11. H.1 — three repairs, one of which is progress
+
+Three rows struck earlier in the phase were rebuilt. One became a real row; two
+became struck rows with better prose, and are recorded as that.
+
+### The Krohn–Rhodes bed is alive
+
+It had shipped no null at all. It now carries two, both scored on the task's own
+argmax label metric rather than on finiteness, at n = 2000 per seed:
+
+| null | per-seed error | correct construction |
+|---|---|---|
+| shuffled operator assignment | 0.5045 / 0.4970 / 0.5175 / 0.5170 / 0.5160 | 0.0000 |
+| orthogonal reset substitute, `det = 1` | 0.5445 / 0.5465 / 0.5445 / 0.5420 / 0.4645 | 0.0000 |
+
+The second null is the one that matters, because the property under test turned
+out to be contraction rather than singularity, and a *near-singular* invertible
+matrix would pass the task and prove nothing. To rule out a lucky draw the entire
+2×2 orthogonal family was swept — 721 angles, both determinant signs, singular
+values exactly `[1, 1]` — and the best member still errs between **0.393 and
+0.544** on every seed.
+
+The contraction reading is confirmed from the other side too: `R_ε = (1−ε)P + εI`
+scores **exactly zero label error at every ε tested**, from 0.4999 down to
+`1e−15`. Against the same sequences, an orthogonal substitute errs 0.4175–0.572
+while the contracting one errs 0.0.
+
+One sentence of this project's own correction was itself incomplete. The failing
+pairs under the pseudo-inverse prefix form require **both indices past the
+projector**, not one — a pseudo-inverse cannot undo a rank-one projection at
+either end.
+
+### The line gate is still a length filter
+
+The replacement is a two-level model — a character trigram and a word bigram,
+each with its own placebo — and it passes both placebo tests that the original
+failed. Letter-shuffle passes the character level **0.00%** of the time;
+word-salad passes the word level **2.40%**, both under the 5% void line.
+
+It also reproduces the expected division of labour at real corpus size: the
+character level kills letter-shuffle but is **68.5% blind to salad**, while the
+word level kills salad and kills letter-shuffle as well through unknown tokens.
+
+But the confound that struck the original is **worse**, not better:
+
+| line length | rejected |
+|---|---|
+| under 40 chars | **60.0%** |
+| 40–100 | 18.78% |
+| 100–250 | 2.7% |
+| over 250 | **0.0%** |
+
+A spread of 0.60 against the struck gate's 0.4172. The mechanism is genuinely
+different — this gate is order-sensitive where an index of coincidence is a
+letter-multiset statistic — but the symptom is identical and larger. It is a
+better-behaved length filter. The within-bucket control that would settle whether
+anything else is being measured was not run.
+
+### The recall bar clears its floors and still measures the wrong thing
+
+Cross-tagger agreement reproduces exactly: **0.8262** (404/489), Wilson 95%
+interval **[0.7901, 0.8572]**, between a dependency parser's root verb and an
+independent part-of-speech tagger's first verb-tagged token.
+
+It clears four no-parsing floors without interval overlap — the strongest being a
+first `-ing`/`-ed` heuristic at 0.3579 [0.3166, 0.4013], then longest word at
+0.0716, first alphabetic token at 0.0102, sentence-final token at 0.0041. The
+system beats the strongest by 0.4683, and 0.4013 < 0.7901.
+
+The old bar of ≥ 0.95 is unreachable against an independent tagger and was only
+ever met by the tautology it replaced. A defensible bar is the measurement's own
+lower bound, 0.7901.
+
+What it cannot do is the thing a bar is for. Two imperfect taggers disagree on
+**17.4%** of lines when nothing is broken at all, driven by participles used as
+adjectives, copulas and fronted adjuncts. So a below-bar reading cannot separate
+an extraction bug from ordinary tagger ambiguity: it measures concordance, not
+correctness. It is an honest number and a weak bar.
+
+---
+
+## 12. H.1 — two certificates, and the end of the exactness claim
+
+Both certificates pass, and neither is a result. They are theorems with checks,
+and the page says so rather than counting them.
+
+**The dilation identity holds with four orders of slack.** Across r ∈ {2, 4, 8} at
+five seeds, with σ = 0 and σ = 1 included deliberately rather than left to a
+random draw, the doubled-space operator is orthogonal to a maximum of
+`2.220446049250313e-16` against a bar of `1e−12`, its top-left block equals Σ
+**bitwise** in every run, and the reconstruction error is `0.0` exactly.
+
+Two things the hunt for a failure turned up. An earlier draft claimed the
+angle route and the direct-product route diverge at σ = 1; they diverge at
+**σ = 0**, because `arccos(0) = π/2` and `cos(π/2) = 6.123233995736766e-17`, not
+zero — σ = 1 round-trips exactly. The implementation this repository ships is the
+direct-product route, which never calls either function and is therefore exact at
+both corners. And the naive `√(1−σ²)` loses against the stable
+`√((1−σ)(1+σ))` by a relative `2.756e−10` at σ = 0.99999999, but orthogonality
+never degrades past `1.1e−16` there: the precision loss lives in a scalar erasure
+formula, not in the defining identity.
+
+The attribution is Halmos 1950 for the block form and Sz.-Nagy 1953 for power
+dilations. Stinespring 1955 concerns completely positive maps on C\*-algebras and
+is not the citation. The parallel with a groups-and-flip-flops decomposition over
+finite semigroups is a resemblance between different mathematical settings and is
+not claimed as a theorem.
+
+**And the last named structural difference is dead on the bed built to show it.**
+
+The resolvent read is the successor representation applied to a reward, which is
+prior art, and it agrees with the temporal-difference fixed point to
+`8.882e−15` at worst across five seeds against a `1e−12` bar, with successor-
+representation row sums exactly `10.000000`.
+
+The only difference this project still claimed for it was exactness at absorbing
+states — a gate reaching exactly zero where a sigmoid only approaches it. On a
+six-state chain with one absorbing state:
+
+| route | value at the absorbing state |
+|---|---|
+| resolvent read | `0.0` exact |
+| TD(0) after 20,000 sweeps | `2.470e−323` |
+| sigmoid gate after 20,000 steps | `0.03817905137506084` |
+
+The gap between the exact read and TD(0) is a **subnormal float64 value**. No
+tolerance anyone would set can register it.
+
+The sigmoid's `0.038` is not a rescue, and the measurement says why: it comes from
+gradient starvation as the argument approaches zero, which is a fact about
+gradient descent on a sigmoid rather than about value estimation. It is not the
+mechanism being contrasted.
+
+So exactness at absorbing states buys nothing measurable against the method it was
+supposed to beat. That is consistent with this project's own earlier concession
+that the closed-versus-open distinction is a parameterisation default rather than
+a novelty; it is now measured rather than conceded.
 ---
 
 ## Limits
