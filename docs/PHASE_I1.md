@@ -144,6 +144,8 @@ when `Stop-Process -Force` does not take.
 
 | 8 | straight-through forward check | compared `torch.clamp` to `torch.clamp`; could not detect a changed forward |
 | 9 | pairing's shuffled control | vacuous as constructed; pairing held on other evidence |
+| 10 | Kaggle notebook's rebuild gate | numpy-only; executed none of `magnitude_clamp`, `path_product`, `hop`, `operator`, `readout` or `GatedBlock`, so it would pass with the whole torch rebuild wrong |
+| 11 | span-containment curve | tracks `1 − (1−p)^L` to three decimals, so it measures the density it was handed rather than a mechanism |
 
 **Open.** Roughly 140 further tolerance assertions across `tests/cameron`,
 `tests/curvature`, `tests/foreman` and `tests/lorasort` were located by the same
@@ -340,11 +342,55 @@ rescue, and to a loss worse than that clamp's.** So the collapse is *not* only t
 dead zone. Something in the objective prefers the gate shut, and that is a
 different question from the one this row answered.
 
-**Hard-concrete reaches a median backward reach of 234 at sequence length 512**,
-against `1` for both other forms, at the lowest loss of the three. It is the first
-configuration in which this operator has had real reach — and it reaches it by
-having almost no exact zeros at all, which is the property the refusal certificate
-depends on.
+**Hard-concrete ends at a median backward reach of 234 at sequence length 512**,
+against `1` for both other forms, at the lowest loss of the three.
+
+**It does not achieve that reach — it preserves it.** Measured at
+initialisation, hard-concrete already reads `256.5` and the other two read median
+`52`, mean `79.07`. So training moves hard-concrete `256.5 → 234` and moves the
+other two `52 → 1`. The honest statement is that **two forms destroy their initial
+reach and one does not**, which is a different claim from the one an earlier draft
+of this section made.
+
+### The zero-density account was tested and is dead
+
+A leap proposed that the whole effect is the **density of exact zeros at step 0**,
+made permanent because `∂G_ij/∂m_k = ∏_{l≠k} m_l` — one zero in a span silencing
+every gate in it. A crossed design was built to separate form from density, and
+the account died before either cell finished, on two independent grounds.
+
+**It explains a table it is not about.** All three rows above ran at
+`m_head.bias = 0.999` (`tests/chase/gate/r1_gate.py:260`), whose measured init
+zero densities are `0.018250 / 0.018250 / 0.000000` — **not 0.50**. The premise
+"at bias 0 the clamp puts a zero every second token" describes the **pre-repair**
+init, measured here at `0.491455`, and the pre-repair run is not in this table.
+
+**And the table refutes it without new training.** Straight-through's forward is
+*bitwise* clamp, so at seed 0 it carries the identical init density `0.018250`,
+the identical span curve and the identical init reach `52 / 79.07` as the repaired
+clamp — then ends at a different trained zero fraction (`0.4050` against
+`0.3121`), a different max reach (`13` against `42`) and a different loss, off a
+**bitwise-identical step-0 loss**. Same step-0 density, different endpoint, so
+step-0 density is not the effect.
+
+**The crossed cell was also void by construction.** Clamp at `bias = +3.0` does
+reach zero density `0.0` — with `m == 1.0` at **100% of positions** and
+`frac_grad_nonzero = 0.0000`, pinning every gate at the *other* saturating
+endpoint and removing all decay from the path product. At the measured
+`u_std = 0.443641` the clamp's live interval `(0,1)` is **2.254σ** wide, so the
+lowest bias reaching hard-concrete's density is `1.336`, where **77.6% of gates
+are already dead at m = 1**. No clamp cell holds that density with a live
+gradient at this init scale.
+
+**The span curve is arithmetic, not evidence.** It tracks `1 − (1−p)^L` to three
+decimals, so it measures the density it was handed. At the density the table
+actually ran, `L8 = 0.088` and `L32 = 0.302` — **70% of length-32 spans carry no
+zero at init**. And the clamp row's zeros **grew** under training,
+`0.018250 → 0.3121`, so they are the consequence rather than the cause.
+
+**What survives.** The R1 kill stands on its own measurement. Why the gate closes
+is open, and the two accounts offered so far — gradient starvation, and step-0
+zero density — are both refuted by the same table.
 
 ### R7 is clean, and the instrument was validated before it was trusted
 
