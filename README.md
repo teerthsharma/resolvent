@@ -10,14 +10,20 @@
 <h1 align="center">resolvent</h1>
 
 <p align="center">
+  <i>"The S-matrix is the unitary matrix connecting sets of asymptotically free particle states — the in-states and the out-states — with no account of the path between them."</i><br/>
+  <sub>Wheeler, 1937 (Phys. Rev. 52, 1107); Heisenberg carried it through the 1940s. <a href="docs/NORTH_STAR.md">The full reconciliation →</a></sub>
+</p>
+
+<p align="center">
   <b>Softmax attention and Markov path composition are the same operator.</b><br/>
-  <span>One causal head, three switches. Softmax attention, unnormalized-kernel attention and the exact path product of a Markov chain are settings of it &mdash; proved in Lean 4, matched bitwise in code.</span><br/>
+  <span>One causal head, three switches. Softmax attention, unnormalized-kernel attention and the exact path product of a Markov chain are settings of it &mdash; proved in Lean 4, matched bitwise in code, and read as a forward S-matrix through a resolvent: parameters and structure as the in-state, an outcome distribution as the out-state, with the hop expansion as the Born series and <code>γ·ρ(P) &lt; 1</code> as its convergence law.</span><br/>
   <i>Invented by <a href="https://teerthsharma.vercel.app/">Teerth Sharma</a></i><br/>
   <sub><a href="mailto:teerths57@gmail.com">teerths57@gmail.com</a> · <a href="https://github.com/teerthsharma/resolvent">github.com/teerthsharma/resolvent</a></sub>
 </p>
 
 <p align="center">
   <a href="https://teerthsharma.github.io/resolvent/"><b>Site</b></a>&nbsp;&nbsp;·&nbsp;&nbsp;
+  <a href="docs/NORTH_STAR.md">North Star</a>&nbsp;&nbsp;·&nbsp;&nbsp;
   <a href="#quick-start">Quick start</a>&nbsp;&nbsp;·&nbsp;&nbsp;
   <a href="#1-one-family-three-corners">The family</a>&nbsp;&nbsp;·&nbsp;&nbsp;
   <a href="#3-the-graded-read">The graded read</a>&nbsp;&nbsp;·&nbsp;&nbsp;
@@ -27,11 +33,42 @@
   <a href="docs/FAILS.md">Research log</a>
 </p>
 
-<p align="center"><sub>Every number on this page comes with the command that reproduces it. Everything that did not hold (retractions, broken commands, open questions) is logged in one place: <a href="docs/FAILS.md">docs/FAILS.md</a>.</sub></p>
+<p align="center"><sub>Every number on this page comes with the command that reproduces it. Everything that did not hold (retractions, broken commands, open questions) is logged in one place: <a href="docs/FAILS.md">docs/FAILS.md</a>. The physics framing above is <a href="docs/NORTH_STAR.md">a reconciliation, not a result</a> — it gives the project a vocabulary, and adds no measurement.</sub></p>
 
 ---
 
 ## Abstract
+
+A family of attention operators in which softmax attention is one corner. The
+same head, read through a resolvent instead of applied once, has the shape of
+a forward S-matrix: an in-state (query parameters and gate structure) maps to
+an out-state (a committor or a readout) through `(I − gP)⁻¹`, the same closed
+form the Lippmann-Schwinger equation gives the scattering operator `T = (I −
+VG0)⁻¹V`. That is a reconciliation with a physics object nine decades older
+than this project, stated in full at [docs/NORTH_STAR.md](docs/NORTH_STAR.md)
+— it explains why the hop expansion converges when it does, and adds no
+measurement of its own.
+
+**What the project actually has, at real size:**
+
+- **The operator represents order.** Handed S5's 120-state automaton as bare
+  integer symbol ids — no permutation matrices, no transition table — the
+  operator arm scores `0.8620 ± 0.0556` against a commuting-diagonal control
+  at `0.2860 ± 0.0150`, matched at 404 parameters by `numel()`, 5 of 5 seeds
+  pairwise with no overlap; the control is saturated within `0.031` of its own
+  multiset ceiling of `0.3110`. *Scope: one parameter budget, one word length,
+  no length-generalization check.*
+- **The operator does not predict.** On the repaired chess bed, recalibrated
+  resolution is `0.001469` against an oracle ceiling of `0.10117` — 1.45% of
+  what the bed offers — and it is tied by an eight-bin histogram of total
+  piece count computed from the operator's own input, losing on Brier score,
+  `0.6334` against `0.5020`.
+- **The gate closes and nobody knows why.** Proposed mechanisms — gradient
+  starvation, step-0 zero density, eval-only exactness, a live gradient
+  unfreezing a closed gate — have all four been refuted. Two of them
+  (starvation, step-0 density) fell to the same table built to demonstrate
+  them (`docs/PHASE_I1.md`); the other two were pre-registered and killed in
+  the three most recent commits. The cause is open.
 
 Attention mixes **weights across positions**. Recurrences and Markov chains
 compose **values along paths**. Architectures usually pick one side. resolvent

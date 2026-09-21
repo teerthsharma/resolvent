@@ -81,6 +81,7 @@ not_in_nav: |
 
 nav:
   - Home: index.md
+  - "North Star: the forward S-matrix reconciliation": NORTH_STAR.md
   - The record:
       - Everything retracted, broken or open: FAILS.md
       - Component ledger: COMPONENT_LEDGER.md

@@ -10,8 +10,9 @@ hide:
 <div class="hero">
     <p class="over">Invented by <a href="https://teerthsharma.vercel.app/">Teerth Sharma</a> · research record</p>
     <h1 class="title">resolvent</h1>
+    <div class="note" style="margin:0 0 1.1rem"><p style="font-style:italic">"The S-matrix is the unitary matrix connecting sets of asymptotically free particle states — the in-states and the out-states — with no account of the path between them."</p><p style="margin-top:.35rem;font-size:.72rem;color:var(--rs-dim)">Wheeler, 1937 (Phys. Rev. 52, 1107); Heisenberg carried it through the 1940s. <a href="NORTH_STAR/">The full reconciliation →</a></p></div>
     <p class="thesis">Softmax attention and Markov path composition are the same operator.</p>
-    <p class="sub">One causal head, three switches. Softmax attention, unnormalized-kernel attention and the exact path product of a Markov chain are settings of it — proved in Lean&nbsp;4, matched bitwise in code, and every result that failed is kept on the record beside the ones that held.</p>
+    <p class="sub">A family of attention operators in which softmax is one corner, read as a forward S-matrix through a resolvent — proved in Lean&nbsp;4, matched bitwise in code, and every result that failed is kept on the record beside the ones that held. The physics framing is <a href="NORTH_STAR/">a reconciliation, not a result</a>: it explains why the hop expansion converges, and adds no measurement.</p>
     <p class="pills">
       <span class="pill">Lean 4 <b>v4.7.0</b></span>
       <span class="pill"><b>134</b> theorems + <b>41</b> lemmas</span>
@@ -20,6 +21,24 @@ hide:
       <span class="pill">Apache-2.0</span>
     </p>
     <a class="cta" href="#experiment">Read the experiment</a><a class="cta ghost" href="https://github.com/teerthsharma/resolvent">github.com/teerthsharma/resolvent</a>
+
+    <div class="grid" style="margin-top:1.6rem">
+      <div class="card">
+        <p class="k">Represents order</p>
+        <h4>S5, bare integers, matched params <span class="chip met">holds</span></h4>
+        <p>0.8620 ± 0.0556 vs commuting-diagonal control 0.2860 ± 0.0150, 404 params, 5/5 seeds pairwise no overlap; control saturated within 0.031 of its ceiling 0.3110. <em>Scope: one budget, one word length, no length-generalization check.</em></p>
+      </div>
+      <div class="card">
+        <p class="k">Does not predict</p>
+        <h4>Repaired chess bed <span class="chip unmet">unmet</span></h4>
+        <p>Resolution 0.001469 vs oracle ceiling 0.10117 (1.45%); tied by an 8-bin piece-count histogram of its own input; loses on Brier, 0.6334 vs 0.5020.</p>
+      </div>
+      <div class="card">
+        <p class="k">Gate closes, cause unknown</p>
+        <h4>Every proposed mechanism refuted <span class="chip open">open</span></h4>
+        <p>Gradient starvation, step-0 zero density, eval-only exactness, live-gradient unfreeze — all four refuted; the first two by the same table built to demonstrate them, the other two by pre-registered kills. Twelve checks that could not fail are catalogued alongside them.</p>
+      </div>
+    </div>
 
     <figure style="margin-top:2.4rem">
       <svg viewBox="0 0 760 252" data-rs="gates" role="group" aria-label="An interactive diagram: nine tokens in a row with a gate between each neighbouring pair. The last token reads every earlier one. Closing a gate sets every path that crosses it to exactly zero.">
