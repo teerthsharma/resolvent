@@ -1162,7 +1162,87 @@ an arm that no longer exists.
 
 ---
 
-## 20. Rows still out
+## 20. The floors: the chess numbers were computed at the wrong n
+
+Two floors from the same generation, and this project had been scoring against
+neither.
+
+**Wiener 1942 reproduces.** `0.4603 / 0.3480 / 0.2506` against the specified
+`0.4594 / 0.3498 / 0.2502` — within 0.5% on every term, one run, no tuning
+(`default_rng(0)`, AR(2) `a = (1.2, −0.5)`, process sd 0.5, observation sd 0.3,
+N = 200,000). At p = 32 the answer is identical to p = 8 to four decimals, so an
+order-8 linear predictor already captures this process fully and the gap to
+oracle stays 0.0974 at both orders.
+
+**Cramér–Rao 1945 reproduces exactly.**
+
+| p | ε | n (CR/CLT) | n (Hoeffding) | ratio |
+|---|---|---|---|---|
+| 0.50 | 0.02 | 2,401 | 4,612 | 1.92× |
+| 0.20 | 0.02 | — | — | 3.00× |
+| 0.10 | 0.02 | 865 | 4,612 | 5.33× |
+| 0.05 | 0.02 | — | — | 10.11× |
+| **0.01** | 0.02 | — | — | **48.50×** |
+
+The loosest corner is the rare-event one. Hoeffding is tightest at p = 0.5, its
+own calibration point.
+
+### But L-WIENER attaches to no bed in this repository
+
+The chess bed has **no cross-game time index**: `chess.py:117` gives *every ply of
+one game the same one-hot outcome label*, and `ply_idx` resets per game carrying
+no meaning across games. A linear-predictor floor needs a sequence, and there
+isn't one spanning the rows.
+
+**And MDP-CAL does not exist.** An exhaustive search of `ceq/` and `ceqjepa/`,
+source and git history, finds no file, class, function or variable by any
+spelling of it. BED-M, BED-H, `LSTD_bed` and a gridworld exist; none is an MDP
+calibration bed. It has been named in contracts as though it were one.
+
+### The n was positions, and positions are not independent
+
+**Every published chess resolution number used the position count as `n`.** But
+all plies of a game share one outcome label, so positions within a game are
+perfectly correlated. `n = 6000 positions` is roughly 1,000 independent draws,
+and correcting `n` from positions to games **flips `oracle_ceiling_RES` from 13.7×
+above its Cramér–Rao floor to below it.**
+
+Three rows sit below their own floor at the n actually used:
+
+| row | value | n used | against naive p=0.5 floor 0.01265 |
+|---|---|---|---|
+| `operator_committor.RES` | 0.0012548892 | 6,000 positions | **~10× below** |
+| `draw.res_k` | 0.0004429054 | 6,000 | below |
+| `sink.res_k` | 0.0007011879 | 6,000 | below |
+
+A row below its floor is reporting noise with a confidence interval drawn around
+it.
+
+### And the numbers this page carried are not the numbers in the file
+
+| quoted throughout this phase | actually in `wil_chess400_results.json` |
+|---|---|
+| RES `0.001469` | **`0.0012548892`** |
+| oracle ceiling `0.10117` | **`0.0241166938`** |
+
+Worse, three result files cited as sources **were never produced**:
+`wil_res_ceiling.json`, `wil_bar_can_fire.json` and `wil_recal_race.json` do not
+exist. Those figures came from lane reports rather than from disk, and were
+published as measurements.
+
+**What survives and what does not.** The prediction verdict survives — the
+operator's committor was tied by an eight-bin histogram of its own input, and a
+tie is a tie whatever the ceiling. **Its quantification does not.** "1.45% of the
+bed's resolution ceiling" is meaningless when the ceiling is itself below its
+noise floor at the corrected n, and the two figures that sentence was built from
+do not match their own file.
+
+Every resolution sentence in `PHASE_I.md` §1 and `PHASE_I1.md` §8 is struck to a
+direction without a magnitude until re-measured at `n = games`.
+
+---
+
+## 21. Rows still out
 
 `R1` gate parameterization (straight-through against hard-concrete, with the
 four-condition must-fire); `R3` held-out eval path by document and `R4`
