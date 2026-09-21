@@ -1,4 +1,4 @@
-# The first trained gate
+# The first trained gate, and why it does not measure the gate
 
 Every one of the 165 checkpoints under `results/` is the ungated softmax corner:
 the union of weight-key names across all of them is eight names, and 158 of 165
@@ -68,6 +68,55 @@ the nonzero-conditioned `m̄` gives `L_init = 0.706` and `L_trained = 9.74`, so
 both the `L < S/2 = 256` and `L < S/8 = 64` thresholds fire. Neither means
 anything here, because `L_init` fires too. Using `m̄` over all entries gives
 `L = 0` at both points, since one exact zero sends the geometric mean to zero.
+
+## STRUCK: every number above measures a half-closed random start
+
+`gate_init_repair.py` reruns this identically with `m_head.bias = 0.999` and
+`theta_head.bias = 0.001` — the values `trainable_heads()` was written to set —
+and changes nothing else. Both pre-registered verdict-change thresholds clear.
+
+| | reference (broken init) | repaired | threshold |
+|---|---|---|---|
+| frac exactly 0.0 at init | 0.4915 | **0.0182** | < 0.05 |
+| frac exactly 0.0 trained | 0.5969 | **0.3121** | < 0.45 |
+| trained max run | 10 | **42** | > 14 |
+| final loss | 1.5618 | **1.3122** | — |
+
+The pairing is verified rather than assumed: `config.json` byte-identical, 73-key
+state dicts identical in name set, `run_record` scalars identical, and detrended
+per-step loss correlation **0.9832** against a shuffled control of **−0.0156**,
+so both runs consumed the same batch sequence. Only the two biases differ.
+
+**The open gate reaches a lower loss** — last-50 mean `1.2665 ± 0.0399` against
+`1.5018 ± 0.0352` — so it is better at the task, not merely different.
+
+**Data or init? Both, with init dominant.** Training still closes the gate hard
+from a 98.2%-open start (`0.0182 → 0.3121`, stretch median `144 → 3`), so the
+collapse is real. But the trained `m_head.bias` **barely moves from wherever it
+starts** — reference `0 → −0.0172 / −0.0021 / +0.0068 / −0.0101`, repaired
+`0.999 → 0.9797 / 0.9987 / 0.9908 / 0.9990` — so at 800 steps the bias is
+effectively frozen at its initialisation and whatever it is handed is what it
+keeps.
+
+### Two corrections to the numbers above
+
+**The `max 7` is eval-batch-dependent.** It was measured at `eval_seed=999`;
+both training runs used `12345`, where the same reference checkpoint reads
+`mean 0.941 / median 0 / p95 4 / **max 10**`. The ceiling is a property of the
+eval draw as well as the model.
+
+**"Stretch" is the wrong metric.** It assigns each position the length of its
+whole maximal nonzero run, but `G_ij = ∏_{k=j+1}^{i} m_k`, so row `i`'s live
+reach is the **backward** run ending at `i` — at most the stretch, and about half
+on average.
+
+| backward reach | mean | median | p95 | max |
+|---|---|---|---|---|
+| reference trained | 0.672 | 0 | 3 | 10 |
+| repaired trained | **2.146** | **1** | **7** | **42** |
+
+Stretch overstates reach by roughly `1.7×`. **Every reach number should be quoted
+as backward reach.** The conclusion survives the stricter metric.
 
 ## Why half the gate is closed before training starts
 

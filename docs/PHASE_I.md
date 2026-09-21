@@ -390,6 +390,25 @@ rather than a design: the `m = 0.999` initialisation belongs to
 clamp(u, 0, 1)` over a `u` centred at zero puts **49.3% of the gate at exactly
 zero from random initialisation**, measured before any gradient step.
 
+**And those numbers are struck as a measurement of the operator.** Rerun
+identically with `m_head.bias = 0.999`, changing nothing else, both
+pre-registered thresholds clear: exactly-zero at init `0.4915 → 0.0182`, trained
+`0.5969 → 0.3121`, trained max run `10 → 42`, and the final loss **falls**,
+`1.5618 → 1.3122` (last-50 `1.2665 ± 0.0399` against `1.5018 ± 0.0352`). Pairing
+verified by a detrended per-step loss correlation of `0.9832` against a shuffled
+control at `−0.0156`.
+
+Training does still close the gate from a 98.2%-open start, so the collapse is
+real — but **init is the dominant term**, because the trained `m_head.bias`
+barely moves from wherever it starts (`0.999 → 0.9797 / 0.9987 / 0.9908 /
+0.9990`), so at 800 steps it is effectively frozen at initialisation.
+
+Two corrections to the figures above. The `max 7` was read at `eval_seed=999`
+while both runs used `12345`, where the same checkpoint reads **max 10**. And
+"stretch" is the wrong metric: `G_ij = ∏_{k=j+1}^{i} m_k`, so live reach is the
+**backward** run ending at `i`, which stretch overstates by about `1.7×`.
+Backward reach is `0.672 / max 10` reference against `2.146 / max 42` repaired.
+
 That is 1.8% of one epoch on a children's-story corpus with no held-out channel,
 so it settles existence and the early shape of `m`, and nothing else.
 
