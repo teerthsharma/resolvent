@@ -1,0 +1,188 @@
+--- a/ceq/hf/train.py
++++ b/ceq/hf/train.py
+@@ -31,6 +31,7 @@
+ import math
+ import os
+ import pathlib
++import random
+ import shutil
+ 
+ import torch
+@@ -103,17 +104,37 @@
+ 
+ 
+ class ByteBatches:
+-    """Raw bytes, 90/10 contiguous split so validation is unseen text."""
++    """Raw bytes, split BY DOCUMENT so validation is unseen text.
+ 
+-    def __init__(self, text, vocab_size=256, val_frac=0.1):
+-        b = torch.tensor(list(text.encode("utf-8")), dtype=torch.long) % vocab_size
+-        cut = int(len(b) * (1 - val_frac))
+-        self.train, self.val = b[:cut], b[cut:]
++    NOT a 90/10 byte OFFSET into the concatenated corpus. `data/tinystories_20k.txt`
++    is many short stories separated by a blank line; a byte-offset cut falls
++    inside whichever story straddles it, so `self.val` used to open with the
++    tail of a story `self.train` had already trained on in full -- a leak, not
++    unseen text. Splitting the DOCUMENT list first (seeded, so the split is
++    reproducible and a different `split_seed` genuinely redraws it) and only
++    then concatenating each half removes that leak; each half is otherwise
++    trained/evaluated exactly as before.
++    """
++
++    def __init__(self, text, vocab_size=256, val_frac=0.1, split_seed=0):
++        docs = [d for d in text.split("\n\n") if d.strip()]
++        order = list(range(len(docs)))
++        random.Random(split_seed).shuffle(order)
++        cut = int(len(order) * (1 - val_frac))
++        train_ix, val_ix = sorted(order[:cut]), sorted(order[cut:])
++
++        def to_bytes(ix):
++            t = "\n\n".join(docs[i] for i in ix)
++            return torch.tensor(list(t.encode("utf-8")), dtype=torch.long) % vocab_size
++
++        self.train, self.val = to_bytes(train_ix), to_bytes(val_ix)
++        self.split_seed, self.val_frac = split_seed, val_frac
++        self.n_docs, self.n_train_docs, self.n_val_docs = len(docs), len(train_ix), len(val_ix)
+ 
+     def batch(self, split, bs, seq, gen, device):
+         d = self.train if split == "train" else self.val
+         if len(d) <= seq + 1:
+-            raise ValueError("corpus too small for seq={}".format(seq))
++            raise ValueError("{} split too small for seq={}".format(split, seq))
+         i = torch.randint(len(d) - seq - 1, (bs,), generator=gen)
+         x = torch.stack([d[j:j + seq] for j in i])
+         y = torch.stack([d[j + 1:j + seq + 1] for j in i])
+@@ -302,9 +323,23 @@
+ def train(*, out_dir, steps, batch, seq, hidden_size, n_layers, n_heads,
+           device="cuda", vocab_size=256, data_path=None, max_bytes=64 * 1024 * 1024,
+           lr=3e-4, seed=0, grad_checkpoint=False, clip=1.0, probe_every=1,
+-          log_every=50, gpu=None, resume_from=None, save_every=0, **overrides):
++          log_every=50, gpu=None, resume_from=None, save_every=0,
++          val_frac=0.1, split_seed=None, eval_every=0, eval_batches=4,
++          **overrides):
+     """Train and `save_pretrained` into `out_dir`. Returns the run record.
+ 
++    EVAL PATH (previously absent: `grep -ic eval` on this file returned 0, and
++    the only `data.batch()` call site passed `"train"`; `ByteBatches` built
++    `self.val` and nothing ever requested it). `val_frac` of the corpus's
++    DOCUMENTS -- not a byte offset, which lets the same story straddle the cut
++    -- become held-out, split with `split_seed` (`seed` if not given, so a run
++    is reproducible without a second knob to remember). When `eval_every > 0`,
++    the eval loss is computed on a FIXED held-out subsample (its own generator,
++    seeded once from `split_seed`, reused at every checkpoint so checkpoints
++    are comparable to each other and to a repeat run) every `eval_every` steps
++    and at the end, and both land in `run_record.json` as `eval_losses`
++    (`[{"step":, "loss":}, ...]`) alongside `val_frac` and `split_seed`.
++
+     PERIODIC CHECKPOINTS. `save_every=N` writes a complete checkpoint every N
+     steps into `{out_dir}.ckpt-a` and `{out_dir}.ckpt-b` alternately, through
+     the same atomic path as the end-of-chunk save. `0`, the default, is
+@@ -328,6 +363,15 @@
+     total, and `seed` is ignored on resume: the saved state already determines
+     what comes next.
+     """
++    # R5: a d_head not a multiple of 8 gets both fused SDPA backends rejected
++    # and a math-kernel fallthrough that materialises [B,H,S,S] at 31.8x. This
++    # model has no SDPA call site of its own (its attention is hand-rolled),
++    # but the shape assumption is still real for anyone benchmarking it
++    # against ceq.lm's softmax control at the same (hidden_size, n_heads).
++    assert hidden_size % n_heads == 0, "hidden_size not divisible by n_heads"
++    assert (hidden_size // n_heads) % 8 == 0, (
++        "d_head={} is not a multiple of 8".format(hidden_size // n_heads))
++
+     if gpu is not None:
+         ok, msg = preflight(hidden_size=hidden_size, n_layers=n_layers,
+                             n_heads=n_heads, seq=seq, batch=batch, gpu=gpu,
+@@ -374,7 +418,9 @@
+         model.model.gradient_checkpointing = True
+     model.train()
+ 
+-    data = ByteBatches(_corpus_text(data_path, max_bytes), vocab_size)
++    eff_split_seed = seed if split_seed is None else split_seed
++    data = ByteBatches(_corpus_text(data_path, max_bytes), vocab_size,
++                       val_frac=val_frac, split_seed=eff_split_seed)
+     opt = torch.optim.AdamW(model.parameters(), lr=lr)
+     if resume_from:
+         opt.load_state_dict(ckpt["optimizer"])
+@@ -386,7 +432,24 @@
+         torch.cuda.empty_cache()
+         torch.cuda.reset_peak_memory_stats()
+ 
++    def eval_loss():
++        # Its own generator, reseeded from split_seed on every call: the SAME
++        # held-out batches at every checkpoint and every repeat run, so a
++        # checkpoint curve and a determinism comparison are both apples-to-apples.
++        was_training = model.training
++        model.eval()
++        total = 0.0
++        with torch.no_grad():
++            eg = torch.Generator().manual_seed(20260921 + eff_split_seed)
++            for _ in range(eval_batches):
++                xv, _ = data.batch("val", batch, seq, eg, device)
++                total += float(model(input_ids=xv, labels=xv).loss)
++        if was_training:
++            model.train()
++        return total / eval_batches
++
+     losses, gnorms, l1mins, slot = [], [], [], 0
++    eval_losses = [dict(step=start_step, loss=eval_loss())] if eval_every else []
+     beta_track, beta_acc = [], None
+     for step in range(steps):
+         probe_store.clear()
+@@ -408,6 +471,8 @@
+             print("step {:6d}  loss {:.4f}  |g| {:.4e}  min row L1 {:.3e}".format(
+                 step, losses[-1], gnorms[-1], l1mins[-1]), flush=True)
+             beta_track.append(beta_column(model))
++        if eval_every and (step + 1) % eval_every == 0:
++            eval_losses.append(dict(step=start_step + step + 1, loss=eval_loss()))
+         # `step + 1 < steps`: the end-of-chunk save below already covers the
+         # last step, and at the training shape a redundant one costs 0.29 GiB
+         # and a wall-clock stall.
+@@ -416,10 +481,24 @@
+                              out_dir + _SLOTS[slot])
+             slot = 1 - slot
+ 
++    if eval_every and eval_losses[-1]["step"] != start_step + steps:
++        eval_losses.append(dict(step=start_step + steps, loss=eval_loss()))
++
+     for h in handles:
+         h.remove()
+ 
+     peak = torch.cuda.max_memory_allocated() if device == "cuda" else 0
++    # R5: the memory wall is silent, not an OOM -- WDDM can spill a CUDA
++    # allocation to host RAM with nothing raised, and torch's own peak counter
++    # still reports the (larger) logical figure. Comparing it to the device's
++    # physical total is the only way this is caught after the fact.
++    host_spill = False
++    if device == "cuda":
++        device_total = torch.cuda.get_device_properties(0).total_memory
++        host_spill = peak > device_total
++        if host_spill:
++            print("WARNING: reported peak {:.1f} MiB exceeds device {:.1f} MiB "
++                 "-- WDDM host spill.".format(peak / 1024**2, device_total / 1024**2))
+     model.model.gradient_checkpointing = False
+     _save_checkpoint(model, opt, gen, start_step + steps, out_dir)
+     # The slots are redundant the instant `out_dir` itself loads, and that is
+@@ -430,11 +509,20 @@
+             shutil.rmtree(out_dir + s, ignore_errors=True)
+ 
+     beta_track.append(beta_column(model))
++    n_params = sum(p.numel() for p in model.parameters())
++    # R2: the corpus is 18,167,706 byte-level tokens; at Chinchilla's 20
++    # tokens/param that is a zero-repetition ceiling of 908,385 params. Above
++    # it, training necessarily repeats the corpus more than once to reach the
++    # prescribed budget, which is a generalization claim this run cannot make.
++    repetition_factor = (20.0 * n_params) / 18_167_706
+     record = dict(steps=steps, start_step=start_step,
+                   beta=beta_track, beta_census=beta_acc,
+                   operator=model.config.operator, losses=losses, grad_norms=gnorms,
+-                  row_l1_min=l1mins, peak_bytes=int(peak),
+-                  n_params=sum(p.numel() for p in model.parameters()),
++                  row_l1_min=l1mins, peak_bytes=int(peak), host_spill=host_spill,
++                  n_params=n_params, repetition_factor=repetition_factor,
++                  memorization_regime=repetition_factor > 1.0,
++                  eval_losses=eval_losses, val_frac=val_frac, split_seed=eff_split_seed,
++                  n_docs=data.n_docs, n_train_docs=data.n_train_docs, n_val_docs=data.n_val_docs,
+                   grad_checkpoint=bool(grad_checkpoint), device=str(device))
+     with open(os.path.join(out_dir, "run_record.json"), "w") as fh:
+         json.dump(record, fh, indent=2)

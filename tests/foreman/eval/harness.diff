@@ -1,0 +1,23 @@
+--- a/ceq/harness.py
++++ b/ceq/harness.py
+@@ -315,12 +315,17 @@
+ 
+     `data/cogs_gen.tsv` is ordered BY GENERALIZATION CATEGORY. Taking the first
+     256 rows would score one category and call it COGS. The generator is seeded
+-    off the split size alone, so both arms are scored on exactly the same items
+-    at every seed and the subsample cannot drift between them.
++    off the split size AND `seed`, so two calls with the SAME `seed` still land
++    on exactly the same items -- comparability between arms scored at one seed
++    is preserved -- while two different `seed` values now draw different
++    subsamples. `seed` used to be accepted and silently ignored
++    (`20260825 + n_test` alone), so eval seeds 1 and 2 returned byte-identical
++    index lists and no subsample-luck estimate was reachable through this knob;
++    `seed=0` is unchanged, so nothing recorded at the old default moves.
+     """
+     if max_eval >= n_test:
+         return list(range(n_test))
+-    g = torch.Generator().manual_seed(20260825 + n_test)
++    g = torch.Generator().manual_seed(20260825 + n_test + seed)
+     return torch.randperm(n_test, generator=g)[:max_eval].sort().values.tolist()
+ 
+ 

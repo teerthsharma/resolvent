@@ -232,7 +232,67 @@ run's own board logging raised on a `numpy.bool_` that `json.dumps` refuses.
 
 ---
 
-## 6. Rows still out
+## 6. The eval path, and what the determinism null did not test
+
+**R3 is closed.** `ceq/hf/train.py` had no held-out quantity of any kind —
+`grep -ic eval` returned 0, `ByteBatches.val` was built and never requested. It
+now splits **by document**, 105,095 blank-line-separated stories seeded through
+`split_seed`, giving 94,585 train and 10,510 val with **zero document overlap**,
+and writes `eval_losses` to `run_record.json` alongside `val_frac` and
+`split_seed`. Proposed as a diff; not applied.
+
+**The split was checked by searching for the leak rather than by reading the
+code.** Held-out documents were searched against the concatenated train split:
+**0 of 96** mid-document 200-character windows appear in train. Two of 200 whole
+held-out documents match verbatim and both are corpus fragments — `"The end."` at
+8 characters and `"Are you OK?" Lily asked.` at 25 — not stories. The val split is
+not a contiguous tail, and `split_seed` 0 against 1 produces different val md5s,
+so the seed genuinely redraws.
+
+**And the leak it closes is 56 bytes.** The stock byte-offset cut at 16,160,346
+does land 114 bytes into a 170-byte story exactly as predicted, so 56 bytes of one
+story crossed into val — **0.0031% of the 1,795,595-byte val split**. Corpus-wide
+there are 704 duplicate document copies, 0.67%, of which only 2 are 100 characters
+or longer, so duplication is not a second leak channel. The by-document split is
+correct and the defect it closes was small; both are stated.
+
+**The seed bug is fixed and the fix is demonstrated.** `eval_indices(3920, 256,
+seed=1)` and `seed=2` returned byte-identical index lists against the live
+unedited function. Folding the seed into the formula —
+`manual_seed(20260825 + n_test + seed)` — makes 1 and 2 diverge while keeping
+**seed 0 byte-identical**, so every existing seed-0 result, including the COGS
+control curve, is unmoved.
+
+### The determinism null is a null about the wrong model
+
+Six runs — two without the flags, two with, two for the must-fire — returned
+**bit-identical** eval-loss trajectories, final `2.249588042497635` in every one.
+The flags cost 7.6% peak memory and removed nothing.
+
+That reads as "determinism was already free", and it is not what was measured.
+The `0.113` swing this row exists to explain lives in `ceq.lm`'s literal
+scaled-dot-product attention path, and `CEQForCausalLM` has **zero
+`scaled_dot_product_attention` call sites**. The model used here cannot exhibit
+the mechanism. **The 0.113 swing is untested, not unremoved**, and the R5 fused-
+backend assertion is likewise not applicable to this module for the same reason.
+
+The must-fire needs the same correction: its band was set from repeat-determinism
+variance, because **no seed was varied across the six runs**. It measures that one
+seed reproduces itself, which it does exactly, rather than that eval loss
+reproduces inside seed variance. The threshold was set before the confirmation
+pair was inspected, so the procedure was sound; the quantity was the wrong one.
+
+Every row here is labelled up front rather than caveated afterwards:
+`n_params = 4,929,536` against the 908,385 ceiling gives a repetition factor of
+**5.4267×**, **MEMORIZATION REGIME**, and no generalization sentence is made about
+any of them.
+
+**Kaggle's blocker is now closed**: a remote run has a held-out quantity to score.
+What it does not yet have is a seed-variance estimate on a model that can vary.
+
+---
+
+## 7. Rows still out
 
 `R1` gate parameterization (straight-through against hard-concrete, with the
 four-condition must-fire); `R3` held-out eval path by document and `R4`
