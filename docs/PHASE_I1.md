@@ -981,7 +981,49 @@ Hard-concrete's reach, by contrast, is stable: `241.4, 200.2, 206.1, 221.5,
 
 ---
 
-## 17. Rows still out
+## 17. The second corpus: it transfers, and the gap grows
+
+The pre-registration held the Q2 result back from being called a win until a
+second corpus confirmed it. A second **domain** now has.
+
+| corpus | repetition | (f) − (a), 5 seeds | mean |
+|---|---|---|---|
+| TinyStories — synthetic children's prose | 0.7977× / 0.7985× | −0.2326 … −0.2622 | **−0.2473** |
+| WikiText-103-raw — encyclopedic English | 0.2155× / 0.2158× | −0.2977 … −0.3508 | **−0.3285** |
+
+**Five of five seeds on both, and the gap is 30× the pre-registered tie band of
+0.01 nats. The effect is larger on the harder domain, not smaller.**
+
+Both corpora sit below 1× repetition, so neither run is in the memorization
+regime and a generalization sentence is admissible for both.
+
+The corpus is pinned rather than named: WikiText-103-raw from
+`Salesforce/wikitext`, CC BY-SA 4.0, `105,326,029` bytes on disk
+(`sha256 3523ac1d…`), of which the **unchanged** 64 MiB cap in
+`train_with_eval` loads `67,239,422` (`sha256 3b81cdca…`), split by document into
+3,866 articles — 3,479 train, 387 validation.
+
+**Exactly one variable moved**: the corpus file and its token count. The shape,
+the initializer, the split convention, the seed set, the optimiser, the steps
+formula and the byte-level vocabulary are the values `q2_certificate.py` locks,
+and `r3_eval.py` and `r1_gate.py` were reused unedited.
+
+### What this does not settle
+
+`split_seed = 0` is fixed across all five seeds **on both corpora**. Every
+interval here carries model variance and **no eval-draw variance at all**. So the
+result now holds across two domains and remains untested against the draw of the
+held-out set itself.
+
+That is precisely the contrast `C_win` measures in the 4×5 paired design, where
+the split seed varies with the model seed and the arms are paired by common
+random numbers. Until it reports, the honest statement is: **the effect survives
+a domain change at five of five seeds, twice, and has never been measured against
+a second validation draw.**
+
+---
+
+## 18. Rows still out
 
 `R1` gate parameterization (straight-through against hard-concrete, with the
 four-condition must-fire); `R3` held-out eval path by document and `R4`
