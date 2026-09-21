@@ -95,6 +95,7 @@ nav:
       - "Phase G: spectral": PHASE_G.md
       - "Phase H: bind": PHASE_H.md
       - "Phase I: calibrate and cost": PHASE_I.md
+      - "Phase I.1: repair": PHASE_I1.md
   - Ledgers:
       - Failure mechanisms: ledgers/mistakes.md
       - Struck constants: ledgers/struck.md
