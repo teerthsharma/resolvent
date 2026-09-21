@@ -1242,7 +1242,55 @@ direction without a magnitude until re-measured at `n = games`.
 
 ---
 
-## 21. Rows still out
+## 21. A third domain, on a T4, with a gate that was shown to reject
+
+Source code — `codeparrot/codeparrot-clean-valid`, 20,982,884 bytes — run on a
+Tesla T4 as a self-contained kernel with no repository file uploaded.
+
+```
+softmax        691,840 params    final eval loss 1.7685
+hard-concrete  692,623 params    final eval loss 1.4384
+                                 difference     -0.3301
+```
+
+The parameter gap is **783**, the same per-block excess as both earlier rows.
+
+**One seed, and the lane said so.** The run record carries
+`dropped: seeds 5 -> 1 (5-seed grid did not fit the remaining budget)` rather
+than presenting a single cell as a grid. A third domain at one seed is a data
+point.
+
+| corpus | structure | seeds | mean (f) − (a) |
+|---|---|---|---|
+| TinyStories | synthetic short-dependency prose | 5 | **−0.2473** |
+| WikiText-103 | encyclopedic English | 5 | **−0.3285** |
+| codeparrot | source code | **1** | **−0.3301** |
+
+### The rebuild gate failed on a broken rebuild
+
+Every previous Kaggle gate in this project passed a correct rebuild and was never
+shown to reject a wrong one — the first was numpy-only and would have passed with
+the entire torch rebuild broken. This one was tested both ways:
+
+```
+correct rebuild   (beta,qk) = (0,0) (1,1) (1,0)  ->  PASS PASS PASS
+broken  rebuild   (beta,qk) = (0,0) (1,1) (1,0)  ->  FAIL FAIL FAIL
+any_false_pass = false
+```
+
+That is the first gate here demonstrated to fail rather than merely to pass.
+
+### And the previous OOM has an exact cause
+
+The kernel that lost two of three questions did so by never freeing a model:
+**cell 13 constructed eight and freed none**, cell 15 added one more, and cell 17
+ran a nested three-by-five loop on top — nine unfreed models before the sweep that
+died had begun. No `del`, no `torch.cuda.empty_cache()`, and no memory logged
+anywhere in the notebook. This kernel carries all three.
+
+---
+
+## 22. Rows still out
 
 `R1` gate parameterization (straight-through against hard-concrete, with the
 four-condition must-fire); `R3` held-out eval path by document and `R4`
