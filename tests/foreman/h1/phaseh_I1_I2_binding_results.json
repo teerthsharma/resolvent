@@ -1,0 +1,95 @@
+{
+  "producer": "Foreman/numpy-2.4.6/py-3.11.9",
+  "timestamp": "2026-09-21T01:54:32",
+  "I1a_vector_order_diff": 0.0,
+  "I1a_reference": 2.2e-16,
+  "I1a_note": "addition commutes: (a+b)-(b+a) is exactly 0 up to float64 rounding",
+  "I1b_separation": 2.82842712474619,
+  "I1b_reference_separation": 2.08,
+  "I1b_commutator_fro": 2.449489742783178,
+  "I1b_reference_commutator_fro": 1.44,
+  "I2a_max_recovery_err": 0.0015972317035921613,
+  "I2a_reference": 0.0017,
+  "I2a_per_token_err": [
+    0.0015972317035921613,
+    0.0010816847537125085,
+    0.0011114602302069593,
+    0.0015779494303967967,
+    0.0013370587838409387
+  ],
+  "I2a_n_samples": 400,
+  "I2b_operator_bound_err": 0.006234077720024101,
+  "I2b_vector_bound_err": 4.071722874225512,
+  "I2b_untrained_ratio": 653.1395752649953,
+  "I2b_reference_op_err": 0.0011,
+  "I2b_reference_vec_err": 1.06,
+  "I2b_reference_ratio": 963.6363636363636,
+  "H3_null_precondition_per_seed": [
+    {
+      "seed": 0,
+      "n": 300,
+      "finite_scored": 300,
+      "exact_null_matches": 3
+    },
+    {
+      "seed": 1,
+      "n": 300,
+      "finite_scored": 300,
+      "exact_null_matches": 1
+    },
+    {
+      "seed": 2,
+      "n": 300,
+      "finite_scored": 300,
+      "exact_null_matches": 12
+    },
+    {
+      "seed": 3,
+      "n": 300,
+      "finite_scored": 300,
+      "exact_null_matches": 0
+    },
+    {
+      "seed": 4,
+      "n": 300,
+      "finite_scored": 300,
+      "exact_null_matches": 4
+    }
+  ],
+  "H3_null_void": false,
+  "floors": {
+    "always_identity": 6.31886432613281,
+    "last_state": 7.614973928633705,
+    "class_frequency": 5.621281866207079
+  },
+  "order_leak_check": [
+    {
+      "seed": 0,
+      "n": 300,
+      "position_only_acc": 0.51
+    },
+    {
+      "seed": 1,
+      "n": 300,
+      "position_only_acc": 0.5766666666666667
+    },
+    {
+      "seed": 2,
+      "n": 300,
+      "position_only_acc": 0.5033333333333333
+    },
+    {
+      "seed": 3,
+      "n": 300,
+      "position_only_acc": 0.52
+    },
+    {
+      "seed": 4,
+      "n": 300,
+      "position_only_acc": 0.5133333333333333
+    }
+  ],
+  "order_leak_mean_acc": 0.5246666666666666,
+  "wall_seconds": 0.07150912284851074,
+  "bed_void": false
+}

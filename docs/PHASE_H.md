@@ -299,7 +299,10 @@ survived a matched budget. Discrete-label accuracy over eight fixed anchors,
 | (c) operator gate, invertible | 552 | **0.9570** | 0.0048 | **+0.6004** |
 | (d) operator gate + projector | 654 | 0.9470 | 0.0059 | +0.5904 |
 
-Tightest floor is `last_two_ops = 0.3566` on that eval split. `(c) − (a) = 0.7332`
+Tightest floor is `last_two_ops = 0.3566` on that eval split. Every figure in this table is
+produced by the chain in `tests/foreman/h1/`, which runs with the six commands
+listed in its README; until that directory existed these numbers appeared in
+this page and nowhere else, and a reader could not re-run them. `(c) − (a) = 0.7332`
 against a pooled per-seed standard deviation of `0.01250` — **59 σ**, with every
 (c) seed beating every (a) seed by at least 0.708. Complete separation at n = 5.
 

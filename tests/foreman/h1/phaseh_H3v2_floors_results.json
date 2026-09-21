@@ -1,0 +1,178 @@
+{
+  "producer": "Foreman/numpy-2.4.6/py-3.11.9",
+  "timestamp": "2026-09-21T13:24:26",
+  "dtype": "float64",
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "n_test_per_seed_bed": 100,
+  "bed_params": {
+    "m": 12,
+    "d": 8,
+    "k": 6,
+    "line_len": 3,
+    "c_anchors": 8
+  },
+  "bed_source": "C:\\Users\\seal\\Desktop\\New folder (32)\\tests\\foreman\\h1\\phaseh_H3v2_bed.py",
+  "edit1_constant_predictor_floor": {
+    "n_sweep": {
+      "100": {
+        "mean": 0.192,
+        "std": 0.017204650534085254,
+        "per_seed": [
+          0.18,
+          0.19,
+          0.17,
+          0.2,
+          0.22
+        ]
+      },
+      "1000": {
+        "mean": 0.16540000000000002,
+        "std": 0.011757550765359257,
+        "per_seed": [
+          0.16,
+          0.181,
+          0.17,
+          0.146,
+          0.17
+        ]
+      },
+      "5000": {
+        "mean": 0.16092,
+        "std": 0.011248893278896378,
+        "per_seed": [
+          0.1582,
+          0.1786,
+          0.1584,
+          0.144,
+          0.1654
+        ]
+      }
+    },
+    "declared_chance": 0.125,
+    "measured_floor_large_n": 0.16092,
+    "entropy_bits": 2.987897273610084,
+    "entropy_bits_max": 3.0,
+    "effective_k": 7.933168948406763,
+    "above_declared": true,
+    "dur": 1.1284239292144775
+  },
+  "edit2_bag_floor_large_n": {
+    "n_sweep": {
+      "100": {
+        "mean": 0.192,
+        "std": 0.023151673805580458,
+        "per_seed": [
+          0.23,
+          0.18,
+          0.2,
+          0.19,
+          0.16
+        ]
+      },
+      "1000": {
+        "mean": 0.183,
+        "std": 0.0193183850256692,
+        "per_seed": [
+          0.211,
+          0.159,
+          0.199,
+          0.168,
+          0.178
+        ]
+      },
+      "5000": {
+        "mean": 0.18152000000000001,
+        "std": 0.011991063339003762,
+        "per_seed": [
+          0.1984,
+          0.1768,
+          0.193,
+          0.1692,
+          0.1702
+        ]
+      }
+    },
+    "beats_const_at_5000": true,
+    "dur": 2.81990909576416
+  },
+  "edit3_tighter_floors_n100": {
+    "n": 100,
+    "last_op_only_mean": 0.256,
+    "last_two_ops_mean": 0.346,
+    "order_free_mean": 0.15999999999999998,
+    "floors_all": {
+      "bag_of_context": 0.192,
+      "constant_predictor": 0.192,
+      "order_free": 0.15999999999999998,
+      "last_op_only": 0.256,
+      "last_two_ops": 0.346
+    },
+    "tightest_name": "last_two_ops",
+    "tightest_val": 0.346,
+    "old_headroom_vs_bag": 0.808,
+    "honest_headroom": 0.654,
+    "dur": 0.06047248840332031
+  },
+  "edit3_tighter_floors_n5000": {
+    "n": 5000,
+    "last_op_only_mean": 0.26032,
+    "last_two_ops_mean": 0.37928,
+    "order_free_mean": 0.17128000000000002,
+    "floors_all": {
+      "bag_of_context": 0.18152000000000001,
+      "constant_predictor": 0.16092,
+      "order_free": 0.17128000000000002,
+      "last_op_only": 0.26032,
+      "last_two_ops": 0.37928
+    },
+    "tightest_name": "last_two_ops",
+    "tightest_val": 0.37928,
+    "old_headroom_vs_bag": 0.81848,
+    "honest_headroom": 0.6207199999999999,
+    "dur": 2.323117256164551
+  },
+  "edit4_null_as_accuracy": {
+    "per_seed": [
+      {
+        "seed": 0,
+        "n": 100,
+        "null_accuracy": 0.34,
+        "n_worse_than_correct": 66
+      },
+      {
+        "seed": 1,
+        "n": 100,
+        "null_accuracy": 0.12,
+        "n_worse_than_correct": 88
+      },
+      {
+        "seed": 2,
+        "n": 100,
+        "null_accuracy": 0.16,
+        "n_worse_than_correct": 84
+      },
+      {
+        "seed": 3,
+        "n": 100,
+        "null_accuracy": 0.16,
+        "n_worse_than_correct": 84
+      },
+      {
+        "seed": 4,
+        "n": 100,
+        "null_accuracy": 0.11,
+        "n_worse_than_correct": 89
+      }
+    ],
+    "mean_null_accuracy": 0.178,
+    "null_discriminates": true,
+    "dur": 0.025118589401245117
+  },
+  "wall_seconds": 6.359047174453735
+}

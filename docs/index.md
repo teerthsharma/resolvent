@@ -316,7 +316,7 @@ hide:
   <div class="tw"><table class="t">
     <thead><tr><th>Lean theorem</th><th>what it proves</th></tr></thead>
     <tbody>
-      <tr><td><code>three_corners_containment</code></td><td>one family (β, g, qk) contains all three operators; the softmax corner matches causal softmax to <code>0.000e+00</code></td></tr>
+      <tr><td><code>three_corners_containment</code></td><td>one family (β, g, qk) contains all three operators; the softmax corner matches the corpus's own <code>softmaxAttn</code> to <code>0.000e+00</code>, and <code>ceq/lm.py</code>'s attention to <code>1.110223e-16</code> — half an ulp — on 19 of 64 entries. It has not been read against a fused kernel</td></tr>
       <tr><td><code>corners_are_distinct</code></td><td>the corners are different operators: at (i, j) = (1, 0) with gate and qk off, β = 1 reads 1/2 and β = 0 reads 1</td></tr>
       <tr><td><code>gate_zero_beta_zero_is_linear_attention</code></td><td>with the gate off, β alone decides softmax-class membership</td></tr>
       <tr><td><code>no_prefix_scan_represents_a_zero_gate</code></td><td><var>e</var><sup><var>C<sub>i</sub></var>−<var>C<sub>j</sub></var></sup> is never zero, so no prefix scan represents a closed gate; the path product does</td></tr>
