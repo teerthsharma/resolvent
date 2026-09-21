@@ -78,6 +78,17 @@ off `n_test` alone, so eval seeds 1 and 2 return byte-identical scores.
 Checkpoint comparisons are therefore perfectly paired, which is good, but no
 subsample-luck estimate is reachable through that knob, which is not.
 
+> **PROVISIONAL — PHASE I.1 R1.** Every gate number below was measured under
+> `magnitude = clamp(u, 0, 1)`, whose gradient is **zero outside (0, 1)**. At
+> bias 0, `P(u ≤ 0) = 0.501` sit at an exact zero with no gradient; at bias
+> 0.999, `P(u ≥ 1) = 0.498` sit at an exact one with no gradient. Only **33.8%**
+> and **34.3%** of gates carry gradient at the two starts respectively, so the
+> bias gradient — a mean over per-gate gradients — is small either way. "Frozen
+> at initialisation" is the **clamp**, not the data, and a gate that reaches
+> exactly zero under clamp **never reopens**: dead, not closed. These rows are
+> re-measured under R1 (straight-through or hard-concrete) before any sentence
+> about the gate stands.
+
 ## What was not run
 
 The gated arm was not raced here — racing against an unsettled bar would settle

@@ -19,6 +19,17 @@ another lane held the GPU. Float32 is not a choice: bfloat16 is rejected by
 `torch.polar` and float16 crashes at step 0, so this is the only dtype the gated
 arm runs in.
 
+> **PROVISIONAL — PHASE I.1 R1.** Every gate number below was measured under
+> `magnitude = clamp(u, 0, 1)`, whose gradient is **zero outside (0, 1)**. At
+> bias 0, `P(u ≤ 0) = 0.501` sit at an exact zero with no gradient; at bias
+> 0.999, `P(u ≥ 1) = 0.498` sit at an exact one with no gradient. Only **33.8%**
+> and **34.3%** of gates carry gradient at the two starts respectively, so the
+> bias gradient — a mean over per-gate gradients — is small either way. "Frozen
+> at initialisation" is the **clamp**, not the data, and a gate that reaches
+> exactly zero under clamp **never reopens**: dead, not closed. These rows are
+> re-measured under R1 (straight-through or hard-concrete) before any sentence
+> about the gate stands.
+
 ## The artefact
 
 `model.safetensors` carries 73 keys, and all seven gate names are present on all
