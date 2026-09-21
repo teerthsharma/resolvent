@@ -907,7 +907,81 @@ the landing page records `UNREACHED` for an open paper.
 
 ---
 
-## 16. Rows still out
+## 16. Q2: the first row entitled to a generalization sentence, and it did not tie
+
+Every language-model comparison this project had made sat at 5.4× to 28.3× corpus
+repetition — the memorization regime, where a gate that helps or hurts says
+nothing about generalization. **This row sits below 1× and is the first that can
+support the sentence.**
+
+Fixed structure printed before any arm was scored, verified in the board log by
+ordering: `q3_fixed_structure` at line 4296 precedes `start_variant` at 4300;
+`q2_fixed_structure` at 4416 precedes the first `q2_seed_done` at 4417.
+
+| | arm (a) softmax twin | arm (f) hard-concrete |
+|---|---|---|
+| params by `numel()` | **724,608** | **725,391** |
+| repetition | **0.7977×** | **0.7985×** |
+| attention | `F.scaled_dot_product_attention`, `is_causal=True` | `arm_smprime` gated readout |
+
+The arms differ by **783 parameters, 0.108%** — and that excess is exactly
+`3 × (2·(128+1) + 3)`, the per-block quantity `modeling_ceq.py:409-418` already
+documents for `m_head`, `theta_head`, `beta`, `qk` and `g`. The softmax twin was
+checked for dead weight: at `operator="sgate"` only `qkv` and `o_proj` are built
+and `softmax_forward` uses both, so it is not a padded skeleton. **0.108% cannot
+carry 0.247 nats.**
+
+### The result
+
+```
+                seeds 0-4 final eval loss                     mean
+softmax  (a)    1.2757  1.2775  1.3021  1.3013  1.2916       1.2896
+hard-cc  (f)    1.0431  1.0424  1.0430  1.0392  1.0439       1.0423
+diff            -0.2326 -0.2351 -0.2591 -0.2622 -0.2476      -0.2473
+```
+
+**The gated arm wins at 5 of 5 seeds, and the smallest gap is 23× the
+pre-registered tie band of 0.01 nats.** Both the tie branch and the
+gate-costs-generalization branch are excluded.
+
+**This is not written as a win.** The pre-registration says a 5-of-5 result is
+the first learned win this project would have **and is not written until verified
+on a second corpus**. It is recorded here as a measurement. The verification is
+the next row, not a formality.
+
+### Q3: the gate sweep, at five seeds, with no mechanism attached
+
+| form | last-50 loss | trained exact-zero | backward reach mean | live gradient |
+|---|---|---|---|---|
+| clamp | 1.2604 | 0.2760 | 32.33 | 0.5514 |
+| straight-through | 1.2843 | 0.3912 | 1.32 | 1.0000 |
+| **hard-concrete** | **1.1218** | **0.0018** | **214.35** | 0.9839 |
+
+Hard-concrete takes the lowest loss **and** the highest reach at **every seed
+individually**, so the seed-dependence counter does not fire. Seed 0 reproduces
+the single-seed reference almost exactly.
+
+**No mechanism sentence appears anywhere in this row.** Four accounts of gate
+closure are already dead; a fifth was not born from a table.
+
+### Two constants that did not survive being measured
+
+**The certificate parameter count was wrong.** `632,496` was carried into this
+page and into a commit message. Measured `numel()` is **724,608** — a **0.5%
+excess** over the closed form's `720,896`, not a 12.3% shortfall. The conclusion
+survives, since both arms remain far below 1× repetition, but the number was
+quoted rather than audited, which is the exact defect L-REFLECTOR names.
+
+**And the clamp reach constant reproduces at no seed.** Per-seed `reach_mean` for
+the clamp arm reads `2.1, 26.5, 65.3, 1.8, 66.0`. The `2.146` quoted throughout
+this phase is **one draw from a distribution spanning 1.8 to 66.0**, and every
+sentence resting on clamp's reach being *small* rests on a single seed.
+Hard-concrete's reach, by contrast, is stable: `241.4, 200.2, 206.1, 221.5,
+202.5`.
+
+---
+
+## 17. Rows still out
 
 `R1` gate parameterization (straight-through against hard-concrete, with the
 four-condition must-fire); `R3` held-out eval path by document and `R4`
