@@ -147,6 +147,7 @@ when `Stop-Process -Force` does not take.
 | 10 | Kaggle notebook's rebuild gate | numpy-only; executed none of `magnitude_clamp`, `path_product`, `hop`, `operator`, `readout` or `GatedBlock`, so it would pass with the whole torch rebuild wrong |
 | 11 | freeze verifier | compared `clamp(u_raw,0,1)` while `blend()` computes `magnitude(lerp(1,u,g))` with `g` trainable and drifted to `0.8699`; halted a row on a false alarm |
 | 12 | span-containment curve | tracks `1 − (1−p)^L` to three decimals, so it measures the density it was handed rather than a mechanism |
+| 13 | C27 rebuild gate anchor | specified against `ceq/arm_pl.py` and `ceq/arm_phase.py`, which contain neither `path_product` nor `hop` — a gate pointed at a file without the functions it compares |
 
 **Open.** Roughly 140 further tolerance assertions across `tests/cameron`,
 `tests/curvature`, `tests/foreman` and `tests/lorasort` were located by the same
@@ -554,7 +555,66 @@ form predicted, a 12.3% shortfall moving its repetition factor to `0.696`.
 
 ---
 
-## 11. Rows still out
+## 11. C26: the floors, and two figures that do not clear them
+
+Every exact-match number carries `n` and its quantization floor `1/n`, and **a
+swing smaller than `3/n` is not a swing.** Fourteen published figures were swept
+against that rule. Twelve survive. Two do not, and both are new.
+
+**`cogs_curve.jsonl`, in-distribution, step 9,000 → 12,000: the delta is
+`0.00390625` — exactly `1/256`, one item — against a floor of `3/256 = 0.01172`.**
+The apparent movement in that leg of the curve is subsample noise. The curve's
+generalization column is unaffected: its deltas are `0.11523`, `0.00977` and
+`−0.04883` at `n = 512`, all clear of `3/512 = 0.00586`.
+
+**`addprim_jump`, softmax, per-seed swing `0.005859375` — sitting exactly on the
+`3/512` boundary.** It is the smallest value the rule admits as a swing at all,
+and it has been read as neither signal nor noise anywhere.
+
+The known instance reproduces: the COGS `0.113` at `n = 512` is 58 items against
+a `0.00586` floor, and survives comfortably.
+
+### The subsample is retired by a flag, not a diff
+
+`ceq/harness.py::eval_indices` already returns `range(n_test)` whenever
+`max_eval ≥ n_test`, and `ceq/capability.py` already exposes `--max-eval`. So
+
+```bash
+python -m ceq.capability --split cogs --max-eval 21000
+```
+
+scores the **full** 21,000-item generalization split today. Priced from the four
+measured `eval_seconds` in `cogs_curve.jsonl` — a per-item range of
+`0.00951`–`0.04570` s — that is **3.3 to 16.0 minutes per checkpoint**, against a
+training wall clock of `1737.9` s already recorded for the same split. The
+subsample costs more in credibility than it saves in time.
+
+### PID 9000 is defunct, and the reboot clause does not apply
+
+`Get-Process -Id 9000` fails — *"Cannot find a process with the process
+identifier 9000"* — while `tasklist` and `Get-CimInstance Win32_Process` both
+still list it as `python.exe -m ceqjepa.hbucket`, created 2026-09-20 13:28:47.
+**That three-way split is the mechanism behind `taskkill`'s "no running instance"
+against a PID `tasklist` still prints.** `nvidia-smi` reads `0 MiB / 8188 MiB`
+with no running compute processes.
+
+**The memory is not held.** An earlier reading of 1,779 MiB at 95% utilisation
+was the sibling lanes, not this entry, and the claim that a day-old orphan was
+starving the box is withdrawn. The contract clause *not released means reboot
+before any timing row* does not apply; no reboot was performed or proposed.
+
+### The rebuild gate was anchored to the wrong file
+
+C27's torch-executing rebuild gate — the check that exists precisely to catch a
+wrong rebuild — was specified against `ceq/arm_pl.py` and `ceq/arm_phase.py`,
+**neither of which contains `path_product` or `hop`.** The correct anchor is
+`ceq/arm_smprime.py`, and the gate was rewritten and run against it. A gate
+pointed at a file without the functions it compares is the thirteenth entry in
+the catalogue below.
+
+---
+
+## 12. Rows still out
 
 `R1` gate parameterization (straight-through against hard-concrete, with the
 four-condition must-fire); `R3` held-out eval path by document and `R4`

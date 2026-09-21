@@ -37,7 +37,7 @@ Run from the repository root so `ceq.harness` and `ceq.lm` import. One continuou
 given more budget, so the recorded pairing measures training length rather than
 architecture.
 
-In-distribution was never the undertrained quantity: it is saturated from step
+**The 9,000 → 12,000 in-distribution delta is `0.00390625` — exactly `1/256`, one item — against a `3/256 = 0.01172` floor, so it is not movement.** In-distribution was never the undertrained quantity: it is saturated from step
 3,000 against a `score_ceiling` of `0.951171875`.
 
 The curve is a property of the weights, not of logging. All four saved
