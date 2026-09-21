@@ -1,0 +1,286 @@
+{
+  "primary": {
+    "label": "PRIMARY (curriculum chess, step 550)",
+    "checkpoint": "ceqjepa\\artifacts\\curriculum\\chess.pt",
+    "bed": "chess",
+    "phase": "chess",
+    "step": 550,
+    "n": 16,
+    "nA": 4,
+    "nT": 12,
+    "gamma": 0.8999999761581421,
+    "B": 64,
+    "rho_P_mean": 1.0,
+    "rho_P_min": 1.0,
+    "rho_P_max": 1.0,
+    "xi_P_mean": 9.491219194638326,
+    "xi_P_worst": 9.491219194638326,
+    "rho_Q_mean": 0.02426325572338328,
+    "rho_Q_min": 4.651334893424064e-05,
+    "rho_Q_max": 0.23145726323127747,
+    "xi_Q_mean": 0.2614958323650274,
+    "xi_Q_worst": 0.6374621569899606,
+    "thresholds_P": {
+      "nonzero (P>0, numerically)": {
+        "d_mean": 1.0,
+        "d_min": 1,
+        "d_max": 1,
+        "reach_frac_mean": 1.0,
+        "thresh": 0.0
+      },
+      "1/n^2 (weak support)": {
+        "d_mean": 2.421875,
+        "d_min": 1,
+        "d_max": 4,
+        "reach_frac_mean": 0.37734375000000003,
+        "thresh": 0.00390625
+      },
+      "1/n (uniform-reference)": {
+        "d_mean": 2.875,
+        "d_min": 2,
+        "d_max": 3,
+        "reach_frac_mean": 0.23828125000000014,
+        "thresh": 0.0625
+      },
+      "2/n (twice uniform)": {
+        "d_mean": 2.984375,
+        "d_min": 2,
+        "d_max": 3,
+        "reach_frac_mean": 0.21171874999999982,
+        "thresh": 0.125
+      }
+    },
+    "verdicts_P": {
+      "nonzero (P>0, numerically)": {
+        "dead_mean_case": true,
+        "dead_worst_case": true,
+        "xi_mean": 9.491219194638326,
+        "xi_worst": 9.491219194638326,
+        "diameter_mean": 1.0
+      },
+      "1/n^2 (weak support)": {
+        "dead_mean_case": true,
+        "dead_worst_case": true,
+        "xi_mean": 9.491219194638326,
+        "xi_worst": 9.491219194638326,
+        "diameter_mean": 2.421875
+      },
+      "1/n (uniform-reference)": {
+        "dead_mean_case": true,
+        "dead_worst_case": true,
+        "xi_mean": 9.491219194638326,
+        "xi_worst": 9.491219194638326,
+        "diameter_mean": 2.875
+      },
+      "2/n (twice uniform)": {
+        "dead_mean_case": true,
+        "dead_worst_case": true,
+        "xi_mean": 9.491219194638326,
+        "xi_worst": 9.491219194638326,
+        "diameter_mean": 2.984375
+      }
+    },
+    "thresholds_Q": {
+      "nonzero (Q>0, numerically)": {
+        "d_mean": 1.0,
+        "d_min": 1,
+        "d_max": 1,
+        "reach_frac_mean": 1.0,
+        "thresh": 0.0
+      },
+      "1/nT^2 (weak support)": {
+        "d_mean": 2.46875,
+        "d_min": 2,
+        "d_max": 3,
+        "reach_frac_mean": 0.39228219696969685,
+        "thresh": 0.006944444444444444
+      },
+      "1/nT (uniform-reference)": {
+        "d_mean": 2.1875,
+        "d_min": 2,
+        "d_max": 3,
+        "reach_frac_mean": 0.23153409090909083,
+        "thresh": 0.08333333333333333
+      },
+      "2/nT (twice uniform)": {
+        "d_mean": 2.125,
+        "d_min": 2,
+        "d_max": 3,
+        "reach_frac_mean": 0.1931818181818181,
+        "thresh": 0.16666666666666666
+      }
+    },
+    "verdicts_Q": {
+      "nonzero (Q>0, numerically)": {
+        "dead_mean_case": false,
+        "dead_worst_case": false,
+        "xi_mean": 0.2614958323650274,
+        "xi_worst": 0.6374621569899606,
+        "diameter_mean": 1.0
+      },
+      "1/nT^2 (weak support)": {
+        "dead_mean_case": false,
+        "dead_worst_case": false,
+        "xi_mean": 0.2614958323650274,
+        "xi_worst": 0.6374621569899606,
+        "diameter_mean": 2.46875
+      },
+      "1/nT (uniform-reference)": {
+        "dead_mean_case": false,
+        "dead_worst_case": false,
+        "xi_mean": 0.2614958323650274,
+        "xi_worst": 0.6374621569899606,
+        "diameter_mean": 2.1875
+      },
+      "2/nT (twice uniform)": {
+        "dead_mean_case": false,
+        "dead_worst_case": false,
+        "xi_mean": 0.2614958323650274,
+        "xi_worst": 0.6374621569899606,
+        "diameter_mean": 2.125
+      }
+    }
+  },
+  "crosscheck": {
+    "label": "CROSS-CHECK (standalone chess, step 400)",
+    "checkpoint": "ceqjepa\\space\\chess_checkpoint.pt",
+    "bed": "chess",
+    "phase": "chess",
+    "step": 400,
+    "n": 32,
+    "nA": 4,
+    "nT": 28,
+    "gamma": 0.8999999761581421,
+    "B": 64,
+    "rho_P_mean": 1.0,
+    "rho_P_min": 1.0,
+    "rho_P_max": 1.0,
+    "xi_P_mean": 9.491219194638326,
+    "xi_P_worst": 9.491219194638326,
+    "rho_Q_mean": 0.1943579763174057,
+    "rho_Q_min": 0.1943579763174057,
+    "rho_Q_max": 0.1943579763174057,
+    "xi_Q_mean": 0.5735871852921381,
+    "xi_Q_worst": 0.5735871852921381,
+    "thresholds_P": {
+      "nonzero (P>0, numerically)": {
+        "d_mean": 1.0,
+        "d_min": 1,
+        "d_max": 1,
+        "reach_frac_mean": 1.0,
+        "thresh": 0.0
+      },
+      "1/n^2 (weak support)": {
+        "d_mean": 1.0,
+        "d_min": 1,
+        "d_max": 1,
+        "reach_frac_mean": 0.9879032258064502,
+        "thresh": 0.0009765625
+      },
+      "1/n (uniform-reference)": {
+        "d_mean": 2.0,
+        "d_min": 2,
+        "d_max": 2,
+        "reach_frac_mean": 0.9637096774193539,
+        "thresh": 0.03125
+      },
+      "2/n (twice uniform)": {
+        "d_mean": 1.0,
+        "d_min": 1,
+        "d_max": 1,
+        "reach_frac_mean": 0.2096774193548385,
+        "thresh": 0.0625
+      }
+    },
+    "verdicts_P": {
+      "nonzero (P>0, numerically)": {
+        "dead_mean_case": true,
+        "dead_worst_case": true,
+        "xi_mean": 9.491219194638326,
+        "xi_worst": 9.491219194638326,
+        "diameter_mean": 1.0
+      },
+      "1/n^2 (weak support)": {
+        "dead_mean_case": true,
+        "dead_worst_case": true,
+        "xi_mean": 9.491219194638326,
+        "xi_worst": 9.491219194638326,
+        "diameter_mean": 1.0
+      },
+      "1/n (uniform-reference)": {
+        "dead_mean_case": true,
+        "dead_worst_case": true,
+        "xi_mean": 9.491219194638326,
+        "xi_worst": 9.491219194638326,
+        "diameter_mean": 2.0
+      },
+      "2/n (twice uniform)": {
+        "dead_mean_case": true,
+        "dead_worst_case": true,
+        "xi_mean": 9.491219194638326,
+        "xi_worst": 9.491219194638326,
+        "diameter_mean": 1.0
+      }
+    },
+    "thresholds_Q": {
+      "nonzero (Q>0, numerically)": {
+        "d_mean": 1.0,
+        "d_min": 1,
+        "d_max": 1,
+        "reach_frac_mean": 1.0,
+        "thresh": 0.0
+      },
+      "1/nT^2 (weak support)": {
+        "d_mean": 1.0,
+        "d_min": 1,
+        "d_max": 1,
+        "reach_frac_mean": 1.0,
+        "thresh": 0.0012755102040816326
+      },
+      "1/nT (uniform-reference)": {
+        "d_mean": 2.0,
+        "d_min": 2,
+        "d_max": 2,
+        "reach_frac_mean": 0.7195767195767199,
+        "thresh": 0.03571428571428571
+      },
+      "2/nT (twice uniform)": {
+        "d_mean": 2.0,
+        "d_min": 2,
+        "d_max": 2,
+        "reach_frac_mean": 0.1164021164021163,
+        "thresh": 0.07142857142857142
+      }
+    },
+    "verdicts_Q": {
+      "nonzero (Q>0, numerically)": {
+        "dead_mean_case": false,
+        "dead_worst_case": false,
+        "xi_mean": 0.5735871852921381,
+        "xi_worst": 0.5735871852921381,
+        "diameter_mean": 1.0
+      },
+      "1/nT^2 (weak support)": {
+        "dead_mean_case": false,
+        "dead_worst_case": false,
+        "xi_mean": 0.5735871852921381,
+        "xi_worst": 0.5735871852921381,
+        "diameter_mean": 1.0
+      },
+      "1/nT (uniform-reference)": {
+        "dead_mean_case": false,
+        "dead_worst_case": false,
+        "xi_mean": 0.5735871852921381,
+        "xi_worst": 0.5735871852921381,
+        "diameter_mean": 2.0
+      },
+      "2/nT (twice uniform)": {
+        "dead_mean_case": false,
+        "dead_worst_case": false,
+        "xi_mean": 0.5735871852921381,
+        "xi_worst": 0.5735871852921381,
+        "diameter_mean": 2.0
+      }
+    }
+  }
+}

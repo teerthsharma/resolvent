@@ -150,6 +150,7 @@ when `Stop-Process -Force` does not take.
 | 13 | C27 rebuild gate anchor | specified against `ceq/arm_pl.py` and `ceq/arm_phase.py`, which contain neither `path_product` nor `hop` — a gate pointed at a file without the functions it compares |
 | 14 | C25 check-the-check | read ORDERING UNSTABLE from `sorted()`'s alphabetical tie-break between two arms both scoring `RES = 0.000000` |
 | 15 | `score_vs_ceiling()` | the matched-functional enforcer, defined and never called; the ceiling script prints a binned numerator over an unbinned published value |
+| 16 | band-position step 0 | tested `ρ(P)` for a row-stochastic `P`, which is `1.0` by Perron–Frobenius whatever the weights — the kill could only ever fire, and fired without consulting a trained parameter |
 
 **Open.** Roughly 140 further tolerance assertions across `tests/cameron`,
 `tests/curvature`, `tests/foreman` and `tests/lorasort` were located by the same
@@ -771,7 +772,75 @@ and unfetched, and it borrows another instance rather than running its own.
 
 ---
 
-## 14. Rows still out
+## 14. The band-position leap, and a kill that could not fail
+
+The leap: `γ·ρ(P) < 1` — what this project calls exactness — is in physics the
+statement that **E is off the spectrum**, and a resolvent off the spectrum does
+not propagate, it images. It offers one fixed fact under three findings:
+representation is near-field, prediction is far-field transport, and a gate past
+the decay length multiplies a contribution with zero expected signal.
+
+**Its free kill was written so that it could only ever return one answer.**
+
+The instruction was to read `γ·ρ(P)` off the trained checkpoint and compare
+`ξ = −1/ln(γρ)` against the support-graph diameter. But **`P` is row-stochastic,
+so `ρ(P) = 1.0` exactly by Perron–Frobenius** — for every `P` this codebase
+builds, trained or untrained. That fixes `ξ(P) = −1/ln(0.9) = 9.4912`, constant,
+always above a diameter measured at 1 to 3. The leap dies **without a single
+trained weight being consulted**, which is not a measurement.
+
+The dispatch also asserted a diameter of "about 7, for a king-move board". `n`
+here is a chart-position count — 16 or 32 — not chessboard squares, and the
+operator's support graph is far denser than king-move adjacency.
+
+### On the correct object, the leap survives
+
+`Q` is the sub-stochastic transient block that the model's own committor solve
+`(I − Q)⁻¹ R` actually uses, and it is not pinned to 1:
+
+| | primary checkpoint | cross-check |
+|---|---|---|
+| `ρ(Q)` | mean `0.0243`, min `0.00005`, **max `0.2315`** | `0.1944` |
+| `ξ(Q)` worst case | **`0.637`** | **`0.574`** |
+| diameter(`Q`) | 1 – 2.47 | 1 – 2.00 |
+
+`ξ(Q) < diameter(Q)` at every threshold on both checkpoints, so **step 0 passes
+on the object the model actually solves**, and the largest measured `ρ(Q)` of
+`0.2315` sits close to the leap's own cited `0.2596`.
+
+One caveat carried rather than buried: the cross-check checkpoint returns
+`ρ(Q) = 0.1944` **identical across all 64 examples**, which is the signature of a
+documented pre-2026-09-08 dead-per-example-operator defect, so it is treated as a
+single degenerate data point rather than 64.
+
+### Both free reads are blocked, and were reported blocked
+
+The gate corollary's two reads — open-gate density by hop distance, and per-step
+gate ratios — both presuppose a discrete hop-binned gate attached to the chess
+checkpoint's `P`. **That `P` has no gates**; it is a continuous softmax. The only
+real gate system in the repository trains on an unrelated synthetic corpus with
+no chess and no per-step log. The data does not exist, and the reads were
+returned as blocked rather than approximated.
+
+### The citations, fetched
+
+| source | bibliography | content claim |
+|---|---|---|
+| Anderson 1958, Phys. Rev. **109**, 1492 | confirmed, title exact | abstract confirms localization; the *locator-expansion* phrasing is **UNREACHED**, full text paywalled |
+| Weinberg 1963, Phys. Rev. **131**, 440 | confirmed, "Quasiparticles and the Born Series" | **abstract confirms** the paraphrase — the series fails when bound states are present |
+| Combes–Thomas 1973, Commun. Math. Phys. **34**, 251–270 | confirmed — **volume and pages were unstated in the leap and are supplied here for the first time** | **UNREACHED**, 403 |
+| Lewontin–Cohen 1969, PNAS **62**, 1056–1060 | confirmed, title exact | **UNREACHED**, 403 |
+| Ash–Nicholls 1972, Nature **237**, 510–512 | confirmed, exact pages | **UNREACHED**, login wall |
+| Synge 1928 | **UNREACHED** — no direct source found | — |
+
+So condition 2 of the hop gate passes on bibliography and **fails on content**:
+the two load-bearing claims, Combes–Thomas exponential decay off-spectrum and the
+Lewontin–Cohen drift correction, remain unverified beyond their titles. Neither
+enters a numeric argument until it is read.
+
+---
+
+## 15. Rows still out
 
 `R1` gate parameterization (straight-through against hard-concrete, with the
 four-condition must-fire); `R3` held-out eval path by document and `R4`
