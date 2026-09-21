@@ -81,6 +81,7 @@ not_in_nav: |
 
 nav:
   - Home: index.md
+  - "Status: done against total": STATUS.md
   - "North Star: the forward S-matrix reconciliation": NORTH_STAR.md
   - The record:
       - Everything retracted, broken or open: FAILS.md
