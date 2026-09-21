@@ -322,6 +322,36 @@ The gate is implemented and it trains — that is measured in §4. What does not
 exist is a single *saved* run that used it. Every trained artifact this project
 can point at is the corner the operator was built to improve on.
 
+**One now exists, and it changes the question.** `tests/foreman/gated/` trains
+and saves a gated checkpoint in 207 seconds — 800 steps, loss `5.6557 → 1.5618`,
+all seven gate names on all four layers, with the three switches moved off their
+starting values for the first time in any stored run. Reading `m` where the
+operator consumes it, on a held-out batch:
+
+| | init | trained |
+|---|---|---|
+| exactly `0.0` | **49.3%** | **59.3%** |
+| geomean over nonzero | 0.2425 | 0.9024 |
+| mean run of consecutive nonzero `m` | 1.023 | **0.685** |
+| longest live path anywhere | 17 | **7** |
+
+**The gate is a hard truncation, not a decay.** `G_ij = ∏ m_k` is exactly zero
+the moment one `m_k` in the span is zero, so reach is set by *runs*, not by a
+rate, and no row in the trained model carries a live path beyond **7 tokens** at
+S=512. The decay length `L = 9.74` clears both pre-registered thresholds and
+means nothing, because `L_init = 0.706` clears them too.
+
+And half the gate is closed before training starts, for a reason that is a defect
+rather than a design: the `m = 0.999` initialisation belongs to
+`ArmSMPrime.trainable_heads()`, which **the HF path never calls**.
+`CEQAttention.__init__` (`ceq/hf/modeling_ceq.py:439`) builds `m_head` as a plain
+`nn.Linear` and `_init_weights` zeros its bias, so `blend(u, θ, g=1) =
+clamp(u, 0, 1)` over a `u` centred at zero puts **49.3% of the gate at exactly
+zero from random initialisation**, measured before any gradient step.
+
+That is 1.8% of one epoch on a children's-story corpus with no held-out channel,
+so it settles existence and the early shape of `m`, and nothing else.
+
 This is what blocks the three live claims at once. The cost argument needs a
 trained `m̄` to know the bandwidth. The refusal argument needs a trained `m̄` to
 know where the underflow window sits. The architecture argument needs a trained
