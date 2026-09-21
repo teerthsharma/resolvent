@@ -148,6 +148,8 @@ when `Stop-Process -Force` does not take.
 | 11 | freeze verifier | compared `clamp(u_raw,0,1)` while `blend()` computes `magnitude(lerp(1,u,g))` with `g` trainable and drifted to `0.8699`; halted a row on a false alarm |
 | 12 | span-containment curve | tracks `1 − (1−p)^L` to three decimals, so it measures the density it was handed rather than a mechanism |
 | 13 | C27 rebuild gate anchor | specified against `ceq/arm_pl.py` and `ceq/arm_phase.py`, which contain neither `path_product` nor `hop` — a gate pointed at a file without the functions it compares |
+| 14 | C25 check-the-check | read ORDERING UNSTABLE from `sorted()`'s alphabetical tie-break between two arms both scoring `RES = 0.000000` |
+| 15 | `score_vs_ceiling()` | the matched-functional enforcer, defined and never called; the ceiling script prints a binned numerator over an unbinned published value |
 
 **Open.** Roughly 140 further tolerance assertions across `tests/cameron`,
 `tests/curvature`, `tests/foreman` and `tests/lorasort` were located by the same
@@ -614,7 +616,80 @@ the catalogue below.
 
 ---
 
-## 12. Rows still out
+## 12. C25: the rule holds, and the first implementation of it broke the rule
+
+A scorer and its ceiling must be the **same functional**. A row whose scorer and
+ceiling differ is **void, not inverted** — the distinction matters because an
+inverted row invites you to pick the flattering binning and a void row does not.
+Resolution is computed at equal-count 200, equal-count 50 and fixed-width 10, and
+**the ordering of arms must agree across all three or the row carries no
+verdict.**
+
+### The wrapper can fire both verdicts — but not by the demonstration offered
+
+A real instability was constructed and fired: a narrow-band arm with
+excess-over-null `0.134` that fixed-width-10 ranks **last**, at `res_k` of exactly
+`0.000000` with all 8,000 forecasts in one bin, while **both** equal-count schemes
+rank it **first**.
+
+The row's own UNSTABLE demonstration did not establish that. At `equal_count_50`
+**both arms score `RES = 0.000000` exactly**, and the reported ordering is
+`sorted()`'s alphabetical tie-break rather than a measurement; at
+`equal_count_200` the winning margin of `3.28182e-05` comes from a class with
+**zero populated bins** and a residual of `2.09e-01`. A check-the-check that reads
+unstable from an alphabetical tie is the fourteenth entry in the catalogue.
+
+### `score_vs_ceiling()` is dead code
+
+It is defined at `c25_scorer.py:132` and **called from nowhere in the tree.** The
+one function whose entire job is to enforce the matched functional never runs.
+What the ceiling script actually prints is a **binned numerator over the published
+unbinned `0.10116955630126778`**, at a different `n`, on different data — the void
+condition, rebuilt inside the fix for it.
+
+### The binned ceiling reproduces the unbinned one
+
+This is the opposite of what was anticipated. The headline that the binned ceiling
+**exceeds** the unbinned one by `1.6×`–`2.4×` is **38–49% uncorrected bin-count
+bias**; once that floor is subtracted the binned ceiling reproduces the unbinned
+one to within 10%. **The correction was already in the file the row imported
+from** — `wil_chess400_results.json` records
+`shuffle_null_analytic_B_minus_1_UNC_over_N = 0.0006843155567724138`.
+
+So no RES-over-ceiling ratio needs restating on ceiling grounds, and the earlier
+warning that they might is withdrawn.
+
+### Two defects that void any verdict the wrapper issues
+
+**A degenerate edge set silently drops every item.** A constant forecast collapses
+`torch.unique(edges)` to a single edge, `_score_one_class` loops over `range(0)`,
+and all 6,000 items vanish: reliability falls from a correct `0.00637584` at
+fixed-width to `0.0`, the residual jumps to `6.38e-03`, and **nothing raises.**
+The resulting `RES = 0` is correct by accident — a constant forecast does have
+zero resolution — so the ordering survives a bug rather than being produced by the
+scorer.
+
+**There is no tie handling.** Two arms with identical resolution are ordered by
+dictionary insertion, confirmed by scoring one forecast array under the names
+`zzz` and `aaa` and receiving a STABLE verdict on a pure tie. Both fixes are
+named: place all items in one bin when the edges degenerate, and return
+**ORDERING TIED** rather than a name-sorted ordering.
+
+### And the published rows cannot be re-scored at all
+
+Only aggregates are saved in the tree, not raw per-item forecast arrays, so the
+chess400 and tier-2 rows **cannot be re-scored under any other bin scheme.** That
+is a fixed-structure defect of exactly the class L-REFLECTOR exists to catch: the
+decision about what to persist was made once, never revisited, and it forecloses
+every later audit.
+
+One premise carried from the earlier sweep is also misattributed — `white_win` and
+`black_win` are **not** zero on the recalibrated operator arm. Two lanes disagree
+on that figure and it is recorded as disputed rather than settled.
+
+---
+
+## 13. Rows still out
 
 `R1` gate parameterization (straight-through against hard-concrete, with the
 four-condition must-fire); `R3` held-out eval path by document and `R4`
