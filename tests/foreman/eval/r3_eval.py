@@ -228,6 +228,7 @@ def train_with_eval(*, out_dir, steps, batch, seq, hidden_size, n_layers, n_head
 
     losses, gnorms, l1mins = [], [], []
     eval_losses = [dict(step=0, loss=eval_loss())]
+    _train_t0 = time.time()
     for step in range(steps):
         probe_store.clear()
         x, _ = data.batch("train", batch, seq, gen, device)
@@ -247,6 +248,7 @@ def train_with_eval(*, out_dir, steps, batch, seq, hidden_size, n_layers, n_head
         if log_every and step % log_every == 0:
             print("step {:6d}  loss {:.4f}  |g| {:.4e}".format(
                 step, losses[-1], gnorms[-1]), flush=True)
+    _train_seconds = time.time() - _train_t0
     if eval_losses[-1]["step"] != steps:
         eval_losses.append(dict(step=steps, loss=eval_loss()))
     for h in handles:
@@ -266,6 +268,7 @@ def train_with_eval(*, out_dir, steps, batch, seq, hidden_size, n_layers, n_head
         peak_bytes=int(peak), host_spill=host_spill,
         repetition_factor=rep, memorization_regime=(rep > 1.0),
         operator=model.config.operator,
+        seconds=_train_seconds,
     )
     if out_dir:
         os.makedirs(out_dir, exist_ok=True)
