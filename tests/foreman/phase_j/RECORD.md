@@ -142,3 +142,16 @@ Wilson checks every number before the close.
 - Abstention retired; R-TEMP dead.
 
 Next hour: R-DO-E2E. Same bed and floors; the committor head trained end-to-end on the 512 chains, not frozen; bar (f) ≤ 0.8 × 0.07412 on 5/5 AND (a″) > 0.07412. Miss 0.07412 with a trained head and DO is dead at every read; Phase J closes as a kernel phase.
+
+## R-DO-E2E — Dr House ruling
+
+**1. Verdict.** "DO dead at every read" overclaims. Both DO rows read arms at 1.944–1.972 nats against an online count at 1.720; an arm that never learned the chain has no chain in its state, so probe and head returned the same nothing. The rows measured the step budget, and the budget was my silence: the spec copied R-DO-IC's arms and named no training floor. Corrected verdict: **DO untested at every read.** Phase J still closes as a kernel phase: the forget gate is the only survivor and no DO row had an admissible arm.
+
+**2. Gate.** No DO read counts unless the arm's held-out chain NLL ≤ 1.720 (online Dirichlet(0.5) count), logged beside every do-error, and the read beats the count's plug-in 0.07412. Cost: today 150 steps, 10 s per cell. Recovering 0.36 nats of in-context estimation is a 20–100x budget: 3k–15k steps, 3–17 min per cell, 15 cells ≈ 1–4 h on the 4060. A plateau above 1.720 means the gate is unmeetable at this width.
+
+**3. Standing state.**
+- Condition 2: untested, not dead; every DO read so far was of an arm above the count.
+- Phase J: closed as a kernel phase; forget gate stands; DO rows voided as step-budget measurements.
+- Bar for any DO row: NLL 1.720, plug-in 0.07412.
+
+**4. Next row.** R-DO-STEPS, outside Phase J: arm f, one seed, train to NLL plateau, logging every 100 steps. Clears 1.720: rerun the R-DO-IC probe on that checkpoint. Plateaus above: condition 2 unaskable at this width; closure final.

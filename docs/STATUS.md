@@ -62,7 +62,12 @@ own chain and read by a frozen linear probe, the arms score 0.1054 (twin), 0.095
 (FoX) and 0.0986 (family) on 50 intervened worlds, where a three-line Dirichlet
 plug-in reading the same 128 tokens scores **0.0741**. Nobody clears the floor, so
 condition 2 stays closed *by absence*, not by a passed kill: "consequence" is not
-struck, and one read remains (the committor head trained end-to-end, R-DO-E2E).
+struck. The end-to-end head (R-DO-E2E) scored 0.1057 / 0.1028 / 0.1032 — on the
+null. **Both reads were of arms that never learned the task:** 150 steps, next-token
+loss 1.94–1.97 nats against 1.720 for an online Dirichlet count and 2.079 for a
+unigram. Ruled **DO untested**, not dead. Admissibility gate for every future DO
+row: held-out chain NLL ≤ 1.720 before any read counts. Phase J closes as a kernel
+phase; the forget gate is the only survivor.
 An earlier DO row trained on a single chain was ruled **void**: every arm sat on
 the no-update null 0.07226 to four decimals.
 
@@ -111,11 +116,11 @@ is not counted twice here.
 | Seeds landed across domains | 11 / 15 | **73%** | if every domain carried five |
 | Seat producer directories reachable in-tree | 22 | **—** | no denominator; this is a count, not a fraction |
 | Lean obligations closed | 6 of 12 files carry a `sorry` | **50%** by file | 6 `sorry` total |
-| Commits pushed this run | 44 / 44 | **100%** | nothing held locally |
+| Commits pushed this run | 45 / 45 | **100%** | nothing held locally |
 | Phase I.1 sections written | 22 | **—** | §22 *Rows still out* is stale: R3 landed and Kaggle has since run three domains |
 | Abstention decile test | ran, then **retired** | **NEITHER** | decile gradient 0.113 → 0.341, top-3 share 40.6% < 50%; control failed, then R-STRAT showed abstention survives stratification (ρ with difficulty 0.0125) |
 | Phase J hour one | 17 rows, 0 struck | **—** | R-FoX PASS ×3, R-TEMP FAIL, R-COMP PASS, R-STRAT survives; three contract figures did not reproduce |
-| Phase J hour two | 8 rows, 0 struck | **—** | R-XFER PASS (abstention retires), R-K5 FAIL 1.99×, R-DO-LM **void**, R-DO-IC: DO retires at the probe read |
+| Phase J hour two | 10 rows, 0 struck | **—** | R-XFER PASS (abstention retires), R-K5 FAIL 1.99×; R-DO-LM, R-DO-IC, R-DO-E2E all **void** — one chain, then 150 steps; DO untested |
 
 ---
 
@@ -129,6 +134,6 @@ and owned by prior art.
 
 Three counts belong beside the percentages and have no denominator:
 **6 misattributions** found and corrected, **16 pre-registered checks that could
-not have failed** and **1 that could not have passed** catalogued, and **5 beds that failed at their own floors**.
+not have failed** and **3 that could not have passed** catalogued, and **5 beds that failed at their own floors**.
 Those are the error rate this project is measuring against itself, and a status
 page that omits them reads better than the work deserves.

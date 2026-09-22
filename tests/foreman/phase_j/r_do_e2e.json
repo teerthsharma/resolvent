@@ -1,0 +1,184 @@
+{
+ "row": "R-DO-E2E",
+ "numel": {
+  "a": 108865,
+  "a2F": 109385,
+  "f": 109131
+ },
+ "numel_spread_frac": {
+  "a": 0.0,
+  "a2F": 0.00477655812244523,
+  "f": 0.0024433931934046754
+ },
+ "numel_within_2pct": true,
+ "results": {
+  "a": {
+   "0": {
+    "seed": 0,
+    "do_error": 0.10604149532580313,
+    "training_chain_probe_error": 0.12024032775199316,
+    "final_mse": 0.025790991261601448,
+    "final_train_loss": 1.9602166414260864,
+    "tokens_seen": 1228800,
+    "wall_seconds": 7.846823692321777
+   },
+   "1": {
+    "seed": 1,
+    "do_error": 0.10483331345952382,
+    "training_chain_probe_error": 0.13615029917968482,
+    "final_mse": 0.029359029605984688,
+    "final_train_loss": 1.9700350761413574,
+    "tokens_seen": 1228800,
+    "wall_seconds": 7.763101816177368
+   },
+   "2": {
+    "seed": 2,
+    "do_error": 0.10087871151347226,
+    "training_chain_probe_error": 0.13790285644505504,
+    "final_mse": 0.026257777586579323,
+    "final_train_loss": 1.956811785697937,
+    "tokens_seen": 1228800,
+    "wall_seconds": 7.799964189529419
+   },
+   "3": {
+    "seed": 3,
+    "do_error": 0.10975231410930275,
+    "training_chain_probe_error": 0.13773267644467638,
+    "final_mse": 0.026075324043631554,
+    "final_train_loss": 1.9673476219177246,
+    "tokens_seen": 1228800,
+    "wall_seconds": 8.210633754730225
+   },
+   "4": {
+    "seed": 4,
+    "do_error": 0.10691942712632993,
+    "training_chain_probe_error": 0.146359596952179,
+    "final_mse": 0.025649627670645714,
+    "final_train_loss": 1.965040683746338,
+    "tokens_seen": 1228800,
+    "wall_seconds": 7.958491325378418
+   }
+  },
+  "a2F": {
+   "0": {
+    "seed": 0,
+    "do_error": 0.09668195671162316,
+    "training_chain_probe_error": 0.12205949336077011,
+    "final_mse": 0.02644066885113716,
+    "final_train_loss": 1.961273193359375,
+    "tokens_seen": 1228800,
+    "wall_seconds": 8.522692441940308
+   },
+   "1": {
+    "seed": 1,
+    "do_error": 0.10149054313814937,
+    "training_chain_probe_error": 0.12361746121947272,
+    "final_mse": 0.031002439558506012,
+    "final_train_loss": 1.9755722284317017,
+    "tokens_seen": 1228800,
+    "wall_seconds": 8.529890537261963
+   },
+   "2": {
+    "seed": 2,
+    "do_error": 0.09662750445485675,
+    "training_chain_probe_error": 0.12776641387404078,
+    "final_mse": 0.02735813707113266,
+    "final_train_loss": 1.9653379917144775,
+    "tokens_seen": 1228800,
+    "wall_seconds": 8.633460760116577
+   },
+   "3": {
+    "seed": 3,
+    "do_error": 0.10137334526039118,
+    "training_chain_probe_error": 0.14200151936889752,
+    "final_mse": 0.0291729923337698,
+    "final_train_loss": 1.9734327793121338,
+    "tokens_seen": 1228800,
+    "wall_seconds": 8.78011178970337
+   },
+   "4": {
+    "seed": 4,
+    "do_error": 0.11768995656854803,
+    "training_chain_probe_error": 0.138472047359227,
+    "final_mse": 0.02734728716313839,
+    "final_train_loss": 1.9704012870788574,
+    "tokens_seen": 1228800,
+    "wall_seconds": 8.813766717910767
+   }
+  },
+  "f": {
+   "0": {
+    "seed": 0,
+    "do_error": 0.10480741680910766,
+    "training_chain_probe_error": 0.12422459264702894,
+    "final_mse": 0.02671242505311966,
+    "final_train_loss": 1.9570260047912598,
+    "tokens_seen": 1228800,
+    "wall_seconds": 14.23052716255188
+   },
+   "1": {
+    "seed": 1,
+    "do_error": 0.10685909600727529,
+    "training_chain_probe_error": 0.1351521639565646,
+    "final_mse": 0.03025912120938301,
+    "final_train_loss": 1.9629007577896118,
+    "tokens_seen": 1228800,
+    "wall_seconds": 14.244003772735596
+   },
+   "2": {
+    "seed": 2,
+    "do_error": 0.0985237375813136,
+    "training_chain_probe_error": 0.12602786073815245,
+    "final_mse": 0.02574051171541214,
+    "final_train_loss": 1.9526698589324951,
+    "tokens_seen": 1228800,
+    "wall_seconds": 14.35222053527832
+   },
+   "3": {
+    "seed": 3,
+    "do_error": 0.10395945980395883,
+    "training_chain_probe_error": 0.1390767119991885,
+    "final_mse": 0.02728947624564171,
+    "final_train_loss": 1.9573619365692139,
+    "tokens_seen": 1228800,
+    "wall_seconds": 14.648609399795532
+   },
+   "4": {
+    "seed": 4,
+    "do_error": 0.10186960983951536,
+    "training_chain_probe_error": 0.13739058544159938,
+    "final_mse": 0.02710268646478653,
+    "final_train_loss": 1.9583837985992432,
+    "tokens_seen": 1228800,
+    "wall_seconds": 14.768341302871704
+   }
+  }
+ },
+ "means": {
+  "a": 0.10568505230688638,
+  "a2F": 0.10277266122671369,
+  "f": 0.10320386400823414
+ },
+ "seeds": [
+  0,
+  1,
+  2,
+  3,
+  4
+ ],
+ "floor_plugin": 0.07412,
+ "floor_onegram": 0.09032,
+ "floor_noupdate_range": [
+  0.1024,
+  0.1063
+ ],
+ "bar_threshold_0p8x_floor": 0.05929600000000001,
+ "verdict": "DO DEAD AT EVERY READ: Phase J closes as a kernel phase",
+ "clock_ratio": {
+  "a": 1.008790724248483,
+  "a2F": 1.1031195282056094,
+  "f": 1.8413489331721435
+ },
+ "started": "15:53:39",
+ "finished": "15:56:14"
+}
