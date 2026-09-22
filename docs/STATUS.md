@@ -1,6 +1,7 @@
 # Status — done against total
 
-Read at 2026-09-22, after the 4x5 grid completed at 20/20. Every percentage
+Read at 2026-09-22, after the 4x5 grid completed at 20/20 and the first hour of
+Phase J (`tests/foreman/phase_j/RECORD.md`). Every percentage
 on this page is a count of named gates, not a judgement of effort. Each table lists its own denominator so a reader can
 disagree with the denominator rather than with the number.
 
@@ -14,7 +15,7 @@ numbers are given below, and the weakest leg is the honest one.
 
 | reading | value |
 |---|---|
-| gates passed, all three conditions | **10 of 19 — 53%** |
+| gates passed, all three conditions | **9 of 19 — 47%** |
 | the goal as actually stated (conjunctive, weakest leg) | **30%** |
 | the leg that sets it | condition 3, *carries the weight of self-attention or JEPA* |
 
@@ -36,22 +37,30 @@ numbers are given below, and the weakest leg is the honest one.
 
 ## Condition 2 — beats anything before it
 
-**6 of 9 gates — 67%**
+**5 of 9 gates — 56%, with three gates now measured as failures rather than open**
 
 | # | gate | state | evidence |
 |---|---|---|---|
 | 1 | A win exists | **done** | −0.2473 eval NLL, 5 seeds |
 | 2 | At matched parameters, excess reported not hidden | **done** | 783 excess per the same per-block formula on all three domains |
 | 3 | More than one domain | **done** | TinyStories −0.2473, WikiText-103 −0.3285, codeparrot −0.3301 |
-| 4 | Against the strongest baseline lacking the property | **done** | the softmax twin routes through a genuine `scaled_dot_product_attention` call site, monkeypatch-verified |
+| 4 | Against the strongest baseline lacking the property | **failed** | the strongest such baseline is no longer the softmax twin: a Forgetting Transformer gate on the twin (727,704 params, same count as a2) recovers **100.2 / 100.3 / 110.9%** of `C_win` at split seeds 0 / 1 / 2 |
 | 5 | A seed interval on every domain | **not done** | 5 seeds / 5 seeds / **1 seed** — the third domain is a data point, and its record says so |
 | 6 | Survives a varied-split protocol | **done** | `C_win` = **+0.2470**, sd 0.0160, 95% CI **[+0.2271, +0.2668]** excludes zero, 5/5 split seeds, CRN digests byte-identical across all four arms at every seed |
-| 7 | The mechanism identified | **not done** | `C_phase` **−0.0124** (p_BH 0.0177) and `C_mass` **−0.0376** (p_BH 0.0201) — both statistically non-zero and both signed *against* their own mechanism, so neither contributes any part of the win; `C_resid` is **+0.2969, 120.2% of it** |
-| 8 | Against a strong published baseline, not only its own twin | **not done** | every comparison to date is internal |
-| 9 | Matched on compute, not only on tokens and parameters | **not done** | the arms match at 3,538 steps and matched tokens, but wall clock is **514.8s** for (f) against **76.6s** for (a), n = 5 each, ranges 512.4–519.4 and 75.7–77.6 — a ratio of **6.72×** |
+| 7 | The mechanism identified | **done — and it is prior art** | the win is a data-dependent forget gate: the FoX twin matches the family's per-token gain in every difficulty quintile to within 0.01. Before that: `C_phase` **−0.0124** (p_BH 0.0177) and `C_mass` **−0.0376** (p_BH 0.0201) — both statistically non-zero and both signed *against* their own mechanism, so neither contributes any part of the win; `C_resid` is **+0.2969, 120.2% of it** |
+| 8 | Against a strong published baseline, not only its own twin | **failed** | FoX (arXiv 2503.02130) minus the family: **−0.0004 / −0.0008 / −0.0284** at split seeds 0 / 1 / 2 — a tie, a tie, and a loss, at **131.9 s** against **514.8 s** per cell |
+| 9 | Matched on compute, not only on tokens and parameters | **failed** | a twin grown to hidden 512 (9,976,320 params) at the same steps and tokens finishes in **226 s** and beats the family by **0.1672**. Before that: the arms match at 3,538 steps and matched tokens, but wall clock is **514.8s** for (f) against **76.6s** for (a), n = 5 each, ranges 512.4–519.4 and 75.7–77.6 — a ratio of **6.72×** |
 
-Gate 7 is the load-bearing failure on this page. The effect reproduces; nothing
-yet explains it, and both candidate explanations point the wrong way.
+**Phase J hour one settled condition 2's loss leg, and against the family.** The
+effect reproduces and is now explained — by a published forget gate that
+reaches it at 3.9x less wall clock. A plainly larger twin beats it at under half
+its clock. Condition 2 can no longer pass through language-model loss; only a
+capability the forget gate lacks (the DO and JEPA rows of Phase J) can reopen it.
+
+**Correction.** Earlier versions of this page scored condition 2 at 6 of 8, then
+6 of 9. Gates 1, 2, 3, 4 and 6 were the only ones marked done — five, not six. The
+headline was 9 of 18 (50%), then 9 of 19 (47%), not 10 of 18 (56%) and 10 of 19
+(53%). The count was wrong by one from the first version.
 
 **Gate 9 did not exist when this page was first written.** An adversarial check
 of the grid found it: `C_win` carries an unpriced confound as load-bearing as
@@ -93,9 +102,10 @@ is not counted twice here.
 | Seeds landed across domains | 11 / 15 | **73%** | if every domain carried five |
 | Seat producer directories reachable in-tree | 22 | **—** | no denominator; this is a count, not a fraction |
 | Lean obligations closed | 6 of 12 files carry a `sorry` | **50%** by file | 6 `sorry` total |
-| Commits pushed this run | 38 / 38 | **100%** | nothing held locally |
+| Commits pushed this run | 42 / 42 | **100%** | nothing held locally |
 | Phase I.1 sections written | 22 | **—** | §22 *Rows still out* is stale: R3 landed and Kaggle has since run three domains |
-| Abstention decile test | pre-registered, unrun | **0%** | thresholds fixed and committed before its checkpoints exist |
+| Abstention decile test | ran | **NEITHER** | decile gradient 0.113 → 0.341, top-3 share 40.6% < 50%; control failed, then R-STRAT showed abstention survives stratification (ρ with difficulty 0.0125) |
+| Phase J hour one | 17 rows, 0 struck | **—** | R-FoX PASS ×3, R-TEMP FAIL, R-COMP PASS, R-STRAT survives; three contract figures did not reproduce |
 
 ---
 
@@ -103,9 +113,9 @@ is not counted twice here.
 
 A gate marked **done** means one measurement passed with its control and its
 provenance recorded. It does not mean the question behind the gate is closed.
-Condition 2 stands at 67% with its mechanism gate failing, which is the
-uncomfortable and accurate reading: the effect is now well measured and not at
-all understood.
+Condition 2 stands at 56% with three gates measured false, which is the
+uncomfortable and accurate reading: the effect is well measured, now understood,
+and owned by prior art.
 
 Three counts belong beside the percentages and have no denominator:
 **6 misattributions** found and corrected, **16 pre-registered checks that could
