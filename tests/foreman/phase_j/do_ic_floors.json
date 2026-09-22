@@ -1,0 +1,23 @@
+{
+ "row": "R-DO-IC-FLOORS",
+ "n_train_chains": 512,
+ "n_worlds": 50,
+ "n_streams_per_world": 16,
+ "S": 128,
+ "fallback_mean_committor": [
+  0.5144405980205585,
+  0.5002933275200322,
+  0.504710300589568,
+  0.5090986190198035,
+  0.5053475242253994,
+  0.5116215658214182
+ ],
+ "errors": {
+  "no_update": 0.10634187764335025,
+  "onegram_mle": 0.09221481927556584,
+  "dirichlet_posterior_mean": 0.07534811998419698
+ },
+ "strongest": "dirichlet_posterior_mean",
+ "verdict": "FLOORS SET",
+ "seconds": 0.6088628768920898
+}

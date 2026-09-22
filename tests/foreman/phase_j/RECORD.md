@@ -127,3 +127,18 @@ Wilson checks every number before the close.
 **3. Kernel.** Float mask 1.99× boolean, 2.84× is_causal, all inside mem_efficient. Hour one's 3.9× is (f) over the twin's 76.6 s, also mem_efficient; a flash denominator only widens it, so 3.9× is a floor on the gap. (a″) alone is 2.84× of it; the family's residual over FoX is ~1.4×. (a″) misses K5 with (f) per the row's rule, but K5 as written, "within X of fused SDPA", cannot be scored on this box by any arm, twin included. Verdict deferred to a flash build (a flash wheel needs no yes; Kaggle does).
 
 **4. Next row: R-DO-IC.** Foreman, GPU 12 min; floors first (CPU). Bed: 512 training streams, each from its own fresh Dirichlet(0.5) chain (n=8, basins 6,7), S 128, target its own chain's committor; probe fit across the 512 chains, frozen. Eval: 50 do() worlds, each read from a stream drawn from P_do. Floors before any arm trains: (i) no-update, mean training committor; (ii) 1-gram MLE, 0.009702; (iii) Dirichlet(0.5) posterior-mean plug-in from the same 128 tokens, the strongest input-only reader and the real floor. Bar: (f) ≤ 0.8×(iii) on 5/5 seeds AND (a″) > (iii) → condition 2 reopened. (a″) ≤ 0.8×(iii) too → closed for good. Nobody clears (iii) → DO retires: a three-line estimator beats every arm.
+
+## R-DO-IC — Dr House ruling
+
+**1. DO RETIRES.** Nobody clears floor (iii). Plug-in 0.07535; a 0.10536 / a″ 0.09544 / f 0.09855, 5/5 seeds. The best arm misses by 0.020; (a) sits on the no-update null; 1-gram counting (0.09221) beats all three. The stream deviation is recorded, not a strike: on the arms' exact streams the floors move DOWN (plug-in 0.07412, 1-gram 0.09032) and the margin widens to 0.021.
+
+**2. What retired, narrowly.** This read: a frozen linear probe on the last hidden state, ~109k params, S 128, one stream, fixed steps. At that read a three-line Bayesian count of the same 128 tokens beats every arm. NOT licensed: striking "consequence", or closing condition 2 for good. That kill needs (a″) within 0.01 of (f) on a bed some arm beats; here nobody beats anything. Condition 2 stays closed as at 15:11, by absence, not by a passed kill. In-distribution probe error 0.11–0.14 exceeds the do-error: the probe is the floor before the arm is.
+
+**3. Ordering.** a″ < f < a. Forget gate best, family second, every gap inside a band a 1-gram count beats. It says one thing: the family shows no DO capability a forget gate lacks.
+
+**4. Standing state.**
+- Condition 2 closed; consequence unstruck; DO-as-probe retired; the family's live claim is the operator frame at 1.084×.
+- Kernel: FoX 2.84× the twin, family ~1.4× over FoX, 3.9× a floor; K5 deferred to a flash build.
+- Abstention retired; R-TEMP dead.
+
+Next hour: R-DO-E2E. Same bed and floors; the committor head trained end-to-end on the 512 chains, not frozen; bar (f) ≤ 0.8 × 0.07412 on 5/5 AND (a″) > 0.07412. Miss 0.07412 with a trained head and DO is dead at every read; Phase J closes as a kernel phase.

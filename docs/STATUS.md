@@ -57,6 +57,15 @@ reaches it at 3.9x less wall clock. A plainly larger twin beats it at under half
 its clock. Condition 2 can no longer pass through language-model loss; only a
 capability the forget gate lacks (the DO and JEPA rows of Phase J) can reopen it.
 
+**Hour two tried DO, and it did not reopen.** Trained with every stream from its
+own chain and read by a frozen linear probe, the arms score 0.1054 (twin), 0.0954
+(FoX) and 0.0986 (family) on 50 intervened worlds, where a three-line Dirichlet
+plug-in reading the same 128 tokens scores **0.0741**. Nobody clears the floor, so
+condition 2 stays closed *by absence*, not by a passed kill: "consequence" is not
+struck, and one read remains (the committor head trained end-to-end, R-DO-E2E).
+An earlier DO row trained on a single chain was ruled **void**: every arm sat on
+the no-update null 0.07226 to four decimals.
+
 **Correction.** Earlier versions of this page scored condition 2 at 6 of 8, then
 6 of 9. Gates 1, 2, 3, 4 and 6 were the only ones marked done — five, not six. The
 headline was 9 of 18 (50%), then 9 of 19 (47%), not 10 of 18 (56%) and 10 of 19
@@ -86,7 +95,7 @@ is not counted twice here.
 | # | gate | state | evidence |
 |---|---|---|---|
 | 1 | Runs at transformer scale | **not done** | 128 hidden / 3 layers / 8 heads / ~725k params |
-| 2 | Cost competitive with FlashAttention | **not done** | no kernel; the carry-collapse theorem retired the kernel claim — a single-token path gate telescopes to a per-key vector, one head dimension in stock SDPA at 1.084×. Now carries a measured number: **6.72× the wall clock of the fused twin** at equal steps and tokens |
+| 2 | Cost competitive with FlashAttention | **not done** | no kernel; the carry-collapse theorem retired the kernel claim — a single-token path gate telescopes to a per-key vector, one head dimension in stock SDPA at 1.084×. Now carries measured numbers: **6.72×** the twin's wall clock at equal steps (family), and the forget gate alone runs **1.99×** an explicit-mask twin and **2.84×** is_causal per step (R-K5). This torch build has **no flash attention**; every "fused" figure here is the memory-efficient kernel, so K5 is deferred to a flash build |
 | 3 | A prediction or consequence capability self-attention lacks | **not done** | the prediction leg answered NO: committor resolution tied by eight bins of piece count taken from its own input |
 | 4 | The block-summary path proven exact | **done** | dense vs bucketed at 8.9e-16 / 3.2e-13 / 2.6e-10 for β = 1 / 0.5 / 0, block 8, 15 closed gates |
 | 5 | Formal backing | **half** | 12 Lean files, **6 `sorry`** remaining |
@@ -102,10 +111,11 @@ is not counted twice here.
 | Seeds landed across domains | 11 / 15 | **73%** | if every domain carried five |
 | Seat producer directories reachable in-tree | 22 | **—** | no denominator; this is a count, not a fraction |
 | Lean obligations closed | 6 of 12 files carry a `sorry` | **50%** by file | 6 `sorry` total |
-| Commits pushed this run | 42 / 42 | **100%** | nothing held locally |
+| Commits pushed this run | 44 / 44 | **100%** | nothing held locally |
 | Phase I.1 sections written | 22 | **—** | §22 *Rows still out* is stale: R3 landed and Kaggle has since run three domains |
-| Abstention decile test | ran | **NEITHER** | decile gradient 0.113 → 0.341, top-3 share 40.6% < 50%; control failed, then R-STRAT showed abstention survives stratification (ρ with difficulty 0.0125) |
+| Abstention decile test | ran, then **retired** | **NEITHER** | decile gradient 0.113 → 0.341, top-3 share 40.6% < 50%; control failed, then R-STRAT showed abstention survives stratification (ρ with difficulty 0.0125) |
 | Phase J hour one | 17 rows, 0 struck | **—** | R-FoX PASS ×3, R-TEMP FAIL, R-COMP PASS, R-STRAT survives; three contract figures did not reproduce |
+| Phase J hour two | 8 rows, 0 struck | **—** | R-XFER PASS (abstention retires), R-K5 FAIL 1.99×, R-DO-LM **void**, R-DO-IC: DO retires at the probe read |
 
 ---
 
@@ -119,6 +129,6 @@ and owned by prior art.
 
 Three counts belong beside the percentages and have no denominator:
 **6 misattributions** found and corrected, **16 pre-registered checks that could
-not have failed** catalogued, and **5 beds that failed at their own floors**.
+not have failed** and **1 that could not have passed** catalogued, and **5 beds that failed at their own floors**.
 Those are the error rate this project is measuring against itself, and a status
 page that omits them reads better than the work deserves.
