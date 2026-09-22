@@ -1,0 +1,28 @@
+{
+  "row": "COST-B'",
+  "shape": {
+    "B": 1,
+    "H": 8,
+    "S": 4096,
+    "head_dim": 64,
+    "dtype": "float32"
+  },
+  "backend_observed": "EFFICIENT_ATTENTION",
+  "flash_available_in_build": true,
+  "ms_sdpa_fwd": 5.8606299993698485,
+  "ms_bprime_fwd": 12.592365000455175,
+  "ratio_fwd": 2.1486367509651934,
+  "ms_sdpa_fwd_bwd": 17.51605000026757,
+  "ms_bprime_fwd_bwd": 41.55586499982746,
+  "ratio_fwd_bwd": 2.372444986123736,
+  "stage_ms_fwd": {
+    "head": 0.17676999705145136,
+    "scan": 5.974179999611806,
+    "pre_rotate": 0.6086649984354153,
+    "sdpa": 4.376085000694729,
+    "post_rotate": 0.6180600001243874
+  },
+  "bar": 1.3,
+  "strike_above": 2.0,
+  "verdict": "FAIL"
+}

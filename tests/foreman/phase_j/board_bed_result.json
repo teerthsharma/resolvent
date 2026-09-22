@@ -1,0 +1,52 @@
+{
+  "vocab_size": 20480,
+  "num_classes": 13,
+  "n_games": 4000,
+  "n_holdout": 500,
+  "max_ply": 120,
+  "seed": 0,
+  "floors": {
+    "ply>=40": {
+      "initial_board": {
+        "per_square_acc": 0.391991046482093,
+        "exact_match_acc": 0.0,
+        "n_positions": 39370
+      },
+      "empty_majority": {
+        "per_square_acc": 0.6601925641351283,
+        "exact_match_acc": 0.0,
+        "n_positions": 39370
+      },
+      "rule_free_tracker": {
+        "per_square_acc": 0.9968440436880873,
+        "exact_match_acc": 0.8439420878841758,
+        "n_positions": 39370
+      }
+    },
+    "ply>=80": {
+      "initial_board": {
+        "per_square_acc": 0.36937178524139336,
+        "exact_match_acc": 0.0,
+        "n_positions": 19636
+      },
+      "empty_majority": {
+        "per_square_acc": 0.7085057420044816,
+        "exact_match_acc": 0.0,
+        "n_positions": 19636
+      },
+      "rule_free_tracker": {
+        "per_square_acc": 0.9960969329293136,
+        "exact_match_acc": 0.7968017926257893,
+        "n_positions": 19636
+      }
+    }
+  },
+  "special_move_stats_holdout": {
+    "n_ply": 58823,
+    "n_games": 500,
+    "castling_frac": 0.0005440048960440644,
+    "en_passant_frac": 0.0002550022950206552,
+    "promotion_frac": 0.0035530319772877957,
+    "games_with_any_special_move_frac": 0.414
+  }
+}
