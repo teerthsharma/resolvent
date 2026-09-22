@@ -1,0 +1,69 @@
+{
+  "row": "R-K5",
+  "started": "15:17:59",
+  "finished": "15:18:03",
+  "grid": {
+    "hidden": 128,
+    "layers": 3,
+    "heads": 8,
+    "seq": 512,
+    "batch": 8,
+    "vocab": 256
+  },
+  "warmup": 10,
+  "steps": 50,
+  "ms_per_step": {
+    "a-flash": 8.4730419999687,
+    "a-explicit": 12.111898000002839,
+    "a''": 24.05266199959442
+  },
+  "ratio_app_over_explicit": 1.9858705877137326,
+  "ratio_explicit_over_flash": 1.4294627596614746,
+  "ratio_app_over_flash": 2.838728050643827,
+  "bar": "(a'')/(a-explicit) <= 1.30",
+  "verdict": "FAIL",
+  "backend_detail": [
+    {
+      "label": "a-flash",
+      "ms_per_step": 8.4730419999687,
+      "sdp_kernel_forced_ok": {
+        "flash": false,
+        "mem_efficient": true,
+        "math": true
+      },
+      "profiler_kernel_hits": {
+        "flash": false,
+        "efficient": true,
+        "math": true
+      }
+    },
+    {
+      "label": "a-explicit",
+      "ms_per_step": 12.111898000002839,
+      "sdp_kernel_forced_ok": {
+        "flash": false,
+        "mem_efficient": true,
+        "math": true
+      },
+      "profiler_kernel_hits": {
+        "flash": false,
+        "efficient": true,
+        "math": true
+      }
+    },
+    {
+      "label": "a''",
+      "ms_per_step": 24.05266199959442,
+      "sdp_kernel_forced_ok": {
+        "flash": false,
+        "mem_efficient": true,
+        "math": true
+      },
+      "profiler_kernel_hits": {
+        "flash": false,
+        "efficient": true,
+        "math": true
+      }
+    }
+  ]
+}

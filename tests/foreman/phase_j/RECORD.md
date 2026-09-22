@@ -84,3 +84,46 @@ Abstention is alive but orphaned: it survives difficulty, yet FoX has no row-sum
 5. R-COMP retitled: capacity, not repetition, explains the gap.
 
 **4. Next row: R-XFER.** On the ss0 pair plus ckpt_a2F_ss0, rank the 32,704 sites by (f)'s a_t and read d_FoX = NLL_a − NLL_FoX. Bar: top-minus-bottom decile of d_FoX ≥ ½ × (+0.030/+0.112/+0.233/+0.300/+0.732) in all five NLL_a quintiles → abstention marks sites any forget gate wins, retire the abstention rows; otherwise abstention is (f)'s own. Cost 2 s GPU.
+
+## Hour two — Dr House opening (15:11)
+
+Condition 2 stays closed unless a capability a forget gate lacks reopens it. This hour buys that one test, prices the kernel, settles abstention. Hard stop 15:56.
+
+**1. Slice (GPU queue in order; CPU rows beside it).**
+
+1. **R-XFER** — Wilson, GPU 1 min. ss0 pair + ckpt_a2F_ss0; 32,704 sites ranked by (f)'s a_t; d_FoX = NLL_a − NLL_FoX. Bar: top-minus-bottom decile of d_FoX ≥ +0.015/+0.056/+0.117/+0.150/+0.366 in all five NLL_a quintiles. PASS retires the abstention rows; FAIL keeps abstention as (f)'s own until §4.
+2. **R-K5** — Cameron, GPU 3 min. Same shape and steps, 50 fwd+bwd each, three paths: (a) is_causal (flash); (a) explicit boolean causal mask (math path, no gate); (a″) float mask. Bar: (a″)/(a-explicit) ≤ 1.30. PASS → the 1.72× is the path; K5 becomes a fused-kernel question priced at (a-explicit)/(a-flash). FAIL → the gate itself costs; (a″) misses K5 with (f).
+3. **R-DO-LM** — Foreman, GPU 10–12 min. J2 bed (n=8, Dirichlet(0.5), basins 6,7) as token streams; arms (a), (a″), (f) at matched numel, d 64, 2 layers, S 128; seeds 0–2, then 3–4 only if an arm is within 0.01 of the bar. Read = (J)-style: linear probe of c_i from the last hidden state, fit on the observational chain, frozen; 50 do(i→row) worlds scored against `intervene.committor_do` (1.7e−16). Bar: (f) do-error < 0.0629 (the bag) AND (a″) ≥ 0.0629 → condition 2 reopened. (a″) within 0.01 of (f) → closed for good, "consequence" struck, Phase J is a kernel phase. Neither beats the bag → NEITHER; the read is the floor.
+4. **R-DPI** — Chase, CPU 3 min, beside row 3. Same 50 worlds; input-only controls: visit bag (0.0629), k-gram read (k = 1..3). Bar: any PASS in row 3 beats the best control by ≥ 0.02, else the DO win is a histogram and row 3 is void.
+
+Wilson checks every number before the close.
+
+**2. Struck this hour.**
+- R-JEPA: no predictor, no Mode B; built in 45 min it is a bed failing at its floor.
+- R-CURV re-run: −0.732 unpinned; nothing runs until the author pins it or takes −0.774.
+- (a_T) seeds 1, 2, any R-TEMP variant: dead.
+- K1 bitwise vs flash_attn: absent; stays 1e−6 fp32 (amendment 6).
+- R-FACE, R-HOLE, R-VERB-EP, R-CLOCK, R-PHASE, R-KNN: no trained c-space until row 3 makes one.
+- it.J6, Kaggle: out.
+
+**3. Fields.** All stand. Add `clock_ratio` (arm s / (a) s at equal steps, every GPU row); `read` ("probe"/"exact"/"bag"/"kgram", rows 3–4); `queue_pos`, `started`, `finished` (local time, every row).
+
+## Hour two — Dr House close (15:56)
+
+**1. Verdicts.**
+- R-XFER PASS: +0.0305/+0.0994/+0.2759/+0.2730/+0.7555 over +0.015/+0.056/+0.117/+0.150/+0.366; control d_f reproduces. Abstention marks sites any forget gate wins.
+- R-K5 FAIL: 1.986 > 1.30. And no flash in this torch build; is_causal ran mem_efficient.
+- R-WORLDS PASS: 4.4e−16, 50 worlds.
+- R-DPI: floor 0.009702 (1-gram). Bag here 0.01504, not the 0.0629 my spec carried.
+- R-DO-LM VOID, not FAIL; "closed for good, consequence struck" does not stand. a 0.07219 / a″ 0.07225 / f 0.07229 on a no-update null of 0.07226: every arm sits on the null to four decimals, so the row measured the bed. Both faults mine: "J2 bed as token streams" is one P_obs, so no context varied and no arm was trained to read one; and a 0.0629 bar over a 0.0097 floor made "beat the control by 0.02" unsatisfiable before a step ran. A check that could not pass joins the 16 that could not fail. Condition 2 stays closed as at 15:11, pending a bed that can pass.
+
+**2. Dead this hour.**
+- Abstention rows: retire (R-XFER).
+- R-DO-LM as run: reroute → R-DO-IC.
+- 0.0629 bag bar: reprice → §4 floors.
+- "1.72× is the path": retire (1.99× at explicit mask).
+- Every "flash" cell in the ledger: reprice → relabel mem_efficient.
+
+**3. Kernel.** Float mask 1.99× boolean, 2.84× is_causal, all inside mem_efficient. Hour one's 3.9× is (f) over the twin's 76.6 s, also mem_efficient; a flash denominator only widens it, so 3.9× is a floor on the gap. (a″) alone is 2.84× of it; the family's residual over FoX is ~1.4×. (a″) misses K5 with (f) per the row's rule, but K5 as written, "within X of fused SDPA", cannot be scored on this box by any arm, twin included. Verdict deferred to a flash build (a flash wheel needs no yes; Kaggle does).
+
+**4. Next row: R-DO-IC.** Foreman, GPU 12 min; floors first (CPU). Bed: 512 training streams, each from its own fresh Dirichlet(0.5) chain (n=8, basins 6,7), S 128, target its own chain's committor; probe fit across the 512 chains, frozen. Eval: 50 do() worlds, each read from a stream drawn from P_do. Floors before any arm trains: (i) no-update, mean training committor; (ii) 1-gram MLE, 0.009702; (iii) Dirichlet(0.5) posterior-mean plug-in from the same 128 tokens, the strongest input-only reader and the real floor. Bar: (f) ≤ 0.8×(iii) on 5/5 seeds AND (a″) > (iii) → condition 2 reopened. (a″) ≤ 0.8×(iii) too → closed for good. Nobody clears (iii) → DO retires: a three-line estimator beats every arm.
