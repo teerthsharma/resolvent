@@ -116,3 +116,34 @@ Each clause replaces a contract clause that K0 broke; the bound fact behind it i
 
 Kills stay as the contract states: (f_R) < 0.8 at the training depth is a learnability
 kill.
+
+## Amendment K1-a (registered 2026-09-23, before any R-DEPTH arm trains)
+
+Clause 2's kill fired twice at the same cell, L = 7 and n = 4096. Both numbers are
+bound (Inspector K1 PASS1–PASS2; Foreman K1 report):
+- **bed_k:** Foreman's HPD window scores 0.5642 beyond 2^L. The best window is the
+  maximum over bound windows, so this is above Cameron's 0.4086.
+- **bed_k'** (Cameron's replacement, 8 lanes): a 14-slot window scores **0.5108**,
+  built at R0 width as real causal softmax heads (15 heads × 8 dims + a 57-unit ReLU
+  multiplexer) and matching the idealised window pointer for pointer in float64 and
+  float32. A 30-slot build (31 heads × 4 dims) scores 0.8096. The "12 dims per slot"
+  pricing understated what d = 128 holds by about 3×.
+
+Every window found multiplies reach by a constant factor c over pointer doubling: 3.0 at
+L = 4 and 3.5 at L = 7 for the 30-slot build. Past 2·c·2^L every construction scores
+chance (1/8) on more than 100k tokens. Replacement clauses 1–2:
+
+1′. **Bed.** bed_k' generator, scored only on the **far band**: tokens deeper than
+    2·c_max(L)·2^L, where c_max(L) is the largest reach factor of any bound real-heads
+    construction at that rung's width. Currently 6·2^L at L = 4 and 7·2^L at L = 7. For the
+    L = 7 arm with 8 lanes, this needs n ≥ 16384.
+2′. **Floor row K1.F''.** On the far band, run the position-only floor, credited doubling
+    and every bound window (10-, 14- and 30-slot, HPD, no-oracle), RED first. The twin's
+    line is the maximum of these. If any exceeds 0.5 on the band, the band moves out to the
+    new c_max, and no arm trains until the floor is below 0.5.
+- The free positional oracle stays in the kill rule. The harness's bf16 ALiBi position
+  signal is coarse (39.79 positions), but a twin with a sharper position channel would not
+  be, and a bed whose defence is a rounding artifact is not a defence.
+- The R-DEPTH prediction reads on the far band: (f_R) ≥ 0.95 there at every rung.
+- Open, and able to move the band: 2-dim slots (about 62 at d = 128) in fp32; the 30-slot
+  build at n = 8192 and 16384; whether the band holds at R1 and R2.
