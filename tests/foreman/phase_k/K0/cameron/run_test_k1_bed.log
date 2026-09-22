@@ -1,0 +1,11 @@
+PASS train bed: n=1024, depth<=32, distinct ids, parent before child, pids/targets consistent (50 draws) : 
+PASS test bed n=4096: 16 roots, content consistent : 275
+PASS test bed n=8192: 16 roots, content consistent : 555
+PASS test bed n=16384: 16 roots, content consistent : 1087
+PASS test bed 16k reaches depth >= 900 : 1087
+PASS oracle scores 1.0 everywhere : 1.0
+PASS evaluate(recency preds) == floor_recency : 0.064697265625
+PASS ceiling_credit L=2 == slow reference : 0.17833333333333334
+PASS ceiling_credit L=3 == slow reference : 0.2783333333333333
+PASS ceiling_credit L=5 == slow reference : 0.87
+exit=0

@@ -1,0 +1,2 @@
+RED fwd_sparsemax_S1024_vs_f64_pivot: "EXC NotImplementedError: stub"
+SUMMARY {"fwd_sparsemax_S1024_vs_f64_pivot": "red"}

@@ -1,0 +1,265 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/ERbx+3FGwiaOJ0rVakEZ/+MW2mI</id>
+  <title>arXiv Query: search_query=&amp;id_list=2001.08361,2203.15556,2406.10149,2301.13196,2311.12424,1909.01377,1810.05997&amp;start=0&amp;max_results=10</title>
+  <updated>2026-09-22T20:23:27Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=&amp;start=0&amp;max_results=10&amp;id_list=2001.08361,2203.15556,2406.10149,2301.13196,2311.12424,1909.01377,1810.05997" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>10</opensearch:itemsPerPage>
+  <opensearch:totalResults>7</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/1810.05997v6</id>
+    <title>Predict then Propagate: Graph Neural Networks meet Personalized PageRank</title>
+    <updated>2022-04-05T11:39:26Z</updated>
+    <link href="https://arxiv.org/abs/1810.05997v6" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1810.05997v6" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Neural message passing algorithms for semi-supervised classification on graphs have recently achieved great success. However, for classifying a node these methods only consider nodes that are a few propagation steps away and the size of this utilized neighborhood is hard to extend. In this paper, we use the relationship between graph convolutional networks (GCN) and PageRank to derive an improved propagation scheme based on personalized PageRank. We utilize this propagation procedure to construct a simple model, personalized propagation of neural predictions (PPNP), and its fast approximation, APPNP. Our model's training time is on par or faster and its number of parameters on par or lower than previous models. It leverages a large, adjustable neighborhood for classification and can be easily combined with any neural network. We show that this model outperforms several recently proposed methods for semi-supervised classification in the most thorough study done so far for GCN-like models. Our implementation is available online.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="stat.ML" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2018-10-14T08:36:54Z</published>
+    <arxiv:comment>Published as a conference paper at ICLR 2019. Author name changed from Johannes Klicpera to Johannes Gasteiger</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <arxiv:journal_ref>International Conference on Learning Representations (ICLR), New Orleans, LA, USA, 2019</arxiv:journal_ref>
+    <author>
+      <name>Johannes Gasteiger</name>
+    </author>
+    <author>
+      <name>Aleksandar Bojchevski</name>
+    </author>
+    <author>
+      <name>Stephan Günnemann</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2001.08361v1</id>
+    <title>Scaling Laws for Neural Language Models</title>
+    <updated>2020-01-23T03:59:20Z</updated>
+    <link href="https://arxiv.org/abs/2001.08361v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2001.08361v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We study empirical scaling laws for language model performance on the cross-entropy loss. The loss scales as a power-law with model size, dataset size, and the amount of compute used for training, with some trends spanning more than seven orders of magnitude. Other architectural details such as network width or depth have minimal effects within a wide range. Simple equations govern the dependence of overfitting on model/dataset size and the dependence of training speed on model size. These relationships allow us to determine the optimal allocation of a fixed compute budget. Larger models are significantly more sample-efficient, such that optimally compute-efficient training involves training very large models on a relatively modest amount of data and stopping significantly before convergence.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="stat.ML" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-01-23T03:59:20Z</published>
+    <arxiv:comment>19 pages, 15 figures</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Jared Kaplan</name>
+    </author>
+    <author>
+      <name>Sam McCandlish</name>
+    </author>
+    <author>
+      <name>Tom Henighan</name>
+    </author>
+    <author>
+      <name>Tom B. Brown</name>
+    </author>
+    <author>
+      <name>Benjamin Chess</name>
+    </author>
+    <author>
+      <name>Rewon Child</name>
+    </author>
+    <author>
+      <name>Scott Gray</name>
+    </author>
+    <author>
+      <name>Alec Radford</name>
+    </author>
+    <author>
+      <name>Jeffrey Wu</name>
+    </author>
+    <author>
+      <name>Dario Amodei</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2311.12424v3</id>
+    <title>Looped Transformers are Better at Learning Learning Algorithms</title>
+    <updated>2024-03-16T21:10:38Z</updated>
+    <link href="https://arxiv.org/abs/2311.12424v3" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2311.12424v3" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Transformers have demonstrated effectiveness in in-context solving data-fitting problems from various (latent) models, as reported by Garg et al. However, the absence of an inherent iterative structure in the transformer architecture presents a challenge in emulating the iterative algorithms, which are commonly employed in traditional machine learning methods. To address this, we propose the utilization of looped transformer architecture and its associated training methodology, with the aim of incorporating iterative characteristics into the transformer architectures. Experimental results suggest that the looped transformer achieves performance comparable to the standard transformer in solving various data-fitting problems, while utilizing less than 10% of the parameter count.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.NE" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2023-11-21T08:32:38Z</published>
+    <arxiv:comment>Accepted for publication at ICLR 2024</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Liu Yang</name>
+    </author>
+    <author>
+      <name>Kangwook Lee</name>
+    </author>
+    <author>
+      <name>Robert Nowak</name>
+    </author>
+    <author>
+      <name>Dimitris Papailiopoulos</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/1909.01377v2</id>
+    <title>Deep Equilibrium Models</title>
+    <updated>2019-10-28T22:25:01Z</updated>
+    <link href="https://arxiv.org/abs/1909.01377v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1909.01377v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We present a new approach to modeling sequential data: the deep equilibrium model (DEQ). Motivated by an observation that the hidden layers of many existing deep sequence models converge towards some fixed point, we propose the DEQ approach that directly finds these equilibrium points via root-finding. Such a method is equivalent to running an infinite depth (weight-tied) feedforward network, but has the notable advantage that we can analytically backpropagate through the equilibrium point using implicit differentiation. Using this approach, training and prediction in these networks require only constant memory, regardless of the effective "depth" of the network. We demonstrate how DEQs can be applied to two state-of-the-art deep sequence models: self-attention transformers and trellis networks. On large-scale language modeling tasks, such as the WikiText-103 benchmark, we show that DEQs 1) often improve performance over these state-of-the-art models (for similar parameter counts); 2) have similar computational requirements to existing models; and 3) vastly reduce memory consumption (often the bottleneck for training large sequence models), demonstrating an up-to 88% memory reduction in our experiments. The code is available at https://github.com/locuslab/deq .</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="stat.ML" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2019-09-03T18:02:50Z</published>
+    <arxiv:comment>NeurIPS 2019 Spotlight Oral</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Shaojie Bai</name>
+    </author>
+    <author>
+      <name>J. Zico Kolter</name>
+    </author>
+    <author>
+      <name>Vladlen Koltun</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2203.15556v1</id>
+    <title>Training Compute-Optimal Large Language Models</title>
+    <updated>2022-03-29T13:38:03Z</updated>
+    <link href="https://arxiv.org/abs/2203.15556v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2203.15556v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We investigate the optimal model size and number of tokens for training a transformer language model under a given compute budget. We find that current large language models are significantly undertrained, a consequence of the recent focus on scaling language models whilst keeping the amount of training data constant. By training over 400 language models ranging from 70 million to over 16 billion parameters on 5 to 500 billion tokens, we find that for compute-optimal training, the model size and the number of training tokens should be scaled equally: for every doubling of model size the number of training tokens should also be doubled. We test this hypothesis by training a predicted compute-optimal model, Chinchilla, that uses the same compute budget as Gopher but with 70B parameters and 4$\times$ more more data. Chinchilla uniformly and significantly outperforms Gopher (280B), GPT-3 (175B), Jurassic-1 (178B), and Megatron-Turing NLG (530B) on a large range of downstream evaluation tasks. This also means that Chinchilla uses substantially less compute for fine-tuning and inference, greatly facilitating downstream usage. As a highlight, Chinchilla reaches a state-of-the-art average accuracy of 67.5% on the MMLU benchmark, greater than a 7% improvement over Gopher.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2022-03-29T13:38:03Z</published>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Jordan Hoffmann</name>
+    </author>
+    <author>
+      <name>Sebastian Borgeaud</name>
+    </author>
+    <author>
+      <name>Arthur Mensch</name>
+    </author>
+    <author>
+      <name>Elena Buchatskaya</name>
+    </author>
+    <author>
+      <name>Trevor Cai</name>
+    </author>
+    <author>
+      <name>Eliza Rutherford</name>
+    </author>
+    <author>
+      <name>Diego de Las Casas</name>
+    </author>
+    <author>
+      <name>Lisa Anne Hendricks</name>
+    </author>
+    <author>
+      <name>Johannes Welbl</name>
+    </author>
+    <author>
+      <name>Aidan Clark</name>
+    </author>
+    <author>
+      <name>Tom Hennigan</name>
+    </author>
+    <author>
+      <name>Eric Noland</name>
+    </author>
+    <author>
+      <name>Katie Millican</name>
+    </author>
+    <author>
+      <name>George van den Driessche</name>
+    </author>
+    <author>
+      <name>Bogdan Damoc</name>
+    </author>
+    <author>
+      <name>Aurelia Guy</name>
+    </author>
+    <author>
+      <name>Simon Osindero</name>
+    </author>
+    <author>
+      <name>Karen Simonyan</name>
+    </author>
+    <author>
+      <name>Erich Elsen</name>
+    </author>
+    <author>
+      <name>Jack W. Rae</name>
+    </author>
+    <author>
+      <name>Oriol Vinyals</name>
+    </author>
+    <author>
+      <name>Laurent Sifre</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2301.13196v1</id>
+    <title>Looped Transformers as Programmable Computers</title>
+    <updated>2023-01-30T18:57:31Z</updated>
+    <link href="https://arxiv.org/abs/2301.13196v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2301.13196v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We present a framework for using transformer networks as universal computers by programming them with specific weights and placing them in a loop. Our input sequence acts as a punchcard, consisting of instructions and memory for data read/writes. We demonstrate that a constant number of encoder layers can emulate basic computing blocks, including embedding edit operations, non-linear functions, function calls, program counters, and conditional branches. Using these building blocks, we emulate a small instruction-set computer. This allows us to map iterative algorithms to programs that can be executed by a looped, 13-layer transformer. We show how this transformer, instructed by its input, can emulate a basic calculator, a basic linear algebra library, and in-context learning algorithms that employ backpropagation. Our work highlights the versatility of the attention mechanism, and demonstrates that even shallow transformers can execute full-fledged, general-purpose programs.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2023-01-30T18:57:31Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Angeliki Giannou</name>
+    </author>
+    <author>
+      <name>Shashank Rajput</name>
+    </author>
+    <author>
+      <name>Jy-yong Sohn</name>
+    </author>
+    <author>
+      <name>Kangwook Lee</name>
+    </author>
+    <author>
+      <name>Jason D. Lee</name>
+    </author>
+    <author>
+      <name>Dimitris Papailiopoulos</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2406.10149v2</id>
+    <title>BABILong: Testing the Limits of LLMs with Long Context Reasoning-in-a-Haystack</title>
+    <updated>2024-11-06T14:50:40Z</updated>
+    <link href="https://arxiv.org/abs/2406.10149v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2406.10149v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>In recent years, the input context sizes of large language models (LLMs) have increased dramatically. However, existing evaluation methods have not kept pace, failing to comprehensively assess the efficiency of models in handling long contexts. To bridge this gap, we introduce the BABILong benchmark, designed to test language models' ability to reason across facts distributed in extremely long documents. BABILong includes a diverse set of 20 reasoning tasks, including fact chaining, simple induction, deduction, counting, and handling lists/sets. These tasks are challenging on their own, and even more demanding when the required facts are scattered across long natural text. Our evaluations show that popular LLMs effectively utilize only 10-20\% of the context and their performance declines sharply with increased reasoning complexity. Among alternatives to in-context reasoning, Retrieval-Augmented Generation methods achieve a modest 60\% accuracy on single-fact question answering, independent of context length. Among context extension methods, the highest performance is demonstrated by recurrent memory transformers after fine-tuning, enabling the processing of lengths up to 50 million tokens. The BABILong benchmark is extendable to any length to support the evaluation of new upcoming models with increased capabilities, and we provide splits up to 10 million token lengths.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-06-14T16:00:29Z</published>
+    <arxiv:comment>NeurIPS 2024 Datasets and Benchmarks Track</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Yuri Kuratov</name>
+    </author>
+    <author>
+      <name>Aydar Bulatov</name>
+    </author>
+    <author>
+      <name>Petr Anokhin</name>
+    </author>
+    <author>
+      <name>Ivan Rodkin</name>
+    </author>
+    <author>
+      <name>Dmitry Sorokin</name>
+    </author>
+    <author>
+      <name>Artyom Sorokin</name>
+    </author>
+    <author>
+      <name>Mikhail Burtsev</name>
+    </author>
+  </entry>
+</feed>

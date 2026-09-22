@@ -1,0 +1,77 @@
+{
+ "rscale": {
+  "bed": {
+   "n": 16384,
+   "M": 16,
+   "seed": 3000,
+   "max_depth": 1078
+  },
+  "rows": [
+   {
+    "L": 4,
+    "d": 128,
+    "W": 10,
+    "2^L": 16,
+    "Dc_doubling": 17,
+    "Dc_hybrid_centered": 22,
+    "Dc_hybrid_anchored": 21
+   },
+   {
+    "L": 6,
+    "d": 320,
+    "W": 26,
+    "2^L": 64,
+    "Dc_doubling": 65,
+    "Dc_hybrid_centered": 128,
+    "Dc_hybrid_anchored": 101
+   },
+   {
+    "L": 8,
+    "d": 512,
+    "W": 42,
+    "2^L": 256,
+    "Dc_doubling": 257,
+    "Dc_hybrid_centered": 649,
+    "Dc_hybrid_anchored": 470
+   }
+  ],
+  "doubling_slope": 0.979540426985885,
+  "hybrid_slope": 1.2206607623404606,
+  "hybrid_anchored_slope": 1.12104988094656
+ },
+ "dilated": {
+  "beds": {
+   "M16": {
+    "max_depth": 1054,
+    "median_depth": 511,
+    "doubling_L6": 0.0634765625,
+    "hybrid_L6_W26_k3": 0.12176513671875,
+    "hybrid_L6_W26_k4": 0.1400146484375,
+    "ratio_k3": 1.9182692307692308,
+    "ratio_k4": 2.205769230769231,
+    "beyond64_hybrid_k3": 0.062239311783107404
+   },
+   "M64": {
+    "max_depth": 293,
+    "median_depth": 127,
+    "doubling_L6": 0.25390625,
+    "hybrid_L6_W26_k3": 0.309814453125,
+    "hybrid_L6_W26_k4": 0.31292724609375,
+    "ratio_k3": 1.2201923076923078,
+    "ratio_k4": 1.232451923076923,
+    "beyond64_hybrid_k3": 0.074934554973822
+   },
+   "M128": {
+    "max_depth": 159,
+    "median_depth": 63,
+    "doubling_L6": 0.5078125,
+    "hybrid_L6_W26_k3": 0.563232421875,
+    "hybrid_L6_W26_k4": 0.56640625,
+    "ratio_k3": 1.1091346153846153,
+    "ratio_k4": 1.1153846153846154,
+    "beyond64_hybrid_k3": 0.11259920634920635
+   }
+  },
+  "ratio": 1.2201923076923078
+ }
+}

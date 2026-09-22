@@ -1,0 +1,61 @@
+Traceback (most recent call last):
+  File "C:\Users\seal\AppData\Local\Temp\claude\C--Users-seal-Desktop-New-folder--32-\870edeb1-6409-4414-98e7-00d0537b75dd\scratchpad\phase_k\K0\chase\test_chase_k0.py", line 66, in run
+    ok, val = fn()
+              ^^^^
+  File "C:\Users\seal\AppData\Local\Temp\claude\C--Users-seal-Desktop-New-folder--32-\870edeb1-6409-4414-98e7-00d0537b75dd\scratchpad\phase_k\K0\chase\test_chase_k0.py", line 228, in t_fwd_c
+    _stub()
+  File "C:\Users\seal\AppData\Local\Temp\claude\C--Users-seal-Desktop-New-folder--32-\870edeb1-6409-4414-98e7-00d0537b75dd\scratchpad\phase_k\K0\chase\test_chase_k0.py", line 222, in _stub
+    raise NotImplementedError("stub")
+NotImplementedError: stub
+RED fwd_softmax_S1024_vs_f64_fs5c: "EXC NotImplementedError: stub"
+Traceback (most recent call last):
+  File "C:\Users\seal\AppData\Local\Temp\claude\C--Users-seal-Desktop-New-folder--32-\870edeb1-6409-4414-98e7-00d0537b75dd\scratchpad\phase_k\K0\chase\test_chase_k0.py", line 66, in run
+    ok, val = fn()
+              ^^^^
+  File "C:\Users\seal\AppData\Local\Temp\claude\C--Users-seal-Desktop-New-folder--32-\870edeb1-6409-4414-98e7-00d0537b75dd\scratchpad\phase_k\K0\chase\test_chase_k0.py", line 243, in t_bwd_c
+    _stub()
+  File "C:\Users\seal\AppData\Local\Temp\claude\C--Users-seal-Desktop-New-folder--32-\870edeb1-6409-4414-98e7-00d0537b75dd\scratchpad\phase_k\K0\chase\test_chase_k0.py", line 222, in _stub
+    raise NotImplementedError("stub")
+NotImplementedError: stub
+RED fusedc_bwd_S1024_vs_f64: "EXC NotImplementedError: stub"
+Traceback (most recent call last):
+  File "C:\Users\seal\AppData\Local\Temp\claude\C--Users-seal-Desktop-New-folder--32-\870edeb1-6409-4414-98e7-00d0537b75dd\scratchpad\phase_k\K0\chase\test_chase_k0.py", line 66, in run
+    ok, val = fn()
+              ^^^^
+  File "C:\Users\seal\AppData\Local\Temp\claude\C--Users-seal-Desktop-New-folder--32-\870edeb1-6409-4414-98e7-00d0537b75dd\scratchpad\phase_k\K0\chase\test_chase_k0.py", line 258, in t_fwd_sp_c
+    _stub()
+  File "C:\Users\seal\AppData\Local\Temp\claude\C--Users-seal-Desktop-New-folder--32-\870edeb1-6409-4414-98e7-00d0537b75dd\scratchpad\phase_k\K0\chase\test_chase_k0.py", line 222, in _stub
+    raise NotImplementedError("stub")
+NotImplementedError: stub
+RED fwd_sparsemax_S1024_vs_f64_pivot: "EXC NotImplementedError: stub"
+Traceback (most recent call last):
+  File "C:\Users\seal\AppData\Local\Temp\claude\C--Users-seal-Desktop-New-folder--32-\870edeb1-6409-4414-98e7-00d0537b75dd\scratchpad\phase_k\K0\chase\test_chase_k0.py", line 66, in run
+    ok, val = fn()
+              ^^^^
+  File "C:\Users\seal\AppData\Local\Temp\claude\C--Users-seal-Desktop-New-folder--32-\870edeb1-6409-4414-98e7-00d0537b75dd\scratchpad\phase_k\K0\chase\test_chase_k0.py", line 273, in t_cg
+    _stub()
+  File "C:\Users\seal\AppData\Local\Temp\claude\C--Users-seal-Desktop-New-folder--32-\870edeb1-6409-4414-98e7-00d0537b75dd\scratchpad\phase_k\K0\chase\test_chase_k0.py", line 222, in _stub
+    raise NotImplementedError("stub")
+NotImplementedError: stub
+RED fusedcg_matches_fusedc_S1024: "EXC NotImplementedError: stub"
+Traceback (most recent call last):
+  File "C:\Users\seal\AppData\Local\Temp\claude\C--Users-seal-Desktop-New-folder--32-\870edeb1-6409-4414-98e7-00d0537b75dd\scratchpad\phase_k\K0\chase\test_chase_k0.py", line 66, in run
+    ok, val = fn()
+              ^^^^
+  File "C:\Users\seal\AppData\Local\Temp\claude\C--Users-seal-Desktop-New-folder--32-\870edeb1-6409-4414-98e7-00d0537b75dd\scratchpad\phase_k\K0\chase\test_chase_k0.py", line 292, in t_y2_tail
+    _stub()
+  File "C:\Users\seal\AppData\Local\Temp\claude\C--Users-seal-Desktop-New-folder--32-\870edeb1-6409-4414-98e7-00d0537b75dd\scratchpad\phase_k\K0\chase\test_chase_k0.py", line 222, in _stub
+    raise NotImplementedError("stub")
+NotImplementedError: stub
+RED y2_tail_instrument: "EXC NotImplementedError: stub"
+Traceback (most recent call last):
+  File "C:\Users\seal\AppData\Local\Temp\claude\C--Users-seal-Desktop-New-folder--32-\870edeb1-6409-4414-98e7-00d0537b75dd\scratchpad\phase_k\K0\chase\test_chase_k0.py", line 66, in run
+    ok, val = fn()
+              ^^^^
+  File "C:\Users\seal\AppData\Local\Temp\claude\C--Users-seal-Desktop-New-folder--32-\870edeb1-6409-4414-98e7-00d0537b75dd\scratchpad\phase_k\K0\chase\test_chase_k0.py", line 306, in t_gc_blocked
+    _stub()
+  File "C:\Users\seal\AppData\Local\Temp\claude\C--Users-seal-Desktop-New-folder--32-\870edeb1-6409-4414-98e7-00d0537b75dd\scratchpad\phase_k\K0\chase\test_chase_k0.py", line 222, in _stub
+    raise NotImplementedError("stub")
+NotImplementedError: stub
+RED gradcheck_blocked_adjoint_S64_f64: "EXC NotImplementedError: stub"
+SUMMARY {"fwd_softmax_S1024_vs_f64_fs5c": "red", "fusedc_bwd_S1024_vs_f64": "red", "fwd_sparsemax_S1024_vs_f64_pivot": "red", "fusedcg_matches_fusedc_S1024": "red", "y2_tail_instrument": "red", "gradcheck_blocked_adjoint_S64_f64": "red"}

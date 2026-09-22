@@ -1,0 +1,2 @@
+RED gradcheck_blocked_adjoint_S64_f64: "EXC NotImplementedError: stub"
+SUMMARY {"gradcheck_blocked_adjoint_S64_f64": "red"}

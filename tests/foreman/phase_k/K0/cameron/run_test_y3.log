@@ -1,0 +1,13 @@
+PASS n=1024 s_50 8.92 width 1.81 : (8.92, 1.81)
+PASS n=1024 acc(s) monotone within 0.005 : -0.0
+PASS n=4096 s_50 10.73 width 2.61 : (10.73, 2.61)
+PASS n=4096 acc(s) monotone within 0.005 : -0.0
+PASS n=16384 s_50 13.0 width 3.82 : (13.0, 3.82)
+PASS n=16384 acc(s) monotone within 0.005 : -0.0
+n=1024: seed-median s_50 9.02 width 1.66 offset -1.38; range s_50 [8.81,9.22]
+n=4096: seed-median s_50 10.64 width 2.81 offset -2.53; range s_50 [10.45,10.74]
+n=16384: seed-median s_50 12.87 width 3.69 offset -3.07; range s_50 [12.77,13.02]
+PASS law stays struck: offset falls > 0.5 from 1k to 16k : -1.6909393053524395
+PASS broadening: width(16k) - width(1k) > 1.0 : 2.0333482291703406
+PASS slopes per ln n in [1.1, 1.8] : [np.float64(1.169957773778741), np.float64(1.6102873510831637)]
+exit=0

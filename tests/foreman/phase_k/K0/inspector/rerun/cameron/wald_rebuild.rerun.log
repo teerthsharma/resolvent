@@ -1,0 +1,14 @@
+PASS max depth 269, median 127 : (np.int64(269), np.float64(127.5))
+PASS floor 0.0645 : 0.064453125
+PASS ceiling L=4 0.0664 : 0.06640625
+PASS ceiling L=6 0.2539 : 0.25390625
+PASS ceiling L=8 0.9856 : 0.985595703125
+PASS dense resolvent s=8 -> 0.0869 : 0.0869140625
+PASS dense resolvent s=12 -> 0.9954 : 0.995361328125
+PASS dense resolvent s=16 -> 1.0 : 1.0
+PASS dense resolvent s=20 -> 1.0 : 1.0
+PASS sparsemax exact 1.0 : 1.0
+PASS seed band floor: pinned 0.0645 in [q2.5, q97.5] : [0.059808349609375, 0.06640625, 0.07423095703125]
+FAIL seed band L8: pinned 0.9856 in [q2.5, q97.5] : [0.967999267578125, 0.9776611328125, 0.985357666015625]
+PASS seed band s8: pinned 0.0869 in [q2.5, q97.5] : [0.0676025390625, 0.0841064453125, 0.093511962890625]
+PASS seed band s12: pinned 0.9954 in [q2.5, q97.5] : [0.9809326171875, 0.99609375, 1.0]

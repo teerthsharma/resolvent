@@ -1,0 +1,9 @@
+START real_R0_A 02:14:53
+END real_R0_A rc=0 02:15:47
+START real_R0_B 02:15:47
+END real_R0_B rc=0 02:16:16
+START real_R0_B 02:16:16
+END real_R0_B rc=0 02:16:45
+START real_R1 02:16:45
+END real_R1 rc=0 02:17:44
+REALDONE 02:17:44

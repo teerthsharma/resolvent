@@ -1,0 +1,17 @@
+Y1  Klein-Gordon lattice, mass 0.1: measured decay 0.099958 vs arccosh(1+m^2/2) = 0.099958
+Y1  Klein-Gordon lattice, mass 0.5: measured decay 0.494933 vs arccosh(1+m^2/2) = 0.494933
+Y1  Klein-Gordon lattice, mass 1.0: measured decay 0.962424 vs arccosh(1+m^2/2) = 0.962424
+Y2  bare mass 0.5 (range 2.0 tokens), gamma 0.9: dressed mass measured 0.06285 vs ln(gamma+(1-gamma)e^lam) = 0.06285  -> range 16 tokens
+Y2  bare mass 0.5 (range 2.0 tokens), gamma 0.99: dressed mass measured 0.00647 vs ln(gamma+(1-gamma)e^lam) = 0.00647  -> range 155 tokens
+Y2  bare mass 0.5 (range 2.0 tokens), gamma 0.999: dressed mass measured 0.00065 vs ln(gamma+(1-gamma)e^lam) = 0.00065  -> range 1,542 tokens
+Y2  bare mass 1.0 (range 1.0 tokens), gamma 0.9: dressed mass measured 0.15857 vs ln(gamma+(1-gamma)e^lam) = 0.15857  -> range 6 tokens
+Y2  bare mass 1.0 (range 1.0 tokens), gamma 0.99: dressed mass measured 0.01704 vs ln(gamma+(1-gamma)e^lam) = 0.01704  -> range 59 tokens
+Y2  bare mass 1.0 (range 1.0 tokens), gamma 0.999: dressed mass measured 0.00172 vs ln(gamma+(1-gamma)e^lam) = 0.00172  -> range 582 tokens
+Y3  n= 1024, median depth 32: s_50 = 8.92, law ln(n*D_med) = 10.40, offset -1.48; transition width s_90 - s_10 = 1.81
+Y3  n= 4096, median depth 128: s_50 = 10.73, law ln(n*D_med) = 13.17, offset -2.44; transition width s_90 - s_10 = 2.61
+Y3  n=16384, median depth 512: s_50 = 13.00, law ln(n*D_med) = 15.94, offset -2.94; transition width s_90 - s_10 = 3.82
+Y4  assumptions: attained peak 26.77 TF (measured), MFU 0.35 (assumed) -> 9.37 TF effective
+Y4  R0: L= 4 d=128 params    7.2M, tokens  0.14B (20/param), compute 8.08e+15 FLOP ->    0.2 h per run; weights+optimizer 0.11 GiB
+Y4  R1: L= 6 d=320 params   23.5M, tokens  0.47B (20/param), compute 8.83e+16 FLOP ->    2.6 h per run; weights+optimizer 0.35 GiB
+Y4  R2: L= 8 d=512 params   50.9M, tokens  1.02B (20/param), compute 4.14e+17 FLOP ->   12.3 h per run; weights+optimizer 0.76 GiB
+Y4  R3: L=12 d=768 params  123.6M, tokens  2.47B (20/param), compute 2.39e+18 FLOP ->   70.9 h per run; weights+optimizer 1.84 GiB

@@ -1,0 +1,1251 @@
+{
+ "bed": {
+  "max_depth": 269,
+  "median_depth": 127,
+  "n_depth_gt_64": 3056
+ },
+ "doubling": {
+  "4": {
+   "all": 0.06640625,
+   "beyond": 0.0,
+   "n_beyond": 3824
+  },
+  "5": {
+   "all": 0.12890625,
+   "beyond": 0.0,
+   "n_beyond": 3568
+  },
+  "6": {
+   "all": 0.25390625,
+   "beyond": 0.0,
+   "n_beyond": 3056
+  },
+  "7": {
+   "all": 0.50390625,
+   "beyond": 0.0,
+   "n_beyond": 2032
+  },
+  "8": {
+   "all": 0.985595703125,
+   "beyond": 0.0,
+   "n_beyond": 59
+  }
+ },
+ "probes": {
+  "most_recent_root": {
+   "all": 0.064453125,
+   "beyond": 0.05660994764397906,
+   "n_beyond": 3056
+  },
+  "pos_mod_16": {
+   "all": 0.059326171875,
+   "beyond": 0.05595549738219895,
+   "n_beyond": 3056
+  },
+  "local_table": {
+   "all": 0.0673828125,
+   "beyond": 0.0625,
+   "n_beyond": 3056
+  }
+ },
+ "hybrid": {
+  "L4_W8_k3_anchored": {
+   "all": 0.078369140625,
+   "beyond": 0.012813807531380754,
+   "n_beyond": 3824,
+   "attn_dims": 96,
+   "mlp_hidden": 96
+  },
+  "L4_W16_k3_anchored": {
+   "all": 0.091064453125,
+   "beyond": 0.02641213389121339,
+   "n_beyond": 3824,
+   "attn_dims": 192,
+   "mlp_hidden": 192
+  },
+  "L4_W26_k3_anchored": {
+   "all": 0.10205078125,
+   "beyond": 0.038179916317991634,
+   "n_beyond": 3824,
+   "attn_dims": 312,
+   "mlp_hidden": 312
+  },
+  "L4_W32_k3_anchored": {
+   "all": 0.110595703125,
+   "beyond": 0.0473326359832636,
+   "n_beyond": 3824,
+   "attn_dims": 384,
+   "mlp_hidden": 384
+  },
+  "L4_W48_k3_anchored": {
+   "all": 0.122314453125,
+   "beyond": 0.059884937238493724,
+   "n_beyond": 3824,
+   "attn_dims": 576,
+   "mlp_hidden": 576
+  },
+  "L4_W64_k3_anchored": {
+   "all": 0.134521484375,
+   "beyond": 0.0729602510460251,
+   "n_beyond": 3824,
+   "attn_dims": 768,
+   "mlp_hidden": 768
+  },
+  "L4_W96_k3_anchored": {
+   "all": 0.148193359375,
+   "beyond": 0.08760460251046025,
+   "n_beyond": 3824,
+   "attn_dims": 1152,
+   "mlp_hidden": 1152
+  },
+  "L4_W128_k3_anchored": {
+   "all": 0.168701171875,
+   "beyond": 0.10957112970711297,
+   "n_beyond": 3824,
+   "attn_dims": 1536,
+   "mlp_hidden": 1536
+  },
+  "L4_W192_k3_anchored": {
+   "all": 0.20751953125,
+   "beyond": 0.15115062761506276,
+   "n_beyond": 3824,
+   "attn_dims": 2304,
+   "mlp_hidden": 2304
+  },
+  "L4_W256_k3_anchored": {
+   "all": 0.21484375,
+   "beyond": 0.1589958158995816,
+   "n_beyond": 3824,
+   "attn_dims": 3072,
+   "mlp_hidden": 3072
+  },
+  "L4_W384_k3_anchored": {
+   "all": 0.246337890625,
+   "beyond": 0.19273012552301255,
+   "n_beyond": 3824,
+   "attn_dims": 4608,
+   "mlp_hidden": 4608
+  },
+  "L4_W512_k3_anchored": {
+   "all": 0.305419921875,
+   "beyond": 0.2560146443514644,
+   "n_beyond": 3824,
+   "attn_dims": 6144,
+   "mlp_hidden": 6144
+  },
+  "L4_W1024_k3_anchored": {
+   "all": 0.3203125,
+   "beyond": 0.2719665271966527,
+   "n_beyond": 3824,
+   "attn_dims": 12288,
+   "mlp_hidden": 12288
+  },
+  "L4_W4096_k3_anchored": {
+   "all": 0.3203125,
+   "beyond": 0.2719665271966527,
+   "n_beyond": 3824,
+   "attn_dims": 49152,
+   "mlp_hidden": 49152
+  },
+  "L4_W8_k3_centered": {
+   "all": 0.081298828125,
+   "beyond": 0.015951882845188285,
+   "n_beyond": 3824,
+   "attn_dims": 96,
+   "mlp_hidden": 96
+  },
+  "L4_W16_k3_centered": {
+   "all": 0.100830078125,
+   "beyond": 0.036872384937238496,
+   "n_beyond": 3824,
+   "attn_dims": 192,
+   "mlp_hidden": 192
+  },
+  "L4_W26_k3_centered": {
+   "all": 0.122802734375,
+   "beyond": 0.06040794979079498,
+   "n_beyond": 3824,
+   "attn_dims": 312,
+   "mlp_hidden": 312
+  },
+  "L4_W32_k3_centered": {
+   "all": 0.14208984375,
+   "beyond": 0.08106694560669456,
+   "n_beyond": 3824,
+   "attn_dims": 384,
+   "mlp_hidden": 384
+  },
+  "L4_W48_k3_centered": {
+   "all": 0.173828125,
+   "beyond": 0.11506276150627615,
+   "n_beyond": 3824,
+   "attn_dims": 576,
+   "mlp_hidden": 576
+  },
+  "L4_W64_k3_centered": {
+   "all": 0.199951171875,
+   "beyond": 0.1430439330543933,
+   "n_beyond": 3824,
+   "attn_dims": 768,
+   "mlp_hidden": 768
+  },
+  "L4_W96_k3_centered": {
+   "all": 0.23046875,
+   "beyond": 0.17573221757322174,
+   "n_beyond": 3824,
+   "attn_dims": 1152,
+   "mlp_hidden": 1152
+  },
+  "L4_W128_k3_centered": {
+   "all": 0.2666015625,
+   "beyond": 0.21443514644351463,
+   "n_beyond": 3824,
+   "attn_dims": 1536,
+   "mlp_hidden": 1536
+  },
+  "L4_W192_k3_centered": {
+   "all": 0.302734375,
+   "beyond": 0.25313807531380755,
+   "n_beyond": 3824,
+   "attn_dims": 2304,
+   "mlp_hidden": 2304
+  },
+  "L4_W256_k3_centered": {
+   "all": 0.315673828125,
+   "beyond": 0.2669979079497908,
+   "n_beyond": 3824,
+   "attn_dims": 3072,
+   "mlp_hidden": 3072
+  },
+  "L4_W384_k3_centered": {
+   "all": 0.3203125,
+   "beyond": 0.2719665271966527,
+   "n_beyond": 3824,
+   "attn_dims": 4608,
+   "mlp_hidden": 4608
+  },
+  "L4_W512_k3_centered": {
+   "all": 0.3203125,
+   "beyond": 0.2719665271966527,
+   "n_beyond": 3824,
+   "attn_dims": 6144,
+   "mlp_hidden": 6144
+  },
+  "L4_W1024_k3_centered": {
+   "all": 0.3203125,
+   "beyond": 0.2719665271966527,
+   "n_beyond": 3824,
+   "attn_dims": 12288,
+   "mlp_hidden": 12288
+  },
+  "L4_W4096_k3_centered": {
+   "all": 0.3203125,
+   "beyond": 0.2719665271966527,
+   "n_beyond": 3824,
+   "attn_dims": 49152,
+   "mlp_hidden": 49152
+  },
+  "L4_W8_k4_anchored": {
+   "all": 0.0791015625,
+   "beyond": 0.013598326359832637,
+   "n_beyond": 3824,
+   "attn_dims": 96,
+   "mlp_hidden": 768
+  },
+  "L4_W16_k4_anchored": {
+   "all": 0.09423828125,
+   "beyond": 0.02981171548117155,
+   "n_beyond": 3824,
+   "attn_dims": 192,
+   "mlp_hidden": 3072
+  },
+  "L4_W26_k4_anchored": {
+   "all": 0.11083984375,
+   "beyond": 0.047594142259414225,
+   "n_beyond": 3824,
+   "attn_dims": 312,
+   "mlp_hidden": 8112
+  },
+  "L4_W32_k4_anchored": {
+   "all": 0.11865234375,
+   "beyond": 0.05596234309623431,
+   "n_beyond": 3824,
+   "attn_dims": 384,
+   "mlp_hidden": 12288
+  },
+  "L4_W48_k4_anchored": {
+   "all": 0.1416015625,
+   "beyond": 0.08054393305439331,
+   "n_beyond": 3824,
+   "attn_dims": 576,
+   "mlp_hidden": 27648
+  },
+  "L4_W64_k4_anchored": {
+   "all": 0.163818359375,
+   "beyond": 0.10434100418410042,
+   "n_beyond": 3824,
+   "attn_dims": 768,
+   "mlp_hidden": 49152
+  },
+  "L4_W96_k4_anchored": {
+   "all": 0.195068359375,
+   "beyond": 0.13781380753138076,
+   "n_beyond": 3824,
+   "attn_dims": 1152,
+   "mlp_hidden": 110592
+  },
+  "L4_W128_k4_anchored": {
+   "all": 0.228271484375,
+   "beyond": 0.17337866108786612,
+   "n_beyond": 3824,
+   "attn_dims": 1536,
+   "mlp_hidden": 196608
+  },
+  "L4_W192_k4_anchored": {
+   "all": 0.26708984375,
+   "beyond": 0.2149581589958159,
+   "n_beyond": 3824,
+   "attn_dims": 2304,
+   "mlp_hidden": 442368
+  },
+  "L4_W256_k4_anchored": {
+   "all": 0.3212890625,
+   "beyond": 0.2730125523012552,
+   "n_beyond": 3824,
+   "attn_dims": 3072,
+   "mlp_hidden": 786432
+  },
+  "L4_W384_k4_anchored": {
+   "all": 0.3798828125,
+   "beyond": 0.33577405857740583,
+   "n_beyond": 3824,
+   "attn_dims": 4608,
+   "mlp_hidden": 1769472
+  },
+  "L4_W512_k4_anchored": {
+   "all": 0.443603515625,
+   "beyond": 0.4040271966527197,
+   "n_beyond": 3824,
+   "attn_dims": 6144,
+   "mlp_hidden": 3145728
+  },
+  "L4_W1024_k4_anchored": {
+   "all": 0.6298828125,
+   "beyond": 0.6035564853556485,
+   "n_beyond": 3824,
+   "attn_dims": 12288,
+   "mlp_hidden": 12582912
+  },
+  "L4_W4096_k4_anchored": {
+   "all": 0.985595703125,
+   "beyond": 0.984571129707113,
+   "n_beyond": 3824,
+   "attn_dims": 49152,
+   "mlp_hidden": 201326592
+  },
+  "L4_W8_k4_centered": {
+   "all": 0.083251953125,
+   "beyond": 0.018043933054393304,
+   "n_beyond": 3824,
+   "attn_dims": 96,
+   "mlp_hidden": 768
+  },
+  "L4_W16_k4_centered": {
+   "all": 0.108642578125,
+   "beyond": 0.045240585774058574,
+   "n_beyond": 3824,
+   "attn_dims": 192,
+   "mlp_hidden": 3072
+  },
+  "L4_W26_k4_centered": {
+   "all": 0.1435546875,
+   "beyond": 0.08263598326359832,
+   "n_beyond": 3824,
+   "attn_dims": 312,
+   "mlp_hidden": 8112
+  },
+  "L4_W32_k4_centered": {
+   "all": 0.1708984375,
+   "beyond": 0.11192468619246862,
+   "n_beyond": 3824,
+   "attn_dims": 384,
+   "mlp_hidden": 12288
+  },
+  "L4_W48_k4_centered": {
+   "all": 0.207275390625,
+   "beyond": 0.15088912133891214,
+   "n_beyond": 3824,
+   "attn_dims": 576,
+   "mlp_hidden": 27648
+  },
+  "L4_W64_k4_centered": {
+   "all": 0.2314453125,
+   "beyond": 0.17677824267782427,
+   "n_beyond": 3824,
+   "attn_dims": 768,
+   "mlp_hidden": 49152
+  },
+  "L4_W96_k4_centered": {
+   "all": 0.3056640625,
+   "beyond": 0.25627615062761505,
+   "n_beyond": 3824,
+   "attn_dims": 1152,
+   "mlp_hidden": 110592
+  },
+  "L4_W128_k4_centered": {
+   "all": 0.35400390625,
+   "beyond": 0.3080543933054393,
+   "n_beyond": 3824,
+   "attn_dims": 1536,
+   "mlp_hidden": 196608
+  },
+  "L4_W192_k4_centered": {
+   "all": 0.46142578125,
+   "beyond": 0.42311715481171547,
+   "n_beyond": 3824,
+   "attn_dims": 2304,
+   "mlp_hidden": 442368
+  },
+  "L4_W256_k4_centered": {
+   "all": 0.521728515625,
+   "beyond": 0.4877092050209205,
+   "n_beyond": 3824,
+   "attn_dims": 3072,
+   "mlp_hidden": 786432
+  },
+  "L4_W384_k4_centered": {
+   "all": 0.565673828125,
+   "beyond": 0.5347803347280334,
+   "n_beyond": 3824,
+   "attn_dims": 4608,
+   "mlp_hidden": 1769472
+  },
+  "L4_W512_k4_centered": {
+   "all": 0.64013671875,
+   "beyond": 0.6145397489539749,
+   "n_beyond": 3824,
+   "attn_dims": 6144,
+   "mlp_hidden": 3145728
+  },
+  "L4_W1024_k4_centered": {
+   "all": 0.752197265625,
+   "beyond": 0.734571129707113,
+   "n_beyond": 3824,
+   "attn_dims": 12288,
+   "mlp_hidden": 12582912
+  },
+  "L4_W4096_k4_centered": {
+   "all": 0.985595703125,
+   "beyond": 0.984571129707113,
+   "n_beyond": 3824,
+   "attn_dims": 49152,
+   "mlp_hidden": 201326592
+  },
+  "L6_W8_k3_anchored": {
+   "all": 0.306396484375,
+   "beyond": 0.07035340314136125,
+   "n_beyond": 3056,
+   "attn_dims": 96,
+   "mlp_hidden": 96
+  },
+  "L6_W16_k3_anchored": {
+   "all": 0.34375,
+   "beyond": 0.12041884816753927,
+   "n_beyond": 3056,
+   "attn_dims": 192,
+   "mlp_hidden": 192
+  },
+  "L6_W26_k3_anchored": {
+   "all": 0.398193359375,
+   "beyond": 0.19339005235602094,
+   "n_beyond": 3056,
+   "attn_dims": 312,
+   "mlp_hidden": 312
+  },
+  "L6_W32_k3_anchored": {
+   "all": 0.424072265625,
+   "beyond": 0.2280759162303665,
+   "n_beyond": 3056,
+   "attn_dims": 384,
+   "mlp_hidden": 384
+  },
+  "L6_W48_k3_anchored": {
+   "all": 0.482177734375,
+   "beyond": 0.30595549738219896,
+   "n_beyond": 3056,
+   "attn_dims": 576,
+   "mlp_hidden": 576
+  },
+  "L6_W64_k3_anchored": {
+   "all": 0.521484375,
+   "beyond": 0.3586387434554974,
+   "n_beyond": 3056,
+   "attn_dims": 768,
+   "mlp_hidden": 768
+  },
+  "L6_W96_k3_anchored": {
+   "all": 0.587158203125,
+   "beyond": 0.4466623036649215,
+   "n_beyond": 3056,
+   "attn_dims": 1152,
+   "mlp_hidden": 1152
+  },
+  "L6_W128_k3_anchored": {
+   "all": 0.669677734375,
+   "beyond": 0.5572643979057592,
+   "n_beyond": 3056,
+   "attn_dims": 1536,
+   "mlp_hidden": 1536
+  },
+  "L6_W192_k3_anchored": {
+   "all": 0.8134765625,
+   "beyond": 0.75,
+   "n_beyond": 3056,
+   "attn_dims": 2304,
+   "mlp_hidden": 2304
+  },
+  "L6_W256_k3_anchored": {
+   "all": 0.8447265625,
+   "beyond": 0.7918848167539267,
+   "n_beyond": 3056,
+   "attn_dims": 3072,
+   "mlp_hidden": 3072
+  },
+  "L6_W384_k3_anchored": {
+   "all": 0.943359375,
+   "beyond": 0.9240837696335078,
+   "n_beyond": 3056,
+   "attn_dims": 4608,
+   "mlp_hidden": 4608
+  },
+  "L6_W512_k3_anchored": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 3056,
+   "attn_dims": 6144,
+   "mlp_hidden": 6144
+  },
+  "L6_W1024_k3_anchored": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 3056,
+   "attn_dims": 12288,
+   "mlp_hidden": 12288
+  },
+  "L6_W4096_k3_anchored": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 3056,
+   "attn_dims": 49152,
+   "mlp_hidden": 49152
+  },
+  "L6_W8_k3_centered": {
+   "all": 0.3232421875,
+   "beyond": 0.09293193717277487,
+   "n_beyond": 3056,
+   "attn_dims": 96,
+   "mlp_hidden": 96
+  },
+  "L6_W16_k3_centered": {
+   "all": 0.390869140625,
+   "beyond": 0.18357329842931938,
+   "n_beyond": 3056,
+   "attn_dims": 192,
+   "mlp_hidden": 192
+  },
+  "L6_W26_k3_centered": {
+   "all": 0.498291015625,
+   "beyond": 0.3275523560209424,
+   "n_beyond": 3056,
+   "attn_dims": 312,
+   "mlp_hidden": 312
+  },
+  "L6_W32_k3_centered": {
+   "all": 0.5712890625,
+   "beyond": 0.42539267015706805,
+   "n_beyond": 3056,
+   "attn_dims": 384,
+   "mlp_hidden": 384
+  },
+  "L6_W48_k3_centered": {
+   "all": 0.67138671875,
+   "beyond": 0.5595549738219895,
+   "n_beyond": 3056,
+   "attn_dims": 576,
+   "mlp_hidden": 576
+  },
+  "L6_W64_k3_centered": {
+   "all": 0.783935546875,
+   "beyond": 0.7104057591623036,
+   "n_beyond": 3056,
+   "attn_dims": 768,
+   "mlp_hidden": 768
+  },
+  "L6_W96_k3_centered": {
+   "all": 0.91552734375,
+   "beyond": 0.8867801047120419,
+   "n_beyond": 3056,
+   "attn_dims": 1152,
+   "mlp_hidden": 1152
+  },
+  "L6_W128_k3_centered": {
+   "all": 0.978271484375,
+   "beyond": 0.9708769633507853,
+   "n_beyond": 3056,
+   "attn_dims": 1536,
+   "mlp_hidden": 1536
+  },
+  "L6_W192_k3_centered": {
+   "all": 0.99853515625,
+   "beyond": 0.9980366492146597,
+   "n_beyond": 3056,
+   "attn_dims": 2304,
+   "mlp_hidden": 2304
+  },
+  "L6_W256_k3_centered": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 3056,
+   "attn_dims": 3072,
+   "mlp_hidden": 3072
+  },
+  "L6_W384_k3_centered": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 3056,
+   "attn_dims": 4608,
+   "mlp_hidden": 4608
+  },
+  "L6_W512_k3_centered": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 3056,
+   "attn_dims": 6144,
+   "mlp_hidden": 6144
+  },
+  "L6_W1024_k3_centered": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 3056,
+   "attn_dims": 12288,
+   "mlp_hidden": 12288
+  },
+  "L6_W4096_k3_centered": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 3056,
+   "attn_dims": 49152,
+   "mlp_hidden": 49152
+  },
+  "L6_W8_k4_anchored": {
+   "all": 0.314453125,
+   "beyond": 0.08115183246073299,
+   "n_beyond": 3056,
+   "attn_dims": 96,
+   "mlp_hidden": 768
+  },
+  "L6_W16_k4_anchored": {
+   "all": 0.368896484375,
+   "beyond": 0.15412303664921467,
+   "n_beyond": 3056,
+   "attn_dims": 192,
+   "mlp_hidden": 3072
+  },
+  "L6_W26_k4_anchored": {
+   "all": 0.43212890625,
+   "beyond": 0.23887434554973822,
+   "n_beyond": 3056,
+   "attn_dims": 312,
+   "mlp_hidden": 8112
+  },
+  "L6_W32_k4_anchored": {
+   "all": 0.460205078125,
+   "beyond": 0.2765052356020942,
+   "n_beyond": 3056,
+   "attn_dims": 384,
+   "mlp_hidden": 12288
+  },
+  "L6_W48_k4_anchored": {
+   "all": 0.556640625,
+   "beyond": 0.40575916230366493,
+   "n_beyond": 3056,
+   "attn_dims": 576,
+   "mlp_hidden": 27648
+  },
+  "L6_W64_k4_anchored": {
+   "all": 0.6259765625,
+   "beyond": 0.4986910994764398,
+   "n_beyond": 3056,
+   "attn_dims": 768,
+   "mlp_hidden": 49152
+  },
+  "L6_W96_k4_anchored": {
+   "all": 0.77294921875,
+   "beyond": 0.6956806282722513,
+   "n_beyond": 3056,
+   "attn_dims": 1152,
+   "mlp_hidden": 110592
+  },
+  "L6_W128_k4_anchored": {
+   "all": 0.88720703125,
+   "beyond": 0.8488219895287958,
+   "n_beyond": 3056,
+   "attn_dims": 1536,
+   "mlp_hidden": 196608
+  },
+  "L6_W192_k4_anchored": {
+   "all": 0.9931640625,
+   "beyond": 0.9908376963350786,
+   "n_beyond": 3056,
+   "attn_dims": 2304,
+   "mlp_hidden": 442368
+  },
+  "L6_W256_k4_anchored": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 3056,
+   "attn_dims": 3072,
+   "mlp_hidden": 786432
+  },
+  "L6_W384_k4_anchored": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 3056,
+   "attn_dims": 4608,
+   "mlp_hidden": 1769472
+  },
+  "L6_W512_k4_anchored": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 3056,
+   "attn_dims": 6144,
+   "mlp_hidden": 3145728
+  },
+  "L6_W1024_k4_anchored": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 3056,
+   "attn_dims": 12288,
+   "mlp_hidden": 12582912
+  },
+  "L6_W4096_k4_anchored": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 3056,
+   "attn_dims": 49152,
+   "mlp_hidden": 201326592
+  },
+  "L6_W8_k4_centered": {
+   "all": 0.337646484375,
+   "beyond": 0.11223821989528796,
+   "n_beyond": 3056,
+   "attn_dims": 96,
+   "mlp_hidden": 768
+  },
+  "L6_W16_k4_centered": {
+   "all": 0.42236328125,
+   "beyond": 0.22578534031413613,
+   "n_beyond": 3056,
+   "attn_dims": 192,
+   "mlp_hidden": 3072
+  },
+  "L6_W26_k4_centered": {
+   "all": 0.5546875,
+   "beyond": 0.4031413612565445,
+   "n_beyond": 3056,
+   "attn_dims": 312,
+   "mlp_hidden": 8112
+  },
+  "L6_W32_k4_centered": {
+   "all": 0.665771484375,
+   "beyond": 0.5520287958115183,
+   "n_beyond": 3056,
+   "attn_dims": 384,
+   "mlp_hidden": 12288
+  },
+  "L6_W48_k4_centered": {
+   "all": 0.818603515625,
+   "beyond": 0.756871727748691,
+   "n_beyond": 3056,
+   "attn_dims": 576,
+   "mlp_hidden": 27648
+  },
+  "L6_W64_k4_centered": {
+   "all": 0.9248046875,
+   "beyond": 0.8992146596858639,
+   "n_beyond": 3056,
+   "attn_dims": 768,
+   "mlp_hidden": 49152
+  },
+  "L6_W96_k4_centered": {
+   "all": 0.99951171875,
+   "beyond": 0.9993455497382199,
+   "n_beyond": 3056,
+   "attn_dims": 1152,
+   "mlp_hidden": 110592
+  },
+  "L6_W128_k4_centered": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 3056,
+   "attn_dims": 1536,
+   "mlp_hidden": 196608
+  },
+  "L6_W192_k4_centered": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 3056,
+   "attn_dims": 2304,
+   "mlp_hidden": 442368
+  },
+  "L6_W256_k4_centered": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 3056,
+   "attn_dims": 3072,
+   "mlp_hidden": 786432
+  },
+  "L6_W384_k4_centered": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 3056,
+   "attn_dims": 4608,
+   "mlp_hidden": 1769472
+  },
+  "L6_W512_k4_centered": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 3056,
+   "attn_dims": 6144,
+   "mlp_hidden": 3145728
+  },
+  "L6_W1024_k4_centered": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 3056,
+   "attn_dims": 12288,
+   "mlp_hidden": 12582912
+  },
+  "L6_W4096_k4_centered": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 3056,
+   "attn_dims": 49152,
+   "mlp_hidden": 201326592
+  },
+  "L8_W8_k3_anchored": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 59,
+   "attn_dims": 96,
+   "mlp_hidden": 96
+  },
+  "L8_W16_k3_anchored": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 59,
+   "attn_dims": 192,
+   "mlp_hidden": 192
+  },
+  "L8_W26_k3_anchored": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 59,
+   "attn_dims": 312,
+   "mlp_hidden": 312
+  },
+  "L8_W32_k3_anchored": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 59,
+   "attn_dims": 384,
+   "mlp_hidden": 384
+  },
+  "L8_W48_k3_anchored": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 59,
+   "attn_dims": 576,
+   "mlp_hidden": 576
+  },
+  "L8_W64_k3_anchored": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 59,
+   "attn_dims": 768,
+   "mlp_hidden": 768
+  },
+  "L8_W96_k3_anchored": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 59,
+   "attn_dims": 1152,
+   "mlp_hidden": 1152
+  },
+  "L8_W128_k3_anchored": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 59,
+   "attn_dims": 1536,
+   "mlp_hidden": 1536
+  },
+  "L8_W192_k3_anchored": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 59,
+   "attn_dims": 2304,
+   "mlp_hidden": 2304
+  },
+  "L8_W256_k3_anchored": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 59,
+   "attn_dims": 3072,
+   "mlp_hidden": 3072
+  },
+  "L8_W384_k3_anchored": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 59,
+   "attn_dims": 4608,
+   "mlp_hidden": 4608
+  },
+  "L8_W512_k3_anchored": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 59,
+   "attn_dims": 6144,
+   "mlp_hidden": 6144
+  },
+  "L8_W1024_k3_anchored": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 59,
+   "attn_dims": 12288,
+   "mlp_hidden": 12288
+  },
+  "L8_W4096_k3_anchored": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 59,
+   "attn_dims": 49152,
+   "mlp_hidden": 49152
+  },
+  "L8_W8_k3_centered": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 59,
+   "attn_dims": 96,
+   "mlp_hidden": 96
+  },
+  "L8_W16_k3_centered": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 59,
+   "attn_dims": 192,
+   "mlp_hidden": 192
+  },
+  "L8_W26_k3_centered": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 59,
+   "attn_dims": 312,
+   "mlp_hidden": 312
+  },
+  "L8_W32_k3_centered": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 59,
+   "attn_dims": 384,
+   "mlp_hidden": 384
+  },
+  "L8_W48_k3_centered": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 59,
+   "attn_dims": 576,
+   "mlp_hidden": 576
+  },
+  "L8_W64_k3_centered": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 59,
+   "attn_dims": 768,
+   "mlp_hidden": 768
+  },
+  "L8_W96_k3_centered": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 59,
+   "attn_dims": 1152,
+   "mlp_hidden": 1152
+  },
+  "L8_W128_k3_centered": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 59,
+   "attn_dims": 1536,
+   "mlp_hidden": 1536
+  },
+  "L8_W192_k3_centered": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 59,
+   "attn_dims": 2304,
+   "mlp_hidden": 2304
+  },
+  "L8_W256_k3_centered": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 59,
+   "attn_dims": 3072,
+   "mlp_hidden": 3072
+  },
+  "L8_W384_k3_centered": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 59,
+   "attn_dims": 4608,
+   "mlp_hidden": 4608
+  },
+  "L8_W512_k3_centered": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 59,
+   "attn_dims": 6144,
+   "mlp_hidden": 6144
+  },
+  "L8_W1024_k3_centered": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 59,
+   "attn_dims": 12288,
+   "mlp_hidden": 12288
+  },
+  "L8_W4096_k3_centered": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 59,
+   "attn_dims": 49152,
+   "mlp_hidden": 49152
+  },
+  "L8_W8_k4_anchored": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 59,
+   "attn_dims": 96,
+   "mlp_hidden": 768
+  },
+  "L8_W16_k4_anchored": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 59,
+   "attn_dims": 192,
+   "mlp_hidden": 3072
+  },
+  "L8_W26_k4_anchored": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 59,
+   "attn_dims": 312,
+   "mlp_hidden": 8112
+  },
+  "L8_W32_k4_anchored": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 59,
+   "attn_dims": 384,
+   "mlp_hidden": 12288
+  },
+  "L8_W48_k4_anchored": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 59,
+   "attn_dims": 576,
+   "mlp_hidden": 27648
+  },
+  "L8_W64_k4_anchored": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 59,
+   "attn_dims": 768,
+   "mlp_hidden": 49152
+  },
+  "L8_W96_k4_anchored": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 59,
+   "attn_dims": 1152,
+   "mlp_hidden": 110592
+  },
+  "L8_W128_k4_anchored": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 59,
+   "attn_dims": 1536,
+   "mlp_hidden": 196608
+  },
+  "L8_W192_k4_anchored": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 59,
+   "attn_dims": 2304,
+   "mlp_hidden": 442368
+  },
+  "L8_W256_k4_anchored": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 59,
+   "attn_dims": 3072,
+   "mlp_hidden": 786432
+  },
+  "L8_W384_k4_anchored": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 59,
+   "attn_dims": 4608,
+   "mlp_hidden": 1769472
+  },
+  "L8_W512_k4_anchored": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 59,
+   "attn_dims": 6144,
+   "mlp_hidden": 3145728
+  },
+  "L8_W1024_k4_anchored": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 59,
+   "attn_dims": 12288,
+   "mlp_hidden": 12582912
+  },
+  "L8_W4096_k4_anchored": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 59,
+   "attn_dims": 49152,
+   "mlp_hidden": 201326592
+  },
+  "L8_W8_k4_centered": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 59,
+   "attn_dims": 96,
+   "mlp_hidden": 768
+  },
+  "L8_W16_k4_centered": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 59,
+   "attn_dims": 192,
+   "mlp_hidden": 3072
+  },
+  "L8_W26_k4_centered": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 59,
+   "attn_dims": 312,
+   "mlp_hidden": 8112
+  },
+  "L8_W32_k4_centered": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 59,
+   "attn_dims": 384,
+   "mlp_hidden": 12288
+  },
+  "L8_W48_k4_centered": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 59,
+   "attn_dims": 576,
+   "mlp_hidden": 27648
+  },
+  "L8_W64_k4_centered": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 59,
+   "attn_dims": 768,
+   "mlp_hidden": 49152
+  },
+  "L8_W96_k4_centered": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 59,
+   "attn_dims": 1152,
+   "mlp_hidden": 110592
+  },
+  "L8_W128_k4_centered": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 59,
+   "attn_dims": 1536,
+   "mlp_hidden": 196608
+  },
+  "L8_W192_k4_centered": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 59,
+   "attn_dims": 2304,
+   "mlp_hidden": 442368
+  },
+  "L8_W256_k4_centered": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 59,
+   "attn_dims": 3072,
+   "mlp_hidden": 786432
+  },
+  "L8_W384_k4_centered": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 59,
+   "attn_dims": 4608,
+   "mlp_hidden": 1769472
+  },
+  "L8_W512_k4_centered": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 59,
+   "attn_dims": 6144,
+   "mlp_hidden": 3145728
+  },
+  "L8_W1024_k4_centered": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 59,
+   "attn_dims": 12288,
+   "mlp_hidden": 12582912
+  },
+  "L8_W4096_k4_centered": {
+   "all": 1.0,
+   "beyond": 1.0,
+   "n_beyond": 59,
+   "attn_dims": 49152,
+   "mlp_hidden": 201326592
+  }
+ },
+ "replication_8_fresh_beds": {
+  "L6_W4096_k3_anchored": {
+   "beyond_mean": 1.0,
+   "beyond_min": 1.0,
+   "beyond_max": 1.0
+  },
+  "L6_W26_k3_anchored": {
+   "beyond_mean": 0.1880726439790576,
+   "beyond_min": 0.17473821989528796,
+   "beyond_max": 0.20091623036649214
+  },
+  "L6_W128_k3_centered": {
+   "beyond_mean": 0.9603648560209423,
+   "beyond_min": 0.949607329842932,
+   "beyond_max": 0.9679319371727748
+  },
+  "L6_W64_k3_centered": {
+   "beyond_mean": 0.7137598167539267,
+   "beyond_min": 0.6695026178010471,
+   "beyond_max": 0.7581806282722513
+  }
+ }
+}

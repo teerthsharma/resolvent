@@ -1,0 +1,2 @@
+RED fwd_softmax_S1024_vs_f64: {"rel_err": 3.6769499861787216e-05}
+SUMMARY {"fwd_softmax_S1024_vs_f64": "red"}

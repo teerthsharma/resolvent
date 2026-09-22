@@ -1,0 +1,3 @@
+RED fwd_softmax_S1024_vs_f64_fs5c: "EXC NotImplementedError: stub"
+RED fusedc_bwd_S1024_vs_f64: "EXC NotImplementedError: stub"
+SUMMARY {"fwd_softmax_S1024_vs_f64_fs5c": "red", "fusedc_bwd_S1024_vs_f64": "red"}

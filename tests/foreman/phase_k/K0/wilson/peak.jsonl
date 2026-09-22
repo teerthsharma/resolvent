@@ -1,0 +1,6 @@
+[POLL] compute_procs=1 used_mib=1011 free=False
+[POLL] compute_procs=1 used_mib=417 free=False
+[POLL] compute_procs=0 used_mib=0 free=True
+{"n": 4096, "tflops": [26.174778250861966, 32.450665005467364, 31.555145196581602, 30.589683612864963, 31.123668032462792], "device": "NVIDIA GeForce RTX 4060 Laptop GPU", "clock_mhz": "2550 MHz, 3105 MHz, [N/A]"}
+[POLL] compute_procs=0 used_mib=0 free=True
+{"n": 8192, "tflops": [30.377139675241445, 29.87350197007127, 29.455585262846324, 29.07985636667345, 28.688292292310727], "device": "NVIDIA GeForce RTX 4060 Laptop GPU", "clock_mhz": "2340 MHz, 3105 MHz, [N/A]"}

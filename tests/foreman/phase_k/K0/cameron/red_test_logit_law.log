@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "C:\Users\seal\AppData\Local\Temp\claude\C--Users-seal-Desktop-New-folder--32-\870edeb1-6409-4414-98e7-00d0537b75dd\scratchpad\phase_k\K0\cameron\test_logit_law.py", line 9, in <module>
+    from k1_floors import s_needed, GRID, train_beds, test_beds
+ModuleNotFoundError: No module named 'k1_floors'

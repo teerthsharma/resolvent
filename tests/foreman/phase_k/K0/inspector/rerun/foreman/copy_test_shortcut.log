@@ -1,0 +1,8 @@
+PASS doubling_sim L=4  got=0.06640625
+PASS doubling_sim L=6  got=0.25390625
+PASS doubling_sim L=8  got=0.985595703125
+PASS no_local_leak most_recent_root  got=0.05660994764397906
+PASS no_local_leak pos_mod_16  got=0.05595549738219895
+PASS no_local_leak local_table  got=0.0625
+PASS hybrid_beats_2L L=6 W=4096  got=1.0
+PASS hybrid_at_R1_width L=6 W=26  got=0.19339005235602094

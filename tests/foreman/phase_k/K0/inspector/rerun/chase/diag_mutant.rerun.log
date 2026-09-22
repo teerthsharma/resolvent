@@ -1,0 +1,6 @@
+mutant dv*1.01:
+RED gradcheck_blocked_adjoint_S64_f64: {"gradcheck": false, "S": 64, "c": 16, "dtype": "float64"}
+mutant no push:
+RED gradcheck_blocked_adjoint_S64_f64: {"gradcheck": false, "S": 64, "c": 16, "dtype": "float64"}
+mutant untransposed dense adjoint:
+RED gradcheck_softmax_S64_f64: {"gradcheck": false, "S": 64, "dtype": "float64"}

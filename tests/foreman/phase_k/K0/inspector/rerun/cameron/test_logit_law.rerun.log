@@ -1,0 +1,2 @@
+s_train (worst of 8 train beds, acc>=0.99) = 11.50; 16k median acc at s_train = 0.2551; 16k median s_99 = 14.50; implied a = 1.082 per ln n
+PASS

@@ -1,0 +1,12 @@
+[POLL] compute_procs=0 used_mib=0 free=True
+RED fwd_softmax_S1024_vs_f64: "EXC NotImplementedError: stub"
+RED fwd_sparsemax_S1024_vs_f64: "EXC NotImplementedError: stub"
+RED gradcheck_softmax_S64_f64: "EXC NotImplementedError: stub"
+RED gradcheck_sparsemax_S64_f64: "EXC NotImplementedError: stub"
+RED fused_bwd_S1024_vs_f64: "EXC NotImplementedError: stub"
+RED y1_rebuild: "EXC NotImplementedError: stub"
+RED y2_closed_form: "EXC NotImplementedError: stub"
+RED y2_vs_pinned: "EXC NotImplementedError: stub"
+RED gamma_rho_lt_1: "EXC NotImplementedError: stub"
+RED cost_report: {}
+SUMMARY {"fwd_softmax_S1024_vs_f64": "red", "fwd_sparsemax_S1024_vs_f64": "red", "gradcheck_softmax_S64_f64": "red", "gradcheck_sparsemax_S64_f64": "red", "fused_bwd_S1024_vs_f64": "red", "y1_rebuild": "red", "y2_closed_form": "red", "y2_vs_pinned": "red", "gamma_rho_lt_1": "red", "cost_report": "red"}

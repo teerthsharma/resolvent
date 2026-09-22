@@ -1,0 +1,2 @@
+{"arm": "family", "hidden": 384, "layers": 6, "heads": 6, "seq": 1024, "batch": 8, "oom": true}
+RED cost@11.2M: family OOM vs bar >= 43573 tok/s, <= 4.0 GiB

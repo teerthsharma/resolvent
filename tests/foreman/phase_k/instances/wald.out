@@ -1,0 +1,11 @@
+bed: n=4096, 16 interleaved chains, max depth 269, median depth 127
+floor  position-only (most recent root): 0.0645;  chance 1/M = 0.0625
+ceiling L=4 transformer, perfect pointer doubling (reaches 2^L = 16 hops): 0.0664
+ceiling L=6 transformer, perfect pointer doubling (reaches 2^L = 64 hops): 0.2539
+ceiling L=8 transformer, perfect pointer doubling (reaches 2^L = 256 hops): 0.9856
+resolvent 1 layer, softmax logit scale s= 8.0 (gamma 0.999): 0.0869
+resolvent 1 layer, softmax logit scale s=12.0 (gamma 0.999): 0.9954
+resolvent 1 layer, softmax logit scale s=16.0 (gamma 0.999): 1.0000
+resolvent 1 layer, softmax logit scale s=20.0 (gamma 0.999): 1.0000
+resolvent 1 layer, sparsemax (exact parent weight 1): 1.0000 by construction (B_i = B_parent)
+softmax scale needed for per-hop leak <= 1/(10*depth_max): s >= ln(n * 10 * D) = 16.2

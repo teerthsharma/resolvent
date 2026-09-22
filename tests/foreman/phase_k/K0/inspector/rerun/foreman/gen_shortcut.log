@@ -1,0 +1,86 @@
+doubling L=4: all 0.0664 beyond 0.0
+doubling L=5: all 0.1289 beyond 0.0
+doubling L=6: all 0.2539 beyond 0.0
+doubling L=7: all 0.5039 beyond 0.0
+doubling L=8: all 0.9856 beyond 0.0
+probe most_recent_root: all 0.0645 beyond(>64) 0.0566 n=3056
+probe pos_mod_16: all 0.0593 beyond(>64) 0.0560 n=3056
+probe local_table: all 0.0674 beyond(>64) 0.0625 n=3056
+L6_W8_k3_anchored: all 0.3064 beyond(>64) 0.0704 attn_dims 96 mlp_hidden 96
+L6_W16_k3_anchored: all 0.3438 beyond(>64) 0.1204 attn_dims 192 mlp_hidden 192
+L6_W26_k3_anchored: all 0.3982 beyond(>64) 0.1934 attn_dims 312 mlp_hidden 312
+L6_W32_k3_anchored: all 0.4241 beyond(>64) 0.2281 attn_dims 384 mlp_hidden 384
+L6_W48_k3_anchored: all 0.4822 beyond(>64) 0.3060 attn_dims 576 mlp_hidden 576
+L6_W64_k3_anchored: all 0.5215 beyond(>64) 0.3586 attn_dims 768 mlp_hidden 768
+L6_W96_k3_anchored: all 0.5872 beyond(>64) 0.4467 attn_dims 1152 mlp_hidden 1152
+L6_W128_k3_anchored: all 0.6697 beyond(>64) 0.5573 attn_dims 1536 mlp_hidden 1536
+L6_W192_k3_anchored: all 0.8135 beyond(>64) 0.7500 attn_dims 2304 mlp_hidden 2304
+L6_W256_k3_anchored: all 0.8447 beyond(>64) 0.7919 attn_dims 3072 mlp_hidden 3072
+L6_W384_k3_anchored: all 0.9434 beyond(>64) 0.9241 attn_dims 4608 mlp_hidden 4608
+L6_W512_k3_anchored: all 1.0000 beyond(>64) 1.0000 attn_dims 6144 mlp_hidden 6144
+L6_W1024_k3_anchored: all 1.0000 beyond(>64) 1.0000 attn_dims 12288 mlp_hidden 12288
+L6_W4096_k3_anchored: all 1.0000 beyond(>64) 1.0000 attn_dims 49152 mlp_hidden 49152
+L6_W8_k3_centered: all 0.3232 beyond(>64) 0.0929 attn_dims 96 mlp_hidden 96
+L6_W16_k3_centered: all 0.3909 beyond(>64) 0.1836 attn_dims 192 mlp_hidden 192
+L6_W26_k3_centered: all 0.4983 beyond(>64) 0.3276 attn_dims 312 mlp_hidden 312
+L6_W32_k3_centered: all 0.5713 beyond(>64) 0.4254 attn_dims 384 mlp_hidden 384
+L6_W48_k3_centered: all 0.6714 beyond(>64) 0.5596 attn_dims 576 mlp_hidden 576
+L6_W64_k3_centered: all 0.7839 beyond(>64) 0.7104 attn_dims 768 mlp_hidden 768
+L6_W96_k3_centered: all 0.9155 beyond(>64) 0.8868 attn_dims 1152 mlp_hidden 1152
+L6_W128_k3_centered: all 0.9783 beyond(>64) 0.9709 attn_dims 1536 mlp_hidden 1536
+L6_W192_k3_centered: all 0.9985 beyond(>64) 0.9980 attn_dims 2304 mlp_hidden 2304
+L6_W256_k3_centered: all 1.0000 beyond(>64) 1.0000 attn_dims 3072 mlp_hidden 3072
+L6_W384_k3_centered: all 1.0000 beyond(>64) 1.0000 attn_dims 4608 mlp_hidden 4608
+L6_W512_k3_centered: all 1.0000 beyond(>64) 1.0000 attn_dims 6144 mlp_hidden 6144
+L6_W1024_k3_centered: all 1.0000 beyond(>64) 1.0000 attn_dims 12288 mlp_hidden 12288
+L6_W4096_k3_centered: all 1.0000 beyond(>64) 1.0000 attn_dims 49152 mlp_hidden 49152
+L6_W8_k4_anchored: all 0.3145 beyond(>64) 0.0812 attn_dims 96 mlp_hidden 768
+L6_W16_k4_anchored: all 0.3689 beyond(>64) 0.1541 attn_dims 192 mlp_hidden 3072
+L6_W26_k4_anchored: all 0.4321 beyond(>64) 0.2389 attn_dims 312 mlp_hidden 8112
+L6_W32_k4_anchored: all 0.4602 beyond(>64) 0.2765 attn_dims 384 mlp_hidden 12288
+L6_W48_k4_anchored: all 0.5566 beyond(>64) 0.4058 attn_dims 576 mlp_hidden 27648
+L6_W64_k4_anchored: all 0.6260 beyond(>64) 0.4987 attn_dims 768 mlp_hidden 49152
+L6_W96_k4_anchored: all 0.7729 beyond(>64) 0.6957 attn_dims 1152 mlp_hidden 110592
+L6_W128_k4_anchored: all 0.8872 beyond(>64) 0.8488 attn_dims 1536 mlp_hidden 196608
+L6_W192_k4_anchored: all 0.9932 beyond(>64) 0.9908 attn_dims 2304 mlp_hidden 442368
+L6_W256_k4_anchored: all 1.0000 beyond(>64) 1.0000 attn_dims 3072 mlp_hidden 786432
+L6_W384_k4_anchored: all 1.0000 beyond(>64) 1.0000 attn_dims 4608 mlp_hidden 1769472
+L6_W512_k4_anchored: all 1.0000 beyond(>64) 1.0000 attn_dims 6144 mlp_hidden 3145728
+L6_W1024_k4_anchored: all 1.0000 beyond(>64) 1.0000 attn_dims 12288 mlp_hidden 12582912
+L6_W4096_k4_anchored: all 1.0000 beyond(>64) 1.0000 attn_dims 49152 mlp_hidden 201326592
+L6_W8_k4_centered: all 0.3376 beyond(>64) 0.1122 attn_dims 96 mlp_hidden 768
+L6_W16_k4_centered: all 0.4224 beyond(>64) 0.2258 attn_dims 192 mlp_hidden 3072
+L6_W26_k4_centered: all 0.5547 beyond(>64) 0.4031 attn_dims 312 mlp_hidden 8112
+L6_W32_k4_centered: all 0.6658 beyond(>64) 0.5520 attn_dims 384 mlp_hidden 12288
+L6_W48_k4_centered: all 0.8186 beyond(>64) 0.7569 attn_dims 576 mlp_hidden 27648
+L6_W64_k4_centered: all 0.9248 beyond(>64) 0.8992 attn_dims 768 mlp_hidden 49152
+L6_W96_k4_centered: all 0.9995 beyond(>64) 0.9993 attn_dims 1152 mlp_hidden 110592
+L6_W128_k4_centered: all 1.0000 beyond(>64) 1.0000 attn_dims 1536 mlp_hidden 196608
+L6_W192_k4_centered: all 1.0000 beyond(>64) 1.0000 attn_dims 2304 mlp_hidden 442368
+L6_W256_k4_centered: all 1.0000 beyond(>64) 1.0000 attn_dims 3072 mlp_hidden 786432
+L6_W384_k4_centered: all 1.0000 beyond(>64) 1.0000 attn_dims 4608 mlp_hidden 1769472
+L6_W512_k4_centered: all 1.0000 beyond(>64) 1.0000 attn_dims 6144 mlp_hidden 3145728
+L6_W1024_k4_centered: all 1.0000 beyond(>64) 1.0000 attn_dims 12288 mlp_hidden 12582912
+L6_W4096_k4_centered: all 1.0000 beyond(>64) 1.0000 attn_dims 49152 mlp_hidden 201326592
+{
+ "L6_W4096_k3_anchored": {
+  "beyond_mean": 1.0,
+  "beyond_min": 1.0,
+  "beyond_max": 1.0
+ },
+ "L6_W26_k3_anchored": {
+  "beyond_mean": 0.1880726439790576,
+  "beyond_min": 0.17473821989528796,
+  "beyond_max": 0.20091623036649214
+ },
+ "L6_W128_k3_centered": {
+  "beyond_mean": 0.9603648560209423,
+  "beyond_min": 0.949607329842932,
+  "beyond_max": 0.9679319371727748
+ },
+ "L6_W64_k3_centered": {
+  "beyond_mean": 0.7137598167539267,
+  "beyond_min": 0.6695026178010471,
+  "beyond_max": 0.7581806282722513
+ }
+}

@@ -1,0 +1,41 @@
+train: roots 38.0 chance 0.0263 max_depth [32.0, 32.0, 32.0] recency 0.1016 | res s_99 [11.25, 11.34375, 11.5] acc@16 1.0000 acc@20 1.0000
+   L= 3 exact 0.3112 credited 0.3663 beyond-frac 0.6888 credited_beyond 0.0800 [0.0576,0.0999] recency_beyond 0.0256
+   L= 4 exact 0.5610 credited 0.6051 beyond-frac 0.4390 credited_beyond 0.1003 [0.0726,0.1483] recency_beyond 0.0130
+   L= 5 exact 1.0000 credited 1.0000 beyond-frac 0.0000
+   L= 6 exact 1.0000 credited 1.0000 beyond-frac 0.0000
+   L= 7 exact 1.0000 credited 1.0000 beyond-frac 0.0000
+   L= 8 exact 1.0000 credited 1.0000 beyond-frac 0.0000
+   L= 9 exact 1.0000 credited 1.0000 beyond-frac 0.0000
+   L=10 exact 1.0000 credited 1.0000 beyond-frac 0.0000
+   L=11 exact 1.0000 credited 1.0000 beyond-frac 0.0000
+test_4096: roots 16.0 chance 0.0625 max_depth [275.0, 281.0, 296.0] recency 0.0653 | res s_99 [12.0, 12.03125, 12.25] acc@16 1.0000 acc@20 1.0000
+   L= 3 exact 0.0352 credited 0.0946 beyond-frac 0.9648 credited_beyond 0.0616 [0.0577,0.0655] recency_beyond 0.0609
+   L= 4 exact 0.0664 credited 0.1239 beyond-frac 0.9336 credited_beyond 0.0616 [0.0575,0.0656] recency_beyond 0.0608
+   L= 5 exact 0.1289 credited 0.1825 beyond-frac 0.8711 credited_beyond 0.0616 [0.0572,0.0659] recency_beyond 0.0607
+   L= 6 exact 0.2539 credited 0.2997 beyond-frac 0.7461 credited_beyond 0.0614 [0.0563,0.0664] recency_beyond 0.0604
+   L= 7 exact 0.5039 credited 0.5341 beyond-frac 0.4961 credited_beyond 0.0608 [0.0531,0.0684] recency_beyond 0.0593
+   L= 8 exact 0.9778 credited 0.9786 beyond-frac 0.0222 credited_beyond 0.0413 [0.0000,0.1282] recency_beyond 0.0263
+   L= 9 exact 1.0000 credited 1.0000 beyond-frac 0.0000
+   L=10 exact 1.0000 credited 1.0000 beyond-frac 0.0000
+   L=11 exact 1.0000 credited 1.0000 beyond-frac 0.0000
+test_8192: roots 16.0 chance 0.0625 max_depth [529.0, 545.625, 555.0] recency 0.0636 | res s_99 [13.0, 13.21875, 13.25] acc@16 1.0000 acc@20 1.0000
+   L= 3 exact 0.0176 credited 0.0782 beyond-frac 0.9824 credited_beyond 0.0617 [0.0586,0.0654] recency_beyond 0.0613
+   L= 4 exact 0.0332 credited 0.0929 beyond-frac 0.9668 credited_beyond 0.0617 [0.0586,0.0654] recency_beyond 0.0612
+   L= 5 exact 0.0645 credited 0.1222 beyond-frac 0.9355 credited_beyond 0.0617 [0.0585,0.0655] recency_beyond 0.0612
+   L= 6 exact 0.1270 credited 0.1808 beyond-frac 0.8730 credited_beyond 0.0616 [0.0582,0.0657] recency_beyond 0.0611
+   L= 7 exact 0.2520 credited 0.2979 beyond-frac 0.7480 credited_beyond 0.0615 [0.0574,0.0663] recency_beyond 0.0609
+   L= 8 exact 0.5020 credited 0.5323 beyond-frac 0.4980 credited_beyond 0.0610 [0.0549,0.0681] recency_beyond 0.0600
+   L= 9 exact 0.9845 credited 0.9853 beyond-frac 0.0155 credited_beyond 0.0489 [0.0000,0.1818] recency_beyond 0.0334
+   L=10 exact 1.0000 credited 1.0000 beyond-frac 0.0000
+   L=11 exact 1.0000 credited 1.0000 beyond-frac 0.0000
+test_16384: roots 16.0 chance 0.0625 max_depth [1067.0, 1090.875, 1120.0] recency 0.0637 | res s_99 [14.25, 14.46875, 14.5] acc@16 1.0000 acc@20 1.0000
+   L= 3 exact 0.0088 credited 0.0710 beyond-frac 0.9912 credited_beyond 0.0628 [0.0587,0.0671] recency_beyond 0.0626
+   L= 4 exact 0.0166 credited 0.0783 beyond-frac 0.9834 credited_beyond 0.0628 [0.0587,0.0671] recency_beyond 0.0626
+   L= 5 exact 0.0322 credited 0.0930 beyond-frac 0.9678 credited_beyond 0.0628 [0.0587,0.0672] recency_beyond 0.0626
+   L= 6 exact 0.0635 credited 0.1223 beyond-frac 0.9365 credited_beyond 0.0628 [0.0585,0.0673] recency_beyond 0.0626
+   L= 7 exact 0.1260 credited 0.1809 beyond-frac 0.8740 credited_beyond 0.0628 [0.0582,0.0677] recency_beyond 0.0626
+   L= 8 exact 0.2510 credited 0.2981 beyond-frac 0.7490 credited_beyond 0.0629 [0.0575,0.0685] recency_beyond 0.0626
+   L= 9 exact 0.5010 credited 0.5324 beyond-frac 0.4990 credited_beyond 0.0630 [0.0550,0.0716] recency_beyond 0.0627
+   L=10 exact 0.9879 credited 0.9892 beyond-frac 0.0121 credited_beyond 0.1146 [0.0000,0.3443] recency_beyond 0.1046
+   L=11 exact 1.0000 credited 1.0000 beyond-frac 0.0000
+exit=0

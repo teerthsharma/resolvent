@@ -1,0 +1,304 @@
+{
+ "dataset": {
+  "repo": "HuggingFaceFW/fineweb-edu",
+  "revision": "87f09149ef4734204d70ed1d046ddc9ca3f2b8f9",
+  "subset": "sample-10BT (files 000-003 of 000-013)",
+  "card_url": "https://huggingface.co/datasets/HuggingFaceFW/fineweb-edu/resolve/87f09149ef4734204d70ed1d046ddc9ca3f2b8f9/README.md",
+  "card_sha256": "a0cc8998a20499432b28b6575f3046b714938eb8e11b8d59a1d25ddf3716061e",
+  "license_field": "odc-by",
+  "license_text_verbatim": "The dataset is released under the **Open Data Commons Attribution License (ODC-By) v1.0** [license](https://opendatacommons.org/licenses/by/1-0/). The use of this dataset is also subject to [CommonCrawl's Terms of Use](https://commoncrawl.org/terms-of-use).",
+  "license_text_source": "dataset card README.md line 632 (section 'Licensing Information'); front matter line 2: 'license: odc-by'"
+ },
+ "sources": [
+  {
+   "file": "sample/10BT/000_00000.parquet",
+   "bytes": 2152819114,
+   "sha256": "b1ba7b2ce4cb5ea6ef42dca40263eabb85f37700d01693a68e9b30a31d78e871",
+   "hf_lfs_sha256": "b1ba7b2ce4cb5ea6ef42dca40263eabb85f37700d01693a68e9b30a31d78e871",
+   "hf_lfs_bytes": 2152819114,
+   "match": true,
+   "url": "https://huggingface.co/datasets/HuggingFaceFW/fineweb-edu/resolve/87f09149ef4734204d70ed1d046ddc9ca3f2b8f9/sample/10BT/000_00000.parquet"
+  },
+  {
+   "file": "sample/10BT/001_00000.parquet",
+   "bytes": 2152222432,
+   "sha256": "3fcf2dc69cd52503986276d3d2d26a8c356d0f2ea28a0de4fdbda8cf87755693",
+   "hf_lfs_sha256": "3fcf2dc69cd52503986276d3d2d26a8c356d0f2ea28a0de4fdbda8cf87755693",
+   "hf_lfs_bytes": 2152222432,
+   "match": true,
+   "url": "https://huggingface.co/datasets/HuggingFaceFW/fineweb-edu/resolve/87f09149ef4734204d70ed1d046ddc9ca3f2b8f9/sample/10BT/001_00000.parquet"
+  },
+  {
+   "file": "sample/10BT/002_00000.parquet",
+   "bytes": 2151796315,
+   "sha256": "547ae182d132c9f06b6ce63149567208ea9f57630bfd9b1a2938e504f0c9ebd7",
+   "hf_lfs_sha256": "547ae182d132c9f06b6ce63149567208ea9f57630bfd9b1a2938e504f0c9ebd7",
+   "hf_lfs_bytes": 2151796315,
+   "match": true,
+   "url": "https://huggingface.co/datasets/HuggingFaceFW/fineweb-edu/resolve/87f09149ef4734204d70ed1d046ddc9ca3f2b8f9/sample/10BT/002_00000.parquet"
+  },
+  {
+   "file": "sample/10BT/003_00000.parquet",
+   "bytes": 2152437524,
+   "sha256": "22184e6eb25759ddd97783751ffc73e1705dfa2542e630dae1f2a8bac8ee6ddb",
+   "hf_lfs_sha256": "22184e6eb25759ddd97783751ffc73e1705dfa2542e630dae1f2a8bac8ee6ddb",
+   "hf_lfs_bytes": 2152437524,
+   "match": true,
+   "url": "https://huggingface.co/datasets/HuggingFaceFW/fineweb-edu/resolve/87f09149ef4734204d70ed1d046ddc9ca3f2b8f9/sample/10BT/003_00000.parquet"
+  }
+ ],
+ "tokenizer": {
+  "library": "tiktoken",
+  "version": "0.12.0",
+  "encoding": "gpt2",
+  "eot_id": 50256,
+  "rule": "EOT prepended to every document (so one EOT between consecutive documents)",
+  "dtype": "uint16 little-endian, no header"
+ },
+ "split": {
+  "rule": "validation = first 10000 documents in row order of 000_00000.parquet; train = all remaining documents in source order",
+  "docs_val": 10000,
+  "docs_train": 2906000
+ },
+ "shard_dir": "C:/Users/seal/datasets/fineweb_edu",
+ "shard_tokens": 100000000,
+ "val_shards": [
+  {
+   "file": "val_000000.bin",
+   "bytes": 20624044,
+   "tokens": 10312022,
+   "sha256": "229a9d899168fce9c6f961cb40fa06dba83f5abdbccbbb09a84ffbc054e85e2e",
+   "sha256_disk_matches_write": true
+  }
+ ],
+ "train_shards": [
+  {
+   "file": "train_000000.bin",
+   "bytes": 200000000,
+   "tokens": 100000000,
+   "sha256": "43df9475bde3af2cafdc1cd30efb7217c60e7bf3b5fe923643d2066284bf5ce5",
+   "sha256_disk_matches_write": true
+  },
+  {
+   "file": "train_000001.bin",
+   "bytes": 200000000,
+   "tokens": 100000000,
+   "sha256": "44fd49a57d28487afbcfd44754c408c24ecae9f9e021ab46b761bb14ac782ca2",
+   "sha256_disk_matches_write": true
+  },
+  {
+   "file": "train_000002.bin",
+   "bytes": 200000000,
+   "tokens": 100000000,
+   "sha256": "2a823cd09d9e755023cd771860a5b507dc23b27ad8e25e8a095e059242df9fb6",
+   "sha256_disk_matches_write": true
+  },
+  {
+   "file": "train_000003.bin",
+   "bytes": 200000000,
+   "tokens": 100000000,
+   "sha256": "94304d7cdd0b12ee92a3218653fae607f27df6d43639206a744c2a056d4ea367",
+   "sha256_disk_matches_write": true
+  },
+  {
+   "file": "train_000004.bin",
+   "bytes": 200000000,
+   "tokens": 100000000,
+   "sha256": "189dca61c6d8f812727072fb3cddc5d02d026e52653b81ad1e84ae866bb6858e",
+   "sha256_disk_matches_write": true
+  },
+  {
+   "file": "train_000005.bin",
+   "bytes": 200000000,
+   "tokens": 100000000,
+   "sha256": "7f590373a6701960a3a8f1ccc92db09a52f684d50fa0cea6d2ecf66436b1ae8d",
+   "sha256_disk_matches_write": true
+  },
+  {
+   "file": "train_000006.bin",
+   "bytes": 200000000,
+   "tokens": 100000000,
+   "sha256": "991a1872b27540bbc79308b5cc08fea858e517fa3251089d3a36b0b2ffcdebd3",
+   "sha256_disk_matches_write": true
+  },
+  {
+   "file": "train_000007.bin",
+   "bytes": 200000000,
+   "tokens": 100000000,
+   "sha256": "4d31570f4edb4e460df922a4e1b565c97cfd81132b5de04c8b043cb8f9e364df",
+   "sha256_disk_matches_write": true
+  },
+  {
+   "file": "train_000008.bin",
+   "bytes": 200000000,
+   "tokens": 100000000,
+   "sha256": "9eefa0651388c83984b2adc6e4ff20e545f6a1be8b7461a5b514f806df789ffb",
+   "sha256_disk_matches_write": true
+  },
+  {
+   "file": "train_000009.bin",
+   "bytes": 200000000,
+   "tokens": 100000000,
+   "sha256": "8a5f056b2938c75cb6df83b0da63929a6664d7be9f7b2593776ad4698a01a365",
+   "sha256_disk_matches_write": true
+  },
+  {
+   "file": "train_000010.bin",
+   "bytes": 200000000,
+   "tokens": 100000000,
+   "sha256": "0321a544c81b6ac1a110fe998448d0a93d724d40d4a7df3d5c7e0b818fc01cb3",
+   "sha256_disk_matches_write": true
+  },
+  {
+   "file": "train_000011.bin",
+   "bytes": 200000000,
+   "tokens": 100000000,
+   "sha256": "152c1d7398f1f0eeb00f783eb660c129099de8796be0d39c25472733f1f93d96",
+   "sha256_disk_matches_write": true
+  },
+  {
+   "file": "train_000012.bin",
+   "bytes": 200000000,
+   "tokens": 100000000,
+   "sha256": "441cf4b207e1bfdb68e6ffaed9cfb02ca2d622554ee5ca959831b572d3e6e729",
+   "sha256_disk_matches_write": true
+  },
+  {
+   "file": "train_000013.bin",
+   "bytes": 200000000,
+   "tokens": 100000000,
+   "sha256": "b145d3acfb3c2bda0f3ee818b7d883db5d1d9cb4546fa2c2f7a5ef0e597152ac",
+   "sha256_disk_matches_write": true
+  },
+  {
+   "file": "train_000014.bin",
+   "bytes": 200000000,
+   "tokens": 100000000,
+   "sha256": "779f71179a83642cde65fb1ed799a00baeb60dbc72df1faae5c837f060c72ed6",
+   "sha256_disk_matches_write": true
+  },
+  {
+   "file": "train_000015.bin",
+   "bytes": 200000000,
+   "tokens": 100000000,
+   "sha256": "61dfae83d6b5151463d1ff8fb1fb8fc9d80f187ad63df0a06136bcb512616ad3",
+   "sha256_disk_matches_write": true
+  },
+  {
+   "file": "train_000016.bin",
+   "bytes": 200000000,
+   "tokens": 100000000,
+   "sha256": "b9c747ddd6479964af93a3161038fcea5f41a84ab9d598183a25127955fe018a",
+   "sha256_disk_matches_write": true
+  },
+  {
+   "file": "train_000017.bin",
+   "bytes": 200000000,
+   "tokens": 100000000,
+   "sha256": "8aff751fa72e8d779fa791d189e6a482caddb066f2cde4cec6dda624c4c84d33",
+   "sha256_disk_matches_write": true
+  },
+  {
+   "file": "train_000018.bin",
+   "bytes": 200000000,
+   "tokens": 100000000,
+   "sha256": "9d666c03a7e4cfb715ca9d649fca8a7d625aab0f8084835c62d10a66718f67a5",
+   "sha256_disk_matches_write": true
+  },
+  {
+   "file": "train_000019.bin",
+   "bytes": 200000000,
+   "tokens": 100000000,
+   "sha256": "67cf517e7ad8950bf0b36002ac468eaf92a083979262a8bacf5fa080c850119d",
+   "sha256_disk_matches_write": true
+  },
+  {
+   "file": "train_000020.bin",
+   "bytes": 200000000,
+   "tokens": 100000000,
+   "sha256": "a82f2c57bd595985b3c2f0274bdcf3bbe0d51d9b4f3b5d78c7d8e284be0ea8e6",
+   "sha256_disk_matches_write": true
+  },
+  {
+   "file": "train_000021.bin",
+   "bytes": 200000000,
+   "tokens": 100000000,
+   "sha256": "a29fa9caf7a5541486a4cd7177c09034f816a6c7410e986b2effa32426d4ac72",
+   "sha256_disk_matches_write": true
+  },
+  {
+   "file": "train_000022.bin",
+   "bytes": 200000000,
+   "tokens": 100000000,
+   "sha256": "707cc0fc2fac5a29479adfe91313dc30d19cb0d2bfdf3ef84afac65ec20bfbf0",
+   "sha256_disk_matches_write": true
+  },
+  {
+   "file": "train_000023.bin",
+   "bytes": 200000000,
+   "tokens": 100000000,
+   "sha256": "46eeb27b4808fd400ef59334ea3447a95732fd18017d71750f355b67ac36fc48",
+   "sha256_disk_matches_write": true
+  },
+  {
+   "file": "train_000024.bin",
+   "bytes": 200000000,
+   "tokens": 100000000,
+   "sha256": "310f07f8f2cb4851a83571269ce8d6f767de05cf9b2d613a2a3ead4949bdfa8a",
+   "sha256_disk_matches_write": true
+  },
+  {
+   "file": "train_000025.bin",
+   "bytes": 200000000,
+   "tokens": 100000000,
+   "sha256": "9ddafad04a7a31b02ac69d5707eee7cdac9d44a6b04439582b14603b1bce9182",
+   "sha256_disk_matches_write": true
+  },
+  {
+   "file": "train_000026.bin",
+   "bytes": 200000000,
+   "tokens": 100000000,
+   "sha256": "cc2c8aa7188442c90044125927ec084f0e1b80f08fa708af7b71a78ee1f21be3",
+   "sha256_disk_matches_write": true
+  },
+  {
+   "file": "train_000027.bin",
+   "bytes": 200000000,
+   "tokens": 100000000,
+   "sha256": "9576630352ab47af2dc6228ab4dcd9c7362c3a71683ccfcd9bb9bff5c80388e5",
+   "sha256_disk_matches_write": true
+  },
+  {
+   "file": "train_000028.bin",
+   "bytes": 200000000,
+   "tokens": 100000000,
+   "sha256": "8742b29659b26e03a04a4c08309594454ac3205e50b532df60bc061d16975f88",
+   "sha256_disk_matches_write": true
+  },
+  {
+   "file": "train_000029.bin",
+   "bytes": 188423478,
+   "tokens": 94211739,
+   "sha256": "f4680f7cc60845530509fb0fa67581e3fd2ee369ad6f8a65b04389ea3cc3b455",
+   "sha256_disk_matches_write": true
+  }
+ ],
+ "tokens_val": 10312022,
+ "tokens_train": 2994211739,
+ "tokens_total": 3004523761,
+ "tokenise_wall_s": 132.8,
+ "scripts": {
+  "fetch_curl.sh": {
+   "path": "C:/Users/seal/AppData/Local/Temp/claude/C--Users-seal-Desktop-New-folder--32-/870edeb1-6409-4414-98e7-00d0537b75dd/scratchpad/phase_k/K0/wilson/fetch_curl.sh",
+   "sha256": "b3400fc2c7b0e3b5c8bb666a2591b1a8a82ae18aed22a833768df86869010a94"
+  },
+  "tokenize_fineweb.py": {
+   "path": "C:/Users/seal/AppData/Local/Temp/claude/C--Users-seal-Desktop-New-folder--32-/870edeb1-6409-4414-98e7-00d0537b75dd/scratchpad/phase_k/K0/wilson/tokenize_fineweb.py",
+   "sha256": "a112acac505921f0a5fb31823be138b39404bef0c21192b5011c8ee7ddc4aa7d"
+  },
+  "build_manifest.py": {
+   "path": "C:/Users/seal/AppData/Local/Temp/claude/C--Users-seal-Desktop-New-folder--32-/870edeb1-6409-4414-98e7-00d0537b75dd/scratchpad/phase_k/K0/wilson/build_manifest.py",
+   "sha256": "2ec5d468a2da1cac241febf801a0faf3b93edc03fa1d46c1ea722d38b7853254"
+  }
+ }
+}

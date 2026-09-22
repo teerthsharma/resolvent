@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "C:\Users\seal\AppData\Local\Temp\claude\C--Users-seal-Desktop-New-folder--32-\870edeb1-6409-4414-98e7-00d0537b75dd\scratchpad\phase_k\K0\cameron\test_k1_bed.py", line 5, in <module>
+    from bed_k import make_train, make_test, evaluate, floor_recency, ceiling_credit, make_bed, NULL, V
+ModuleNotFoundError: No module named 'bed_k'

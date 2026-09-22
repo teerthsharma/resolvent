@@ -1,0 +1,7 @@
+gamma 0.9: accuracy 0.7798
+gamma 0.99: accuracy 1.0000
+gamma 0.999: accuracy 1.0000
+gamma 0.99999: accuracy 1.0000
+gamma 0.9999999999: accuracy 0.0605
+PASS
+exit=0

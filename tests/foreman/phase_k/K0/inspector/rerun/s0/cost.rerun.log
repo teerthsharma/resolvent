@@ -1,0 +1,2 @@
+{"arm": "flite", "params": 11232798, "hidden": 384, "layers": 6, "heads": 6, "seq": 1024, "batch": 8, "tok_per_s": 55692, "step_s": 0.1471, "peak_gib": 1.63, "loss_first": 5.6228, "loss_last": 3.8008}
+GREEN cost@11.2M: flite 55692 tok/s (0.852x twin), peak 1.63 GiB vs bar >= 43573 tok/s, <= 4.0 GiB

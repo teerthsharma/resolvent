@@ -1,0 +1,92 @@
+{"files": ["C:/Users/seal/datasets/fineweb_edu/raw/sample/10BT\\000_00000.parquet", "C:/Users/seal/datasets/fineweb_edu/raw/sample/10BT\\001_00000.parquet", "C:/Users/seal/datasets/fineweb_edu/raw/sample/10BT\\002_00000.parquet", "C:/Users/seal/datasets/fineweb_edu/raw/sample/10BT\\003_00000.parquet"], "units": 2916}
+{"unit": 0, "of": 2916, "docs": 1000, "train_tokens": 0, "t": 1.8}
+{"unit": 50, "of": 2916, "docs": 51000, "train_tokens": 43440079, "t": 3.7}
+{"unit": 100, "of": 2916, "docs": 101000, "train_tokens": 95165185, "t": 5.4}
+{"shard": {"file": "train_000000.bin", "bytes": 200000000, "tokens": 100000000, "sha256": "43df9475bde3af2cafdc1cd30efb7217c60e7bf3b5fe923643d2066284bf5ce5"}, "t": 6.1}
+{"unit": 150, "of": 2916, "docs": 151000, "train_tokens": 146481262, "t": 7.7}
+{"unit": 200, "of": 2916, "docs": 201000, "train_tokens": 196991491, "t": 10.1}
+{"shard": {"file": "train_000001.bin", "bytes": 200000000, "tokens": 100000000, "sha256": "44fd49a57d28487afbcfd44754c408c24ecae9f9e021ab46b761bb14ac782ca2"}, "t": 10.7}
+{"unit": 250, "of": 2916, "docs": 251000, "train_tokens": 248135839, "t": 12.5}
+{"unit": 300, "of": 2916, "docs": 301000, "train_tokens": 298846307, "t": 14.7}
+{"shard": {"file": "train_000002.bin", "bytes": 200000000, "tokens": 100000000, "sha256": "2a823cd09d9e755023cd771860a5b507dc23b27ad8e25e8a095e059242df9fb6"}, "t": 15.3}
+{"unit": 350, "of": 2916, "docs": 351000, "train_tokens": 350779273, "t": 17.1}
+{"shard": {"file": "train_000003.bin", "bytes": 200000000, "tokens": 100000000, "sha256": "94304d7cdd0b12ee92a3218653fae607f27df6d43639206a744c2a056d4ea367"}, "t": 19.9}
+{"unit": 400, "of": 2916, "docs": 401000, "train_tokens": 403697587, "t": 20.0}
+{"unit": 450, "of": 2916, "docs": 451000, "train_tokens": 456411839, "t": 22.5}
+{"shard": {"file": "train_000004.bin", "bytes": 200000000, "tokens": 100000000, "sha256": "189dca61c6d8f812727072fb3cddc5d02d026e52653b81ad1e84ae866bb6858e"}, "t": 24.6}
+{"unit": 500, "of": 2916, "docs": 501000, "train_tokens": 508624464, "t": 24.6}
+{"unit": 550, "of": 2916, "docs": 551000, "train_tokens": 560477699, "t": 26.8}
+{"shard": {"file": "train_000005.bin", "bytes": 200000000, "tokens": 100000000, "sha256": "7f590373a6701960a3a8f1ccc92db09a52f684d50fa0cea6d2ecf66436b1ae8d"}, "t": 29.2}
+{"unit": 600, "of": 2916, "docs": 601000, "train_tokens": 611876902, "t": 29.2}
+{"unit": 650, "of": 2916, "docs": 651000, "train_tokens": 663694891, "t": 31.1}
+{"shard": {"file": "train_000006.bin", "bytes": 200000000, "tokens": 100000000, "sha256": "991a1872b27540bbc79308b5cc08fea858e517fa3251089d3a36b0b2ffcdebd3"}, "t": 33.6}
+{"unit": 700, "of": 2916, "docs": 701000, "train_tokens": 715969210, "t": 33.6}
+{"unit": 750, "of": 2916, "docs": 751000, "train_tokens": 767921792, "t": 35.9}
+{"shard": {"file": "train_000007.bin", "bytes": 200000000, "tokens": 100000000, "sha256": "4d31570f4edb4e460df922a4e1b565c97cfd81132b5de04c8b043cb8f9e364df"}, "t": 37.9}
+{"unit": 800, "of": 2916, "docs": 801000, "train_tokens": 819247095, "t": 38.4}
+{"unit": 850, "of": 2916, "docs": 851000, "train_tokens": 870114635, "t": 40.5}
+{"shard": {"file": "train_000008.bin", "bytes": 200000000, "tokens": 100000000, "sha256": "9eefa0651388c83984b2adc6e4ff20e545f6a1be8b7461a5b514f806df789ffb"}, "t": 42.1}
+{"unit": 900, "of": 2916, "docs": 901000, "train_tokens": 921156994, "t": 42.7}
+{"unit": 950, "of": 2916, "docs": 951000, "train_tokens": 972005161, "t": 44.8}
+{"shard": {"file": "train_000009.bin", "bytes": 200000000, "tokens": 100000000, "sha256": "8a5f056b2938c75cb6df83b0da63929a6664d7be9f7b2593776ad4698a01a365"}, "t": 46.4}
+{"unit": 1000, "of": 2916, "docs": 1001000, "train_tokens": 1022502575, "t": 46.9}
+{"unit": 1050, "of": 2916, "docs": 1051000, "train_tokens": 1073054337, "t": 49.2}
+{"shard": {"file": "train_000010.bin", "bytes": 200000000, "tokens": 100000000, "sha256": "0321a544c81b6ac1a110fe998448d0a93d724d40d4a7df3d5c7e0b818fc01cb3"}, "t": 50.7}
+{"unit": 1100, "of": 2916, "docs": 1101000, "train_tokens": 1125670361, "t": 51.3}
+{"unit": 1150, "of": 2916, "docs": 1151000, "train_tokens": 1177506191, "t": 53.6}
+{"shard": {"file": "train_000011.bin", "bytes": 200000000, "tokens": 100000000, "sha256": "152c1d7398f1f0eeb00f783eb660c129099de8796be0d39c25472733f1f93d96"}, "t": 55.0}
+{"unit": 1200, "of": 2916, "docs": 1201000, "train_tokens": 1229412157, "t": 55.6}
+{"unit": 1250, "of": 2916, "docs": 1251000, "train_tokens": 1281900813, "t": 58.1}
+{"shard": {"file": "train_000012.bin", "bytes": 200000000, "tokens": 100000000, "sha256": "441cf4b207e1bfdb68e6ffaed9cfb02ca2d622554ee5ca959831b572d3e6e729"}, "t": 59.2}
+{"unit": 1300, "of": 2916, "docs": 1301000, "train_tokens": 1332825395, "t": 60.3}
+{"unit": 1350, "of": 2916, "docs": 1351000, "train_tokens": 1384881776, "t": 62.6}
+{"shard": {"file": "train_000013.bin", "bytes": 200000000, "tokens": 100000000, "sha256": "b145d3acfb3c2bda0f3ee818b7d883db5d1d9cb4546fa2c2f7a5ef0e597152ac"}, "t": 63.5}
+{"unit": 1400, "of": 2916, "docs": 1401000, "train_tokens": 1436295950, "t": 64.8}
+{"unit": 1450, "of": 2916, "docs": 1451000, "train_tokens": 1488963049, "t": 66.9}
+{"shard": {"file": "train_000014.bin", "bytes": 200000000, "tokens": 100000000, "sha256": "779f71179a83642cde65fb1ed799a00baeb60dbc72df1faae5c837f060c72ed6"}, "t": 68.3}
+{"unit": 1500, "of": 2916, "docs": 1501000, "train_tokens": 1541053994, "t": 69.1}
+{"unit": 1550, "of": 2916, "docs": 1551000, "train_tokens": 1592710914, "t": 71.2}
+{"shard": {"file": "train_000015.bin", "bytes": 200000000, "tokens": 100000000, "sha256": "61dfae83d6b5151463d1ff8fb1fb8fc9d80f187ad63df0a06136bcb512616ad3"}, "t": 72.6}
+{"unit": 1600, "of": 2916, "docs": 1601000, "train_tokens": 1644170662, "t": 73.3}
+{"unit": 1650, "of": 2916, "docs": 1651000, "train_tokens": 1694896325, "t": 75.4}
+{"shard": {"file": "train_000016.bin", "bytes": 200000000, "tokens": 100000000, "sha256": "b9c747ddd6479964af93a3161038fcea5f41a84ab9d598183a25127955fe018a"}, "t": 76.8}
+{"unit": 1700, "of": 2916, "docs": 1701000, "train_tokens": 1746798459, "t": 77.6}
+{"unit": 1750, "of": 2916, "docs": 1751000, "train_tokens": 1798004602, "t": 80.6}
+{"shard": {"file": "train_000017.bin", "bytes": 200000000, "tokens": 100000000, "sha256": "8aff751fa72e8d779fa791d189e6a482caddb066f2cde4cec6dda624c4c84d33"}, "t": 81.1}
+{"unit": 1800, "of": 2916, "docs": 1801000, "train_tokens": 1848857960, "t": 82.7}
+{"shard": {"file": "train_000018.bin", "bytes": 200000000, "tokens": 100000000, "sha256": "9d666c03a7e4cfb715ca9d649fca8a7d625aab0f8084835c62d10a66718f67a5"}, "t": 85.3}
+{"unit": 1850, "of": 2916, "docs": 1851000, "train_tokens": 1901455520, "t": 85.3}
+{"unit": 1900, "of": 2916, "docs": 1901000, "train_tokens": 1953385685, "t": 87.1}
+{"shard": {"file": "train_000019.bin", "bytes": 200000000, "tokens": 100000000, "sha256": "67cf517e7ad8950bf0b36002ac468eaf92a083979262a8bacf5fa080c850119d"}, "t": 89.5}
+{"unit": 1950, "of": 2916, "docs": 1951000, "train_tokens": 2004962352, "t": 89.5}
+{"unit": 2000, "of": 2916, "docs": 2001000, "train_tokens": 2056560445, "t": 91.1}
+{"shard": {"file": "train_000020.bin", "bytes": 200000000, "tokens": 100000000, "sha256": "a82f2c57bd595985b3c2f0274bdcf3bbe0d51d9b4f3b5d78c7d8e284be0ea8e6"}, "t": 93.5}
+{"unit": 2050, "of": 2916, "docs": 2051000, "train_tokens": 2107920977, "t": 93.6}
+{"unit": 2100, "of": 2916, "docs": 2101000, "train_tokens": 2160189910, "t": 95.3}
+{"shard": {"file": "train_000021.bin", "bytes": 200000000, "tokens": 100000000, "sha256": "a29fa9caf7a5541486a4cd7177c09034f816a6c7410e986b2effa32426d4ac72"}, "t": 97.7}
+{"unit": 2150, "of": 2916, "docs": 2151000, "train_tokens": 2212086070, "t": 97.7}
+{"unit": 2200, "of": 2916, "docs": 2201000, "train_tokens": 2263484535, "t": 99.7}
+{"shard": {"file": "train_000022.bin", "bytes": 200000000, "tokens": 100000000, "sha256": "707cc0fc2fac5a29479adfe91313dc30d19cb0d2bfdf3ef84afac65ec20bfbf0"}, "t": 101.9}
+{"unit": 2250, "of": 2916, "docs": 2251000, "train_tokens": 2315245959, "t": 102.1}
+{"unit": 2300, "of": 2916, "docs": 2301000, "train_tokens": 2366539434, "t": 104.7}
+{"shard": {"file": "train_000023.bin", "bytes": 200000000, "tokens": 100000000, "sha256": "46eeb27b4808fd400ef59334ea3447a95732fd18017d71750f355b67ac36fc48"}, "t": 106.2}
+{"unit": 2350, "of": 2916, "docs": 2351000, "train_tokens": 2417970790, "t": 106.8}
+{"unit": 2400, "of": 2916, "docs": 2401000, "train_tokens": 2468451259, "t": 109.1}
+{"shard": {"file": "train_000024.bin", "bytes": 200000000, "tokens": 100000000, "sha256": "310f07f8f2cb4851a83571269ce8d6f767de05cf9b2d613a2a3ead4949bdfa8a"}, "t": 110.8}
+{"unit": 2450, "of": 2916, "docs": 2451000, "train_tokens": 2519977758, "t": 111.4}
+{"unit": 2500, "of": 2916, "docs": 2501000, "train_tokens": 2570142331, "t": 113.5}
+{"shard": {"file": "train_000025.bin", "bytes": 200000000, "tokens": 100000000, "sha256": "9ddafad04a7a31b02ac69d5707eee7cdac9d44a6b04439582b14603b1bce9182"}, "t": 115.1}
+{"unit": 2550, "of": 2916, "docs": 2551000, "train_tokens": 2620769355, "t": 115.7}
+{"unit": 2600, "of": 2916, "docs": 2601000, "train_tokens": 2672006413, "t": 118.0}
+{"shard": {"file": "train_000026.bin", "bytes": 200000000, "tokens": 100000000, "sha256": "cc2c8aa7188442c90044125927ec084f0e1b80f08fa708af7b71a78ee1f21be3"}, "t": 119.5}
+{"unit": 2650, "of": 2916, "docs": 2651000, "train_tokens": 2722523845, "t": 120.2}
+{"unit": 2700, "of": 2916, "docs": 2701000, "train_tokens": 2773216333, "t": 122.5}
+{"shard": {"file": "train_000027.bin", "bytes": 200000000, "tokens": 100000000, "sha256": "9576630352ab47af2dc6228ab4dcd9c7362c3a71683ccfcd9bb9bff5c80388e5"}, "t": 124.1}
+{"unit": 2750, "of": 2916, "docs": 2751000, "train_tokens": 2824154808, "t": 124.8}
+{"unit": 2800, "of": 2916, "docs": 2801000, "train_tokens": 2875273671, "t": 127.6}
+{"shard": {"file": "train_000028.bin", "bytes": 200000000, "tokens": 100000000, "sha256": "8742b29659b26e03a04a4c08309594454ac3205e50b532df60bc061d16975f88"}, "t": 129.3}
+{"unit": 2850, "of": 2916, "docs": 2851000, "train_tokens": 2927175752, "t": 130.0}
+{"unit": 2900, "of": 2916, "docs": 2901000, "train_tokens": 2978951048, "t": 132.3}
+{"shard": {"file": "val_000000.bin", "bytes": 20624044, "tokens": 10312022, "sha256": "229a9d899168fce9c6f961cb40fa06dba83f5abdbccbbb09a84ffbc054e85e2e"}, "t": 132.6}
+{"shard": {"file": "train_000029.bin", "bytes": 188423478, "tokens": 94211739, "sha256": "f4680f7cc60845530509fb0fa67581e3fd2ee369ad6f8a65b04389ea3cc3b455"}, "t": 132.8}
+DONE {"tokens_val": 10312022, "tokens_train": 2994211739, "tokens_total": 3004523761, "tokenise_wall_s": 132.8}

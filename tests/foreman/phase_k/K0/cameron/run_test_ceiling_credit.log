@@ -1,0 +1,5 @@
+L=4: exact-only ceiling 0.0664   chance-credited opponent 0.1230
+L=6: exact-only ceiling 0.2539   chance-credited opponent 0.2988
+L=8: exact-only ceiling 0.9856   chance-credited opponent 0.9861
+PASS L=6 credited opponent 0.2988 > 0.2739
+exit=0

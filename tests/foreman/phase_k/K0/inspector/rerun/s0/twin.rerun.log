@@ -1,0 +1,1 @@
+{"arm": "twin", "params": 11228160, "hidden": 384, "layers": 6, "heads": 6, "seq": 1024, "batch": 8, "tok_per_s": 59671, "step_s": 0.1373, "peak_gib": 1.35, "loss_first": 5.6181, "loss_last": 4.3858}

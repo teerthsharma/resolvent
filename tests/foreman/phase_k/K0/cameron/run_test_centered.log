@@ -1,0 +1,15 @@
+1024 (0.0, 'softmax') acc@8 0.1748 acc@12 1.0 s50 8.88
+1024 (0.0, 'centered') acc@8 1.0 acc@12 1.0 s50 4.5
+1024 (1.0, 'softmax') acc@8 0.1201 acc@12 1.0 s50 9.6
+1024 (1.0, 'centered') acc@8 0.3525 acc@12 1.0 s50 8.58
+4096 (0.0, 'softmax') acc@8 0.0867 acc@12 0.9958 s50 10.66
+4096 (0.0, 'centered') acc@8 0.5596 acc@12 1.0 s50 7.7
+4096 (1.0, 'softmax') acc@8 0.0754 acc@12 0.5918 s50 11.72
+4096 (1.0, 'centered') acc@8 0.113 acc@12 0.8975 s50 10.8
+PASS (a) n=1024 centered sigma0 = 1.0 at s=8,12 : (np.float64(1.0), np.float64(1.0))
+FAIL (a) n=4096 centered sigma0 = 1.0 at s=8,12 : (np.float64(0.5595703125), np.float64(1.0))
+PASS (a) softmax sigma0 s=8 n=4096 < 0.2 : 0.086669921875
+PASS (b) n=1024 sigma1 s50 centered <= softmax - 1 : (8.582375478927203, 9.6)
+FAIL (b) n=4096 sigma1 s50 centered <= softmax - 1 : (10.800900900900901, 11.718562874251496)
+FAIL (c) sigma1 slope centered < softmax : {'softmax': np.float64(1.5282200762470515), 'centered': np.float64(1.6003278121837747)}
+exit=1

@@ -1,0 +1,1 @@
+{"S": 4096, "path": "densec sparsemax", "ms": {"sdpa_fb": 17.83193588256836, "sparsemax_fb": 167.72607421875}, "ratio_fwd_bwd": 9.40593748896949, "peak_mib": 3792.640625, "reps": 5}
