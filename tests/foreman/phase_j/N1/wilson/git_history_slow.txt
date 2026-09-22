@@ -1,0 +1,2 @@
+/c/Users/seal/Documents/GitHub/pytorch rc=0 secs=140 out=[]
+/c/Users/seal/Documents/GitHub/firefox rc=0 secs=212 out=[]

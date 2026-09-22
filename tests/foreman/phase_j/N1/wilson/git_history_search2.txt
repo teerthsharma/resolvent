@@ -1,0 +1,170 @@
+none /c/Users/seal/Desktop/agenthalo
+none /c/Users/seal/Desktop/AGI_MONOREPO
+none /c/Users/seal/Desktop/AGI_MONOREPO/kernel/aether/Aether-Lang
+none /c/Users/seal/Desktop/AGI_MONOREPO/kernel/aether/aether-link
+none /c/Users/seal/Desktop/AGI_MONOREPO/kernel/aether/aether-nexus
+none /c/Users/seal/Desktop/AGI_MONOREPO/kernel/epsilon/epsilon
+none /c/Users/seal/Desktop/AGI_MONOREPO/kernel/epsilon/epsilon-ide
+none /c/Users/seal/Desktop/auth-dash
+none /c/Users/seal/Desktop/Beat store
+none /c/Users/seal/Desktop/coding coding seal/MVP_Dashboard-deployable-branch
+none /c/Users/seal/Desktop/Lauching Page
+none /c/Users/seal/Desktop/mehul
+none /c/Users/seal/Desktop/MVP_Dashboard
+none /c/Users/seal/Desktop/new code/aether-link
+none /c/Users/seal/Desktop/New folder/sealmega-ide
+none /c/Users/seal/Desktop/New folder (10)
+none /c/Users/seal/Desktop/New folder (11)/parameter-golf-main
+none /c/Users/seal/Desktop/New folder (12)/controls_challenge-master
+none /c/Users/seal/Desktop/New folder (12)/EPSILON-PHASE
+none /c/Users/seal/Desktop/New folder (13)
+none /c/Users/seal/Desktop/New folder (14)/Asmodeus
+none /c/Users/seal/Desktop/New folder (15)/Asmodeus
+none /c/Users/seal/Desktop/New folder (17)
+none /c/Users/seal/Desktop/New folder (18)
+none /c/Users/seal/Desktop/New folder (19)/auth-dash-clone
+none /c/Users/seal/Desktop/New folder (19)/auth-dash-main
+none /c/Users/seal/Desktop/New folder (21)
+none /c/Users/seal/Desktop/New folder (21)/cugraph
+none /c/Users/seal/Desktop/New folder (22)/deepmind
+none /c/Users/seal/Desktop/New folder (22)/deepmind_backup_20260609_072459
+none /c/Users/seal/Desktop/New folder (22)/distributed_graph_flow
+none /c/Users/seal/Desktop/New folder (22)/meta/pytorch_geometric
+none /c/Users/seal/Desktop/New folder (23)/faraday
+none /c/Users/seal/Desktop/New folder (24)/posthog-repo
+none /c/Users/seal/Desktop/New folder (24)/topoattack-repo
+none /c/Users/seal/Desktop/New folder (25)/aether-link
+none /c/Users/seal/Desktop/New folder (25)/controls_challenge
+none /c/Users/seal/Desktop/New folder (25)/controls_challenge/DO NOT GIT COMMIT WHOLE/aether-link
+none /c/Users/seal/Desktop/New folder (25)/controls_challenge/remote_ref
+none /c/Users/seal/Desktop/New folder (25)/controls_challenge/runs/external/tfpgh_controls_challenge
+none /c/Users/seal/Desktop/New folder (25)/faraday
+none /c/Users/seal/Desktop/New folder (26)/lambda-engine
+none /c/Users/seal/Desktop/New folder (28)
+none /c/Users/seal/Desktop/New folder (3)/Aether-Lang-master
+none /c/Users/seal/Desktop/New folder (30)
+none /c/Users/seal/Desktop/New folder (32)
+none /c/Users/seal/Desktop/New folder (32)/lean/.lake/packages/aesop
+none /c/Users/seal/Desktop/New folder (32)/lean/.lake/packages/Cli
+none /c/Users/seal/Desktop/New folder (32)/lean/.lake/packages/importGraph
+none /c/Users/seal/Desktop/New folder (32)/lean/.lake/packages/mathlib
+none /c/Users/seal/Desktop/New folder (32)/lean/.lake/packages/proofwidgets
+none /c/Users/seal/Desktop/New folder (32)/lean/.lake/packages/Qq
+none /c/Users/seal/Desktop/New folder (32)/lean/.lake/packages/std
+none /c/Users/seal/Desktop/New folder (33)/repo
+none /c/Users/seal/Desktop/New folder (5)/parameter-golf-main
+none /c/Users/seal/Desktop/New folder (7)/nanoclaw
+none /c/Users/seal/Desktop/New folder (7)/New folder (2)/rice_disease_burn
+none /c/Users/seal/Desktop/New folder (9)
+none /c/Users/seal/Desktop/teerth-peak-frontend-portfolio/reference/Debyte404-portfolio
+none /c/Users/seal/Desktop/Yuddh-Niti-main
+HIT /c/Users/seal/Documents/Codex :: fatal: not a git repository (or any of the parent directories): .git
+HIT /c/Users/seal/Documents/Codex/2026-07-01/can :: fatal: not a git repository (or any of the parent directories): .git
+none /c/Users/seal/Documents/Codex/2026-07-01/can/teerthfolio-remote
+none /c/Users/seal/Documents/Codex/2026-07-01/can/work/debyte-portfolio
+none /c/Users/seal/Documents/Codex/2026-07-01/can/work/ref-portfolio
+none /c/Users/seal/Documents/Codex/2026-07-09/teerthsharma-teerthsharma-https-github-com-teerthsharma/work/teerthsharma
+HIT /c/Users/seal/Documents/Codex/2026-07-22/thi :: fatal: not a git repository (or any of the parent directories): .git
+none /c/Users/seal/Documents/GitHub/Aether-Lang
+none /c/Users/seal/Documents/GitHub/aether-link
+none /c/Users/seal/Documents/GitHub/alphafold3
+none /c/Users/seal/Documents/GitHub/auth-dash
+none /c/Users/seal/Documents/GitHub/candle
+none /c/Users/seal/Documents/GitHub/cleave
+none /c/Users/seal/Documents/GitHub/computer-vision-basics-in-microsoft-excel
+none /c/Users/seal/Documents/GitHub/cosmos
+HIT /c/Users/seal/Documents/GitHub/Demon-of-inkosei :: fatal: not a git repository (or any of the parent directories): .git
+none /c/Users/seal/Documents/GitHub/Demon-of-inkosei/demon-tts
+none /c/Users/seal/Documents/GitHub/docker-agent
+none /c/Users/seal/Documents/GitHub/Epsilon-Hollow
+none /c/Users/seal/Documents/GitHub/erpnext
+none /c/Users/seal/Documents/GitHub/fairchem
+none /c/Users/seal/Documents/GitHub/faraday
+TIMEOUT /c/Users/seal/Documents/GitHub/firefox
+none /c/Users/seal/Documents/GitHub/fprime
+none /c/Users/seal/Documents/GitHub/hamliton
+none /c/Users/seal/Documents/GitHub/highway
+none /c/Users/seal/Documents/GitHub/highway-topo/.donotcommit/build/googletest-src
+none /c/Users/seal/Documents/GitHub/hollow-asm
+none /c/Users/seal/Documents/GitHub/kaggle-cell-tracking-competition
+none /c/Users/seal/Documents/GitHub/kernels
+none /c/Users/seal/Documents/GitHub/laamba-silence
+none /c/Users/seal/Documents/GitHub/laamba-silence/repos/Aether-Lang
+none /c/Users/seal/Documents/GitHub/laamba-silence/repos/faraday
+none /c/Users/seal/Documents/GitHub/laamba-silence/repos/hamliton
+none /c/Users/seal/Documents/GitHub/laamba-silence/repos/phi-mem
+none /c/Users/seal/Documents/GitHub/lamba-topo
+none /c/Users/seal/Documents/GitHub/lambda-topo
+none /c/Users/seal/Documents/GitHub/mealbuddy
+none /c/Users/seal/Documents/GitHub/mujoco
+none /c/Users/seal/Documents/GitHub/mujoco/build-asan/_deps/abseil-cpp-src
+none /c/Users/seal/Documents/GitHub/mujoco/build-asan/_deps/benchmark-src
+none /c/Users/seal/Documents/GitHub/mujoco/build-asan/_deps/ccd-src
+none /c/Users/seal/Documents/GitHub/mujoco/build-asan/_deps/eigen3-src
+none /c/Users/seal/Documents/GitHub/mujoco/build-asan/_deps/googletest-src
+none /c/Users/seal/Documents/GitHub/mujoco/build-asan/_deps/lodepng-src
+none /c/Users/seal/Documents/GitHub/mujoco/build-asan/_deps/marchingcubecpp-src
+none /c/Users/seal/Documents/GitHub/mujoco/build-asan/_deps/miniz-src
+none /c/Users/seal/Documents/GitHub/mujoco/build-asan/_deps/qhull-src
+none /c/Users/seal/Documents/GitHub/mujoco/build-asan/_deps/tinyobjloader-src
+none /c/Users/seal/Documents/GitHub/mujoco/build-asan/_deps/tinyxml2-src
+none /c/Users/seal/Documents/GitHub/mujoco/build-bench/_deps/abseil-cpp-src
+none /c/Users/seal/Documents/GitHub/mujoco/build-bench/_deps/benchmark-src
+none /c/Users/seal/Documents/GitHub/mujoco/build-bench/_deps/ccd-src
+none /c/Users/seal/Documents/GitHub/mujoco/build-bench/_deps/eigen3-src
+none /c/Users/seal/Documents/GitHub/mujoco/build-bench/_deps/googletest-src
+none /c/Users/seal/Documents/GitHub/mujoco/build-bench/_deps/lodepng-src
+none /c/Users/seal/Documents/GitHub/mujoco/build-bench/_deps/marchingcubecpp-src
+none /c/Users/seal/Documents/GitHub/mujoco/build-bench/_deps/miniz-src
+none /c/Users/seal/Documents/GitHub/mujoco/build-bench/_deps/qhull-src
+none /c/Users/seal/Documents/GitHub/mujoco/build-bench/_deps/tinyobjloader-src
+none /c/Users/seal/Documents/GitHub/mujoco/build-bench/_deps/tinyxml2-src
+none /c/Users/seal/Documents/GitHub/mujoco_warp
+none /c/Users/seal/Documents/GitHub/NeMo-Relay
+none /c/Users/seal/Documents/GitHub/NeMo-Relay/third_party/hermes-agent
+none /c/Users/seal/Documents/GitHub/NeMo-Relay-benchmark-sandbox/aiperf
+none /c/Users/seal/Documents/GitHub/NeMo-Relay-benchmark-sandbox/claw-eval
+none /c/Users/seal/Documents/GitHub/NeMo-Relay-benchmark-sandbox/pinchbench-skill
+none /c/Users/seal/Documents/GitHub/NeMo-Relay-benchmark-sandbox/SWE-bench
+none /c/Users/seal/Documents/GitHub/new
+none /c/Users/seal/Documents/GitHub/OSMO
+none /c/Users/seal/Documents/GitHub/PanaceaX
+none /c/Users/seal/Documents/GitHub/pgtable-asm
+none /c/Users/seal/Documents/GitHub/planimeter
+none /c/Users/seal/Documents/GitHub/pyrefly/.donotcommit/aether-link
+none /c/Users/seal/Documents/GitHub/pyrefly
+TIMEOUT /c/Users/seal/Documents/GitHub/pytorch
+none /c/Users/seal/Documents/GitHub/pytorch/agent_space/pytorch-topology-source
+none /c/Users/seal/Documents/GitHub/pytorch/agent_space/topological-ml-toolkit
+none /c/Users/seal/Documents/GitHub/pytorch-topology
+none /c/Users/seal/Documents/GitHub/rtp-llm
+none /c/Users/seal/Documents/GitHub/separatrix
+none /c/Users/seal/Documents/GitHub/tangle
+none /c/Users/seal/Documents/GitHub/teerthfolio
+none /c/Users/seal/Documents/GitHub/teerthfolio/donotcommit/hologram-particles
+none /c/Users/seal/Documents/GitHub/teerthsharma
+none /c/Users/seal/Documents/GitHub/teerthsharma.github.io
+none /c/Users/seal/Documents/GitHub/tensorflow
+none /c/Users/seal/Documents/GitHub/TensorRT-LLM
+none /c/Users/seal/Documents/GitHub/test_2
+none /c/Users/seal/Documents/GitHub/tinygrad
+none /c/Users/seal/Documents/GitHub/topo-asm
+none /c/Users/seal/Documents/GitHub/topograph
+none /c/Users/seal/Documents/GitHub/triton
+none /c/Users/seal/Documents/GitHub/veena
+none /c/Users/seal/Documents/GitHub/vllm
+none /c/Users/seal/Documents/GitHub/X-Rust
+none /c/Users/seal/Documents/GitHub/xeroday
+none /c/Users/seal/Documents/GitHub/XNNPACK/.donotcommit/build-h005-baseline/FXdiv-source
+none /c/Users/seal/Documents/GitHub/XNNPACK
+none /c/Users/seal/Documents/GitHub/Yuddh-Niti
+none /c/Users/seal/Documents/GitHub/zstd
+none /c/Users/seal/Documents/seal/Aether-Lang-push
+none /c/Users/seal/Documents/seal/branchcut
+none /c/Users/seal/Documents/seal/caustic
+none /c/Users/seal/Documents/seal/Electromagnetic-Field-Data-Simulator
+none /c/Users/seal/Documents/seal/nerve
+none /c/Users/seal/Documents/seal/pytorch-topology
+none /c/Users/seal/Documents/seal/sigmoid
+none /c/Users/seal/Documents/seal/tf-topology-hunt/xla-fork
+none /c/Users/seal/Documents/seal/topological-ml-toolkit

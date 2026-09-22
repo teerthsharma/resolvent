@@ -1,0 +1,170 @@
+/c/Users/seal/Desktop/agenthalo/.git
+/c/Users/seal/Desktop/AGI_MONOREPO/.git
+/c/Users/seal/Desktop/AGI_MONOREPO/kernel/aether/Aether-Lang/.git
+/c/Users/seal/Desktop/AGI_MONOREPO/kernel/aether/aether-link/.git
+/c/Users/seal/Desktop/AGI_MONOREPO/kernel/aether/aether-nexus/.git
+/c/Users/seal/Desktop/AGI_MONOREPO/kernel/epsilon/epsilon/.git
+/c/Users/seal/Desktop/AGI_MONOREPO/kernel/epsilon/epsilon-ide/.git
+/c/Users/seal/Desktop/auth-dash/.git
+/c/Users/seal/Desktop/Beat store/.git
+/c/Users/seal/Desktop/coding coding seal/MVP_Dashboard-deployable-branch/.git
+/c/Users/seal/Desktop/Lauching Page/.git
+/c/Users/seal/Desktop/mehul/.git
+/c/Users/seal/Desktop/MVP_Dashboard/.git
+/c/Users/seal/Desktop/new code/aether-link/.git
+/c/Users/seal/Desktop/New folder/sealmega-ide/.git
+/c/Users/seal/Desktop/New folder (10)/.git
+/c/Users/seal/Desktop/New folder (11)/parameter-golf-main/.git
+/c/Users/seal/Desktop/New folder (12)/controls_challenge-master/.git
+/c/Users/seal/Desktop/New folder (12)/EPSILON-PHASE/.git
+/c/Users/seal/Desktop/New folder (13)/.git
+/c/Users/seal/Desktop/New folder (14)/Asmodeus/.git
+/c/Users/seal/Desktop/New folder (15)/Asmodeus/.git
+/c/Users/seal/Desktop/New folder (17)/.git
+/c/Users/seal/Desktop/New folder (18)/.git
+/c/Users/seal/Desktop/New folder (19)/auth-dash-clone/.git
+/c/Users/seal/Desktop/New folder (19)/auth-dash-main/.git
+/c/Users/seal/Desktop/New folder (21)/.git
+/c/Users/seal/Desktop/New folder (21)/cugraph/.git
+/c/Users/seal/Desktop/New folder (22)/deepmind/.git
+/c/Users/seal/Desktop/New folder (22)/deepmind_backup_20260609_072459/.git
+/c/Users/seal/Desktop/New folder (22)/distributed_graph_flow/.git
+/c/Users/seal/Desktop/New folder (22)/meta/pytorch_geometric/.git
+/c/Users/seal/Desktop/New folder (23)/faraday/.git
+/c/Users/seal/Desktop/New folder (24)/posthog-repo/.git
+/c/Users/seal/Desktop/New folder (24)/topoattack-repo/.git
+/c/Users/seal/Desktop/New folder (25)/aether-link/.git
+/c/Users/seal/Desktop/New folder (25)/controls_challenge/.git
+/c/Users/seal/Desktop/New folder (25)/controls_challenge/DO NOT GIT COMMIT WHOLE/aether-link/.git
+/c/Users/seal/Desktop/New folder (25)/controls_challenge/remote_ref/.git
+/c/Users/seal/Desktop/New folder (25)/controls_challenge/runs/external/tfpgh_controls_challenge/.git
+/c/Users/seal/Desktop/New folder (25)/faraday/.git
+/c/Users/seal/Desktop/New folder (26)/lambda-engine/.git
+/c/Users/seal/Desktop/New folder (28)/.git
+/c/Users/seal/Desktop/New folder (3)/Aether-Lang-master/.git
+/c/Users/seal/Desktop/New folder (30)/.git
+/c/Users/seal/Desktop/New folder (32)/.git
+/c/Users/seal/Desktop/New folder (32)/lean/.lake/packages/aesop/.git
+/c/Users/seal/Desktop/New folder (32)/lean/.lake/packages/Cli/.git
+/c/Users/seal/Desktop/New folder (32)/lean/.lake/packages/importGraph/.git
+/c/Users/seal/Desktop/New folder (32)/lean/.lake/packages/mathlib/.git
+/c/Users/seal/Desktop/New folder (32)/lean/.lake/packages/proofwidgets/.git
+/c/Users/seal/Desktop/New folder (32)/lean/.lake/packages/Qq/.git
+/c/Users/seal/Desktop/New folder (32)/lean/.lake/packages/std/.git
+/c/Users/seal/Desktop/New folder (33)/repo/.git
+/c/Users/seal/Desktop/New folder (5)/parameter-golf-main/.git
+/c/Users/seal/Desktop/New folder (7)/nanoclaw/.git
+/c/Users/seal/Desktop/New folder (7)/New folder (2)/rice_disease_burn/.git
+/c/Users/seal/Desktop/New folder (9)/.git
+/c/Users/seal/Desktop/teerth-peak-frontend-portfolio/reference/Debyte404-portfolio/.git
+/c/Users/seal/Desktop/Yuddh-Niti-main/.git
+/c/Users/seal/Documents/Codex/.git
+/c/Users/seal/Documents/Codex/2026-07-01/can/.git
+/c/Users/seal/Documents/Codex/2026-07-01/can/teerthfolio-remote/.git
+/c/Users/seal/Documents/Codex/2026-07-01/can/work/debyte-portfolio/.git
+/c/Users/seal/Documents/Codex/2026-07-01/can/work/ref-portfolio/.git
+/c/Users/seal/Documents/Codex/2026-07-09/teerthsharma-teerthsharma-https-github-com-teerthsharma/work/teerthsharma/.git
+/c/Users/seal/Documents/Codex/2026-07-22/thi/.git
+/c/Users/seal/Documents/GitHub/Aether-Lang/.git
+/c/Users/seal/Documents/GitHub/aether-link/.git
+/c/Users/seal/Documents/GitHub/alphafold3/.git
+/c/Users/seal/Documents/GitHub/auth-dash/.git
+/c/Users/seal/Documents/GitHub/candle/.git
+/c/Users/seal/Documents/GitHub/cleave/.git
+/c/Users/seal/Documents/GitHub/computer-vision-basics-in-microsoft-excel/.git
+/c/Users/seal/Documents/GitHub/cosmos/.git
+/c/Users/seal/Documents/GitHub/Demon-of-inkosei/.git
+/c/Users/seal/Documents/GitHub/Demon-of-inkosei/demon-tts/.git
+/c/Users/seal/Documents/GitHub/docker-agent/.git
+/c/Users/seal/Documents/GitHub/Epsilon-Hollow/.git
+/c/Users/seal/Documents/GitHub/erpnext/.git
+/c/Users/seal/Documents/GitHub/fairchem/.git
+/c/Users/seal/Documents/GitHub/faraday/.git
+/c/Users/seal/Documents/GitHub/firefox/.git
+/c/Users/seal/Documents/GitHub/fprime/.git
+/c/Users/seal/Documents/GitHub/hamliton/.git
+/c/Users/seal/Documents/GitHub/highway/.git
+/c/Users/seal/Documents/GitHub/highway-topo/.donotcommit/build/googletest-src/.git
+/c/Users/seal/Documents/GitHub/hollow-asm/.git
+/c/Users/seal/Documents/GitHub/kaggle-cell-tracking-competition/.git
+/c/Users/seal/Documents/GitHub/kernels/.git
+/c/Users/seal/Documents/GitHub/laamba-silence/.git
+/c/Users/seal/Documents/GitHub/laamba-silence/repos/Aether-Lang/.git
+/c/Users/seal/Documents/GitHub/laamba-silence/repos/faraday/.git
+/c/Users/seal/Documents/GitHub/laamba-silence/repos/hamliton/.git
+/c/Users/seal/Documents/GitHub/laamba-silence/repos/phi-mem/.git
+/c/Users/seal/Documents/GitHub/lamba-topo/.git
+/c/Users/seal/Documents/GitHub/lambda-topo/.git
+/c/Users/seal/Documents/GitHub/mealbuddy/.git
+/c/Users/seal/Documents/GitHub/mujoco/.git
+/c/Users/seal/Documents/GitHub/mujoco/build-asan/_deps/abseil-cpp-src/.git
+/c/Users/seal/Documents/GitHub/mujoco/build-asan/_deps/benchmark-src/.git
+/c/Users/seal/Documents/GitHub/mujoco/build-asan/_deps/ccd-src/.git
+/c/Users/seal/Documents/GitHub/mujoco/build-asan/_deps/eigen3-src/.git
+/c/Users/seal/Documents/GitHub/mujoco/build-asan/_deps/googletest-src/.git
+/c/Users/seal/Documents/GitHub/mujoco/build-asan/_deps/lodepng-src/.git
+/c/Users/seal/Documents/GitHub/mujoco/build-asan/_deps/marchingcubecpp-src/.git
+/c/Users/seal/Documents/GitHub/mujoco/build-asan/_deps/miniz-src/.git
+/c/Users/seal/Documents/GitHub/mujoco/build-asan/_deps/qhull-src/.git
+/c/Users/seal/Documents/GitHub/mujoco/build-asan/_deps/tinyobjloader-src/.git
+/c/Users/seal/Documents/GitHub/mujoco/build-asan/_deps/tinyxml2-src/.git
+/c/Users/seal/Documents/GitHub/mujoco/build-bench/_deps/abseil-cpp-src/.git
+/c/Users/seal/Documents/GitHub/mujoco/build-bench/_deps/benchmark-src/.git
+/c/Users/seal/Documents/GitHub/mujoco/build-bench/_deps/ccd-src/.git
+/c/Users/seal/Documents/GitHub/mujoco/build-bench/_deps/eigen3-src/.git
+/c/Users/seal/Documents/GitHub/mujoco/build-bench/_deps/googletest-src/.git
+/c/Users/seal/Documents/GitHub/mujoco/build-bench/_deps/lodepng-src/.git
+/c/Users/seal/Documents/GitHub/mujoco/build-bench/_deps/marchingcubecpp-src/.git
+/c/Users/seal/Documents/GitHub/mujoco/build-bench/_deps/miniz-src/.git
+/c/Users/seal/Documents/GitHub/mujoco/build-bench/_deps/qhull-src/.git
+/c/Users/seal/Documents/GitHub/mujoco/build-bench/_deps/tinyobjloader-src/.git
+/c/Users/seal/Documents/GitHub/mujoco/build-bench/_deps/tinyxml2-src/.git
+/c/Users/seal/Documents/GitHub/mujoco_warp/.git
+/c/Users/seal/Documents/GitHub/NeMo-Relay/.git
+/c/Users/seal/Documents/GitHub/NeMo-Relay/third_party/hermes-agent/.git
+/c/Users/seal/Documents/GitHub/NeMo-Relay-benchmark-sandbox/aiperf/.git
+/c/Users/seal/Documents/GitHub/NeMo-Relay-benchmark-sandbox/claw-eval/.git
+/c/Users/seal/Documents/GitHub/NeMo-Relay-benchmark-sandbox/pinchbench-skill/.git
+/c/Users/seal/Documents/GitHub/NeMo-Relay-benchmark-sandbox/SWE-bench/.git
+/c/Users/seal/Documents/GitHub/new/.git
+/c/Users/seal/Documents/GitHub/OSMO/.git
+/c/Users/seal/Documents/GitHub/PanaceaX/.git
+/c/Users/seal/Documents/GitHub/pgtable-asm/.git
+/c/Users/seal/Documents/GitHub/planimeter/.git
+/c/Users/seal/Documents/GitHub/pyrefly/.donotcommit/aether-link/.git
+/c/Users/seal/Documents/GitHub/pyrefly/.git
+/c/Users/seal/Documents/GitHub/pytorch/.git
+/c/Users/seal/Documents/GitHub/pytorch/agent_space/pytorch-topology-source/.git
+/c/Users/seal/Documents/GitHub/pytorch/agent_space/topological-ml-toolkit/.git
+/c/Users/seal/Documents/GitHub/pytorch-topology/.git
+/c/Users/seal/Documents/GitHub/rtp-llm/.git
+/c/Users/seal/Documents/GitHub/separatrix/.git
+/c/Users/seal/Documents/GitHub/tangle/.git
+/c/Users/seal/Documents/GitHub/teerthfolio/.git
+/c/Users/seal/Documents/GitHub/teerthfolio/donotcommit/hologram-particles/.git
+/c/Users/seal/Documents/GitHub/teerthsharma/.git
+/c/Users/seal/Documents/GitHub/teerthsharma.github.io/.git
+/c/Users/seal/Documents/GitHub/tensorflow/.git
+/c/Users/seal/Documents/GitHub/TensorRT-LLM/.git
+/c/Users/seal/Documents/GitHub/test_2/.git
+/c/Users/seal/Documents/GitHub/tinygrad/.git
+/c/Users/seal/Documents/GitHub/topo-asm/.git
+/c/Users/seal/Documents/GitHub/topograph/.git
+/c/Users/seal/Documents/GitHub/triton/.git
+/c/Users/seal/Documents/GitHub/veena/.git
+/c/Users/seal/Documents/GitHub/vllm/.git
+/c/Users/seal/Documents/GitHub/X-Rust/.git
+/c/Users/seal/Documents/GitHub/xeroday/.git
+/c/Users/seal/Documents/GitHub/XNNPACK/.donotcommit/build-h005-baseline/FXdiv-source/.git
+/c/Users/seal/Documents/GitHub/XNNPACK/.git
+/c/Users/seal/Documents/GitHub/Yuddh-Niti/.git
+/c/Users/seal/Documents/GitHub/zstd/.git
+/c/Users/seal/Documents/seal/Aether-Lang-push/.git
+/c/Users/seal/Documents/seal/branchcut/.git
+/c/Users/seal/Documents/seal/caustic/.git
+/c/Users/seal/Documents/seal/Electromagnetic-Field-Data-Simulator/.git
+/c/Users/seal/Documents/seal/nerve/.git
+/c/Users/seal/Documents/seal/pytorch-topology/.git
+/c/Users/seal/Documents/seal/sigmoid/.git
+/c/Users/seal/Documents/seal/tf-topology-hunt/xla-fork/.git
+/c/Users/seal/Documents/seal/topological-ml-toolkit/.git

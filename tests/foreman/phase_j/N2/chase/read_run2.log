@@ -1,0 +1,46 @@
+[rdiag'] batch 0 done  7s
+[rdiag'] batch 1 done  11s
+[rdiag'] batch 2 done  15s
+[rdiag'] batch 3 done  18s
+[rdiag'] batch 4 done  22s
+[rdiag'] batch 5 done  26s
+[rdiag'] batch 6 done  31s
+[rdiag'] batch 7 done  35s
+C:\Users\seal\AppData\Local\Temp\claude\C--Users-seal-Desktop-New-folder--32-\870edeb1-6409-4414-98e7-00d0537b75dd\scratchpad\phase_j\N2\chase\rdiag_prime.py:228: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\torch\csrc\autograd\generated\python_variable_methods.cpp:821.)
+  beta_param=float(layers[li].self_attn.beta),
+{
+ "checkpoint": "C:\\Users\\seal\\AppData\\Local\\Temp\\claude\\C--Users-seal-Desktop-New-folder--32-\\870edeb1-6409-4414-98e7-00d0537b75dd\\scratchpad\\d45_ckpt_f_ss0_pair\\model.pt",
+ "gamma": 0.99,
+ "tol64": 1e-06,
+ "eval_nll": 1.0430562864777626,
+ "eval_tokens": 32704,
+ "attn_out_max_abs_diff": 0.0,
+ "n_windows": 64,
+ "worst_f64": {
+  "val": 2.067682053190922,
+  "layer": 2,
+  "window": 22,
+  "head": 1,
+  "pos": 242,
+  "s_ii": 7.237973936353719,
+  "lnZ": 7.238432095446907,
+  "p_ii": 0.9995419458456629,
+  "one_minus_beta_s_ii": 0.726840349353572,
+  "neumann_growth_per_step": 2.0470052326590125,
+  "rho_gammaW": 2.0470052326590125
+ },
+ "seconds": 34.63198709487915
+}
+{"layer": 0, "beta": 1.0605748891830444, "beta_param": 1.0605748891830444, "qk": 1.0872255563735962, "g": 0.9823850989341736, "gate": {"n": 32768, "zeros_all": 0, "zeros_excl0": 0, "m_min": 0.047169141471385956, "m_min_excl0": 0.047169141471385956}, "diag_imag_nonzero": 0, "ReW_diag_equals_W_diag_bitwise": true}
+  f32 {"n_pairs": 512, "n_diag": 262144, "unit_diagonals": 0, "max_Wii": 1.2068455219268799, "max_Wii_at": {"window": 0, "head": 4, "pos": 0}, "gstar_min": 0.8286064635707269, "gstar_median": 0.9541198086530165, "n_pairs_gstar_lt_099": 424, "frac_pairs_gstar_lt_099": 0.828125, "frac_pairs_argmax_at_pos0": 0.9921875, "excl_pos0": {"max_Wii": 1.066506028175354, "max_Wii_at": {"window": 47, "head": 6, "pos": 1}, "gstar_min": 0.937641207439646, "n_pairs_gstar_lt_099": 7, "frac_pairs_gstar_lt_099": 0.013671875}, "n_positions_Wii_gt_1": 469, "n_positions_Wii_gt_1_over_099": 429, "isolated_rows_excl_pos0": 0, "absorbers_excl_pos0": 0}
+  f64 {"n_pairs": 512, "n_diag": 262144, "unit_diagonals": 0, "max_Wii": 1.2068454692837733, "max_Wii_at": {"window": 0, "head": 4, "pos": 0}, "gstar_min": 0.828606499714889, "gstar_median": 0.9541198603588641, "n_pairs_gstar_lt_099": 424, "frac_pairs_gstar_lt_099": 0.828125, "frac_pairs_argmax_at_pos0": 0.9921875, "excl_pos0": {"max_Wii": 1.0665060259316514, "max_Wii_at": {"window": 47, "head": 6, "pos": 1}, "gstar_min": 0.9376412094122443, "n_pairs_gstar_lt_099": 7, "frac_pairs_gstar_lt_099": 0.013671875}, "n_positions_Wii_gt_1": 469, "n_positions_Wii_gt_1_over_099": 429, "isolated_rows_excl_pos0": 0, "absorbers_excl_pos0": 0}
+  ReW {"n_pairs": 512, "n_diag": 262144, "unit_diagonals": 0, "max_Wii": 1.2068455219268799, "max_Wii_at": {"window": 0, "head": 4, "pos": 0}, "gstar_min": 0.8286064635707269, "gstar_median": 0.9541198086530165, "n_pairs_gstar_lt_099": 424, "frac_pairs_gstar_lt_099": 0.828125, "frac_pairs_argmax_at_pos0": 0.9921875, "excl_pos0": {"max_Wii": 1.066506028175354, "max_Wii_at": {"window": 47, "head": 6, "pos": 1}, "gstar_min": 0.937641207439646, "n_pairs_gstar_lt_099": 7, "frac_pairs_gstar_lt_099": 0.013671875}, "n_positions_Wii_gt_1": 469, "n_positions_Wii_gt_1_over_099": 429, "isolated_rows_excl_pos0": 0, "absorbers_excl_pos0": 0}
+{"layer": 1, "beta": 0.9300132989883423, "beta_param": 0.9300132989883423, "qk": 1.33349609375, "g": 1.009325623512268, "gate": {"n": 32768, "zeros_all": 0, "zeros_excl0": 0, "m_min": 0.09668873995542526, "m_min_excl0": 0.09668873995542526}, "diag_imag_nonzero": 0, "ReW_diag_equals_W_diag_bitwise": true}
+  f32 {"n_pairs": 512, "n_diag": 262144, "unit_diagonals": 0, "max_Wii": 1.414293646812439, "max_Wii_at": {"window": 30, "head": 6, "pos": 134}, "gstar_min": 0.707066741234268, "gstar_median": 0.8438505728221547, "n_pairs_gstar_lt_099": 496, "frac_pairs_gstar_lt_099": 0.96875, "frac_pairs_argmax_at_pos0": 0.02734375, "excl_pos0": {"max_Wii": 1.414293646812439, "max_Wii_at": {"window": 30, "head": 6, "pos": 134}, "gstar_min": 0.707066741234268, "n_pairs_gstar_lt_099": 495, "frac_pairs_gstar_lt_099": 0.966796875}, "n_positions_Wii_gt_1": 6802, "n_positions_Wii_gt_1_over_099": 6260, "isolated_rows_excl_pos0": 0, "absorbers_excl_pos0": 0}
+  f64 {"n_pairs": 512, "n_diag": 262144, "unit_diagonals": 0, "max_Wii": 1.4142936757024833, "max_Wii_at": {"window": 30, "head": 6, "pos": 134}, "gstar_min": 0.707066726790882, "gstar_median": 0.8438505549230114, "n_pairs_gstar_lt_099": 496, "frac_pairs_gstar_lt_099": 0.96875, "frac_pairs_argmax_at_pos0": 0.02734375, "excl_pos0": {"max_Wii": 1.4142936757024833, "max_Wii_at": {"window": 30, "head": 6, "pos": 134}, "gstar_min": 0.707066726790882, "n_pairs_gstar_lt_099": 495, "frac_pairs_gstar_lt_099": 0.966796875}, "n_positions_Wii_gt_1": 6802, "n_positions_Wii_gt_1_over_099": 6260, "isolated_rows_excl_pos0": 0, "absorbers_excl_pos0": 0}
+  ReW {"n_pairs": 512, "n_diag": 262144, "unit_diagonals": 0, "max_Wii": 1.414293646812439, "max_Wii_at": {"window": 30, "head": 6, "pos": 134}, "gstar_min": 0.707066741234268, "gstar_median": 0.8438505728221547, "n_pairs_gstar_lt_099": 496, "frac_pairs_gstar_lt_099": 0.96875, "frac_pairs_argmax_at_pos0": 0.02734375, "excl_pos0": {"max_Wii": 1.414293646812439, "max_Wii_at": {"window": 30, "head": 6, "pos": 134}, "gstar_min": 0.707066741234268, "n_pairs_gstar_lt_099": 495, "frac_pairs_gstar_lt_099": 0.966796875}, "n_positions_Wii_gt_1": 6802, "n_positions_Wii_gt_1_over_099": 6260, "isolated_rows_excl_pos0": 0, "absorbers_excl_pos0": 0}
+{"layer": 2, "beta": 0.8995795845985413, "beta_param": 0.8995795845985413, "qk": 1.3895158767700195, "g": 0.9927084445953369, "gate": {"n": 32768, "zeros_all": 0, "zeros_excl0": 0, "m_min": 0.09254664927721024, "m_min_excl0": 0.09254664927721024}, "diag_imag_nonzero": 0, "ReW_diag_equals_W_diag_bitwise": true}
+  f32 {"n_pairs": 512, "n_diag": 262144, "unit_diagonals": 0, "max_Wii": 2.0676822662353516, "max_Wii_at": {"window": 22, "head": 1, "pos": 242}, "gstar_min": 0.48363330107807584, "gstar_median": 0.6824102074920086, "n_pairs_gstar_lt_099": 512, "frac_pairs_gstar_lt_099": 1.0, "frac_pairs_argmax_at_pos0": 0.0078125, "excl_pos0": {"max_Wii": 2.0676822662353516, "max_Wii_at": {"window": 22, "head": 1, "pos": 242}, "gstar_min": 0.48363330107807584, "n_pairs_gstar_lt_099": 512, "frac_pairs_gstar_lt_099": 1.0}, "n_positions_Wii_gt_1": 14675, "n_positions_Wii_gt_1_over_099": 14040, "isolated_rows_excl_pos0": 0, "absorbers_excl_pos0": 0}
+  f64 {"n_pairs": 512, "n_diag": 262144, "unit_diagonals": 0, "max_Wii": 2.067682053190922, "max_Wii_at": {"window": 22, "head": 1, "pos": 242}, "gstar_min": 0.48363335090942233, "gstar_median": 0.6824102883008283, "n_pairs_gstar_lt_099": 512, "frac_pairs_gstar_lt_099": 1.0, "frac_pairs_argmax_at_pos0": 0.0078125, "excl_pos0": {"max_Wii": 2.067682053190922, "max_Wii_at": {"window": 22, "head": 1, "pos": 242}, "gstar_min": 0.48363335090942233, "n_pairs_gstar_lt_099": 512, "frac_pairs_gstar_lt_099": 1.0}, "n_positions_Wii_gt_1": 14675, "n_positions_Wii_gt_1_over_099": 14040, "isolated_rows_excl_pos0": 0, "absorbers_excl_pos0": 0}
+  ReW {"n_pairs": 512, "n_diag": 262144, "unit_diagonals": 0, "max_Wii": 2.0676822662353516, "max_Wii_at": {"window": 22, "head": 1, "pos": 242}, "gstar_min": 0.48363330107807584, "gstar_median": 0.6824102074920086, "n_pairs_gstar_lt_099": 512, "frac_pairs_gstar_lt_099": 1.0, "frac_pairs_argmax_at_pos0": 0.0078125, "excl_pos0": {"max_Wii": 2.0676822662353516, "max_Wii_at": {"window": 22, "head": 1, "pos": 242}, "gstar_min": 0.48363330107807584, "n_pairs_gstar_lt_099": 512, "frac_pairs_gstar_lt_099": 1.0}, "n_positions_Wii_gt_1": 14675, "n_positions_Wii_gt_1_over_099": 14040, "isolated_rows_excl_pos0": 0, "absorbers_excl_pos0": 0}

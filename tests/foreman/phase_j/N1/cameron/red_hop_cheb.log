@@ -1,0 +1,20 @@
+[POLL] compute_procs=0 used_mib=0 free=True
+C:\Users\seal\AppData\Local\Temp\claude\C--Users-seal-Desktop-New-folder--32-\870edeb1-6409-4414-98e7-00d0537b75dd\scratchpad\phase_j\N1\cameron\cost_n.py:43: UserWarning: Memory efficient kernel not used because: (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\aten\src\ATen\native\transformers\cuda\sdp_utils.cpp:1240.)
+  return F.scaled_dot_product_attention(q, k, x, is_causal=True)
+C:\Users\seal\AppData\Local\Temp\claude\C--Users-seal-Desktop-New-folder--32-\870edeb1-6409-4414-98e7-00d0537b75dd\scratchpad\phase_j\N1\cameron\cost_n.py:43: UserWarning: Memory Efficient attention has been runtime disabled. (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\aten\src\ATen/native/transformers/sdp_utils_cpp.h:600.)
+  return F.scaled_dot_product_attention(q, k, x, is_causal=True)
+C:\Users\seal\AppData\Local\Temp\claude\C--Users-seal-Desktop-New-folder--32-\870edeb1-6409-4414-98e7-00d0537b75dd\scratchpad\phase_j\N1\cameron\cost_n.py:43: UserWarning: Flash attention kernel not used because: (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\aten\src\ATen\native\transformers\cuda\sdp_utils.cpp:1242.)
+  return F.scaled_dot_product_attention(q, k, x, is_causal=True)
+C:\Users\seal\AppData\Local\Temp\claude\C--Users-seal-Desktop-New-folder--32-\870edeb1-6409-4414-98e7-00d0537b75dd\scratchpad\phase_j\N1\cameron\cost_n.py:43: UserWarning: Torch was not compiled with flash attention. (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\aten\src\ATen\native\transformers\cuda\sdp_utils.cpp:1050.)
+  return F.scaled_dot_product_attention(q, k, x, is_causal=True)
+C:\Users\seal\AppData\Local\Temp\claude\C--Users-seal-Desktop-New-folder--32-\870edeb1-6409-4414-98e7-00d0537b75dd\scratchpad\phase_j\N1\cameron\cost_n.py:43: UserWarning: cuDNN attention kernel not used because: (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\aten\src\ATen\native\transformers\cuda\sdp_utils.cpp:1244.)
+  return F.scaled_dot_product_attention(q, k, x, is_causal=True)
+C:\Users\seal\AppData\Local\Temp\claude\C--Users-seal-Desktop-New-folder--32-\870edeb1-6409-4414-98e7-00d0537b75dd\scratchpad\phase_j\N1\cameron\cost_n.py:43: UserWarning: cuDNN attention has been runtime disabled. (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\aten\src\ATen\native\transformers\cuda\sdp_utils.cpp:922.)
+  return F.scaled_dot_product_attention(q, k, x, is_causal=True)
+{"impl": "hop_cheb", "S": 4096, "B": 1, "H": 8, "D": 64, "gamma": 0.99, "dtype": "fp32", "tf32": false, "sdpa_backend_default": "EFFICIENT_ATTENTION", "sdpa_backends_available": {"FLASH_ATTENTION": false, "EFFICIENT_ATTENTION": true, "MATH": true}, "ms_sdpa": 4.497407913208008, "ms_impl": 582.5853271484375, "ratio": 129.53802243232113, "max_abs_err_vs_f64": 132836.35752027214, "rel_err_vs_f64": 44578.897484030706, "reps": 3, "sequential_steps": 130, "torch": "2.14.0+cu126", "gpu": "NVIDIA GeForce RTX 4060 Laptop GPU"}
+RESULT impl=hop_cheb ratio=129.538 rel_err=4.458e+04 cost_bar=FAIL exact_bar=FAIL
+Traceback (most recent call last):
+  File "C:\Users\seal\AppData\Local\Temp\claude\C--Users-seal-Desktop-New-folder--32-\870edeb1-6409-4414-98e7-00d0537b75dd\scratchpad\phase_j\N1\cameron\test_cost_n.py", line 18, in <module>
+    assert ok_cost, f"R-COST-N FAIL: {impl} ratio {row['ratio']:.3f} > 1.5x one SDPA pass"
+           ^^^^^^^
+AssertionError: R-COST-N FAIL: hop_cheb ratio 129.538 > 1.5x one SDPA pass

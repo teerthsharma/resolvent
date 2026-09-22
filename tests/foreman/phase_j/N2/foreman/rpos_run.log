@@ -1,0 +1,87 @@
+[POLL] compute_procs=0 used_mib=0 free=True
+[REP] ckpt_a_rope_ss0: n_params=724,608  repetition_factor=0.7977x
+C:\Users\seal\Desktop\New folder (32)\tests\foreman\eval\r3_eval.py:243: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\torch\csrc\autograd\generated\python_variable_methods.cpp:821.)
+  losses.append(float(loss))
+[CELL] {"arm": "a_rope", "split_seed": 0, "seed": 0, "n_params": 724608, "final_eval_loss": 1.0516063794493675, "loss_last_train": 1.06548011302948, "crn_digest_file": "d36f6436f58c65ad93c55c174d0107050f4369c44131e019118d529030dc2455", "crn_digest_recomputed": "d36f6436f58c65ad93c55c174d0107050f4369c44131e019118d529030dc2455", "crn_digest_grid": "d36f6436f58c65ad93c55c174d0107050f4369c44131e019118d529030dc2455", "crn_match": true, "n_params_eq_grid_a": true, "steps": 3538, "run_seconds": 110.66567802429199, "grid_a_run_seconds": 77.63451600074768, "ts": "2026-09-23T00:39:45"}
+[POLL] compute_procs=1 used_mib=201 free=False
+[POLL] compute_procs=1 used_mib=201 free=False
+[POLL] compute_procs=1 used_mib=201 free=False
+[POLL] compute_procs=1 used_mib=201 free=False
+[POLL] compute_procs=1 used_mib=201 free=False
+[POLL] compute_procs=1 used_mib=201 free=False
+[POLL] compute_procs=1 used_mib=201 free=False
+[POLL] compute_procs=1 used_mib=201 free=False
+[POLL] compute_procs=1 used_mib=201 free=False
+[POLL] compute_procs=1 used_mib=201 free=False
+[POLL] compute_procs=1 used_mib=201 free=False
+[POLL] compute_procs=1 used_mib=201 free=False
+[POLL] compute_procs=1 used_mib=201 free=False
+[POLL] compute_procs=1 used_mib=201 free=False
+[POLL] compute_procs=1 used_mib=201 free=False
+[POLL] compute_procs=1 used_mib=201 free=False
+[POLL] compute_procs=1 used_mib=201 free=False
+[POLL] compute_procs=1 used_mib=201 free=False
+[POLL] compute_procs=1 used_mib=201 free=False
+[POLL] compute_procs=1 used_mib=201 free=False
+[POLL] compute_procs=1 used_mib=201 free=False
+[POLL] compute_procs=1 used_mib=201 free=False
+[POLL] compute_procs=1 used_mib=201 free=False
+[POLL] compute_procs=1 used_mib=201 free=False
+[POLL] compute_procs=1 used_mib=201 free=False
+[POLL] compute_procs=1 used_mib=201 free=False
+[POLL] compute_procs=1 used_mib=201 free=False
+[POLL] compute_procs=1 used_mib=201 free=False
+[POLL] compute_procs=1 used_mib=201 free=False
+[POLL] compute_procs=1 used_mib=201 free=False
+[POLL] compute_procs=1 used_mib=201 free=False
+[POLL] compute_procs=1 used_mib=201 free=False
+=== a_alibi 0 00:50:22
+[POLL] compute_procs=0 used_mib=0 free=True
+[REP] ckpt_a_alibi_ss0: n_params=724,608  repetition_factor=0.7977x
+C:\Users\seal\Desktop\New folder (32)\tests\foreman\eval\r3_eval.py:243: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\torch\csrc\autograd\generated\python_variable_methods.cpp:821.)
+  losses.append(float(loss))
+[CELL] {"arm": "a_alibi", "split_seed": 0, "seed": 0, "n_params": 724608, "final_eval_loss": 1.0224847048521042, "loss_last_train": 1.0121558904647827, "crn_digest_file": "d36f6436f58c65ad93c55c174d0107050f4369c44131e019118d529030dc2455", "crn_digest_recomputed": "d36f6436f58c65ad93c55c174d0107050f4369c44131e019118d529030dc2455", "crn_digest_grid": "d36f6436f58c65ad93c55c174d0107050f4369c44131e019118d529030dc2455", "crn_match": true, "n_params_eq_grid_a": true, "steps": 3538, "run_seconds": 103.58702898025513, "grid_a_run_seconds": 77.63451600074768, "ts": "2026-09-23T00:52:19"}
+EXIT=0 a_alibi 0
+=== a_rope 1 00:52:21
+[POLL] compute_procs=0 used_mib=0 free=True
+[REP] ckpt_a_rope_ss1: n_params=724,608  repetition_factor=0.7977x
+C:\Users\seal\Desktop\New folder (32)\tests\foreman\eval\r3_eval.py:243: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\torch\csrc\autograd\generated\python_variable_methods.cpp:821.)
+  losses.append(float(loss))
+[CELL] {"arm": "a_rope", "split_seed": 1, "seed": 1, "n_params": 724608, "final_eval_loss": 1.05374176800251, "loss_last_train": 1.035888671875, "crn_digest_file": "e5c8ab9ad40c31d08bb26fdc396154a3243474dfc505f46834bbd389d5e52133", "crn_digest_recomputed": "e5c8ab9ad40c31d08bb26fdc396154a3243474dfc505f46834bbd389d5e52133", "crn_digest_grid": "e5c8ab9ad40c31d08bb26fdc396154a3243474dfc505f46834bbd389d5e52133", "crn_match": true, "n_params_eq_grid_a": true, "steps": 3538, "run_seconds": 104.11081600189209, "grid_a_run_seconds": 77.59093189239502, "ts": "2026-09-23T00:54:20"}
+EXIT=0 a_rope 1
+=== a_alibi 1 00:54:21
+[POLL] compute_procs=0 used_mib=0 free=True
+[REP] ckpt_a_alibi_ss1: n_params=724,608  repetition_factor=0.7977x
+C:\Users\seal\Desktop\New folder (32)\tests\foreman\eval\r3_eval.py:243: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\torch\csrc\autograd\generated\python_variable_methods.cpp:821.)
+  losses.append(float(loss))
+[CELL] {"arm": "a_alibi", "split_seed": 1, "seed": 1, "n_params": 724608, "final_eval_loss": 1.0370063483715057, "loss_last_train": 1.012422800064087, "crn_digest_file": "e5c8ab9ad40c31d08bb26fdc396154a3243474dfc505f46834bbd389d5e52133", "crn_digest_recomputed": "e5c8ab9ad40c31d08bb26fdc396154a3243474dfc505f46834bbd389d5e52133", "crn_digest_grid": "e5c8ab9ad40c31d08bb26fdc396154a3243474dfc505f46834bbd389d5e52133", "crn_match": true, "n_params_eq_grid_a": true, "steps": 3538, "run_seconds": 108.13807535171509, "grid_a_run_seconds": 77.59093189239502, "ts": "2026-09-23T00:56:23"}
+EXIT=0 a_alibi 1
+=== a_rope 2 00:56:25
+[POLL] compute_procs=0 used_mib=0 free=True
+[REP] ckpt_a_rope_ss2: n_params=724,608  repetition_factor=0.7977x
+C:\Users\seal\Desktop\New folder (32)\tests\foreman\eval\r3_eval.py:243: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\torch\csrc\autograd\generated\python_variable_methods.cpp:821.)
+  losses.append(float(loss))
+[CELL] {"arm": "a_rope", "split_seed": 2, "seed": 2, "n_params": 724608, "final_eval_loss": 1.0353356525301933, "loss_last_train": 1.0230203866958618, "crn_digest_file": "ee102d790549709cbea7d47b5fe39235093a710c53bce132d8d496880160b348", "crn_digest_recomputed": "ee102d790549709cbea7d47b5fe39235093a710c53bce132d8d496880160b348", "crn_digest_grid": "ee102d790549709cbea7d47b5fe39235093a710c53bce132d8d496880160b348", "crn_match": true, "n_params_eq_grid_a": true, "steps": 3538, "run_seconds": 101.78694725036621, "grid_a_run_seconds": 75.80431938171387, "ts": "2026-09-23T00:58:22"}
+EXIT=0 a_rope 2
+=== a_alibi 2 00:58:24
+[POLL] compute_procs=0 used_mib=0 free=True
+[REP] ckpt_a_alibi_ss2: n_params=724,608  repetition_factor=0.7977x
+C:\Users\seal\Desktop\New folder (32)\tests\foreman\eval\r3_eval.py:243: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\torch\csrc\autograd\generated\python_variable_methods.cpp:821.)
+  losses.append(float(loss))
+[CELL] {"arm": "a_alibi", "split_seed": 2, "seed": 2, "n_params": 724608, "final_eval_loss": 1.015971302986145, "loss_last_train": 1.0092487335205078, "crn_digest_file": "ee102d790549709cbea7d47b5fe39235093a710c53bce132d8d496880160b348", "crn_digest_recomputed": "ee102d790549709cbea7d47b5fe39235093a710c53bce132d8d496880160b348", "crn_digest_grid": "ee102d790549709cbea7d47b5fe39235093a710c53bce132d8d496880160b348", "crn_match": true, "n_params_eq_grid_a": true, "steps": 3538, "run_seconds": 109.85379362106323, "grid_a_run_seconds": 75.80431938171387, "ts": "2026-09-23T01:00:29"}
+EXIT=0 a_alibi 2
+=== a 0 01:00:32
+[POLL] compute_procs=0 used_mib=0 free=True
+[REP] ckpt_a_ss0: n_params=724,608  repetition_factor=0.7977x
+C:\Users\seal\Desktop\New folder (32)\tests\foreman\eval\r3_eval.py:243: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\torch\csrc\autograd\generated\python_variable_methods.cpp:821.)
+  losses.append(float(loss))
+[CELL] {"arm": "a", "split_seed": 0, "seed": 0, "n_params": 724608, "final_eval_loss": 1.2756858617067337, "loss_last_train": 1.2773281335830688, "crn_digest_file": "d36f6436f58c65ad93c55c174d0107050f4369c44131e019118d529030dc2455", "crn_digest_recomputed": "d36f6436f58c65ad93c55c174d0107050f4369c44131e019118d529030dc2455", "crn_digest_grid": "d36f6436f58c65ad93c55c174d0107050f4369c44131e019118d529030dc2455", "crn_match": true, "n_params_eq_grid_a": true, "steps": 3538, "run_seconds": 91.41664552688599, "grid_a_run_seconds": 77.63451600074768, "ts": "2026-09-23T01:02:20"}
+EXIT=0 a 0
+DONE

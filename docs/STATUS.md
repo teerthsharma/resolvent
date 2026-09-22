@@ -15,7 +15,7 @@ numbers are given below, and the weakest leg is the honest one.
 
 | reading | value |
 |---|---|
-| gates passed, all three conditions | **9 of 19 — 47%** |
+| gates passed, all three conditions | **8 of 19 — 42%** |
 | the goal as actually stated (conjunctive, weakest leg) | **30%** |
 | the leg that sets it | condition 3, *carries the weight of self-attention or JEPA* |
 
@@ -37,11 +37,11 @@ numbers are given below, and the weakest leg is the honest one.
 
 ## Condition 2 — beats anything before it
 
-**5 of 9 gates — 56%, with three gates now measured as failures rather than open**
+**4 of 9 gates — 44%, with four gates now measured as failures rather than open**
 
 | # | gate | state | evidence |
 |---|---|---|---|
-| 1 | A win exists | **done** | −0.2473 eval NLL, 5 seeds |
+| 1 | A win exists | **failed** | −0.2473 eval NLL over the plain softmax twin, 5 seeds — but that twin carries position only through an absolute table. A zero-parameter RoPE twin recovers 96.3 / 99.7 / 101.4% of the win and an ALiBi twin 108.8 / 106.7 / 108.8%, beating the family by 0.016–0.023 nats at 3 of 3 seeds (R-POS, `tests/foreman/phase_j/RECORD_N.md`). Against the strongest zero-parameter control there is no win |
 | 2 | At matched parameters, excess reported not hidden | **done** | 783 excess per the same per-block formula on all three domains |
 | 3 | More than one domain | **done** | TinyStories −0.2473, WikiText-103 −0.3285, codeparrot −0.3301 |
 | 4 | Against the strongest baseline lacking the property | **failed** | the strongest such baseline is no longer the softmax twin: a Forgetting Transformer gate on the twin (727,704 params, same count as a2) recovers **100.2 / 100.3 / 110.9%** of `C_win` at split seeds 0 / 1 / 2 |

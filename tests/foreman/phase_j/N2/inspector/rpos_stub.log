@@ -1,0 +1,10 @@
+a_rope   recovery per seed ['nan', 'nan', 'nan']  mean nan
+a_alibi  recovery per seed ['nan', 'nan', 'nan']  mean nan
+Traceback (most recent call last):
+  File "C:\Users\seal\AppData\Local\Temp\claude\C--Users-seal-Desktop-New-folder--32-\870edeb1-6409-4414-98e7-00d0537b75dd\scratchpad\phase_j\N2\foreman\test_rpos.py", line 64, in <module>
+    main("--stub" in sys.argv)
+  File "C:\Users\seal\AppData\Local\Temp\claude\C--Users-seal-Desktop-New-folder--32-\870edeb1-6409-4414-98e7-00d0537b75dd\scratchpad\phase_j\N2\foreman\test_rpos.py", line 59, in main
+    assert vd == "PASS", "R-POS verdict {}, not PASS: a_rope {} a_alibi {}".format(vd, fmt("a_rope"), fmt("a_alibi"))
+           ^^^^^^^^^^^^
+AssertionError: R-POS verdict NEITHER, not PASS: a_rope [nan, nan, nan] a_alibi [nan, nan, nan]
+EXIT=1

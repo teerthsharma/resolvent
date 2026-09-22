@@ -1,0 +1,17 @@
+C:\Users\seal\AppData\Local\Temp\claude\C--Users-seal-Desktop-New-folder--32-\870edeb1-6409-4414-98e7-00d0537b75dd\scratchpad\phase_j\N2\chase\nurse1\wii_check.py:42: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\torch\csrc\autograd\generated\python_variable_methods.cpp:821.)
+  beta, qk, g = float(at.beta), float(at.qk), float(at.g)
+=== Case A: L=2 window=22 head=1 i=242 ===
+W_ii = 2.0676820534
+w_ii = 7.2379739364
+Z_i  = 1391.9098771038
+beta = 0.8995795846
+abs diff from given (2.0676820532) = 1.9257528905e-10
+min m_t over t=1..511 (layer 2, window 22) = 0.1652052091
+
+=== Case B: L=0 window=0 head=4 i=0 ===
+W_ii = 1.2068454693
+w_ii = -3.1037597871
+Z_i  = 0.0448801450
+beta = 1.0605748892
+abs diff from given (1.2068454693) = 1.6226575639e-11

@@ -1,0 +1,6 @@
+{"P1": {"lift": null, "auc": null, "null_auc_p95": null},
+ "P2": {"mean_attn_on_closure": null},
+ "P3": {"median_ratio": null},
+ "P4": {"rho": null, "null_abs_rho_p95": null},
+ "FT": {"a": [null, null, null], "f": [null, null, null], "fox": [null, null, null]},
+ "X_colocate": {"rho_per_layer": [null, null, null], "null_abs_rho_p95": null}}

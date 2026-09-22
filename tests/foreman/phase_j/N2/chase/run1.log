@@ -1,0 +1,7 @@
+RED   test_rebuild_fidelity AssertionError: 
+RED   test_beta_is_learned_beta AssertionError: 
+RED   test_operator_is_model_path AssertionError: 
+RED   test_diag_real_and_ReW_diag_equal AssertionError: 
+RED   test_bar_well_posed_gamma_099 AssertionError: 
+RED   test_bar_well_posed_gamma_099_ReW AssertionError: 
+RED   test_no_absorber_but_position_0 AssertionError: 

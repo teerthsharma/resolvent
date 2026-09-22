@@ -1,0 +1,27 @@
+find: '/c/Users/seal/AppData/Local/Nahimic': No such file or directory
+find: '/c/Users/seal/AppData/Local/NEO': No such file or directory
+find: '/c/Users/seal/AppData/Local/NhNotifSys': No such file or directory
+find: '/c/Users/seal/AppData/Local/node-gyp': No such file or directory
+find: '/c/Users/seal/AppData/Local/NVIDIA': No such file or directory
+find: '/c/Users/seal/AppData/Local/NVIDIA Corporation': No such file or directory
+find: '/c/Users/seal/AppData/Local/Ollama': No such file or directory
+find: '/c/Users/seal/AppData/Local/OpenAI': No such file or directory
+find: '/c/Users/seal/AppData/Local/ort.pyke.io': No such file or directory
+find: '/c/Users/seal/AppData/Local/Package Cache': No such file or directory
+find: '/c/Users/seal/AppData/Local/Packages': No such file or directory
+find: '/c/Users/seal/AppData/Local/Pandoc': No such file or directory
+find: '/c/Users/seal/AppData/Local/PlaceholderTileLogoFolder': No such file or directory
+find: '/c/Users/seal/AppData/Local/Programs': No such file or directory
+find: '/c/Users/seal/AppData/Local/Publishers': No such file or directory
+find: '/c/Users/seal/AppData/Local/pypa': No such file or directory
+find: '/c/Users/seal/AppData/Local/qBittorrent': No such file or directory
+find: '/c/Users/seal/AppData/Local/samplomatic': No such file or directory
+find: '/c/Users/seal/AppData/Local/SquirrelTemp': No such file or directory
+find: '/c/Users/seal/AppData/Local/tauri': No such file or directory
+find: '/c/Users/seal/AppData/Local/Temp': No such file or directory
+find: '/c/Users/seal/AppData/Local/ToastNotificationManagerCompat': No such file or directory
+find: '/c/Users/seal/AppData/Local/torch_extensions': No such file or directory
+find: '/c/Users/seal/AppData/Local/VirtualStore': No such file or directory
+find: '/c/Users/seal/AppData/Local/wsl': No such file or directory
+find: '/c/Users/seal/AppData/Local/Zoom': No such file or directory
+find: failed to read file names from file system at or below '/c/Users/seal': No such file or directory

@@ -1,0 +1,7 @@
+RED   test_rebuild_fidelity NotImplementedError: R-DIAG' read not built yet
+RED   test_beta_is_learned_beta NotImplementedError: R-DIAG' read not built yet
+RED   test_operator_is_model_path NotImplementedError: R-DIAG' read not built yet
+RED   test_diag_real_and_ReW_diag_equal NotImplementedError: R-DIAG' read not built yet
+RED   test_bar_well_posed_gamma_099 NotImplementedError: R-DIAG' read not built yet
+RED   test_bar_well_posed_gamma_099_ReW NotImplementedError: R-DIAG' read not built yet
+RED   test_no_absorber_but_position_0 NotImplementedError: R-DIAG' read not built yet

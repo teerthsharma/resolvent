@@ -1,0 +1,3 @@
+{"nll_trained": 1.0430562864777626, "trained_gstar_min": 0.9341955492171667, "nll_beta1": 1.0652995398833094, "beta1_gstar_min": 1.0, "dnll": 0.02224325340554678}
+GREEN test_beta1_gstar_at_least_1
+RED   test_beta_pin_free AssertionError: (1.0430562864777626, 1.0652995398833094, 0.02224325340554678)

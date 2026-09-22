@@ -1,0 +1,8 @@
+MEAN=1.0 n=256: structural depth n-1=255 (log10 prod subdiag J = -558.7, >-inf => every entry > 0); hops to rel err 1e-6: 18, to 1e-12: 26
+MEAN=1.0 n=1024: structural depth n-1=1023 (log10 prod subdiag J = -2874.1, >-inf => every entry > 0); hops to rel err 1e-6: 22, to 1e-12: 30
+
+Traceback (most recent call last):
+  File "C:\Users\seal\AppData\Local\Temp\claude\C--Users-seal-Desktop-New-folder--32-\870edeb1-6409-4414-98e7-00d0537b75dd\scratchpad\phase_j\N1\cameron\test_dense_depth.py", line 13, in <module>
+    assert h12 >= n - 1, f"D5-as-framed FAIL at n={n}: rel err <= 1e-12 after {h12} hops, not n-1 = {n-1}"
+           ^^^^^^^^^^^^
+AssertionError: D5-as-framed FAIL at n=256: rel err <= 1e-12 after 26 hops, not n-1 = 255

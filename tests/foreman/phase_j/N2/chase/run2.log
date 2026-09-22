@@ -1,0 +1,17 @@
+[rdiag'] batch 0 done  7s
+[rdiag'] batch 1 done  12s
+[rdiag'] batch 2 done  16s
+[rdiag'] batch 3 done  20s
+[rdiag'] batch 4 done  23s
+[rdiag'] batch 5 done  27s
+[rdiag'] batch 6 done  30s
+[rdiag'] batch 7 done  34s
+Consider using tensor.detach() first. (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\torch\csrc\autograd\generated\python_variable_methods.cpp:821.)
+  beta_param=float(layers[li].self_attn.beta),
+GREEN test_rebuild_fidelity
+GREEN test_beta_is_learned_beta
+GREEN test_operator_is_model_path
+GREEN test_diag_real_and_ReW_diag_equal
+RED   test_bar_well_posed_gamma_099 AssertionError: {0: (424, 512, 0.8286064635707269), 1: (496, 512, 0.707066741234268), 2: (512, 512, 0.48363330107807584)}
+RED   test_bar_well_posed_gamma_099_ReW AssertionError: {0: (424, 0.8286064635707269), 1: (496, 0.707066741234268), 2: (512, 0.48363330107807584)}
+GREEN test_no_absorber_but_position_0

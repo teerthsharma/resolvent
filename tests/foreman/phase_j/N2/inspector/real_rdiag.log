@@ -1,0 +1,19 @@
+[rdiag'] batch 0 done  5s
+[rdiag'] batch 1 done  9s
+[rdiag'] batch 2 done  12s
+[rdiag'] batch 3 done  15s
+[rdiag'] batch 4 done  17s
+[rdiag'] batch 5 done  20s
+[rdiag'] batch 6 done  23s
+[rdiag'] batch 7 done  25s
+C:\Users\seal\AppData\Local\Temp\claude\C--Users-seal-Desktop-New-folder--32-\870edeb1-6409-4414-98e7-00d0537b75dd\scratchpad\phase_j\N2\inspector\rdiag_prime.py:228: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\torch\csrc\autograd\generated\python_variable_methods.cpp:821.)
+  beta_param=float(layers[li].self_attn.beta),
+GREEN test_rebuild_fidelity
+GREEN test_beta_is_learned_beta
+GREEN test_operator_is_model_path
+GREEN test_diag_real_and_ReW_diag_equal
+RED   test_bar_well_posed_gamma_099 AssertionError: {0: (424, 512, 0.8286064635707269), 1: (496, 512, 0.707066741234268), 2: (512, 512, 0.48363330107807584)}
+RED   test_bar_well_posed_gamma_099_ReW AssertionError: {0: (424, 0.8286064635707269), 1: (496, 0.707066741234268), 2: (512, 0.48363330107807584)}
+GREEN test_no_absorber_but_position_0
+EXIT=1

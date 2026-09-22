@@ -1,0 +1,27 @@
+GREEN KR 
+GREEN PF 
+GREEN T1 
+GREEN T2 
+GREEN T3 
+GREEN T4 
+GREEN T5 
+GREEN T6 
+GREEN T7 
+GREEN T8 
+GREEN T9 
+GREEN T10 
+GREEN X1 
+GREEN X2a 
+RED   X2b AssertionError: {'global': 3.899008222063571e-06, 'segmented': 6.570651501780489e-07, 'global_mean': 1.5107073735803067e-06, 'segmented_mean': 1.7627142812572004e-07, 'global_norm_drift_max': 2.084250138256749e-06}
+GREEN X3a 
+GREEN X3b 
+GREEN X4 
+GREEN B1_D1_unit_count_beta1 
+RED   B1_D1_unit_count_trained_beta AssertionError: ('1.09', {'unit': 0, 'structural': 3, 'max_diag': 1.0677041954249709, 're_row_mass': 0.33272315840174316, 'mod_row_mass': 0.8869131085386082, 'unit_idx': [], 'pole_gamma': 0.9365889956084484, 'absorber_diag': [1.0677041954249709, 1.06294527883667, 1.0261411065423254]})
+RED   B2_D3_as_written_complex_gate AssertionError: {'as_written': 1.3314002873135162, 'modulus_rho': 2.220446049250313e-16, 'unit_diag': [0, 16, 40]}
+GREEN B2r_D3_modulus_rho 
+GREEN B3_D5_dense_depth 
+GREEN B4_RDIAG_gate_route 
+RED   B4_RDIAG_logit_route_diag AssertionError: {'diag_bitwise': False, 'count_equal': True, 'count': 3, 'max_abs_diag_diff': 0.8302004224312057}
+RED   B4_RDIAG_can_fire_at_trained_beta AssertionError: ('1.09', {'count': 0, 'count_other_theta': 0, 'rdiag_check_passes': True})
+RED   B5_no_pole_inside_unit_gamma AssertionError: ('1.09', {'unit': 0, 'structural': 3, 'max_diag': 1.0677041954249709, 're_row_mass': 0.33272315840174316, 'mod_row_mass': 0.8869131085386082, 'unit_idx': [], 'pole_gamma': 0.9365889956084484, 'absorber_diag': [1.0677041954249709, 1.06294527883667, 1.0261411065423254]})

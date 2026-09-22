@@ -1,0 +1,4 @@
+a_rope   recovery per seed ['0.9632', '0.9971', '1.0143']  mean 0.9915
+a_alibi  recovery per seed ['1.0884', '1.0671', '1.0882']  mean 1.0813
+R-POS verdict PASS
+EXIT=0
