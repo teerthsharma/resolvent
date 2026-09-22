@@ -1,0 +1,18 @@
+{
+ "impl": "fused",
+ "device": "NVIDIA GeForce RTX 4060 Laptop GPU",
+ "torch": "2.14.0+cu126",
+ "fold_max_abs_err_vs_contract_f64": 2.2134439208176815e-06,
+ "scan_max_abs_err_fp32_vs_f64_S4096": 6.632165418563041e-05,
+ "ms_sdpa_default": 4.753715006510417,
+ "ms_mode_bprime_fwd": 4.947251383463541,
+ "ratio_fwd": 1.0407126587706812,
+ "sdpa_ms_by_backend": {
+  "MATH": 25.408101399739582,
+  "EFFICIENT_ATTENTION": 4.743750508626302,
+  "FLASH_ATTENTION": "unavailable: No available kernel. Aborting execution.",
+  "CUDNN_ATTENTION": "unavailable: No available kernel. Aborting execution."
+ },
+ "shape": "B1 H8 S4096 D64 fp32 causal",
+ "t": "2026-09-22 23:07:56"
+}

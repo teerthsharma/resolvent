@@ -1,0 +1,32 @@
+E       AssertionError: record P_min 2.09832 vs DP global min 0.029946095698810307
+E       assert 2.09832 <= (0.029946095698810307 * 1.001)
+E       AssertionError: token-lattice min per boundary at eps=0.03 is 0.029946095698810307, bar 1/3
+E       assert (0.303387237634523 / (1 / 3)) <= 0.2
+E        +  where 0.303387237634523 = abs((0.029946095698810307 - (1 / 3)))
+E       AssertionError: run_horn case_a noiseless angle error 4.712160915387242e-08 rad > 1e-9
+E       assert np.float64(4.712160915387242e-08) <= 1e-09
+E       AssertionError: out_ab_* and out_ba_* are the identical expression for ['scalar', 'phase']: the control never composes two gates
+E       assert not ['scalar', 'phase']
+E       AssertionError: FoX read distinguishes AB from BA: diff 0.14336512334745194
+E       assert 0.14336512334745194 == 0.0
+E       AssertionError: rotation angle of ab = 167.2983619145489 deg, not an icosahedral angle
+E       assert False
+E        +  where False = any(<generator object test_q2_contract_generators_are_icosahedral.<locals>.<genexpr> at 0x0000017954AF3880>)
+E       AssertionError: above 1/60: {'a2_fox_twin': 0.03125}
+E       assert not {'a2_fox_twin': 0.03125}
+E       AssertionError: record says 'MATH', producer JSON says 'EFFICIENT_ATTENTION'
+E       assert False
+E        +  where False = <built-in method startswith of str object at 0x0000017954BB4300>('EFFICIENT_ATTENTION')
+E        +    where <built-in method startswith of str object at 0x0000017954BB4300> = "MATH (flash: 'Torch was not compiled with flash attention'; mem-efficient: runtime-disabled for fp32 at this shape; both fail with 'No available kernel', default call falls to MATH)".startswith
+E       AssertionError: test_pf.py defines 0 test functions; pytest collects nothing
+E       assert 0 >= 1
+FAILED test_chase_L1_red.py::test_pf_record_eps003_is_lattice_minimum - Asser...
+FAILED test_chase_L1_red.py::test_pf_repriced_bar_on_token_lattice - Assertio...
+FAILED test_chase_L1_red.py::test_drift_noiseless_registered_1e9 - AssertionE...
+FAILED test_chase_L1_red.py::test_q3_control_composes_two_orders - AssertionE...
+FAILED test_chase_L1_red.py::test_q3_fox_read_is_order_blind - AssertionError...
+FAILED test_chase_L1_red.py::test_q2_contract_generators_are_icosahedral - As...
+FAILED test_chase_L1_red.py::test_a5_commit_all_arms_at_or_below_chance - Ass...
+FAILED test_chase_L1_red.py::test_costb_record_backend_matches_producer - Ass...
+FAILED test_chase_L1_red.py::test_pf_test_file_is_collectable - AssertionErro...
+9 failed in 14.12s

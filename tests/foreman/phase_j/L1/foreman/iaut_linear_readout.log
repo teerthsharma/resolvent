@@ -1,0 +1,5 @@
+0 {'best_bayes': 0.67375, 'best_linear4': 0.2625, 'best_quad10': 0.4}
+1 {'best_bayes': 0.64, 'best_linear4': 0.28625, 'best_quad10': 0.43875}
+2 {'best_bayes': 0.66625, 'best_linear4': 0.3225, 'best_quad10': 0.44125}
+GREEN 0.2904166666666667
+exit=0

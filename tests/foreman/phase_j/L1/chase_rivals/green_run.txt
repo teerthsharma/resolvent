@@ -1,0 +1,11 @@
+GREEN T1a_a2_equals_qwen_G1_headwise :: max|a2 - qwenG1_headwise| = 0.000e+00
+GREEN T1b_a2_strict_subset_of_qwen3next_elementwise :: generic W: diff 2.502e+00 (a2 != shipped); tied-per-head W: diff 4.441e-16 (a2 = subset)
+GREEN T2a_gdn_decay_is_fox_gate_up_to_head_power :: A_log=0: |g - logf_FoX| = 0.000e+00; A_log=0.7: |g - e^0.7 logf| = 0.000e+00
+GREEN T2b_gdn_recurrence_is_fox_mask_linear_not_softmax :: |GDN - FoXmask linear| = 4.441e-16; |GDN - FoX softmax| = 2.298e+00 (not our arm)
+GREEN T3a_kda_gdn_noncommuting_diag_commuting :: ||[A1,A2]|| KDA 1.187e-02, GDN 6.750e-02, diagonal-decay (Mamba2/lightning/FoX) 0.000e+00
+GREEN T3b_kda_det_below_one_no_rotation :: det(KDA)=(1-b)prod(alpha) err 1.110e-16; max|det| over 200 draws 0.5276 < 1 => no product equals any rotation; beta=2 pair -> 120deg rotation True; our SU(2) unitary True
+GREEN T3c_kda_gdn_spectrum_in_0_1_su2_on_circle :: 2000 shipped-range factors: out-of-[0,1] 0, max|Im ev| 1.76e-16; SU(2) 3-cycle ev angles [-1.047198, 1.047198], U^3=-I True; unnormalized |k|=1.3,b=.9 -> min ev -0.521
+GREEN T4_lightning_is_alibi_is_constant_fox :: |lightning - exp(ALiBi)| 0.000e+00; |lightning - FoX(f const)| 1.110e-16
+GREEN T5_softmax_set_order_blind :: |out - out(permuted keys)| = 3.123e-17: order enters only through RoPE/mask, no state transition
+GREEN T6_nsa_single_branch_is_a2 :: |NSA(C=1) - a2| = 0.000e+00
+{"module": "rivals_impl", "passed": 10, "total": 10}

@@ -1,0 +1,4 @@
+{"stated_closure_su2": 5000, "stated_closure_so3": 3393, "exceeds_cap": true, "seconds": 41.35193681716919}
+{"reroute_closure_su2": 120, "reroute_closure_so3": 60, "exceeds_cap": false, "seconds": 0.0523226261138916}
+{"cayley_check_reroute": true}
+{"commutator": 0.8312538755549068, "q3_diff": 4.552964986550147, "q3_gate_diffs": [0.0, 0.0]}

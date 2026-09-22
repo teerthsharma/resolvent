@@ -1,0 +1,24 @@
+{"t": "test", "agent": "Kofi", "status": "red", "name": "L1-A5"}
+{"t": "test", "agent": "Kofi", "status": "green", "name": "L1-A5"}
+{"t": "test", "agent": "Kofi", "status": "green", "name": "L1-A5_a_softmax_twin_seed0", "detail": "final_pos_acc=0.0469 loss=0.9757 dur=5.64s"}
+{"t": "test", "agent": "Kofi", "status": "green", "name": "L1-A5_a2_fox_twin_seed0", "detail": "final_pos_acc=0.0000 loss=0.9464 dur=6.34s"}
+{"t": "test", "agent": "Kofi", "status": "green", "name": "L1-A5_fq_quat_twin_seed0", "detail": "final_pos_acc=0.0156 loss=0.0041 dur=14.71s"}
+{"t": "test", "agent": "Kofi", "status": "green", "name": "L1-A5_a_softmax_twin_seed1", "detail": "final_pos_acc=0.0156 loss=0.8005 dur=4.98s"}
+{"t": "test", "agent": "Kofi", "status": "green", "name": "L1-A5_a2_fox_twin_seed1", "detail": "final_pos_acc=0.0469 loss=0.6330 dur=6.32s"}
+{"t": "test", "agent": "Kofi", "status": "green", "name": "L1-A5_fq_quat_twin_seed1", "detail": "final_pos_acc=0.0000 loss=0.0052 dur=14.53s"}
+{"t": "test", "agent": "Kofi", "status": "green", "name": "L1-A5_a_softmax_twin_seed2", "detail": "final_pos_acc=0.0156 loss=0.7855 dur=4.93s"}
+{"t": "test", "agent": "Kofi", "status": "green", "name": "L1-A5_a2_fox_twin_seed2", "detail": "final_pos_acc=0.0156 loss=0.5371 dur=6.09s"}
+{"t": "test", "agent": "Kofi", "status": "green", "name": "L1-A5_fq_quat_twin_seed2", "detail": "final_pos_acc=0.0000 loss=0.0052 dur=14.06s"}
+{"t": "done", "agent": "Kofi", "text": "L1-A5 done verdict=FAIL a=0.0260 a2_fox=0.0208 fq=0.0052"}
+{"t": "test", "agent": "Kofi", "status": "red", "name": "L1-A5"}
+{"t": "test", "agent": "Kofi", "status": "green", "name": "L1-A5"}
+{"t": "test", "agent": "Kofi", "status": "green", "name": "L1-A5_a_softmax_twin_seed0", "detail": "final_pos_acc=0.0469 loss=0.9757 dur=5.16s"}
+{"t": "test", "agent": "Kofi", "status": "green", "name": "L1-A5_a2_fox_twin_seed0", "detail": "final_pos_acc=0.0000 loss=0.9464 dur=6.09s"}
+{"t": "test", "agent": "Kofi", "status": "green", "name": "L1-A5_fq_quat_twin_seed0", "detail": "final_pos_acc=0.0156 loss=0.0041 dur=13.28s"}
+{"t": "test", "agent": "Kofi", "status": "green", "name": "L1-A5_a_softmax_twin_seed1", "detail": "final_pos_acc=0.0156 loss=0.8005 dur=4.64s"}
+{"t": "test", "agent": "Kofi", "status": "green", "name": "L1-A5_a2_fox_twin_seed1", "detail": "final_pos_acc=0.0469 loss=0.6330 dur=5.73s"}
+{"t": "test", "agent": "Kofi", "status": "green", "name": "L1-A5_fq_quat_twin_seed1", "detail": "final_pos_acc=0.0000 loss=0.0052 dur=13.52s"}
+{"t": "test", "agent": "Kofi", "status": "green", "name": "L1-A5_a_softmax_twin_seed2", "detail": "final_pos_acc=0.0156 loss=0.7855 dur=4.78s"}
+{"t": "test", "agent": "Kofi", "status": "green", "name": "L1-A5_a2_fox_twin_seed2", "detail": "final_pos_acc=0.0156 loss=0.5371 dur=5.57s"}
+{"t": "test", "agent": "Kofi", "status": "green", "name": "L1-A5_fq_quat_twin_seed2", "detail": "final_pos_acc=0.0000 loss=0.0052 dur=12.66s"}
+{"t": "done", "agent": "Kofi", "text": "L1-A5 done verdict=FAIL a=0.0260 a2_fox=0.0208 fq=0.0052"}

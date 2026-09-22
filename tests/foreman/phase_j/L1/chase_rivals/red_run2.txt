@@ -1,0 +1,11 @@
+RED   T1a_a2_equals_qwen_G1_headwise :: NotImplementedError: 
+RED   T1b_a2_strict_subset_of_qwen3next_elementwise :: NotImplementedError: 
+RED   T2a_gdn_decay_is_fox_gate_up_to_head_power :: NotImplementedError: 
+RED   T2b_gdn_recurrence_is_fox_mask_linear_not_softmax :: NotImplementedError: 
+RED   T3a_kda_gdn_noncommuting_diag_commuting :: NotImplementedError: 
+RED   T3b_kda_det_below_one_no_rotation :: NotImplementedError: 
+RED   T3c_kda_gdn_spectrum_in_0_1_su2_on_circle :: NotImplementedError: 
+RED   T4_lightning_is_alibi_is_constant_fox :: NotImplementedError: 
+RED   T5_softmax_set_order_blind :: NotImplementedError: 
+RED   T6_nsa_single_branch_is_a2 :: NotImplementedError: 
+{"module": "rivals_stub", "passed": 0, "total": 10}

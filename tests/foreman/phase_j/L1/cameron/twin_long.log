@@ -1,0 +1,8 @@
+[POLL] compute_procs=2 used_mib=166 free=False
+[POLL] compute_procs=2 used_mib=166 free=False
+[POLL] compute_procs=1 used_mib=83 free=False
+[POLL] compute_procs=0 used_mib=0 free=True
+FREE True
+S4 {'8': {'acc': 0.9375}, '16': {'acc': 0.318}, '32': {'acc': 0.2355}, '48': {'acc': 0.277}, '64': {'acc': 0.2525}} 0.25499999999999995 False 17574
+S3 {'8': {'acc': 0.999}, '16': {'acc': 0.563}, '32': {'acc': 0.346}, '48': {'acc': 0.3255}, '64': {'acc': 0.3255}} 0.3323333333333333 False 10247
+done 23:29:59

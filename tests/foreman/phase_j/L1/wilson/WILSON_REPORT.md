@@ -1,0 +1,33 @@
+# Wilson — ground truth of the Addendum L record (final report, 23:12 local)
+
+Labels: [V] verified, [U] unverified. Journal times UTC (+05:30 = local). J = C:/Users/seal/.claude/projects/C--Users-seal-Desktop-New-folder--32-/870edeb1-6409-4414-98e7-00d0537b75dd/subagents/workflows. REC and SPJ record_L.jsonl are byte-identical (cmp).
+
+## 1. Rows vs record, producer, output
+- record_L.jsonl: 15 lines, 14 parse, line 4 (LEAN-SCOUT) does not. [V]
+- Rows whose numbers EQUAL their output files / reruns [V]: PF-GAMMA (pf.py rerun: E_min 0.333333, c_W 0.235702, unit lattice 0.330458/0.250914/0.098020/2.098320, refined 0.336874/0.337080/0.337019/0.337159), COST-B' numbers (5.8606, 12.5924, 2.1486, 17.5161, 41.5559, 2.3724, scan 5.9742, sdpa 4.3761), BOARD-BED (0.391991, 0.660193, 0.996844, 0.843942, 0.369372, 0.708506, 0.996097, 0.796802), BOARD-ARMS, FQ-ARM (rerun 2.220e-16, 36 extra params/layer), Q2 (rerun 5000/3393/True, 0.8312538755549068, 0.0), Q2-REROUTE (rerun 120/60/False, Cayley PASS), Q3 (rerun 4.552964986550147, 0.0, 0.0), L1-IAUT (all equal l1_iaut_results.json; certified 0.286/0.311 come from l1_iaut.py:44-45, not the JSON), L1-A5 (all equal a5_bed_results.json; steps/lr/L/C/n/seeds at a5_bed.py:110-117).
+- COST-B' MISMATCH [V]: the row says backend "MATH (flash: 'Torch was not compiled with flash attention'...)"; costb_timing_result.json says "backend_observed": "EFFICIENT_ATTENTION", "flash_available_in_build": true. Backend chosen by costb_timing.py:42-55 (first that runs, FLASH then EFFICIENT then MATH); flash flag from flash_sdp_enabled() at :155.
+- LEAN-SCOUT: lean_draft_A5.lean is a statement draft with no proof; Mathlib locations Alternating.lean:307, Solvable.lean:211 not checked [U].
+- ABSENT from the record [V]: Q1, FOLD, FETCH-CHASE-P1..P3, DRIFT-SYNTH, DRIFT-REAL, FETCH-CAMERON-1..4. Producers exist: Q1 test_su2.py+su2.py; FOLD fold.py+test_fold.py; FETCH-CHASE fetch_papers.py; DRIFT horn.py, run_horn.py, test_horn.py; FETCH-CAMERON fetch_cameron.py. DRIFT has no output file ("run_horn.py stdout"). Numbers of absent rows not re-run [U].
+
+## 2. The truncation [V]
+- Full pre-truncation file (11 rows: Q1, FETCH-CAMERON-1..4, FETCH-CHASE-P1..P3, DRIFT-SYNTH, DRIFT-REAL, FOLD) survives only in J/wf_19ba9227-9f4/agent-a16f5c4e06f433655.jsonl line 78 (tool_result 11:38:11.709Z, 11,435 chars).
+- No .py opens record_L.jsonl with "w" or write_text. Code writers append: a5_bed.py:322, l1_iaut.py:236, fetch_cameron.py:116 (relative path).
+- Truncating call: J/wf_d34bb075-3c3/agent-aeca0de939d9e8967.jsonl L94 at 11:38:24.913Z, `cat > ".../phase_j/record_L.jsonl" << 'EOF'` with the three Foreman fetch rows; agent "Foreman > nurse Fay (haiku) · fetch". Same agent: L33 Read at 11:37:16Z returned "File does not exist"; L89 Write at 11:38:18Z refused ("File has not been read yet").
+- Write order UTC: 11:37:20 absent; 11:37:30 Q1; 11:37:34 fetch_cameron 4 rows; 11:37:36 fetch_papers (wc -l 8); 11:37:48 DRIFT-SYNTH, DRIFT-REAL; 11:38:11 FOLD; 11:38:22 ls 11,437 bytes; 11:38:24.913 TRUNCATION; 11:38:25 LEAN-SCOUT via cat record_entry.json >>; 11:38:32 PF-GAMMA, PF-SWEEP; 11:38:40 COST-B'; 11:39:07 BOARD-BED, BOARD-ARMS; 11:39:08 FQ-ARM; 11:52:32 Q2, Q2-REROUTE, Q3; L1-IAUT via l1_iaut.py; 17:37:35 IST L1-A5 via a5_bed.py. 2-byte gap 11,435 vs 11,437 unexplained [U].
+
+## 3. su2.py [V]
+- Current (SPJ = REC, mtime 17:07:03.379 IST): torch, w-first, qmul(a,b) = Hamilton a*b (:5-14); sequential_prefix out[i] = qmul(q_i, out[i-1]) = q_i...q_0 newest on the left (:26-31); prefix_scan qmul(x[d:], x[:-d]), same order (:34-44).
+- Writes UTC: 11:36:05 Ada torch; 11:36:08 Mei numpy; 11:36:29 Ada torch; 11:36:34 Ada zero stub then restored; 11:36:40 Ines quat_mul/quat_conj (no qmul/prefix_scan); 11:37:03 Ada `cat > su2.py` = current text (matches mtime). No later write.
+- Consumers saw the current text: Jeffrey cat 11:37:20Z identical; Kofi cat 12:05:11Z identical; FQ-ARM (17:08:59), L1-IAUT (17:11-17:33), L1-A5 (17:36-17:37) all ran after 17:07:03.
+- Imports: from su2 — arm_fq.py:36, l1_iaut.py:33, a5_bed.py:38, test_su2.py:3; import su2 — test_costb.py:13. chase_q2q3.py:3 imports chase_su2 (numpy copy). Own helpers: fold.py:20 quat_mul; costb_impl.py:13 qmul; test_costb.py:45 qmul_torch. costb_impl builds acc = qmul(shifted, acc), i.e. Pi_i = q_0...q_i OLDEST on the left — opposite order to su2.prefix_scan.
+
+## 4. Unparseable lines [V]
+- record_L.jsonl line 4: starts byte 1732, error byte 2214, "Invalid \escape", unescaped Windows path in "output".
+- house-events.jsonl (1,834,512 bytes, 4,729 lines): lines 914 and 915 (regex backslashes unescaped), lines 2851-2856 (one pretty-printed Wilson "finding" object over six lines).
+
+## 5. Published numbers
+5b7e6b8 (17:31:22 IST): carried [V] — S 4096 fp32, 2.149x, 2.372x, 2x strike, scan 5.97, SDPA 4.38, 4,000 games, 0.9968, 0.844, 0.10, line-4 Windows path. NOT carried [V]: "the baseline itself ran the math backend" (JSON says EFFICIENT_ATTENTION); "5 of 5 boundaries, null 0.0, 4.71e-8, bar 1e-9" (only in journal a29c8ab6 L59: 5 boundary idx, agreement 1.0, c_null 0.0, 4.712160915387242e-08); "Four citations fetched" (FETCH-CAMERON-1..4 absent; fetch_cameron.py builds each row from a hard-coded KNOWN_DATA dict at :40-77). "three checkers, no majority strike" not located [U].
+3932ced (17:41:13 IST): carried [V] — 2.22e-16, 36 params, 0.2333/0.2342/0.2371, 0.2860/0.3110 (record and l1_iaut.py:44-45), every arm below 0.2860 (highest seed 0.2550), 150 steps, SU(2) train loss 0.005676-0.005922, others 0.4818-1.0932, 1/3 not sqrt2/6, refined 0.3369-0.3372, 1.2 percent (ratio 1.011477), unit-lattice collapse, FoX fetched / MM 1977 and GL 1950 not. NOT carried [V]: "all three sit at or below chance, 1/60" — the FoX twin mean is 0.03125 vs chance 0.016667 (seeds 0.03125, 0.015625, 0.046875).
+
+## 6. Board test events [V]
+Q1: 4667 Chase green (no red). FETCH-CHASE-P1/P2/P3: 4668 green, 4669 green, 4670 red. DRIFT-SYNTH: 4671 red, 4672 green. FOLD: 4673 red, 4674 green. FETCH-CAMERON-1..4: 4675-4678 green. arXiv: 4679 green; MM: 4680 red; GL: 4681 red. LEAN-SCOUT: 4682 green. PF-GAMMA: 4683 green. PF-SWEEP: 4684 red. COST-B': 4685 green, 4686 red. FQ-ARM: 4687 red, 4688 green. BOARD-BED: 4689 red, 4690 green. L1-IAUT: 4691 red; seed events 4692-4695, 4699-4703 green; 4717 red; 4718 green seed0 "dur=71.24s". Q2/Q2-REROUTE/Q3: 4696 red/4697 green/4698 green. L1-A5: 4705 red, 4706 green, 4707-4715 green. DRIFT-REAL, BOARD-ARMS: no events. Nurse Ivy ran l1_iaut.py at 12:08:19Z, task output "[killed]"; whether that wrote 4717-4718 unverified (board lines carry no timestamps) [U].

@@ -1,0 +1,8 @@
+{
+ "fold_err_vs_contract": 1.4152345366724717e-06,
+ "ms_sdpa": 7.500083414713542,
+ "ms_eager_contract": 13.576874796549479,
+ "ms_compiled": 8.017749532063801,
+ "ratio_eager": 1.810229839566129,
+ "ratio_compiled": 1.0690213813268676
+}

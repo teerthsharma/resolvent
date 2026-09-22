@@ -1,0 +1,49 @@
+{
+ "Q2_stated": {
+  "rotation_angle_ab_deg": 167.2983619145489,
+  "allowed_in_I": [
+   0,
+   72,
+   120,
+   144,
+   180
+  ],
+  "axis_angle_deg": 54.735610317245346,
+  "icosahedral_5fold_3fold_axis_angles_deg": [
+   37.3774,
+   79.1877
+  ],
+  "2cos_theta_ab": -1.9510565162951536,
+  "minpoly_2cos_theta_ab": "16*x**4 + 64*x**3 + 76*x**2 + 24*x + 1",
+  "2cos_theta_ab_is_algebraic_integer": false,
+  "trace_check_2cos": -1.9510565162951536
+ },
+ "Q2_reroute": {
+  "closure_so3": 60,
+  "closure_su2": 120,
+  "order_histogram": {
+   "1": 1,
+   "2": 15,
+   "3": 20,
+   "5": 24
+  },
+  "class_sizes": [
+   1,
+   12,
+   12,
+   15,
+   20
+  ],
+  "word_len": 10000,
+  "word_float_vs_table_maxabs": 2.930988785010413e-14
+ },
+ "Q3": {
+  "su2_attention_read_diff": 0.7938518675222702,
+  "fox_scalar_read_diff": 0.17306331603351133,
+  "control_harness_detects_noncommuting": true
+ },
+ "HORN": {
+  "kabsch_stable_angle_rad": 2.1465669368927013e-16,
+  "kabsch_arccos_angle_rad": 2.9802322387695312e-08
+ }
+}

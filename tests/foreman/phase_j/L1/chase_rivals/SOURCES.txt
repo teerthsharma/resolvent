@@ -1,0 +1,33 @@
+Sources behind rivals_impl.py / test_rivals.py (fetched 2026-09-22 by Chase + fetch workers; read-only, no weights, no third-party code run).
+[U] = not opened. Quotes are short; equations are restated, not copied code.
+
+Qwen gated attention  arXiv 2505.06708 (Qiu, Wang, Zheng, ... Lin; v1 10 May 2025). Eq: Y' = Y (.) sigma(X W_theta); X = "hidden states after pre-normalization".
+  G1 = after SDPA output. Table 1 (MoE 15A2B): baseline PPL 6.026 / MMLU 58.79; elementwise G1 5.761 / 60.82 (+201M); headwise G1 5.792 / 60.05 (+1.6M).
+  First-token attention 46.7% -> 4.8% with gate. Repo github.com/qiuzh20/gated_attention: MIT, (c) 2025 Zihan Qiu.
+Qwen3-Next  huggingface.co/Qwen/Qwen3-Next-80B-A3B-Instruct config.json + README (license: apache-2.0);
+  transformers src/transformers/models/qwen3_next/modeling_qwen3_next.py (Apache-2.0, (c) Qwen team + HF):
+  L433-436 query,gate = chunk(q_proj(h).view(..., head_dim*2)); L450 attn_output * sigmoid(gate)  -> ELEMENTWISE G1.
+  L856 beta = sigmoid(b); L858 g = -exp(A_log) * softplus(a + dt_bias); loop L1038-1051: S*=exp(g); delta=(v - S^T k)*beta; S+=k delta^T; o=S^T q.
+  use_qk_l2norm_in_kernel=True at call site; linear-layer output: RMSNormGated(o, z) = norm(o)*silu(z).
+  config: full_attention_interval 4, partial_rotary_factor 0.25 (64 of head_dim 256), rope_theta 1e7, 16 Q / 2 KV heads.
+Kimi Linear / KDA  arXiv 2510.26692 (v2): S_t = (I - b_t k_t k_t^T) Diag(alpha_t) S_{t-1} + b_t k_t v_t^T; o_t = S_t^T q_t;
+  q,k = L2Norm(Swish(ShortConv(W x))); alpha_t = f(W_up W_down x) in [0,1]^dk; b_t = Sigmoid(W x) in [0,1].
+  3:1 KDA:MLA; NoPE on all MLA layers; o = W_o(Sigmoid(W_up W_down x) (.) RMSNorm(KDA)). Claims: KV cache up to 75% less, decode 6.3x vs MLA at 1M.
+  Repo MoonshotAI/Kimi-Linear MIT (c) 2025 Moonshot AI; HF card license: mit; kernel in fla-org/flash-linear-attention (MIT, (c) Songlin Yang, Yu Zhang, Zhiyuan Li), fla/ops/kda/naive.py.
+DeepSeek MLA  arXiv 2412.19437 s2.1.1: c^KV = W^DKV h; k^C = W^UK c^KV; k^R = RoPE(W^KR h); o_{t,i} = sum_j Softmax_j(q^T k / sqrt(d_h + d_h^R)) v^C. Cache c^KV and k^R only.
+  DeepSeek-V3 LICENSE-CODE MIT; LICENSE-MODEL "DEEPSEEK LICENSE AGREEMENT Version 1.0".
+DeepSeek DSA  github deepseek-ai/DeepSeek-V3.2-Exp inference/model.py: index_topk 2048, index_n_heads 64, index_head_dim 128, fp8 k_cache;
+  index_score = fp8_index(q_fp8, weights, k_cache); weights = weights_proj(x) * n_heads^-0.5 * q_scale * softmax_scale; -inf mask off top-k added to MLA scores.
+  Repo + weights MIT ("This repository and the model weights are licensed under the MIT License."). Indexer equation in DeepSeek_V3_2.pdf: [U] (PDF text unreadable).
+NSA  arXiv 2502.11089 (Yuan, Gao, Dai, ...; v2 27 Feb 2025): o*_t = sum_c g_t^c Attn(q_t, K~^c, V~^c), g in [0,1] via MLP + sigmoid; c in {cmp, slc, win};
+  l=32, d=16, l'=64, n=16, w=512; Triton on A100 at 64k: fwd 9.0x, bwd 6.0x, decode 11.6x vs FlashAttention-2. No official code link; weights not stated released.
+MoBA  arXiv 2502.13189: g_i = 1 iff s_i in Topk, s_i = <q, mean_pool(K[I_i])>; MoBA = Softmax(q K[I]^T) V[I]; 6.5x prefill at 1M; "deployed to support Kimi's long-context requests". MoonshotAI/MoBA MIT.
+Kimi K2  arXiv 2507.20534: MLA, 64 heads (vs 128) -- 128 heads cost +83% inference FLOPs at 128k; QK-Clip gamma = min(1, tau / S_max^h), tau = 100. HF LICENSE: modified MIT (display clause for large commercial use; paraphrased by worker, verbatim not checked).
+MiniMax lightning  arXiv 2501.08313: kv_t = kv_{t-1} + k_t v_t^T; o_t^T = q_t^T kv_t; softmax block after every 7 lightning blocks; RoPE on half head dim, base 10,000 (paper).
+  modeling_minimax_m1.py (HF MiniMaxAI/MiniMax-M1-80k): ratio = exp(-slope_rate); kv = ratio*kv + ...; ALiBi slopes 2^(-8/n)-style, times (1 - idx/(L-1) + 1e-5) per layer;
+  output = sigmoid(output_gate(x)) * norm(output). M1 config rotary_dim 64 / head_dim 128, rope_theta 1e7. arXiv 2506.13585: 25% of DeepSeek R1 FLOPs at 100K generation.
+  MiniMax-M1 repo + HF: Apache-2.0. MiniMax-01: LICENSE-CODE MIT, LICENSE-MODEL "MINIMAX MODEL LICENSE".
+GLM-4.5  arXiv 2508.06471: GQA with partial RoPE, 96 heads at hidden 5120 ("does not improve training loss" but improves MMLU/BBH), QK-Norm. config: partial_rotary_factor 0.5, rope_theta 1e6, 8 KV heads. License MIT per README (LICENSE file 404).
+Qwen3  arXiv 2505.09388: GQA, RoPE base 1e6 (ABF), QK-Norm, QKV-bias removed. Apache-2.0.
+Ours: design4x5.py softmax_gated_forward (a2), arms_j.py fox_forward (FoX arm, arXiv 2503.02130).
+[U] not opened, not cited as evidence: Gated DeltaNet arXiv 2412.06464; negative-eigenvalue DeltaNet (Grazzi et al.); DeltaProduct; DeepSeek_V3_2.pdf.

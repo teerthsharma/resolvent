@@ -1,0 +1,16 @@
+RED line: NotImplementedError: a5 arm not yet wired -- RED stub
+GREEN: |A5|=60 verified, generators BFS-close to 60, all three arms run and produce correct shape
+params={'a_softmax_twin': 71620, 'a2_fox_twin': 71620, 'fq_quat_twin': 72140} spread_pct_of_mean=0.7243% within_2pct=True
+  a_softmax_twin seed=0 loss=0.9757 acc16=0.0000 acc32=0.0000 acc64=0.0469 dur=5.16s
+  a2_fox_twin seed=0 loss=0.9464 acc16=0.0156 acc32=0.0000 acc64=0.0000 dur=6.09s
+  fq_quat_twin seed=0 loss=0.0041 acc16=0.0469 acc32=0.0469 acc64=0.0156 dur=13.28s
+  a_softmax_twin seed=1 loss=0.8005 acc16=0.0000 acc32=0.0156 acc64=0.0156 dur=4.64s
+  a2_fox_twin seed=1 loss=0.6330 acc16=0.0156 acc32=0.0000 acc64=0.0469 dur=5.73s
+  fq_quat_twin seed=1 loss=0.0052 acc16=0.0000 acc32=0.0156 acc64=0.0000 dur=13.52s
+  a_softmax_twin seed=2 loss=0.7855 acc16=0.0156 acc32=0.0156 acc64=0.0156 dur=4.78s
+  a2_fox_twin seed=2 loss=0.5371 acc16=0.0156 acc32=0.0312 acc64=0.0156 dur=5.57s
+  fq_quat_twin seed=2 loss=0.0052 acc16=0.0000 acc32=0.0469 acc64=0.0000 dur=12.66s
+
+a=0.0260 a2_fox=0.0208 fq=0.0052 verdict=FAIL
+majority_floor(per seed eval)=[0.029296875, 0.028564453125, 0.031982421875] chance=0.0167
+wrote record_L.jsonl row L1-A5

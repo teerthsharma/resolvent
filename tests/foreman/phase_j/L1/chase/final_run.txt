@@ -1,0 +1,13 @@
+FAILED test_chase_L1_red.py::test_pf_record_eps003_is_lattice_minimum
+FAILED test_chase_L1_red.py::test_pf_repriced_bar_on_token_lattice
+FAILED test_chase_L1_red.py::test_drift_noiseless_registered_1e9
+FAILED test_chase_L1_red.py::test_q3_control_composes_two_orders
+FAILED test_chase_L1_red.py::test_q3_fox_read_is_order_blind
+FAILED test_chase_L1_red.py::test_q2_contract_generators_are_icosahedral
+FAILED test_chase_L1_red.py::test_a5_commit_all_arms_at_or_below_chance
+FAILED test_chase_L1_red.py::test_costb_record_backend_matches_producer
+FAILED test_chase_L1_red.py::test_pf_test_file_is_collectable
+FAILED test_chase_L1_red.py::test_a5_rerun_reproduces_record
+FAILED test_chase_L1_red.py::test_board_bar_unsatisfiable_per_square
+FAILED test_chase_L1_red.py::test_costb_sdpa_timed_consistently
+12 failed, 10 passed in 67.66s (0:01:07)

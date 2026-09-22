@@ -1,0 +1,9 @@
+{
+ "impl": "fused",
+ "grad_max_rel_err_vs_contract_f64": 9.867353587451907e-07,
+ "ms_sdpa_fwd_bwd": 17.56742706298828,
+ "ms_mode_bprime_fwd_bwd": 19.698457336425783,
+ "ratio_fwd_bwd": 1.1213057703781357,
+ "shape": "B1 H8 S4096 D64 fp32 causal, loss=out.sum()",
+ "t": "2026-09-22 23:11:39"
+}
