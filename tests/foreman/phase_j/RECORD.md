@@ -155,3 +155,39 @@ Next hour: R-DO-E2E. Same bed and floors; the committor head trained end-to-end 
 - Bar for any DO row: NLL 1.720, plug-in 0.07412.
 
 **4. Next row.** R-DO-STEPS, outside Phase J: arm f, one seed, train to NLL plateau, logging every 100 steps. Clears 1.720: rerun the R-DO-IC probe on that checkpoint. Plateaus above: condition 2 unaskable at this width; closure final.
+
+## Dr House leap (after the close) — kernel schedule, OPEN
+
+Prior art handed in: triton-lang/kernels#22 (author's, merged 2026-07-28), a
+forward-only Triton online-softmax kernel over causal CSR block schedules whose
+top-k persistence schedule is approximate (max abs error 0.0009).
+
+**F.** Every accuracy arm ties FoX, and the one property FoX provably lacks — an
+exact zero — was only ever run on dense kernels, where by Lemma E2 a closed gate
+changes nothing but cost. **H.** The family is a schedule generator for #22: the
+continuous part of m is FoX's per-key bias; the exact-zero part is a learned
+segment boundary the CSR kernel consumes with error exactly 0. Its claim is
+condition 3 (cost), not loss. FIXED: the merged kernel, block 64, CSR, causal
+line (theta = 0 by W5). TRAINABLE: one segment flag. Phase, mass, temperature,
+sinks and persistence salience deleted.
+
+**Instance, dispatcher-recomputed (S 4096, block 64):** dense causal 2080 blocks;
+fixed 512-token segments 288; fixed 256-token 160 — all three exact as House
+stated. Random flags at the measured density 0.0024/token visit **478 on average
+(5–95%: 313–824, 200 draws)**; House's single draw was 463. Correction to his text:
+that is MORE than the persistence schedule's 398, not fewer — at the trained
+density, learned flags would visit more blocks than #22 already does, though at
+exact rather than 0.0009 error.
+
+**Kill, by House:** the existing trained densities (0.0/0.0024/0.0/0.0 by layer;
+a separate checkpoint truncating at ~1 token) make H dead at both, unless an
+intermediate density is learnable [U]. **Row R-SEG:** FoX numerics + one learned
+flag with an L0 target of one flag per 512 tokens at S 4096, 3 seeds; control:
+fixed block-aligned 512-token segments (288 blocks). Bar: (a) learned flags beat
+the fixed control by more than seed spread at equal visited blocks, AND (b) stay
+within seed spread of dense FoX. Fail (a): the family is a block-diagonal mask the
+kernel already ships. Fail (b): exact skipping bought nothing a window does not.
+Engineering note: #22 has no backward, so training runs dense with the mask and
+cost is priced forward through #22.
+
+Status: hypothesis, unbound. Enters Open until a fellow binds it with a RED row.
