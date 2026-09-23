@@ -264,3 +264,36 @@ seeds at R0.
      before the first run.
 3. Deciding numbers stay on the local RTX 4060. Kaggle reproduction needs the author's
    yes per launch.
+
+## K2.0 result, and K2.1 as registered (before the pilot runs)
+
+**K2.0** (Cameron, `test_k2_leak.py`, RED twice before measurement). The prediction
+fails; the counter does not fire.
+- Scaling the trained logit scale by κ = 1 / 1.5 / 2 / 3 / 5 at evaluation gives
+  depth > 160 at n = 4096 of 0.2855 / 0.7941 / 0.8689 / **0.8750** / 0.8546, against
+  the 0.9 line.
+- At 16k the best is 0.2621 (depth > 160) and 0.0810 (depth > 1280).
+- Raising γ to 0.9999 lifts depth > 1280 at 16k by only +0.0166, so γ is not the wall.
+- A hard pointer (exact zeros on this checkpoint's own argmax) caps the three far10
+  cells at 0.9347 / 0.4498 / 0.2292 (`test_k2_walk.py`, `walk_ceiling`). Leakage is
+  most of the 4k wall; at 16k the pointer itself links to the wrong chain.
+- Wrong links follow position, not depth (`test_k2_lanes.py`, GREEN):
+  - at equal position, 32-lane beds link wrongly at 0.00932 vs 0.00733 for 8-lane beds;
+  - at equal depth, 0.00927 vs 0.00146;
+  - r_pos 1.271, r_dep 6.325.
+
+**K2.1, registered RED before any run** (Cameron; `test_k2_pilot.py` sha 9996d651,
+`test_k2_grid.py` sha a622cd95).
+- The pilot `pilot_fR_sp_s0` uses Chase's sparsemax hook (named in `READY_SP`),
+  24,000 steps and seed 0. γ anneals `0.5:6000,0.9:12000,0.99:18000,0.999`, which is
+  K1-b's schedule at the same budget fractions.
+- Its gates: learned-the-task ≥ 0.9, and `walk_ceiling` ≥ 0.95 on all three far10
+  cells.
+- The branch rule was fixed before the run:
+
+| pilot outcome | branch |
+|---|---|
+| every gate GREEN | GRID: 6 arms × 3 seeds at 24k, far10 bars |
+| learned, but any ceiling < 0.95 | IDENTITY: every arm trained on contexts up to 4096 at depth cap 32, far10 bars plus `walk_ceiling` |
+| seed 0 fails to learn | rerun once at seed 1 |
+| seed 1 also fails | sparsemax retired; the identity grid runs |
