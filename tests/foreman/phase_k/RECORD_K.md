@@ -275,8 +275,14 @@ fails; the counter does not fire.
 - At 16k the best is 0.2621 (depth > 160) and 0.0810 (depth > 1280).
 - Raising γ to 0.9999 lifts depth > 1280 at 16k by only +0.0166, so γ is not the wall.
 - A hard pointer (exact zeros on this checkpoint's own argmax) caps the three far10
-  cells at 0.9347 / 0.4498 / 0.2292 (`test_k2_walk.py`, `walk_ceiling`). Leakage is
-  most of the 4k wall; at 16k the pointer itself links to the wrong chain.
+  cells at 0.9347 / 0.4498 / 0.2292 (`test_k2_walk.py`, `walk_ceiling`). The K2.0
+  result sits between its prediction and its counter. Whether the 16k miss is the
+  pointer alone is not bound: the hard walk explains the soft model's errors at 4k
+  (0.9326) but not at 16k (0.7995, RED).
+- **Correction (Inspector K2 PASS1).** This section as first written, and the title of
+  commit 8e1bd52, said "leakage is most of the 4k wall" and "at 16k the pointer itself
+  links to the wrong chain". No row reads "most", and `walk_explains` is RED at 16k.
+  Both are struck; the text above replaces them.
 - Wrong links follow position, not depth (`test_k2_lanes.py`, GREEN):
   - at equal position, 32-lane beds link wrongly at 0.00932 vs 0.00733 for 8-lane beds;
   - at equal depth, 0.00927 vs 0.00146;
