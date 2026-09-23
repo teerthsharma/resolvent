@@ -1,0 +1,84 @@
+=== RED 1: no producer, runs dir absent (2026-09-23 10:09:28)
+FAIL cameron.k2.leak_machinery kappa=1 : missing
+FAIL cameron.k2.leak_machinery kappa=1.5 : missing
+FAIL cameron.k2.leak_machinery kappa=2 : missing
+FAIL cameron.k2.leak_machinery kappa=3 : missing
+FAIL cameron.k2.leak_machinery kappa=5 : missing
+FAIL cameron.k2.leak_control_k1 n=4096 depth>160 == K1 0.2855 +- 0.0005 : missing
+FAIL cameron.k2.leak_control_k1 n=16384 depth>160 == K1 0.0784 +- 0.0005 : missing
+FAIL cameron.k2.leak_control_k1 n=16384 depth>1280 == K1 0.0322 +- 0.0005 : missing
+FAIL cameron.k2.leak_control_k1 n=1024 gate == K1 0.9963 +- 0.0005 : missing
+FAIL cameron.k2.leak_cell kappa=1 n=4096 depth>160 >= 0.95 : missing
+FAIL cameron.k2.leak_cell kappa=1 n=16384 depth>160 >= 0.95 : missing
+FAIL cameron.k2.leak_cell kappa=1 n=16384 depth>1280 >= 0.95 : missing
+FAIL cameron.k2.leak_cell kappa=1.5 n=4096 depth>160 >= 0.95 : missing
+FAIL cameron.k2.leak_cell kappa=1.5 n=16384 depth>160 >= 0.95 : missing
+FAIL cameron.k2.leak_cell kappa=1.5 n=16384 depth>1280 >= 0.95 : missing
+FAIL cameron.k2.leak_cell kappa=2 n=4096 depth>160 >= 0.95 : missing
+FAIL cameron.k2.leak_cell kappa=2 n=16384 depth>160 >= 0.95 : missing
+FAIL cameron.k2.leak_cell kappa=2 n=16384 depth>1280 >= 0.95 : missing
+FAIL cameron.k2.leak_cell kappa=3 n=4096 depth>160 >= 0.95 : missing
+FAIL cameron.k2.leak_cell kappa=3 n=16384 depth>160 >= 0.95 : missing
+FAIL cameron.k2.leak_cell kappa=3 n=16384 depth>1280 >= 0.95 : missing
+FAIL cameron.k2.leak_cell kappa=5 n=4096 depth>160 >= 0.95 : missing
+FAIL cameron.k2.leak_cell kappa=5 n=16384 depth>160 >= 0.95 : missing
+FAIL cameron.k2.leak_cell kappa=5 n=16384 depth>1280 >= 0.95 : missing
+FAIL cameron.k2.leak_prediction max_kappa acc(depth>160, n=4096) >= 0.9 : missing
+FAIL cameron.k2.leak_counter_quiet max_kappa acc(depth>160, n=4096) > 0.5 (FAIL = counter fires) : missing
+FAIL cameron.k2.leak_gate_at_best n=1024 depth<=16 >= 0.9 : missing
+FAIL cameron.k2.err_profile n=4096 at best kappa : missing
+FAIL cameron.k2.err_profile n=16384 at best kappa : missing
+FAIL cameron.k2.gamma_numerics gamma=0.999 fs5c fp32 vs float64 dense, max|dx|/max|v| <= 1e-3 : missing
+FAIL cameron.k2.gamma_numerics gamma=0.9999 fs5c fp32 vs float64 dense, max|dx|/max|v| <= 1e-3 : missing
+FAIL cameron.k2.gamma_machinery : missing best kappa
+FAIL cameron.k2.gamma_explains_513 : unread (gamma machinery)
+FAIL cameron.k2.gamma_lift_1280 : unread (gamma machinery)
+FAIL cameron.k2.gamma_counter_quiet : unread (gamma machinery)
+FAIL cameron.k2.gamma_cell : unread (gamma machinery)
+FAIL cameron.k2.gamma_gate : unread (gamma machinery)
+RED 37 failing rows
+exit 1
+
+=== RED 2: stub = the null world (kappa and gamma inert; every dir holds K1's kappa-1 arrays; numerics relerr 1.0) (2026-09-23 10:09:42)
+PASS cameron.k2.leak_machinery kappa=1 : ok
+PASS cameron.k2.leak_machinery kappa=1.5 : ok
+PASS cameron.k2.leak_machinery kappa=2 : ok
+PASS cameron.k2.leak_machinery kappa=3 : ok
+PASS cameron.k2.leak_machinery kappa=5 : ok
+PASS cameron.k2.leak_control_k1 n=4096 depth>160 == K1 0.2855 +- 0.0005 : 0.2855 (N 22464; per-token agreement with K1 1.000000)
+PASS cameron.k2.leak_control_k1 n=16384 depth>160 == K1 0.0784 +- 0.0005 : 0.0784 (N 120768; per-token agreement with K1 1.000000)
+PASS cameron.k2.leak_control_k1 n=16384 depth>1280 == K1 0.0322 +- 0.0005 : 0.0322 (N 49088; per-token agreement with K1 1.000000)
+PASS cameron.k2.leak_control_k1 n=1024 gate == K1 0.9963 +- 0.0005 : 0.9963
+FAIL cameron.k2.leak_cell kappa=1 n=4096 depth>160 >= 0.95 : 0.2855 (N 22464, SE 0.0030)
+FAIL cameron.k2.leak_cell kappa=1 n=16384 depth>160 >= 0.95 : 0.0784 (N 120768, SE 0.0008)
+FAIL cameron.k2.leak_cell kappa=1 n=16384 depth>1280 >= 0.95 : 0.0322 (N 49088, SE 0.0008)
+FAIL cameron.k2.leak_cell kappa=1.5 n=4096 depth>160 >= 0.95 : 0.2855 (N 22464, SE 0.0030)
+FAIL cameron.k2.leak_cell kappa=1.5 n=16384 depth>160 >= 0.95 : 0.0784 (N 120768, SE 0.0008)
+FAIL cameron.k2.leak_cell kappa=1.5 n=16384 depth>1280 >= 0.95 : 0.0322 (N 49088, SE 0.0008)
+FAIL cameron.k2.leak_cell kappa=2 n=4096 depth>160 >= 0.95 : 0.2855 (N 22464, SE 0.0030)
+FAIL cameron.k2.leak_cell kappa=2 n=16384 depth>160 >= 0.95 : 0.0784 (N 120768, SE 0.0008)
+FAIL cameron.k2.leak_cell kappa=2 n=16384 depth>1280 >= 0.95 : 0.0322 (N 49088, SE 0.0008)
+FAIL cameron.k2.leak_cell kappa=3 n=4096 depth>160 >= 0.95 : 0.2855 (N 22464, SE 0.0030)
+FAIL cameron.k2.leak_cell kappa=3 n=16384 depth>160 >= 0.95 : 0.0784 (N 120768, SE 0.0008)
+FAIL cameron.k2.leak_cell kappa=3 n=16384 depth>1280 >= 0.95 : 0.0322 (N 49088, SE 0.0008)
+FAIL cameron.k2.leak_cell kappa=5 n=4096 depth>160 >= 0.95 : 0.2855 (N 22464, SE 0.0030)
+FAIL cameron.k2.leak_cell kappa=5 n=16384 depth>160 >= 0.95 : 0.0784 (N 120768, SE 0.0008)
+FAIL cameron.k2.leak_cell kappa=5 n=16384 depth>1280 >= 0.95 : 0.0322 (N 49088, SE 0.0008)
+FAIL cameron.k2.leak_prediction max_kappa acc(depth>160, n=4096) >= 0.9 : 0.2855 at kappa=1; grid x1 0.2855 / x1.5 0.2855 / x2 0.2855 / x3 0.2855 / x5 0.2855
+FAIL cameron.k2.leak_counter_quiet max_kappa acc(depth>160, n=4096) > 0.5 (FAIL = counter fires) : 0.2855 at kappa=1
+PASS cameron.k2.leak_gate_at_best n=1024 depth<=16 >= 0.9 : 0.9963 at kappa=1
+PASS cameron.k2.err_profile n=4096 at best kappa=1 (x1 beside it) buckets partition the tokens : 0-16 0.9853 (x1 0.9853, N 1088); 17-32 0.9844 (x1 0.9844, N 1024); 33-64 0.9844 (x1 0.9844, N 2048); 65-128 0.9832 (x1 0.9832, N 4096); 129-256 0.7778 (x1 0.7778, N 8192); 257-512 0.1268 (x1 0.1268, N 15729); 513-1024 0.0474 (x1 0.0474, N 591)
+PASS cameron.k2.err_profile n=16384 at best kappa=1 (x1 beside it) buckets partition the tokens : 0-16 1.0000 (x1 1.0000, N 1088); 17-32 1.0000 (x1 1.0000, N 1024); 33-64 0.9946 (x1 0.9946, N 2048); 65-128 0.9785 (x1 0.9785, N 4096); 129-256 0.7122 (x1 0.7122, N 8192); 257-512 0.1337 (x1 0.1337, N 16384); 513-1024 0.0363 (x1 0.0363, N 32768); 1025-max 0.0323 (x1 0.0323, N 65472)
+FAIL cameron.k2.gamma_numerics gamma=0.999 fs5c fp32 vs float64 dense, max|dx|/max|v| <= 1e-3 : 1.000e+00 at kappa=1
+FAIL cameron.k2.gamma_numerics gamma=0.9999 fs5c fp32 vs float64 dense, max|dx|/max|v| <= 1e-3 : 1.000e+00 at kappa=1
+PASS cameron.k2.gamma_machinery : ok
+FAIL cameron.k2.gamma_explains_513 n=16384 depth 513-1024 lift >= 0.10 : 0.0363 -> 0.0363 (lift +0.0000, N 32768) at kappa=1
+FAIL cameron.k2.gamma_lift_1280 n=16384 depth>1280 lift >= 0.10 : 0.0322 -> 0.0322 (lift +0.0000, N 49088)
+FAIL cameron.k2.gamma_counter_quiet n=16384 depth>1280 lift > 0.02 (FAIL = counter fires) : lift +0.0000
+FAIL cameron.k2.gamma_cell gamma=0.9999 kappa=1 n=4096 depth>160 >= 0.95 : 0.2855 (N 22464, SE 0.0030)
+FAIL cameron.k2.gamma_cell gamma=0.9999 kappa=1 n=16384 depth>160 >= 0.95 : 0.0784 (N 120768, SE 0.0008)
+FAIL cameron.k2.gamma_cell gamma=0.9999 kappa=1 n=16384 depth>1280 >= 0.95 : 0.0322 (N 49088, SE 0.0008)
+PASS cameron.k2.gamma_gate n=1024 depth<=16 >= 0.9 : 0.9963
+  field (err_profile at gamma 0.9999, n=16384): 0-16 1.0000 (N 1088); 17-32 1.0000 (N 1024); 33-64 0.9946 (N 2048); 65-128 0.9785 (N 4096); 129-256 0.7122 (N 8192); 257-512 0.1337 (N 16384); 513-1024 0.0363 (N 32768); 1025-max 0.0323 (N 65472)
+RED 25 failing rows
+exit 1

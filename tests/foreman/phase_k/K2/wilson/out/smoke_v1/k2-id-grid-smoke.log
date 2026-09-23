@@ -1,0 +1,112 @@
+[{"stream_name":"stdout","time":0.912310284,"data":"SHA OK   phase_k/K1/cameron/rdepth.py 6a413119a322a1f22d0488b88326eba7ee7fbc295f8205bf3bf6150119c764df\n"}
+,{"stream_name":"stdout","time":0.912869913,"data":"SHA OK   phase_k/K1/cameron/train_ladder.py d524b13005d86bd49ae1d7692d41de4e0030542f7a19a212fb562de916758d93\n"}
+,{"stream_name":"stdout","time":0.913218978,"data":"SHA OK   phase_k/K1/cameron/bed_k.py aa60e6d963307d57a4db7ce99a785ec45b75814e6ebdcd8c8650a2174ecb320f\n"}
+,{"stream_name":"stdout","time":0.9135116,"data":"SHA OK   phase_k/K1/cameron/bed_kp.py 20d50b9d71248cd39aff74219b831b2c513d6044dfc0ca7ecc744a7a6a323355\n"}
+,{"stream_name":"stdout","time":0.91390729,"data":"SHA OK   phase_k/K2/cameron/k2_ptr.py b02a81360c87da78cbc0ec6891cb46559addea70ae3477dbd0cf372686ef5151\n"}
+,{"stream_name":"stdout","time":0.914283978,"data":"SHA OK   phase_k/K1/chase/resolvent_hook.py 3855288d7da7acdebf54b9b1979d9b0b5afebb3dca6d8ccefd684812d33451e2\n"}
+,{"stream_name":"stdout","time":0.914698778,"data":"SHA OK   phase_k/K2/chase/resolvent_sp.py 36039c3a4189189840d04b345fa3c54d43e6d32bcc8a176ce5e8aac135bfd7bc\n"}
+,{"stream_name":"stdout","time":0.915592314,"data":"SHA OK   REPO/tests/foreman/phase_k/K0/chase/resolvent.py f850c568f3454c36224325d7b28df6a081a0e32069b860188882b6a6374ceccd\n"}
+,{"stream_name":"stdout","time":0.916215946,"data":"SHA OK   REPO/tests/foreman/phase_k/K0/wilson/train_ladder.py d524b13005d86bd49ae1d7692d41de4e0030542f7a19a212fb562de916758d93\n"}
+,{"stream_name":"stdout","time":0.916938951,"data":"SHA OK   REPO/tests/foreman/phase_j/N1/cameron/cost_n.py 9ab22197eaad779a51a1b8e1cff294babe7811f12bca2aba53ea2d481fbec93a\n"}
+,{"stream_name":"stdout","time":2.544268126,"data":"FP OK   far10_n4096\n"}
+,{"stream_name":"stdout","time":2.54431457,"data":"FP OK   far10_n8192\n"}
+,{"stream_name":"stdout","time":2.5443600760000002,"data":"FP OK   far10_n16384\n"}
+,{"stream_name":"stdout","time":2.544364012,"data":"FP OK   heldout_1024\n"}
+,{"stream_name":"stdout","time":2.544367836,"data":"FP OK   train_seed0_steps1-5\n"}
+,{"stream_name":"stdout","time":2.544371411,"data":"FP OK   train_seed1_steps1-5\n"}
+,{"stream_name":"stdout","time":2.544375039,"data":"FP OK   train_seed2_steps1-5\n"}
+,{"stream_name":"stdout","time":8.694892744,"data":"{\"torch\": \"2.10.0+cu128\", \"cuda\": \"12.8\", \"cudnn\": 91002, \"python\": \"3.12.13\", \"numpy\": \"2.0.2\", \"gpu_count\": 2, \"nvidia_smi\": \"0, Tesla T4, 580.159.04, 15360 MiB\\n1, Tesla T4, 580.159.04, 15360 MiB\", \"kernel_slug\": \"melowdramtic/k2-id-grid-smoke\", \"kernel_version_expected\": 1, \"kernel_run_type\": \"Batch\", \"bf16_supported\": true}\n"}
+,{"stream_name":"stdout","time":8.697213749,"data":"10:02:09 lane 1 start smoke_fR_sp_s1\n"}
+,{"stream_name":"stdout","time":8.69780203,"data":"10:02:09 lane 0 start smoke_aL4_s1\n"}
+,{"stream_name":"stdout","time":36.591390476,"data":"10:02:37 lane 0 end smoke_aL4_s1 rc 0 wall 28 s\n"}
+,{"stream_name":"stdout","time":36.591987396,"data":"10:02:37 lane 0 start smoke_fR_ga_s1\n"}
+,{"stream_name":"stdout","time":40.252234665,"data":"10:02:40 lane 1 end smoke_fR_sp_s1 rc 0 wall 32 s\n"}
+,{"stream_name":"stdout","time":40.252952139,"data":"10:02:40 lane 1 start smoke_fR_sp_s1_walk\n"}
+,{"stream_name":"stdout","time":51.754898592,"data":"10:02:52 lane 1 end smoke_fR_sp_s1_walk rc 0 wall 12 s\n"}
+,{"stream_name":"stdout","time":51.75493301,"data":"10:02:52 lane 1 start smoke_fR_ga_g999_s1\n"}
+,{"stream_name":"stdout","time":62.238739953,"data":"10:03:02 lane 0 end smoke_fR_ga_s1 rc 0 wall 26 s\n"}
+,{"stream_name":"stdout","time":62.239261469,"data":"10:03:02 lane 0 start smoke_fR_ga_s1_walk\n"}
+,{"stream_name":"stdout","time":70.826633773,"data":"10:03:11 lane 0 end smoke_fR_ga_s1_walk rc 0 wall 9 s\n"}
+,{"stream_name":"stdout","time":78.086962085,"data":"10:03:18 lane 1 end smoke_fR_ga_g999_s1 rc 0 wall 26 s\n"}
+,{"stream_name":"stdout","time":78.090761493,"data":"{\n"}
+,{"stream_name":"stdout","time":78.090781241,"data":" \"slug\": \"melowdramtic/k2-id-grid-smoke\",\n"}
+,{"stream_name":"stdout","time":78.090792587,"data":" \"version_expected\": 1,\n"}
+,{"stream_name":"stdout","time":78.090796439,"data":" \"t0\": \"2026-09-23 10:02:01Z\",\n"}
+,{"stream_name":"stdout","time":78.090799786,"data":" \"jobs\": {\n"}
+,{"stream_name":"stdout","time":78.090802912,"data":"  \"smoke_fR_sp_s1\": {\n"}
+,{"stream_name":"stdout","time":78.090807069,"data":"   \"lane\": 1,\n"}
+,{"stream_name":"stdout","time":78.090829431,"data":"   \"gpu\": \"Tesla T4\",\n"}
+,{"stream_name":"stdout","time":78.090835537,"data":"   \"kind\": \"train\",\n"}
+,{"stream_name":"stdout","time":78.090841359,"data":"   \"start_s\": 7.793292760848999,\n"}
+,{"stream_name":"stdout","time":78.090846201,"data":"   \"rc\": 0,\n"}
+,{"stream_name":"stdout","time":78.090850764,"data":"   \"wall_s\": 31.554993152618408,\n"}
+,{"stream_name":"stdout","time":78.090855378,"data":"   \"status\": \"done\"\n"}
+,{"stream_name":"stdout","time":78.09086003,"data":"  },\n"}
+,{"stream_name":"stdout","time":78.090882371,"data":"  \"smoke_aL4_s1\": {\n"}
+,{"stream_name":"stdout","time":78.090893307,"data":"   \"lane\": 0,\n"}
+,{"stream_name":"stdout","time":78.090897136,"data":"   \"gpu\": \"Tesla T4\",\n"}
+,{"stream_name":"stdout","time":78.090900403,"data":"   \"kind\": \"train\",\n"}
+,{"stream_name":"stdout","time":78.090903689,"data":"   \"start_s\": 7.793518781661987,\n"}
+,{"stream_name":"stdout","time":78.090940897,"data":"   \"rc\": 0,\n"}
+,{"stream_name":"stdout","time":78.090947589,"data":"   \"wall_s\": 27.890877723693848,\n"}
+,{"stream_name":"stdout","time":78.09095372,"data":"   \"status\": \"done\"\n"}
+,{"stream_name":"stdout","time":78.090959746,"data":"  },\n"}
+,{"stream_name":"stdout","time":78.090965114,"data":"  \"smoke_fR_ga_s1\": {\n"}
+,{"stream_name":"stdout","time":78.090970235,"data":"   \"lane\": 0,\n"}
+,{"stream_name":"stdout","time":78.090975163,"data":"   \"gpu\": \"Tesla T4\",\n"}
+,{"stream_name":"stdout","time":78.090980289,"data":"   \"kind\": \"train\",\n"}
+,{"stream_name":"stdout","time":78.090985403,"data":"   \"start_s\": 35.68851089477539,\n"}
+,{"stream_name":"stdout","time":78.090990512,"data":"   \"rc\": 0,\n"}
+,{"stream_name":"stdout","time":78.090995384,"data":"   \"wall_s\": 25.645872831344604,\n"}
+,{"stream_name":"stdout","time":78.091000377,"data":"   \"status\": \"done\"\n"}
+,{"stream_name":"stdout","time":78.09100549,"data":"  },\n"}
+,{"stream_name":"stdout","time":78.091015875,"data":"  \"smoke_fR_sp_s1_walk\": {\n"}
+,{"stream_name":"stdout","time":78.091019553,"data":"   \"lane\": 1,\n"}
+,{"stream_name":"stdout","time":78.09102283,"data":"   \"gpu\": \"Tesla T4\",\n"}
+,{"stream_name":"stdout","time":78.091043857,"data":"   \"kind\": \"walk\",\n"}
+,{"stream_name":"stdout","time":78.091050006,"data":"   \"start_s\": 39.349167585372925,\n"}
+,{"stream_name":"stdout","time":78.091055978,"data":"   \"rc\": 0,\n"}
+,{"stream_name":"stdout","time":78.091061722,"data":"   \"wall_s\": 11.500749111175537,\n"}
+,{"stream_name":"stdout","time":78.091066869,"data":"   \"status\": \"done\"\n"}
+,{"stream_name":"stdout","time":78.091071979,"data":"  },\n"}
+,{"stream_name":"stdout","time":78.091076778,"data":"  \"smoke_fR_ga_g999_s1\": {\n"}
+,{"stream_name":"stdout","time":78.091081832,"data":"   \"lane\": 1,\n"}
+,{"stream_name":"stdout","time":78.091104861,"data":"   \"gpu\": \"Tesla T4\",\n"}
+,{"stream_name":"stdout","time":78.091109025,"data":"   \"kind\": \"train\",\n"}
+,{"stream_name":"stdout","time":78.091113083,"data":"   \"start_s\": 50.851083517074585,\n"}
+,{"stream_name":"stdout","time":78.091117269,"data":"   \"rc\": 0,\n"}
+,{"stream_name":"stdout","time":78.091127083,"data":"   \"wall_s\": 26.33178448677063,\n"}
+,{"stream_name":"stdout","time":78.091145466,"data":"   \"status\": \"done\"\n"}
+,{"stream_name":"stdout","time":78.091150529,"data":"  },\n"}
+,{"stream_name":"stdout","time":78.091154781,"data":"  \"smoke_fR_ga_s1_walk\": {\n"}
+,{"stream_name":"stdout","time":78.091159509,"data":"   \"lane\": 0,\n"}
+,{"stream_name":"stdout","time":78.091164093,"data":"   \"gpu\": \"Tesla T4\",\n"}
+,{"stream_name":"stdout","time":78.091168074,"data":"   \"kind\": \"walk\",\n"}
+,{"stream_name":"stdout","time":78.091172031,"data":"   \"start_s\": 61.335549116134644,\n"}
+,{"stream_name":"stdout","time":78.091175948,"data":"   \"rc\": 0,\n"}
+,{"stream_name":"stdout","time":78.091179842,"data":"   \"wall_s\": 8.586913347244263,\n"}
+,{"stream_name":"stdout","time":78.09118374,"data":"   \"status\": \"done\"\n"}
+,{"stream_name":"stdout","time":78.091187705,"data":"  }\n"}
+,{"stream_name":"stdout","time":78.091191419,"data":" },\n"}
+,{"stream_name":"stdout","time":78.091195153,"data":" \"hw\": {\n"}
+,{"stream_name":"stdout","time":78.091198995,"data":"  \"torch\": \"2.10.0+cu128\",\n"}
+,{"stream_name":"stdout","time":78.091203032,"data":"  \"cuda\": \"12.8\",\n"}
+,{"stream_name":"stdout","time":78.091206976,"data":"  \"cudnn\": 91002,\n"}
+,{"stream_name":"stdout","time":78.091211061,"data":"  \"python\": \"3.12.13\",\n"}
+,{"stream_name":"stdout","time":78.091215072,"data":"  \"numpy\": \"2.0.2\",\n"}
+,{"stream_name":"stdout","time":78.091219145,"data":"  \"gpu_count\": 2,\n"}
+,{"stream_name":"stdout","time":78.091229429,"data":"  \"nvidia_smi\": \"0, Tesla T4, 580.159.04, 15360 MiB\\n1, Tesla T4, 580.159.04, 15360 MiB\",\n"}
+,{"stream_name":"stdout","time":78.091246932,"data":"  \"kernel_slug\": \"melowdramtic/k2-id-grid-smoke\",\n"}
+,{"stream_name":"stdout","time":78.091251994,"data":"  \"kernel_version_expected\": 1,\n"}
+,{"stream_name":"stdout","time":78.091256693,"data":"  \"kernel_run_type\": \"Batch\",\n"}
+,{"stream_name":"stdout","time":78.091261483,"data":"  \"bf16_supported\": true\n"}
+,{"stream_name":"stdout","time":78.091265555,"data":" },\n"}
+,{"stream_name":"stdout","time":78.091269338,"data":" \"end_s\": 77.18384313583374\n"}
+,{"stream_name":"stdout","time":78.091273303,"data":"}\n"}
+,{"stream_name":"stderr","time":80.754286845,"data":"/usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":80.754359747,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":81.019886395,"data":"/usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":81.019909429,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":81.702419625,"data":"[NbConvertApp] Converting notebook __script__.ipynb to html\n"}
+,{"stream_name":"stderr","time":82.964866794,"data":"[NbConvertApp] Writing 546474 bytes to __results__.html\n"}
+]

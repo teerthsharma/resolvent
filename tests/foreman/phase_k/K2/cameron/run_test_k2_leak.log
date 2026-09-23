@@ -1,0 +1,43 @@
+=== run on the measurement (2026-09-23 10:11:14); producer log k2_leak.log
+PASS cameron.k2.leak_machinery kappa=1 : ok
+PASS cameron.k2.leak_machinery kappa=1.5 : ok
+PASS cameron.k2.leak_machinery kappa=2 : ok
+PASS cameron.k2.leak_machinery kappa=3 : ok
+PASS cameron.k2.leak_machinery kappa=5 : ok
+PASS cameron.k2.leak_control_k1 n=4096 depth>160 == K1 0.2855 +- 0.0005 : 0.2855 (N 22464; per-token agreement with K1 1.000000)
+PASS cameron.k2.leak_control_k1 n=16384 depth>160 == K1 0.0784 +- 0.0005 : 0.0784 (N 120768; per-token agreement with K1 1.000000)
+PASS cameron.k2.leak_control_k1 n=16384 depth>1280 == K1 0.0322 +- 0.0005 : 0.0322 (N 49088; per-token agreement with K1 1.000000)
+PASS cameron.k2.leak_control_k1 n=1024 gate == K1 0.9963 +- 0.0005 : 0.9963
+FAIL cameron.k2.leak_cell kappa=1 n=4096 depth>160 >= 0.95 : 0.2855 (N 22464, SE 0.0030)
+FAIL cameron.k2.leak_cell kappa=1 n=16384 depth>160 >= 0.95 : 0.0784 (N 120768, SE 0.0008)
+FAIL cameron.k2.leak_cell kappa=1 n=16384 depth>1280 >= 0.95 : 0.0322 (N 49088, SE 0.0008)
+FAIL cameron.k2.leak_cell kappa=1.5 n=4096 depth>160 >= 0.95 : 0.7941 (N 22464, SE 0.0027)
+FAIL cameron.k2.leak_cell kappa=1.5 n=16384 depth>160 >= 0.95 : 0.1783 (N 120768, SE 0.0011)
+FAIL cameron.k2.leak_cell kappa=1.5 n=16384 depth>1280 >= 0.95 : 0.0476 (N 49088, SE 0.0010)
+FAIL cameron.k2.leak_cell kappa=2 n=4096 depth>160 >= 0.95 : 0.8689 (N 22464, SE 0.0023)
+FAIL cameron.k2.leak_cell kappa=2 n=16384 depth>160 >= 0.95 : 0.2260 (N 120768, SE 0.0012)
+FAIL cameron.k2.leak_cell kappa=2 n=16384 depth>1280 >= 0.95 : 0.0600 (N 49088, SE 0.0011)
+FAIL cameron.k2.leak_cell kappa=3 n=4096 depth>160 >= 0.95 : 0.8750 (N 22464, SE 0.0022)
+FAIL cameron.k2.leak_cell kappa=3 n=16384 depth>160 >= 0.95 : 0.2555 (N 120768, SE 0.0013)
+FAIL cameron.k2.leak_cell kappa=3 n=16384 depth>1280 >= 0.95 : 0.0745 (N 49088, SE 0.0012)
+FAIL cameron.k2.leak_cell kappa=5 n=4096 depth>160 >= 0.95 : 0.8546 (N 22464, SE 0.0024)
+FAIL cameron.k2.leak_cell kappa=5 n=16384 depth>160 >= 0.95 : 0.2621 (N 120768, SE 0.0013)
+FAIL cameron.k2.leak_cell kappa=5 n=16384 depth>1280 >= 0.95 : 0.0810 (N 49088, SE 0.0012)
+FAIL cameron.k2.leak_prediction max_kappa acc(depth>160, n=4096) >= 0.9 : 0.8750 at kappa=3; grid x1 0.2855 / x1.5 0.7941 / x2 0.8689 / x3 0.8750 / x5 0.8546
+PASS cameron.k2.leak_counter_quiet max_kappa acc(depth>160, n=4096) > 0.5 (FAIL = counter fires) : 0.8750 at kappa=3
+PASS cameron.k2.leak_gate_at_best n=1024 depth<=16 >= 0.9 : 0.9962 at kappa=3
+PASS cameron.k2.err_profile n=4096 at best kappa=3 (x1 beside it) buckets partition the tokens : 0-16 1.0000 (x1 0.9853, N 1088); 17-32 1.0000 (x1 0.9844, N 1024); 33-64 1.0000 (x1 0.9844, N 2048); 65-128 0.9983 (x1 0.9832, N 4096); 129-256 0.9874 (x1 0.7778, N 8192); 257-512 0.8418 (x1 0.1268, N 15729); 513-1024 0.6058 (x1 0.0474, N 591)
+PASS cameron.k2.err_profile n=16384 at best kappa=3 (x1 beside it) buckets partition the tokens : 0-16 1.0000 (x1 1.0000, N 1088); 17-32 1.0000 (x1 1.0000, N 1024); 33-64 0.9946 (x1 0.9946, N 2048); 65-128 0.9844 (x1 0.9785, N 4096); 129-256 0.9733 (x1 0.7122, N 8192); 257-512 0.7843 (x1 0.1337, N 16384); 513-1024 0.2275 (x1 0.0363, N 32768); 1025-max 0.0702 (x1 0.0323, N 65472)
+PASS cameron.k2.gamma_numerics gamma=0.999 fs5c fp32 vs float64 dense, max|dx|/max|v| <= 1e-3 : 5.929e-05 at kappa=3
+PASS cameron.k2.gamma_numerics gamma=0.9999 fs5c fp32 vs float64 dense, max|dx|/max|v| <= 1e-3 : 8.034e-05 at kappa=3
+PASS cameron.k2.gamma_machinery : ok
+FAIL cameron.k2.gamma_explains_513 n=16384 depth 513-1024 lift >= 0.10 : 0.2275 -> 0.3026 (lift +0.0751, N 32768) at kappa=3
+FAIL cameron.k2.gamma_lift_1280 n=16384 depth>1280 lift >= 0.10 : 0.0745 -> 0.0911 (lift +0.0166, N 49088)
+FAIL cameron.k2.gamma_counter_quiet n=16384 depth>1280 lift > 0.02 (FAIL = counter fires) : lift +0.0166
+FAIL cameron.k2.gamma_cell gamma=0.9999 kappa=3 n=4096 depth>160 >= 0.95 : 0.8989 (N 22464, SE 0.0020)
+FAIL cameron.k2.gamma_cell gamma=0.9999 kappa=3 n=16384 depth>160 >= 0.95 : 0.2889 (N 120768, SE 0.0013)
+FAIL cameron.k2.gamma_cell gamma=0.9999 kappa=3 n=16384 depth>1280 >= 0.95 : 0.0911 (N 49088, SE 0.0013)
+PASS cameron.k2.gamma_gate n=1024 depth<=16 >= 0.9 : 0.9963
+  field (err_profile at gamma 0.9999, n=16384): 0-16 1.0000 (N 1088); 17-32 1.0000 (N 1024); 33-64 0.9946 (N 2048); 65-128 0.9844 (N 4096); 129-256 0.9736 (N 8192); 257-512 0.8090 (N 16384); 513-1024 0.3026 (N 32768); 1025-max 0.0879 (N 65472)
+RED 22 failing rows
+exit 1

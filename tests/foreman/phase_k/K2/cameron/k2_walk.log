@@ -1,0 +1,5 @@
+10:14:12 acquired k2_walk
+n=4096: ptr (8, 2, 4096)
+n=16384: ptr (8, 2, 16384)
+kinv_agree 1.0
+10:14:19 released k2_walk rc=0

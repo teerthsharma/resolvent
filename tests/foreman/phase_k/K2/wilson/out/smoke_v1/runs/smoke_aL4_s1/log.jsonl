@@ -1,0 +1,4 @@
+{"t": "config", "arm": "aL", "layers": 4, "dff": 512, "loops": 5, "hook": null, "seed": 1, "steps": 50, "lr": 0.003, "warmup": 200, "eval_ns": "1024,4096,8192,16384", "probe_every": 2000, "out": "/tmp/sp/phase_k/K2/cameron/runs/smoke_aL4_s1", "bed": "kpf", "emb": "frozen", "par_init": "orth", "train_M": null, "tok": 8192, "train_ns": "256,512,1024,2048,4096", "threads": 0, "eval_beds": 64, "gamma_sched": null, "device": "Tesla T4", "params": 4999552, "params_nonemb": 805120, "hook_sha256": null, "torch": "2.10.0+cu128"}
+{"t": "step", "step": 1, "n": 512, "loss": 10.482651710510254, "acc": 0.0625, "gn": 1.2475115060806274, "train_s": 0.9143288135528564}
+{"t": "step", "step": 50, "n": 256, "loss": 9.396636009216309, "acc": 0.125, "gn": 0.9659450650215149, "train_s": 9.597649335861206}
+{"t": "end", "train_s": 9.597649335861206}

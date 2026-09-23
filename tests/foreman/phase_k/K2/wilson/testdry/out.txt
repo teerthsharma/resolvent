@@ -1,0 +1,134 @@
+FAIL cameron.k2.grid_id_config_hw aL4 s0 : bad: missing
+FAIL cameron.k2.grid_id_trained aL4 s0 held-out acc_le16 >= 0.9 : missing/misconfigured
+FAIL cameron.k2.grid_id_config_hw aL4 s1 : bad: steps (device Tesla T4)
+FAIL cameron.k2.grid_id_trained aL4 s1 held-out acc_le16 >= 0.9 : missing/misconfigured
+FAIL cameron.k2.grid_id_config_hw aL4 s2 : bad: missing
+FAIL cameron.k2.grid_id_trained aL4 s2 held-out acc_le16 >= 0.9 : missing/misconfigured
+FAIL cameron.k2.grid_id_config_hw aL7 s0 : bad: missing
+FAIL cameron.k2.grid_id_trained aL7 s0 held-out acc_le32 >= 0.9 : missing/misconfigured
+FAIL cameron.k2.grid_id_config_hw aL7 s1 : bad: missing
+FAIL cameron.k2.grid_id_trained aL7 s1 held-out acc_le32 >= 0.9 : missing/misconfigured
+FAIL cameron.k2.grid_id_config_hw aL7 s2 : bad: missing
+FAIL cameron.k2.grid_id_trained aL7 s2 held-out acc_le32 >= 0.9 : missing/misconfigured
+FAIL cameron.k2.grid_id_config_hw ass4 s0 : bad: missing
+FAIL cameron.k2.grid_id_trained ass4 s0 held-out acc_le16 >= 0.9 : missing/misconfigured
+FAIL cameron.k2.grid_id_config_hw ass4 s1 : bad: missing
+FAIL cameron.k2.grid_id_trained ass4 s1 held-out acc_le16 >= 0.9 : missing/misconfigured
+FAIL cameron.k2.grid_id_config_hw ass4 s2 : bad: missing
+FAIL cameron.k2.grid_id_trained ass4 s2 held-out acc_le16 >= 0.9 : missing/misconfigured
+FAIL cameron.k2.grid_id_config_hw aloop5 s0 : bad: missing
+FAIL cameron.k2.grid_id_trained aloop5 s0 held-out acc_le32 >= 0.9 : missing/misconfigured
+FAIL cameron.k2.grid_id_config_hw aloop5 s1 : bad: missing
+FAIL cameron.k2.grid_id_trained aloop5 s1 held-out acc_le32 >= 0.9 : missing/misconfigured
+FAIL cameron.k2.grid_id_config_hw aloop5 s2 : bad: missing
+FAIL cameron.k2.grid_id_trained aloop5 s2 held-out acc_le32 >= 0.9 : missing/misconfigured
+FAIL cameron.k2.grid_id_config_hw fR_ga s0 : bad: missing
+FAIL cameron.k2.grid_id_trained fR_ga s0 held-out acc_le16 >= 0.9 : missing/misconfigured
+FAIL cameron.k2.grid_id_learnable fR_ga s0 held-out acc >= 0.8 : missing/misconfigured
+FAIL cameron.k2.grid_id_config_hw fR_ga s1 : bad: steps (device Tesla T4)
+FAIL cameron.k2.grid_id_trained fR_ga s1 held-out acc_le16 >= 0.9 : missing/misconfigured
+FAIL cameron.k2.grid_id_learnable fR_ga s1 held-out acc >= 0.8 : missing/misconfigured
+FAIL cameron.k2.grid_id_config_hw fR_ga s2 : bad: missing
+FAIL cameron.k2.grid_id_trained fR_ga s2 held-out acc_le16 >= 0.9 : missing/misconfigured
+FAIL cameron.k2.grid_id_learnable fR_ga s2 held-out acc >= 0.8 : missing/misconfigured
+FAIL cameron.k2.grid_id_config_hw fR_sp s0 : bad: missing
+FAIL cameron.k2.grid_id_trained fR_sp s0 held-out acc_le16 >= 0.9 : missing/misconfigured
+FAIL cameron.k2.grid_id_learnable fR_sp s0 held-out acc >= 0.8 : missing/misconfigured
+FAIL cameron.k2.grid_id_config_hw fR_sp s1 : bad: steps (device Tesla T4)
+FAIL cameron.k2.grid_id_trained fR_sp s1 held-out acc_le16 >= 0.9 : missing/misconfigured
+FAIL cameron.k2.grid_id_learnable fR_sp s1 held-out acc >= 0.8 : missing/misconfigured
+FAIL cameron.k2.grid_id_config_hw fR_sp s2 : bad: missing
+FAIL cameron.k2.grid_id_trained fR_sp s2 held-out acc_le16 >= 0.9 : missing/misconfigured
+FAIL cameron.k2.grid_id_learnable fR_sp s2 held-out acc >= 0.8 : missing/misconfigured
+FAIL cameron.k2.grid_id_r1 fR_ga or fR_sp learnable on >= 2 of 3 seeds : fR_ga 0/3 / fR_sp 0/3
+UNREAD cameron.k2.grid_id_prediction fR_ga s0 n=4096 depth>160 >= 0.95 : unread/missing
+UNREAD cameron.k2.grid_id_prediction fR_ga s0 n=8192 depth>160 >= 0.95 : unread/missing
+UNREAD cameron.k2.grid_id_prediction fR_ga s0 n=16384 depth>160 >= 0.95 : unread/missing
+UNREAD cameron.k2.grid_id_prediction fR_ga s0 n=16384 depth>1280 >= 0.95 : unread/missing
+UNREAD cameron.k2.grid_id_multilen16k fR_ga s0 acc n=16384 >= 0.95 : unread/missing
+UNREAD cameron.k2.grid_id_walk_ceiling fR_ga s0 n=4096 depth>160 OR-walk >= 0.95 : unread (gate or walk machinery)
+UNREAD cameron.k2.grid_id_walk_ceiling fR_ga s0 n=16384 depth>160 OR-walk >= 0.95 : unread (gate or walk machinery)
+UNREAD cameron.k2.grid_id_walk_ceiling fR_ga s0 n=16384 depth>1280 OR-walk >= 0.95 : unread (gate or walk machinery)
+UNREAD cameron.k2.grid_id_prediction fR_ga s1 n=4096 depth>160 >= 0.95 : unread/missing
+UNREAD cameron.k2.grid_id_prediction fR_ga s1 n=8192 depth>160 >= 0.95 : unread/missing
+UNREAD cameron.k2.grid_id_prediction fR_ga s1 n=16384 depth>160 >= 0.95 : unread/missing
+UNREAD cameron.k2.grid_id_prediction fR_ga s1 n=16384 depth>1280 >= 0.95 : unread/missing
+UNREAD cameron.k2.grid_id_multilen16k fR_ga s1 acc n=16384 >= 0.95 : unread/missing
+UNREAD cameron.k2.grid_id_walk_ceiling fR_ga s1 n=4096 depth>160 OR-walk >= 0.95 : unread (gate or walk machinery)
+UNREAD cameron.k2.grid_id_walk_ceiling fR_ga s1 n=16384 depth>160 OR-walk >= 0.95 : unread (gate or walk machinery)
+UNREAD cameron.k2.grid_id_walk_ceiling fR_ga s1 n=16384 depth>1280 OR-walk >= 0.95 : unread (gate or walk machinery)
+UNREAD cameron.k2.grid_id_prediction fR_ga s2 n=4096 depth>160 >= 0.95 : unread/missing
+UNREAD cameron.k2.grid_id_prediction fR_ga s2 n=8192 depth>160 >= 0.95 : unread/missing
+UNREAD cameron.k2.grid_id_prediction fR_ga s2 n=16384 depth>160 >= 0.95 : unread/missing
+UNREAD cameron.k2.grid_id_prediction fR_ga s2 n=16384 depth>1280 >= 0.95 : unread/missing
+UNREAD cameron.k2.grid_id_multilen16k fR_ga s2 acc n=16384 >= 0.95 : unread/missing
+UNREAD cameron.k2.grid_id_walk_ceiling fR_ga s2 n=4096 depth>160 OR-walk >= 0.95 : unread (gate or walk machinery)
+UNREAD cameron.k2.grid_id_walk_ceiling fR_ga s2 n=16384 depth>160 OR-walk >= 0.95 : unread (gate or walk machinery)
+UNREAD cameron.k2.grid_id_walk_ceiling fR_ga s2 n=16384 depth>1280 OR-walk >= 0.95 : unread (gate or walk machinery)
+UNREAD cameron.k2.grid_id_prediction fR_sp s0 n=4096 depth>160 >= 0.95 : unread/missing
+UNREAD cameron.k2.grid_id_prediction fR_sp s0 n=8192 depth>160 >= 0.95 : unread/missing
+UNREAD cameron.k2.grid_id_prediction fR_sp s0 n=16384 depth>160 >= 0.95 : unread/missing
+UNREAD cameron.k2.grid_id_prediction fR_sp s0 n=16384 depth>1280 >= 0.95 : unread/missing
+UNREAD cameron.k2.grid_id_multilen16k fR_sp s0 acc n=16384 >= 0.95 : unread/missing
+UNREAD cameron.k2.grid_id_walk_ceiling fR_sp s0 n=4096 depth>160 OR-walk >= 0.95 : unread (gate or walk machinery)
+UNREAD cameron.k2.grid_id_walk_ceiling fR_sp s0 n=16384 depth>160 OR-walk >= 0.95 : unread (gate or walk machinery)
+UNREAD cameron.k2.grid_id_walk_ceiling fR_sp s0 n=16384 depth>1280 OR-walk >= 0.95 : unread (gate or walk machinery)
+UNREAD cameron.k2.grid_id_prediction fR_sp s1 n=4096 depth>160 >= 0.95 : unread/missing
+UNREAD cameron.k2.grid_id_prediction fR_sp s1 n=8192 depth>160 >= 0.95 : unread/missing
+UNREAD cameron.k2.grid_id_prediction fR_sp s1 n=16384 depth>160 >= 0.95 : unread/missing
+UNREAD cameron.k2.grid_id_prediction fR_sp s1 n=16384 depth>1280 >= 0.95 : unread/missing
+UNREAD cameron.k2.grid_id_multilen16k fR_sp s1 acc n=16384 >= 0.95 : unread/missing
+UNREAD cameron.k2.grid_id_walk_ceiling fR_sp s1 n=4096 depth>160 OR-walk >= 0.95 : unread (gate or walk machinery)
+UNREAD cameron.k2.grid_id_walk_ceiling fR_sp s1 n=16384 depth>160 OR-walk >= 0.95 : unread (gate or walk machinery)
+UNREAD cameron.k2.grid_id_walk_ceiling fR_sp s1 n=16384 depth>1280 OR-walk >= 0.95 : unread (gate or walk machinery)
+UNREAD cameron.k2.grid_id_prediction fR_sp s2 n=4096 depth>160 >= 0.95 : unread/missing
+UNREAD cameron.k2.grid_id_prediction fR_sp s2 n=8192 depth>160 >= 0.95 : unread/missing
+UNREAD cameron.k2.grid_id_prediction fR_sp s2 n=16384 depth>160 >= 0.95 : unread/missing
+UNREAD cameron.k2.grid_id_prediction fR_sp s2 n=16384 depth>1280 >= 0.95 : unread/missing
+UNREAD cameron.k2.grid_id_multilen16k fR_sp s2 acc n=16384 >= 0.95 : unread/missing
+UNREAD cameron.k2.grid_id_walk_ceiling fR_sp s2 n=4096 depth>160 OR-walk >= 0.95 : unread (gate or walk machinery)
+UNREAD cameron.k2.grid_id_walk_ceiling fR_sp s2 n=16384 depth>160 OR-walk >= 0.95 : unread (gate or walk machinery)
+UNREAD cameron.k2.grid_id_walk_ceiling fR_sp s2 n=16384 depth>1280 OR-walk >= 0.95 : unread (gate or walk machinery)
+UNREAD cameron.k2.grid_id_counter_quiet aL4 s0 n=4096 depth>160 <= 0.5 : unread/missing
+UNREAD cameron.k2.grid_id_twin_under_line aL4 s0 n=4096 depth>160 <= line+3SE : unread/missing
+UNREAD cameron.k2.grid_id_counter_quiet aL4 s0 n=8192 depth>160 <= 0.5 : unread/missing
+UNREAD cameron.k2.grid_id_twin_under_line aL4 s0 n=8192 depth>160 <= line+3SE : unread/missing
+UNREAD cameron.k2.grid_id_counter_quiet aL4 s0 n=16384 depth>160 <= 0.5 : unread/missing
+UNREAD cameron.k2.grid_id_twin_under_line aL4 s0 n=16384 depth>160 <= line+3SE : unread/missing
+UNREAD cameron.k2.grid_id_counter_quiet aL4 s1 n=4096 depth>160 <= 0.5 : unread/missing
+UNREAD cameron.k2.grid_id_twin_under_line aL4 s1 n=4096 depth>160 <= line+3SE : unread/missing
+UNREAD cameron.k2.grid_id_counter_quiet aL4 s1 n=8192 depth>160 <= 0.5 : unread/missing
+UNREAD cameron.k2.grid_id_twin_under_line aL4 s1 n=8192 depth>160 <= line+3SE : unread/missing
+UNREAD cameron.k2.grid_id_counter_quiet aL4 s1 n=16384 depth>160 <= 0.5 : unread/missing
+UNREAD cameron.k2.grid_id_twin_under_line aL4 s1 n=16384 depth>160 <= line+3SE : unread/missing
+UNREAD cameron.k2.grid_id_counter_quiet aL4 s2 n=4096 depth>160 <= 0.5 : unread/missing
+UNREAD cameron.k2.grid_id_twin_under_line aL4 s2 n=4096 depth>160 <= line+3SE : unread/missing
+UNREAD cameron.k2.grid_id_counter_quiet aL4 s2 n=8192 depth>160 <= 0.5 : unread/missing
+UNREAD cameron.k2.grid_id_twin_under_line aL4 s2 n=8192 depth>160 <= line+3SE : unread/missing
+UNREAD cameron.k2.grid_id_counter_quiet aL4 s2 n=16384 depth>160 <= 0.5 : unread/missing
+UNREAD cameron.k2.grid_id_twin_under_line aL4 s2 n=16384 depth>160 <= line+3SE : unread/missing
+UNREAD cameron.k2.grid_id_counter_quiet aL7 s0 n=16384 depth>1280 <= 0.5 : unread/missing
+UNREAD cameron.k2.grid_id_twin_under_line aL7 s0 n=16384 depth>1280 <= line+3SE : unread/missing
+UNREAD cameron.k2.grid_id_counter_quiet aL7 s1 n=16384 depth>1280 <= 0.5 : unread/missing
+UNREAD cameron.k2.grid_id_twin_under_line aL7 s1 n=16384 depth>1280 <= line+3SE : unread/missing
+UNREAD cameron.k2.grid_id_counter_quiet aL7 s2 n=16384 depth>1280 <= 0.5 : unread/missing
+UNREAD cameron.k2.grid_id_twin_under_line aL7 s2 n=16384 depth>1280 <= line+3SE : unread/missing
+UNREAD cameron.k2.grid_id_opponents_quiet ass4 s0 n=4096 depth>160 <= 0.5 : unread/missing
+UNREAD cameron.k2.grid_id_opponents_quiet ass4 s0 n=8192 depth>160 <= 0.5 : unread/missing
+UNREAD cameron.k2.grid_id_opponents_quiet ass4 s0 n=16384 depth>160 <= 0.5 : unread/missing
+UNREAD cameron.k2.grid_id_opponents_quiet ass4 s1 n=4096 depth>160 <= 0.5 : unread/missing
+UNREAD cameron.k2.grid_id_opponents_quiet ass4 s1 n=8192 depth>160 <= 0.5 : unread/missing
+UNREAD cameron.k2.grid_id_opponents_quiet ass4 s1 n=16384 depth>160 <= 0.5 : unread/missing
+UNREAD cameron.k2.grid_id_opponents_quiet ass4 s2 n=4096 depth>160 <= 0.5 : unread/missing
+UNREAD cameron.k2.grid_id_opponents_quiet ass4 s2 n=8192 depth>160 <= 0.5 : unread/missing
+UNREAD cameron.k2.grid_id_opponents_quiet ass4 s2 n=16384 depth>160 <= 0.5 : unread/missing
+UNREAD cameron.k2.grid_id_opponents_quiet aloop5 s0 n=4096 depth>320 <= 0.5 : unread/missing
+UNREAD cameron.k2.grid_id_opponents_quiet aloop5 s0 n=8192 depth>320 <= 0.5 : unread/missing
+UNREAD cameron.k2.grid_id_opponents_quiet aloop5 s0 n=16384 depth>320 <= 0.5 : unread/missing
+UNREAD cameron.k2.grid_id_opponents_quiet aloop5 s1 n=4096 depth>320 <= 0.5 : unread/missing
+UNREAD cameron.k2.grid_id_opponents_quiet aloop5 s1 n=8192 depth>320 <= 0.5 : unread/missing
+UNREAD cameron.k2.grid_id_opponents_quiet aloop5 s1 n=16384 depth>320 <= 0.5 : unread/missing
+UNREAD cameron.k2.grid_id_opponents_quiet aloop5 s2 n=4096 depth>320 <= 0.5 : unread/missing
+UNREAD cameron.k2.grid_id_opponents_quiet aloop5 s2 n=8192 depth>320 <= 0.5 : unread/missing
+UNREAD cameron.k2.grid_id_opponents_quiet aloop5 s2 n=16384 depth>320 <= 0.5 : unread/missing
+RED 133 failing rows

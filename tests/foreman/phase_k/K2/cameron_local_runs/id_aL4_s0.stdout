@@ -1,0 +1,30 @@
+11:31:42 acquired id_aL4_s0
+{"t": "config", "arm": "aL", "layers": 4, "dff": 512, "loops": 5, "hook": null, "seed": 0, "steps": 24000, "lr": 0.003, "warmup": 200, "eval_ns": "1024,4096,8192,16384", "probe_every": 2000, "out": "C:/Users/seal/AppData/Local/Temp/claude/C--Users-seal-Desktop-New-folder--32-/870edeb1-6409-4414-98e7-00d0537b75dd/scratchpad/phase_k/K2/cameron/runs/id_aL4_s0", "bed": "kpf", "emb": "frozen", "par_init": "orth", "train_M": null, "tok": 8192, "train_ns": "256,512,1024,2048,4096", "threads": 0, "eval_beds": 64, "gamma_sched": null, "device": "NVIDIA GeForce RTX 4060 Laptop GPU", "params": 4999552, "params_nonemb": 805120, "hook_sha256": null, "torch": "2.14.0+cu126"}
+  eval n=1024: acc 0.2340 beyond16 0.002364066193853428 beyond128 None band4 None band7 None
+step 2000 loss 2.9575 acc 0.7113 train_s 119
+  eval n=1024: acc 0.3368 beyond16 0.0021054964539007092 beyond128 None band4 None band7 None
+step 4000 loss 0.9688 acc 0.9138 train_s 239
+  eval n=1024: acc 0.3374 beyond16 0.001182033096926714 beyond128 None band4 None band7 None
+step 6000 loss 0.9047 acc 0.9208 train_s 361
+  eval n=1024: acc 0.3383 beyond16 0.002364066193853428 beyond128 None band4 None band7 None
+step 8000 loss 0.8978 acc 0.9192 train_s 485
+  eval n=1024: acc 0.3398 beyond16 0.0006279550827423168 beyond128 None band4 None band7 None
+step 10000 loss 0.8082 acc 0.9290 train_s 610
+  eval n=1024: acc 0.3472 beyond16 0.0017730496453900709 beyond128 None band4 None band7 None
+step 12000 loss 0.7028 acc 0.9386 train_s 735
+  eval n=1024: acc 0.3494 beyond16 0.0016622340425531915 beyond128 None band4 None band7 None
+step 14000 loss 0.6608 acc 0.9399 train_s 859
+  eval n=1024: acc 0.3517 beyond16 0.003324468085106383 beyond128 None band4 None band7 None
+step 16000 loss 0.6465 acc 0.9437 train_s 985
+  eval n=1024: acc 0.3551 beyond16 0.0032136524822695034 beyond128 None band4 None band7 None
+step 18000 loss 0.5930 acc 0.9471 train_s 1111
+  eval n=1024: acc 0.3566 beyond16 0.0039154846335697395 beyond128 None band4 None band7 None
+step 20000 loss 0.5890 acc 0.9449 train_s 1243
+  eval n=1024: acc 0.3570 beyond16 0.004100177304964539 beyond128 None band4 None band7 None
+step 22000 loss 0.6156 acc 0.9398 train_s 1421
+  eval n=1024: acc 0.3573 beyond16 0.004063238770685579 beyond128 None band4 None band7 None
+  eval n=4096: acc 0.0409 beyond16 0.02250631313131313 beyond128 0.016318537859007835 band4 0.01795933734939759 band7 None
+  eval n=8192: acc 0.0237 beyond16 0.014042328699106257 beyond128 0.00939245810055866 band4 0.010804341963322545 band7 0.0
+  eval n=16384: acc 0.0114 beyond16 0.006623892171344166 beyond128 0.003997850442939031 band4 0.004821245515120451 band7 0.0
+{"Larm": 4, "train_s": 1600.111988067627, "wall_s": 1884.3482248783112, "final_loss": 0.5644592046737671}
+12:03:19 released id_aL4_s0 rc=0

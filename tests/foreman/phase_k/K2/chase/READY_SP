@@ -1,0 +1,14 @@
+hook: C:/Users/seal/AppData/Local/Temp/claude/C--Users-seal-Desktop-New-folder--32-/870edeb1-6409-4414-98e7-00d0537b75dd/scratchpad/phase_k/K2/chase/resolvent_sp.py
+sha256: 36039c3a4189189840d04b345fa3c54d43e6d32bcc8a176ce5e8aac135bfd7bc
+classes: ResolventAttention (the sparsemax resolvent layer alone); FRSP (arm f_R_sp for train_ladder: layers 0..L-2 = K0 train_ladder AlibiAttention, layer L-1 = ResolventAttention)
+usage (rdepth.py, arm f_R_sp): --arm fR --hook "C:/Users/seal/AppData/Local/Temp/claude/C--Users-seal-Desktop-New-folder--32-/870edeb1-6409-4414-98e7-00d0537b75dd/scratchpad/phase_k/K2/chase/resolvent_sp.py:ResolventAttention" --gamma_sched 0.5:2000,0.9:4000,0.99:6000,0.999 (plus the K1-b flags: --bed kpf --emb frozen --par_init orth --lr 0.003 --warmup 200)
+  Use :ResolventAttention with rdepth, not :FRSP. gamma_wrap subclasses the class it is given, and FRSP.__new__ returns a plain ResolventAttention, so the schedule would be silently dropped. Evaluation runs at gamma 0.999 (the hook's GAMMA).
+usage (train_ladder.py): --attn "C:/Users/seal/AppData/Local/Temp/claude/C--Users-seal-Desktop-New-folder--32-/870edeb1-6409-4414-98e7-00d0537b75dd/scratchpad/phase_k/K2/chase/resolvent_sp.py:FRSP" --no_poll ...   (hold gpu.lock.d yourself)
+gamma: layer(..., g=) (what rdepth's --gamma_sched calls), or set module.gamma (default 0.999)
+fixed: beta 1; W = causal sparsemax(s_i q_i.k_j / sqrt(D)), with exact zeros; logit scale s_i = a_h ln(i+1) + b_h (a = 1, b = 0 at init, learned); the layer runs in fp32 with autocast off; row block c = 256; any S (a partial last block, no padding)
+memory: B1 S16384 fwd+bwd, allocated / reserved peak 0.33 / 0.35 GiB (H2 D64, the rdepth shape) and 0.61 / 0.63 GiB (H4 D32)
+precision: fp32 vs float64 at S 1024: x <= 6.16e-6, grads <= 7.83e-5. At S 16384: x 1.11e-5 (H2 D64) and 3.20e-5 (H4 D32); the 1e-5 line is claimed at S 1024 only
+cost (reported, not scored; vs K1 FR 3855288d, B1 H2 D64): fwd+bwd 2.38x at S 4096 and 2.77x at S 16384; fwd-only 3.42x and 9.39x
+rules: no --compile (untested); single process per GPU
+bars GREEN (hook 36039c3a, run3*.log): sp_fwd_parity_S1024_v2, sp_support_S1024_v2, sp_gradcheck_S64_f64, sp_mem_S16384_v2, sp_rdepth_smoke_50, sp_train_ladder_R0_50
+bars RED and kept as registered (their replacements are the v2 bars above): sp_fwd_parity_S1024 (the mutant predicate scores NaN as a match), sp_support_S1024 (support + 1 cannot change the set), sp_mem_S16384 (fp32 residual 1.10e-5 against 1e-5)

@@ -1,0 +1,5 @@
+{"hook": "C:\\Users\\seal\\AppData\\Local\\Temp\\claude\\C--Users-seal-Desktop-New-folder--32-\\870edeb1-6409-4414-98e7-00d0537b75dd\\scratchpad\\phase_k\\K2\\chase\\resolvent_sp.py", "sha256": "98259dff2ec8714fabd35313b7e783dcf3a8c263d058dabb9a226c729b739604"}
+GREEN sp_support_S1024_v2: {"in1": {"sets_equal": true, "rowsum_err": 1.0658141036401503e-14, "max_support": 6, "causal_exact_zeros": 1046528}, "in2": {"sets_equal": true, "rowsum_err": 1.4210854715202004e-14, "max_support": 8, "causal_exact_zeros": 1046086}, "mutant_tau_kth_sets_equal": false}
+GREEN sp_train_ladder_R0_50: {"rc": 0, "n_steps": 50, "first10": 10.806851959228515, "last10": 9.862738037109375, "eval": [9.631362915039062], "sha_ok": true, "a_keys": ["blocks.3.attn.a"], "b_keys": ["blocks.3.attn.b"], "moved": 0.00991123728454113}
+{"sp_support_S1024_v2": "green", "sp_train_ladder_R0_50": "green"}
+exit 0

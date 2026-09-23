@@ -1,0 +1,216 @@
+{
+ "slug": "melowdramtic/k2-id-grid-smoke",
+ "version_expected": 1,
+ "t0": "2026-09-23 10:02:01Z",
+ "sha": {
+  "phase_k/K1/cameron/rdepth.py": {
+   "expected": "6a413119a322a1f22d0488b88326eba7ee7fbc295f8205bf3bf6150119c764df",
+   "on_disk": "6a413119a322a1f22d0488b88326eba7ee7fbc295f8205bf3bf6150119c764df",
+   "ok": true,
+   "path": "/tmp/sp/phase_k/K1/cameron/rdepth.py"
+  },
+  "phase_k/K1/cameron/train_ladder.py": {
+   "expected": "d524b13005d86bd49ae1d7692d41de4e0030542f7a19a212fb562de916758d93",
+   "on_disk": "d524b13005d86bd49ae1d7692d41de4e0030542f7a19a212fb562de916758d93",
+   "ok": true,
+   "path": "/tmp/sp/phase_k/K1/cameron/train_ladder.py"
+  },
+  "phase_k/K1/cameron/bed_k.py": {
+   "expected": "aa60e6d963307d57a4db7ce99a785ec45b75814e6ebdcd8c8650a2174ecb320f",
+   "on_disk": "aa60e6d963307d57a4db7ce99a785ec45b75814e6ebdcd8c8650a2174ecb320f",
+   "ok": true,
+   "path": "/tmp/sp/phase_k/K1/cameron/bed_k.py"
+  },
+  "phase_k/K1/cameron/bed_kp.py": {
+   "expected": "20d50b9d71248cd39aff74219b831b2c513d6044dfc0ca7ecc744a7a6a323355",
+   "on_disk": "20d50b9d71248cd39aff74219b831b2c513d6044dfc0ca7ecc744a7a6a323355",
+   "ok": true,
+   "path": "/tmp/sp/phase_k/K1/cameron/bed_kp.py"
+  },
+  "phase_k/K2/cameron/k2_ptr.py": {
+   "expected": "b02a81360c87da78cbc0ec6891cb46559addea70ae3477dbd0cf372686ef5151",
+   "on_disk": "b02a81360c87da78cbc0ec6891cb46559addea70ae3477dbd0cf372686ef5151",
+   "ok": true,
+   "path": "/tmp/sp/phase_k/K2/cameron/k2_ptr.py"
+  },
+  "phase_k/K1/chase/resolvent_hook.py": {
+   "expected": "3855288d7da7acdebf54b9b1979d9b0b5afebb3dca6d8ccefd684812d33451e2",
+   "on_disk": "3855288d7da7acdebf54b9b1979d9b0b5afebb3dca6d8ccefd684812d33451e2",
+   "ok": true,
+   "path": "/tmp/sp/phase_k/K1/chase/resolvent_hook.py"
+  },
+  "phase_k/K2/chase/resolvent_sp.py": {
+   "expected": "36039c3a4189189840d04b345fa3c54d43e6d32bcc8a176ce5e8aac135bfd7bc",
+   "on_disk": "36039c3a4189189840d04b345fa3c54d43e6d32bcc8a176ce5e8aac135bfd7bc",
+   "ok": true,
+   "path": "/tmp/sp/phase_k/K2/chase/resolvent_sp.py"
+  },
+  "REPO/tests/foreman/phase_k/K0/chase/resolvent.py": {
+   "expected": "f850c568f3454c36224325d7b28df6a081a0e32069b860188882b6a6374ceccd",
+   "on_disk": "f850c568f3454c36224325d7b28df6a081a0e32069b860188882b6a6374ceccd",
+   "ok": true,
+   "path": "/tmp/sp/phase_k/K2/cameron/C:/Users/seal/Desktop/New folder (32)/tests/foreman/phase_k/K0/chase/resolvent.py"
+  },
+  "REPO/tests/foreman/phase_k/K0/wilson/train_ladder.py": {
+   "expected": "d524b13005d86bd49ae1d7692d41de4e0030542f7a19a212fb562de916758d93",
+   "on_disk": "d524b13005d86bd49ae1d7692d41de4e0030542f7a19a212fb562de916758d93",
+   "ok": true,
+   "path": "/tmp/sp/phase_k/K2/cameron/C:/Users/seal/Desktop/New folder (32)/tests/foreman/phase_k/K0/wilson/train_ladder.py"
+  },
+  "REPO/tests/foreman/phase_j/N1/cameron/cost_n.py": {
+   "expected": "9ab22197eaad779a51a1b8e1cff294babe7811f12bca2aba53ea2d481fbec93a",
+   "on_disk": "9ab22197eaad779a51a1b8e1cff294babe7811f12bca2aba53ea2d481fbec93a",
+   "ok": true,
+   "path": "/tmp/sp/phase_k/K2/cameron/C:/Users/seal/Desktop/New folder (32)/tests/foreman/phase_j/N1/cameron/cost_n.py"
+  }
+ },
+ "fp": {
+  "far10_n4096": {
+   "expected": "c67b57c39c73c423470e47dd3c542d6408333dc60991978af4956a3d379d0906",
+   "got": "c67b57c39c73c423470e47dd3c542d6408333dc60991978af4956a3d379d0906",
+   "ok": true
+  },
+  "far10_n8192": {
+   "expected": "503eb6d68914631128ae2fb3f664cbbb2095f6e9222518627dae50a7ae635787",
+   "got": "503eb6d68914631128ae2fb3f664cbbb2095f6e9222518627dae50a7ae635787",
+   "ok": true
+  },
+  "far10_n16384": {
+   "expected": "6f10fb094c5bd2a4be3111c6cf681368968008d3f2b53d12ea84e088f476f7e9",
+   "got": "6f10fb094c5bd2a4be3111c6cf681368968008d3f2b53d12ea84e088f476f7e9",
+   "ok": true
+  },
+  "heldout_1024": {
+   "expected": "abcd8e16ab33589006153a03ddd8b60121249f4f9c2eb9ae1f6ef27a6ecf8dce",
+   "got": "abcd8e16ab33589006153a03ddd8b60121249f4f9c2eb9ae1f6ef27a6ecf8dce",
+   "ok": true
+  },
+  "train_seed0_steps1-5": {
+   "expected": "2244c2d83fb250e7e0b08f6cb0dda159e5000c35ca6a1756483326f14f9c53d3",
+   "got": "2244c2d83fb250e7e0b08f6cb0dda159e5000c35ca6a1756483326f14f9c53d3",
+   "ok": true
+  },
+  "train_seed1_steps1-5": {
+   "expected": "062c3dc2c39373b53347ac3c1b44d88cad68ac64234340221b14a8322d35e016",
+   "got": "062c3dc2c39373b53347ac3c1b44d88cad68ac64234340221b14a8322d35e016",
+   "ok": true
+  },
+  "train_seed2_steps1-5": {
+   "expected": "a1f7e4a9e7b8696957b54c33f945476bfdb37708129bc014c1630409fbd4e2ce",
+   "got": "a1f7e4a9e7b8696957b54c33f945476bfdb37708129bc014c1630409fbd4e2ce",
+   "ok": true
+  }
+ },
+ "jobs": {
+  "smoke_fR_sp_s1": {
+   "lane": 1,
+   "gpu": "Tesla T4",
+   "kind": "train",
+   "start_s": 7.793292760848999,
+   "rc": 0,
+   "wall_s": 31.554993152618408,
+   "status": "done"
+  },
+  "smoke_aL4_s1": {
+   "lane": 0,
+   "gpu": "Tesla T4",
+   "kind": "train",
+   "start_s": 7.793518781661987,
+   "rc": 0,
+   "wall_s": 27.890877723693848,
+   "status": "done"
+  },
+  "smoke_fR_ga_s1": {
+   "lane": 0,
+   "gpu": "Tesla T4",
+   "kind": "train",
+   "start_s": 35.68851089477539,
+   "rc": 0,
+   "wall_s": 25.645872831344604,
+   "status": "done"
+  },
+  "smoke_fR_sp_s1_walk": {
+   "lane": 1,
+   "gpu": "Tesla T4",
+   "kind": "walk",
+   "start_s": 39.349167585372925,
+   "rc": 0,
+   "wall_s": 11.500749111175537,
+   "status": "done"
+  },
+  "smoke_fR_ga_g999_s1": {
+   "lane": 1,
+   "gpu": "Tesla T4",
+   "kind": "train",
+   "start_s": 50.851083517074585,
+   "rc": 0,
+   "wall_s": 26.33178448677063,
+   "status": "done"
+  },
+  "smoke_fR_ga_s1_walk": {
+   "lane": 0,
+   "gpu": "Tesla T4",
+   "kind": "walk",
+   "start_s": 61.335549116134644,
+   "rc": 0,
+   "wall_s": 8.586913347244263,
+   "status": "done"
+  }
+ },
+ "hw": {
+  "torch": "2.10.0+cu128",
+  "cuda": "12.8",
+  "cudnn": 91002,
+  "python": "3.12.13",
+  "numpy": "2.0.2",
+  "gpu_count": 2,
+  "nvidia_smi": "0, Tesla T4, 580.159.04, 15360 MiB\n1, Tesla T4, 580.159.04, 15360 MiB",
+  "kernel_slug": "melowdramtic/k2-id-grid-smoke",
+  "kernel_version_expected": 1,
+  "kernel_run_type": "Batch",
+  "bf16_supported": true
+ },
+ "end_s": 77.18384313583374,
+ "files": {
+  "kernel_status.json": 6044,
+  "runs/smoke_aL4_s1/hardware.json": 540,
+  "runs/smoke_aL4_s1/log.jsonl": 837,
+  "runs/smoke_aL4_s1/ok_16384.npz": 197340,
+  "runs/smoke_aL4_s1/ok_4096.npz": 46765,
+  "runs/smoke_aL4_s1/ok_8192.npz": 98294,
+  "runs/smoke_aL4_s1/result.json": 10051,
+  "runs/smoke_aL4_s1.stdout": 928,
+  "runs/smoke_fR_ga_g999_s1/hardware.json": 546,
+  "runs/smoke_fR_ga_g999_s1/log.jsonl": 978,
+  "runs/smoke_fR_ga_g999_s1/model.pt": 20009689,
+  "runs/smoke_fR_ga_g999_s1/ok_16384.npz": 197340,
+  "runs/smoke_fR_ga_g999_s1/ok_4096.npz": 46765,
+  "runs/smoke_fR_ga_g999_s1/ok_8192.npz": 98294,
+  "runs/smoke_fR_ga_g999_s1/result.json": 10178,
+  "runs/smoke_fR_ga_g999_s1.stdout": 1059,
+  "runs/smoke_fR_ga_s1/hardware.json": 624,
+  "runs/smoke_fR_ga_s1/log.jsonl": 1002,
+  "runs/smoke_fR_ga_s1/model.pt": 20009689,
+  "runs/smoke_fR_ga_s1/ok_16384.npz": 197340,
+  "runs/smoke_fR_ga_s1/ok_4096.npz": 46763,
+  "runs/smoke_fR_ga_s1/ok_8192.npz": 98294,
+  "runs/smoke_fR_ga_s1/result.json": 10220,
+  "runs/smoke_fR_ga_s1/walk/meta.json": 223,
+  "runs/smoke_fR_ga_s1/walk/ptr_16384.npz": 823234,
+  "runs/smoke_fR_ga_s1/walk/ptr_4096.npz": 190499,
+  "runs/smoke_fR_ga_s1.stdout": 1083,
+  "runs/smoke_fR_ga_s1_walk.stdout": 40,
+  "runs/smoke_fR_sp_s1/hardware.json": 625,
+  "runs/smoke_fR_sp_s1/log.jsonl": 1000,
+  "runs/smoke_fR_sp_s1/model.pt": 20009689,
+  "runs/smoke_fR_sp_s1/ok_16384.npz": 197340,
+  "runs/smoke_fR_sp_s1/ok_4096.npz": 46763,
+  "runs/smoke_fR_sp_s1/ok_8192.npz": 98294,
+  "runs/smoke_fR_sp_s1/result.json": 10220,
+  "runs/smoke_fR_sp_s1/walk/meta.json": 223,
+  "runs/smoke_fR_sp_s1/walk/ptr_16384.npz": 842789,
+  "runs/smoke_fR_sp_s1/walk/ptr_4096.npz": 195115,
+  "runs/smoke_fR_sp_s1.stdout": 1083,
+  "runs/smoke_fR_sp_s1_walk.stdout": 40
+ }
+}

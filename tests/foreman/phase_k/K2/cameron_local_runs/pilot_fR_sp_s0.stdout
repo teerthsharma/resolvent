@@ -1,0 +1,30 @@
+10:42:32 acquired pilot_fR_sp_s0
+{"t": "config", "arm": "fR", "layers": 4, "dff": 512, "loops": 5, "hook": "C:/Users/seal/AppData/Local/Temp/claude/C--Users-seal-Desktop-New-folder--32-/870edeb1-6409-4414-98e7-00d0537b75dd/scratchpad/phase_k/K2/chase/resolvent_sp.py:ResolventAttention", "seed": 0, "steps": 24000, "lr": 0.003, "warmup": 200, "eval_ns": "1024,4096,8192,16384", "probe_every": 2000, "out": "C:\\Users\\seal\\AppData\\Local\\Temp\\claude\\C--Users-seal-Desktop-New-folder--32-\\870edeb1-6409-4414-98e7-00d0537b75dd\\scratchpad\\phase_k\\K2\\cameron\\runs\\pilot_fR_sp_s0", "bed": "kpf", "emb": "frozen", "par_init": "orth", "train_M": null, "tok": 8192, "train_ns": "256,512,1024", "threads": 0, "eval_beds": 64, "gamma_sched": "0.5:6000,0.9:12000,0.99:18000,0.999", "device": "NVIDIA GeForce RTX 4060 Laptop GPU", "params": 4999556, "params_nonemb": 805124, "hook_sha256": "36039c3a4189189840d04b345fa3c54d43e6d32bcc8a176ce5e8aac135bfd7bc", "torch": "2.14.0+cu126"}
+  eval n=1024: acc 0.1271 beyond16 0.002216312056737589 beyond128 None band4 None band7 None
+step 2000 loss 8.2529 acc 0.1313 train_s 128
+  eval n=1024: acc 0.2679 beyond16 0.002327127659574468 beyond128 None band4 None band7 None
+step 4000 loss 5.2480 acc 0.4528 train_s 263
+  eval n=1024: acc 0.7885 beyond16 0.6677378841607565 beyond128 None band4 None band7 None
+step 6000 loss 0.7663 acc 0.9514 train_s 400
+  eval n=1024: acc 0.9100 beyond16 0.855681146572104 beyond128 None band4 None band7 None
+step 8000 loss 1.1967 acc 0.9193 train_s 533
+  eval n=1024: acc 0.9223 beyond16 0.8715277777777778 beyond128 None band4 None band7 None
+step 10000 loss 0.6383 acc 0.9530 train_s 666
+  eval n=1024: acc 0.9487 beyond16 0.9205821513002365 beyond128 None band4 None band7 None
+step 12000 loss 0.2759 acc 0.9827 train_s 800
+  eval n=1024: acc 0.9661 beyond16 0.9465868794326241 beyond128 None band4 None band7 None
+step 14000 loss 0.5245 acc 0.9642 train_s 934
+  eval n=1024: acc 0.9817 beyond16 0.9715942671394799 beyond128 None band4 None band7 None
+step 16000 loss 0.1395 acc 0.9904 train_s 1068
+  eval n=1024: acc 0.9856 beyond16 0.9780954491725768 beyond128 None band4 None band7 None
+step 18000 loss 0.0174 acc 0.9987 train_s 1202
+  eval n=1024: acc 0.9919 beyond16 0.9871823286052009 beyond128 None band4 None band7 None
+step 20000 loss 0.1259 acc 0.9924 train_s 1337
+  eval n=1024: acc 0.9944 beyond16 0.9911716903073287 beyond128 None band4 None band7 None
+step 22000 loss 0.0642 acc 0.9974 train_s 1473
+  eval n=1024: acc 0.9949 beyond16 0.991725768321513 beyond128 None band4 None band7 None
+  eval n=4096: acc 0.5174 beyond16 0.500915404040404 beyond128 0.35806951697127937 band4 0.40625 band7 None
+  eval n=8192: acc 0.2826 beyond16 0.27051266137040714 beyond128 0.1797486033519553 band4 0.20767597087378642 band7 0.0327263779527559
+  eval n=16384: acc 0.1537 beyond16 0.14664112506154603 beyond128 0.09721046117769672 band4 0.11182566632496156 band7 0.03438586012163336
+{"Larm": 4, "train_s": 1607.111290693283, "wall_s": 1996.7072343826294, "final_loss": 0.009112175554037094}
+11:15:56 released pilot_fR_sp_s0 rc=0

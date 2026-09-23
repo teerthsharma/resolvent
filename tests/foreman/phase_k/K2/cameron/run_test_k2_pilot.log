@@ -1,0 +1,16 @@
+=== run on the measurement (2026-09-23 11:19:05); producer logs runs/pilot_fR_sp_s0.stdout, k2_pilot_walk.log
+PASS cameron.k2.pilot_config s0 : ok
+PASS cameron.k2.pilot_trained s0 held-out depth<=16 >= 0.9 : 0.9971
+PASS cameron.k2.pilot_learnable s0 held-out acc >= 0.8 : 0.9949
+PASS cameron.k2.pilot_walk_machinery s0 : ok
+FAIL cameron.k2.pilot_walk_ceiling s0 n=4096 depth>160 OR-walk >= 0.95 : 0.8949 (N 22464)
+FAIL cameron.k2.pilot_walk_ceiling s0 n=16384 depth>160 OR-walk >= 0.95 : 0.4513 (N 120768)
+FAIL cameron.k2.pilot_walk_ceiling s0 n=16384 depth>1280 OR-walk >= 0.95 : 0.2498 (N 49088)
+FAIL cameron.k2.pilot_far10 s0 n=4096 depth>160 >= 0.95 : 0.3046 (N 22464)
+FAIL cameron.k2.pilot_far10 s0 n=8192 depth>160 >= 0.95 : 0.1503 (N 55232)
+FAIL cameron.k2.pilot_far10 s0 n=16384 depth>160 >= 0.95 : 0.0829 (N 120768)
+FAIL cameron.k2.pilot_far10 s0 n=16384 depth>1280 >= 0.95 : 0.0325 (N 49088)
+FAIL cameron.k2.pilot_multilen16k s0 acc n=16384 >= 0.95 : 0.1537
+FAIL cameron.k2.pilot_grid_launch s0 every GATE row GREEN : BRANCH: IDENTITY (walk ceiling 0.8949 / 0.4513 / 0.2498)
+RED 9 failing rows
+exit 1

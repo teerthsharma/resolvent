@@ -1,0 +1,30 @@
+13:14:08 acquired id_aloop5_s0
+{"t": "config", "arm": "aloop", "layers": 4, "dff": 512, "loops": 5, "hook": null, "seed": 0, "steps": 24000, "lr": 0.003, "warmup": 200, "eval_ns": "1024,4096,8192,16384", "probe_every": 2000, "out": "C:/Users/seal/AppData/Local/Temp/claude/C--Users-seal-Desktop-New-folder--32-/870edeb1-6409-4414-98e7-00d0537b75dd/scratchpad/phase_k/K2/cameron/runs/id_aloop5_s0", "bed": "kpf", "emb": "frozen", "par_init": "orth", "train_M": null, "tok": 8192, "train_ns": "256,512,1024,2048,4096", "threads": 0, "eval_beds": 64, "gamma_sched": null, "device": "NVIDIA GeForce RTX 4060 Laptop GPU", "params": 4408192, "params_nonemb": 213760, "hook_sha256": null, "torch": "2.14.0+cu126"}
+  eval n=1024: acc 0.0677 beyond16 0.0 beyond128 None band4 None band7 None
+step 2000 loss 8.6933 acc 0.2092 train_s 126
+  eval n=1024: acc 0.0845 beyond16 0.0 beyond128 None band4 None band7 None
+step 4000 loss 8.3304 acc 0.2483 train_s 257
+  eval n=1024: acc 0.0872 beyond16 0.0018469267139479906 beyond128 None band4 None band7 None
+step 6000 loss 7.2586 acc 0.2496 train_s 389
+  eval n=1024: acc 0.4490 beyond16 0.001736111111111111 beyond128 None band4 None band7 None
+step 8000 loss 0.6083 acc 0.9475 train_s 522
+  eval n=1024: acc 0.5339 beyond16 0.0009973404255319148 beyond128 None band4 None band7 None
+step 10000 loss 0.2989 acc 0.9772 train_s 654
+  eval n=1024: acc 0.5566 beyond16 0.0015883569739952718 beyond128 None band4 None band7 None
+step 12000 loss 0.2035 acc 0.9841 train_s 787
+  eval n=1024: acc 0.5715 beyond16 0.0014036643026004729 beyond128 None band4 None band7 None
+step 14000 loss 0.1012 acc 0.9940 train_s 920
+  eval n=1024: acc 0.5787 beyond16 0.0024379432624113476 beyond128 None band4 None band7 None
+step 16000 loss 0.0575 acc 0.9960 train_s 1052
+  eval n=1024: acc 0.5831 beyond16 0.003952423167848699 beyond128 None band4 None band7 None
+step 18000 loss 0.0713 acc 0.9952 train_s 1186
+  eval n=1024: acc 0.5843 beyond16 0.004949763593380615 beyond128 None band4 None band7 None
+step 20000 loss 0.0141 acc 0.9980 train_s 1319
+  eval n=1024: acc 0.5869 beyond16 0.007646276595744681 beyond128 None band4 None band7 None
+step 22000 loss 0.0185 acc 0.9984 train_s 1453
+  eval n=1024: acc 0.5879 beyond16 0.009123817966903073 beyond128 None band4 None band7 None
+  eval n=4096: acc 0.0544 beyond16 0.02234848484848485 beyond128 0.01839915143603133 band4 0.01957831325301205 band7 None
+  eval n=8192: acc 0.0268 beyond16 0.010551142005958292 beyond128 0.007489525139664804 band4 0.008225458468176915 band7 0.0
+  eval n=16384: acc 0.0138 beyond16 0.005793020679468242 beyond128 0.0039082855653986455 band4 0.00431669656586366 band7 4.0725456125108604e-05
+{"Larm": 5, "train_s": 1586.3501727581024, "wall_s": 1880.236135005951, "final_loss": 0.0078102536499500275}
+13:45:35 released id_aloop5_s0 rc=0

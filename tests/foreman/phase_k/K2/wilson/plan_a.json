@@ -1,0 +1,35 @@
+{
+ "slug": "melowdramtic/k2-id-grid-a",
+ "title": "K2 id grid a",
+ "version": 1,
+ "lanes": [
+  [
+   "id_fR_ga_s0",
+   "id_fR_ga_s0_walk",
+   "id_fR_sp_s0",
+   "id_fR_sp_s0_walk",
+   "id_aL4_s0"
+  ],
+  [
+   "id_fR_ga_s1",
+   "id_fR_ga_s1_walk",
+   "id_fR_sp_s1",
+   "id_fR_sp_s1_walk",
+   "id_aL4_s1"
+  ]
+ ],
+ "est": {
+  "id_fR_ga_s0": 20000,
+  "id_fR_ga_s0_walk": 60,
+  "id_fR_sp_s0": 6200,
+  "id_fR_sp_s0_walk": 60,
+  "id_aL4_s0": 5577,
+  "id_fR_ga_s1": 20000,
+  "id_fR_ga_s1_walk": 60,
+  "id_fR_sp_s1": 6200,
+  "id_fR_sp_s1_walk": 60,
+  "id_aL4_s1": 5577
+ },
+ "soft_s": 41400,
+ "hard_s": 42300
+}

@@ -1,0 +1,12 @@
+=== run on the measurement (2026-09-23 10:14:24); producer log k2_walk.log
+PASS cameron.k2.walk_machinery : ok
+PASS cameron.k2.walk_sane OR-walk acc depth<=128 n=4096 >= 0.98 : 0.9949 (N 8256)
+PASS cameron.k2.walk_explains n=4096 depth>160 agreement(ok, OR-walk) >= 0.9 : 0.9326 (N 22464; both wrong 0.0615, soft right walk wrong 0.0038, walk right soft wrong 0.0636)
+FAIL cameron.k2.walk_explains n=16384 depth>160 agreement(ok, OR-walk) >= 0.9 : 0.7995 (N 120768; both wrong 0.5471, soft right walk wrong 0.0031, walk right soft wrong 0.1973)
+PASS cameron.k2.walk_explains_counter_quiet n=16384 agreement > 0.7 (FAIL = counter fires) : 0.7995
+FAIL cameron.k2.walk_ceiling n=4096 depth>160 OR-walk >= 0.95 : 0.9347 (N 22464; head 0 0.8106 / head 1 0.8406)
+FAIL cameron.k2.walk_ceiling n=16384 depth>160 OR-walk >= 0.95 : 0.4498 (N 120768; head 0 0.3010 / head 1 0.2971)
+FAIL cameron.k2.walk_ceiling n=16384 depth>1280 OR-walk >= 0.95 : 0.2292 (N 49088; head 0 0.1275 / head 1 0.1052)
+FAIL cameron.k2.walk_link_grows head 0 off-chain rate pos 4096-16383 >= 2 x pos 0-1023 : 0.00598 (0-1023) / 0.00146 (1024-4095) / 0.00840 (4096-16383)
+RED 5 failing rows
+exit 1

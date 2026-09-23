@@ -1,0 +1,4 @@
+{"t": "config", "arm": "fR", "layers": 4, "dff": 512, "loops": 5, "hook": "/tmp/sp/phase_k/K1/chase/resolvent_hook.py:ResolventAttention", "seed": 1, "steps": 50, "lr": 0.003, "warmup": 200, "eval_ns": "1024,4096,8192,16384", "probe_every": 2000, "out": "/tmp/sp/phase_k/K2/cameron/runs/smoke_fR_ga_g999_s1", "bed": "kpf", "emb": "frozen", "par_init": "orth", "train_M": null, "tok": 8192, "train_ns": "256,512,1024,2048,4096", "threads": 0, "eval_beds": 64, "gamma_sched": "0.999", "device": "Tesla T4", "params": 4999556, "params_nonemb": 805124, "hook_sha256": "3855288d7da7acdebf54b9b1979d9b0b5afebb3dca6d8ccefd684812d33451e2", "torch": "2.10.0+cu128"}
+{"t": "step", "step": 1, "n": 512, "loss": 10.472969055175781, "acc": 0.0625, "gn": 1.6152268648147583, "train_s": 0.7312102317810059}
+{"t": "step", "step": 50, "n": 256, "loss": 9.458930969238281, "acc": 0.1251220703125, "gn": 1.2240796089172363, "train_s": 10.59769582748413}
+{"t": "end", "train_s": 10.59769582748413}

@@ -1,0 +1,6 @@
+{"t": "config", "arm": "fR", "layers": 4, "dff": 512, "loops": 5, "hook": "/tmp/sp/phase_k/K2/chase/resolvent_sp.py:ResolventAttention", "seed": 1, "steps": 50, "lr": 0.003, "warmup": 200, "eval_ns": "1024,4096,8192,16384", "probe_every": 2000, "out": "/tmp/sp/phase_k/K2/cameron/runs/smoke_fR_sp_s1", "bed": "kpf", "emb": "frozen", "par_init": "orth", "train_M": null, "tok": 8192, "train_ns": "256,512,1024,2048,4096", "threads": 0, "eval_beds": 64, "gamma_sched": "0.5:6000,0.9:12000,0.99:18000,0.999", "device": "Tesla T4", "params": 4999556, "params_nonemb": 805124, "hook_sha256": "36039c3a4189189840d04b345fa3c54d43e6d32bcc8a176ce5e8aac135bfd7bc", "torch": "2.10.0+cu128"}
+  eval n=1024: acc 0.0437 beyond16 0.0 beyond128 None band4 None band7 None
+  eval n=4096: acc 0.0020 beyond16 0.0 beyond128 0.0 band4 0.0 band7 None
+  eval n=8192: acc 0.0010 beyond16 0.0 beyond128 0.0 band4 0.0 band7 0.0
+  eval n=16384: acc 0.0005 beyond16 0.0 beyond128 0.0 band4 0.0 band7 0.0
+{"Larm": 4, "train_s": 10.753156423568726, "wall_s": 22.807672262191772, "final_loss": 9.395267486572266}

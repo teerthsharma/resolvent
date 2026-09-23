@@ -1,0 +1,20 @@
+{
+ "torch": "2.10.0+cu128",
+ "cuda": "12.8",
+ "cudnn": 91002,
+ "python": "3.12.13",
+ "numpy": "2.0.2",
+ "gpu_count": 2,
+ "nvidia_smi": "0, Tesla T4, 580.159.04, 15360 MiB\n1, Tesla T4, 580.159.04, 15360 MiB",
+ "kernel_slug": "melowdramtic/k2-id-grid-smoke",
+ "kernel_version_expected": 1,
+ "kernel_run_type": "Batch",
+ "bf16_supported": true,
+ "gpu_name": "Tesla T4",
+ "gpu_index_in_kernel": 0,
+ "job": "smoke_aL4_s1",
+ "started_utc": "2026-09-23 10:02:09",
+ "ended_utc": "2026-09-23 10:02:37",
+ "rc": 0,
+ "job_wall_s": 27.890877723693848
+}

@@ -1,0 +1,5 @@
+{"hook": "C:/Users/seal/AppData/Local/Temp/claude/C--Users-seal-Desktop-New-folder--32-/870edeb1-6409-4414-98e7-00d0537b75dd/scratchpad/phase_k/K2/chase/resolvent_sp_stub2.py", "sha256": "3d80644837be1a82038db40cad8fc18836163f990e7720e86f0d97423026d618"}
+RED sp_support_S1024_v2: {"in1": {"sets_equal": false, "rowsum_err": 0.0, "max_support": 1, "causal_exact_zeros": 1047552}, "in2": {"sets_equal": false, "rowsum_err": 0.0, "max_support": 1, "causal_exact_zeros": 1047552}, "mutant_tau_kth_sets_equal": false}
+RED sp_train_ladder_R0_50: {"rc": 0, "n_steps": 50, "first10": 10.802065467834472, "last10": 9.852860927581787, "eval": [9.622053623199463], "sha_ok": true, "a_keys": ["blocks.3.attn.a"], "b_keys": ["blocks.3.attn.b"], "moved": 0.0}
+{"sp_support_S1024_v2": "red", "sp_train_ladder_R0_50": "red"}
+exit 1
