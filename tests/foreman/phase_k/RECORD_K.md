@@ -303,3 +303,26 @@ fails; the counter does not fire.
 | learned, but any ceiling < 0.95 | IDENTITY: every arm trained on contexts up to 4096 at depth cap 32, far10 bars plus `walk_ceiling` |
 | seed 0 fails to learn | rerun once at seed 1 |
 | seed 1 also fails | sparsemax retired; the identity grid runs |
+
+## K2.1 pilot result (Inspector K2 PASS2: rows and BRANCH line bound)
+
+`pilot_fR_sp_s0` ran the sparsemax hook (sha 36039c3a, `resolvent_sp.py:ResolventAttention`)
+for 24,000 steps with the registered anneal. `test_k2_pilot.py` (sha 9996d651) reads:
+
+| row | measured | status |
+|---|---|---|
+| config (gate) | hook and recipe as registered | GREEN |
+| trained (gate, ≥ 0.9) | 0.9971 | GREEN |
+| learnable (≥ 0.8) | 0.9949 | GREEN |
+| walk_ceiling (gate, ≥ 0.95) | 0.8949 / 0.4513 / 0.2498 | RED ×3 |
+| far10 (≥ 0.95) | 0.3046 / 0.1503 / 0.0829 / 0.0325 | RED ×4 |
+| multilen16k (≥ 0.95) | 0.1537 | RED |
+
+**Branch: IDENTITY**, by the rule registered at 8e1bd52.
+- The sparsemax arm learns its training depth on this seed.
+- Its hard-pointer ceiling on the far10 cells is below 0.95, so exact zeros alone cannot
+  pass the band on this pointer.
+- A comparison with the K1-b checkpoint's pointer is not bound: no row compares the two,
+  and the step budgets differ (24k vs 8k).
+
+The identity grid (`test_k2_grid.py id`, sha a622cd95) is released as registered.
