@@ -1,0 +1,7 @@
+# 2026-09-23 03:28:18 IST
+# cmd: python test_k1i.py
+PASS foreman.k1.reach3_doubling_is_one_L4 : 1.0
+PASS foreman.k1.reach3_constant_factor_L4 HPD in [1.2, 3.0] : 1.5
+PASS foreman.k1.far_band3_defeats_all_L4 : {'kappa': 3.0, 'tokens': 127936, 'worst': 0.06348486743371685, 'doubling_far': 0.06348486743371685}
+GREEN 0 failing rows
+# exit 0

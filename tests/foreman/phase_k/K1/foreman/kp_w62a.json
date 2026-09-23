@@ -1,0 +1,33 @@
+{
+ "slope": 0.031249999999999976,
+ "period": 2048.0,
+ "beta": 20000000.0,
+ "16384": {
+  "4": {
+   "mismatches": 0,
+   "rows": 32768,
+   "rate": 0.0,
+   "alias_violations": 0
+  },
+  "7": {
+   "mismatches": 6033,
+   "rows": 57344,
+   "rate": 0.10520717075892858,
+   "alias_violations": 783878
+  }
+ },
+ "8192": {
+  "4": {
+   "mismatches": 0,
+   "rows": 32768,
+   "rate": 0.0,
+   "alias_violations": 0
+  },
+  "7": {
+   "mismatches": 5258,
+   "rows": 57344,
+   "rate": 0.09169224330357142,
+   "alias_violations": 701938
+  }
+ }
+}

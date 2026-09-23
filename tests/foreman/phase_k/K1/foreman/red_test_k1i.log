@@ -1,0 +1,7 @@
+# 2026-09-23 03:28:15 IST
+# cmd: python test_k1i.py k1i_stub.json
+FAIL foreman.k1.reach3_doubling_is_one_L4 : 0.0
+FAIL foreman.k1.reach3_constant_factor_L4 HPD in [1.2, 3.0] : 0.0
+FAIL foreman.k1.far_band3_defeats_all_L4 : {'kappa': 0, 'worst': 1.0, 'tokens': 0}
+RED 3 failing rows
+# exit 1

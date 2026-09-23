@@ -1,0 +1,12 @@
+# 2026-09-23 04:55:47 IST
+# cmd: python test_kp_w62a.py
+PASS foreman.k1.w62a_real_16384 L=4 rate <= 1e-3 : {'mismatches': 0, 'rows': 32768, 'rate': 0.0, 'alias_violations': 0}
+PASS foreman.k1.w62a_no_alias n=16384 L=4 violations == 0 : 0
+FAIL foreman.k1.w62a_real_16384 L=7 rate <= 1e-3 : {'mismatches': 6033, 'rows': 57344, 'rate': 0.10520717075892858, 'alias_violations': 783878}
+FAIL foreman.k1.w62a_no_alias n=16384 L=7 violations == 0 : 783878
+PASS foreman.k1.w62a_real_8192 L=4 rate <= 1e-3 : {'mismatches': 0, 'rows': 32768, 'rate': 0.0, 'alias_violations': 0}
+PASS foreman.k1.w62a_no_alias n=8192 L=4 violations == 0 : 0
+FAIL foreman.k1.w62a_real_8192 L=7 rate <= 1e-3 : {'mismatches': 5258, 'rows': 57344, 'rate': 0.09169224330357142, 'alias_violations': 701938}
+FAIL foreman.k1.w62a_no_alias n=8192 L=7 violations == 0 : 701938
+RED 4 failing rows
+# exit 1

@@ -1,0 +1,11 @@
+[LOCK] 2026-09-23T02:46:19 held, waiting 60 s
+[LOCK] 2026-09-23T02:47:19 held, waiting 60 s
+[LOCK] 2026-09-23T02:48:19 acquired by pid 32852
+[JOB] a_L_s1 rc=0 wall_s=1826.4
+[LOCK] 2026-09-23T03:18:46 released
+S1_EXIT=0
+[LOCK] 2026-09-23T03:18:46 acquired by pid 1836
+[JOB] a_L_s2 rc=0 wall_s=1856.5
+[LOCK] 2026-09-23T03:49:43 released
+S2_EXIT=0
+WARD_AL_DONE

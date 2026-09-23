@@ -1,0 +1,25 @@
+PASS cameron.k1.fpp_machinery (a) Foreman sc-HPD W10 (4096, L7) == 0.43982539164490864 : 0.43982539164490864
+PASS cameron.k1.fpp_machinery (b) credited >= zero : 0
+PASS cameron.k1.fpp_machinery (c) band thresholds : {'4': 96, '7': 896}
+PASS cameron.k1.fpp_machinery (d) 8 roots, distinct ids : {'credit_below_zero_violations': 0, 'band': {'4': 96, '7': 896}, 'roots_all_8': True, 'ids_distinct': True, 'foreman_schpd_W10_4096_L7': 0.43982539164490864}
+PASS cameron.k1.fpp_band_size n=4096 L=4 >= 500 : 26560
+PASS cameron.k1.fpp_line n=4096 L=4 : 0.12695783132530122 vs 0.12695783132530122
+PASS cameron.k1.fpp_not_void n=4096 L=4 far-band line < 0.5 : 0.1270 (argmax recency)
+PASS cameron.k1.fpp_resolvent_feasible n=4096 L=4 >= 0.99 : [1.0, 1.0, 1.0]
+PASS cameron.k1.fpp_band_size n=8192 L=4 >= 500 : 59328
+PASS cameron.k1.fpp_line n=8192 L=4 : 0.12299420172599784 vs 0.12299420172599784
+PASS cameron.k1.fpp_not_void n=8192 L=4 far-band line < 0.5 : 0.1230 (argmax recency)
+PASS cameron.k1.fpp_resolvent_feasible n=8192 L=4 >= 0.99 : [1.0, 1.0, 1.0]
+PASS cameron.k1.fpp_band_size n=16384 L=4 >= 500 : 124864
+PASS cameron.k1.fpp_line n=16384 L=4 : 0.12386276268580215 vs 0.12386276268580215
+PASS cameron.k1.fpp_not_void n=16384 L=4 far-band line < 0.5 : 0.1239 (argmax recency)
+PASS cameron.k1.fpp_resolvent_feasible n=16384 L=4 >= 0.99 : [1.0, 1.0, 1.0]
+PASS cameron.k1.fpp_band_size n=8192 L=7 >= 500 : 8128
+PASS cameron.k1.fpp_line n=8192 L=7 : 0.11035925196850394 vs 0.11035925196850394
+PASS cameron.k1.fpp_not_void n=8192 L=7 far-band line < 0.5 : 0.1104 (argmax recency)
+PASS cameron.k1.fpp_resolvent_feasible n=8192 L=7 >= 0.99 : [1.0, 1.0, 1.0]
+PASS cameron.k1.fpp_band_size n=16384 L=7 >= 500 : 73664
+PASS cameron.k1.fpp_line n=16384 L=7 : 0.1230723284100782 vs 0.1230723284100782
+PASS cameron.k1.fpp_not_void n=16384 L=7 far-band line < 0.5 : 0.1231 (argmax recency)
+PASS cameron.k1.fpp_resolvent_feasible n=16384 L=7 >= 0.99 : [1.0, 1.0, 1.0]
+GREEN 0 failing rows

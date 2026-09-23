@@ -1,0 +1,8 @@
+16384 4 {'mismatches': 0, 'rows': 32768, 'rate': 0.0, 'alias_violations': 0} 170s
+16384 7 {'mismatches': 6033, 'rows': 57344, 'rate': 0.10520717075892858, 'alias_violations': 783878} 498s
+8192 4 {'mismatches': 0, 'rows': 32768, 'rate': 0.0, 'alias_violations': 0} 606s
+8192 7 {'mismatches': 5258, 'rows': 57344, 'rate': 0.09169224330357142, 'alias_violations': 701938} 826s
+
+real	13m49.007s
+user	0m0.015s
+sys	0m0.015s

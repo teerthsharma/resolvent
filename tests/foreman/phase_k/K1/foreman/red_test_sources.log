@@ -1,0 +1,6 @@
+# 2026-09-23 02:56:30 IST
+# cmd: python test_sources.py quotes_stub.json
+FAIL foreman.k1.sources_verbatim quote 0 (sources/2402.09268.txt) : STUB QUOTE THAT IS NOT IN THE PAPER
+FAIL foreman.k1.sources_verbatim >= 4 quotes from >= 2 papers : (1, 1)
+RED 2 failing rows
+# exit 1

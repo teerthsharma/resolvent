@@ -1,0 +1,31 @@
+[
+ {
+  "name": "pilot_aL7_frozen_orth_lr3e-3_8k",
+  "argv": [
+   "--arm",
+   "aL",
+   "--layers",
+   "7",
+   "--dff",
+   "183",
+   "--emb",
+   "frozen",
+   "--par_init",
+   "orth",
+   "--lr",
+   "3e-3",
+   "--bed",
+   "kp",
+   "--seed",
+   "0",
+   "--steps",
+   "8000",
+   "--probe_every",
+   "1000",
+   "--eval_ns",
+   "1024,4096",
+   "--out",
+   "C:/Users/seal/AppData/Local/Temp/claude/C--Users-seal-Desktop-New-folder--32-/870edeb1-6409-4414-98e7-00d0537b75dd/scratchpad/phase_k/K1/cameron/runs/pilot_aL7_frozen_orth_lr3e-3_8k"
+  ]
+ }
+]

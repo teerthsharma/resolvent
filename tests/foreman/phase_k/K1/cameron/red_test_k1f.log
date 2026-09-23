@@ -1,0 +1,26 @@
+FAIL cameron.k1.f_machinery k2==doubling mismatches : -1
+FAIL cameron.k1.f_machinery credited>=zero violations : -1
+FAIL cameron.k1.f_machinery recomputed probes match json : (nan, nan, nan)
+FAIL cameron.k1.f_not_void n=4096 L=4 C2 best credited beyond 2^L <= 0.5 : mean 1.0000 [min 1.0000, max 1.0000] cfg stub
+FAIL cameron.k1.f_not_void n=4096 L=7 C2 best credited beyond 2^L <= 0.5 : mean 1.0000 [min 1.0000, max 1.0000] cfg stub
+FAIL cameron.k1.f_not_void n=8192 L=4 C2 best credited beyond 2^L <= 0.5 : mean 1.0000 [min 1.0000, max 1.0000] cfg stub
+FAIL cameron.k1.f_not_void n=8192 L=7 C2 best credited beyond 2^L <= 0.5 : mean 1.0000 [min 1.0000, max 1.0000] cfg stub
+FAIL cameron.k1.f_not_void n=16384 L=4 C2 best credited beyond 2^L <= 0.5 : mean 1.0000 [min 1.0000, max 1.0000] cfg stub
+FAIL cameron.k1.f_not_void n=16384 L=7 C2 best credited beyond 2^L <= 0.5 : mean 1.0000 [min 1.0000, max 1.0000] cfg stub
+FAIL cameron.k1.f_line n=1024 L=4 all : line None recomputed nan
+FAIL cameron.k1.f_line n=1024 L=4 beyond : line None recomputed nan
+FAIL cameron.k1.f_line n=1024 L=7 all : line None recomputed nan
+FAIL cameron.k1.f_line n=1024 L=7 beyond : line None recomputed nan
+FAIL cameron.k1.f_line n=4096 L=4 all : line None recomputed nan
+FAIL cameron.k1.f_line n=4096 L=4 beyond : line None recomputed nan
+FAIL cameron.k1.f_line n=4096 L=7 all : line None recomputed nan
+FAIL cameron.k1.f_line n=4096 L=7 beyond : line None recomputed nan
+FAIL cameron.k1.f_line n=8192 L=4 all : line None recomputed nan
+FAIL cameron.k1.f_line n=8192 L=4 beyond : line None recomputed nan
+FAIL cameron.k1.f_line n=8192 L=7 all : line None recomputed nan
+FAIL cameron.k1.f_line n=8192 L=7 beyond : line None recomputed nan
+FAIL cameron.k1.f_line n=16384 L=4 all : line None recomputed nan
+FAIL cameron.k1.f_line n=16384 L=4 beyond : line None recomputed nan
+FAIL cameron.k1.f_line n=16384 L=7 all : line None recomputed nan
+FAIL cameron.k1.f_line n=16384 L=7 beyond : line None recomputed nan
+RED 25 failing rows

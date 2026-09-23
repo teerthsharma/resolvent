@@ -1,0 +1,26 @@
+PASS cameron.k1.f_machinery k2==doubling mismatches : 0
+PASS cameron.k1.f_machinery credited>=zero violations : 0
+PASS cameron.k1.f_machinery recomputed probes match json : (0.0, 0.0, 0.0)
+PASS cameron.k1.f_not_void n=4096 L=4 C2 best credited beyond 2^L <= 0.5 : mean 0.0839 [min 0.0764, max 0.0918] cfg centered_k3_W10
+PASS cameron.k1.f_not_void n=4096 L=7 C2 best credited beyond 2^L <= 0.5 : mean 0.4086 [min 0.3676, max 0.4483] cfg centered_k3_W10
+PASS cameron.k1.f_not_void n=8192 L=4 C2 best credited beyond 2^L <= 0.5 : mean 0.0696 [min 0.0658, max 0.0737] cfg centered_k3_W10
+PASS cameron.k1.f_not_void n=8192 L=7 C2 best credited beyond 2^L <= 0.5 : mean 0.1722 [min 0.1627, max 0.1833] cfg centered_k3_W10
+PASS cameron.k1.f_not_void n=16384 L=4 C2 best credited beyond 2^L <= 0.5 : mean 0.0691 [min 0.0643, max 0.0727] cfg centered_k3_W10
+PASS cameron.k1.f_not_void n=16384 L=7 C2 best credited beyond 2^L <= 0.5 : mean 0.1131 [min 0.1055, max 0.1198] cfg centered_k3_W10
+PASS cameron.k1.f_line n=1024 L=4 all : line 0.73095703125 recomputed 0.7310
+PASS cameron.k1.f_line n=1024 L=4 beyond : line 0.3802207986942418 recomputed 0.3802
+PASS cameron.k1.f_line n=1024 L=7 all : line 1.0 recomputed 1.0000
+PASS cameron.k1.f_line n=1024 L=7 beyond undefined together : [None, None, None]
+PASS cameron.k1.f_line n=4096 L=4 all : line 0.144775390625 recomputed 0.1448
+PASS cameron.k1.f_line n=4096 L=4 beyond : line 0.08394351464435146 recomputed 0.0839
+PASS cameron.k1.f_line n=4096 L=7 all : line 0.70660400390625 recomputed 0.7066
+PASS cameron.k1.f_line n=4096 L=7 beyond : line 0.4085875984251969 recomputed 0.4086
+PASS cameron.k1.f_line n=8192 L=4 all : line 0.1004638671875 recomputed 0.1005
+PASS cameron.k1.f_line n=8192 L=4 beyond : line 0.06957070707070707 recomputed 0.0696
+PASS cameron.k1.f_line n=8192 L=7 all : line 0.3807525634765625 recomputed 0.3808
+PASS cameron.k1.f_line n=8192 L=7 beyond : line 0.17218097258485637 recomputed 0.1722
+PASS cameron.k1.f_line n=16384 L=4 all : line 0.08457183837890625 recomputed 0.0846
+PASS cameron.k1.f_line n=16384 L=4 beyond : line 0.06911773833167825 recomputed 0.0691
+PASS cameron.k1.f_line n=16384 L=7 all : line 0.2248077392578125 recomputed 0.2248
+PASS cameron.k1.f_line n=16384 L=7 beyond : line 0.11307611731843575 recomputed 0.1131
+GREEN 0 failing rows

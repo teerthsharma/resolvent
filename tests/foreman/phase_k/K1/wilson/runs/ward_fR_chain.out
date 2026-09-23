@@ -1,0 +1,21 @@
+[LOCK] 2026-09-23T04:31:15 held, waiting 60 s
+[LOCK] 2026-09-23T04:32:15 acquired by pid 31544
+[JOB] peak_pre rc=0 wall_s=9.7
+[JOB] probe_fR_c1024_b8 rc=0 wall_s=46.2
+[JOB] probe_fR_c1024_b4 rc=0 wall_s=32.7
+[JOB] probe_fR_c1024_b16 rc=3 wall_s=23.9
+[JOB] probe_fR_c4096_b2 rc=0 wall_s=54.1
+[JOB] probe_fR_c4096_b1 rc=0 wall_s=35.7
+[JOB] probe_fR_c4096_b4 rc=3 wall_s=24.3
+[JOB] peak_post rc=0 wall_s=10.2
+[LOCK] 2026-09-23T04:36:13 released
+MFU_EXIT=0
+[LOCK] 2026-09-23T04:36:14 acquired by pid 6532
+[JOB] f_R_s1 rc=0 wall_s=2272.9
+[LOCK] 2026-09-23T05:14:07 released
+S1_EXIT=0
+[LOCK] 2026-09-23T05:14:08 acquired by pid 1320
+[JOB] f_R_s2 rc=0 wall_s=2476.7
+[LOCK] 2026-09-23T05:55:26 released
+S2_EXIT=0
+WARD_FR_DONE

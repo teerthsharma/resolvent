@@ -1,0 +1,11 @@
+[LOCK] 2026-09-23T02:44:25 acquired by pid 34320
+[JOB] peak_pre rc=0 wall_s=4.2
+[JOB] probe_aL_c1024_b8 rc=0 wall_s=39.9
+[JOB] probe_aL_c1024_b4 rc=0 wall_s=23.9
+[JOB] probe_aL_c1024_b16 rc=3 wall_s=12.9
+[JOB] probe_aL_c4096_b2 rc=0 wall_s=38.7
+[JOB] probe_aL_c4096_b1 rc=0 wall_s=28.7
+[JOB] probe_aL_c4096_b4 rc=3 wall_s=18.9
+[JOB] peak_post rc=0 wall_s=8.1
+[LOCK] 2026-09-23T02:47:23 released
+GPUJOB_EXIT=0

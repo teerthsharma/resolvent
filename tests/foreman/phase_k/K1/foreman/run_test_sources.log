@@ -1,0 +1,13 @@
+# 2026-09-23 03:07:33 IST
+# cmd: python test_sources.py
+PASS foreman.k1.sources_verbatim quote 0 (sources/2402.09268.txt) : Corollary 4.3. Assuming Conjecture 2.4, for any constants (0, 1/2] and (0, 1), and any eve
+PASS foreman.k1.sources_verbatim quote 1 (sources/2402.09268.txt) : Theorem 4.2. For any k N and alphabet with || N , there exists T MaskTransformerm N,L,H th
+PASS foreman.k1.sources_verbatim quote 2 (sources/2402.09268.txt) : Conjecture 2.4 (see, e.g., Ghaffari et al., 2019). For any > 0, < 1, and N , if is an (, )
+PASS foreman.k1.sources_verbatim quote 3 (sources/2402.09268.txt) : we show that logarithmic depth is sufficient for transformers to solve basic computational
+PASS foreman.k1.sources_verbatim quote 4 (sources/2412.02975.txt) : Theorem 1.1 (Lower bound for multi-layer Transformer). Let H be the number attention heads
+PASS foreman.k1.sources_verbatim quote 5 (sources/2412.02975.txt) : we assume the input prompt first describes L functions in the order of zL-1, . . . , z0, a
+PASS foreman.k1.sources_verbatim quote 6 (sources/2402.08164.txt) : Theorem 1. Consider a function composition problem with input domain size |A| = |B| = |C| 
+PASS foreman.k1.sources_verbatim quote 7 (sources/2503.03961.txt) : Notably, both of these problems cannot be expressed by fixed-depth transformers under stan
+PASS foreman.k1.sources_verbatim >= 4 quotes from >= 2 papers : (8, 4)
+GREEN 0 failing rows
+# exit 0

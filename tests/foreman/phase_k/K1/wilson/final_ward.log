@@ -1,0 +1,4 @@
+FAIL done_clean [a_L_s2] foreign [20036, 30392]
+FAIL done_clean [f_R_s1] foreign [29244]
+{"test": "wilson.k1.ward", "status": "red", "n_fail": 2, "checks_fired": "1/17", "never_fired": ["row_present", "row_orphan", "failed_reported", "done_rc0", "done_tokens", "done_seeds", "done_val", "done_curve", "done_tok_s", "done_hours", "done_mem", "done_params", "done_ckpt", "done_sha", "done_spill", "delta"]}
+exit=1

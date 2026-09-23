@@ -1,0 +1,5 @@
+RED bf16_leak_fused_read1: {"1024": 4.947185516357422e-06, "4096": 1.3947486877441406e-05}
+GREEN bf16_leak_fused_pattern: {"1024": 0.011000315152595773, "4096": 0.007920493986930833}
+GREEN bf16_inputs_fused_raises: {"raised": "NotImplementedError: \"triangular_solve_cuda\" not implemented for 'BFloat16'"}
+SUMMARY {"bf16_leak_fused_read1": "red", "bf16_leak_fused_pattern": "green", "bf16_inputs_fused_raises": "green"}
+exit 1

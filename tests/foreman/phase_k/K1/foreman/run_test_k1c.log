@@ -1,0 +1,17 @@
+# 2026-09-23 03:05:12 IST
+# cmd: python test_k1c.py
+PASS foreman.k1.deep_bed_floor L_n=4_1024 HPD <= 0.35 and local <= 0.25 : hpd 0.2141 [hpd_k3_W10] local 0.0801 line 0.2141 dbl 0.0582 rec 0.0525
+FAIL foreman.k1.deep_bed_is_deeper L_n=4_1024 frac(depth > 4*2^L) >= 0.2 : 0.0418701171875
+PASS foreman.k1.deep_bed_floor L_n=5_2048 HPD <= 0.35 and local <= 0.25 : hpd 0.2225 [hpd_k3_W10] local 0.0844 line 0.2225 dbl 0.0651 rec 0.0624
+FAIL foreman.k1.deep_bed_is_deeper L_n=5_2048 frac(depth > 4*2^L) >= 0.2 : 0.03033447265625
+PASS foreman.k1.deep_bed_floor L_n=6_4096 HPD <= 0.35 and local <= 0.25 : hpd 0.2291 [hpd_k3_W10] local 0.0846 line 0.2291 dbl 0.0645 rec 0.0631
+FAIL foreman.k1.deep_bed_is_deeper L_n=6_4096 frac(depth > 4*2^L) >= 0.2 : 0.0216064453125
+PASS foreman.k1.deep_bed_floor L_n=7_8192 HPD <= 0.35 and local <= 0.25 : hpd 0.2326 [hpd_k3_W10] local 0.0821 line 0.2326 dbl 0.0630 rec 0.0626
+FAIL foreman.k1.deep_bed_is_deeper L_n=7_8192 frac(depth > 4*2^L) >= 0.2 : 0.0152130126953125
+PASS foreman.k1.deep_bed_floor L_n=7_16384 HPD <= 0.35 and local <= 0.25 : hpd 0.1345 [hpd_k3_W10] local 0.0717 line 0.1345 dbl 0.0633 rec 0.0632
+PASS foreman.k1.deep_bed_is_deeper L_n=7_16384 frac(depth > 4*2^L) >= 0.2 : 0.4990234375
+PASS foreman.k1.deep_bed_floor L_n=7_32768 HPD <= 0.35 and local <= 0.25 : hpd 0.0950 [hpd_k3_W10] local 0.0661 line 0.0950 dbl 0.0620 rec 0.0619
+PASS foreman.k1.deep_bed_is_deeper L_n=7_32768 frac(depth > 4*2^L) >= 0.2 : 0.74951171875
+PASS foreman.k1.harness_channel_coarse 16 <= max pair err <= 256 : {'max_pair_err': 39.7903659106305, 'slope': 0.00390625, 'beds': 4, 't_range': [4096, 16384]}
+RED 4 failing rows
+# exit 1

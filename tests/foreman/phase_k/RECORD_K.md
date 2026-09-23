@@ -147,3 +147,120 @@ chance (1/8) on more than 100k tokens. Replacement clauses 1–2:
 - The R-DEPTH prediction reads on the far band: (f_R) ≥ 0.95 there at every rung.
 - Open, and able to move the band: 2-dim slots (about 62 at d = 128) in fp32; the 30-slot
   build at n = 8192 and 16384; whether the band holds at R1 and R2.
+
+## Amendment K1-b and clause 6 v2 (as registered during it.K1)
+
+- **Clause 6 v2** (Chase, at the dispatcher's instruction). Registered and run RED at
+  04:33:52, before any checkpoint was read (Inspector PASS4). γ·max row-sum(W) < 1, and
+  the read of V = 1 within 2× the fp32-hook floor, where the floor is the fp32 hook
+  against a blocked float64 reference on the same checkpoint's inputs. A power bar
+  requires K0's fs5 to exceed 2× the floor in at least one cell. The original 1e-5
+  line stays registered and is reported beside it.
+- **K1-b** (Cameron): arm far_fR_ga_s{0,1}, with γ annealed 0.5 → 0.9 → 0.99 → 0.999
+  (0.999 from step 6000; evaluation at 0.999). Bars `rdepth_ga_*` were registered and
+  run RED at 07:50:34; the arms launched at 07:53:45 and 08:08:24. The schedule that
+  ran equals the registered one. No setting outside the resolvent differs from the
+  twins (Inspector FINAL).
+
+## it.K1 (2026-09-23 02:5x – 09:4x): results as bound
+
+Fellows on opus with nurses. The four lanes shared one GPU through a lock directory,
+with a 3-minute re-acquire cooldown from 05:25. Seven Inspector passes audited 340
+claims and struck 96 (Cameron 120/39, Chase 50/8, Foreman 129/33, Wilson 41/16). Lane
+files: `K1/<seat>/`; audits: `K1/inspector/PASS1–6.md`, `FINAL.md`.
+
+**R-DEPTH at R0 fails its prediction, and the registered (f_R) hits the learnability
+kill.** Arms train on bed_k' at depth ≤ 32 (8,000 steps) and are scored on the far10
+band (depth > 160 at L = 4, > 1280 at L = 7). An arm that fails the learned-the-task
+gate is not read.
+- **(f_R) as registered** (γ = 0.999 fixed): held-out accuracy 0.2026 / 0.2354
+  (seeds 0 / 1), against the 0.8 kill line. The contract's learnability kill fires.
+- **(f_R) under K1-b** (γ annealed): learns on seed 0 (gate 0.9963, held-out 0.9931)
+  and not on seed 1 (0.3387 / 0.2011; the kill fires on seed 1). On the far band, seed
+  0 scores 0.2855 / 0.1454 / 0.0784 on depth > 160 at n = 4k / 8k / 16k, and 0.0322
+  on depth > 1280 at 16k, against a bar of 0.95.
+- **Twins:** only aL7 passes the gate (0.9948 / 0.9850), and it scores 0.0000 on the
+  far band at 16k on both seeds, against its line of 0.1330. aL4 (0.3465 / 0.4008),
+  ass4 (0.3986 / 0.4375) and aloop5 (0.5883 / 0.3488) fail the gate and are not read.
+  The L = 4 counter is therefore unread.
+
+**The bed holds.** On the far10 band, floor K1.F''' reads 0.1259–0.1285 (chance 1/8),
+and a hand-set resolvent scores 1.0000 on every cell. Foreman's densest bound
+construction at L = 4 is a 62-slot window built as 63 real heads of 2 dims, exact in
+fp32 at n = 4096 / 8192 / 16384. It has reach factor 4.25, putting the bound band at
+depth > 136, inside far10. At L = 7 the proven reach is 3.5 (30-slot build, exact at
+16384), and the idealised 62-slot reach of 5.0 is exactly far10's 1280. Every bound
+construction scores chance on the band. A trained opponent (aL4, 2× an arm's tokens) is
+void at its own gate (0.818 against 0.9).
+
+**The resolvent layer trains** (Chase; hook `K1/chase/resolvent_hook.py`, sha
+3855288d…). The layer runs in fp32 outside autocast. The backward forms dP from
+x − mean(x): at γ = 0.999 the K0 backward cancelled in fp32 and put da/db at 7.5e-4.
+The fix takes parity to y ≤ 3.7e-6 and da/db ≤ 5.2e-5; gradcheck passes, the
+deterministic pair is bitwise equal, and `--compile` is barred. On every R0 (f_R)
+checkpoint read (3 checkpoints, 4 cells):
+- clause6_v2 is GREEN: γ·max row-sum 0.99900036, read error at 1.67 / 1.37 / 0.82 /
+  0.62 × the floor. The power bar is GREEN: fs5 sits at 12–439× the floor.
+- The original 1e-5 line is RED on 3 of 4 cells (1.75e-5, 9.27e-5, 1.10e-5). The fp32
+  floor on the same inputs is 1.05e-5 to 6.75e-5.
+- Clause 7 is GREEN: the largest BOS share is 0.187, so the γ_h route did not trigger.
+- R-RANGE is RED: no trained (f_R) checkpoint meets its premise. The twin-slope bar is
+  RED: 36 of 84 heads are out of band on Cameron's chain-bed pilots, and 16 of 16 in
+  band on Wilson's LM twins.
+- The K0 tail-mass range fit is killed for heads with a sink, replaced by the band-mass
+  fit (Y2 to ≤ 1.9e−13).
+
+**R0 language model and MFU** (Wilson). R0 is 4 × 128 layers, ctx 1024, batch 8, and
+144,547,840 tokens per run. Every run shares one validation set.
+
+| arm | seed | val loss | tok/s | hours |
+|---|---|---|---|---|
+| (a_L) | 1 | 4.997022 | 87,410 | 0.507 |
+| (a_L) | 2 | 4.984507 | 85,587 | 0.516 |
+| (f_R) | 1 | 5.016564 | 70,764 | 0.631 |
+| (f_R) | 2 | 5.008180 | 65,884 | 0.688 |
+
+- (f_R)'s validation loss is higher than (a_L)'s at both seeds. R-CARRY is scored at
+  K3.
+- MFU at R0, against a peak re-measured in the same session: (a_L) 0.134 (ctx 1024)
+  and 0.144 (ctx 4096); (f_R) 0.115 and 0.113, counting no solve FLOPs. The contract
+  assumed 0.35.
+- The ward bar is RED on `done_clean`: foreign GPU processes appeared during 2 of the
+  4 runs.
+
+**Kills and their replacements.**
+- **(f_R) learnability, as registered** → rerouted to the γ anneal (K1-b), which learns
+  on 1 of 2 seeds and misses the band.
+- The claimed mechanism is struck as unbarred: softmax leakage at test length, from an
+  evaluation-time logit-scale ×3 probe lifting depth > 160 at 4k from 0.2479 to 0.9113.
+  It enters K2 as a registered bar, not as a finding.
+- **Twins failing the gate at 8,000 steps** → repriced to a longer shared budget for
+  every arm.
+- **Clause 6's 1e-5 line** → clause6_v2 (above).
+- **K0 tail-mass fit** → band-mass fit.
+
+## K2, as registered here (before any K2 cell runs)
+
+K2 repairs R0 before climbing. The contract's it.K2 (R1 for every arm) waits: R1 starts
+only when an (f_R) arm passes learnability (≥ 0.8 at training depth) on at least 2 of 3
+seeds at R0.
+
+1. **K2.0, the leakage bar** (evaluation only; checkpoint far_fR_ga_s0).
+   - Scale the trained per-head logit scale by κ ∈ {1, 1.5, 2, 3, 5} at evaluation,
+     with no retraining.
+   - Read depth > 160 at n = 4096 and 16384, and depth > 1280 at 16384, on the far10
+     beds.
+   - Prediction: some κ lifts depth > 160 at 4096 to ≥ 0.9.
+   - Counter: no κ lifts it above 0.5, meaning leakage is not the wall.
+   - RED on a stub first.
+2. **K2.1, the repaired arm.** (f_R_sp): γ anneal as K1-b, with sparsemax attention
+   weights in the resolvent layer (exact zeros).
+   - This needs a blocked sparsemax path: the dense path costs 9.41× at S 4096 and
+     does not fit at 8192 and above.
+   - All arms (aL4, aL7, ass4, aloop5, f_R_ga, f_R_sp) train at one shared budget of
+     24,000 steps, 3 seeds each, under new run names.
+   - Same far10 band, same gate, same bars.
+   - Registered RED before launch; the dispatcher records the exact schedule here
+     before the first run.
+3. Deciding numbers stay on the local RTX 4060. Kaggle reproduction needs the author's
+   yes per launch.

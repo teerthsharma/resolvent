@@ -1,0 +1,15 @@
+# 2026-09-23 03:26:58 IST
+# cmd: python test_k1g.py
+FAIL foreman.k1.reach_doubling_is_one L=4 : 131.875
+PASS foreman.k1.reach_doubling_is_one L=6 : 1.0
+PASS foreman.k1.reach_doubling_is_one L=7 : 1.0
+FAIL foreman.k1.reach_is_constant_factor HPD 4_R0 in [1.2, 3.0] : 131.875
+PASS foreman.k1.reach_is_constant_factor HPD 6_R0 in [1.2, 3.0] : 1.5
+PASS foreman.k1.reach_is_constant_factor HPD 7_R0 in [1.2, 3.0] : 1.5
+PASS foreman.k1.reach_is_constant_factor HPD 6_R1 in [1.2, 3.0] : 2.125
+PASS foreman.k1.reach_grows_with_width c(HPD,6,R1) - c(HPD,6,R0) >= 0.2 : (2.125, 1.5)
+FAIL foreman.k1.far_band_defeats_all 4_R0 kappa=263.75 : {'kappa': 263.75, 'tokens': 0, 'worst': nan, 'hpd_best_far': nan, 'doubling_far': nan}
+PASS foreman.k1.far_band_defeats_all 7_R0 kappa=3.0 : {'kappa': 3.0, 'tokens': 106432, 'worst': 0.06368385447985568, 'hpd_best_far': 0.06368385447985568, 'doubling_far': 0.06368385447985568}
+PASS foreman.k1.far_band_defeats_all 6_R1 kappa=4.25 : {'kappa': 4.25, 'tokens': 113600, 'worst': 0.06360915492957747, 'hpd_best_far': 0.06360915492957747, 'doubling_far': 0.06360915492957747}
+RED 3 failing rows
+# exit 1

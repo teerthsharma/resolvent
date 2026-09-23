@@ -1,0 +1,83 @@
+{
+ "deep": {
+  "4_1024": {
+   "recency": 0.052526595744680854,
+   "dbl_cred": 0.05817819148936171,
+   "hpd_best": 0.21409574468085105,
+   "hpd_cfg": "hpd_k3_W10",
+   "local_best": 0.08011968085106383,
+   "local_cfg": "local_k3_W10",
+   "line": 0.21409574468085105,
+   "frac_gt_4x": 0.0418701171875,
+   "max_depth_mean": null
+  },
+  "5_2048": {
+   "recency": 0.06241776315789474,
+   "dbl_cred": 0.06513157894736843,
+   "hpd_best": 0.22253289473684212,
+   "hpd_cfg": "hpd_k3_W10",
+   "local_best": 0.084375,
+   "local_cfg": "local_k3_W10",
+   "line": 0.22253289473684212,
+   "frac_gt_4x": 0.03033447265625,
+   "max_depth_mean": null
+  },
+  "6_4096": {
+   "recency": 0.0630726439790576,
+   "dbl_cred": 0.06454515706806283,
+   "hpd_best": 0.22905759162303663,
+   "hpd_cfg": "hpd_k3_W10",
+   "local_best": 0.08458769633507854,
+   "local_cfg": "local_k3_W10",
+   "line": 0.22905759162303663,
+   "frac_gt_4x": 0.0216064453125,
+   "max_depth_mean": null
+  },
+  "7_8192": {
+   "recency": 0.06258159268929504,
+   "dbl_cred": 0.06296915796344647,
+   "hpd_best": 0.23264115535248042,
+   "hpd_cfg": "hpd_k3_W10",
+   "local_best": 0.08214343994778069,
+   "local_cfg": "local_k3_W10",
+   "line": 0.23264115535248042,
+   "frac_gt_4x": 0.0152130126953125,
+   "max_depth_mean": null
+  },
+  "7_16384": {
+   "recency": 0.0632070530726257,
+   "dbl_cred": 0.06331180167597765,
+   "hpd_best": 0.1345495810055866,
+   "hpd_cfg": "hpd_k3_W10",
+   "local_best": 0.07170914804469275,
+   "local_cfg": "local_k3_W10",
+   "line": 0.1345495810055866,
+   "frac_gt_4x": 0.4990234375,
+   "max_depth_mean": null
+  },
+  "7_32768": {
+   "recency": 0.061901543772798336,
+   "dbl_cred": 0.062011464304325165,
+   "hpd_best": 0.09502833507034913,
+   "hpd_cfg": "hpd_k3_W10",
+   "local_best": 0.06608259510161543,
+   "local_cfg": "local_k3_W10",
+   "line": 0.09502833507034913,
+   "frac_gt_4x": 0.74951171875,
+   "max_depth_mean": null
+  }
+ },
+ "harness_channel": {
+  "max_pair_err": 39.7903659106305,
+  "slope": 0.00390625,
+  "beds": 4,
+  "t_range": [
+   4096,
+   16384
+  ]
+ }
+}
+
+real	0m2.266s
+user	0m0.015s
+sys	0m0.000s

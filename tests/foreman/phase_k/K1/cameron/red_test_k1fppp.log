@@ -1,0 +1,21 @@
+FAIL cameron.k1.fppp_machinery (a) Foreman sc-HPD W10 (4096, L7) == 0.43982539164490864 : nan
+FAIL cameron.k1.fppp_machinery (b) credited >= zero : -1
+FAIL cameron.k1.fppp_machinery (c) band thresholds : {}
+FAIL cameron.k1.fppp_machinery (d) 8 roots, distinct ids : {'foreman_schpd_W10_4096_L7': nan, 'credit_below_zero_violations': -1, 'band': {}, 'roots_all_8': False, 'ids_distinct': False}
+FAIL cameron.k1.fppp_band_size n=4096 L=4 >= 500 : 0
+FAIL cameron.k1.fppp_line n=4096 L=4 : nan vs 1.0
+FAIL cameron.k1.fppp_not_void n=4096 L=4 far-band line < 0.5 : nan (argmax stub)
+FAIL cameron.k1.fppp_resolvent_feasible n=4096 L=4 >= 0.99 : [nan, nan, nan]
+FAIL cameron.k1.fppp_band_size n=8192 L=4 >= 500 : 0
+FAIL cameron.k1.fppp_line n=8192 L=4 : nan vs 1.0
+FAIL cameron.k1.fppp_not_void n=8192 L=4 far-band line < 0.5 : nan (argmax stub)
+FAIL cameron.k1.fppp_resolvent_feasible n=8192 L=4 >= 0.99 : [nan, nan, nan]
+FAIL cameron.k1.fppp_band_size n=16384 L=4 >= 500 : 0
+FAIL cameron.k1.fppp_line n=16384 L=4 : nan vs 1.0
+FAIL cameron.k1.fppp_not_void n=16384 L=4 far-band line < 0.5 : nan (argmax stub)
+FAIL cameron.k1.fppp_resolvent_feasible n=16384 L=4 >= 0.99 : [nan, nan, nan]
+FAIL cameron.k1.fppp_band_size n=16384 L=7 >= 500 : 0
+FAIL cameron.k1.fppp_line n=16384 L=7 : nan vs 1.0
+FAIL cameron.k1.fppp_not_void n=16384 L=7 far-band line < 0.5 : nan (argmax stub)
+FAIL cameron.k1.fppp_resolvent_feasible n=16384 L=7 >= 0.99 : [nan, nan, nan]
+RED 20 failing rows

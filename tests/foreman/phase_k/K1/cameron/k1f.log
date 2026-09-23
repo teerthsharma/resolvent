@@ -1,0 +1,12 @@
+n=1024 roots 38.2 max_depth 32 hist {'0-16': 579.375, '17-32': 444.625, '33-64': 0.0, '65-128': 0.0, '129-256': 0.0, '257-512': 0.0, '513-1024': 0.0, '1025-999999999': 0.0}
+  L=4 recency 0.1049/0.0203  dbl_cred 0.6071/0.0950  C2 0.7310[centered_k3_W10]/0.3802[centered_k3_W10]  LINE {'all': 0.73095703125, 'all_arg': 'c2_best', 'beyond': 0.3802207986942418, 'beyond_arg': 'c2_best'}
+  L=7 recency 0.1049/  --    dbl_cred 1.0000/  --    C2 1.0000[centered_k4_W6]/  --  [None]  LINE {'all': 1.0, 'all_arg': 'doubling_credited', 'beyond': None, 'beyond_arg': None}
+n=4096 roots 16.0 max_depth 281 hist {'0-16': 272.0, '17-32': 256.0, '33-64': 512.0, '65-128': 1024.0, '129-256': 1942.875, '257-512': 89.125, '513-1024': 0.0, '1025-999999999': 0.0}
+  L=4 recency 0.0679/0.0638  dbl_cred 0.1265/0.0644  C2 0.1448[centered_k3_W10]/0.0839[centered_k3_W10]  LINE {'all': 0.144775390625, 'all_arg': 'c2_best', 'beyond': 0.08394351464435146, 'beyond_arg': 'c2_best'}
+  L=7 recency 0.0679/0.0649  dbl_cred 0.5367/0.0661  C2 0.7066[centered_k3_W10]/0.4086[centered_k3_W10]  LINE {'all': 0.70660400390625, 'all_arg': 'c2_best', 'beyond': 0.4085875984251969, 'beyond_arg': 'c2_best'}
+n=8192 roots 16.0 max_depth 545 hist {'0-16': 272.0, '17-32': 256.0, '33-64': 512.0, '65-128': 1024.0, '129-256': 2048.0, '257-512': 3950.875, '513-1024': 129.125, '1025-999999999': 0.0}
+  L=4 recency 0.0630/0.0608  dbl_cred 0.0923/0.0611  C2 0.1005[centered_k3_W10]/0.0696[centered_k3_W10]  LINE {'all': 0.1004638671875, 'all_arg': 'c2_best', 'beyond': 0.06957070707070707, 'beyond_arg': 'c2_best'}
+  L=7 recency 0.0630/0.0603  dbl_cred 0.2973/0.0607  C2 0.3808[centered_k3_W10]/0.1722[centered_k3_W10]  LINE {'all': 0.3807525634765625, 'all_arg': 'c2_best', 'beyond': 0.17218097258485637, 'beyond_arg': 'c2_best'}
+n=16384 roots 16.0 max_depth 1099 hist {'0-16': 272.0, '17-32': 256.0, '33-64': 512.0, '65-128': 1024.0, '129-256': 2048.0, '257-512': 4096.0, '513-1024': 7967.25, '1025-999999999': 208.75}
+  L=4 recency 0.0655/0.0644  dbl_cred 0.0802/0.0647  C2 0.0846[centered_k3_W10]/0.0691[centered_k3_W10]  LINE {'all': 0.08457183837890625, 'all_arg': 'c2_best', 'beyond': 0.06911773833167825, 'beyond_arg': 'c2_best'}
+  L=7 recency 0.0655/0.0646  dbl_cred 0.1827/0.0649  C2 0.2248[centered_k3_W10]/0.1131[centered_k3_W10]  LINE {'all': 0.2248077392578125, 'all_arg': 'c2_best', 'beyond': 0.11307611731843575, 'beyond_arg': 'c2_best'}

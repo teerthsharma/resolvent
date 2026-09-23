@@ -1,0 +1,20 @@
+# runner restarted 05:40:02 with guard start line 5795 (Foreman findings through 5795 reviewed: none pushes the band past far10)
+06:16:38 far_fR_s0 rc=0 1175s
+06:34:52 far_aL4_s0 rc=0 913s
+# runner restarted 06:38:02 with jobs_far_all2.json (pilot_fR_ganneal_s0 inserted after the s0 twins), guard start 5817
+skip far_fR_s0 (done)
+skip far_aL4_s0 (done)
+07:03:03 STOP after acquiring, before far_aL7_s0: {"t":"finding","agent":"Foreman","text":"Item 3 (long-budget far-band opponent) is VOID, not a finding: long_aL4_s7 (Cameron rdepth.py, aL L=4, bed kpf, frozen emb, orth P, lr 3e-3, seed 7, 16000 steps x 8192 tok = 131M tokens, 1033 s train, lock released 07:02) FAILS its registered L-TRAINED gate: 
+# runner restarted 07:06:21 with jobs_far_all3.json, guard start 5890 (c_max / reach factor only)
+07:20:44 far_aL7_s0 rc=0 862s
+07:37:51 pilot_fR_ganneal_s0 rc=0 847s
+07:50:55 far_aloop5_s0 rc=0 604s
+# runner restarted 07:53:45 with jobs_far_all4.json (far_fR_ga_s0/s1 first, registered K1-b), guard start 5922
+08:05:24 far_fR_ga_s0 rc=0 700s
+08:20:00 far_fR_ga_s1 rc=0 696s
+08:32:49 far_ass4_s0 rc=0 589s
+08:46:18 far_fR_s1 rc=0 629s
+08:59:21 far_aL7_s1 rc=0 603s
+09:11:44 far_aL4_s1 rc=0 563s
+09:24:10 far_ass4_s1 rc=0 566s
+09:36:59 far_aloop5_s1 rc=0 589s

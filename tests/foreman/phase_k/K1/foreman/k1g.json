@@ -1,0 +1,46 @@
+{
+ "reach": {
+  "doubling_4": 131.875,
+  "doubling_6": 1.0,
+  "doubling_7": 1.0,
+  "hpd_4_R0": 131.875,
+  "local_4_R0": 131.875,
+  "hpd_6_R0": 1.5,
+  "local_6_R0": 1.125,
+  "hpd_7_R0": 1.5,
+  "local_7_R0": 1.125,
+  "hpd_6_R1": 2.125,
+  "local_6_R1": 1.25
+ },
+ "far": {
+  "4_R0": {
+   "kappa": 263.75,
+   "tokens": 0,
+   "worst": NaN,
+   "hpd_best_far": NaN,
+   "doubling_far": NaN
+  },
+  "6_R0": {
+   "kappa": 3.0,
+   "tokens": 118720,
+   "worst": 0.06356974393530997,
+   "hpd_best_far": 0.06356974393530997,
+   "doubling_far": 0.06356132075471699
+  },
+  "7_R0": {
+   "kappa": 3.0,
+   "tokens": 106432,
+   "worst": 0.06368385447985568,
+   "hpd_best_far": 0.06368385447985568,
+   "doubling_far": 0.06368385447985568
+  },
+  "6_R1": {
+   "kappa": 4.25,
+   "tokens": 113600,
+   "worst": 0.06360915492957747,
+   "hpd_best_far": 0.06360915492957747,
+   "doubling_far": 0.06360915492957747
+  }
+ },
+ "detail": {}
+}

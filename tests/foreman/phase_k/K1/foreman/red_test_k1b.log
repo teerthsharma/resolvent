@@ -1,0 +1,15 @@
+# 2026-09-23 03:00:35 IST
+# cmd: python test_k1b.py k1b_stub.json
+FAIL foreman.k1.hpd_machinery J=1 HPD == anchored : {'j1_equals_anchored': False, 'hpd_ge_centered_violations': -1}
+FAIL foreman.k1.hpd_machinery HPD mass >= centered mass : {'j1_equals_anchored': False, 'hpd_ge_centered_violations': -1}
+FAIL foreman.k1.hpd_beats_line L7 n4096 > 0.4186 : nan [stub]
+FAIL foreman.k1.hpd_not_void n=4096 L=4 <= 0.5 : nan [stub]
+FAIL foreman.k1.hpd_not_void n=4096 L=7 <= 0.5 : nan [stub]
+FAIL foreman.k1.hpd_not_void n=8192 L=4 <= 0.5 : nan [stub]
+FAIL foreman.k1.hpd_not_void n=8192 L=7 <= 0.5 : nan [stub]
+FAIL foreman.k1.hpd_not_void n=16384 L=4 <= 0.5 : nan [stub]
+FAIL foreman.k1.hpd_not_void n=16384 L=7 <= 0.5 : nan [stub]
+FAIL foreman.k1.local_wide_fires k3 W64 L7 n4096 > 0.5 : nan
+FAIL foreman.k1.local_crossing smallest W > 0.5 in [33, 64] : None
+RED 11 failing rows
+# exit 1

@@ -1,0 +1,37 @@
+{
+ "tag": "ward_a_L_s1",
+ "session": "K1-wilson-ward",
+ "record": "C:/Users/seal/AppData/Local/Temp/claude/C--Users-seal-Desktop-New-folder--32-/870edeb1-6409-4414-98e7-00d0537b75dd/scratchpad/phase_k/K1/wilson/runs/ward_jobs.jsonl",
+ "jobs": [
+  {
+   "name": "a_L_s1",
+   "cmd": [
+    "C:\\Users\\seal\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+    "C:/Users/seal/AppData/Local/Temp/claude/C--Users-seal-Desktop-New-folder--32-/870edeb1-6409-4414-98e7-00d0537b75dd/scratchpad/phase_k/K1/wilson/train_ladder_k1.py",
+    "--rung",
+    "R0",
+    "--ctx",
+    "1024",
+    "--batch",
+    "8",
+    "--tokens",
+    "144552960",
+    "--attn",
+    "alibi",
+    "--data_dir",
+    "C:/Users/seal/datasets/fineweb_edu",
+    "--out_dir",
+    "C:/Users/seal/AppData/Local/Temp/claude/C--Users-seal-Desktop-New-folder--32-/870edeb1-6409-4414-98e7-00d0537b75dd/scratchpad/phase_k/K1/wilson/runs/a_L_s1",
+    "--eval_every",
+    "250",
+    "--eval_batches",
+    "40",
+    "--seed",
+    "1",
+    "--eval_seed",
+    "0"
+   ],
+   "out": "C:/Users/seal/AppData/Local/Temp/claude/C--Users-seal-Desktop-New-folder--32-/870edeb1-6409-4414-98e7-00d0537b75dd/scratchpad/phase_k/K1/wilson/runs/a_L_s1.out"
+  }
+ ]
+}

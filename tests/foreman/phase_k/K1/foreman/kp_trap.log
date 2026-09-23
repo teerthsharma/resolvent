@@ -1,0 +1,2 @@
+w30_8192 4 {'mismatches': 3, 'beds': 4, 'beyond_2L': 0.15724304865938432} 165s
+w30_8192 7 {'mismatches': 6, 'beds': 4, 'beyond_2L': 0.43097067039106146} 1010sww62_16384 4 {'mismatches': 0, 'beds': 2, 'beyond_2L': 0.1476181683899557, 'kappa': 8.5, 'band_tokens': 30576, 'band_acc': 0.12477106227106227} 2953sw62_16384 7 {'mismatches': 24893, 'beds': 2, 'beyond_2L': 0.21036347055758206, 'kappa': 10.0, 'band_tokens': 12272, 'band_acc': 0.12442959582790092} 4794s

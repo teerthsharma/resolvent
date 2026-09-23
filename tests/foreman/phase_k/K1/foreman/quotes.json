@@ -1,0 +1,34 @@
+[
+ {
+  "file": "sources/2402.09268.txt",
+  "quote": "Corollary 4.3. Assuming Conjecture 2.4, for any constants   (0, 1/2] and   (0, 1), and any even\nk = (N ), every transformer T  MaskTransformerNm,L,H with mH = O(k1-) that computes hopk has depth\nL = (log k)."
+ },
+ {
+  "file": "sources/2402.09268.txt",
+  "quote": "Theorem 4.2. For any k  N and alphabet  with ||  N , there exists T  MaskTransformerm N,L,H that\ncomputes hopk : N  (  {})N with m = O(1), L = log2 k + 2, and H = 1."
+ },
+ {
+  "file": "sources/2402.09268.txt",
+  "quote": "Conjecture 2.4 (see, e.g., Ghaffari et al., 2019). For any  > 0,  < 1, and N , if  is an (, )-MPC\nprotocol that distinguishes a single cycle on N nodes and a union of two cycles each on N/2 nodes, then \nuses (log N ) rounds."
+ },
+ {
+  "file": "sources/2402.09268.txt",
+  "quote": "we show that logarithmic depth is sufficient for transformers to solve basic computational tasks that\n                                                cannot be efficiently solved by several other neural sequence models and sub-quadratic transformer"
+ },
+ {
+  "file": "sources/2412.02975.txt",
+  "quote": "Theorem 1.1 (Lower bound for multi-layer Transformer). Let H be the number attention heads,\nd be the head dimension, p be the precision, L be the number of layers, n be the prompt length. For\nany L  O(log log(n)), an L-layer decoder-only Transformer could not solve L-sequential function\ncomposition whenever Hdp  n2-4L ."
+ },
+ {
+  "file": "sources/2412.02975.txt",
+  "quote": "we assume the input prompt\nfirst describes L functions in the order of zL-1, . . . , z0, and then describes the query w."
+ },
+ {
+  "file": "sources/2402.08164.txt",
+  "quote": "Theorem 1. Consider a function composition problem with input domain size |A| = |B| = |C| = n,\n\nand an H-headed transformer layer L with embedding dimension d and computation precision p, and\n\nassume that H(d + 1)p < n log n. Then L cannot solve correctly the function composition problem."
+ },
+ {
+  "file": "sources/2503.03961.txt",
+  "quote": "Notably, both of these problems cannot be expressed by fixed-depth\n                                                  transformers under standard complexity conjectures"
+ }
+]

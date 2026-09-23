@@ -1,0 +1,37 @@
+PASS cameron.k1.fp_machinery (a) hpd port == Foreman 0.5642224409448819 : 0.5642224409448819
+PASS cameron.k1.fp_machinery (b) k2 == doubling : 0
+PASS cameron.k1.fp_machinery (c) credited >= zero : 0
+PASS cameron.k1.fp_machinery (d) bed invariants : {'test_roots_all_8': True, 'train_max_depth': 32, 'ids_distinct': True}
+PASS cameron.k1.fp_line n=1024 L=4 all : 0.718505859375 vs 0.718505859375
+PASS cameron.k1.fp_line n=1024 L=4 beyond : 0.32185572232240667 vs 0.32185572232240667
+PASS cameron.k1.fp_not_void n=1024 L=4 line beyond 2^L < 0.5 : 0.3219 (argmax hpd_analytic k3W10; per-bed max 0.3874)
+PASS cameron.k1.fp_deep n=1024 L=4 frac(depth > 2^L) >= 0.25 : [0.415283203125, 0.3994140625, 0.4345703125]
+PASS cameron.k1.fp_line n=4096 L=4 all : 0.177703857421875 vs 0.177703857421875
+PASS cameron.k1.fp_line n=4096 L=4 beyond : 0.14946338383838384 vs 0.14946338383838384
+PASS cameron.k1.fp_not_void n=4096 L=4 line beyond 2^L < 0.5 : 0.1495 (argmax hpd_analytic k3W10; per-bed max 0.1568)
+PASS cameron.k1.fp_deep n=4096 L=4 frac(depth > 2^L) >= 0.25 : [0.966796875, 0.966796875, 0.966796875]
+PASS cameron.k1.fp_line n=4096 L=7 all : 0.55755615234375 vs 0.55755615234375
+PASS cameron.k1.fp_line n=4096 L=7 beyond : 0.4085345953002611 vs 0.4085345953002611
+PASS cameron.k1.fp_not_void n=4096 L=7 line beyond 2^L < 0.5 : 0.4085 (argmax hpd_empirical k3W10; per-bed max 0.4305)
+PASS cameron.k1.fp_deep n=4096 L=7 frac(depth > 2^L) >= 0.25 : [0.748046875, 0.748046875, 0.748046875]
+PASS cameron.k1.fp_line n=8192 L=4 all : 0.1539764404296875 vs 0.1539764404296875
+PASS cameron.k1.fp_line n=8192 L=4 beyond : 0.1396940168818272 vs 0.1396940168818272
+PASS cameron.k1.fp_not_void n=8192 L=4 line beyond 2^L < 0.5 : 0.1397 (argmax hpd_analytic k3W10; per-bed max 0.1428)
+PASS cameron.k1.fp_deep n=8192 L=4 frac(depth > 2^L) >= 0.25 : [0.9833984375, 0.9833984375, 0.9833984375]
+PASS cameron.k1.fp_line n=8192 L=7 all : 0.3450469970703125 vs 0.3450469970703125
+PASS cameron.k1.fp_line n=8192 L=7 beyond : 0.2506459497206704 vs 0.2506459497206704
+PASS cameron.k1.fp_not_void n=8192 L=7 line beyond 2^L < 0.5 : 0.2506 (argmax hpd_empirical k3W10; per-bed max 0.2624)
+PASS cameron.k1.fp_deep n=8192 L=7 frac(depth > 2^L) >= 0.25 : [0.8740234375, 0.8740234375, 0.8740234375]
+PASS cameron.k1.fp_line n=16384 L=4 all : 0.13848876953125 vs 0.13848876953125
+PASS cameron.k1.fp_line n=16384 L=4 beyond : 0.13127769571639586 vs 0.13127769571639586
+PASS cameron.k1.fp_not_void n=16384 L=4 line beyond 2^L < 0.5 : 0.1313 (argmax hpd_empirical k3W10; per-bed max 0.1341)
+PASS cameron.k1.fp_deep n=16384 L=4 frac(depth > 2^L) >= 0.25 : [0.99169921875, 0.99169921875, 0.99169921875]
+PASS cameron.k1.fp_line n=16384 L=7 all : 0.23328399658203125 vs 0.23328399658203125
+PASS cameron.k1.fp_line n=16384 L=7 beyond : 0.18174342105263158 vs 0.18174342105263158
+PASS cameron.k1.fp_not_void n=16384 L=7 line beyond 2^L < 0.5 : 0.1817 (argmax hpd_analytic k3W10; per-bed max 0.1871)
+PASS cameron.k1.fp_deep n=16384 L=7 frac(depth > 2^L) >= 0.25 : [0.93701171875, 0.93701171875, 0.93701171875]
+PASS cameron.k1.fp_line n=1024 L=7 undefined : [0.0, 0.0, 0.0]
+PASS cameron.k1.fp_resolvent_feasible n=4096 acc >= 0.99 and beyond16 >= 0.99 : {'acc': [1.0, 1.0, 1.0], 'beyond16': [1.0, 1.0, 1.0]}
+PASS cameron.k1.fp_resolvent_feasible n=8192 acc >= 0.99 and beyond16 >= 0.99 : {'acc': [1.0, 1.0, 1.0], 'beyond16': [1.0, 1.0, 1.0]}
+PASS cameron.k1.fp_resolvent_feasible n=16384 acc >= 0.99 and beyond16 >= 0.99 : {'acc': [1.0, 1.0, 1.0], 'beyond16': [1.0, 1.0, 1.0]}
+GREEN 0 failing rows

@@ -1,0 +1,5 @@
+n=4096 L=4 band>96 tokens 26560 line 0.1270 (recency) resolvent 1.0000 W62 0.1270
+n=8192 L=4 band>96 tokens 59328 line 0.1230 (recency) resolvent 1.0000 W62 0.1230
+n=16384 L=4 band>96 tokens 124864 line 0.1239 (recency) resolvent 1.0000 W62 0.1239
+n=8192 L=7 band>896 tokens 8128 line 0.1104 (recency) resolvent 1.0000 W62 0.1220
+n=16384 L=7 band>896 tokens 73664 line 0.1231 (recency) resolvent 1.0000 W62 0.1246

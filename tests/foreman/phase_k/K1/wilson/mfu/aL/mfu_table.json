@@ -1,0 +1,84 @@
+{
+ "session": "K1-wilson-mfu-aL-20260923",
+ "peak_tflops": 32.31,
+ "rows": [
+  {
+   "name": "probe_aL_c1024_b8",
+   "attn": "alibi",
+   "rung": "R0",
+   "ctx": 1024,
+   "batch": 8,
+   "params": 7227648,
+   "status": "fit",
+   "tok_s": 93243,
+   "mfu": 0.134,
+   "peak_mem_gib": 5.63,
+   "mfu_vs_26_77": 0.162
+  },
+  {
+   "name": "probe_aL_c1024_b4",
+   "attn": "alibi",
+   "rung": "R0",
+   "ctx": 1024,
+   "batch": 4,
+   "params": 7227648,
+   "status": "fit",
+   "tok_s": 91551,
+   "mfu": 0.132,
+   "peak_mem_gib": 2.88,
+   "mfu_vs_26_77": 0.159
+  },
+  {
+   "name": "probe_aL_c1024_b16",
+   "attn": "alibi",
+   "rung": "R0",
+   "ctx": 1024,
+   "batch": 16,
+   "params": 7227648,
+   "status": "no_fit",
+   "tok_s": null,
+   "mfu": null,
+   "peak_mem_gib": null,
+   "abort_peak_mem_gib": 11.09
+  },
+  {
+   "name": "probe_aL_c4096_b2",
+   "attn": "alibi",
+   "rung": "R0",
+   "ctx": 4096,
+   "batch": 2,
+   "params": 7227648,
+   "status": "fit",
+   "tok_s": 83424,
+   "mfu": 0.144,
+   "peak_mem_gib": 5.69,
+   "mfu_vs_26_77": 0.174
+  },
+  {
+   "name": "probe_aL_c4096_b1",
+   "attn": "alibi",
+   "rung": "R0",
+   "ctx": 4096,
+   "batch": 1,
+   "params": 7227648,
+   "status": "fit",
+   "tok_s": 73133,
+   "mfu": 0.127,
+   "peak_mem_gib": 2.93,
+   "mfu_vs_26_77": 0.153
+  },
+  {
+   "name": "probe_aL_c4096_b4",
+   "attn": "alibi",
+   "rung": "R0",
+   "ctx": 4096,
+   "batch": 4,
+   "params": 7227648,
+   "status": "no_fit",
+   "tok_s": null,
+   "mfu": null,
+   "peak_mem_gib": null,
+   "abort_peak_mem_gib": 11.15
+  }
+ ]
+}

@@ -1,0 +1,12 @@
+{"t": "config", "arm": "aL", "layers": 4, "dff": 512, "loops": 5, "hook": null, "seed": 0, "steps": 8000, "lr": 0.003, "warmup": 200, "eval_ns": "1024,4096,8192,16384", "probe_every": 2000, "out": "C:/Users/seal/AppData/Local/Temp/claude/C--Users-seal-Desktop-New-folder--32-/870edeb1-6409-4414-98e7-00d0537b75dd/scratchpad/phase_k/K1/cameron/runs/far_aL4_s0", "bed": "kpf", "emb": "frozen", "par_init": "orth", "train_M": null, "tok": 8192, "train_ns": "256,512,1024", "threads": 0, "eval_beds": 64, "gamma_sched": null, "device": "NVIDIA GeForce RTX 4060 Laptop GPU", "params": 4999552, "params_nonemb": 805120, "hook_sha256": null, "torch": "2.14.0+cu126"}
+  eval n=1024: acc 0.1624 beyond16 0.0025856973995271866 beyond128 None band4 None band7 None
+step 2000 loss 7.9178 acc 0.1660 train_s 132
+  eval n=1024: acc 0.1669 beyond16 0.0038046690307328604 beyond128 None band4 None band7 None
+step 4000 loss 6.6760 acc 0.2571 train_s 271
+  eval n=1024: acc 0.1901 beyond16 0.005429964539007092 beyond128 None band4 None band7 None
+step 6000 loss 3.7816 acc 0.5764 train_s 410
+  eval n=1024: acc 0.2066 beyond16 0.007867907801418439 beyond128 None band4 None band7 None
+  eval n=4096: acc 0.0493 beyond16 0.03772095959595959 beyond128 0.011953328981723238 band4 0.01927710843373494 band7 None
+  eval n=8192: acc 0.0269 beyond16 0.020854021847070508 beyond128 0.008257681564245811 band4 0.01222019956850054 band7 0.0
+  eval n=16384: acc 0.0127 beyond16 0.009693500738552437 beyond128 0.0031347707139134967 band4 0.005013454638646848 band7 0.0
+{"Larm": 4, "train_s": 549.8271472454071, "wall_s": 892.3715209960938, "final_loss": 7.135296821594238}

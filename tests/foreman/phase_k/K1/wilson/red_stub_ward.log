@@ -1,0 +1,28 @@
+FAIL row_orphan [orphan_s9] row names no ward job
+FAIL done_sha [a_L_s1] reported x config x disk 4c00beff4ce77211113faf20a949bcb7c99d1d50967d1b8c482e7110da667e03
+FAIL done_tokens [a_L_s2] tokens 144552960 last 17640 n 17640 want 17645
+FAIL done_seeds [a_L_s2] seed 2 eval_seed 7 det False
+FAIL done_val [a_L_s2] reported 3.9 eval@last None
+FAIL done_curve [a_L_s2] 70 evals missing
+FAIL done_tok_s [a_L_s2] reported 1 logged 16684.23
+FAIL done_hours [a_L_s2] reported 0.9 job 0.5000
+FAIL done_mem [a_L_s2] logged 9.1 device 7.996 reported 5.6
+FAIL done_params [a_L_s2] 1 vs 7227648
+FAIL done_ckpt [a_L_s2] ckpt step 3 last 17640
+FAIL done_sha [a_L_s2] reported y config x disk 4c00beff4ce77211113faf20a949bcb7c99d1d50967d1b8c482e7110da667e03
+FAIL done_clean [a_L_s2] foreign [99]
+FAIL failed_reported [f_R_s1] rc 3 aborts 1 reported done
+FAIL done_rc0 [f_R_s1] rc 3 aborts 1
+FAIL done_tokens [f_R_s1] tokens 144552960 last 1 n 1 want 17645
+FAIL done_val [f_R_s1] reported 4.0 eval@last None
+FAIL done_curve [f_R_s1] 1 evals missing
+FAIL done_tok_s [f_R_s1] reported 94000 logged 0.00
+FAIL done_mem [f_R_s1] logged 11.0 device 7.996 reported 5.6
+FAIL done_ckpt [f_R_s1] ckpt step FileNotFoundError(2, 'No such file or directory') last 1
+FAIL done_sha [f_R_s1] reported x config x disk 4c00beff4ce77211113faf20a949bcb7c99d1d50967d1b8c482e7110da667e03
+FAIL done_spill [f_R_s1] min window median 0 vs run median 1
+FAIL done_sha [f_R_s2] reported x config x disk 4c00beff4ce77211113faf20a949bcb7c99d1d50967d1b8c482e7110da667e03
+FAIL row_present [x_s1] 0 rows
+FAIL delta [2] reported 0.1 f_R 4.0 a_L None
+{"test": "wilson.k1.ward", "status": "red", "n_fail": 26, "checks_fired": "17/17", "never_fired": []}
+exit=1

@@ -1,0 +1,9 @@
+RED c6_numerics_R0_v2: "EXC NotImplementedError: stub"
+RED c6_power_R0_v2: "EXC NotImplementedError: stub"
+RED c7_bos_R0_v2: "EXC NotImplementedError: stub"
+RED c7_route_gamma_h_v2: "EXC NotImplementedError: stub"
+RED rrange_fR_depth_R0_v2: "EXC NotImplementedError: stub"
+RED rrange_fR_span_R0_v2: "EXC NotImplementedError: stub"
+RED rrange_aL_slope_R0_v2: "EXC NotImplementedError: stub"
+SUMMARY {"c6_numerics_R0_v2": "red", "c6_power_R0_v2": "red", "c7_bos_R0_v2": "red", "c7_route_gamma_h_v2": "red", "rrange_fR_depth_R0_v2": "red", "rrange_fR_span_R0_v2": "red", "rrange_aL_slope_R0_v2": "red"}
+exit 1

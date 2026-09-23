@@ -1,0 +1,13 @@
+{"t": "config", "arm": "aL", "layers": 7, "dff": 183, "loops": 5, "hook": null, "seed": 0, "steps": 1500, "lr": 0.003, "warmup": 200, "eval_ns": "1024", "probe_every": 250, "out": "C:/Users/seal/AppData/Local/Temp/claude/C--Users-seal-Desktop-New-folder--32-/870edeb1-6409-4414-98e7-00d0537b75dd/scratchpad/phase_k/K1/cameron/runs/pilot_aL7_frozen_lr3e-3", "bed": "kp", "emb": "frozen", "device": "NVIDIA GeForce RTX 4060 Laptop GPU", "params": 5001344, "params_nonemb": 806912, "hook_sha256": null, "torch": "2.14.0+cu126"}
+  eval n=1024: acc 0.0354 beyond16 0.00011081560283687943 beyond128 None
+step 250 loss 10.1339 acc 0.0532 train_s 15
+  eval n=1024: acc 0.0837 beyond16 0.0014775413711583924 beyond128 None
+step 500 loss 9.6260 acc 0.0837 train_s 30
+  eval n=1024: acc 0.1236 beyond16 0.002955082742316785 beyond128 None
+step 750 loss 6.6506 acc 0.3639 train_s 45
+  eval n=1024: acc 0.1582 beyond16 0.0028073286052009458 beyond128 None
+step 1000 loss 7.5807 acc 0.2416 train_s 60
+  eval n=1024: acc 0.1617 beyond16 0.0022532505910165487 beyond128 None
+step 1250 loss 8.1499 acc 0.1627 train_s 76
+  eval n=1024: acc 0.2001 beyond16 0.0035460992907801418 beyond128 None
+{"Larm": 7, "train_s": 90.66361665725708, "wall_s": 115.560311794281, "final_loss": 4.027477741241455}

@@ -1,0 +1,20 @@
+# 2026-09-23 04:14:27 IST
+# cmd: python test_kp_w62.py kp_w62_stub.json
+FAIL foreman.k1.w62_real_4096 L=4 mismatches == 0 : {'mismatches': -1}
+FAIL foreman.k1.w62_real_4096 L=7 mismatches == 0 : {'mismatches': -1}
+FAIL foreman.k1.w62_real_8192 mismatch rate <= 1e-3 : {'rate': 1.0}
+FAIL foreman.k1.w62_unreal_16384 mismatch rate >= 0.01 : {'rate': 0.0}
+FAIL foreman.k1.w62_reach L=4 c(W30) <= c(W62) <= 6 : {'c_w62': 0.0}
+FAIL foreman.k1.w62_far_band L=4 worst <= 0.155, tokens >= 500 : {'worst': 1.0, 'tokens': 0}
+FAIL foreman.k1.w62_reach L=7 c(W30) <= c(W62) <= 6 : {'c_w62': 0.0}
+FAIL foreman.k1.w62_far_band L=7 worst <= 0.155, tokens >= 500 : {'worst': 1.0, 'tokens': 0}
+FAIL foreman.k1.w30_real_long n=8192 L=4 mismatches == 0 : -1
+FAIL foreman.k1.w30_far_band_long n=8192 L=4 <= 0.155 : {'mismatches': -1, 'band_tokens': 1000, 'band_acc': 1.0}
+FAIL foreman.k1.w30_real_long n=8192 L=7 mismatches == 0 : -1
+FAIL foreman.k1.w30_far_band_long n=8192 L=7 <= 0.155 : {'mismatches': -1, 'band_tokens': 1000, 'band_acc': 1.0}
+FAIL foreman.k1.w30_real_long n=16384 L=4 mismatches == 0 : -1
+FAIL foreman.k1.w30_far_band_long n=16384 L=4 <= 0.155 : {'mismatches': -1, 'band_tokens': 1000, 'band_acc': 1.0}
+FAIL foreman.k1.w30_real_long n=16384 L=7 mismatches == 0 : -1
+FAIL foreman.k1.w30_far_band_long n=16384 L=7 <= 0.155 : {'mismatches': -1, 'band_tokens': 1000, 'band_acc': 1.0}
+RED 16 failing rows
+# exit 1

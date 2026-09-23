@@ -1,0 +1,28 @@
+# 2026-09-23 02:56:29 IST
+# cmd: python test_hunt.py hunt_stub.json
+FAIL foreman.k1.hunt_machinery space==hybrid mismatches : -1
+FAIL foreman.k1.hunt_machinery Cameron cell L7 n4096 centered k3 W10 : nan
+FAIL foreman.k1.ids_eq_pos (i) wald id-addressed == positional pointers : -1
+FAIL foreman.k1.ids_eq_pos (i) wald id-addressed all ~ 0.3982 : nan (positional nan)
+FAIL foreman.k1.ids_eq_pos (ii) n=4096 L=4 id-addressed best - credited doubling <= 0.005 : id 1.0000 [stub] dbl 0.0000 oracle nan
+FAIL foreman.k1.ids_eq_pos (ii) n=4096 L=4 id-window hit rate <= 1e-3 : 1.0
+FAIL foreman.k1.ids_eq_pos (ii) n=4096 L=7 id-addressed best - credited doubling <= 0.005 : id 1.0000 [stub] dbl 0.0000 oracle nan
+FAIL foreman.k1.ids_eq_pos (ii) n=4096 L=7 id-window hit rate <= 1e-3 : 1.0
+FAIL foreman.k1.content_closure L=1 plain : {'mismatch_plain': -1, 'mismatch_overlap': -1}
+FAIL foreman.k1.content_closure L=1 with overlap predicate : {'mismatch_plain': -1, 'mismatch_overlap': -1}
+FAIL foreman.k1.content_closure L=2 plain : {'mismatch_plain': -1, 'mismatch_overlap': -1}
+FAIL foreman.k1.content_closure L=2 with overlap predicate : {'mismatch_plain': -1, 'mismatch_overlap': -1}
+FAIL foreman.k1.content_closure L=3 plain : {'mismatch_plain': -1, 'mismatch_overlap': -1}
+FAIL foreman.k1.content_closure L=3 with overlap predicate : {'mismatch_plain': -1, 'mismatch_overlap': -1}
+FAIL foreman.k1.content_closure L=4 plain : {'mismatch_plain': -1, 'mismatch_overlap': -1}
+FAIL foreman.k1.content_closure L=4 with overlap predicate : {'mismatch_plain': -1, 'mismatch_overlap': -1}
+FAIL foreman.k1.content_closure L=5 plain : {'mismatch_plain': -1, 'mismatch_overlap': -1}
+FAIL foreman.k1.content_closure L=5 with overlap predicate : {'mismatch_plain': -1, 'mismatch_overlap': -1}
+FAIL foreman.k1.no_oracle_ceiling n=4096 L=4 <= 0.25 : local 1.0000 [stub] stale 1.0000 [stub] dbl 0.0000 oracle nan
+FAIL foreman.k1.no_oracle_ceiling n=4096 L=7 <= 0.25 : local 1.0000 [stub] stale 1.0000 [stub] dbl 0.0000 oracle nan
+FAIL foreman.k1.no_oracle_ceiling n=8192 L=4 <= 0.25 : local 1.0000 [stub] stale 1.0000 [stub] dbl 0.0000 oracle nan
+FAIL foreman.k1.no_oracle_ceiling n=8192 L=7 <= 0.25 : local 1.0000 [stub] stale 1.0000 [stub] dbl 0.0000 oracle nan
+FAIL foreman.k1.no_oracle_ceiling n=16384 L=4 <= 0.25 : local 1.0000 [stub] stale 1.0000 [stub] dbl 0.0000 oracle nan
+FAIL foreman.k1.no_oracle_ceiling n=16384 L=7 <= 0.25 : local 1.0000 [stub] stale 1.0000 [stub] dbl 0.0000 oracle nan
+RED 24 failing rows
+# exit 1

@@ -1,0 +1,12 @@
+# 2026-09-23 04:19:50 IST
+# cmd: python test_kp_w62a.py kp_w62a_stub.json
+FAIL foreman.k1.w62a_real_16384 L=4 rate <= 1e-3 : {'rate': 1.0, 'alias_violations': -1}
+FAIL foreman.k1.w62a_no_alias n=16384 L=4 violations == 0 : -1
+FAIL foreman.k1.w62a_real_16384 L=7 rate <= 1e-3 : {'rate': 1.0, 'alias_violations': -1}
+FAIL foreman.k1.w62a_no_alias n=16384 L=7 violations == 0 : -1
+FAIL foreman.k1.w62a_real_8192 L=4 rate <= 1e-3 : {'rate': 1.0, 'alias_violations': -1}
+FAIL foreman.k1.w62a_no_alias n=8192 L=4 violations == 0 : -1
+FAIL foreman.k1.w62a_real_8192 L=7 rate <= 1e-3 : {'rate': 1.0, 'alias_violations': -1}
+FAIL foreman.k1.w62a_no_alias n=8192 L=7 violations == 0 : -1
+RED 8 failing rows
+# exit 1

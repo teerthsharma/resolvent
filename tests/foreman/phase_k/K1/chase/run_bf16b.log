@@ -1,0 +1,3 @@
+GREEN bf16_leak_read1_vs_fp32: {"1024": {"leak": 4.947185516357422e-06, "fp32_hook": 4.589557647705078e-06}, "4096": {"leak": 1.3947486877441406e-05, "fp32_hook": 1.4066696166992188e-05}}
+SUMMARY {"bf16_leak_read1_vs_fp32": "green"}
+exit 0

@@ -1,0 +1,53 @@
+{
+ "machinery": {
+  "cameron_cell": 0.4085875984251969,
+  "space_vs_hybrid_mismatches": 0
+ },
+ "wald": {
+  "mismatches": 0,
+  "id_addr_all": 0.398193359375,
+  "pos_all": 0.398193359375
+ },
+ "closure": {
+  "1": {
+   "mismatch_plain": 0,
+   "mismatch_overlap": 0,
+   "tokens": 8192,
+   "resolved_frac": 0.046875
+  },
+  "2": {
+   "mismatch_plain": 0,
+   "mismatch_overlap": 0,
+   "tokens": 8192,
+   "resolved_frac": 0.078125
+  },
+  "3": {
+   "mismatch_plain": 0,
+   "mismatch_overlap": 0,
+   "tokens": 8192,
+   "resolved_frac": 0.140625
+  },
+  "4": {
+   "mismatch_plain": 0,
+   "mismatch_overlap": 0,
+   "tokens": 8192,
+   "resolved_frac": 0.265625
+  },
+  "5": {
+   "mismatch_plain": 0,
+   "mismatch_overlap": 0,
+   "tokens": 8192,
+   "resolved_frac": 0.515625
+  }
+ }
+}
+n=4096 L=4 dbl 0.0644 | oracle 0.0839 [oracle_centered_k3_W10] | id 0.0645 hit 3.13e-04 | local 0.0687 [local_k3_W10] | stale 0.0667 [stale_k3_W10] || wide(unbarred) local W64 0.1018 W128 0.1343 stale W64 0.0841 W128 0.0968
+n=4096 L=7 dbl 0.0661 | oracle 0.4086 [oracle_centered_k3_W10] | id 0.0674 hit 2.79e-04 | local 0.1246 [local_k3_W10] | stale 0.0954 [stale_k3_W10] || wide(unbarred) local W64 0.6417 W128 0.9954 stale W64 0.3669 W128 0.5483
+n=8192 L=4 dbl 0.0611 | oracle 0.0696 [oracle_centered_k3_W10] | id 0.0611 hit 3.01e-04 | local 0.0632 [local_k3_W10] | stale 0.0622 [stale_k3_W10] || wide(unbarred) local W64 0.0796 W128 0.0949 stale W64 0.0711 W128 0.0764
+n=8192 L=7 dbl 0.0607 | oracle 0.1722 [oracle_centered_k3_W10] | id 0.0611 hit 3.27e-04 | local 0.0817 [local_k3_W10] | stale 0.0710 [stale_k3_W10] || wide(unbarred) local W64 0.2518 W128 0.4117 stale W64 0.1625 W128 0.2214
+n=16384 L=4 dbl 0.0647 | oracle 0.0691 [oracle_centered_k3_W10] | id 0.0647 hit 3.03e-04 | local 0.0656 [local_k3_W10] | stale 0.0651 [stale_k3_W10] || wide(unbarred) local W64 0.0738 W128 0.0812 stale W64 0.0695 W128 0.0722
+n=16384 L=7 dbl 0.0649 | oracle 0.1131 [oracle_centered_k3_W10] | id 0.0651 hit 3.22e-04 | local 0.0731 [local_k3_W10] | stale 0.0688 [stale_k3_W10] || wide(unbarred) local W64 0.1470 W128 0.2138 stale W64 0.1080 W128 0.1331
+
+real	0m16.898s
+user	0m0.077s
+sys	0m0.077s

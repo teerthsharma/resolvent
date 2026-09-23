@@ -1,0 +1,63 @@
+2026-09-23T02:46:27 absent
+2026-09-23T02:48:27 absent
+2026-09-23T02:50:27 absent
+2026-09-23T02:52:27 absent
+2026-09-23T02:54:27 absent
+2026-09-23T02:56:27 absent
+2026-09-23T02:58:27 absent
+2026-09-23T03:00:27 absent
+2026-09-23T03:02:27 absent
+2026-09-23T03:04:27 absent
+2026-09-23T03:06:27 absent
+2026-09-23T03:08:27 absent
+2026-09-23T03:10:27 absent
+2026-09-23T03:12:27 absent
+2026-09-23T03:14:27 absent
+2026-09-23T03:16:27 absent
+2026-09-23T03:18:27 absent
+2026-09-23T03:20:27 absent
+2026-09-23T03:22:27 absent
+2026-09-23T03:24:27 absent
+2026-09-23T03:26:27 absent
+2026-09-23T03:28:27 absent
+2026-09-23T03:30:27 absent
+2026-09-23T03:32:27 absent
+2026-09-23T03:34:27 absent
+2026-09-23T03:36:27 absent
+2026-09-23T03:38:27 absent
+2026-09-23T03:40:27 absent
+2026-09-23T03:42:27 absent
+2026-09-23T03:44:27 absent
+2026-09-23T03:46:27 absent
+2026-09-23T03:48:27 absent
+2026-09-23T03:50:27 absent
+2026-09-23T03:52:27 absent
+2026-09-23T03:54:27 absent
+2026-09-23T03:56:27 absent
+2026-09-23T03:58:27 absent
+2026-09-23T04:00:27 absent
+2026-09-23T04:02:27 absent
+2026-09-23T04:04:27 absent
+2026-09-23T04:06:27 absent
+2026-09-23T04:08:27 absent
+2026-09-23T04:10:27 absent
+2026-09-23T04:12:27 absent
+2026-09-23T04:14:27 absent
+2026-09-23T04:16:27 absent
+2026-09-23T04:18:27 absent
+2026-09-23T04:20:27 absent
+2026-09-23T04:22:27 absent
+2026-09-23T04:24:27 absent
+2026-09-23T04:26:27 absent
+2026-09-23T04:28:27 absent
+2026-09-23T04:30:27 READY
+hook: C:/Users/seal/AppData/Local/Temp/claude/C--Users-seal-Desktop-New-folder--32-/870edeb1-6409-4414-98e7-00d0537b75dd/scratchpad/phase_k/K1/chase/resolvent_hook.py
+sha256: 3855288d7da7acdebf54b9b1979d9b0b5afebb3dca6d8ccefd684812d33451e2
+classes: FR (arm f_R: layers 0..L-2 = K0 train_ladder AlibiAttention, layer L-1 = ResolventAttention); ResolventAttention (the resolvent layer alone)
+usage (train_ladder): python train_ladder.py --rung R0 --attn "C:/Users/seal/AppData/Local/Temp/claude/C--Users-seal-Desktop-New-folder--32-/870edeb1-6409-4414-98e7-00d0537b75dd/scratchpad/phase_k/K1/chase/resolvent_hook.py:FR" --no_poll ...   (hold gpu.lock.d yourself)
+usage (rdepth.py):    --arm fR --hook "C:/Users/seal/AppData/Local/Temp/claude/C--Users-seal-Desktop-New-folder--32-/870edeb1-6409-4414-98e7-00d0537b75dd/scratchpad/phase_k/K1/chase/resolvent_hook.py:ResolventAttention"   (or :FR; both give the resolvent layer at layer_idx = n_layers-1)
+fixed: beta 1, gamma 0.999, logit scale s_i = a_h ln(i+1) + b_h (a=1, b=0 init, learned, no decay); layer runs in fp32 with autocast off
+rules: no --compile with this hook (untested: it captures its own CUDA graphs); single process per GPU; bitwise comparisons need --deterministic (bound GREEN)
+bars GREEN (test_chase_k1.py, run4.log): hook_parity_S1024, hook_gradcheck_S64_f64, hook_train_ladder_R0_50, hook_deterministic_R0_50
+
+POLL_EXIT=0

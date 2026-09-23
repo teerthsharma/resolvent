@@ -1,0 +1,84 @@
+{
+ "session": "K1-wilson-mfu-fR-20260923",
+ "peak_tflops": 31.85,
+ "rows": [
+  {
+   "name": "probe_fR_c1024_b8",
+   "attn": "C:/Users/seal/AppData/Local/Temp/claude/C--Users-seal-Desktop-New-folder--32-/870edeb1-6409-4414-98e7-00d0537b75dd/scratchpad/phase_k/K1/chase/resolvent_hook.py:FR",
+   "rung": "R0",
+   "ctx": 1024,
+   "batch": 8,
+   "params": 7227652,
+   "status": "fit",
+   "tok_s": 78794,
+   "mfu": 0.115,
+   "peak_mem_gib": 5.73,
+   "mfu_vs_26_77": 0.137
+  },
+  {
+   "name": "probe_fR_c1024_b4",
+   "attn": "C:/Users/seal/AppData/Local/Temp/claude/C--Users-seal-Desktop-New-folder--32-/870edeb1-6409-4414-98e7-00d0537b75dd/scratchpad/phase_k/K1/chase/resolvent_hook.py:FR",
+   "rung": "R0",
+   "ctx": 1024,
+   "batch": 4,
+   "params": 7227652,
+   "status": "fit",
+   "tok_s": 68756,
+   "mfu": 0.1,
+   "peak_mem_gib": 2.94,
+   "mfu_vs_26_77": 0.119
+  },
+  {
+   "name": "probe_fR_c1024_b16",
+   "attn": "C:/Users/seal/AppData/Local/Temp/claude/C--Users-seal-Desktop-New-folder--32-/870edeb1-6409-4414-98e7-00d0537b75dd/scratchpad/phase_k/K1/chase/resolvent_hook.py:FR",
+   "rung": "R0",
+   "ctx": 1024,
+   "batch": 16,
+   "params": 7227652,
+   "status": "no_fit",
+   "tok_s": null,
+   "mfu": null,
+   "peak_mem_gib": null,
+   "abort_peak_mem_gib": 11.18
+  },
+  {
+   "name": "probe_fR_c4096_b2",
+   "attn": "C:/Users/seal/AppData/Local/Temp/claude/C--Users-seal-Desktop-New-folder--32-/870edeb1-6409-4414-98e7-00d0537b75dd/scratchpad/phase_k/K1/chase/resolvent_hook.py:FR",
+   "rung": "R0",
+   "ctx": 4096,
+   "batch": 2,
+   "params": 7227652,
+   "status": "fit",
+   "tok_s": 64392,
+   "mfu": 0.113,
+   "peak_mem_gib": 5.79,
+   "mfu_vs_26_77": 0.135
+  },
+  {
+   "name": "probe_fR_c4096_b1",
+   "attn": "C:/Users/seal/AppData/Local/Temp/claude/C--Users-seal-Desktop-New-folder--32-/870edeb1-6409-4414-98e7-00d0537b75dd/scratchpad/phase_k/K1/chase/resolvent_hook.py:FR",
+   "rung": "R0",
+   "ctx": 4096,
+   "batch": 1,
+   "params": 7227652,
+   "status": "fit",
+   "tok_s": 54261,
+   "mfu": 0.095,
+   "peak_mem_gib": 3.0,
+   "mfu_vs_26_77": 0.113
+  },
+  {
+   "name": "probe_fR_c4096_b4",
+   "attn": "C:/Users/seal/AppData/Local/Temp/claude/C--Users-seal-Desktop-New-folder--32-/870edeb1-6409-4414-98e7-00d0537b75dd/scratchpad/phase_k/K1/chase/resolvent_hook.py:FR",
+   "rung": "R0",
+   "ctx": 4096,
+   "batch": 4,
+   "params": 7227652,
+   "status": "no_fit",
+   "tok_s": null,
+   "mfu": null,
+   "peak_mem_gib": null,
+   "abort_peak_mem_gib": 11.24
+  }
+ ]
+}

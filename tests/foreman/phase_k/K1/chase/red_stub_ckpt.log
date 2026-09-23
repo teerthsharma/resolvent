@@ -1,0 +1,15 @@
+RED bf16_leak_fused_read1: "EXC NotImplementedError: stub"
+RED bf16_leak_fused_pattern: "EXC NotImplementedError: stub"
+RED bf16_inputs_fused_raises: "EXC NotImplementedError: stub"
+RED rrange_band_y2: "EXC NotImplementedError: stub"
+RED rrange_band_sink: "EXC NotImplementedError: stub"
+RED rrange_tail_sink_fooled: "EXC NotImplementedError: stub"
+RED c6_numerics_R0: "EXC NotImplementedError: stub"
+RED c6_power_R0: "EXC NotImplementedError: stub"
+RED c7_bos_R0: "EXC NotImplementedError: stub"
+RED c7_route_gamma_h: "EXC NotImplementedError: stub"
+RED rrange_fR_depth_R0: "EXC NotImplementedError: stub"
+RED rrange_fR_span_R0: "EXC NotImplementedError: stub"
+RED rrange_aL_slope_R0: "EXC NotImplementedError: stub"
+SUMMARY {"bf16_leak_fused_read1": "red", "bf16_leak_fused_pattern": "red", "bf16_inputs_fused_raises": "red", "rrange_band_y2": "red", "rrange_band_sink": "red", "rrange_tail_sink_fooled": "red", "c6_numerics_R0": "red", "c6_power_R0": "red", "c7_bos_R0": "red", "c7_route_gamma_h": "red", "rrange_fR_depth_R0": "red", "rrange_fR_span_R0": "red", "rrange_aL_slope_R0": "red"}
+exit 1

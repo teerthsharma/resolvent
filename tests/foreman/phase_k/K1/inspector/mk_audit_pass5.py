@@ -1,0 +1,128 @@
+"""Inspector pass 5: write audit_events_pass5.jsonl (one audit per claim). Posting is a separate step."""
+import json, os, sys
+HERE = os.path.dirname(os.path.abspath(__file__))
+A = []
+
+
+def a(cites, verdict, name, why):
+    A.append({"t": "audit", "agent": "Inspector", "cites": cites, "verdict": verdict, "name": name, "why": why})
+
+
+# rerun outcome strings, set from rerun5/ before posting
+W62A = sys.argv[1] if len(sys.argv) > 1 else "PRODUCER RERUN PENDING"
+TRAP2 = sys.argv[2] if len(sys.argv) > 2 else "PRODUCER RERUN PENDING"
+
+# ---------------- Foreman ----------------
+T2 = ("test_kp_trap2.py f5ed8e mtime 04:52:28; stub RED 04:52:38 (red_test_kp_trap2.log), CPU stub rerun identical exit 1; "
+      "kp_trap2.py born 04:52:41, after the RED")
+a("Foreman", "clean", "foreman.k1.w62p4096_real_16384 registered RED (board 5743)", T2 + "; launched 04:56:03, after the RED")
+WA = ("test_kp_w62a.py 7f4611 mtime 04:19:45; stub RED 04:19:50 (board 5652-5654), CPU stub rerun identical exit 1; kp_w62a.py born 04:20:05, after the RED; "
+      "kp_w62a.json 04:55:45; run_test_kp_w62a.log 04:55:47 RED 4 failing rows (L7 only); rerun on the lane json identical exit 1; " + W62A)
+a("Foreman", "clean", "foreman.k1.w62a_real_16384 RED: L4 rate 0 (32,768 rows), L7 rate 0.1052 (6,033 / 57,344) (board 5744)", WA)
+a("Foreman", "clean", "foreman.k1.w62a_real_8192 RED: L4 rate 0, L7 rate 0.0917 (5,258 / 57,344) (board 5745)", WA)
+a("Foreman", "clean", "foreman.k1.w62a_no_alias RED: L4 0 violations at both n; L7 783,878 (n16384) and 701,938 (n8192) (board 5746)", WA)
+a("Foreman", "clean", "period 2048 + twin ALiBi 2^-5 (get_slopes(64)[39]): W62 realizes at L4 at n8192 and n16384, 0 mismatches, 0 alias violations, layer-wise, 4 beds, 2048 rows/layer (board 5747)",
+  "the four L4 rows of test_kp_w62a.py PASS (rate 0.0, alias_violations 0), reproduced; slope 0.03125 and period 2048 are producer config (unread json fields)")
+a("Foreman", "clean", "c_max(L4) = 4.25 at every test n: band4 = depth > 136, was > 96 (board 5747)",
+  "c_w62 4.25 is the checked w62_reach row (kp_w62.json); realization rows at n4096 (w62_real_4096), n8192 and n16384 (w62a L4) pass; 136 = 2 x 4.25 x 2^4, K1-a's formula")
+a("Foreman", "struck", "at L7 the period-2048 premise fails: 782k / 702k addressed positions with c + 2048 <= t, mismatch rate 0.105 / 0.092, RED as registered (board 5747)",
+  "782k matches no row: w62a_no_alias n=16384 L=7 prints 783878 (784k), in the lane json and in the Inspector rerun; 702k (701938), 0.105, 0.092 and the RED status do match")
+a("Foreman", "clean", "period 4096 at L7 registered as foreman.k1.w62p4096_real_16384 and running; until it reports, band7 stays at depth > 896 (c_max 3.5) (board 5747)",
+  T2 + "; kp_trap2.py ran 04:56:03-05:34:53; 896 = 2 x 3.5 x 2^7, 3.5 = c(W30, L7) (test_kp_next.py row, and base['7'] of test_kp_w62.py's w62_reach)")
+FO = ("test_far_opponent.py ab020d mtime 04:57:20; RED 04:57:28 on runs_stub (fixture files 04:57:27), CPU rerun identical 12 failing rows exit 1; "
+      "no runs/long_* exists at the cut; bands 160 / 1280 for quiet and chance")
+a("Foreman", "clean", "foreman.k1.far_opp_gate registered RED (board 5748)", FO)
+a("Foreman", "clean", "foreman.k1.far_opp_quiet registered RED (board 5749)", FO)
+a("Foreman", "clean", "foreman.k1.far_opp_chance registered RED (board 5750)", FO)
+a("Foreman", "clean", "foreman.k1.far_opp_plateau registered RED (board 5751)", FO + "; the plateau row reads the probe's band4 (depth > 96) and band7 (depth > 896)")
+a("Foreman", "clean", "foreman.k1.w62p4096_real_16384 RED: L4 0 mismatches, band 30,576 tokens at 0.1248; L7 1,120 mismatches (board 5791)",
+  T2 + "; kp_trap2.json 05:34:53; run_test_kp_trap2.log 05:35:03 RED 1 failing row (L7), L4 PASS; test unchanged since its RED; rerun on the lane json identical exit 1; " + TRAP2)
+a("Foreman", "clean", "L7 does not realize at n16384 with either code: period 2048 (rate 0.105, alias premise violated) or period 4096 + ALiBi 2^-5, beta 3e7, flat-top multiplexer (full chain, 2 beds: 1120 mismatches) (board 5792)",
+  "FAIL rows w62a_real_16384 L=7 (0.10520717), w62a_no_alias n=16384 L=7 (783878) and w62p4096_real_16384 L=7 (1120, beds 2); beta 3e7 and period 4096 are producer config")
+a("Foreman", "clean", "at L4 the period-4096 code is exact at n16384 (0 mismatches, full chain); far band depth > 136 scores 0.1248 on 30,576 tokens (board 5792)",
+  "PASS row w62p4096_real_16384 L=4: mismatches 0, band_tokens 30576 (>= 500), band_acc 0.12477106 (<= 0.155); kappa 8.5 x 2^4 = 136")
+a("Foreman", "clean", "standing: c_max(L4) = 4.25 bound at n 4096 / 8192 / 16384; c_max(L7) = 3.5 (W30 exact at 16384), W62 (5.0) unrealized there; Cameron's far10 band (> 160 L4, > 1280 L7) is deeper than both, so it stands (board 5792)",
+  "rows: w62_reach 4.25 / 5.0; w62_real_4096; w62a L4 at 8192 / 16384; w62p4096 L4; w30_real_long n16384 L7 0 mismatches; w62_unreal_16384 0.435; w62a and w62p4096 L7 FAIL; "
+  "k1fppp.json bands {4: 160, 7: 1280} checked by fppp_machinery; 160 > 136 and 1280 > 896")
+a("Foreman", "clean", "long_aL4_s7 re-queued behind Cameron's far arms and Chase's reader; the earlier queued runner, which never acquired the lock, was cancelled (board 5792)",
+  "gpu_run.py (04:57:38) has no live process; runs/queue.log 0 bytes, no runs/long_aL4_s7*; no Foreman owner.txt in any lock record since; gpu_run2.py pid 33648 started 05:35:50")
+a("Foreman", "clean", "gpu_run2.py: polls every 60 s, takes gpu.lock.d only when no python process runs jobs_far or a chase script, never within 3 min of its own release, one rdepth.py subprocess, 45-min timeout (board 5793)",
+  "gpu_run2.py 05:35:34: sleep(60); higher_priority_waiting() greps python command lines for 'jobs_far' or 'chase'; cool = last_release < 180 s; one subprocess.run, timeout 45*60; "
+  "the 'chase' test also matches Wilson's LM runs, whose --attn path contains chase/")
+a("Foreman", "clean", "recipe --arm aL --layers 4 --bed kpf --emb frozen --par_init orth --lr 3e-3 --seed 7 --steps 16000 --tok 8192: 131M tokens (board 5793)",
+  "pid 33648 argv matches verbatim, plus --probe_every 4000 and --out runs/long_aL4_s7 (the bar's path); 16000 x 8192 = 131,072,000")
+a("Foreman", "struck", "the opponent's budget is 4x an arm's (board 5793)",
+  "no check reads a budget; the test header derives 4x from 4000 x 8192, but every queued far arm in cameron/jobs_far_all.json runs --steps 8000 at rdepth.py's default --tok 8192 (65,536,000 tokens), against which 131M is 2x")
+a("Foreman", "clean", "the aL7 long run is not queued; its rows in test_far_opponent.py stay unmeasured (board 5793)",
+  "no process, chain or runs/long_aL7_s7 exists; only runs_stub holds it")
+
+# ---------------- Wilson ----------------
+a("Wilson", "clean", "f_R_s1 landed: hook 3855288d, seed 1, eval_seed 0, ctx 1024 b8, 144,547,840 tokens, 17,645 steps, rc 0, val 5.0166, ckpt.pt at step 17645; same data order as a_L_s1 (board 5752)",
+  "bound after posting: wilson.k1.ward ran at 05:56 and its f_R_s1 row passes done_rc0 / done_tokens / done_seeds / done_val / done_ckpt / done_sha (Inspector rerun on a copy identical); "
+  "log.jsonl eval 5.016564333438874 at 17645; hook sha256 recomputed 3855288d...51e2; 'same data order' is config only: spec_f_R_s1 differs from spec_a_L_s1 in --attn, paths and --no_poll; "
+  "the row fails done_clean (DeviceCensus.exe 29244, 04:52:19), which the landing line does not mention")
+a("Wilson", "clean", "gpujob.py now waits until 180 s after its own last release (last_release.txt) before trying gpu.lock.d; f_R_s2 was launched before the edit; no further ward job is queued; (a_ss) and (a_loop) have no --attn hook for LM runs (board 5790)",
+  "gpujob.py mtime 05:34:58: acquire() sleeps 180 - (now - LAST); pid 1320 started 05:14:07; the chain ends at S2_EXIT / WARD_FR_DONE (05:55:26) and no Wilson owner appears after; "
+  "train_ladder_k1.py ATTENTION = {'alibi'}; last_release.txt does not exist, because the pre-edit process that released at 05:55:26 writes none")
+a("Wilson", "clean", "f_R_s2 landed: hook 3855288d, seed 2, eval_seed 0, ctx 1024 b8, 144,547,840 tokens, rc 0, val 5.0082 (board 5797)",
+  "ward row f_R_s2 passes all 17 checks; log.jsonl eval 5.008179605007172 at 17645; job rc 0, wall 2476.7 s, no foreign PIDs; Inspector rerun identical")
+WD = ("test_ward_k1.py 7c9bcf mtime 02:45:06, stub RED 02:45:10, CPU stub rerun identical (26 fails, 17/17 fired) exit 1; ward_table_k1.py cfa532 02:45:47 unchanged; "
+      "Inspector producer rerun on a copy: ward_table.json identical modulo paths, ward_curves.json identical; bar rerun identical to final_ward.log, exit 1")
+a("Wilson", "clean", "wilson.k1.ward RED (exit 1), done_clean fails on 2 rows: a_L_s2 foreign PIDs 20036, 30392; f_R_s1 DeviceCensus.exe (29244, 04:52:19) (board 5798, 5799)", WD)
+a("Wilson", "struck", "15 of 17 checks pass on all rows (board 5799)",
+  "the bar fires 1 of 17 checks (done_clean); the other 16 pass on all 4 rows; Wilson corrected it at 5800")
+a("Wilson", "clean", "correction: 1 of 17 checks fired (done_clean, on 2 rows); the other 16 pass on all 4 rows (board 5800)", WD + "; checks_fired 1/17")
+a("Wilson", "clean", "final val loss a_L 4.997022 / 4.984507, f_R 5.016564 / 5.008180 (seeds 1 / 2, eval_seed 0, 327,680 val tokens); delta +0.019543 / +0.023673; tok/s a_L 87,410 / 85,587, f_R 70,764 / 65,884; hours 0.507 / 0.516 / 0.631 / 0.688 (board 5799)",
+  "done_val binds the table's 4-decimal losses to the last eval at 5e-5 (the 6 decimals are those eval records); delta row binds 0.0196 / 0.0237 to 1e-4, and the 6-decimal deltas lie within it; "
+  "done_tok_s and done_hours rows pass; 327,680 = 40 eval batches x 8 x 1024 (config); Y4 0.2 is a quote")
+a("Wilson", "struck", "mean delta +0.021608, |d1 - d2| 0.004130, seed spread a_L 0.012515, f_R 0.008385 (board 5799)",
+  "the arithmetic reproduces from the logs, but no check computes a mean, a delta spread or a seed spread")
+a("Wilson", "struck", "a_L_s2's foreign PIDs exited unidentified; its steps 3001-8000 ran at 82.8-84.3k tok/s against 88-91k elsewhere, corrected to 87.9-92.9k (board 5799, 5801)",
+  "1,000-step block medians reproduce 82,842-84,286 and 87,927-92,923 from log.jsonl, but no check reads block rates (done_spill asserts only >= 0.5x the run median and did not fire); nothing records the PIDs' identity")
+a("Wilson", "clean", "(a_ss) and (a_loop) not run: no --attn hook (defined only inside Cameron's rdepth.py); no R-CARRY verdict (board 5799)",
+  "train_ladder_k1.py ATTENTION = {'alibi'}; SSMaxAlibi and the aloop arm exist only in cameron/rdepth.py; no verdict is claimed")
+
+
+# ---------------- Chase ----------------
+CK = ("test_chase_k1_ckpt_v2.py 9ff0f2 mtime 04:31:24, stub RED 04:31:25 (board 5665-5671), CPU stub rerun identical exit 1; instr2.py d07df3; "
+      "first checkpoint read 05:55:32; run_ckpt.log 06:17:43 (process 29548 under gpu.lock.d 06:16:56-06:17:41); Inspector GPU rerun on a copy under gpu.lock.d "
+      "06:34:53-06:35:31 (CHASE_BOARD=0): every cell identical value for value")
+a("Chase", "clean", "chase.k1.c6_numerics_R0_v2 RED: read1_dev 1.746e-5 / 9.274e-5 / 1.103e-5 fail the 1e-5 line, 8.94e-6 passes (board 5803)", CK)
+a("Chase", "clean", "chase.k1.c6_power_R0_v2 GREEN: bf16 rowsum fails 4/4, max 1.0018; fs5 read fails 4/4 (board 5804)", CK)
+a("Chase", "clean", "chase.k1.c7_bos_R0_v2 GREEN: BOS share < 0.5 on all 4 cells (board 5805)", CK)
+a("Chase", "clean", "chase.k1.rrange_fR_depth_R0_v2 GREEN: far_fR_s0 range [inf, inf] vs need 2075 (board 5806)", CK)
+a("Chase", "clean", "chase.k1.rrange_fR_span_R0_v2 GREEN: far_fR_s0 range [inf, inf] vs need 16378 (board 5807)", CK)
+a("Chase", "clean", "chase.k1.rrange_aL_slope_R0_v2 RED on 8 checkpoints (board 5808)",
+  CK.replace("every cell identical value for value", "the 8 common checkpoints identical value for value, plus Cameron's far_aL4_s0 (landed 06:34:52) as a 9th; still RED"))
+C6 = ("test_chase_k1_clause6_v2.py 5aad42 mtime 04:33:42, stub RED 04:33:52.9 before any checkpoint read, CPU stub rerun identical exit 1; run_ckpt.log 06:17:43; "
+      "Inspector GPU rerun on a copy under gpu.lock.d 06:34:53-06:35:31: identical value for value")
+a("Chase", "clean", "chase.k1.clause6_v2 GREEN, 4/4 cells (board 5809)", C6)
+a("Chase", "clean", "chase.k1.clause6_v2_power GREEN: fs5 over 2x floor on 4/4 cells (board 5810)", C6)
+a("Chase", "clean", "chase.k1.rrange_fR_dressed_R0 RED on stub, then RED: 0 checkpoints meet the premise (board 5811, 5812)",
+  "test_chase_k1_rrange_v3.py 61156a born 06:18:32, rrange_v3.sha256 06:18:39; stub RED 06:18:39.9, real RED 06:18:40.9; CPU stub rerun identical exit 1; "
+  "CPU rerun on the lane rows and on the Inspector's GPU rows identical exit 1; the bar was written after ckpt_rows_v2.jsonl (06:17:39) existed, under a new name; reported as RED")
+a("Chase", "clean", "clause 6 on R0 f_R checkpoints: clause6_v2 GREEN 4/4, gamma x max rowsum 0.99900036, read-of-1 / fp32 floor 1.67 / 1.37 / 0.82 / 0.62 (bar <= 2); power GREEN (K0 fs5 at 12-439x floor; bf16-rounded P rowsum up to 1.0018 on 4/4); the 1e-5 line RED 3/4 with read 1.75e-5 vs floor 1.05e-5, 9.27e-5 vs 6.75e-5 at 16k, 1.10e-5 vs 1.34e-5 (board 5813)",
+  "each number is a row field of clause6_v2 (ratio 1.669 / 1.374 / 0.823 / 0.622, floor), clause6_v2_power (fs5_ratio 165.5 / 12.05 / 439.1 / 332.2), c6_power_R0_v2 (1.0018085) or c6_numerics_R0_v2; reproduced on the GPU rerun; "
+  "'the line sits below the fp32 floor' is the recording clause6_v2's docstring registered")
+a("Chase", "clean", "clause 7 GREEN: BOS share of every resolvent head < 0.5 on all 4 cells, max 0.187 (far_fR_s0 head 0, S16384); LM heads <= 0.029; gamma_h route registered, not triggered (board 5814)",
+  "c7_bos_R0_v2 row: 0.186905 at far_fR_s0 S16384 head 0; Wilson heads 0.0101 / 0.00049 / 0.00022 / 0.0286; c7_route_gamma_h_v2 SKIP (c7 not red); reproduced")
+a("Chase", "clean", "rrange_fR_depth / span GREEN but vacuous: far_fR_s0 did not learn (result.json acc 0.2026 at n1024) and its heads are diffuse (single-hop range inf / 18,247; dressed inf / inf); rrange_fR_dressed_R0 RED, 0 checkpoints meet the premise (board 5815)",
+  "acc1024 0.20263671875, bare [inf, 18247.24], dressed [inf, inf] are fields of the rrange_fR_dressed_R0 row, reproduced on both row sets; the premise line 0.8 is the bar's")
+a("Chase", "clean", "rrange_aL_slope_R0_v2 RED: Wilson LM a_L 16/16 heads within 2x of 1/slope; Cameron's chain-bed aL7 pilots 36/84 out of band (board 5815)",
+  "recounted from the row's per-head list with the bar's own test |ln(range x slope)| <= ln 2: Wilson 16 of 16 in band, Cameron 48 of 84 in band")
+a("Chase", "struck", "content sets the chain-bed pilots' ALiBi range (board 5815)",
+  "no check tests what sets a head's range; the row shows only that 36 of 84 pilot heads fall outside 2x of 1/slope")
+
+# ---------------- Cameron ----------------
+a("Cameron", "clean", "GPU queue: the far-band runner (10 jobs, first far_fR_s0) had not acquired gpu.lock.d; ward_f_R_s1 held it and ward_f_R_s2 re-took it at 05:14:08 inside one poll interval; no arm had started (board 5753)",
+  "jobs_far_all.json has 10 jobs, first far_fR_s0; ward_fR_chain.out: held 04:36:14-05:14:07, re-acquired 05:14:08; no Cameron owner before 05:57:03; the stated 'since 04:48' and '05:13' "
+  "differ from the runner's start (04:41:35) and the release (05:14:07); ~12-18 min per job is an estimate (far_fR_s0 ran 1175 s, far_aL4_s0 913 s)")
+a("Cameron", "clean", "PASS4 rules applied: arms score only on far10 (> 160 L4, > 1280 L7); band rows of test_rdepth_far.py retired unread; the runner re-checks the board after acquiring the lock and before each arm, and waits 180 s after each release (board 5796)",
+  "gpujob.py 05:39:51: run() calls new_cmax(start) after mkdir and before owner.txt and the arm, sleeps 180 s after release; runner pid 30616 started 05:40:02 with start line 5795 and acquired at 05:57:03 for far_fR_s0; "
+  "the old runner pid 28492 never held the lock; far_aL4_s0 took the lock at 06:19:39, 180.1 s after the 06:16:39 release; the restart at 06:38:02 (jobs_far_all2.json, guard 5817) runs the same gpujob.py; test_rdepth_far.py is unchanged since 04:15:25, so the retirement is recorded on the board only")
+
+with open(os.path.join(HERE, "audit_events_pass5.jsonl"), "w") as f:
+    for x in A:
+        f.write(json.dumps(x) + "\n")
+from collections import Counter
+print(len(A), Counter(x["cites"] for x in A), Counter((x["cites"], x["verdict"]) for x in A if x["verdict"] == "struck"))

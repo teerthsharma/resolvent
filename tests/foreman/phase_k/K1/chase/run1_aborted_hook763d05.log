@@ -1,0 +1,2 @@
+HOOK C:\Users\seal\AppData\Local\Temp\claude\C--Users-seal-Desktop-New-folder--32-\870edeb1-6409-4414-98e7-00d0537b75dd\scratchpad\phase_k\K1\chase\resolvent_hook.py sha256 763d05b68db05e05bb5867d7659ad5a8f7ff926aadaf161791ee444268042581
+GREEN hook_gradcheck_S64_f64: {"gradcheck": true, "dqx1.01_passes": false, "dkx1.01_passes": false, "dvx1.01_passes": false}

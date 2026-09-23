@@ -1,0 +1,7 @@
+{"t": "config", "arm": "aL", "layers": 2, "dff": 512, "loops": 5, "hook": null, "seed": 0, "steps": 600, "lr": 0.001, "warmup": 50, "eval_ns": "1024", "probe_every": 100, "out": "cpu/L2_M32_lr1e-3", "bed": "kp", "emb": "frozen", "par_init": "orth", "train_M": null, "tok": 2048, "train_ns": "256", "threads": 6, "eval_beds": 8, "device": "cpu", "params": 4605312, "params_nonemb": 410880, "hook_sha256": null, "torch": "2.14.0+cu126"}
+  eval n=1024: acc 0.0835 beyond16 0.0 beyond128 None
+step 100 loss 8.8517 acc 0.2495 train_s 82
+  eval n=1024: acc 0.0837 beyond16 0.0 beyond128 None
+step 200 loss 8.7273 acc 0.2490 train_s 164
+  eval n=1024: acc 0.0837 beyond16 0.0 beyond128 None
+step 300 loss 8.6128 acc 0.2500 train_s 255

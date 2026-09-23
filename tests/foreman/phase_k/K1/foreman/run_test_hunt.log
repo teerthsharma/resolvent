@@ -1,0 +1,28 @@
+# 2026-09-23 03:00:41 IST
+# cmd: python test_hunt.py
+PASS foreman.k1.hunt_machinery space==hybrid mismatches : 0
+PASS foreman.k1.hunt_machinery Cameron cell L7 n4096 centered k3 W10 : 0.4085875984251969
+PASS foreman.k1.ids_eq_pos (i) wald id-addressed == positional pointers : 0
+PASS foreman.k1.ids_eq_pos (i) wald id-addressed all ~ 0.3982 : 0.398193 (positional 0.398193)
+PASS foreman.k1.ids_eq_pos (ii) n=4096 L=4 id-addressed best - credited doubling <= 0.005 : id 0.0645 [id_centered_k3_W10] dbl 0.0644 oracle 0.0839
+PASS foreman.k1.ids_eq_pos (ii) n=4096 L=4 id-window hit rate <= 1e-3 : 0.00031280517578125
+PASS foreman.k1.ids_eq_pos (ii) n=4096 L=7 id-addressed best - credited doubling <= 0.005 : id 0.0674 [id_anchored_k3_W10] dbl 0.0661 oracle 0.4086
+PASS foreman.k1.ids_eq_pos (ii) n=4096 L=7 id-window hit rate <= 1e-3 : 0.00027901785714285713
+PASS foreman.k1.content_closure L=1 plain : {'mismatch_plain': 0, 'mismatch_overlap': 0, 'tokens': 8192, 'resolved_frac': 0.046875}
+PASS foreman.k1.content_closure L=1 with overlap predicate : {'mismatch_plain': 0, 'mismatch_overlap': 0, 'tokens': 8192, 'resolved_frac': 0.046875}
+PASS foreman.k1.content_closure L=2 plain : {'mismatch_plain': 0, 'mismatch_overlap': 0, 'tokens': 8192, 'resolved_frac': 0.078125}
+PASS foreman.k1.content_closure L=2 with overlap predicate : {'mismatch_plain': 0, 'mismatch_overlap': 0, 'tokens': 8192, 'resolved_frac': 0.078125}
+PASS foreman.k1.content_closure L=3 plain : {'mismatch_plain': 0, 'mismatch_overlap': 0, 'tokens': 8192, 'resolved_frac': 0.140625}
+PASS foreman.k1.content_closure L=3 with overlap predicate : {'mismatch_plain': 0, 'mismatch_overlap': 0, 'tokens': 8192, 'resolved_frac': 0.140625}
+PASS foreman.k1.content_closure L=4 plain : {'mismatch_plain': 0, 'mismatch_overlap': 0, 'tokens': 8192, 'resolved_frac': 0.265625}
+PASS foreman.k1.content_closure L=4 with overlap predicate : {'mismatch_plain': 0, 'mismatch_overlap': 0, 'tokens': 8192, 'resolved_frac': 0.265625}
+PASS foreman.k1.content_closure L=5 plain : {'mismatch_plain': 0, 'mismatch_overlap': 0, 'tokens': 8192, 'resolved_frac': 0.515625}
+PASS foreman.k1.content_closure L=5 with overlap predicate : {'mismatch_plain': 0, 'mismatch_overlap': 0, 'tokens': 8192, 'resolved_frac': 0.515625}
+PASS foreman.k1.no_oracle_ceiling n=4096 L=4 <= 0.25 : local 0.0687 [local_k3_W10] stale 0.0667 [stale_k3_W10] dbl 0.0644 oracle 0.0839
+PASS foreman.k1.no_oracle_ceiling n=4096 L=7 <= 0.25 : local 0.1246 [local_k3_W10] stale 0.0954 [stale_k3_W10] dbl 0.0661 oracle 0.4086
+PASS foreman.k1.no_oracle_ceiling n=8192 L=4 <= 0.25 : local 0.0632 [local_k3_W10] stale 0.0622 [stale_k3_W10] dbl 0.0611 oracle 0.0696
+PASS foreman.k1.no_oracle_ceiling n=8192 L=7 <= 0.25 : local 0.0817 [local_k3_W10] stale 0.0710 [stale_k3_W10] dbl 0.0607 oracle 0.1722
+PASS foreman.k1.no_oracle_ceiling n=16384 L=4 <= 0.25 : local 0.0656 [local_k3_W10] stale 0.0651 [stale_k3_W10] dbl 0.0647 oracle 0.0691
+PASS foreman.k1.no_oracle_ceiling n=16384 L=7 <= 0.25 : local 0.0731 [local_k3_W10] stale 0.0688 [stale_k3_W10] dbl 0.0649 oracle 0.1131
+GREEN 0 failing rows
+# exit 0

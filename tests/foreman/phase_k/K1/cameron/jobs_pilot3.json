@@ -1,0 +1,60 @@
+[
+ {
+  "name": "pilot_aL7_frozen_orth_lr1e-3",
+  "argv": [
+   "--arm",
+   "aL",
+   "--layers",
+   "7",
+   "--dff",
+   "183",
+   "--emb",
+   "frozen",
+   "--par_init",
+   "orth",
+   "--lr",
+   "1e-3",
+   "--bed",
+   "kp",
+   "--seed",
+   "0",
+   "--steps",
+   "1500",
+   "--probe_every",
+   "250",
+   "--eval_ns",
+   "1024",
+   "--out",
+   "C:/Users/seal/AppData/Local/Temp/claude/C--Users-seal-Desktop-New-folder--32-/870edeb1-6409-4414-98e7-00d0537b75dd/scratchpad/phase_k/K1/cameron/runs/pilot_aL7_frozen_orth_lr1e-3"
+  ]
+ },
+ {
+  "name": "pilot_aL7_frozen_orth_lr3e-3",
+  "argv": [
+   "--arm",
+   "aL",
+   "--layers",
+   "7",
+   "--dff",
+   "183",
+   "--emb",
+   "frozen",
+   "--par_init",
+   "orth",
+   "--lr",
+   "3e-3",
+   "--bed",
+   "kp",
+   "--seed",
+   "0",
+   "--steps",
+   "1500",
+   "--probe_every",
+   "250",
+   "--eval_ns",
+   "1024",
+   "--out",
+   "C:/Users/seal/AppData/Local/Temp/claude/C--Users-seal-Desktop-New-folder--32-/870edeb1-6409-4414-98e7-00d0537b75dd/scratchpad/phase_k/K1/cameron/runs/pilot_aL7_frozen_orth_lr3e-3"
+  ]
+ }
+]

@@ -1,0 +1,16 @@
+{"t": "config", "arm": "aL", "layers": 7, "dff": 183, "loops": 5, "hook": null, "seed": 0, "steps": 1500, "lr": 0.003, "warmup": 200, "eval_ns": "1024", "probe_every": 250, "out": "C:/Users/seal/AppData/Local/Temp/claude/C--Users-seal-Desktop-New-folder--32-/870edeb1-6409-4414-98e7-00d0537b75dd/scratchpad/phase_k/K1/cameron/runs/pilot_aL7_learned_lr3e-3", "bed": "kp", "emb": "learned", "par_init": "normal", "train_M": null, "tok": 8192, "train_ns": "256,512,1024", "threads": 0, "eval_beds": 64, "device": "NVIDIA GeForce RTX 4060 Laptop GPU", "params": 5001344, "params_nonemb": 806912, "hook_sha256": null, "torch": "2.14.0+cu126"}
+Traceback (most recent call last):
+  File "C:\Users\seal\AppData\Local\Temp\claude\C--Users-seal-Desktop-New-folder--32-\870edeb1-6409-4414-98e7-00d0537b75dd\scratchpad\phase_k\K1\cameron\rdepth.py", line 256, in <module>
+    main()
+  File "C:\Users\seal\AppData\Local\Temp\claude\C--Users-seal-Desktop-New-folder--32-\870edeb1-6409-4414-98e7-00d0537b75dd\scratchpad\phase_k\K1\cameron\rdepth.py", line 228, in main
+    loss.backward()
+  File "C:\Users\seal\AppData\Local\Programs\Python\Python311\Lib\site-packages\torch\_tensor.py", line 623, in backward
+    torch.autograd.backward(
+  File "C:\Users\seal\AppData\Local\Programs\Python\Python311\Lib\site-packages\torch\autograd\__init__.py", line 395, in backward
+    _engine_run_backward(
+  File "C:\Users\seal\AppData\Local\Programs\Python\Python311\Lib\site-packages\torch\autograd\graph.py", line 1072, in _engine_run_backward
+    return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.AcceleratorError: CUDA error: out of memory
+Search for `cudaErrorMemoryAllocation' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+

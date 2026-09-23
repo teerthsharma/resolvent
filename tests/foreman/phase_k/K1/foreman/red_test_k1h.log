@@ -1,0 +1,15 @@
+# 2026-09-23 03:27:29 IST
+# cmd: python test_k1h.py k1h_stub.json
+FAIL foreman.k1.reach2_doubling_is_one L=4 : nan
+FAIL foreman.k1.reach2_doubling_is_one L=6 : nan
+FAIL foreman.k1.reach2_doubling_is_one L=7 : nan
+FAIL foreman.k1.reach2_constant_factor HPD 4_R0 in [1.2, 3.0] : nan
+FAIL foreman.k1.reach2_constant_factor HPD 6_R0 in [1.2, 3.0] : nan
+FAIL foreman.k1.reach2_constant_factor HPD 7_R0 in [1.2, 3.0] : nan
+FAIL foreman.k1.reach2_constant_factor HPD 6_R1 in [1.2, 3.0] : nan
+FAIL foreman.k1.reach2_grows_with_width : (nan, nan)
+FAIL foreman.k1.far_band2_defeats_all 4_R0 : {'kappa': nan, 'worst': nan, 'tokens': 0}
+FAIL foreman.k1.far_band2_defeats_all 7_R0 : {'kappa': nan, 'worst': nan, 'tokens': 0}
+FAIL foreman.k1.far_band2_defeats_all 6_R1 : {'kappa': nan, 'worst': nan, 'tokens': 0}
+RED 11 failing rows
+# exit 1

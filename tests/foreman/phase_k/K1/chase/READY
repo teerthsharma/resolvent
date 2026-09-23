@@ -1,0 +1,8 @@
+hook: C:/Users/seal/AppData/Local/Temp/claude/C--Users-seal-Desktop-New-folder--32-/870edeb1-6409-4414-98e7-00d0537b75dd/scratchpad/phase_k/K1/chase/resolvent_hook.py
+sha256: 3855288d7da7acdebf54b9b1979d9b0b5afebb3dca6d8ccefd684812d33451e2
+classes: FR (arm f_R: layers 0..L-2 = K0 train_ladder AlibiAttention, layer L-1 = ResolventAttention); ResolventAttention (the resolvent layer alone)
+usage (train_ladder): python train_ladder.py --rung R0 --attn "C:/Users/seal/AppData/Local/Temp/claude/C--Users-seal-Desktop-New-folder--32-/870edeb1-6409-4414-98e7-00d0537b75dd/scratchpad/phase_k/K1/chase/resolvent_hook.py:FR" --no_poll ...   (hold gpu.lock.d yourself)
+usage (rdepth.py):    --arm fR --hook "C:/Users/seal/AppData/Local/Temp/claude/C--Users-seal-Desktop-New-folder--32-/870edeb1-6409-4414-98e7-00d0537b75dd/scratchpad/phase_k/K1/chase/resolvent_hook.py:ResolventAttention"   (or :FR; both give the resolvent layer at layer_idx = n_layers-1)
+fixed: beta 1, gamma 0.999, logit scale s_i = a_h ln(i+1) + b_h (a=1, b=0 init, learned, no decay); layer runs in fp32 with autocast off
+rules: no --compile with this hook (untested: it captures its own CUDA graphs); single process per GPU; bitwise comparisons need --deterministic (bound GREEN)
+bars GREEN (test_chase_k1.py, run4.log): hook_parity_S1024, hook_gradcheck_S64_f64, hook_train_ladder_R0_50, hook_deterministic_R0_50

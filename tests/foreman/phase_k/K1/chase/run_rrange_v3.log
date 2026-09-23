@@ -1,0 +1,2 @@
+RED rrange_fR_dressed_R0: {"n_premise": 0, "far_fR_s0": {"premise": false, "acc1024": 0.20263671875, "bare": [Infinity, 18247.240455803993], "dressed": [Infinity, Infinity], "need": 2075}}
+SUMMARY {"rrange_fR_dressed_R0": "red"}

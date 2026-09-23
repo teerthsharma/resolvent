@@ -1,0 +1,2 @@
+{"test": "wilson.k1.mfu", "status": "green", "n_fail": 0, "checks_fired": "0/17", "never_fired": ["peak_device", "peak_reps", "peak_median", "peak_session", "peak_before_sweep", "row_present", "row_orphan", "nofit_reported", "nofit_real", "fit_rc0", "fit_steps", "fit_step_consistency", "fit_tok_s", "fit_mfu", "fit_mem", "fit_cv", "fit_clean"]}
+exit=0

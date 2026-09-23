@@ -1,0 +1,37 @@
+FAIL cameron.k1.fp_machinery (a) hpd port == Foreman 0.5642224409448819 : nan
+FAIL cameron.k1.fp_machinery (b) k2 == doubling : -1
+FAIL cameron.k1.fp_machinery (c) credited >= zero : -1
+FAIL cameron.k1.fp_machinery (d) bed invariants : {'test_roots_all_8': False, 'train_max_depth': 99, 'ids_distinct': False}
+FAIL cameron.k1.fp_line n=1024 L=4 all : nan vs nan
+FAIL cameron.k1.fp_line n=1024 L=4 beyond : 1.0 vs nan
+FAIL cameron.k1.fp_not_void n=1024 L=4 line beyond 2^L < 0.5 : 1.0000 (argmax recency ; per-bed max nan)
+FAIL cameron.k1.fp_deep n=1024 L=4 frac(depth > 2^L) >= 0.25 : [0.0, 0.0, 0.0]
+FAIL cameron.k1.fp_line n=4096 L=4 all : nan vs nan
+FAIL cameron.k1.fp_line n=4096 L=4 beyond : 1.0 vs nan
+FAIL cameron.k1.fp_not_void n=4096 L=4 line beyond 2^L < 0.5 : 1.0000 (argmax recency ; per-bed max nan)
+FAIL cameron.k1.fp_deep n=4096 L=4 frac(depth > 2^L) >= 0.25 : [0.0, 0.0, 0.0]
+FAIL cameron.k1.fp_line n=4096 L=7 all : nan vs nan
+FAIL cameron.k1.fp_line n=4096 L=7 beyond : 1.0 vs nan
+FAIL cameron.k1.fp_not_void n=4096 L=7 line beyond 2^L < 0.5 : 1.0000 (argmax recency ; per-bed max nan)
+FAIL cameron.k1.fp_deep n=4096 L=7 frac(depth > 2^L) >= 0.25 : [0.0, 0.0, 0.0]
+FAIL cameron.k1.fp_line n=8192 L=4 all : nan vs nan
+FAIL cameron.k1.fp_line n=8192 L=4 beyond : 1.0 vs nan
+FAIL cameron.k1.fp_not_void n=8192 L=4 line beyond 2^L < 0.5 : 1.0000 (argmax recency ; per-bed max nan)
+FAIL cameron.k1.fp_deep n=8192 L=4 frac(depth > 2^L) >= 0.25 : [0.0, 0.0, 0.0]
+FAIL cameron.k1.fp_line n=8192 L=7 all : nan vs nan
+FAIL cameron.k1.fp_line n=8192 L=7 beyond : 1.0 vs nan
+FAIL cameron.k1.fp_not_void n=8192 L=7 line beyond 2^L < 0.5 : 1.0000 (argmax recency ; per-bed max nan)
+FAIL cameron.k1.fp_deep n=8192 L=7 frac(depth > 2^L) >= 0.25 : [0.0, 0.0, 0.0]
+FAIL cameron.k1.fp_line n=16384 L=4 all : nan vs nan
+FAIL cameron.k1.fp_line n=16384 L=4 beyond : 1.0 vs nan
+FAIL cameron.k1.fp_not_void n=16384 L=4 line beyond 2^L < 0.5 : 1.0000 (argmax recency ; per-bed max nan)
+FAIL cameron.k1.fp_deep n=16384 L=4 frac(depth > 2^L) >= 0.25 : [0.0, 0.0, 0.0]
+FAIL cameron.k1.fp_line n=16384 L=7 all : nan vs nan
+FAIL cameron.k1.fp_line n=16384 L=7 beyond : 1.0 vs nan
+FAIL cameron.k1.fp_not_void n=16384 L=7 line beyond 2^L < 0.5 : 1.0000 (argmax recency ; per-bed max nan)
+FAIL cameron.k1.fp_deep n=16384 L=7 frac(depth > 2^L) >= 0.25 : [0.0, 0.0, 0.0]
+FAIL cameron.k1.fp_line n=1024 L=7 undefined : [0.0, 0.0, 0.0]
+FAIL cameron.k1.fp_resolvent_feasible n=4096 acc >= 0.99 and beyond16 >= 0.99 : {'acc': [nan, nan, nan], 'beyond16': [nan, nan, nan]}
+FAIL cameron.k1.fp_resolvent_feasible n=8192 acc >= 0.99 and beyond16 >= 0.99 : {'acc': [nan, nan, nan], 'beyond16': [nan, nan, nan]}
+FAIL cameron.k1.fp_resolvent_feasible n=16384 acc >= 0.99 and beyond16 >= 0.99 : {'acc': [nan, nan, nan], 'beyond16': [nan, nan, nan]}
+RED 36 failing rows

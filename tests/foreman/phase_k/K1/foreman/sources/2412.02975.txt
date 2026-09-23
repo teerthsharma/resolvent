@@ -1,0 +1,1927 @@
+                                       Theoretical limitations of multi-layer Transformer
+
+                                                 Lijie Chen               Binghui Peng            Hongxun Wu
+                                               UC Berkeley     Simons Institute, UC Berkeley       UC Berkeley
+                                       lijiechen@berkeley.edu                                 wuhx@berkeley.edu
+                                                                   bp2601@columbia.edu
+
+arXiv:2412.02975v1 [cs.LG] 4 Dec 2024                                                          Abstract
+
+                                           Transformers, especially the decoder-only variants, are the backbone of most modern large
+                                       language models; yet we do not have much understanding of their expressive power except for
+                                       the simple 1-layer case.
+
+                                           Due to the difficulty of analyzing multi-layer models, all previous work relies on unproven
+                                       complexity conjectures to show limitations for multi-layer Transformers. In this work, we prove
+                                       the first unconditional lower bound against multi-layer decoder-only transformers. For any
+                                       constant L, we prove that any L-layer decoder-only transformer needs a polynomial model
+                                       dimension (n(1)) to perform sequential composition of L functions over an input of n tokens.
+
+                                           As a consequence, our results give: (1) the first depth-width trade-off for multi-layer trans-
+                                       formers, exhibiting that the L-step composition task is exponentially harder for L-layer models
+                                       compared to (L + 1)-layer ones; (2) an unconditional separation between encoder and decoder,
+                                       exhibiting a hard task for decoders that can be solved by an exponentially shallower and smaller
+                                       encoder; (3) a provable advantage of chain-of-thought, exhibiting a task that becomes exponen-
+                                       tially easier with chain-of-thought.
+
+                                           On the technical side, we propose the multi-party autoregressive communication model that
+                                       captures the computation of a decoder-only Transformer. We also introduce a new proof tech-
+                                       nique that finds a certain indistinguishable decomposition of all possible inputs iteratively for
+                                       proving lower bounds in this model. We believe our new communication model and proof
+                                       technique will be helpful to further understand the computational power of transformers.
+
+                                                               1
+1 Introduction
+
+The Transformer architecture [VSP+17] forms the backbone of modern large language models
+(LLMs). When pre-trained on vast corpora and fine-tuned on expert datasets, Transformers achieve
+impressive performance across a range of natural language tasks [AAA+23] and demonstrate emer-
+gent intelligence [BCE+23].
+
+    There is no doubt that the Transformer is an ingenious and powerful architecture, as evidenced
+by many of its substantial empirical successes. Nevertheless, does the architecture have any po-
+tential limitations or weaknesses? We believe this is a fundamental question, especially given the
+widespread deployment of LLMs. In this paper, we investigate this question from a computational
+(representational) perspective, viewing neural networks as parameterized functions and studying
+what they can compute efficiently.
+
+    The literature on the representation power of Transformers is extensive (see Section 1.4 for a de-
+tailed discussion). Prior to our work, we only have a solid understanding of one-layer Transformers ­
+unconditional lower bounds have been established for various basic tasks, such as the composition of
+two functions [PNP24], 3SUM [SHT23], and induction heads [SHT24a]. However, for the arguably
+more interesting case of multi-layer Transformers, unconditional lower bounds remain elusive even
+for two-layer models. There is even speculation in the literature that multi-layer Transformers face
+circuit lower bound barriers, meaning that proving lower bounds for multi-layer Transformer may
+require first resolving long-standing open qestion on circuit lower bounds, see [Hah20] for a detailed
+discussion. As a result, researchers have turned to characterizing the limitations of Transformers
+through computational conjectures, proving that the computational power of Transformers is con-
+tained within constant depth threshold circuit TC0 [MS23b], log-space computation L [PNP24] and
+Massively Parallel Computation (MPC) [SHT24b].
+
+"Small" vs. "Large" transformers. To study the transformer as a computational model, we
+often consider the context length (prompt length) n as a growing parameter and study the required
+size of the transformer (in terms of parameters such as head embedding dimension d and number
+of attention heads H) for solving particular problems. Note that the total number of parameters
+of a transformer is roughly L · poly(dHp), which is independent of the context length n, where L is
+the number of layer, p is the number of bit precision for each entry in the embedding and one can
+often think p as (log n). Following the convention of [SHT23], we consider the transformer small
+if dHp  no(1), and large if dHp  n for some constant  > 0.
+
+1.1 Our result
+
+In this paper, we prove the first unconditional lower bounds for any constant layer (decoder-only)
+Transformer. Indeed, we prove that no small Transformer can not solve sequential composition
+tasks over long context; see Section 2.1 for a formal definition of transformers.
+
+Theorem 1.1 (Lower bound for multi-layer Transformer). Let H be the number attention heads,
+d be the head dimension, p be the precision, L be the number of layers, n be the prompt length. For
+any L  O(log log(n)), an L-layer decoder-only Transformer could not solve L-sequential function
+composition whenever Hdp  n2-4L .
+
+    A formal definition of the L-sequential function composition can be found at Definition 2.1.
+Roughly speaking, given L functions f1, . . . , fL and a query w = (w1, . . . , wL), it asks to compute
+i1 = f1(w1), i2 = f2(w2, i1), . . . , iL = fL(wL, iL-1).
+
+                                                                2
+Encoder vs. decoder. The focus of our paper is on decoder-only Transformer, which is the
+most popular architecture among all LLMs. The original Transformer paper [VSP+17] consists
+of two main components: the encoder and the decoder. The encoder processes input tokens with
+pairwise attention mechanisms, capturing contextual relationships across the input. In contrast,
+the decoder employs causal masking to attend only to previous tokens, enabling autoregressive
+sequence generation.
+
+    Indeed, the history of LLMs reflects a shift from encoder-based to decoder-only architectures.
+Early models like BERT [JCKT19], built on the Transformer's encoder, excelled in understanding
+tasks by learning contextual relationships through masked language modeling. However, encoder-
+based models have been proved limited for text generation, as they lacked autoregressive capabil-
+ities. Decoder-only models are trained through next-token prediction, which not only aligns well
+with text generation tasks but also improves computational efficiency during generation. Following
+the success of GPTs [RWC+19, MRS+20], all prominent large language models, including Claude
+[Ant24], Gemini [TGL+24] and LLaMA [Met24], have adopted the decoder-only approach.
+
+Composition. The ability to perform compositional tasks has been a central focus of empirical
+research [WTB+22, PZM+23, DLS+23, AG23, YGK+24, WSF+24, PSD+24, JMB+24, YXLAZ24],
+as compositionality is essential for reasoning and handling complex tasks. [DLS+23] demonstrated
+through extensive experiments that Transformers struggle with tasks requiring the sequential com-
+position of elementary steps, such as multiplying multi-digit integers and solving logical puzzles,
+with performance rapidly declining as the depth of composition increases. Our main theorem, Theo-
+rem 1.1, provides theoretical justification for the limitations of Transformers in executing sequential
+composition.
+
+    On the other hand, Theorem 1.1 highlights the importance of depth in Transformers. As we
+elaborate in Section 1.2, Theorem 1.1 implies a depth-size tradeoff for Transformers in compositional
+tasks. This aligns with the empirical findings of [YXLAZ24], which demonstrate that depth plays
+a more critical role than width in reasoning and composition tasks.
+
+On the circuit lower bound barrier. It was suggested in [Hah20] that unconditional lower
+bounds against encoder-only transformer would imply breakthrough circuit lower bounds against
+linear threshold circuits.1 Our result avoids this barrier by exploiting the information bottleneck
+and autoregressive nature of decoder-only models. Namely, our proof crucially depends on the fact
+that in decoder-only models, each token cannot attend to any token after it.
+
+1.2 Applications
+
+Application 1: Depth-size tradeoff for Transformer
+
+Depth-size (or depth-width) tradeoff has been extensively studied for neural networks [MCPZ13,
+ES16, Tel16, LS17, Dan17, SS17, LPW+17, Yar17, SES19, VS20, BN20, VRPS21, LWS+20]. Most
+work has focused on the feed-forward ReLU network. However, as pointed out by [VS20, VRPS21],
+proving depth-width tradeoff for L  4 layer ReLU network faces circuit lower bound and natural
+proof barriers for benign functions (i.e., functions that can be computed in polynomial time and
+has polynomial-bounded Lipschitz constant). Hence, existing work [ES16, Dan17] either focus on
+
+    1In [Hah20] it was mentioned briefly in a footnote without providing a detailed argument; in Appendix B, we
+provide a detailed argument showing that an n-size lower bounds against encoders would imply breakthrough circuit
+lower bounds.
+
+                                                                3
+very shallow network (L = 2, 3), or construct separations based on high oscillatory function with
+super-polynomial Lipscitz constant [Tel16].
+
+    In sharp contrast, Theorem 1.1 implies an exponential depth-size tradeoff for Transformer
+architecture. This is because the L-sequential function composition can be easily solved by an
+(L + 1)-layer decoder-only Transformer, with only polylogarithmic number of parameters (i.e.,
+H = O(1), d = poly log(n), p = log(n)).
+
+Corollary 1.2 (Depth-size tradeoff). For any constant L  1, there exists a task (a.k.a. L-
+sequential function composition) such that (1) an (L + 1)-layer Transformer could solve the task
+with polylogarithmic number of parameters while (2) any L-layer Transformer needs polynomial
+number of parameters to solve the task.
+
+Application 2: Separation between Transformer encoder/decoder
+
+Theorem 1.1 also implies a separation between the encoder and the decoder architecture, since
+the L-sequential function composition task can be easily solved by an O(log(L))-layer Transformer
+encoder.
+
+Corollary 1.3 (Separation between encoder and decoder). For any constant L  1, there exists a
+task (a.k.a. L-sequential function composition) such that (1) an O(log(L))-layer Transformer en-
+coder could solve the task with polylogarithmic number of parameters while (2) any L-layer Trans-
+former decoder needs polynomial number of parameters to solve the task.
+
+    There has been a lot of work [FLY+23, AZL23a, AZL23b, NESK24, QMN24] comparing the
+empirical performance of encoder and decoder architecture, see [Tay24] for a detailed coverage.
+A recent work [ECZ+24] compares the expressive power between encoder and decoder, showing a
+strong separation by assuming a conjecture of the hardness of a certain triplet counting problem.
+In contrast, our work gives the first unconditional separation without any unproven assumptions.
+
+Application 3: Provable benefits of chain of thought
+
+The chain of thought (CoT) [WWS+22] is known to help with the reasoning by inducing the
+LLM to perform step by step reasoning and eventually leading to the correct answer. From a
+theoretical view, CoT provides Transformer with extra computation space, and previous work
+[PBM21, FGZ+23, MS23a, LLZM24] proved that log-precision Transformer with CoT could simu-
+late any polynomial-time algorithm. Therefore, by further assuming certain complexity conjecture
+(e.g. P  TC0), their results imply that constant depth Transformer with CoT could simulate
+poly-time algorithm, while constant depth Transform ( TC0) itself can not solve P-complete task.
+
+    Theorem 1.1 implies the first provable benefits of CoT, without relying on any computational
+complexity conjecture. This is because L-sequential function composition can be easily solved using
+L-steps of CoT with only polylogarithmic number of parameters.
+
+Corollary 1.4 (Provably benefits of CoT). For any constant L  1, there exists a task (a.k.a. L-
+sequential function composition) such that (1) an one-layer Transformer with CoT could solve the
+task with polylogarithmic number of parameters while (2) any L-layer Transformer decoder needs
+polynomial number of parameters to solve the task.
+
+1.3 Technique overview
+
+Below, we provide an overview of Theorem 1.1. In Section 1.3.1, we introduce the autoregressive
+communication model, which captures the computation of decoder-only transformers. Then, in Sec-
+tion 1.3.2, we define the L-sequential function composition task, for which we will show hardness
+
+                                                                4
+against decoder-only models. Finally, in Section 1.3.3, we sketch the proof that L-sequential func-
+tion composition is hard in the autoregressive communication model, which implies Theorem 1.1.
+
+Notation. We write [n] = {1, 2, . . . , n} and [n1 : n2] = {n1, n1 + 1, . . . , n2}. In the corner case,
+we let [0] = .
+
+1.3.1 Autoregressive communication model
+
+In order to capture the computational power of autoregressive models such as decoder-only Trans-
+formers, we introduce the autoregressive communication model, which is the key conceptual con-
+tribution of this paper.
+
+Setting. A protocol in the autoregressive communication model proceeds in L epochs (which is
+also the number of layers in a corresponding transformer). There are N players, each player i  [N ]
+receives zi as input. Their goal is to let player 1 compute an intended function f (z1, . . . , zN ) at the
+end of L-th epoch.
+
+    It is also helpful to imagine players are arranged on a line as player N, N - 1, . . . , 1; so autore-
+gressively, player i can only attend to (i.e., send message to) player j such that j > i.
+
+Communication. For   [0 : L], let Xi() be the message collected by player i (i  [N ]) after
+the -th epoch of communication. Initially, when  = 0, Xi(0) is just the input of player i.
+
+    For  = 1, 2, . . . , L, the -th epoch of communication proceeds as follows. For player i  [N ]:
+
+· The player i sends a message i(,j) to all players j  [i + 1 : N ].
+
+· The player j  [i + 1 : N ], based on its own information Xj(-1) and player i's message i(,j),
+  it sends a message (j,i) to player i.
+
+· Finally, the player i updates its collection of information as
+
+Xi() := Xi(-1)        (j,i).
+
+                 j>i
+
+That is, the information state of player i is updated to include all messages received from
+players j  [i + 1 : N ].
+
+Finally, the player 1 returns an output based on its information state X1(L).
+    The most salient feature of the autoregressive communication model is that the players are
+
+forgetful. That is, the player j does not remember anything sent from player i  [1 : j - 1];
+
+see Section 3 for a formal definition of the autoregressive communication model.
+
+Transformer as autoregressive communication. The Transformer architecture can be cap-
+
+tured as by the autoregressive communication model. In particular, if we partition the input
+
+prompt as (zN , . . . , z1) (where each zi can contain multiple tokens), the Transformer can be seen
+as a special autoregressive communication protocol, where each attention layer implements one
+
+epoch of communication and the MLP layers between the attention layers are used to perform local
+computation. The message (i,j) contains the queries from positions corresponding to tokens of zi
+and the returned message (j,i) contains the partial sum of key/value. Moreover the size of i(,j) and
+
+5
+(j,i) is bounded by 2Hdp · |zi|, that is, they are proportional to the input length of player i. We
+call B := 2Hdp the message bits of the communication model; see Lemma 3.1 for a detailed proof
+
+of the simulation of decoder-only transformers by autoregressive communication protocols.
+
+1.3.2 Sequential function composition
+
+Now we elaborate on the L-sequential function composition task and explain why an autoregressive
+communication protocol with small message bits B = 2Hdp fails to solve it.
+
+Intuition. We first provide intuitions on what makes a task hard for autoregressive communica-
+
+tion models. Intuitively, the player i has stronger communication power than player j > i, since
+
+player i could communicate to all players [i + 1 : N ] and it remembers all their returned message in
+
+the information state. Therefore, the failure of an autoregressive communication protocol happens
+
+in the regime of |zN |  |zN-1|  · · ·  |z1|.2 On the other hand, in this regime, player j possess
+
+much more information than player i regard the entire sequence (zN , . . . , z1) since its input has
+larger size and its communication capacity is larger (i.e., |zj| · 2Hdp  |zi| · 2Hdp). In order to
+
+avoid shortcut in the communication, we must make sure that player 1 holds important "secrets"
+
+that are crucial for all players j  [2 : N ].
+
+To this end, consider the L-sequential function composition task. Let m, n1, . . . , nL-1 be pa-
+                      
+rameters and N = m ·  i=1  ni  for      [0  :  L].
+
+L-sequential function composition. Our task, L-FuncComp(w, z0, z1, . . . , zL), takes a sequence
+of functions z0, z1 . . . , zL as input, where z0  [m] and z : [N-1]  [N-1] for   [L] and a query
+w = (w1, . . . , wL-1)  [n1] × · · · × [nL-1]. The output is defined inductively as follows: First, one
+computes
+
+                                          i0 = z0  [m], i1 = z1(i0)  [N0]
+
+and one inductively computes, for each  = 1, 2, . . . , L - 1:
+
+                           i2 = z2(w1, i1)  [N1], . . . , i+1 = z+1(w, i)  [N].
+
+The final output is then defined as
+
+                                         L-FuncComp(w, z0, z1, . . . , zL) = iL.
+
+    In the autoregressive communication model, for the L-sequential function composition task, we
+have N = L + 2 parties. For the sake of exposition, we rename them as player L, L - 1, . . . , 0, -1,
+where the player  receives z (  [0 : L]) and the player -1 receives the query z-1 := w. For
+simplicity, we can assume that the message (i,j) is just the whole information state Xi(-1) of player
+i at the end of epoch  - 1.
+
+1.3.3 Communication lower bound
+
+Next, we elaborate on the communication lower bound for the sequential function composition
+task, which is the main technical part of this paper. In this overview, we hide the precise choice of
+parameters and highlight the key ideas behind the proof.
+
+    For convenience, we set A = [N-1]N-1 be the input domain of player  (  [1 : L]). We
+also set A0 = [m] and A-1 = [n1] × · · · × [nL-1] be the input domain of player 0 and player -1,
+respectively.
+
+    2Note that on the other extreme, when |z1|  |zj | (j  [2 : N ]), there exists a trivial communication protocol
+since the player j could sends it input zj to player 1.
+
+                                                    6
+Indistinguishable decomposition. Our key idea is the concept of indistinguishable decompo-
+
+sition, which is two sets R and Z<, where R is a set of input assignments to players [ : L]
+and Z< is a set of input assignments to players [-1 :  - 1], such that for every possible inputs
+z<  Z<, all assignments in R are indistinguishable to players [-1 :  - 1] on inputs z< after 
+epochs (because they lead to the same transcripts).
+
+    For technical reasons, we will further assume (1) Z< is a product set Z< := Z-1×Z0×· · ·×Z-1,
+where Zi  Ai for every i  [-1 :  - 1]; and (2) Z-1 = A-1.
+
+    Indistinguishable decomposition is helpful because when  = L, for every input assignment from
+
+Z<L to players [-1 : L - 1], the player -1 after L epochs (i.e., at the end of the protocol) sees
+the same transcript when player L receives different inputs from RL.3 In particular, it means for
+every z<L  Z<L, the answer L-FuncComp(z<L, zL) must be the same for every zL  RL. This is
+a strong constraint on the set RL that we will analyze below.
+
+    First, we define I-1 := I-1(Z<L) as the set of all partial composition values i-1 for inputs
+from Z<.
+
+    Recall that by its definition, we have
+
+                        L-FuncComp(z<L, zL) = iL = zL(wL-1, iL-1).
+
+Fixing any z<L  Z<L, this value is the same for all z~L  RL. As Z<L is the product set
+
+A-1 × Z0 × · · · × ZL-1 and z<L  Z<L, variable w = z-1 can take any value A-1. So wL-1 can
+
+take any value in [nL-1]. Fixing any z<L  Z<L is equivalent to fixing any wL-1  [nL-1] and
+
+iL-1  IL-1, and the value of zL(wL-1, iL-1) is fixed for every zL  RL. This in particular, means
+
+that                                            |AL|
+                                           NL|I-L1-1|·nL-1
+                        |RL|                                .       (1)
+
+    Given the above (1), our goal now is (for every autoregressive communication protocol  with
+L epochs and B message bits) to find an indistinguishable decomposition with the following two
+properties:
+
+    · (Large remaining entropy) The size of RL is large; and
+
+    · (Large cover) The size of IL-1(Z<L) is large.
+
+    We intentionally omit the precise meaning of "large" in the two items above; the idea is that
+these two conditions together would contradict (1), therefore showing  does not compute L-
+FuncComp. Since  is an arbitrary protocol, this proves the lower bound.
+
+Construct indistinguishable decomposition via induction. We construct the indistinguish-
+
+able decomposition R and Z< via an induction on . Suppose we have already obtained R and
+
+Z<, and let () =  z(<)            be the collection of transcripts from players [ : L] to players
+
+                        z< Z<
+
+[-1 : ], when players [ : L] take input assignments from R and players [-1 :  - 1] take input
+assignments from Z<. Indistinguishable decomposition ensures that () is well-defined (e.g., it is
+
+the correct transcript for every z  R).
+
+To construct R+1 and Z<+1, we proceeds in two parts.
+
+    3Due to our renaming, player -1 is the player 1 in the definition of the autoregressive model, who is supposed to
+output an answer at the end of the protocol.
+
+                                           7
+· (Part 1) First, we wish to select a set Z  A and let Z<+1 = Z< × Z. To this end, we find
+   a rectangular subset from R, i.e., we find S+1 × Z  R where S+1  AL × · · · × A+1
+   and Z  A, with the requirement that (1) S+1 has large size, and (2) the size of I(Z<+1)
+   is large.
+
+· (Part 2) Next, we want to distill a subset R+1 from S+1. This requires us to determine
+   the transcripts from players [ + 1 : L] to players [-1 : ] in the first  + 1 epochs, when they
+   receive input assignments from R+1 and Z<+1. We further divides into three steps:
+
+     1. (Step 1) We first determine transcripts to players [-1 :  - 1] over the first  epochs. We
+         can simply use () (i.e., transcripts from the inductive hypothesis). Up to this point,
+         all assignments to S+1 are indistinguishable to Z<+1.
+
+     2. (Step 2) Next, we determine transcripts to players [-1 :  - 1] in the ( + 1)-th epoch.
+         This is the key step of the whole proof. Our key insight is that Z is indistinguishable to
+         players [-1 :  - 1] after  epochs, when they take input from Z<. Hence, the ( + 1)-th
+         epoch transcripts to players [-1 :  - 1] are independent of the choice of z  Z. We can
+         then use a greedy strategy to select transcripts that leak the least amount of information
+         about S+1, without consulting to the value of z  Z.4 After this step, we are left
+         with a large subset T+1  S+1 that is indistinguishable to Z<+1.
+
+     3. (Step 3) Finally, we determine transcripts to players  over the first  + 1 epochs,
+         we simply use a greedy strategy to select transcripts that leak the least amount of
+         information about T+1, and we finally left with a large set R+1  T+1 that is
+         indistinguishable to Z<+1.
+
+1.4 Related work
+
+Representation power of Transformer. There is a long line of work studying the representa-
+tion power of Transformer [EGZ20, YPPN21, PBM21, CC22, SHT23, LAG+24, WLLR23, WDL24,
+JBK+24, FGZ+23, MS23a, LLZM24]. Starting from the work of [YPPN21, HHG+20], a line of
+work demonstrates the advantage of Transformer against recurrent architecture (RNNs, LSTMs
+and state space model) on a variety of tasks, such that parsing hierarchical structure [YPPN21],
+sparse averaging [SHT23], in context learning [WDL24] and copying [JBK+24].
+
+    Hahn [Hah20] initiated the study on the limitation of the self-attention mechanism; the author
+proves that a Transformer with hard attention can not recognize parity and dyck language. The
+lower bound does not extend to soft-attention since both parity and dyck language can be solved by
+two-layer Transformers. Since then, the literature either uses communication complexity to prove
+lower bound for one-layer Transformer [PNP24, SHT23, SHT24b], or put Transformer into various
+computation models [SHT24b, MS23b, PNP24].
+
+    The CoT paradigm allows extra computation space for Transformer, and previous work [PBM21,
+FGZ+23, MS23a, LLZM24] demonstrated the power of CoT. [PBM21] prove Transformer with
+arbitrary precise is Turing-complete, [MS23a] and [LLZM24] prove that log-precision Transformer
+could simulate any polynomial time algorithm/polynomial-size circuit when the algorithm/circuit
+is given as input.
+
+Lower bounds against TC0. TC0 is the class of constant-depth circuits consisting of AND, OR,
+NOT, and linear threshold gates.5 In the literature, the size of TC0 circuits is often measured in
+
+    4This saving is crucial for our proof to work.                                 n    wi  ·  xi      and  0  otherwise,
+    5A linear threshold gate G : {0, 1}n  {0, 1} outputs 1 on input x  {0, 1}n if  i=1
+where (w1, . . . , wn)  Rn is a weight vector and   R is a threshold.
+
+8
+terms of the number of wires (i.e., the total fan-in of all gates).
+
+    It is proven in [MS23b] that constant-depth encoder-only transformer can be simulated by
+TC0 circuits with roughly the same depth. Hence, strong lower bounds against TC0 would imply
+
+lower bounds against a constant-depth encoder-only transformer. This simulation has at least a
+quadratic blow-up in terms of wires since it already requires at least an (n2)-wire TC0 circuit
+to simulate a single attention layer. Unfortunately, the best known lower bounds against TC0
+circuits [IPS97, CSS18, HHTT23] are of the form n1+c-d where c > 1 is a constant, which is
+not strong enough to imply any constant-depth encoder-only transformer lower bounds.6 Indeed,
+proving better lower bounds against TC0 (say, n1+1/d wires against depth-d TC0) is a major open
+
+question in complexity theory and would have breakthrough consequences [AK10, CT19].
+
+2 Preliminaries
+
+Notation. Recall we write [n] = {1, 2, . . . , n} and [n1 : n2] = {n1, n1 + 1, . . . , n2}. In the corner
+case, we let [0] = .
+
+2.1 Transformer
+
+We formally describe the decoder-only Transformer architecture. Let L be the number of attention
+layers, H be the number of attention heads at each layer, p be the precision, d be the key, value and
+model dimension, n be the (input) prompt length. In order to carry out attention, it is common
+to assume the bit precision p  log(n).
+
+    An L-layer decoder-only Transformer is a sequence-to-sequence network, consists of alternating
+attention layer and MLP layer:
+
+                            ftran = fm(Llp)  fa(tLtn)  · · ·  fm(1l)p  fa(t1t)n
+
+Given an input sequence x(0) = (x1(0), . . . , x(n0))  (RdH )n, the Transformer inductively computes
+the output of the -th attention layer y() = (y1(), . . . , yn()) and the output of the -th MLP layer
+x() = (x1(), . . . , x(n)). For layer  = 1, 2, . . . , L,
+
+    · Attention layer fattn: For each attention head h  [H] and position i  [n], we have
+
+                            yi(,h) =      (i,j,h)V (,h)x(j-1)  Rd                          (2)
+
+                                      ji
+
+where {(i,j,h)}ji is the attention probability of the h-th attention head, computed as
+
+                 (i,j,h) =  exp((x(i-1) ) (Q(,h) ) K (,h) x(j-1) )                 [0, 1]  (3)
+                            ji exp((x(i-1))(Q(,h))K(,h)x(j-1))
+
+and Q(,h), K(,h), V (,h)  Rd×dH is the query, key and value matrix of the attention head.
+Finally, the output of the -th attention layer is the concatenation of each head,
+
+                                          yi() = (yi(,1), . . . , yi(,H))  RdH i  [n]
+
+    6Also, the hard instance from [IPS97], the parity function, can be solved by a decoder-only transformer with
+polylog(n) model dimension. Here, the parity function takes n bits as input and outputs 1 if the number of ones in
+the input is odd, and 0 otherwise.
+
+                                          9
+    · MLP layer fm lp: The output of the -th layer (and also the input to the ( + 1)-th layer) is
+       an arbitrary function g() : RdH  RdH applied to each position:
+
+                                                      x(i) = g()(yi())  RdH
+
+Our formulation is general enough to capture detailed architecture choice such as the positional
+encoding, the residual connection, the layer normalization and the mixture-of-expert layers.
+
+    The only different between Transformer encoder and decoder is that the encoder performs
+attention to all tokens (instead of previous token), so the summation in Eq. (2)(3) is over j  [n]
+(instead of j  i).
+
+2.2 Sequential function composition
+
+We use the following parameters throughout the paper.
+
+     K = (H dpL)8 · 82L2 , m = K , [0:L-1] 8+1 n = K4·8L--1   [L - 1].  (4)
+
+and
+
+     N = m · n   [0 : L - 1].                                           (5)
+
+     []
+
+Definition 2.1 (L-sequential function composition). A L-sequential function composition task
+L-FuncComp(w, z0, z1, . . . , zL) is described a sequence of functions z0, z1 . . . , zL, where z0  [m] and
+z : [N-1]  [N-1] for   [L] and a query w = (w1, . . . , wL-1)  [n1] × · · · × [nL-1], one computes
+
+                                          i0 = z0  [m], i1 = z1(i0)  [N0]
+
+and one inductively computes, for each  = 1, 2, . . . , L - 1:
+
+     i2 = z2(w1, i1)  [N1], . . . , i+1 = z+1(w, i)  [N]                (6)
+
+The final output is taken as L-FuncComp(w, z0, z1, . . . , zL) = iL.
+
+    For Transformer to solve the L-sequential function composition, we assume the input prompt
+first describes L functions in the order of zL-1, . . . , z0, and then describes the query w. For sim-
+plicity, we assume each entry of z (  [0 : L - 1]) is described using one token (so it takes N-1
+tokens to describe z); the query w is described in one token.
+
+3 The Autoregressive Communication Model
+
+In this section, we introduce a new communication model, which is a nice abstraction of the
+Transformer architecture for our purpose of proving lower bounds.
+
+    The Autoregressive Communication Model
+
+    Settings. Let L be the number of epochs. There are L + 2 players; we call them players
+    [-1 : L]. They communicate in L epochs. Let B be the message bits of a single token.
+
+         10
+    Input. Player i  [-1 : L] receives m(i) tokens zi as input.
+
+    Communication. The communication proceeds in L epochs. For   [0 : L], let Xi()
+    be the message collected by player i ( [-1 : L]) after the -th epoch of communication.
+    Initially, when  = 0, Xi(0) is just the input of player i.
+    For  = 1, 2, . . . , L, the -th epoch of communication proceeds as follows. For player i  [-1 :
+    L],
+
+        · The player i sends its information Xi(-1) to all players [i + 1 : L].
+        · The player j  [i+1 : L], based on its own information Xj(-1) and player i's information
+
+           Xi(-1), it sends a message j(,i) to player i. The length of the message satisfies
+
+                                                         |j(,i)| = 2B · m(i).
+
+        · Finally, the player i updates its collection of information as
+
+                                                    Xi() := Xi(-1)  j(,i).
+
+                                                                                                      j>i
+
+    Output. At the end of L-th round, the player -1 outputs a message based on its informa-
+    tion X-(L1).
+
+    Below, we state L-FuncComp in the autoregressive communication model formally.
+
+    L-FuncComp in the autoregressive communication model
+
+    Settings. Let L be a parameter. Let K, m, n, N be defined according to (4) and (5). We
+    set B = Hdp.
+
+    Input. Player i  [L] receives zi from Definition 2.1 as an input, described in Ni-1 tokens.
+    Player 0 and player -1 receives z0 and w as input, respectively, each described in 1 token.
+
+    Output. At the end of L-th round, the player -1 needs to output L-
+    FuncComp(w, z0, . . . , zL).
+
+3.1 Autoregressive communication lower bounds imply Transformer lower bounds
+
+The following lemma shows that proving a lower bound for the above communication model im-
+mediately implies the desired lower bound against decoder-only Transformers.
+
+Lemma 3.1 (Reduction from Transformers to autoregressive communication). If there is an L-
+layer decoder-only Transformer that solves the L-sequential function composition task, then there is
+a deterministic autoregressive communication protocol that solves L-FuncComp with L epochs and
+B = Hdp message bits.
+
+Proof. Let  be an L-layer Transformer that solves the L-sequential function composition task.
+We use K(,h), Q(,h), V (,h) to denote its key, query and value matrix, and g() to denote its MLP
+
+                                                               11
+function. For i  [-1 : L], Ei  [n] be the positions correspond to the input of player i, i.e.,
+
+                   j[i+1:L] Nj-1 + 1 : j[i:L] Nj-1                    i  [L]
+                                                                       i=0
+          Ei =           { j[0:L-1] Nj + 1}                           i = -1
+                         { j[0:L-1] Nj + 2}
+
+Consider the following autoregressive communication protocol for L-FuncComp with L epochs
+
+and B = Hdp. For epoch  = 1, 2, . . . , L, for each player i and for each j > i, define the transcript
+(j,i) from player j to player i as follow:
+
+                                                                      
+                                                                      
+(j,i) =        exp((x(r-1))(Q(,h))K(,h)x(t-1))V (,h)x(t-1)
+          tEj
+                                                                      h[H ],rEi
+           
+                                                                    
+                   exp((x(r-1) ) (Q(,h) ) K (,h) x(t-1) )
+              tEj
+
+                                                                      h[H ],rEi
+
+The total length of (j,i) satisfies the requirement, i.e., we have
+
+|j(,i)| = |Ei| · H · (dp + p)  |Ei| · 2Hdp =  2Hdp · Ni-1                i  [L]
+                                                  2H dp               i  {0, -1}
+
+    We note that (j,i) depends only on the value of {x(r-1)}rEi and {x(t-1)}tEj , hence, it remains
+to prove that they can be derived based on {Xr(-1)}rEj and {Xt(-1)}tEi . To this end, we prove
+
+Claim 3.2. For  = 0, 1, . . . , L, the player i (i  [-1 : L]) knows the intermediate value {x(t)}tEi
+of the Transformer after -th epoch, i.e., {xt()}tEi can be derived from {Xt()}tEi .
+
+    With Claim 3.2 in hand, we can finish the proof since the player -1 knows the output embedding
+x(nL) of the Transformer.
+
+Proof of Lemma 3.2. The inductive hypothesis is obviously true for  = 0. Suppose it continues
+to hold for  - 1, then for the -th epoch, the player i receives (j,i) for j > i, recall the output
+{yr()}rEi = {yr(,h)}rEi,h[H], and we have
+
+yr(,h) =      (r,t,h)V (,h)x(t-1)
+
+          tr
+
+=         ji tEj ,ti exp((x(r-1))(Q(,h))K(,h)x(t-1))V (,h)x(t-1)
+                 ji tEj ,ti exp((x(r-1))(Q(,h))K(,h)x(t-1))
+
+It can be obtained from the transcript {j(,i)}j>i and Xi(-1). Once the player i obtains {yr()}rEi ,
+it can also obtain {x(r)}rEi since x(r) = g()(yr()) can be computed locally. This completes the
+
+proof.
+
+                                   12
+4 Autoregressive Communication Lower Bound
+
+Our main result (Theorem 1.1) can be obtained from Lemma 3.1 and the following lower bound
+for the communication problem.
+
+Theorem 4.1. There is no deterministic autoregressive communication protocol solving L-FuncComp
+with L epochs and B = Hdp message bits.
+
+Notation. For notational convenience, we use z-1 and w interchangeably to denote player -1's
+input. In the following, we elaborate on several key definitions that will be crucial to our proof.
+
+    · (The transcript j(,i)) For any i  [-1 : L - 1], j  [i + 1 : L],   [L], recall (j,i) is the
+       transcript sent from the player j to the player i at the -th epoch of communication. Its value
+       is determined by the input of players [i : L], i.e., zL, . . . , zi, and its value is independent of
+       the choice of zi-1, . . . , z0, w.7
+       For any fixed value zL  [NL-1]NL-1 , . . . , zi  [Ni-1]Ni-1 , let j(,i)(zL, . . . , zi) be the transcript
+       when the players t receives input zt = zt (t  [i : L]).
+
+    · (The partial composition value i(w, z0, . . . , z)) For any   [0 : L], the value of i is deter-
+       mined by w, z0, . . . , z. We write i(w, z0, . . . , z) to denote the value of i when w = w, z0 =
+       z0, . . . , z = z.
+
+Parameters. We use the following parameters
+
+              x = K8L--1 (  [0 : L - 1]), A = NN-1-1 (  [L])  (7)
+
+and                            (  [2 : L]),      = 8-L(x0 . . . x) · (n1 . . . n-1) (  [L - 1]).
+                                                                                                               (8)
+              
+
+ = 24 K(x0...x-2)·(n1...nL-1)
+
+    For notational convenience, we also set A-1 = iL=-11[ni] and A0 = [m]. Note that with our
+convention of denoting w by z-1, player i takes an input from Ai for every i  [-1 : L].8
+
+    The meaning of parameters will be clearer after we state our main technical centerpiece Lemma
+4.5.
+
+Indistinguishable decomposition. Our key idea is the following concept of indistinguishable
+
+decomposition, which is two sets R and Z<, where R is a set of input assignments to players
+[ : L] and Z< is a set of input assignments to players [-1 :  - 1]), such that for every possible
+inputs z<  Z<, all assignments to R are indistinguishable to players [-1 :  - 1] on inputs z<
+after  epochs (because they lead to the same transcripts).
+
+    Formally, we define:
+
+7The transcript also depends on the underlying autoregressive communication protocol , which will be clear from
+
+the context.
+
+8Here, we can interpret an element from  N N-1  as a function from [N-1]  [N-1] via a natural bijection.
+                                            -1
+
+                                                13
+Definition 4.2 (Indistinguishable decomposition). Let   [2 : L],
+
+                                 R  AL × AL-1 × · · · × A
+
+and
+
+Z< = Z-1 × · · · × Z-1  A-1 × · · · × A-1 where Z-1 = A-1, Z0  A0, · · · , Z-1  A-1.
+
+We say R and Z< is an indistinguishable decomposition, if for every z<  Z<, and for every
+
+,   R, it satisfies:
+
+                              j(,i)(z<, ) = j(,i)(z<, )
+
+for every j  [ : L], i  [-1 :  - 1], and   [].
+
+    Indistinguishable configuration is helpful because when  = L, for every input assignment from
+
+Z<L to players [-1 : L - 1], the player -1 after L epochs (i.e., at the end of the protocol) sees
+the same transcript when player L receives inputs from RL. In particular, it means for every
+z<L  Z<L, the answer L-FuncComp(z<L, zL) must be the same for every zL  RL. This is a
+strong requirement and we will carefully define properties of R and Z< such that this requirement
+would lead to contradiction, and therefore obtaining our lower bound.
+
+    For a subset Z<, we define I-1 as
+
+     I-1(Z<) := {i-1 : i-1 = i-1(z-1, z0, . . . , z-1) for some (z-1, z0, . . . , z-1)  Z<}.
+
+    That is, I-1(Z<) is the set of all partial composition values for inputs from Z<.
+    The following lemma shows that the desired lower bound follows from a good enough indistin-
+
+guishable configuration for  = L.
+
+Lemma 4.3. Let  be an L-epoch Hdp message bits autoregressive communication protocol. If
+there is an indistinguishable decomposition RL and Z<L such that:
+
+   1. (Large remaining entropy) |RL|  |AL|/L.
+   2. (Large cover) |IL-1(Z<L)|  L-1.
+Then  does not solve L-FuncComp.
+
+    In the next subsection, we will show the existence of the required indistinguishable decomposi-
+tion from Lemma 4.3 via an induction, which finishes the proof of Theorem 4.1.
+
+Lemma 4.4. For every L-epoch Hdp message bits autoregressive communication protocol , there
+is an indistinguishable decomposition RL and Z<L satisfying the requirements of Lemma 4.3.
+
+    We finish this subsection by proving Lemma 4.3.
+
+Proof of Lemma 4.3. First, by the large remain entropy property and our choice of parameters, we
+have
+
+     |RL|    |AL|/L  =  |AL|  ·                            >  |AL|  ·  2-8-L2 (x0···xL-1)(n1···nL-1)
+
+                                 2-4 Kx0···xL-2·n1···nL-1
+
+             |AL| · 2-nL-1L-1      |AL| · 2-nL-1|IL-1(Z<L)|                |AL|    (Z<L)|  .
+                                                                (NL-1 )nL-1 |IL-1
+
+                                   14
+Here the second step follows from the definition of L (see Eq. (8)), the third and fourth step follow
+from the choice of parameters (see Eq. (4)(7)), the fifth step follows from |I-1(Z<L)|  -1, i.e.,
+
+the large cover property.
+    Hence, there exists iL-1  IL-1(Z<L) and wL-1  [n-1], such that, there exists zL , zL  RL
+
+satisfying zL (wL-1, iL-1) = zL (wL-1, iL-1). By definition, there exists z<L  Z<L, such that (1)
+iL-1 = iL-1(z<L) and (2) z-1,L-1 = wL-1. By the definition of RL, the messages sent from
+player L to players [-1 : L - 1] are the same under zL , zL , when the -th player (  [-1 : L - 1])
+receives z as input. Hence, the player -1 can not distinguish between zL and zL , and therefore,
+it could not be correct on answering both iL = z (wL-1, iL-1) and iL = z(wL-1, iL-1), since
+zL (wL-1, iL-1) = zL (wL-1, iL-1).
+
+4.1 Constructing Indistinguishable Decompositions via Induction
+
+The rest of this section is devoted to prove Lemma 4.4, we will indeed prove it via an induction
+specified in the Lemma 4.5, whose  = L case is exactly Lemma 4.4.
+
+Lemma 4.5 (Main Lemma). For any   [2 : L],
+
+· We have a pair of sets (R, Z<), where R  AL × AL-1 × · · · × A, Z< = Z-1 × Z0 ×
+   · · · × Z-1, with Z-1 = [n1 · · · nL-1], Z0  A0, Z1  A1, . . . , Z-1  A-1 and they have size
+   |Z0| = x0, |Z1| = x1, . . . , |Z-1| = x-1;
+
+· We can fix the transcript from players [ : L] to [-1 :  - 1] at the first  epochs, when the
+   players [-1 :  - 1] take input from Z<. i.e.,
+
+                        () := (j,i,) j[:L],i[-1:-1],[]
+
+where                                                and j(,i,)(z-1, . . . , zi)  domain(j(,i))
+  (j,i,) := (j,i,)(z-1, . . . , zi) z-1Z-1,...,ziZi
+
+such that we have the following guarantees:
+
+    · (Consistency) () is the first -epoch transcript from players [ : L] to [-1 :  - 1], when
+       they take input from R and Z<, i.e.,
+
+                       j(,i)(zL, . . . , zi) = j(,i,)(z-1, . . . , zi)
+                       j  [ : L], i  [-1 :  - 1],   [], z  RL, z-1  Z-1, . . . zi  Zi,
+
+· (Large remaining entropy) The size of R is large, i.e.,
+
+                        |R|  |AL| · · · |A|/.                                         (9)
+
+· (Large cover) The total number of possible i-1 under Z-1, Z0, Z1, . . . , Z-1 is large, i.e.,
+
+I-1 := {i-1 : i-1 = i-1(w, z0, . . . , z-1) for some w  Z-1, z0  Z0, . . . , z  Z-1}
+
+and its size satisfies
+
+                        |I-1|  -1.                               (10)
+
+                        15
+4.2 The Initial step
+
+We first prove the correctness of Lemma 4.5 for  = 2.
+
+4.2.1 Step 1: Choosing Z0, Z1
+
+We take Z0 = [x0] and our first step is to select the set Z1  [N0]. To this end, consider all possible
+first epoch messages from the player 1 to the player -1, i.e.,
+
+                      (11,-) 1 = (11,-) 1(z-1) z-1Z-1 where (11,-) 1(z-1)  {0, 1}2Hdp .
+
+The total number of possible (11,-) 1 is 22Hdp·|Z-1| = 22Hdp(n1···nL-1), and therefore, there exists one
+(11,-) 1  {0, 1}2Hdp·(n1···nL-1), such that
+
+                       S := {z1  A1 : 1(1,-) 1(z1, z-1) = (11,-) 1(z-1) z-1  Z-1}  A1
+and
+
+           |S|  |A1| · 2-2Hdp·(n1···nL-1).                                                              (11)
+
+Note the first epoch message depends only on z1 and z-1 so we can write it as 1(1,-) 1(z1, z-1).
+    The proof of the following Lemma can be found at Section 4.4.
+
+Lemma 4.6. There exists a subset Z1  S with size |Z1| = x1, such that it satisfies
+
+           |{z1(i0) : z1  Z1, i0  Z0}|  8-Lx0x1 = 1.                                                    (12)
+
+    We take the subset Z1 in Lemma 4.6 and it remains to fix the transcripts from players j  [2 :
+L - 1] to players i = -1, 0, 1 at the first two epochs.
+
+4.2.2 Step 2.1: Fixing the transcript to player -1
+
+We first fix the transcript to player -1. For the first epoch, we need to fix (j2,-,11)(z1, z0, z-1) for
+every z1  Z1, z0  Z0, z-1  Z-1. We note that, the first epoch message from player j to player
+-1 depends only on z-1 and player j's input, but not on z1, z0, hence it suffices to find some
+
+           j(1,-) 1 = j(1,-) 1(z-1) z-1Z-1 where j(1,-) 1(z-1)  {0, 1}2Hdp .
+
+and set    (j2,-,11)(z1, z0, z-1) = (j1,-) 1(z-1) z1  Z1, z0  Z0, z-1  Z-1
+
+The total number of such transcripts are at most 22Hdp·|Z-1| = 22Hdp·(n1···nL-1). Hence, we can
+choose {(j2,-,11)}j[2:L] , such that the set of consistent zL, . . . , z2,
+
+C1 :=                                       (zL, . . . , z2)  AL × · · · × A2 :                         .
+           j(1,-) 1(zL, . . . , z0, z-1) = (j2,-,11)(z1, z0, z-1) z1  Z1, z0  Z0, z-1  Z-1, j  [2 : L]
+
+satisfies
+
+           |C1|  |AL| · · · |A2| · 2-2Hdp·(n1···nL-1)·L.
+
+           16
+    For the second epoch, we need to fix (j2,-,21)(z1, z0, z-1) for every z1  Z1, z0  Z0, z-1  Z-1.
+The transcript from player j  [2 : L] to player -1 depends only on the information state X-(11)
+and Xj(1), which are independent of the choice of z1  Z1. This is because, the only message in
+X-(11) and Xj(1) that depends on z1 is the first epoch message from player 1 to -1, which equals to
+(11,-) 1(z-1) (see Eq. (11) and Lemma 4.6) and it is the same for every z1  Z1. Hence it suffices to
+find some
+
+                                       j(2,-) 1 := j(2,-) 1(z0, z-1) z0Z0,z-1Z-1
+
+and set           (j2,-,21)(z1, z0, z-1) = j(2,-) 1(z0, z-1) z1  Z1, z0  Z0, z-1  Z-1
+
+The total number of such transcripts are at most 22Hdp·x0·(n1···nL-1). Hence, we can properly choose
+{j(2,-,21)}j[2:L-1], such that the set of consistent (zL, . . . , z2)
+
+C2 :=                                               (zL, . . . , z2)  C1 :                              .
+           (j2,-) 1(zL, . . . , z0, z-1) = (j2,-,21)(z1, z0, z-1) z1  Z1, z0  Z0, z-1  Z-1, j  [2 : L]
+
+satisfies
+
+                  |C2| = |C1| · 2-2Hdp·x0(n1···nL-1)·L  |AL · · · A2| · 2-4HdpL·x0(n1···nL-1)
+
+4.2.3 Step 2.2: Fixing the transcript to player 0
+
+We then fix the transcript to player 0. The total number of transcripts {j(2,0,)}j[2:L],[2] of the
+first two epochs is at most 22Hdp·x0x1·2L. We can fix its value so that the set of consistent (zL, . . . , z2)
+
+           C3 :=                                   (zL, . . . , z2)  C2 :                            .
+                  j(,0)(zL, . . . , z0) = j(2,0,)(z1, z0) z1  Z1, z0  Z0, j  [2 : L],   [2]
+
+satisfies
+
+                  |C3|  |C2| · 2-2Hdp·x0x1·2L  |AL · · · A2| · 2-6HdpL·x0(n1···nL-1).
+
+4.2.4 Step 2.3: Fixing the transcript to player 1
+
+Finally, we fix the transcript to player 1. The total number of transcripts {j(2,1,)}j[2:L],[2] of
+the first two epochs is at most 22Hdpm·x1·2L, and we can fix the value so that the set of consistent
+(zL, . . . , z2)
+
+                  C4 :=                           (zL, . . . , z2)  C3 :                .
+                         (j,1)(zL, . . . , z1) = j(2,1,)(z1) z1  Z1, j  [2 : L],   [2]
+
+and we have
+
+           C4  C3 · 2-2Hdpm·x1·2L  |AL| · · · |A2| · 2-8HdpL·x0(n1···nL-1)                              (13)
+
+                                                                                         
+
+                                           |AL| · · · |A2| · 2-4 Kx0(n1···nL-1) = |AL| · · · |A2|/2
+
+Here the second step follows from the choice of parameters (see Eq. (4)(7)) and the last step follows
+from the definition of 2 (see Eq. (8)).
+
+    Combining Lemma 4.6 and Eq. (13), we conclude the proof for the case  = 2.
+
+                         17
+4.3 Inductive step
+
+Suppose Lemma 4.5 holds up to   [2 : L - 1], we prove it continues to hold for  + 1. This proceeds
+in a few steps:
+
+    · We first select the set Z. To this end, we find a rectangular subset from R, i.e., we find
+       S+1 × Z  R where S+1  AL × · · · × A+1 and Z  A, with the requirement that
+       (1) S+1 has large size, and (2) the size of I(Z<+1) is large. see Section 4.3.1 for details.
+
+    · We then fix the transcripts to players [-1 :  - 1] in the first  epochs, for which we simply
+       use the transcript () from the inductive hypothesis; see Section 4.3.2 for details.
+
+    · Next, we fix the transcripts to players [-1 :  - 1] for the ( + 1)-th epoch. This is the key
+       step of our proof. Our key insight is that Z is indistinguishable to players [-1 :  - 1] after
+        epochs, when they take input from Z<. Hence, the ( + 1)-th epoch transcripts to players
+       [-1 :  - 1] are independent of the choice of z  Z. We can then use a greedy strategy to
+       select transcripts that leak the least amount of information, without consulting to the value
+       of z  Z; see Section 4.3.3 for details.
+
+    · Finally, we fix the transcripts to players . We use a greedy strategy and select the transcript
+       that leaks the least amount of information; see Section 4.3.4 for details.
+
+    Our key insight is that Z is indistinguishable to players [-1 :  - 1] after  epochs, when they
+take input from Z<. Hence, the ( + 1)-th epoch transcripts to players [-1 :  - 1] are independent
+of the choice of z  Z. We can then use a greedy strategy to select transcripts that leak the least
+amount of information about S+1, without consulting to the value of z  Z.
+
+4.3.1 Step 1: Choosing the set Z
+Recall the size of R satisfies
+
+|R|  |AL| × · · · × |A|/.                                                         (14)
+
+We would like to select a rectangular subset from R. The proof of Lemma 4.7 is deferred to
+Section 4.4.
+
+Lemma 4.7. There exists a subset S()  R such that
+    · S() = S1() × S2(), where S1()  AL × · · · × A+1, S2()  A, with size
+                                     |S1()|  |AL| · · · |A+1|/2x and |S2()| = x.
+
+· We have
+             |{i : i = z(w-1, i-1) for some w-1  [n-1], i-1  I-1, z  S2()}|  
+
+    With Lemma 4.7 in hand, we take Z = S2() and S+1 = S1().
+    Next, we are going to fix the transcript (+1). Recall we need to fix all transcripts from players
+[ + 1 : L] to players [-1 : ] in the first  + 1 epochs, when players [-1 : ] receive input from
+Z = Z-1 × Z0 × · · · × Z. We proceed in a few steps.
+
+                                  18
+4.3.2 Step 2.1: Fixing the transcript to players [-1 :  - 1] in the first  epochs
+
+First, we fix the transcript from players j  [ + 1 : L] to players i  [-1 :  - 1] in the first 
+epochs. We simply use (), that is, for any z  Z, . . . , zi  Zi,
+
+       (j,i+1,)(z, . . . , zi) = (j,i,)(z-1, . . . , zi). j  [ + 1 : L], i  [-1 :  - 1],   []      (15)
+
+    We claim that S+1  AL × · · · × A+1 is consistent with (+1) up to this point. Formally, we
+have
+
+Lemma 4.8. The set S+1 is consistent with {j(,i,)}j[+1:L],i[-1:-1],[]. Formally, for any
+z+1  S+1 and z<+1  Z<+1, one has
+
+                                        j(,i)(zL, . . . , zi) = (j,i+1,)(z, . . . , zi).
+for any j  [ + 1 : L], i  [-1 :  - 1],   [].
+
+Proof. By Lemma 4.7 and our choice of Z, we have (zL, . . . , z)  S+1 × Z  R, and therefore
+
+       j(,i)(zL, . . . , zi) = (j,i,)(z-1, . . . , zi) = (j,i+1,)(z, z-1, . . . , zi).
+
+where the first step follows from the definition of R, the second step follows from Eq. (15).
+
+4.3.3 Step 2.2: Fixing the transcript to players [-1 :  - 1] at the ( + 1)-th epoch
+
+Next, we fix the transcript from players j  [ + 1 : L] to players i  [-1 :  - 1] at the ( + 1)-th
+epoch. Our key insight is that Z is indistinguishable to players [-1 :  - 1] when they take input
+from Z-1, hence their transcripts are independent of the choice of z  Z. To this end, consider
+
+                          (+1) = j(,i+1) j[+1:L],i[-1:-1]
+
+where
+
+(j,i+1) = (j,i+1)(z-1, . . . , zi) z-1Z...,ziZi and (j,i+1)(z-1, . . . , zi)  domain((j,i+1))
+
+Comparing j(,i+1,+1) with j(,i+1), we note that j(,i+1) does not have dependence on z  Z.
+    For any (+1), define
+
+                                                                                          
+                                     (zL, . . . , z+1)  S+1 :                             
+
+       S((+1))      :=  szuch  that  j(,i+1)(zL, . .  .,  zi) = j(,i+1)(z-1, . . .        ,-zi1)]  (16)
+                               Z, .  . . , zi  Zi, j      [ + 1 : L], i  [-1 : 
+
+In words, S((+1)) include all (zL, . . . , z+1)  S+1 that are consistent with the transcript (+1).
+Our key observation is
+
+Lemma 4.9. We have
+
+                                      S((+1)) = S+1.
+
+                               (+1)
+
+                                     19
+Proof. It suffices to prove that, for any (zL, . . . , z+1)  S+1, z-1  Z-1, . . . , zi  Zi, j  [ + 1 :
+L], i  [-1 :  - 1], the transcript j(,i+1)(zL, . . . , z+1, z, z-1, . . . zi) is the same for every z  Z.
+
+    To prove this, note that the transcript is determined by the information state Xj() and Xi().
+
+It is clear that Xj() does not change with the choice of z  Z since j > . It remains to prove
+
+that Xi() also does not change with z  Z. To this end, we prove that all information states
+{Xr()}r[i:-1],[] does not change with z.
+
+    Recall we have fixed the value of (zL, . . . , z+1)  S+1 and z-1  Z-1, . . . , zi  Zi. We
+prove by induction on r =  - 1, . . . , i. When r =  - 1, the information state X(-1) is determined
+by z-1 and t(,-)1(zL, . . . , z+1, z, z-1) (t  [ : L],   []), since (zL, . . . , z+1, z)  R for
+every z  Z, we have that (t,-)1(zL, . . . , z+1, z, z-1) = (t,,-1)(z-1), which is the same for every
+z  Z. This finishes the proof of the base case.
+
+    Now suppose the induction continues to hold for r + 1, for r, the information state Xr() is
+determined by zr, (t,r)(zL, . . . , z+1, z, z-1, . . . , zr) (t  [r + 1 : L],   []). For t  [ : L], since
+(zL, . . . , z+1, z)  R, we have that (t,r)(zL, . . . , z+1, z, z-1, . . . , zr) = (t,r,)(z-1, . . . , zr),
+which are the same for every z  Z. For t  [r + 1 :  - 1], we have proved Xt() are the same for
+every z  Z, so does (t,r)(zL, . . . , z+1, z, z-1, . . . , zr). This completes the induction and finish
+the proof.
+
+    Now we can use a greedy selection strategy. We upper bound the total number of (+1) and
+show that there exists at least one (+1) such that S((+1)) has large size. The proof of the
+following Lemma can be found at Section 4.4.
+
+Lemma 4.10. There exists (+1) such that
+
+                                                                                                  
+
+                             |S((+1))|  |AL| · · · |A+1| · 2-2 K·(x0···x-1)·(n1···nL-1)
+
+    Given Lemma 4.10, we fix the transcript from players j  [ + 1 : L] to players i  [-1 :  - 1]
+at the ( + 1)-th epoch using (+1), i.e.,
+
+j(,i+1,+1)(z, . . . , zi) = j(,i+1)(z-1, . . . , zi)
+
+for j  [ + 1 : L], i  [-1 :  - 1], z  Z, . . . , zi  Zi.                                               (17)
+
+We set T+1 = S((+1))  S+1. We have
+
+Lemma 4.11. The set T+1 is consistent with (j(,i+1,))i[-1:-1],j[+1:L],[+1]. Formally, for
+any (zL, . . . , z+1)  T+1 and z<+1  Z<+1, one has
+
+j(,i)(zL, . . . , zi) = (j,i+1,)(z, . . . , zi).                                                       (18)
+
+for any j  [ + 1 : L], i  [-1 :  - 1],   [ + 1]. Moreover, we have
+
+                                                                                                       (19)
+
+|T+1|  |AL × · · · × A+1| · 2-2 K·(x0···x-1)·(n1···nL-1).
+
+Proof. Since T+1  S+1, by Lemma 4.8, Eq. (18) holds for any   []. By Eq. (16) and
+Eq. (17), we also know that
+
+                       j(,i+1)(zL, . . . , zi) = j(,i+1)(z-1, . . . , zi) = (j,i+1,+1)(z, . . . , zi)
+This completes the proof of Eq. (18). Eq. (19) follows directly from Lemma 4.10.
+
+                                    20
+4.3.4 Step 2.3: Fixing the transcript to player 
+
+Finally, we fix the transcript from the player j  [ + 1 : L] to the player  at the first ( + 1) epochs.
+This follows from the a greedy selection strategy. Let
+
+         = (j,)(z) j[+1:L],[+1],zZ where j(,)(z)  domain((j,))
+
+Define
+
+        T () :=                            (zL, . . . , z+1)  T+1 :               (20)
+                 (j,)(zL, . . . , z) = j(,)(z) z  Z,   [ + 1], j  [ + 1 : L]
+
+    We can upper bound the number of different , and use an average argument to obtain the
+following Lemma. Its proof can be found at Section 4.4.
+
+Lemma 4.12. There exists  such that |T ()|  |AL| · · · |A+1|/+1.
+
+    Given Lemma 4.12, we fix the transcripts from players j  [ + 1 : L] to players  at the first
+( + 1)-th epochs using . In particular, we take
+
+        (j,+1,)(z) = j(,)(z) j  [ + 1 : L],   [ + 1], zi  Zi.                     (21)
+
+We take R+1 = T () and we have
+
+Lemma 4.13. R+1 is consistent with (+1). Formally, for any z+1  R+1 and z<+1 
+Z<+1, one has
+
+                 j(,i)(zL, . . . , zi) = (j,i+1,)(z, . . . , zi).                 (22)
+
+holds for any j  [ + 1 : L], i  [-1 : ],   [ + 1]. Moreover, we have
+
+                 |R+1|  |AL| · · · |A+1|/+1                                       (23)
+
+Proof. Since R+1  T+1, by Lemma 4.11, it is consistent with {j(,i+1,)}j[+1:L],i[-1:-1],[+1].
+Combining Eq. (20)(21), we have
+
+                                     j(,)(zL, . . . , z) = (j,)(z) = j(,+1,)(z).
+This proves Eq. (22). Eq. (23) follows directly from Lemma 4.12.
+
+4.3.5 Wrap up the induction
+
+Combining the above three steps (Eq. (15)(17)(21)), we have fixed the transcript
+
+                                     (+1) = {j(,i+1,)}j[+1:L],i[-1:],[+1].
+
+Now we can wrap up the induction. We need to verify the two inductive hypothesis, i.e., Eq. (9)(10).
+    For the first inductive hypothesis, by Lemma 4.13, we know that R+1 is consistent with (+1).
+    For the second inductive hypothesis (i.e., Eq. (9)), we have proved in Lemma 4.13 that |R+1| 
+
+|AL| · · · |A+1|/+1.
+    For the last inductive hypothesis (i.e., Eq. (10)), recall we take Z = S2() in Lemma 4.7, we
+
+have that
+
+          |I| = |{i : i = z(w-1, i-1) for some w-1  [n-1], i-1  I-1, z  S2()}|  
+
+This proves Eq. (10)) and completes the induction step.
+
+                                21
+4.4 Proof of remaining technical lemmas
+
+Finally, we provide the missing proofs for the technical lemmas used before.
+    We first prove Lemma 4.6.
+
+Proof of Lemma 4.6. Consider the following greedy approach. Initially, we set D0 = . For  =
+1, 2, . . ., we add   S to D = D-1  { } if it satisfies
+
+       |{ (i0) : i0  Z0} \ {z1(i0) : z1  D-1, i0  Z0}|  8-Lx0.                               (24)
+
+If the process continues to  = x1 + 1, then we take Z1 = Dx1, we have |Z1| = |Dx1| = x1
+and by Eq. (24), it satisfies the requirement of Eq. (12). If the process stops for   x1 and
+|{z1(i0) : z1  D-1, i0  Z0}|  8-Lx0x1, then we can take Z1 to be the union of D-1 and
+arbitrary x1 -  + 1 elements from S, we have |Z1| = x1 and it satisfies the requirement of Eq. (12).
+
+    Otherwise, suppose it stops for   x1 and |{z1(i0) : z1  D-1, i0  Z0}| < 8-Lx0x1. We claim
+that for every   S, its entries (1), . . . , (x0) take value from either {z1(i0) : z1  D-1, i0  Z0},
+or a subset from [N0] \ {z1(i0) : z1  D-1, i0  Z0} of size at most 8-Lx0, the total number of such
+
+ is at most
+
+  N0   · (8-Lx0x1)x0 · (N0)N0-x0  |A0| · (m8-L · 8-Lx0x1/m)x0 < |A0| · 2-2Hdp·(n1···nL-1)
+8-Lx0
+
+The first step follows from A0 = N0N0, N0 = m, the second step follows from (1) m8-L · 8-Lx0x1 
+m/2 and x0 > 2Hdp(n1 · · · nL-1) (see Eq. (4)(7) for the choice of parameters). This contradicts
+
+with Eq. (11) and completes the proof.
+
+The proof of Lemma 4.7 involves several intermediate steps, and we present it here.
+
+Proof of Lemma 4.7. We simplify the notation a bit in the proof. We write
+
+       R := R, A := AL × · · · × A+1, B := A,  := , x := x.                                  (25)
+
+For any b  B, let        Rb = {a  A : (a, b)  R}  A
+By Eq. (9)(25), we have
+
+                                      |Rb| = |R|  |A||B|/                                    (26)
+
+                                  bB
+
+For any b  B = [N-1]N-1 , define
+
+       I(b) := {b(w-1, i-1) : w-1  [n-1], i-1  I-1}  [N-1]
+
+    The key step is to prove
+Lemma 4.14. There exists two sequences b1, . . . , bx  B and A1, . . . , Ax  A that satisfy
+
+    · Ax  Ax-1 · · ·  A1  A0 = A, and |At|  |At-1|/2 (t  [x])
+    · At  Rbt (t  [x])
+    · |I(bt) \ t[t-1]I(bt )|  8-Ln-1|I-1| (t  [x])
+
+                                      22
+·  bB |Rb  At|      (1 -        1  )t  |At||B|  (t   [0 :  x])
+                                x         
+
+With Lemma 4.14, we can easily finish the proof of Lemma 4.7. To see this, we take
+
+                                        S1() = Ax and S2() = {b1, . . . , bx}.
+
+Then we have |S1()|  |A|/2x due to the first claim in Lemma 4.14 and |S2()| = x. Moreover,
+by the second claim in Lemma 4.14, we have S1() = Ax  Rb for any b  S2(), hence we have
+S = S1() × S2()  R.
+
+    For the second property of Lemma 4.7, we have
+
+           |{i : i = z(w-1, i-1) for some w-1  [n-1], i-1  I-1, z  S2()}|
+        = | t[x] I(bx)|  8-Lxn-1|I-1|  8-Lxn-1-1  
+
+The second step follows from the third claim of Lemma 4.14, the third step follows from the
+
+inductive hypothesis of Lemma 4.5 (Eq. (10)), the last step follows from the definition of  (see
+Eq. (8)). This completes the proof of Lemma 4.7.
+
+We next provide the proof of the key Lemma.
+
+Proof of Lemma 4.14. We prove by induction. The case of t = 0 follows directly from Eq. (26).
+Suppose the claim holds up to t, then for t + 1, let
+
+                                               Rb := Rb  At b  B.
+
+By the fourth induction hypothesis, we have
+
+                                   |Rb | =          |Rb  At|      1  -  1  t  ·  |At||B|  .  (27)
+                                                                        x           
+                          bB                    bB
+
+Consider the set                                    Jt := t[t]I(bt )
+its size satisfies
+
+                                       8-Ltn-1|I-1|  |Jt|  tn-1|I-1|
+
+where the LHS follows from the third inductive hypothesis, i.e., |Jt| =                      t[t] |Jt \ Jt-1|  t ·
+
+8-Ln-1|I-1|, the RHS holds since |Jt|  t[t] |I(bt )|  t · n-1|I-1|.
+    Define
+
+                          C := {b  B : |I(b) \ Jt| < 8-Ln-1|I-1|}  B                         (28)
+
+We have the following claim, whose proof is deferred till the end.
+
+Lemma  4.15.  We    have  |C |         |B|  .
+                                       2
+
+Define
+
+                                       Rb :=        Rb     b / C     b  B.                   (29)
+                                                           bC
+
+That is, Rb is set to empty if I(b) does not differ too much from Jt.
+
+                                                           23
+By Lemma 4.15, we have
+
+                                                                1   t     |At||B|        |B|
+                                                                x                        2
+                     |Rb| =      |Rb | -      |Rb |       1  -         ·              -        ·  |At|.                    (30)
+
+                 bB          bB           bC
+
+The first step follows from the definition of Rb (see Eq. (29)), the second step follows from Eq. (27),
+Lemma 4.15 and |Rb |  |At|.
+
+    Now we are going to select bt+1  B and At+1  At. To this end, consider the following greedy
+process. Initially, set D =  and  = 0. If there exists   B such that
+
+                                                          
+
+                                    R \               R            |At|   ,                                                (31)
+                                                                   2
+                                                D
+
+then define
+
+                                                                  
+
+                                 O := R \  R   At                                                                          (32)
+
+                                                           D
+
+and update D  D  { } and  =  + 1. It is clearly that D is not empty (see Eq (30)) and the
+process would stop. Let
+
+                     O := [0:|D|-1]O and Rb := Rb  O b  B,
+
+we have
+
+                                                                       1     t     |At||B|        |B|                      |At|
+                                                                       x                          2                        2
+    |Rb| = |Rb  O| = |Rb| - |Rb \ O|                            1  -            ·           -          ·  |At|  -  |B|  ·
+
+bB           bB              bB           bB
+
+                                                                       1     t+1      |At||B|
+                                                                       x                 
+                                                                1  -               ·
+
+Here the third step follows from Eq. (30) and the selection strategy (i.e. Eq. (31)), the last step
+holds since   x.
+
+    Since {O }[0:|D|-1] are disjoint, we claim that, there exists   [0 : |D| - 1], such that
+
+                                       1  t+1      |At||B|      |O |                  1  t+1   |O ||B|
+                                       x                        |O|                   x           
+                 |Rb  O |        1  -           ·            ·               1     -                      .                (33)
+
+             bB
+
+Here the second step follows from |At|  |O|.
+    We take At+1 = O , bt+1 =  , and we prove the four inductive hypothesis continue to holds.
+    First, by Eq. (31)(32), we have At+1 = O  At, and
+
+                                          |At+1|   =  |O |      |At|                                                       (34)
+                                                                2
+
+Second, by Eq. (32), we have
+
+                                 At+1 = O  R = Rbt+1  Rbt+1                                                                (35)
+
+                                                      24
+Third, it is clear that Rbt+1 is not empty, this implies that bt+1 / C, and therefore
+
+                                         |I(bt+1) \ Jt|  8-L · n-1|I-1|.                                                  (36)
+
+Finally, by Eq (33), we have
+
+                |Rb  At+1| = |Rb  O |  |Rb  O |                                     1  -  1       t+1 |Ot||B|
+                                                                                          x              
+           bB                    bB                       bB
+
+                                                                                          1       t+1   |At+1||B|
+                                                                                          x                 
+                                                                                 =  1  -                           .      (37)
+
+Combining Eq. (34)(35)(36)(37), we complete the proof.
+
+Proof of Lemma 4.15. We compute the size of C. For any b  C  A = [N-1]N-1, one can view
+it as a mapping from [N-1] to [N-1]. By Eq. (28), b  C if and only if it does not differ much
+than Jt on entries (w-1, i-1)  [n-1] × I-1. For entries in [N] \ ([n-1] × I-1), it poses no
+constraints so it has (N-1)N-1-n-1|I-1| number of choices.
+
+    For entries in [n-1] × I-1, it could take value from Jt, or from a subset of at size at most
+8-Ln-1|I-1| in [N] \ ([n-1] × I-1), the total number of choices is at most
+
+                     N-1         · (xn-1|I-1|)n-1|I-1|  (N8--1L · xn-1|I-1|)n-1|I-1|
+                8-Ln-1|I-1|
+
+In summary, the size of C is at most
+
+                              (N-1)N-1-n-1|I-1| · (N8--1L · xn-1|I-1|)n-1|I-1|
+                           = |B| · (N8--1L · xn-1|I-1|/N-1)n-1|I-1|
+                            |B| · (1/2)n-1|I-1|
+                            |B|/2
+
+The first step follows from the definition of x and B. For the second step, it follows from
+
+                     N8--1L  ·  xn-1|I-1|              ·  xn-1(x0       ..    .  x-1)  ·  (n1  .  .  .  n-2)
+                                                   K
+
+                                                 1  m  ·  (n1  ·  ·  ·  n-1)  =  1  N-1
+                                                 2                               2
+
+where  we  use  the  fact  that  N8--1L          |I-1|            (x0 . . . x-1) · (n1 . . . n-2)       in    the  first  step,  the
+                                             K,
+
+second step follows from the choice of parameters (see Eq. (4)(7))
+
+For the third step, we have
+
+                                    
+
+           2 = 2 = 28 K(x0...x-2)·(n1...nL-1)  28-L·n-1(x0...x-1)·(n1...n-2)  2n-1|I-1|
+
+The second step follows from the definition of  (see Eq. (8)), the third step follows from the
+choice of parameters Eq. (4)(7). The last step follows from the induction hypothesis of Lemma
+4.5.
+
+We next prove Lemma 4.10. First, we need
+
+                                                          25
+                                                                                                                   
+
+Lemma 4.16. The total number of possible (+1) is at most 2 K·(x0···x-1)·(n1···nL-1).
+Proof. Recall
+
+                                        (+1) = (j,i+1) j[+1:L],i{e}[0:-1]
+and
+
+    (j,i+1) = j(,i+1)(z-1, . . . , zi) z-1Z-1...,ziZi and j(,i+1)(z-1, . . . , zi)  domain((j,i+1)).
+    For i  [ - 1], j(,i+1)(z-1, . . . , zi) takes value from {0, 1}2Hdp·Ni-1 , summing over z-1 
+Z-1, . . . zi  Zi, j  [ + 1 : L], the total number of (j(,i+1))j[+1:L] is at most
+
+                                 22Hdp·Ni-1 xi···x-1·L  22HdpL·(x0···x-1)·(n1···nL-1)
+
+where the inequality follows from the choice of parameters (see Eq. (4)(5)(7)).
+    For i = 0, j(,0+1)(z-1, . . . , z0) takes value from {0, 1}2Hdp, summing over z-1  Z-1, . . . z0 
+
+Z0 and j  [ + 1 : L], the total number of (j(,0+1))j[+1:L] is at most
+
+                                    22Hdp x0···x-1·L  22HdpL·(x0···x-1)·(n1···nL-1).
+
+    For i = -1, (j,-+11)(z-1, . . . , z0, z-1) takes value from {0, 1}2Hdp, summing over z-1  Z-1, . . . z0 
+Z0, z-1  [Z-1] and j  [ + 1 : L], (j(,-+11))j[+1:L] is at most
+
+                             22Hdp (x0···x-1)·(n1···nL-1)·L = 22HdpL·(x0···x-1)·(n1···nL-1)
+
+Taking a product over all these terms, the total number of (+1) is bounded by
+
+22H dpL·(x0 ···x-1 )·(n1 ···nL-1 )           L        
+
+                                                    2 K·(x0···x-1)·(n1···nL-1)
+
+Now we can finish the proof of Lemma 4.10.
+
+Proof of Lemma 4.10. By Lemma 4.9 and Lemma 4.7, we have that
+
+      S((+1))  =                             |S+1|    |AL  |  · · · |A+1  |  .
+                                                              2x
+(+1)
+
+By Lemma 4.16, there exists (+1), such that
+
+|S((+1))|   |AL| · · · |A+1|                           
+                  2x
+                                                 · 2- K·(x0···x-1)·(n1···nL-1)
+
+                                                        
+       |AL| · · · |A+1| · 2-2 K·(x0···x-1)·(n1···nL-1)
+
+Here the second follows from the choice of parameters (see Eq. (4)(7)(8)).
+
+                                             26
+We next prove Lemma 4.12
+
+Proof of Lemma 4.12. First, we have T () = T+1 and by Lemma 4.11, we have
+
+                                                                                                          
+
+                           |T ()| = |T+1|  |AL| · · · |A+1| · 2-2 K·(x0···x-1)·(n1···nL-1).
+
+                                
+
+Moreover, the total number of  is at most
+
+22H dp·N-1                x·L2      
+
+                                  2 K·(x0···x-1)·(n1···nL-1).
+
+Here the equality holds due to the choice of parameters (see Eq (4)(5)(7)).
+    Hence, there exists  such that
+
+                                      
+|T ()|  |AL| · · · |A+1| · 2-2 K·(x0···x-1)·(n1···nL-1) · 2- K·(x0···x-1)·(n1···nL-1)
+
+ |AL| · · · |A+1|/+1
+
+The last step follows from the definition of +1 (see Eq. (8)). This completes the proof.
+
+                                  27
+References
+
+[AAA+23] Josh Achiam, Steven Adler, Sandhini Agarwal, Lama Ahmad, Ilge Akkaya, Floren-
+                cia Leoni Aleman, Diogo Almeida, Janko Altenschmidt, Sam Altman, Shyamal Anad-
+                kat, et al. Gpt-4 technical report. arXiv preprint arXiv:2303.08774, 2023.
+
+[ACW16]   Josh Alman, Timothy M. Chan, and R. Ryan Williams. Polynomial representations
+          of threshold functions and algorithmic applications. In Irit Dinur, editor, IEEE 57th
+          Annual Symposium on Foundations of Computer Science, FOCS 2016, 9-11 October
+          2016, Hyatt Regency, New Brunswick, New Jersey, USA, pages 467­476. IEEE Com-
+          puter Society, 2016.
+
+[AG23]    Sanjeev Arora and Anirudh Goyal. A theory for emergence of complex skills in language
+          models. arXiv preprint arXiv:2307.15936, 2023.
+
+[AK10]    Eric Allender and Michal Koucky´. Amplifying lower bounds by means of self-
+          reducibility. J. ACM, 57(3):14:1­14:36, 2010.
+
+[Ant24]   Anthropic.  Introducing claude 3.5 sonnet.       Anthropic, 2024.
+
+          https://www.anthropic.com/news/claude-3-family.
+
+[AZL23a] Zeyuan Allen-Zhu and Yuanzhi Li. Physics of language models: Part 1, learning
+                hierarchical language structures. ArXiv e-prints, abs/2305.13673, May, 2023.
+
+[AZL23b] Zeyuan Allen-Zhu and Yuanzhi Li. Physics of language models: Part 3.1, knowledge
+                storage and extraction. arXiv preprint arXiv:2309.14316, 2023.
+
+[BCE+23]  S´ebastien Bubeck, Varun Chandrasekaran, Ronen Eldan, Johannes Gehrke, Eric
+          Horvitz, Ece Kamar, Peter Lee, Yin Tat Lee, Yuanzhi Li, Scott Lundberg, et al.
+          Sparks of artificial general intelligence: Early experiments with gpt-4. arXiv preprint
+          arXiv:2303.12712, 2023.
+
+[BN20]    Guy Bresler and Dheeraj Nagaraj. Sharp representation theorems for relu networks
+          with precise dependence on depth. Advances in Neural Information Processing Sys-
+          tems, 33:10697­10706, 2020.
+
+[CC22]    David Chiang and Peter Cholak. Overcoming a theoretical limitation of self-attention.
+          In Proceedings of the 60th Annual Meeting of the Association for Computational Lin-
+          guistics (Volume 1: Long Papers), pages 7654­7664, 2022.
+
+[CSS18]   Ruiwen Chen, Rahul Santhanam, and Srikanth Srinivasan. Average-case lower bounds
+          and satisfiability algorithms for small threshold circuits. Theory Comput., 14(1):1­55,
+          2018.
+
+[CT19]    Lijie Chen and Roei Tell. Bootstrapping results for threshold circuits "just beyond"
+          known lower bounds. In Moses Charikar and Edith Cohen, editors, Proceedings of
+          the 51st Annual ACM SIGACT Symposium on Theory of Computing, STOC 2019,
+          Phoenix, AZ, USA, June 23-26, 2019, pages 34­41. ACM, 2019.
+
+[Dan17]   Amit Daniely. Depth separation for neural networks. In Conference on Learning
+          Theory, pages 690­696. PMLR, 2017.
+
+                      28
+[DLS+23]  Nouha Dziri, Ximing Lu, Melanie Sclar, Xiang Lorraine Li, Liwei Jiang, Bill Yuchen
+          Lin, Peter West, Chandra Bhagavatula, Ronan Le Bras, Jena D Hwang, et al. Faith
+          and fate: Limits of transformers on compositionality. Advances in neural information
+          processing systems, 2023.
+
+[ECZ+24] Ethan Ewer, Daewon Chae, Thomas Zeng, Jinkyu Kim, and Kangwook Lee. Entp:
+                Encoder-only next token prediction. arXiv preprint arXiv:2410.01600, 2024.
+
+[EGZ20]   Javid Ebrahimi, Dhruv Gelda, and Wei Zhang. How can self-attention networks recog-
+          nize dyck-n languages? In Findings of the Association for Computational Linguistics:
+          EMNLP 2020, pages 4301­4306, 2020.
+
+[ES16]    Ronen Eldan and Ohad Shamir. The power of depth for feedforward neural networks.
+          In Conference on learning theory, pages 907­940. PMLR, 2016.
+
+[FGZ+23]  Guhao Feng, Yuntian Gu, Bohang Zhang, Haotian Ye, Di He, and Liwei Wang. To-
+          wards revealing the mystery behind chain of thought: a theoretical perspective. Ad-
+          vances in neural information processing systems, 2023.
+
+[FLY+23]  Zihao Fu, Wai Lam, Qian Yu, Anthony Man-Cho So, Shengding Hu, Zhiyuan Liu,
+          and Nigel Collier. Decoder-only or encoder-decoder? interpreting language model as
+          a regularized encoder-decoder. arXiv preprint arXiv:2304.04052, 2023.
+
+[Hah20]   Michael Hahn. Theoretical limitations of self-attention in neural sequence models.
+          Transactions of the Association for Computational Linguistics, 8:156­171, 2020.
+
+[HHG+20]  John Hewitt, Michael Hahn, Surya Ganguli, Percy Liang, and Christopher D Manning.
+          Rnns can generate bounded hierarchical languages with optimal memory. In Proceed-
+          ings of the 2020 Conference on Empirical Methods in Natural Language Processing
+          (EMNLP), pages 1978­2010, 2020.
+
+[HHTT23]  Pooya Hatami, William M. Hoza, Avishay Tal, and Roei Tell. Depth-d threshold
+          circuits vs. depth-(d+1) AND-OR trees. In Barna Saha and Rocco A. Servedio, editors,
+          Proceedings of the 55th Annual ACM Symposium on Theory of Computing, STOC
+          2023, Orlando, FL, USA, June 20-23, 2023, pages 895­904. ACM, 2023.
+
+[IPS97]   Russell Impagliazzo, Ramamohan Paturi, and Michael E. Saks. Size-depth tradeoffs
+          for threshold circuits. SIAM J. Comput., 26(3):693­707, 1997.
+
+[JBK+24]  Samy Jelassi, David Brandfonbrener, Sham M Kakade, et al. Repeat after me: Trans-
+          formers are better than state space models at copying. In Forty-first International
+          Conference on Machine Learning, 2024.
+
+[JCKT19] Devlin Jacob, Ming-Wei Chang, Lee Kenton, and Kristina Toutanova. Bert: Pre-
+                training of deep bidirectional transformers for language understanding. In Proceedings
+                of NAACL, volume 1, page 2. Minneapolis, Minnesota, 2019.
+
+[JMB+24]  Samy Jelassi, Clara Mohri, David Brandfonbrener, Alex Gu, Nikhil Vyas, Nikhil
+          Anand, David Alvarez-Melis, Yuanzhi Li, Sham M Kakade, and Eran Malach. Mix-
+          ture of parrots: Experts improve memorization more than reasoning. arXiv preprint
+          arXiv:2410.19034, 2024.
+
+          29
+[LAG+24] Bingbin Liu, Jordan T Ash, Surbhi Goel, Akshay Krishnamurthy, and Cyril Zhang.
+                Transformers learn shortcuts to automata. In The Eleventh International Conference
+                on Learning Representations, 2024.
+
+[LLZM24] Zhiyuan Li, Hong Liu, Denny Zhou, and Tengyu Ma. Chain of thought empowers trans-
+                formers to solve inherently serial problems. In International Conference on Learning
+                Representations, 2024.
+
+[LPW+17] Zhou Lu, Hongming Pu, Feicheng Wang, Zhiqiang Hu, and Liwei Wang. The expressive
+                power of neural networks: A view from the width. Advances in neural information
+                processing systems, 30, 2017.
+
+[LS17]    Shiyu Liang and Rayadurgam Srikant. Why deep neural networks for function approx-
+          imation? In International Conference on Learning Representations, 2017.
+
+[LWS+20]  Yoav Levine, Noam Wies, Or Sharir, Hofit Bata, and Amnon Shashua. Limits to
+          depth efficiencies of self-attention. Advances in Neural Information Processing Systems,
+          33:22640­22651, 2020.
+
+[MCPZ13] James Martens, Arkadev Chattopadhya, Toni Pitassi, and Richard Zemel. On the
+                representational efficiency of restricted boltzmann machines. Advances in Neural In-
+                formation Processing Systems, 26, 2013.
+
+[Met24]   AI Meta. Introducing meta llama 3: The most capable openly available llm to date.
+          Meta AI, 2024. https://ai.meta.com/blog/meta-llama-3/.
+
+[MRS+20] Ben Mann, N Ryder, M Subbiah, J Kaplan, P Dhariwal, A Neelakantan, P Shyam,
+                G Sastry, A Askell, S Agarwal, et al. Language models are few-shot learners. arXiv
+                preprint arXiv:2005.14165, 1, 2020.
+
+[MS23a]   William Merrill and Ashish Sabharwal. The expresssive power of transformers with
+          chain of thought. arXiv preprint arXiv:2310.07923, 2023.
+
+[MS23b]   William Merrill and Ashish Sabharwal. The parallelism tradeoff: Limitations of log-
+          precision transformers. Transactions of the Association for Computational Linguistics,
+          11:531­545, 2023.
+
+[NESK24] Dan Saattrup Nielsen, Kenneth Enevoldsen, and Peter Schneider-Kamp. Encoder vs
+                decoder: Comparative analysis of encoder and decoder language models on multilin-
+                gual nlu tasks. arXiv preprint arXiv:2406.13469, 2024.
+
+[PBM21] Jorge P´erez, Pablo Barcelo´, and Javier Marinkovic. Attention is turing-complete.
+                Journal of Machine Learning Research, 22(75):1­35, 2021.
+
+[PNP24] Binghui Peng, Srini Narayanan, and Christos Papadimitriou. On limitations of the
+                transformer architecture. Conference on Language Modeling, 2024.
+
+[PSD+24]  Jackson Petty, Sjoerd Steenkiste, Ishita Dasgupta, Fei Sha, Dan Garrette, and Tal
+          Linzen. The impact of depth on compositional generalization in transformer language
+          models. In Proceedings of the 2024 Conference of the North American Chapter of the
+          Association for Computational Linguistics: Human Language Technologies (Volume
+          1: Long Papers), pages 7232­7245, 2024.
+
+          30
+[PZM+23] Ofir Press, Muru Zhang, Sewon Min, Ludwig Schmidt, Noah A Smith, and Mike Lewis.
+                Measuring and narrowing the compositionality gap in language models. In Findings of
+                the Association for Computational Linguistics: EMNLP 2023, pages 5687­5711, 2023.
+
+[QMN24]   Muhammad Qorib, Geonsik Moon, and Hwee Tou Ng. Are decoder-only language
+          models better than encoder-only language models in understanding word meaning?
+          In Findings of the Association for Computational Linguistics ACL 2024, pages 16339­
+          16347, 2024.
+
+[ROS94]   Vwani P. Roychowdhury, Alon Orlitsky, and Kai-Yeung Siu. Lower bounds on thresh-
+          old and related circuits via communication complexity. IEEE Trans. Inf. Theory,
+          40(2):467­474, 1994.
+
+[RWC+19] Alec Radford, Jeffrey Wu, Rewon Child, David Luan, Dario Amodei, Ilya Sutskever,
+                et al. Language models are unsupervised multitask learners. OpenAI blog, 1(8):9, 2019.
+
+[SES19]   Itay Safran, Ronen Eldan, and Ohad Shamir. Depth separations in neural networks:
+          what is actually being separated? In Conference on Learning Theory, pages 2664­2666.
+          PMLR, 2019.
+
+[SHT23]   Clayton Sanford, Daniel Hsu, and Matus Telgarsky. Representational strengths and
+          limitations of transformers. Advances in neural information processing systems, 2023.
+
+[SHT24a] Clayton Sanford, Daniel Hsu, and Matus Telgarsky. One-layer transformers fail to
+                solve the induction heads task. arXiv preprint arXiv:2408.14332, 2024.
+
+[SHT24b] Clayton Sanford, Daniel Hsu, and Matus Telgarsky. Transformers, parallel computa-
+                tion, and logarithmic depth. In International Conference on Machine Learning, 2024.
+
+[SS17]    Itay Safran and Ohad Shamir. Depth-width tradeoffs in approximating natural func-
+          tions with neural networks. In International conference on machine learning, pages
+          2979­2987. PMLR, 2017.
+
+[SW13]    Rahul Santhanam and Ryan Williams. On medium-uniformity and circuit lower
+          bounds. In 2013 IEEE Conference on Computational Complexity, pages 15­23. IEEE,
+          2013.
+
+[Tay24]   Yi Tay.  What happened to bert & t5?                 on trans-
+
+          former encoders, prefixlm and denoising objectives.  2024.
+
+          https://www.yitay.net/blog/model-architecture-blogpost-encoders-prefixlm-denoising.
+
+[Tel16]   Matus Telgarsky. Benefits of depth in neural networks. In Conference on learning
+          theory, pages 1517­1539. PMLR, 2016.
+
+[Tel20]   Roei Tell. On implications of better sub-exponential lower bounds for AC0, 2020.
+          Available at: https://sites.google.com/site/roeitell/Expositions.
+
+[TGL+24]  Gemini Team, Petko Georgiev, Ving Ian Lei, Ryan Burnell, Libin Bai, Anmol Gulati,
+          Garrett Tanzer, Damien Vincent, Zhufeng Pan, Shibo Wang, et al. Gemini 1.5: Un-
+          locking multimodal understanding across millions of tokens of context. arXiv preprint
+          arXiv:2403.05530, 2024.
+
+                   31
+[VRPS21] Gal Vardi, Daniel Reichman, Toniann Pitassi, and Ohad Shamir. Size and depth
+                separation in approximating benign functions with neural networks. In Conference on
+                Learning Theory, pages 4195­4223. PMLR, 2021.
+
+[VS20]    Gal Vardi and Ohad Shamir. Neural networks with small weights and depth-separation
+          barriers. Advances in neural information processing systems, 33:19433­19442, 2020.
+
+[VSP+17]  Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N
+          Gomez, Lukasz Kaiser, and Illia Polosukhin. Attention is all you need. Advances in
+          neural information processing systems, 30, 2017.
+
+[WDL24] Kaiyue Wen, Xingyu Dang, and Kaifeng Lyu. Rnns are not transformers (yet): The
+                key bottleneck on in-context retrieval. arXiv preprint arXiv:2402.18510, 2024.
+
+[WLLR23] Kaiyue Wen, Yuchen Li, Bingbin Liu, and Andrej Risteski. Transformers are uninter-
+                pretable with myopic methods: a case study with bounded dyck grammars. Advances
+                in Neural Information Processing Systems, 36, 2023.
+
+[WSF+24] Siwei Wang, Yifei Shen, Shi Feng, Haoran Sun, Shang-Hua Teng, and Wei Chen.
+                Alpine: Unveiling the planning capability of autoregressive learning in language mod-
+                els. Advances in neural information processing systems, 2024.
+
+[WTB+22] Jason Wei, Yi Tay, Rishi Bommasani, Colin Raffel, Barret Zoph, Sebastian Borgeaud,
+                Dani Yogatama, Maarten Bosma, Denny Zhou, Donald Metzler, et al. Emergent
+                abilities of large language models. arXiv preprint arXiv:2206.07682, 2022.
+
+[WWS+22] Jason Wei, Xuezhi Wang, Dale Schuurmans, Maarten Bosma, Fei Xia, Ed Chi, Quoc V
+                Le, Denny Zhou, et al. Chain-of-thought prompting elicits reasoning in large language
+                models. Advances in Neural Information Processing Systems, 35:24824­24837, 2022.
+
+[Yar17]   Dmitry Yarotsky. Error bounds for approximations with deep relu networks. Neural
+          networks, 94:103­114, 2017.
+
+[YGK+24] Sohee Yang, Elena Gribovskaya, Nora Kassner, Mor Geva, and Sebastian Riedel. Do
+                large language models latently perform multi-hop reasoning? In Association for Com-
+                putational Linguistics: ACL-IJCNLP 2024, 2024.
+
+[YPPN21]  Shunyu Yao, Binghui Peng, Christos Papadimitriou, and Karthik Narasimhan. Self-
+          attention networks can process bounded hierarchical languages. In Proceedings of
+          the 59th Annual Meeting of the Association for Computational Linguistics and the
+          11th International Joint Conference on Natural Language Processing (Volume 1: Long
+          Papers), pages 3770­3785, 2021.
+
+[YXLAZ24] Tian Ye, Zicheng Xu, Yuanzhi Li, and Zeyuan Allen-Zhu. Physics of language mod-
+                els: Part 2.1, grade-school math and the hidden reasoning process. arXiv preprint
+                arXiv:2407.20311, 2024.
+
+          32
+A Missing proof from Section 1.2
+
+We sketch the high level proof idea of Corollary 1.2, Corollary 1.3 and Corollary 1.4. Note that
+the lower bound parts of these corollaries all follow directly from Theorem 1.1, so in the following
+it suffices to prove the upper bound parts.
+
+Retrieval head. First, we observe that an attention head could implement the following retrieval
+operation. Let i  [n], suppose xj() (i.e., the input to the -th layer at position j) contains
+aj  {0, 1}D and bj  {0, 1}D for any previous position j  i - 1 and suppose xi() contains a
+"query" a. The retrieval task at position i (of layer ) is to find the position j such that aj = a
+
+and return the value of bj (if there are multiple or no such positions, then the return value could
+
+be arbitrary).
+
+    This retrieval operation can be implemented with one attention head. In particular, we set the
+V -value to be bj, K-value to be log2(n) · (aj, 1 - aj) for position j < i;9 the Q-value at position i
+is taken to be log2(n) · (a, 1 - a). The attention score (before softmax) satisfies
+
+Qxi(), Kxj() =          log2(n)D     aj = a
+                 log2(n)D - log2(n)  aj = a.
+
+Hence, if there is exactly one position j  i that satisfies aj = a, then the attention head would
+only attend to position j and get the value bj, assuming the precision p = (log(n)).
+
+Proof of Corollary 1.2. Consider an (L + 1)-layer Transformer such that each layer has one
+
+attention head. For any   [L+1], let the attention head at layer  implements the retrieval task for
+
+the ( - 1)-th composition, i.e., given i-2 and w-2 at the last token, find i-1 = z-1(w-2, i-2).
+Concretely, the last token implements the query a = (w-2, i-2)  [N-2]. For every previous
+token j  [n - 1], if the j-th token corresponds to the t-th entry of z-1 (t  [N-1]), then it sets
+aj = t and bj = z-1(t); otherwise, if the j-th token does not corresponds to any entry of z-1,
+it provides an arbitrary dummy pair of aj and bj. One can inductively prove that the last token
+successfully retrieves the value of i-1 after layer .
+
+The proof of Corollary 1.4. The proof is similar to Corollary 1.2. We design L + 1 attention
+
+heads, where the -th attention head aims to retrieve i-1 = z-1(w-2, i-2) given w-2, i-2. One
+can inductively prove that at the -th CoT step, the Transformer could obtain i-1 and include it
+into the next token.
+
+Proof of Corollary 1.3. Recall we want to construct an O(log(L))-layer encoder that solves
+the sequential function composition task. For the first layer, the value of w can be shared over all
+positions [n] using one attention head. For layer   2, one can use one attention head to retrieve
+the value of 2-2-hop composition value for every position, Hence, the value of iL can be obtained
+using at most 2 log2(L) + 1 layers of attention. The proof is similar to Theorem 4.2 of [SHT24b].10
+
+    9Here, 1  {0, 1}D denotes the all-1 vector of length D, and 1 - aj denotes element-wise subtraction.
+  10There is one minor difference: The L functions of [SHT24b] are of the same size, whereas our L functions are of
+different size (after fixing the value of w). Nevertheless, one can check that the proof still can go through.
+
+                33
+B Encoder lower bounds imply circuit lower bounds
+
+In this section, we will sketch a proof that a lower bound for encoder-only transformers would
+imply breakthrough circuit lower bounds against constant-depth symmetric circuits. A constant-
+depth symmetric circuit is a constant depth circuit in which every gate has unbounded fan-in and
+computes a symmetric boolean function on its inputs. A function f is symmetric if function value
+f (x) only depends on the number of 1's in x.
+
+    More formally, we will show that any depth-L symmetric circuit with s wires can be simulated
+by an encoder-only transformer of depth 6L and Hdp = O((s/n)2). Therefore, any lower bound of
+Hdp = (n) against encoders is also an (n1+/2)-wire lower bound against symmetric circuits.
+
+    Proving lower bounds against constant-depth symmetric circuits is notoriously hard.11 It was
+shown [ROS94] that the inner product module 2 function12 requires a symmetric circuit of (n)
+gates. However, no non-trivial lower bounds were known even for O(n)-wire depth-3 symmetric
+circuits (see, e.g., [Tel20]).13 Therefore, given our simulation result, if for any  > 0 we can prove an
+(n)-size lower bound against depth-18 encoders, we would get lower bounds against n1+/2-wire
+depth-3 symmetric circuits, which would be a breakthrough in circuit complexity theory.
+
+On the choice of attention/MLP layers. Here we allow the parameters for the attention and
+
+MLP layers to change arbitrarily for different positions (our auto-regressive communication model
+
+applies to this case as well). Otherwise, the encoder architecture would only have poly(Hdp) bits of
+non-uniformity; an encoder lower bound of Hdp = (n) would then follow directly from the folklore
+time hierarchy theorem with advice DTIME(nk+1)  DTIME(nk)/o(n) (see, e.g., Proposition 1
+of [SW13]).14
+
+Simulating a single symmetric gate. On input x1, x2, . . . , xn  {0, 1}n, a symmetric gate
+with w wires outputs f (xi1 + xi2 + · · · + xiw ) for some fixed function f : {0, 1, 2, . . . , w}  {0, 1}.
+
+    First, suppose each input bit xj, we can set the V-value to be xj and K-value to be log2(n) ·
+(j, 1 - j) where j  {0, 1}d is the binary representation of j. Similar to the retrieval head in
+
+Appendix A, this allows an attention head to only attend to position j and get the value xj.
+    Second, we need to gather the sum xi1 + xi2 + · · · + xiw . We set the number of attention heads
+
+H = 5s/n and d = H. Then we divide into two cases and solve each with two layers:
+
+· (Handling small fan-in gates.) If the fan-in of the symmetric gate w  H, at layer fa1ttn,
+   we gather the sum with w attention heads of a single position k  [n] of the first level. Each
+
+   attention head j  [w] attends to a single input position ij using the retrieval head and get
+  value xij .
+
+  Afterwards, let yk1  RdH denote the output of all H attention heads. We can choose the
+   parameter of the MLP layer fm1 lp : RdH  Rd, so that it computes the linear sum over these
+   attention heads and output it in an arbitrary entry t, that is fmlp(yk1)t = xi1 + xi2 + · · · + xiw .
+
+11A technical reason is that a very powerful technique for proving lower bounds against constant-depth circuits,
+
+the random restriction method, fails when applying to certain symmetric functions such as the parity function.
+
+12Given input x1, . . . , xn, y1, . . . , yn  {0, 1}2n, compute  n    xi  ·  yi  (mod 2).
+                                                                 i=1
+13For the case of depth-2 symmetric circuits, it was shown by [ACW16] that ENP (exponential-time with access
+
+to an NP oracle, an extremely large complexity class) requires depth-2 circuits of at least n2- gates; no non-trivial
+
+results were known when we restrict the hard function to be in NP.
+  14We consider such a lower bound uninteresting because it does not say anything meaningful about the Transformer
+
+architecture other than it's not sufficiently non-uniform. An alternative approach of incorporating a super-linear
+
+amount of non-uniformity is to allow arbitrary positional encodings; we choose to work with position-dependent
+
+attention/MLP layers to make our presentation simpler.
+
+                                                        34
+       In this case, we do not need a second layer. We can simply let fm2 lp  fa2ttn be identity by
+       choosing fa2ttn to be retrieval heads and fm2 lp be an identity MLP.
+
+    · (Handling large fan-in gates.) If the fan-in of the symmetric gate w > H, without loss of
+       generality we can assume that w = H · r for some r  Z by padding and this blows up the
+       number of wires by at most a factor of 2.
+
+       At layer fm1 lp  fa1ttn, we spread the sum to w/H = r positions. For each j  [r], we use a
+       position kj  [n] to gather the partial sum xi(j-1)·H+1 + · · · + xij·H . This can be done using
+       the same construction as the first case.
+
+       Next, we will use a single attention head in fa2ttn to gather all the partial sums. Specifically,
+       suppose i is the index of the gate we are simulating and i is its binary representation. We
+       will set the K-value to be (i, 1 - i) and V-value be the partial sums. Suppose p = (log n),
+       following the same analysis as the retrieval head, the query Q = (i, 1 - i) will only attend to
+       these partial sums and get their average. Since r is fixed when the symmetric circuit is given,
+       we can use fm2 lp to multiply the average by r and get xi1 + xi2 + · · · + xiw .
+
+    Thirdly, we need to compute f (xi1 + xi2 + · · · + xiw ) from the sum. Here, because f is a fixed
+function, we can implement a look-up table for f similar to Section 3.2 of [CC22]:
+
+· (Handling small fan-in gates.) If w  H, at layer fa3ttn, we use a single attention head
+   to retrieve the sum xi1 + xi2 + · · · + xiw . Let yk3  RdH denote the output of all H attention
+   heads. In MLP layer fm3 lp, we copy the sum to w different entries of fm3 lp(yk3)  Rd.
+
+  Then we let fa4ttn and fa5ttn be simple retrieval heads, so that fm5 lp fa5ttn fm4 lp fa4ttn can simulate
+   a two-layer MLP network. As shown in [CC22], such a two-layer network can compute the
+
+  piecewise linear function that equals ½[xi1 + xi2 + · · · + xiw = t] on the t-th entry (t  [w]).
+  Multiplying the corresponding weights by f (t) gives ½[xi1 + xi2 + · · · + xiw = t] · f (t).
+
+  Finally, we use fa6ttn and fm6 lp to sum ½[xi1 + xi2 + · · · + xiw = t] · f (t) over t  [w] and get
+
+   f (t). This is similar to how we gather the partial sums.
+
+· (Handling large fan-in gates.) Otherwise, when w > H, we again without loss of generality
+
+  assume w = H ·r = d·r for r  Z. We again spread ½[xi1 +xi2 +· · ·+xiw = t]·f (t) for different
+
+  t  [w] to r different positions. We set up fm5 lp  fa5ttn  fm4 lp  fa4ttn  fm3 lp  fa3ttn in the same way
+
+  as in Case 1, so that the j-th (j  [r]) position computes ½[xi1 + xi2 + · · · + xiw = t] · f (t) for
+
+   all t  [(j - 1)] · d + 1, j · d].
+
+Then we use fa6ttn and fm6 lp to gather them. Let R be the set of r positions we use here.
+
+For each position k  R, the output of fm5 lp is a vector xk5  Rd containing the value of
+½[xi1                                                                fa6ttn,              1
+         + xi2 + · · · + xiw  = t] · f (t)  for  d  many  t's.  For           we  gather  r  kR xk in the same
+
+way as how we gather the partial sums using fa2ttn. Then we multiply it by r and also sum
+over the d entries with fm6 lp. This gives the value of f (t) in a single entry in the output of
+
+fm6 lp.
+
+Simulating a symmetric circuit. We now apply the above simulation to each gate in one layer
+of our symmetric circuit. For those gates with fan-in w less or equal to H, in the above construction,
+they only use w attention heads and at most w entries after the MLP (note d = H = 5s/n). As
+each position has H attention heads, we can pack as many as possible such gates at a single position
+k  [n].
+
+                                                    35
+    After packing, no two positions will simultaneously have fan-in less than H/2 because otherwise
+we can simply pack them into a single position. In the end, all gates with fan-in less than H uses
+at most s/(H/2) + 1  n/2 positions.
+
+    Then for those gates with fan-in w bigger than H, our strategy of spreading it into w/H <
+w/H + 1 positions will use at most 2 · s/H  n/2 positions as well. Thus the n positions per layer
+encoder we have is sufficient for the simulation. Finally, stacking the simulation of each one of the
+L layers together, we get a encoder with 6L layers and Hdp = O((s/n)2).
+
+                                                               36
+

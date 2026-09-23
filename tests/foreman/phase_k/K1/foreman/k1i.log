@@ -1,0 +1,1 @@
+{'doubling': 1.0, 'hpd': 1.5, 'local': 1.0, 'far': {'kappa': 3.0, 'tokens': 127936, 'worst': 0.06348486743371685, 'doubling_far': 0.06348486743371685}}

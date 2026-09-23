@@ -1,0 +1,46 @@
+{
+ "session": "K1-wilson-mfu-aL-20260923",
+ "label": "post",
+ "device": "NVIDIA GeForce RTX 4060 Laptop GPU",
+ "torch": "2.14.0+cu126",
+ "n": 4096,
+ "tflops": [
+  24.071513435175095,
+  30.5358871320704,
+  29.118679568833542,
+  29.690535686870145,
+  28.112028197987673
+ ],
+ "median": 29.118679568833542,
+ "drift_last_vs_first": 0.16785462092750159,
+ "t_start": 1790111840.7218707,
+ "t_end": 1790111843.2096946,
+ "iso_end": "2026-09-23T02:47:23",
+ "telemetry": [
+  {
+   "before": "68, 1890 MHz, 3105 MHz, 15.50 W",
+   "after": "68, 1890 MHz, 3105 MHz, 15.82 W",
+   "query": "temperature.gpu,clocks.sm,clocks.max.sm,power.draw"
+  },
+  {
+   "before": "73, 2685 MHz, 3105 MHz, 37.02 W",
+   "after": "73, 2685 MHz, 3105 MHz, 37.02 W",
+   "query": "temperature.gpu,clocks.sm,clocks.max.sm,power.draw"
+  },
+  {
+   "before": "73, 2685 MHz, 3105 MHz, 37.02 W",
+   "after": "88, 2685 MHz, 3105 MHz, 54.88 W",
+   "query": "temperature.gpu,clocks.sm,clocks.max.sm,power.draw"
+  },
+  {
+   "before": "88, 2685 MHz, 3105 MHz, 54.88 W",
+   "after": "87, 2490 MHz, 3105 MHz, 70.96 W",
+   "query": "temperature.gpu,clocks.sm,clocks.max.sm,power.draw"
+  },
+  {
+   "before": "87, 2490 MHz, 3105 MHz, 70.96 W",
+   "after": "87, 2280 MHz, 3105 MHz, 94.10 W",
+   "query": "temperature.gpu,clocks.sm,clocks.max.sm,power.draw"
+  }
+ ]
+}

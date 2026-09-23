@@ -1,0 +1,13 @@
+UNREAD cameron.k1.rdepth_kp_twin_under_maxline aL4 s0 n=4096 : unread (L-TRAINED None); line 0.1509
+UNREAD cameron.k1.rdepth_kp_twin_under_maxline aL4 s0 n=8192 : unread (L-TRAINED None); line 0.1412
+UNREAD cameron.k1.rdepth_kp_twin_under_maxline aL4 s0 n=16384 : unread (L-TRAINED None); line 0.1315
+UNREAD cameron.k1.rdepth_kp_twin_under_maxline aL4 s1 n=4096 : unread (L-TRAINED None); line 0.1509
+UNREAD cameron.k1.rdepth_kp_twin_under_maxline aL4 s1 n=8192 : unread (L-TRAINED None); line 0.1412
+UNREAD cameron.k1.rdepth_kp_twin_under_maxline aL4 s1 n=16384 : unread (L-TRAINED None); line 0.1315
+UNREAD cameron.k1.rdepth_kp_twin_under_maxline aL7 s0 n=4096 : unread (L-TRAINED None); line 0.4398
+UNREAD cameron.k1.rdepth_kp_twin_under_maxline aL7 s0 n=8192 : unread (L-TRAINED None); line 0.2672
+UNREAD cameron.k1.rdepth_kp_twin_under_maxline aL7 s0 n=16384 : unread (L-TRAINED None); line 0.1893
+UNREAD cameron.k1.rdepth_kp_twin_under_maxline aL7 s1 n=4096 : unread (L-TRAINED None); line 0.4398
+UNREAD cameron.k1.rdepth_kp_twin_under_maxline aL7 s1 n=8192 : unread (L-TRAINED None); line 0.2672
+UNREAD cameron.k1.rdepth_kp_twin_under_maxline aL7 s1 n=16384 : unread (L-TRAINED None); line 0.1893
+RED 12 failing rows

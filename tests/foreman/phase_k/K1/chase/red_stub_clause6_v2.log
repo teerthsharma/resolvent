@@ -1,0 +1,4 @@
+RED clause6_v2: "EXC NotImplementedError: stub"
+RED clause6_v2_power: "EXC NotImplementedError: stub"
+SUMMARY {"clause6_v2": "red", "clause6_v2_power": "red"}
+exit 1

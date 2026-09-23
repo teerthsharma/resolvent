@@ -1,0 +1,12 @@
+{"j1_equals_anchored": true, "hpd_ge_centered_violations": 0}
+HPD n=4096 L=4 best 0.0940 [hpd_k3_W10]  k3W10 0.0940 k4W6 0.0836
+HPD n=4096 L=7 best 0.5642 [hpd_k3_W10]  k3W10 0.5642 k4W6 0.3995
+HPD n=8192 L=4 best 0.0756 [hpd_k3_W10]  k3W10 0.0756 k4W6 0.0711
+HPD n=8192 L=7 best 0.2290 [hpd_k3_W10]  k3W10 0.2290 k4W6 0.1760
+HPD n=16384 L=4 best 0.0717 [hpd_k3_W10]  k3W10 0.0717 k4W6 0.0698
+HPD n=16384 L=7 best 0.1359 [hpd_k3_W10]  k3W10 0.1359 k4W6 0.1160
+local W64 0.6392716535433071 crossing 50 {11: 0.1302, 16: 0.1851, 24: 0.2715, 32: 0.3548, 40: 0.4292, 48: 0.4916, 56: 0.5654, 64: 0.6393, 96: 0.9148, 128: 0.998}
+
+real	0m2.025s
+user	0m0.030s
+sys	0m0.000s

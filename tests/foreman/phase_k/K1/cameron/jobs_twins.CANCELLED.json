@@ -1,0 +1,142 @@
+[
+ {
+  "name": "aL7_s0",
+  "argv": [
+   "--arm",
+   "aL",
+   "--layers",
+   "7",
+   "--dff",
+   "183",
+   "--seed",
+   "0",
+   "--steps",
+   "4000",
+   "--probe_every",
+   "500",
+   "--out",
+   "C:/Users/seal/AppData/Local/Temp/claude/C--Users-seal-Desktop-New-folder--32-/870edeb1-6409-4414-98e7-00d0537b75dd/scratchpad/phase_k/K1/cameron/runs/aL7_s0"
+  ]
+ },
+ {
+  "name": "aL4_s0",
+  "argv": [
+   "--arm",
+   "aL",
+   "--layers",
+   "4",
+   "--seed",
+   "0",
+   "--steps",
+   "4000",
+   "--probe_every",
+   "500",
+   "--out",
+   "C:/Users/seal/AppData/Local/Temp/claude/C--Users-seal-Desktop-New-folder--32-/870edeb1-6409-4414-98e7-00d0537b75dd/scratchpad/phase_k/K1/cameron/runs/aL4_s0"
+  ]
+ },
+ {
+  "name": "ass4_s0",
+  "argv": [
+   "--arm",
+   "ass",
+   "--layers",
+   "4",
+   "--seed",
+   "0",
+   "--steps",
+   "4000",
+   "--probe_every",
+   "500",
+   "--out",
+   "C:/Users/seal/AppData/Local/Temp/claude/C--Users-seal-Desktop-New-folder--32-/870edeb1-6409-4414-98e7-00d0537b75dd/scratchpad/phase_k/K1/cameron/runs/ass4_s0"
+  ]
+ },
+ {
+  "name": "aloop5_s0",
+  "argv": [
+   "--arm",
+   "aloop",
+   "--loops",
+   "5",
+   "--seed",
+   "0",
+   "--steps",
+   "4000",
+   "--probe_every",
+   "500",
+   "--out",
+   "C:/Users/seal/AppData/Local/Temp/claude/C--Users-seal-Desktop-New-folder--32-/870edeb1-6409-4414-98e7-00d0537b75dd/scratchpad/phase_k/K1/cameron/runs/aloop5_s0"
+  ]
+ },
+ {
+  "name": "aL7_s1",
+  "argv": [
+   "--arm",
+   "aL",
+   "--layers",
+   "7",
+   "--dff",
+   "183",
+   "--seed",
+   "1",
+   "--steps",
+   "4000",
+   "--probe_every",
+   "500",
+   "--out",
+   "C:/Users/seal/AppData/Local/Temp/claude/C--Users-seal-Desktop-New-folder--32-/870edeb1-6409-4414-98e7-00d0537b75dd/scratchpad/phase_k/K1/cameron/runs/aL7_s1"
+  ]
+ },
+ {
+  "name": "aL4_s1",
+  "argv": [
+   "--arm",
+   "aL",
+   "--layers",
+   "4",
+   "--seed",
+   "1",
+   "--steps",
+   "4000",
+   "--probe_every",
+   "500",
+   "--out",
+   "C:/Users/seal/AppData/Local/Temp/claude/C--Users-seal-Desktop-New-folder--32-/870edeb1-6409-4414-98e7-00d0537b75dd/scratchpad/phase_k/K1/cameron/runs/aL4_s1"
+  ]
+ },
+ {
+  "name": "ass4_s1",
+  "argv": [
+   "--arm",
+   "ass",
+   "--layers",
+   "4",
+   "--seed",
+   "1",
+   "--steps",
+   "4000",
+   "--probe_every",
+   "500",
+   "--out",
+   "C:/Users/seal/AppData/Local/Temp/claude/C--Users-seal-Desktop-New-folder--32-/870edeb1-6409-4414-98e7-00d0537b75dd/scratchpad/phase_k/K1/cameron/runs/ass4_s1"
+  ]
+ },
+ {
+  "name": "aloop5_s1",
+  "argv": [
+   "--arm",
+   "aloop",
+   "--loops",
+   "5",
+   "--seed",
+   "1",
+   "--steps",
+   "4000",
+   "--probe_every",
+   "500",
+   "--out",
+   "C:/Users/seal/AppData/Local/Temp/claude/C--Users-seal-Desktop-New-folder--32-/870edeb1-6409-4414-98e7-00d0537b75dd/scratchpad/phase_k/K1/cameron/runs/aloop5_s1"
+  ]
+ }
+]

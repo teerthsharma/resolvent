@@ -1,0 +1,6 @@
+UTC Fetch Time: 2026-09-22 21:21:06 UTC
+
+2402.09268	1841837	b3dd3338fba34ff811d846ff6a0691a7a153fc9366687362e6deafe6c5aa8c55	206454	[2402.09268] Transformers, parallel computation, and logarithmic depth	arXiv:2402.09268v1 [cs.LG] 14 Feb 2024       Transformers, parallel computation, and logarithmic depth
+2412.02975	430534	703df71dd4561b6dc926a6a82790ba7c2711b7aa0e8d6621a1b54116cf0409ba	103303	[2412.02975] Theoretical limitations of multi-layer Transformer	Theoretical limitations of multi-layer Transformer
+2503.03961	599571	00df3b725c9f63e8e4bd7a6085d6ab96f0b32fe71f206dcee25c6cf006df1d57	106239	[2503.03961] A Little Depth Goes a Long Way: The Expressive Power of Log-Depth Transformers	A Little Depth Goes a Long Way:
+2402.08164	230532	75975fb249554f3b43ea63b2626f96bea97513b08af0204bfcbcc082dc5aad9f	56103	[2402.08164] On Limitations of the Transformer Architecture	arXiv:2402.08164v2 [stat.ML] 26 Feb 2024           On Limitations of the Transformer Architecture

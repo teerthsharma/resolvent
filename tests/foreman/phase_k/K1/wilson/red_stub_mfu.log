@@ -1,0 +1,24 @@
+FAIL peak_device [-] stub
+FAIL peak_reps [-] 4
+FAIL peak_median [-] median 30.0 stored 30.0 table 26.77
+FAIL peak_session [-] T S S
+FAIL peak_before_sweep [-] peak 90.0-250.0 first probe 200.0
+FAIL row_orphan [probe_orphan] row names no probe job
+FAIL fit_mfu [probe_mfu26] reported 0.142 recomputed 0.12701 at 30.0000 TF
+FAIL nofit_reported [probe_abort_as_fit] rc 3 aborts 1 reported fit
+FAIL fit_rc0 [probe_abort_as_fit] rc 3 aborts 1
+FAIL fit_steps [probe_abort_as_fit] 1 of 20
+FAIL fit_tok_s [probe_abort_as_fit] reported 81920 logged 0.000
+FAIL fit_mfu [probe_abort_as_fit] reported 0.2 recomputed 0.00000 at 30.0000 TF
+FAIL fit_cv [probe_abort_as_fit] cv 9.9000
+FAIL nofit_real [probe_fit_as_nofit] rc 0 aborts 0
+FAIL row_present [probe_no_row] 0 rows
+FAIL fit_steps [probe_all_bad] 15 of 20
+FAIL fit_step_consistency [probe_all_bad] tok_s != tps/dt_s
+FAIL fit_tok_s [probe_all_bad] reported 1 logged 131072.000
+FAIL fit_mfu [probe_all_bad] reported 0.9 recomputed 0.20321 at 30.0000 TF
+FAIL fit_mem [probe_all_bad] logged 9.0000 device 7.996 reported 5.6
+FAIL fit_cv [probe_all_bad] cv 0.3062
+FAIL fit_clean [probe_all_bad] foreign [4242]
+{"test": "wilson.k1.mfu", "status": "red", "n_fail": 22, "checks_fired": "17/17", "never_fired": []}
+exit=1
