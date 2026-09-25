@@ -1,0 +1,3975 @@
+{
+"files": [
+"lean/CEQ.lean",
+"lean/CEQ/Contraction.lean",
+"lean/CEQ/Nilpotent.lean",
+"lean/CEQ/Occupancy.lean",
+"lean/CEQ/OracleSeparation.lean",
+"lean/CEQ/OrbitBound.lean",
+"lean/CEQ/Refcount.lean",
+"lean/CEQ/V15.lean",
+"lean/CEQ/V15Fork.lean",
+"lean/CEQ/V15Kernel.lean",
+"lean/CEQ/V15Phase.lean",
+"lean/CEQ/V15Source.lean",
+"lean/CEQ/V16Domain.lean"
+],
+"counts": {
+"theorem": 166,
+"lemma": 41,
+"all": 280
+},
+"decls": [
+{
+"name": "PerronCertificate",
+"kind": "structure",
+"file": "lean/CEQ/Contraction.lean",
+"line": 59,
+"statement": "structure PerronCertificate (A : Matrix n n ℝ) (w : n → ℝ) (ρ : ℝ) : Prop",
+"uses": [],
+"usedBy": [
+"rowStochastic_perron",
+"weighted_contraction",
+"weighted_contraction_iterate"
+]
+},
+{
+"name": "weighted_contraction",
+"kind": "theorem",
+"file": "lean/CEQ/Contraction.lean",
+"line": 72,
+"statement": "theorem weighted_contraction {A : Matrix n n ℝ} {w : n → ℝ} {ρ : ℝ} (hc : PerronCertificate A w ρ) (v : n → ℝ) (M : ℝ) (hM : ∀ j, |v j| ≤ M * w j) (i : n) : |(A.mulVec v) i| ≤ ρ * M * w i",
+"uses": [
+"PerronCertificate"
+],
+"usedBy": [
+"weighted_contraction_iterate"
+]
+},
+{
+"name": "weighted_contraction_iterate",
+"kind": "theorem",
+"file": "lean/CEQ/Contraction.lean",
+"line": 99,
+"statement": "theorem weighted_contraction_iterate {A : Matrix n n ℝ} {w : n → ℝ} {ρ : ℝ} (hc : PerronCertificate A w ρ) (v : n → ℝ) (M : ℝ) (hM : ∀ j, |v j| ≤ M * w j) : ∀ j, |(A.mulVec v) j| ≤ (ρ * M) * w j",
+"uses": [
+"PerronCertificate",
+"weighted_contraction"
+],
+"usedBy": []
+},
+{
+"name": "RowStochastic",
+"kind": "structure",
+"file": "lean/CEQ/Contraction.lean",
+"line": 110,
+"statement": "structure RowStochastic (P : Matrix n n ℝ) : Prop",
+"uses": [],
+"usedBy": [
+"expander_rowStochastic",
+"rowStochastic_perron"
+]
+},
+{
+"name": "rowStochastic_perron",
+"kind": "theorem",
+"file": "lean/CEQ/Contraction.lean",
+"line": 118,
+"statement": "theorem rowStochastic_perron (P : Matrix n n ℝ) (hP : RowStochastic P) (γ : ℝ) (hγ : 0 ≤ γ) : PerronCertificate (γ • P) (fun _ => 1) γ",
+"uses": [
+"PerronCertificate",
+"RowStochastic"
+],
+"usedBy": []
+},
+{
+"name": "expander",
+"kind": "def",
+"file": "lean/CEQ/Contraction.lean",
+"line": 133,
+"statement": "def expander : Matrix (Fin 2) (Fin 2) ℝ",
+"uses": [],
+"usedBy": [
+"expander_expands_l2",
+"expander_rowStochastic"
+]
+},
+{
+"name": "expander_rowStochastic",
+"kind": "theorem",
+"file": "lean/CEQ/Contraction.lean",
+"line": 135,
+"statement": "theorem expander_rowStochastic : RowStochastic expander",
+"uses": [
+"RowStochastic",
+"expander"
+],
+"usedBy": []
+},
+{
+"name": "expander_expands_l2",
+"kind": "theorem",
+"file": "lean/CEQ/Contraction.lean",
+"line": 151,
+"statement": "theorem expander_expands_l2 : ∃ v : Fin 2 → ℝ, (∑ i, ((expander.mulVec v) i) ^ 2) > (∑ i, (v i) ^ 2)",
+"uses": [
+"expander"
+],
+"usedBy": []
+},
+{
+"name": "StrictlyLower",
+"kind": "def",
+"file": "lean/CEQ/Nilpotent.lean",
+"line": 46,
+"statement": "def StrictlyLower (A : Matrix (Fin n) (Fin n) R) : Prop",
+"uses": [],
+"usedBy": [
+"forward_map_fills_in",
+"occupancy_is_exact_inverse",
+"oracle_ne_resolvent",
+"pow_card_eq_zero",
+"pow_entry_zero",
+"resolvent_operator_isNilpotent",
+"shift3_strictlyLower",
+"source_is_first_order_difference",
+"two_sources_recovered"
+]
+},
+{
+"name": "pow_entry_zero",
+"kind": "theorem",
+"file": "lean/CEQ/Nilpotent.lean",
+"line": 52,
+"statement": "theorem pow_entry_zero {A : Matrix (Fin n) (Fin n) R} (hA : StrictlyLower A) : ∀ (k : ℕ) (i j : Fin n), (i : ℕ) < (j : ℕ) + k → (A ^ k) i j = 0",
+"uses": [
+"StrictlyLower"
+],
+"usedBy": [
+"pow_card_eq_zero"
+]
+},
+{
+"name": "pow_card_eq_zero",
+"kind": "theorem",
+"file": "lean/CEQ/Nilpotent.lean",
+"line": 77,
+"statement": "theorem pow_card_eq_zero {A : Matrix (Fin n) (Fin n) R} (hA : StrictlyLower A) : A ^ n = 0",
+"uses": [
+"StrictlyLower",
+"pow_entry_zero"
+],
+"usedBy": [
+"occupancy_is_exact_inverse",
+"oracle_ne_resolvent",
+"resolvent_operator_isNilpotent"
+]
+},
+{
+"name": "occupancy_is_exact_inverse",
+"kind": "theorem",
+"file": "lean/CEQ/Nilpotent.lean",
+"line": 96,
+"statement": "theorem occupancy_is_exact_inverse {A : Matrix (Fin n) (Fin n) ℝ} (hA : StrictlyLower A) : (1 - A) * CEQ.Occupancy.occupancy A n = 1 ∧ CEQ.Occupancy.occupancy A n * (1 - A) = 1",
+"uses": [
+"StrictlyLower",
+"occupancy",
+"occupancy_eq_inverse_of_nilpotent",
+"pow_card_eq_zero"
+],
+"usedBy": [
+"source_is_first_order_difference"
+]
+},
+{
+"name": "one_not_nilpotent",
+"kind": "theorem",
+"file": "lean/CEQ/Nilpotent.lean",
+"line": 105,
+"statement": "theorem one_not_nilpotent (hn : 0 < n) (k : ℕ) : (1 : Matrix (Fin n) (Fin n) ℝ) ^ k ≠ 0",
+"uses": [],
+"usedBy": []
+},
+{
+"name": "occupancy",
+"kind": "def",
+"file": "lean/CEQ/Occupancy.lean",
+"line": 42,
+"statement": "def occupancy (A : R) (N : ℕ) : R",
+"uses": [],
+"usedBy": [
+"forward_map_fills_in",
+"occupancy_eq_inverse_of_nilpotent",
+"occupancy_is_exact_inverse",
+"occupancy_telescope",
+"occupancy_telescope'",
+"source_is_first_order_difference",
+"truncation_never_exact",
+"two_sources_recovered"
+]
+},
+{
+"name": "occupancy_telescope",
+"kind": "theorem",
+"file": "lean/CEQ/Occupancy.lean",
+"line": 52,
+"statement": "theorem occupancy_telescope (A : R) (N : ℕ) : (1 - A) * occupancy A N = 1 - A ^ N",
+"uses": [
+"occupancy"
+],
+"usedBy": [
+"occupancy_eq_inverse_of_nilpotent",
+"truncation_never_exact"
+]
+},
+{
+"name": "occupancy_telescope'",
+"kind": "theorem",
+"file": "lean/CEQ/Occupancy.lean",
+"line": 66,
+"statement": "theorem occupancy_telescope' (A : R) (N : ℕ) : occupancy A N * (1 - A) = 1 - A ^ N",
+"uses": [
+"occupancy"
+],
+"usedBy": [
+"occupancy_eq_inverse_of_nilpotent"
+]
+},
+{
+"name": "occupancy_eq_inverse_of_nilpotent",
+"kind": "theorem",
+"file": "lean/CEQ/Occupancy.lean",
+"line": 83,
+"statement": "theorem occupancy_eq_inverse_of_nilpotent (A : R) (N : ℕ) (hA : A ^ N = 0) : (1 - A) * occupancy A N = 1 ∧ occupancy A N * (1 - A) = 1",
+"uses": [
+"occupancy",
+"occupancy_telescope",
+"occupancy_telescope'"
+],
+"usedBy": [
+"occupancy_is_exact_inverse"
+]
+},
+{
+"name": "Nonneg",
+"kind": "def",
+"file": "lean/CEQ/OracleSeparation.lean",
+"line": 76,
+"statement": "def Nonneg (Q : Matrix (Fin n) (Fin n) ℝ) : Prop",
+"uses": [],
+"usedBy": [
+"diag_pos_double",
+"diag_sq_le",
+"diag_sq_pos",
+"diag_two_pow_pos",
+"mul_nonneg'",
+"not_isNilpotent",
+"one_nonneg",
+"oracle_ne_resolvent",
+"pow_nonneg'",
+"truncation_never_exact",
+"zero_not_a_counterexample"
+]
+},
+{
+"name": "SymmSupport",
+"kind": "def",
+"file": "lean/CEQ/OracleSeparation.lean",
+"line": 82,
+"statement": "def SymmSupport (Q : Matrix (Fin n) (Fin n) ℝ) : Prop",
+"uses": [],
+"usedBy": [
+"diag_sq_pos",
+"diag_two_pow_pos",
+"not_isNilpotent",
+"oracle_ne_resolvent",
+"truncation_never_exact",
+"zero_not_a_counterexample"
+]
+},
+{
+"name": "one_nonneg",
+"kind": "theorem",
+"file": "lean/CEQ/OracleSeparation.lean",
+"line": 84,
+"statement": "theorem one_nonneg : Nonneg (1 : Matrix (Fin n) (Fin n) ℝ)",
+"uses": [
+"Nonneg"
+],
+"usedBy": [
+"pow_nonneg'"
+]
+},
+{
+"name": "mul_nonneg'",
+"kind": "theorem",
+"file": "lean/CEQ/OracleSeparation.lean",
+"line": 91,
+"statement": "theorem mul_nonneg' {M N : Matrix (Fin n) (Fin n) ℝ} (hM : Nonneg M) (hN : Nonneg N) : Nonneg (M * N)",
+"uses": [
+"Nonneg"
+],
+"usedBy": [
+"pow_nonneg'"
+]
+},
+{
+"name": "pow_nonneg'",
+"kind": "theorem",
+"file": "lean/CEQ/OracleSeparation.lean",
+"line": 97,
+"statement": "theorem pow_nonneg' {Q : Matrix (Fin n) (Fin n) ℝ} (hQ : Nonneg Q) (k : ℕ) : Nonneg (Q ^ k)",
+"uses": [
+"Nonneg",
+"mul_nonneg'",
+"one_nonneg"
+],
+"usedBy": [
+"diag_two_pow_pos"
+]
+},
+{
+"name": "diag_sq_le",
+"kind": "theorem",
+"file": "lean/CEQ/OracleSeparation.lean",
+"line": 106,
+"statement": "theorem diag_sq_le {M : Matrix (Fin n) (Fin n) ℝ} (hM : Nonneg M) (i : Fin n) : M i i * M i i ≤ (M * M) i i",
+"uses": [
+"Nonneg"
+],
+"usedBy": [
+"diag_pos_double"
+]
+},
+{
+"name": "diag_pos_double",
+"kind": "theorem",
+"file": "lean/CEQ/OracleSeparation.lean",
+"line": 112,
+"statement": "theorem diag_pos_double {M : Matrix (Fin n) (Fin n) ℝ} (hM : Nonneg M) {i : Fin n} (h : 0 < M i i) : 0 < (M * M) i i",
+"uses": [
+"Nonneg",
+"diag_sq_le"
+],
+"usedBy": [
+"diag_two_pow_pos"
+]
+},
+{
+"name": "diag_sq_pos",
+"kind": "theorem",
+"file": "lean/CEQ/OracleSeparation.lean",
+"line": 120,
+"statement": "theorem diag_sq_pos {Q : Matrix (Fin n) (Fin n) ℝ} (hQ : Nonneg Q) (hsupp : SymmSupport Q) {i j : Fin n} (hij : 0 < Q i j) : 0 < (Q * Q) i i",
+"uses": [
+"Nonneg",
+"SymmSupport"
+],
+"usedBy": [
+"diag_two_pow_pos"
+]
+},
+{
+"name": "diag_two_pow_pos",
+"kind": "theorem",
+"file": "lean/CEQ/OracleSeparation.lean",
+"line": 128,
+"statement": "theorem diag_two_pow_pos {Q : Matrix (Fin n) (Fin n) ℝ} (hQ : Nonneg Q) (hsupp : SymmSupport Q) {i j : Fin n} (hij : 0 < Q i j) : ∀ k : ℕ, 0 < (Q ^ ((2 : ℕ) ^ (k + 1))) i i",
+"uses": [
+"Nonneg",
+"SymmSupport",
+"diag_pos_double",
+"diag_sq_pos",
+"pow_nonneg'"
+],
+"usedBy": [
+"not_isNilpotent"
+]
+},
+{
+"name": "not_isNilpotent",
+"kind": "theorem",
+"file": "lean/CEQ/OracleSeparation.lean",
+"line": 148,
+"statement": "theorem not_isNilpotent {Q : Matrix (Fin n) (Fin n) ℝ} (hQ : Nonneg Q) (hsupp : SymmSupport Q) {i j : Fin n} (hij : 0 < Q i j) : ¬ IsNilpotent Q",
+"uses": [
+"Nonneg",
+"SymmSupport",
+"diag_two_pow_pos"
+],
+"usedBy": [
+"oracle_ne_resolvent",
+"truncation_never_exact"
+]
+},
+{
+"name": "oracle_ne_resolvent",
+"kind": "theorem",
+"file": "lean/CEQ/OracleSeparation.lean",
+"line": 166,
+"statement": "theorem oracle_ne_resolvent (A Q : Matrix (Fin n) (Fin n) ℝ) (hA : CEQ.Nilpotent.StrictlyLower A) (hQ : Nonneg Q) (hsupp : SymmSupport Q) {i j : Fin n} (hij : 0 < Q i j) : Q ≠ A",
+"uses": [
+"Nonneg",
+"StrictlyLower",
+"SymmSupport",
+"not_isNilpotent",
+"pow_card_eq_zero"
+],
+"usedBy": []
+},
+{
+"name": "truncation_never_exact",
+"kind": "theorem",
+"file": "lean/CEQ/OracleSeparation.lean",
+"line": 180,
+"statement": "theorem truncation_never_exact {Q : Matrix (Fin n) (Fin n) ℝ} (hQ : Nonneg Q) (hsupp : SymmSupport Q) {i j : Fin n} (hij : 0 < Q i j) (N : ℕ) : (1 - Q) * CEQ.Occupancy.occupancy Q N ≠ 1",
+"uses": [
+"Nonneg",
+"SymmSupport",
+"not_isNilpotent",
+"occupancy",
+"occupancy_telescope"
+],
+"usedBy": []
+},
+{
+"name": "zero_not_a_counterexample",
+"kind": "theorem",
+"file": "lean/CEQ/OracleSeparation.lean",
+"line": 193,
+"statement": "theorem zero_not_a_counterexample : Nonneg (0 : Matrix (Fin n) (Fin n) ℝ) ∧ SymmSupport (0 : Matrix (Fin n) (Fin n) ℝ) ∧ IsNilpotent (0 : Matrix (Fin n) (Fin n) ℝ)",
+"uses": [
+"Nonneg",
+"SymmSupport"
+],
+"usedBy": []
+},
+{
+"name": "resolvent_operator_isNilpotent",
+"kind": "theorem",
+"file": "lean/CEQ/OracleSeparation.lean",
+"line": 201,
+"statement": "theorem resolvent_operator_isNilpotent {A : Matrix (Fin n) (Fin n) ℝ} (hA : CEQ.Nilpotent.StrictlyLower A) : IsNilpotent A",
+"uses": [
+"StrictlyLower",
+"pow_card_eq_zero"
+],
+"usedBy": []
+},
+{
+"name": "agree",
+"kind": "def",
+"file": "lean/CEQ/OrbitBound.lean",
+"line": 31,
+"statement": "def agree (R f : E → A) : Finset E",
+"uses": [],
+"usedBy": [
+"card_agree_add_card_errors",
+"card_agree_le_orbits",
+"injOn_agree"
+]
+},
+{
+"name": "errors",
+"kind": "def",
+"file": "lean/CEQ/OrbitBound.lean",
+"line": 34,
+"statement": "def errors (R f : E → A) : Finset E",
+"uses": [],
+"usedBy": [
+"card_agree_add_card_errors",
+"orbit_error_bound",
+"orbit_error_bound_attained"
+]
+},
+{
+"name": "orbits",
+"kind": "def",
+"file": "lean/CEQ/OrbitBound.lean",
+"line": 37,
+"statement": "def orbits (f : E → A) : ℕ",
+"uses": [],
+"usedBy": [
+"card_agree_le_orbits",
+"orbit_error_bound"
+]
+},
+{
+"name": "card_agree_add_card_errors",
+"kind": "theorem",
+"file": "lean/CEQ/OrbitBound.lean",
+"line": 40,
+"statement": "theorem card_agree_add_card_errors (R f : E → A) : (agree R f).card + (errors R f).card = Fintype.card E",
+"uses": [
+"agree",
+"errors"
+],
+"usedBy": [
+"orbit_error_bound"
+]
+},
+{
+"name": "injOn_agree",
+"kind": "theorem",
+"file": "lean/CEQ/OrbitBound.lean",
+"line": 51,
+"statement": "theorem injOn_agree (R f : E → A) (hR : Function.Injective R) : Set.InjOn f (agree R f)",
+"uses": [
+"agree"
+],
+"usedBy": [
+"card_agree_le_orbits"
+]
+},
+{
+"name": "card_agree_le_orbits",
+"kind": "theorem",
+"file": "lean/CEQ/OrbitBound.lean",
+"line": 58,
+"statement": "theorem card_agree_le_orbits (R f : E → A) (hR : Function.Injective R) : (agree R f).card ≤ orbits f",
+"uses": [
+"agree",
+"injOn_agree",
+"orbits"
+],
+"usedBy": [
+"orbit_error_bound"
+]
+},
+{
+"name": "orbit_error_bound",
+"kind": "theorem",
+"file": "lean/CEQ/OrbitBound.lean",
+"line": 71,
+"statement": "theorem orbit_error_bound (R f : E → A) (hR : Function.Injective R) : Fintype.card E - orbits f ≤ (errors R f).card",
+"uses": [
+"card_agree_add_card_errors",
+"card_agree_le_orbits",
+"errors",
+"orbits"
+],
+"usedBy": []
+},
+{
+"name": "orbit_error_bound_attained",
+"kind": "theorem",
+"file": "lean/CEQ/OrbitBound.lean",
+"line": 80,
+"statement": "theorem orbit_error_bound_attained (R : E → A) : (errors R R).card = 0",
+"uses": [
+"errors"
+],
+"usedBy": []
+},
+{
+"name": "fibre",
+"kind": "def",
+"file": "lean/CEQ/Refcount.lean",
+"line": 54,
+"statement": "def fibre (f : E → P) (p : P) : Finset E",
+"uses": [],
+"usedBy": [
+"card_survivors_add_refcount",
+"mem_fibre",
+"one_le_refcount",
+"refcount",
+"survivors"
+]
+},
+{
+"name": "refcount",
+"kind": "def",
+"file": "lean/CEQ/Refcount.lean",
+"line": 58,
+"statement": "def refcount (f : E → P) (p : P) : ℕ",
+"uses": [
+"fibre"
+],
+"usedBy": [
+"IsFreeFace",
+"card_survivors_add_refcount",
+"evict_floor_add_refcount_pred",
+"floor_add_orbits",
+"floor_eq_sum_refcount_pred",
+"one_le_refcount",
+"shared_plaque_floor_drops"
+]
+},
+{
+"name": "plaques",
+"kind": "def",
+"file": "lean/CEQ/Refcount.lean",
+"line": 61,
+"statement": "def plaques (f : E → P) : Finset P",
+"uses": [],
+"usedBy": [
+"card_image_survivors_add_one",
+"evict_floor_add_refcount_pred",
+"floor_add_orbits",
+"floor_eq_sum_refcount_pred",
+"free_face_floor_unchanged",
+"image_survivors",
+"one_le_refcount",
+"shared_plaque_floor_drops"
+]
+},
+{
+"name": "IsFreeFace",
+"kind": "def",
+"file": "lean/CEQ/Refcount.lean",
+"line": 64,
+"statement": "def IsFreeFace (f : E → P) (p : P) : Prop",
+"uses": [
+"refcount"
+],
+"usedBy": [
+"free_face_floor_unchanged",
+"shared_plaque_floor_drops"
+]
+},
+{
+"name": "survivors",
+"kind": "def",
+"file": "lean/CEQ/Refcount.lean",
+"line": 67,
+"statement": "def survivors (f : E → P) (p : P) : Finset E",
+"uses": [
+"fibre"
+],
+"usedBy": [
+"card_image_survivors_add_one",
+"card_survivors_add_refcount",
+"evict_floor_add_refcount_pred",
+"free_face_floor_unchanged",
+"image_survivors",
+"shared_plaque_floor_drops"
+]
+},
+{
+"name": "mem_fibre",
+"kind": "theorem",
+"file": "lean/CEQ/Refcount.lean",
+"line": 71,
+"statement": "theorem mem_fibre {f : E → P} {e : E} {p : P} : e ∈ fibre f p ↔ f e = p",
+"uses": [
+"fibre"
+],
+"usedBy": []
+},
+{
+"name": "one_le_refcount",
+"kind": "theorem",
+"file": "lean/CEQ/Refcount.lean",
+"line": 75,
+"statement": "theorem one_le_refcount {f : E → P} {p : P} (hp : p ∈ plaques f) : 1 ≤ refcount f p",
+"uses": [
+"fibre",
+"plaques",
+"refcount"
+],
+"usedBy": [
+"evict_floor_add_refcount_pred",
+"floor_add_orbits",
+"shared_plaque_floor_drops"
+]
+},
+{
+"name": "floor_add_orbits",
+"kind": "theorem",
+"file": "lean/CEQ/Refcount.lean",
+"line": 87,
+"statement": "theorem floor_add_orbits (f : E → P) : (∑ p in plaques f, (refcount f p - 1)) + (plaques f).card = Fintype.card E",
+"uses": [
+"one_le_refcount",
+"plaques",
+"refcount"
+],
+"usedBy": [
+"floor_eq_sum_refcount_pred"
+]
+},
+{
+"name": "floor_eq_sum_refcount_pred",
+"kind": "theorem",
+"file": "lean/CEQ/Refcount.lean",
+"line": 97,
+"statement": "theorem floor_eq_sum_refcount_pred (f : E → P) : Fintype.card E - (plaques f).card = ∑ p in plaques f, (refcount f p - 1)",
+"uses": [
+"floor_add_orbits",
+"plaques",
+"refcount"
+],
+"usedBy": []
+},
+{
+"name": "card_survivors_add_refcount",
+"kind": "theorem",
+"file": "lean/CEQ/Refcount.lean",
+"line": 102,
+"statement": "theorem card_survivors_add_refcount (f : E → P) (p : P) : (survivors f p).card + refcount f p = Fintype.card E",
+"uses": [
+"fibre",
+"refcount",
+"survivors"
+],
+"usedBy": [
+"evict_floor_add_refcount_pred"
+]
+},
+{
+"name": "image_survivors",
+"kind": "theorem",
+"file": "lean/CEQ/Refcount.lean",
+"line": 113,
+"statement": "theorem image_survivors (f : E → P) (p : P) : (survivors f p).image f = plaques f \\ {p}",
+"uses": [
+"plaques",
+"survivors"
+],
+"usedBy": [
+"card_image_survivors_add_one"
+]
+},
+{
+"name": "card_image_survivors_add_one",
+"kind": "theorem",
+"file": "lean/CEQ/Refcount.lean",
+"line": 133,
+"statement": "theorem card_image_survivors_add_one (f : E → P) {p : P} (hp : p ∈ plaques f) : ((survivors f p).image f).card + 1 = (plaques f).card",
+"uses": [
+"image_survivors",
+"plaques",
+"survivors"
+],
+"usedBy": [
+"evict_floor_add_refcount_pred"
+]
+},
+{
+"name": "evict_floor_add_refcount_pred",
+"kind": "theorem",
+"file": "lean/CEQ/Refcount.lean",
+"line": 145,
+"statement": "theorem evict_floor_add_refcount_pred (f : E → P) {p : P} (hp : p ∈ plaques f) : ((survivors f p).card - ((survivors f p).image f).card) + (refcount f p - 1) = Fintype.card E - (plaques f).card",
+"uses": [
+"card_image_survivors_add_one",
+"card_survivors_add_refcount",
+"one_le_refcount",
+"plaques",
+"refcount",
+"survivors"
+],
+"usedBy": [
+"free_face_floor_unchanged",
+"shared_plaque_floor_drops"
+]
+},
+{
+"name": "free_face_floor_unchanged",
+"kind": "theorem",
+"file": "lean/CEQ/Refcount.lean",
+"line": 160,
+"statement": "theorem free_face_floor_unchanged (f : E → P) {p : P} (hp : p ∈ plaques f) (hfree : IsFreeFace f p) : (survivors f p).card - ((survivors f p).image f).card = Fintype.card E - (plaques f).card",
+"uses": [
+"IsFreeFace",
+"evict_floor_add_refcount_pred",
+"plaques",
+"survivors"
+],
+"usedBy": []
+},
+{
+"name": "shared_plaque_floor_drops",
+"kind": "theorem",
+"file": "lean/CEQ/Refcount.lean",
+"line": 174,
+"statement": "theorem shared_plaque_floor_drops (f : E → P) {p : P} (hp : p ∈ plaques f) (hshared : ¬ IsFreeFace f p) : (survivors f p).card - ((survivors f p).image f).card < Fintype.card E - (plaques f).card",
+"uses": [
+"IsFreeFace",
+"evict_floor_add_refcount_pred",
+"one_le_refcount",
+"plaques",
+"refcount",
+"survivors"
+],
+"usedBy": []
+},
+{
+"name": "chain",
+"kind": "def",
+"file": "lean/CEQ/V15.lean",
+"line": 58,
+"statement": "def chain (a b : ℕ → ℝ) (y₀ : ℝ) : ℕ → ℝ | 0 => y₀ | s + 1 => a (s + 1) * chain a b y₀ s + b (s + 1)",
+"uses": [],
+"usedBy": [
+"Asink_computes_chain",
+"chain_eq_sum",
+"chain_impulse_path_product",
+"chain_one_gt_one",
+"chain_one_nonneg",
+"chain_path_product",
+"chain_step_eq_affApply",
+"no_row_stochastic_with_drive_values",
+"prefix_logit_computes_chain"
+]
+},
+{
+"name": "chain_path_product",
+"kind": "theorem",
+"file": "lean/CEQ/V15.lean",
+"line": 74,
+"statement": "theorem chain_path_product (a b : ℕ → ℝ) (y₀ : ℝ) (m n : ℕ) (h : m ≤ n) : chain a b y₀ n = (∏ k in Ico (m + 1) (n + 1), a k) * chain a b y₀ m + ∑ s in Ico (m + 1) (n + 1), (∏ k in Ico (s + 1) (n + 1), a k) * b s",
+"uses": [
+"chain"
+],
+"usedBy": [
+"chain_eq_sum",
+"chain_impulse_path_product",
+"prefix_logit_computes_chain"
+]
+},
+{
+"name": "chain_impulse_path_product",
+"kind": "theorem",
+"file": "lean/CEQ/V15.lean",
+"line": 99,
+"statement": "theorem chain_impulse_path_product (a b : ℕ → ℝ) (y₀ : ℝ) (m n : ℕ) (h : m < n) (hy : chain a b y₀ m = 0) (hb : ∀ s, m + 1 < s → s ≤ n → b s = 0) : chain a b y₀ n = (∏ k in Ico (m + 2) (n + 1), a k) * b (m + 1)",
+"uses": [
+"chain",
+"chain_path_product"
+],
+"usedBy": []
+},
+{
+"name": "scan",
+"kind": "def",
+"file": "lean/CEQ/V15.lean",
+"line": 114,
+"statement": "def scan (g : ℕ → ℝ) (i : ℕ) : ℝ",
+"uses": [],
+"usedBy": [
+"C_re",
+"W",
+"gate_zero_is_attention",
+"gate_zero_key_logit_identity",
+"gate_zero_logit_identity",
+"gate_zero_sink_logit_identity",
+"num",
+"prefix_logit_mask",
+"scan_zero_of_zero"
+]
+},
+{
+"name": "W",
+"kind": "def",
+"file": "lean/CEQ/V15.lean",
+"line": 117,
+"statement": "noncomputable def W (g : ℕ → ℝ) (i j : ℕ) : ℝ",
+"uses": [
+"scan"
+],
+"usedBy": [
+"Asink_eq_hop",
+"Asink_zero_eq_hop",
+"Wc",
+"corner_path_product",
+"gate_zero_is_attention",
+"gate_zero_second_absorbing",
+"path_product_corner_fails_at_a_zero_gate",
+"phase_modulus_is_the_real_carrier",
+"prefix_logit_computes_chain",
+"prefix_logit_mask",
+"softmax_unique_absorbing"
+]
+},
+{
+"name": "prefix_logit_mask",
+"kind": "theorem",
+"file": "lean/CEQ/V15.lean",
+"line": 128,
+"statement": "theorem prefix_logit_mask (a : ℕ → ℝ) (ha : ∀ k, 0 < a k) {i j : ℕ} (hij : j ≤ i) : W (fun k => Real.log (a k)) i j = ∏ k in Ico (j + 1) (i + 1), a k",
+"uses": [
+"W",
+"scan"
+],
+"usedBy": [
+"Asink_eq_hop",
+"Asink_zero_eq_hop",
+"corner_path_product_is_the_gate_product",
+"prefix_logit_computes_chain",
+"prefix_phase_modulus"
+]
+},
+{
+"name": "prefix_logit_computes_chain",
+"kind": "theorem",
+"file": "lean/CEQ/V15.lean",
+"line": 140,
+"statement": "theorem prefix_logit_computes_chain (a b : ℕ → ℝ) (ha : ∀ k, 0 < a k) (i : ℕ) : chain a b 0 i = ∑ s in Ico 1 (i + 1), W (fun k => Real.log (a k)) i s * b s",
+"uses": [
+"W",
+"chain",
+"chain_path_product",
+"prefix_logit_mask"
+],
+"usedBy": []
+},
+{
+"name": "chi",
+"kind": "def",
+"file": "lean/CEQ/V15.lean",
+"line": 152,
+"statement": "def chi (x : ZMod 2) : ℝ",
+"uses": [],
+"usedBy": [
+"chi_add",
+"chi_one",
+"chi_sum",
+"chi_zero",
+"parity_is_Z2_winding",
+"parity_sign",
+"phase_gate_is_sign"
+]
+},
+{
+"name": "zmod_two_cases",
+"kind": "lemma",
+"file": "lean/CEQ/V15.lean",
+"line": 154,
+"statement": "lemma zmod_two_cases : ∀ x : ZMod 2, x = 0 ∨ x = 1",
+"uses": [],
+"usedBy": [
+"chi_add",
+"phase_gate_is_sign"
+]
+},
+{
+"name": "chi_zero",
+"kind": "lemma",
+"file": "lean/CEQ/V15.lean",
+"line": 156,
+"statement": "@[simp] lemma chi_zero : chi 0 = 1",
+"uses": [
+"chi"
+],
+"usedBy": [
+"chi_add"
+]
+},
+{
+"name": "chi_one",
+"kind": "lemma",
+"file": "lean/CEQ/V15.lean",
+"line": 158,
+"statement": "@[simp] lemma chi_one : chi 1 = -1",
+"uses": [
+"chi"
+],
+"usedBy": [
+"chi_add"
+]
+},
+{
+"name": "chi_add",
+"kind": "lemma",
+"file": "lean/CEQ/V15.lean",
+"line": 163,
+"statement": "lemma chi_add (x y : ZMod 2) : chi (x + y) = chi x * chi y",
+"uses": [
+"chi",
+"chi_one",
+"chi_zero",
+"zmod_two_cases"
+],
+"usedBy": [
+"chi_sum"
+]
+},
+{
+"name": "chi_sum",
+"kind": "lemma",
+"file": "lean/CEQ/V15.lean",
+"line": 168,
+"statement": "lemma chi_sum (p : ℕ → ZMod 2) (s : Finset ℕ) : chi (∑ k in s, p k) = ∏ k in s, chi (p k)",
+"uses": [
+"chi",
+"chi_add"
+],
+"usedBy": [
+"parity_sign"
+]
+},
+{
+"name": "pscan",
+"kind": "def",
+"file": "lean/CEQ/V15.lean",
+"line": 176,
+"statement": "def pscan (p : ℕ → ZMod 2) (i : ℕ) : ZMod 2",
+"uses": [],
+"usedBy": [
+"parity_is_Z2_winding",
+"parity_sign",
+"phase_sum_is_not_the_parity_phase",
+"pscan_sub_eq_add"
+]
+},
+{
+"name": "pscan_sub_eq_add",
+"kind": "lemma",
+"file": "lean/CEQ/V15.lean",
+"line": 180,
+"statement": "lemma pscan_sub_eq_add (p : ℕ → ZMod 2) (i j : ℕ) : pscan p i - pscan p j = pscan p i + pscan p j",
+"uses": [
+"pscan"
+],
+"usedBy": []
+},
+{
+"name": "parity_sign",
+"kind": "theorem",
+"file": "lean/CEQ/V15.lean",
+"line": 190,
+"statement": "theorem parity_sign (p : ℕ → ZMod 2) {i j : ℕ} (hij : j ≤ i) : chi (pscan p i - pscan p j) = ∏ k in Ico (j + 1) (i + 1), chi (p k)",
+"uses": [
+"chi",
+"chi_sum",
+"pscan"
+],
+"usedBy": [
+"parity_is_Z2_winding"
+]
+},
+{
+"name": "Wc",
+"kind": "def",
+"file": "lean/CEQ/V15.lean",
+"line": 199,
+"statement": "noncomputable def Wc (g : ℕ → ℝ) (i j : ℕ) : ℝ",
+"uses": [
+"W"
+],
+"usedBy": [
+"Wgate",
+"corner_path_product",
+"corner_path_product_is_the_gate_product",
+"gate_zero_is_attention",
+"gate_zero_not_stochastic",
+"gate_zero_row_sum",
+"gate_zero_second_absorbing",
+"path_product_corner_fails_at_a_zero_gate",
+"softmax_unique_absorbing",
+"three_corners_containment"
+]
+},
+{
+"name": "gate_zero_is_attention",
+"kind": "theorem",
+"file": "lean/CEQ/V15.lean",
+"line": 208,
+"statement": "theorem gate_zero_is_attention (g : ℕ → ℝ) (hg : ∀ k, g k = 0) (i j : ℕ) : Wc g i j = if j ≤ i then 1 else 0",
+"uses": [
+"W",
+"Wc",
+"scan"
+],
+"usedBy": [
+"gate_zero_row_sum"
+]
+},
+{
+"name": "gate_zero_row_sum",
+"kind": "theorem",
+"file": "lean/CEQ/V15.lean",
+"line": 221,
+"statement": "theorem gate_zero_row_sum (g : ℕ → ℝ) (hg : ∀ k, g k = 0) (i : ℕ) : ∑ j in range (i + 1), Wc g i j = (i : ℝ) + 1",
+"uses": [
+"Wc",
+"gate_zero_is_attention"
+],
+"usedBy": [
+"gate_zero_not_stochastic"
+]
+},
+{
+"name": "gate_zero_not_stochastic",
+"kind": "theorem",
+"file": "lean/CEQ/V15.lean",
+"line": 237,
+"statement": "theorem gate_zero_not_stochastic (g : ℕ → ℝ) (hg : ∀ k, g k = 0) {i : ℕ} (hi : 1 ≤ i) : ∑ j in range (i + 1), Wc g i j ≠ 1",
+"uses": [
+"Wc",
+"gate_zero_row_sum"
+],
+"usedBy": [
+"gate_zero_beta_zero_row_not_one"
+]
+},
+{
+"name": "softmax_unique_absorbing",
+"kind": "theorem",
+"file": "lean/CEQ/V15.lean",
+"line": 263,
+"statement": "theorem softmax_unique_absorbing (g : ℕ → ℝ) : (∀ j, Wc g 0 j = if j = 0 then 1 else 0) ∧ ∀ i, 1 ≤ i → 0 < Wc g i 0",
+"uses": [
+"W",
+"Wc"
+],
+"usedBy": []
+},
+{
+"name": "Wgate",
+"kind": "def",
+"file": "lean/CEQ/V15.lean",
+"line": 281,
+"statement": "noncomputable def Wgate (g : ℕ → ℝ) (m : ℕ → ℕ → ℝ) (i j : ℕ) : ℝ",
+"uses": [
+"Wc"
+],
+"usedBy": [
+"gate_zero_second_absorbing"
+]
+},
+{
+"name": "gate_zero_second_absorbing",
+"kind": "theorem",
+"file": "lean/CEQ/V15.lean",
+"line": 295,
+"statement": "theorem gate_zero_second_absorbing (g : ℕ → ℝ) (m : ℕ → ℕ → ℝ) (h0 : m 1 0 = 0) (h1 : m 1 1 = 1) (j : ℕ) : Wgate g m 1 j = if j = 1 then 1 else 0",
+"uses": [
+"W",
+"Wc",
+"Wgate"
+],
+"usedBy": []
+},
+{
+"name": "gate_zero_logit_identity",
+"kind": "theorem",
+"file": "lean/CEQ/V15.lean",
+"line": 314,
+"statement": "theorem gate_zero_logit_identity (g : ℕ → ℝ) (hg : ∀ k, g k = 0) (q : ℕ → ℕ → ℝ) (i j : ℕ) : q i j + (scan g i - scan g j) = q i j",
+"uses": [
+"scan"
+],
+"usedBy": []
+},
+{
+"name": "softplus",
+"kind": "def",
+"file": "lean/CEQ/V15.lean",
+"line": 322,
+"statement": "noncomputable def softplus (w : ℝ) : ℝ",
+"uses": [],
+"usedBy": [
+"bounded_gates_antitone",
+"bounded_gates_prod_le_one",
+"bounded_gates_stable",
+"six_misses_every_bedM_value",
+"six_never_reaches_the_band",
+"six_recovered",
+"softplus_gate_lt_one",
+"softplus_pos"
+]
+},
+{
+"name": "softplus_pos",
+"kind": "lemma",
+"file": "lean/CEQ/V15.lean",
+"line": 324,
+"statement": "lemma softplus_pos (w : ℝ) : 0 < softplus w",
+"uses": [
+"softplus"
+],
+"usedBy": [
+"bounded_gates_stable",
+"softplus_gate_lt_one"
+]
+},
+{
+"name": "bounded_gates_stable",
+"kind": "theorem",
+"file": "lean/CEQ/V15.lean",
+"line": 329,
+"statement": "theorem bounded_gates_stable (w : ℝ) : 0 < Real.exp (-softplus w) ∧ Real.exp (-softplus w) ≤ 1",
+"uses": [
+"softplus",
+"softplus_pos"
+],
+"usedBy": [
+"bounded_gates_prod_le_one",
+"six_never_reaches_the_band",
+"six_recovered"
+]
+},
+{
+"name": "bounded_gates_prod_le_one",
+"kind": "theorem",
+"file": "lean/CEQ/V15.lean",
+"line": 334,
+"statement": "theorem bounded_gates_prod_le_one (w : ℕ → ℝ) (s : Finset ℕ) : ∏ k in s, Real.exp (-softplus (w k)) ≤ 1",
+"uses": [
+"bounded_gates_stable",
+"softplus"
+],
+"usedBy": [
+"bounded_gates_antitone"
+]
+},
+{
+"name": "bounded_gates_antitone",
+"kind": "theorem",
+"file": "lean/CEQ/V15.lean",
+"line": 342,
+"statement": "theorem bounded_gates_antitone (w : ℕ → ℝ) {j' j i : ℕ} (h1 : j' ≤ j) (h2 : j ≤ i) : ∏ k in Ico j' i, Real.exp (-softplus (w k)) ≤ ∏ k in Ico j i, Real.exp (-softplus (w k))",
+"uses": [
+"bounded_gates_prod_le_one",
+"softplus"
+],
+"usedBy": []
+},
+{
+"name": "Aff",
+"kind": "abbrev",
+"file": "lean/CEQ/V15.lean",
+"line": 354,
+"statement": "abbrev Aff",
+"uses": [],
+"usedBy": [
+"affApply",
+"affApply_affComp",
+"affComp",
+"affComp_id",
+"id_affComp",
+"scan_assoc"
+]
+},
+{
+"name": "affApply",
+"kind": "def",
+"file": "lean/CEQ/V15.lean",
+"line": 357,
+"statement": "def affApply (p : Aff) (x : ℝ) : ℝ",
+"uses": [
+"Aff"
+],
+"usedBy": [
+"affApply_affComp",
+"chain_step_eq_affApply"
+]
+},
+{
+"name": "affComp",
+"kind": "def",
+"file": "lean/CEQ/V15.lean",
+"line": 360,
+"statement": "def affComp (p q : Aff) : Aff",
+"uses": [
+"Aff"
+],
+"usedBy": [
+"affApply_affComp",
+"affComp_gate_only",
+"affComp_id",
+"id_affComp",
+"scan_assoc"
+]
+},
+{
+"name": "affApply_affComp",
+"kind": "theorem",
+"file": "lean/CEQ/V15.lean",
+"line": 365,
+"statement": "theorem affApply_affComp (p q : Aff) (x : ℝ) : affApply (affComp p q) x = affApply q (affApply p x)",
+"uses": [
+"Aff",
+"affApply",
+"affComp"
+],
+"usedBy": []
+},
+{
+"name": "chain_step_eq_affApply",
+"kind": "theorem",
+"file": "lean/CEQ/V15.lean",
+"line": 371,
+"statement": "theorem chain_step_eq_affApply (a b : ℕ → ℝ) (y₀ : ℝ) (s : ℕ) : chain a b y₀ (s + 1) = affApply (a (s + 1), b (s + 1)) (chain a b y₀ s)",
+"uses": [
+"affApply",
+"chain"
+],
+"usedBy": []
+},
+{
+"name": "scan_assoc",
+"kind": "theorem",
+"file": "lean/CEQ/V15.lean",
+"line": 377,
+"statement": "theorem scan_assoc (p q r : Aff) : affComp (affComp p q) r = affComp p (affComp q r)",
+"uses": [
+"Aff",
+"affComp"
+],
+"usedBy": []
+},
+{
+"name": "affComp_id",
+"kind": "theorem",
+"file": "lean/CEQ/V15.lean",
+"line": 381,
+"statement": "theorem affComp_id (p : Aff) : affComp p (1, 0) = p",
+"uses": [
+"Aff",
+"affComp"
+],
+"usedBy": []
+},
+{
+"name": "id_affComp",
+"kind": "theorem",
+"file": "lean/CEQ/V15.lean",
+"line": 383,
+"statement": "theorem id_affComp (p : Aff) : affComp (1, 0) p = p",
+"uses": [
+"Aff",
+"affComp"
+],
+"usedBy": []
+},
+{
+"name": "affComp_gate_only",
+"kind": "theorem",
+"file": "lean/CEQ/V15.lean",
+"line": 388,
+"statement": "theorem affComp_gate_only (a a' : ℝ) : affComp (a, 0) (a', 0) = (a' * a, 0)",
+"uses": [
+"affComp"
+],
+"usedBy": []
+},
+{
+"name": "Vsink",
+"kind": "def",
+"file": "lean/CEQ/V15Fork.lean",
+"line": 62,
+"statement": "noncomputable def Vsink (a b : ℕ → ℝ) (j : ℕ) : ℝ",
+"uses": [],
+"usedBy": [
+"Asink_computes_chain"
+]
+},
+{
+"name": "Asink",
+"kind": "def",
+"file": "lean/CEQ/V15Fork.lean",
+"line": 67,
+"statement": "noncomputable def Asink (a : ℕ → ℝ) (i j : ℕ) : ℝ",
+"uses": [],
+"usedBy": [
+"Asink_computes_chain",
+"Asink_eq_hop",
+"Asink_nonneg",
+"Asink_row_sum",
+"Asink_zero_eq_hop"
+]
+},
+{
+"name": "Asink_row_sum",
+"kind": "theorem",
+"file": "lean/CEQ/V15Fork.lean",
+"line": 81,
+"statement": "theorem Asink_row_sum (a : ℕ → ℝ) (i : ℕ) : ∑ j in range (i + 1), Asink a i j = 1",
+"uses": [
+"Asink"
+],
+"usedBy": []
+},
+{
+"name": "Asink_nonneg",
+"kind": "theorem",
+"file": "lean/CEQ/V15Fork.lean",
+"line": 116,
+"statement": "theorem Asink_nonneg (a : ℕ → ℝ) (h0 : ∀ k, 0 < a k) (h1 : ∀ k, a k < 1) (i j : ℕ) : 0 ≤ Asink a i j",
+"uses": [
+"Asink"
+],
+"usedBy": []
+},
+{
+"name": "chain_eq_sum",
+"kind": "theorem",
+"file": "lean/CEQ/V15Fork.lean",
+"line": 128,
+"statement": "theorem chain_eq_sum (a b : ℕ → ℝ) (i : ℕ) : chain a b 0 i = ∑ s in Ico 1 (i + 1), (∏ k in Ico (s + 1) (i + 1), a k) * b s",
+"uses": [
+"chain",
+"chain_path_product"
+],
+"usedBy": [
+"Asink_computes_chain"
+]
+},
+{
+"name": "Asink_computes_chain",
+"kind": "theorem",
+"file": "lean/CEQ/V15Fork.lean",
+"line": 140,
+"statement": "theorem Asink_computes_chain (a b : ℕ → ℝ) (ha : ∀ k, a k ≠ 1) (i : ℕ) : ∑ j in range (i + 1), Asink a i j * Vsink a b j = chain a b 0 i",
+"uses": [
+"Asink",
+"Vsink",
+"chain",
+"chain_eq_sum"
+],
+"usedBy": []
+},
+{
+"name": "chain_one_nonneg",
+"kind": "theorem",
+"file": "lean/CEQ/V15Fork.lean",
+"line": 156,
+"statement": "theorem chain_one_nonneg (a : ℕ → ℝ) (ha : ∀ k, 0 < a k) (n : ℕ) : 0 ≤ chain a (fun _ => 1) 0 n",
+"uses": [
+"chain"
+],
+"usedBy": [
+"chain_one_gt_one"
+]
+},
+{
+"name": "chain_one_gt_one",
+"kind": "theorem",
+"file": "lean/CEQ/V15Fork.lean",
+"line": 169,
+"statement": "theorem chain_one_gt_one (a : ℕ → ℝ) (ha : ∀ k, 0 < a k) (n : ℕ) : 1 < chain a (fun _ => 1) 0 (n + 2)",
+"uses": [
+"chain",
+"chain_one_nonneg"
+],
+"usedBy": [
+"no_row_stochastic_with_drive_values"
+]
+},
+{
+"name": "no_row_stochastic_with_drive_values",
+"kind": "theorem",
+"file": "lean/CEQ/V15Fork.lean",
+"line": 195,
+"statement": "theorem no_row_stochastic_with_drive_values (a : ℕ → ℝ) (ha : ∀ k, 0 < a k) (A : ℕ → ℝ) (n : ℕ) (hstoch : ∑ j in Ico 1 (n + 2 + 1), A j = 1) (hexact : ∀ b : ℕ → ℝ, ∑ j in Ico 1 (n + 2 + 1), A j * b j = chain a b 0 (n + 2)) : False",
+"uses": [
+"chain",
+"chain_one_gt_one"
+],
+"usedBy": []
+},
+{
+"name": "gate_zero_sink_logit_identity",
+"kind": "theorem",
+"file": "lean/CEQ/V15Fork.lean",
+"line": 218,
+"statement": "theorem gate_zero_sink_logit_identity (g s : ℕ → ℝ) (hg : ∀ k, g k = 0) (hs : ∀ k, s k = 0) (q : ℕ → ℕ → ℝ) (i j : ℕ) : q i j + (scan g i - scan g j) + s j = q i j",
+"uses": [
+"scan"
+],
+"usedBy": []
+},
+{
+"name": "gate_zero_key_logit_identity",
+"kind": "theorem",
+"file": "lean/CEQ/V15Fork.lean",
+"line": 228,
+"statement": "theorem gate_zero_key_logit_identity (g s : ℕ → ℝ) (hg : ∀ k, g k = 0) (hs : ∀ k, s k = 0) (q : ℕ → ℕ → ℝ) (i j : ℕ) : q i j + (-scan g j + s j) = q i j",
+"uses": [
+"scan"
+],
+"usedBy": []
+},
+{
+"name": "Asink_zero_eq_hop",
+"kind": "theorem",
+"file": "lean/CEQ/V15Fork.lean",
+"line": 237,
+"statement": "theorem Asink_zero_eq_hop (a : ℕ → ℝ) (ha : ∀ k, 0 < a k) (i : ℕ) : Asink a i 0 = W (fun k => Real.log (a k)) i 0",
+"uses": [
+"Asink",
+"W",
+"prefix_logit_mask"
+],
+"usedBy": []
+},
+{
+"name": "Asink_eq_hop",
+"kind": "theorem",
+"file": "lean/CEQ/V15Fork.lean",
+"line": 245,
+"statement": "theorem Asink_eq_hop (a : ℕ → ℝ) (ha : ∀ k, 0 < a k) {i j : ℕ} (hj : j ≠ 0) (hij : j ≤ i) : Asink a i j = (1 - a j) * W (fun k => Real.log (a k)) i j",
+"uses": [
+"Asink",
+"W",
+"prefix_logit_mask"
+],
+"usedBy": []
+},
+{
+"name": "vecRec",
+"kind": "def",
+"file": "lean/CEQ/V15Kernel.lean",
+"line": 97,
+"statement": "def vecRec {S : Type*} (F : S → ℝ → S) (s₀ : S) (x : ℕ → ℝ) : ℕ → S | 0 => F s₀ (x 0) | i + 1 => F (vecRec F s₀ x i) (x (i + 1))",
+"uses": [],
+"usedBy": [
+"delay_forces_state_injective",
+"delay_realizable_at_dimension_d",
+"firstOrder",
+"linRec_add",
+"linRec_smul",
+"linRec_sub",
+"linear_first_order_cannot_delay_beyond_state_dim",
+"prefixMap",
+"vecRec_succ",
+"vecRec_zero",
+"window_eq_vecRec"
+]
+},
+{
+"name": "vecRec_zero",
+"kind": "lemma",
+"file": "lean/CEQ/V15Kernel.lean",
+"line": 101,
+"statement": "@[simp] lemma vecRec_zero {S : Type*} (F : S → ℝ → S) (s₀ : S) (x : ℕ → ℝ) : vecRec F s₀ x 0 = F s₀ (x 0)",
+"uses": [
+"vecRec"
+],
+"usedBy": []
+},
+{
+"name": "vecRec_succ",
+"kind": "lemma",
+"file": "lean/CEQ/V15Kernel.lean",
+"line": 104,
+"statement": "@[simp] lemma vecRec_succ {S : Type*} (F : S → ℝ → S) (s₀ : S) (x : ℕ → ℝ) (i : ℕ) : vecRec F s₀ x (i + 1) = F (vecRec F s₀ x i) (x (i + 1))",
+"uses": [
+"vecRec"
+],
+"usedBy": [
+"delay_forces_state_injective",
+"linRec_add",
+"linRec_smul",
+"linRec_sub",
+"window_eq_vecRec"
+]
+},
+{
+"name": "firstOrder",
+"kind": "abbrev",
+"file": "lean/CEQ/V15Kernel.lean",
+"line": 110,
+"statement": "abbrev firstOrder (f : ℝ → ℝ → ℝ) (y₀ : ℝ) (x : ℕ → ℝ) : ℕ → ℝ",
+"uses": [
+"vecRec"
+],
+"usedBy": [
+"affineRec",
+"delay_zero_is_first_order",
+"first_order_cannot_delay"
+]
+},
+{
+"name": "affineRec",
+"kind": "def",
+"file": "lean/CEQ/V15Kernel.lean",
+"line": 114,
+"statement": "def affineRec (α β y₀ : ℝ) (x : ℕ → ℝ) : ℕ → ℝ",
+"uses": [
+"firstOrder"
+],
+"usedBy": [
+"affineRecLag",
+"affineRec_impulse",
+"affine_first_order_cannot_delay",
+"delay_zero_is_first_order",
+"first_order_cannot_powerlaw",
+"first_order_delays_constant_input"
+]
+},
+{
+"name": "IsDelay",
+"kind": "def",
+"file": "lean/CEQ/V15Kernel.lean",
+"line": 120,
+"statement": "def IsDelay (d : ℕ) (y x : ℕ → ℝ) : Prop",
+"uses": [],
+"usedBy": [
+"affine_first_order_cannot_delay",
+"delay_forces_state_injective",
+"delay_realizable_at_dimension_d",
+"delay_zero_is_first_order",
+"first_order_cannot_delay",
+"first_order_delays_constant_input",
+"linear_first_order_cannot_delay_beyond_state_dim"
+]
+},
+{
+"name": "dirac",
+"kind": "def",
+"file": "lean/CEQ/V15Kernel.lean",
+"line": 123,
+"statement": "def dirac (p : ℕ) : ℕ → ℝ",
+"uses": [],
+"usedBy": [
+"affineRecLag_impulse",
+"affineRec_impulse",
+"first_order_cannot_delay",
+"first_order_cannot_powerlaw",
+"first_order_cannot_powerlaw_strict",
+"kconvStrict_dirac_zero",
+"kconv_dirac_zero",
+"lag_dirac_zero"
+]
+},
+{
+"name": "first_order_cannot_delay",
+"kind": "theorem",
+"file": "lean/CEQ/V15Kernel.lean",
+"line": 140,
+"statement": "theorem first_order_cannot_delay (f : ℝ → ℝ → ℝ) (y₀ : ℝ) {d : ℕ} (hd : 1 ≤ d) : ¬ ∀ x : ℕ → ℝ, IsDelay d (firstOrder f y₀ x) x",
+"uses": [
+"IsDelay",
+"dirac",
+"firstOrder"
+],
+"usedBy": [
+"affine_first_order_cannot_delay"
+]
+},
+{
+"name": "affine_first_order_cannot_delay",
+"kind": "theorem",
+"file": "lean/CEQ/V15Kernel.lean",
+"line": 166,
+"statement": "theorem affine_first_order_cannot_delay (α β y₀ : ℝ) {d : ℕ} (hd : 1 ≤ d) : ¬ ∀ x : ℕ → ℝ, IsDelay d (affineRec α β y₀ x) x",
+"uses": [
+"IsDelay",
+"affineRec",
+"first_order_cannot_delay"
+],
+"usedBy": []
+},
+{
+"name": "first_order_delays_constant_input",
+"kind": "theorem",
+"file": "lean/CEQ/V15Kernel.lean",
+"line": 177,
+"statement": "theorem first_order_delays_constant_input (c y₀ : ℝ) (d : ℕ) : IsDelay d (affineRec 0 1 y₀ (fun _ => c)) (fun _ => c)",
+"uses": [
+"IsDelay",
+"affineRec"
+],
+"usedBy": []
+},
+{
+"name": "window",
+"kind": "def",
+"file": "lean/CEQ/V15Kernel.lean",
+"line": 191,
+"statement": "def window (d : ℕ) (x : ℕ → ℝ) (i : ℕ) : Fin (d + 1) → ℝ",
+"uses": [],
+"usedBy": [
+"window_eq_vecRec",
+"window_isDelay",
+"window_step",
+"window_zero"
+]
+},
+{
+"name": "shiftStep",
+"kind": "def",
+"file": "lean/CEQ/V15Kernel.lean",
+"line": 197,
+"statement": "def shiftStep (d : ℕ) (s : Fin (d + 1) → ℝ) (u : ℝ) : Fin (d + 1) → ℝ",
+"uses": [],
+"usedBy": [
+"delay_realizable_at_dimension_d",
+"window_eq_vecRec",
+"window_step",
+"window_zero"
+]
+},
+{
+"name": "window_zero",
+"kind": "lemma",
+"file": "lean/CEQ/V15Kernel.lean",
+"line": 200,
+"statement": "lemma window_zero (d : ℕ) (x : ℕ → ℝ) : window d x 0 = shiftStep d 0 (x 0)",
+"uses": [
+"shiftStep",
+"window"
+],
+"usedBy": [
+"window_eq_vecRec"
+]
+},
+{
+"name": "window_step",
+"kind": "lemma",
+"file": "lean/CEQ/V15Kernel.lean",
+"line": 206,
+"statement": "lemma window_step (d : ℕ) (x : ℕ → ℝ) (i : ℕ) : window d x (i + 1) = shiftStep d (window d x i) (x (i + 1))",
+"uses": [
+"shiftStep",
+"window"
+],
+"usedBy": [
+"window_eq_vecRec"
+]
+},
+{
+"name": "window_eq_vecRec",
+"kind": "lemma",
+"file": "lean/CEQ/V15Kernel.lean",
+"line": 220,
+"statement": "lemma window_eq_vecRec (d : ℕ) (x : ℕ → ℝ) (i : ℕ) : window d x i = vecRec (shiftStep d) 0 x i",
+"uses": [
+"shiftStep",
+"vecRec",
+"vecRec_succ",
+"window",
+"window_step",
+"window_zero"
+],
+"usedBy": [
+"delay_realizable_at_dimension_d"
+]
+},
+{
+"name": "window_isDelay",
+"kind": "lemma",
+"file": "lean/CEQ/V15Kernel.lean",
+"line": 226,
+"statement": "lemma window_isDelay (d : ℕ) (x : ℕ → ℝ) (i : ℕ) : window d x (i + d) (Fin.last d) = x i",
+"uses": [
+"window"
+],
+"usedBy": [
+"delay_realizable_at_dimension_d"
+]
+},
+{
+"name": "delay_realizable_at_dimension_d",
+"kind": "theorem",
+"file": "lean/CEQ/V15Kernel.lean",
+"line": 235,
+"statement": "theorem delay_realizable_at_dimension_d (d : ℕ) (x : ℕ → ℝ) : IsDelay d (fun i => vecRec (shiftStep d) 0 x i (Fin.last d)) x",
+"uses": [
+"IsDelay",
+"shiftStep",
+"vecRec",
+"window_eq_vecRec",
+"window_isDelay"
+],
+"usedBy": []
+},
+{
+"name": "pad",
+"kind": "def",
+"file": "lean/CEQ/V15Kernel.lean",
+"line": 245,
+"statement": "def pad {d : ℕ} (u : Fin d → ℝ) : ℕ → ℝ",
+"uses": [],
+"usedBy": [
+"delay_forces_state_injective",
+"linear_first_order_cannot_delay_beyond_state_dim",
+"pad_add",
+"pad_smul",
+"prefixMap"
+]
+},
+{
+"name": "delay_forces_state_injective",
+"kind": "theorem",
+"file": "lean/CEQ/V15Kernel.lean",
+"line": 253,
+"statement": "theorem delay_forces_state_injective {S : Type*} (F : S → ℝ → S) (s₀ : S) (g : S → ℝ) (e : ℕ) (h : ∀ x : ℕ → ℝ, IsDelay (e + 1) (fun i => g (vecRec F s₀ x i)) x) : Function.Injective (fun u : Fin (e + 1) → ℝ => vecRec F s₀ (pad u) e)",
+"uses": [
+"IsDelay",
+"pad",
+"vecRec",
+"vecRec_succ"
+],
+"usedBy": [
+"linear_first_order_cannot_delay_beyond_state_dim"
+]
+},
+{
+"name": "linStep",
+"kind": "def",
+"file": "lean/CEQ/V15Kernel.lean",
+"line": 289,
+"statement": "def linStep (A : (Fin k → ℝ) →ₗ[ℝ] (Fin k → ℝ)) (B : Fin k → ℝ) (s : Fin k → ℝ) (u : ℝ) : Fin k → ℝ",
+"uses": [],
+"usedBy": [
+"linRec_add",
+"linRec_smul",
+"linRec_sub",
+"linear_first_order_cannot_delay_beyond_state_dim",
+"prefixMap"
+]
+},
+{
+"name": "linRec_add",
+"kind": "lemma",
+"file": "lean/CEQ/V15Kernel.lean",
+"line": 292,
+"statement": "lemma linRec_add (A : (Fin k → ℝ) →ₗ[ℝ] (Fin k → ℝ)) (B : Fin k → ℝ) (x y : ℕ → ℝ) : ∀ i, vecRec (linStep A B) 0 (x + y) i = vecRec (linStep A B) 0 x i + vecRec (linStep A B) 0 y i",
+"uses": [
+"linStep",
+"vecRec",
+"vecRec_succ"
+],
+"usedBy": [
+"prefixMap"
+]
+},
+{
+"name": "linRec_smul",
+"kind": "lemma",
+"file": "lean/CEQ/V15Kernel.lean",
+"line": 302,
+"statement": "lemma linRec_smul (A : (Fin k → ℝ) →ₗ[ℝ] (Fin k → ℝ)) (B : Fin k → ℝ) (c : ℝ) (x : ℕ → ℝ) : ∀ i, vecRec (linStep A B) 0 (c • x) i = c • vecRec (linStep A B) 0 x i",
+"uses": [
+"linStep",
+"vecRec",
+"vecRec_succ"
+],
+"usedBy": [
+"prefixMap"
+]
+},
+{
+"name": "pad_add",
+"kind": "lemma",
+"file": "lean/CEQ/V15Kernel.lean",
+"line": 310,
+"statement": "lemma pad_add {d : ℕ} (u v : Fin d → ℝ) : pad (u + v) = pad u + pad v",
+"uses": [
+"pad"
+],
+"usedBy": [
+"prefixMap"
+]
+},
+{
+"name": "pad_smul",
+"kind": "lemma",
+"file": "lean/CEQ/V15Kernel.lean",
+"line": 314,
+"statement": "lemma pad_smul {d : ℕ} (c : ℝ) (u : Fin d → ℝ) : pad (c • u) = c • pad u",
+"uses": [
+"pad"
+],
+"usedBy": [
+"prefixMap"
+]
+},
+{
+"name": "prefixMap",
+"kind": "def",
+"file": "lean/CEQ/V15Kernel.lean",
+"line": 319,
+"statement": "def prefixMap (e : ℕ) (A : (Fin k → ℝ) →ₗ[ℝ] (Fin k → ℝ)) (B : Fin k → ℝ) : (Fin (e + 1) → ℝ) →ₗ[ℝ] (Fin k → ℝ) where toFun u",
+"uses": [
+"linRec_add",
+"linRec_smul",
+"linStep",
+"pad",
+"pad_add",
+"pad_smul",
+"vecRec"
+],
+"usedBy": [
+"linear_first_order_cannot_delay_beyond_state_dim"
+]
+},
+{
+"name": "linRec_sub",
+"kind": "lemma",
+"file": "lean/CEQ/V15Kernel.lean",
+"line": 332,
+"statement": "lemma linRec_sub (A : (Fin k → ℝ) →ₗ[ℝ] (Fin k → ℝ)) (B : Fin k → ℝ) (s₀ : Fin k → ℝ) (x y : ℕ → ℝ) : ∀ i, vecRec (linStep A B) s₀ x i - vecRec (linStep A B) s₀ y i = vecRec (linStep A B) 0 x i - vecRec (linStep A B) 0 y i",
+"uses": [
+"linStep",
+"vecRec",
+"vecRec_succ"
+],
+"usedBy": [
+"linear_first_order_cannot_delay_beyond_state_dim"
+]
+},
+{
+"name": "linear_first_order_cannot_delay_beyond_state_dim",
+"kind": "theorem",
+"file": "lean/CEQ/V15Kernel.lean",
+"line": 360,
+"statement": "theorem linear_first_order_cannot_delay_beyond_state_dim (e : ℕ) (A : (Fin k → ℝ) →ₗ[ℝ] (Fin k → ℝ)) (B : Fin k → ℝ) (s₀ : Fin k → ℝ) (C : (Fin k → ℝ) → ℝ) (hk : k < e + 1) (h : ∀ x : ℕ → ℝ, IsDelay (e + 1) (fun i => C (vecRec (linStep A B) s₀ x i)) x) : False",
+"uses": [
+"C",
+"IsDelay",
+"delay_forces_state_injective",
+"linRec_sub",
+"linStep",
+"pad",
+"prefixMap",
+"vecRec"
+],
+"usedBy": []
+},
+{
+"name": "glw",
+"kind": "def",
+"file": "lean/CEQ/V15Kernel.lean",
+"line": 381,
+"statement": "noncomputable def glw (α : ℝ) : ℕ → ℝ | 0 => 1 | k + 1 => glw α k * (α + (k : ℝ)) / ((k : ℝ) + 1)",
+"uses": [],
+"usedBy": [
+"GL_not_geometric",
+"GL_not_geometric_tail",
+"GL_weights_alpha_one",
+"GL_weights_alpha_zero",
+"GL_weights_pos",
+"GL_weights_ratio_recurrence",
+"GL_weights_strictAnti",
+"first_order_cannot_powerlaw",
+"first_order_cannot_powerlaw_strict",
+"glw_succ",
+"glw_zero"
+]
+},
+{
+"name": "glw_zero",
+"kind": "lemma",
+"file": "lean/CEQ/V15Kernel.lean",
+"line": 385,
+"statement": "@[simp] lemma glw_zero (α : ℝ) : glw α 0 = 1",
+"uses": [
+"glw"
+],
+"usedBy": []
+},
+{
+"name": "glw_succ",
+"kind": "lemma",
+"file": "lean/CEQ/V15Kernel.lean",
+"line": 387,
+"statement": "lemma glw_succ (α : ℝ) (k : ℕ) : glw α (k + 1) = glw α k * (α + (k : ℝ)) / ((k : ℝ) + 1)",
+"uses": [
+"glw"
+],
+"usedBy": [
+"GL_not_geometric",
+"GL_not_geometric_tail",
+"GL_weights_alpha_one",
+"GL_weights_alpha_zero",
+"GL_weights_pos",
+"GL_weights_ratio_recurrence",
+"GL_weights_strictAnti"
+]
+},
+{
+"name": "gbinom",
+"kind": "def",
+"file": "lean/CEQ/V15Kernel.lean",
+"line": 391,
+"statement": "noncomputable def gbinom (a : ℝ) (k : ℕ) : ℝ",
+"uses": [],
+"usedBy": [
+"GL_weights_ratio_recurrence",
+"glwClosed"
+]
+},
+{
+"name": "glwClosed",
+"kind": "def",
+"file": "lean/CEQ/V15Kernel.lean",
+"line": 395,
+"statement": "noncomputable def glwClosed (α : ℝ) (k : ℕ) : ℝ",
+"uses": [
+"gbinom"
+],
+"usedBy": [
+"GL_weights_ratio_recurrence"
+]
+},
+{
+"name": "GL_weights_ratio_recurrence",
+"kind": "theorem",
+"file": "lean/CEQ/V15Kernel.lean",
+"line": 405,
+"statement": "theorem GL_weights_ratio_recurrence (α : ℝ) (k : ℕ) : glwClosed α k = glw α k",
+"uses": [
+"gbinom",
+"glw",
+"glwClosed",
+"glw_succ"
+],
+"usedBy": []
+},
+{
+"name": "GL_weights_alpha_zero",
+"kind": "theorem",
+"file": "lean/CEQ/V15Kernel.lean",
+"line": 418,
+"statement": "theorem GL_weights_alpha_zero (k : ℕ) : glw 0 (k + 1) = 0",
+"uses": [
+"glw",
+"glw_succ"
+],
+"usedBy": []
+},
+{
+"name": "GL_weights_alpha_one",
+"kind": "theorem",
+"file": "lean/CEQ/V15Kernel.lean",
+"line": 426,
+"statement": "theorem GL_weights_alpha_one (k : ℕ) : glw 1 k = 1",
+"uses": [
+"glw",
+"glw_succ"
+],
+"usedBy": []
+},
+{
+"name": "GL_weights_pos",
+"kind": "theorem",
+"file": "lean/CEQ/V15Kernel.lean",
+"line": 435,
+"statement": "theorem GL_weights_pos (α : ℝ) (hα : 0 < α) (k : ℕ) : 0 < glw α k",
+"uses": [
+"glw",
+"glw_succ"
+],
+"usedBy": [
+"GL_weights_strictAnti"
+]
+},
+{
+"name": "GL_weights_strictAnti",
+"kind": "theorem",
+"file": "lean/CEQ/V15Kernel.lean",
+"line": 447,
+"statement": "theorem GL_weights_strictAnti (α : ℝ) (h0 : 0 < α) (h1 : α < 1) (k : ℕ) : glw α (k + 1) < glw α k",
+"uses": [
+"GL_weights_pos",
+"glw",
+"glw_succ"
+],
+"usedBy": []
+},
+{
+"name": "kconv",
+"kind": "def",
+"file": "lean/CEQ/V15Kernel.lean",
+"line": 458,
+"statement": "def kconv (w x : ℕ → ℝ) (i : ℕ) : ℝ",
+"uses": [],
+"usedBy": [
+"first_order_cannot_powerlaw",
+"kconv_dirac_zero"
+]
+},
+{
+"name": "kconv_dirac_zero",
+"kind": "lemma",
+"file": "lean/CEQ/V15Kernel.lean",
+"line": 460,
+"statement": "lemma kconv_dirac_zero (w : ℕ → ℝ) (i : ℕ) : kconv w (dirac 0) i = w i",
+"uses": [
+"dirac",
+"kconv"
+],
+"usedBy": [
+"first_order_cannot_powerlaw"
+]
+},
+{
+"name": "affineRec_impulse",
+"kind": "lemma",
+"file": "lean/CEQ/V15Kernel.lean",
+"line": 471,
+"statement": "lemma affineRec_impulse (γ β y₀ : ℝ) (hy : γ * y₀ = 0) (k : ℕ) : affineRec γ β y₀ (dirac 0) k = β * γ ^ k",
+"uses": [
+"affineRec",
+"dirac"
+],
+"usedBy": [
+"first_order_cannot_powerlaw"
+]
+},
+{
+"name": "GL_not_geometric",
+"kind": "theorem",
+"file": "lean/CEQ/V15Kernel.lean",
+"line": 489,
+"statement": "theorem GL_not_geometric (α : ℝ) (h0 : 0 < α) (h1 : α < 1) : ¬ ∃ β γ : ℝ, ∀ k, glw α k = β * γ ^ k",
+"uses": [
+"glw",
+"glw_succ"
+],
+"usedBy": [
+"first_order_cannot_powerlaw"
+]
+},
+{
+"name": "first_order_cannot_powerlaw",
+"kind": "theorem",
+"file": "lean/CEQ/V15Kernel.lean",
+"line": 521,
+"statement": "theorem first_order_cannot_powerlaw (α : ℝ) (h0 : 0 < α) (h1 : α < 1) (γ β y₀ : ℝ) : ¬ ∀ (x : ℕ → ℝ) (i : ℕ), affineRec γ β y₀ x i = kconv (glw α) x i",
+"uses": [
+"GL_not_geometric",
+"affineRec",
+"affineRec_impulse",
+"dirac",
+"glw",
+"kconv",
+"kconv_dirac_zero"
+],
+"usedBy": []
+},
+{
+"name": "kconvStrict",
+"kind": "def",
+"file": "lean/CEQ/V15Kernel.lean",
+"line": 538,
+"statement": "def kconvStrict (w x : ℕ → ℝ) (i : ℕ) : ℝ",
+"uses": [],
+"usedBy": [
+"first_order_cannot_powerlaw_strict",
+"kconvStrict_dirac_zero"
+]
+},
+{
+"name": "lag",
+"kind": "def",
+"file": "lean/CEQ/V15Kernel.lean",
+"line": 541,
+"statement": "def lag (x : ℕ → ℝ) : ℕ → ℝ",
+"uses": [],
+"usedBy": [
+"affineRecLag",
+"affineRecLag_impulse",
+"first_order_cannot_powerlaw_strict",
+"lag_dirac_zero"
+]
+},
+{
+"name": "affineRecLag",
+"kind": "def",
+"file": "lean/CEQ/V15Kernel.lean",
+"line": 548,
+"statement": "def affineRecLag (γ β y₀ : ℝ) (x : ℕ → ℝ) : ℕ → ℝ",
+"uses": [
+"affineRec",
+"lag"
+],
+"usedBy": [
+"affineRecLag_impulse",
+"first_order_cannot_powerlaw_strict"
+]
+},
+{
+"name": "lag_dirac_zero",
+"kind": "lemma",
+"file": "lean/CEQ/V15Kernel.lean",
+"line": 550,
+"statement": "lemma lag_dirac_zero : lag (dirac 0) = dirac 1",
+"uses": [
+"dirac",
+"lag"
+],
+"usedBy": [
+"affineRecLag_impulse"
+]
+},
+{
+"name": "kconvStrict_dirac_zero",
+"kind": "lemma",
+"file": "lean/CEQ/V15Kernel.lean",
+"line": 558,
+"statement": "lemma kconvStrict_dirac_zero (w : ℕ → ℝ) (i : ℕ) : kconvStrict w (dirac 0) (i + 1) = w (i + 1)",
+"uses": [
+"dirac",
+"kconvStrict"
+],
+"usedBy": [
+"first_order_cannot_powerlaw_strict"
+]
+},
+{
+"name": "affineRecLag_impulse",
+"kind": "lemma",
+"file": "lean/CEQ/V15Kernel.lean",
+"line": 569,
+"statement": "lemma affineRecLag_impulse (γ β y₀ : ℝ) (hy : γ * y₀ = 0) (k : ℕ) : affineRecLag γ β y₀ (dirac 0) (k + 1) = β * γ ^ k",
+"uses": [
+"affineRecLag",
+"dirac",
+"lag",
+"lag_dirac_zero"
+],
+"usedBy": [
+"first_order_cannot_powerlaw_strict"
+]
+},
+{
+"name": "GL_not_geometric_tail",
+"kind": "theorem",
+"file": "lean/CEQ/V15Kernel.lean",
+"line": 593,
+"statement": "theorem GL_not_geometric_tail (α : ℝ) (h0 : 0 < α) (h1 : α < 1) : ¬ ∃ β γ : ℝ, ∀ k, glw α (k + 1) = β * γ ^ k",
+"uses": [
+"glw",
+"glw_succ"
+],
+"usedBy": [
+"first_order_cannot_powerlaw_strict"
+]
+},
+{
+"name": "first_order_cannot_powerlaw_strict",
+"kind": "theorem",
+"file": "lean/CEQ/V15Kernel.lean",
+"line": 624,
+"statement": "theorem first_order_cannot_powerlaw_strict (α : ℝ) (h0 : 0 < α) (h1 : α < 1) (γ β y₀ : ℝ) : ¬ ∀ (x : ℕ → ℝ) (i : ℕ), affineRecLag γ β y₀ x i = kconvStrict (glw α) x i",
+"uses": [
+"GL_not_geometric_tail",
+"affineRecLag",
+"affineRecLag_impulse",
+"dirac",
+"glw",
+"kconvStrict",
+"kconvStrict_dirac_zero",
+"lag"
+],
+"usedBy": []
+},
+{
+"name": "unit_phase_product",
+"kind": "theorem",
+"file": "lean/CEQ/V15Phase.lean",
+"line": 92,
+"statement": "theorem unit_phase_product (θ : ℕ → ℝ) (s : Finset ℕ) : Complex.abs (∏ k in s, Complex.exp ((θ k : ℂ) * Complex.I)) = 1",
+"uses": [],
+"usedBy": [
+"sixteen_is_silent_on_the_zero_draw"
+]
+},
+{
+"name": "unit_phase_does_not_bound_the_gate",
+"kind": "theorem",
+"file": "lean/CEQ/V15Phase.lean",
+"line": 103,
+"statement": "theorem unit_phase_does_not_bound_the_gate (θ : ℝ) : Complex.abs (Complex.exp ((θ : ℂ) * Complex.I)) = 1 ∧ Complex.abs ((285.07 : ℝ) * Complex.exp ((θ : ℂ) * Complex.I)) = 285.07",
+"uses": [],
+"usedBy": []
+},
+{
+"name": "cap",
+"kind": "def",
+"file": "lean/CEQ/V15Phase.lean",
+"line": 114,
+"statement": "noncomputable def cap (x : ℝ) : ℝ",
+"uses": [],
+"usedBy": [
+"cap_band_attains",
+"cap_eq_one_of_one_le",
+"cap_eq_zero_of_le_zero",
+"cap_le_one",
+"cap_nonneg"
+]
+},
+{
+"name": "cap_nonneg",
+"kind": "lemma",
+"file": "lean/CEQ/V15Phase.lean",
+"line": 116,
+"statement": "lemma cap_nonneg (x : ℝ) : 0 ≤ cap x",
+"uses": [
+"cap"
+],
+"usedBy": []
+},
+{
+"name": "cap_le_one",
+"kind": "lemma",
+"file": "lean/CEQ/V15Phase.lean",
+"line": 119,
+"statement": "lemma cap_le_one (x : ℝ) : cap x ≤ 1",
+"uses": [
+"cap"
+],
+"usedBy": []
+},
+{
+"name": "cap_eq_one_of_one_le",
+"kind": "lemma",
+"file": "lean/CEQ/V15Phase.lean",
+"line": 122,
+"statement": "lemma cap_eq_one_of_one_le {x : ℝ} (hx : 1 ≤ x) : cap x = 1",
+"uses": [
+"cap"
+],
+"usedBy": [
+"cap_band_attains"
+]
+},
+{
+"name": "cap_eq_zero_of_le_zero",
+"kind": "lemma",
+"file": "lean/CEQ/V15Phase.lean",
+"line": 125,
+"statement": "lemma cap_eq_zero_of_le_zero {x : ℝ} (hx : x ≤ 0) : cap x = 0",
+"uses": [
+"cap"
+],
+"usedBy": []
+},
+{
+"name": "softplus_gate_lt_one",
+"kind": "theorem",
+"file": "lean/CEQ/V15Phase.lean",
+"line": 132,
+"statement": "theorem softplus_gate_lt_one (w : ℝ) : Real.exp (-CEQ.V15.softplus w) < 1",
+"uses": [
+"softplus",
+"softplus_pos"
+],
+"usedBy": [
+"six_misses_every_bedM_value",
+"six_never_reaches_the_band"
+]
+},
+{
+"name": "lru_modulus_lt_one",
+"kind": "theorem",
+"file": "lean/CEQ/V15Phase.lean",
+"line": 139,
+"statement": "theorem lru_modulus_lt_one (ν θ : ℝ) : Complex.abs (Complex.exp (((-Real.exp ν : ℝ) : ℂ) + (θ : ℂ) * Complex.I)) < 1",
+"uses": [],
+"usedBy": []
+},
+{
+"name": "prod_lt_one_of_mem",
+"kind": "lemma",
+"file": "lean/CEQ/V15Phase.lean",
+"line": 151,
+"statement": "lemma prod_lt_one_of_mem {s : Finset ℕ} {f : ℕ → ℝ} (h0 : ∀ k ∈ s, 0 < f k) (h1 : ∀ k ∈ s, f k ≤ 1) {k₀ : ℕ} (hk₀ : k₀ ∈ s) (hlt : f k₀ < 1) : ∏ k in s, f k < 1",
+"uses": [],
+"usedBy": [
+"prod_eq_one_iff",
+"six_never_reaches_the_band"
+]
+},
+{
+"name": "prod_eq_one_iff",
+"kind": "lemma",
+"file": "lean/CEQ/V15Phase.lean",
+"line": 163,
+"statement": "lemma prod_eq_one_iff {s : Finset ℕ} {f : ℕ → ℝ} (h0 : ∀ k ∈ s, 0 < f k) (h1 : ∀ k ∈ s, f k ≤ 1) : (∏ k in s, f k = 1) ↔ ∀ k ∈ s, f k = 1",
+"uses": [
+"prod_lt_one_of_mem"
+],
+"usedBy": [
+"phase_path_eq_one_iff_band"
+]
+},
+{
+"name": "C",
+"kind": "def",
+"file": "lean/CEQ/V15Phase.lean",
+"line": 174,
+"statement": "noncomputable def C (m θ : ℕ → ℝ) (i : ℕ) : ℂ",
+"uses": [],
+"usedBy": [
+"C_im",
+"C_re",
+"C_sub",
+"Wp",
+"lean_log_junk_makes_the_scan_form_silently_false",
+"linear_first_order_cannot_delay_beyond_state_dim",
+"magnitude_zero_not_separable",
+"no_prefix_scan_represents_a_zero_gate",
+"pathProdL_no_prefix_scan"
+]
+},
+{
+"name": "Wp",
+"kind": "def",
+"file": "lean/CEQ/V15Phase.lean",
+"line": 179,
+"statement": "noncomputable def Wp (m θ : ℕ → ℝ) (i j : ℕ) : ℂ",
+"uses": [
+"C"
+],
+"usedBy": [
+"Wp_polar",
+"cap_band_attains",
+"divergence_needs_an_open_magnitude",
+"lean_log_junk_makes_the_scan_form_silently_false",
+"pathProd_eq_Wp",
+"phase_modulus_is_the_real_carrier",
+"phase_path_eq_one_iff_band",
+"phase_path_le_one",
+"prefix_logit_mask_restated",
+"prefix_phase_modulus",
+"restatement_subsumes_phase_path_le_one",
+"six_never_reaches_the_band",
+"six_recovered"
+]
+},
+{
+"name": "C_re",
+"kind": "lemma",
+"file": "lean/CEQ/V15Phase.lean",
+"line": 181,
+"statement": "lemma C_re (m θ : ℕ → ℝ) (i : ℕ) : (C m θ i).re = CEQ.V15.scan (fun k => Real.log (m k)) i",
+"uses": [
+"C",
+"scan"
+],
+"usedBy": [
+"phase_modulus_is_the_real_carrier"
+]
+},
+{
+"name": "C_im",
+"kind": "lemma",
+"file": "lean/CEQ/V15Phase.lean",
+"line": 185,
+"statement": "lemma C_im (m θ : ℕ → ℝ) (i : ℕ) : (C m θ i).im = ∑ k in range (i + 1), θ k",
+"uses": [
+"C"
+],
+"usedBy": []
+},
+{
+"name": "C_sub",
+"kind": "lemma",
+"file": "lean/CEQ/V15Phase.lean",
+"line": 188,
+"statement": "lemma C_sub (m θ : ℕ → ℝ) {i j : ℕ} (hij : j ≤ i) : C m θ i - C m θ j = ((∑ k in Ico (j + 1) (i + 1), Real.log (m k) : ℝ) : ℂ) + ((∑ k in Ico (j + 1) (i + 1), θ k : ℝ) : ℂ) * Complex.I",
+"uses": [
+"C"
+],
+"usedBy": [
+"Wp_polar"
+]
+},
+{
+"name": "Wp_polar",
+"kind": "theorem",
+"file": "lean/CEQ/V15Phase.lean",
+"line": 202,
+"statement": "theorem Wp_polar (m θ : ℕ → ℝ) (hm : ∀ k, 0 < m k) {i j : ℕ} (hij : j ≤ i) : Wp m θ i j = ((∏ k in Ico (j + 1) (i + 1), m k : ℝ) : ℂ) * Complex.exp (((∑ k in Ico (j + 1) (i + 1), θ k : ℝ) : ℂ) * Complex.I)",
+"uses": [
+"C_sub",
+"Wp"
+],
+"usedBy": [
+"pathProd_eq_Wp"
+]
+},
+{
+"name": "phase_modulus_is_the_real_carrier",
+"kind": "theorem",
+"file": "lean/CEQ/V15Phase.lean",
+"line": 216,
+"statement": "theorem phase_modulus_is_the_real_carrier (m θ : ℕ → ℝ) (i j : ℕ) : Complex.abs (Wp m θ i j) = CEQ.V15.W (fun k => Real.log (m k)) i j",
+"uses": [
+"C_re",
+"W",
+"Wp"
+],
+"usedBy": [
+"prefix_phase_modulus"
+]
+},
+{
+"name": "prefix_phase_modulus",
+"kind": "theorem",
+"file": "lean/CEQ/V15Phase.lean",
+"line": 223,
+"statement": "theorem prefix_phase_modulus (m θ : ℕ → ℝ) (hm : ∀ k, 0 < m k) {i j : ℕ} (hij : j ≤ i) : Complex.abs (Wp m θ i j) = ∏ k in Ico (j + 1) (i + 1), m k",
+"uses": [
+"Wp",
+"phase_modulus_is_the_real_carrier",
+"prefix_logit_mask"
+],
+"usedBy": [
+"cap_band_attains",
+"divergence_needs_an_open_magnitude",
+"phase_path_eq_one_iff_band",
+"phase_path_le_one",
+"six_never_reaches_the_band"
+]
+},
+{
+"name": "phase_path_le_one",
+"kind": "theorem",
+"file": "lean/CEQ/V15Phase.lean",
+"line": 231,
+"statement": "theorem phase_path_le_one (m : ℕ → ℝ) (h0 : ∀ k, 0 < m k) (h1 : ∀ k, m k ≤ 1) (θ : ℕ → ℝ) {i j : ℕ} (hij : j ≤ i) : Complex.abs (Wp m θ i j) ≤ 1",
+"uses": [
+"Wp",
+"prefix_phase_modulus"
+],
+"usedBy": [
+"six_recovered"
+]
+},
+{
+"name": "phase_path_eq_one_iff_band",
+"kind": "theorem",
+"file": "lean/CEQ/V15Phase.lean",
+"line": 239,
+"statement": "theorem phase_path_eq_one_iff_band (m : ℕ → ℝ) (h0 : ∀ k, 0 < m k) (h1 : ∀ k, m k ≤ 1) (θ : ℕ → ℝ) {i j : ℕ} (hij : j ≤ i) : Complex.abs (Wp m θ i j) = 1 ↔ ∀ k ∈ Ico (j + 1) (i + 1), m k = 1",
+"uses": [
+"Wp",
+"prefix_phase_modulus",
+"prod_eq_one_iff"
+],
+"usedBy": []
+},
+{
+"name": "six_recovered",
+"kind": "theorem",
+"file": "lean/CEQ/V15Phase.lean",
+"line": 249,
+"statement": "theorem six_recovered (w θ : ℕ → ℝ) {i j : ℕ} (hij : j ≤ i) : Complex.abs (Wp (fun k => Real.exp (-CEQ.V15.softplus (w k))) θ i j) ≤ 1",
+"uses": [
+"Wp",
+"bounded_gates_stable",
+"phase_path_le_one",
+"softplus"
+],
+"usedBy": []
+},
+{
+"name": "six_never_reaches_the_band",
+"kind": "theorem",
+"file": "lean/CEQ/V15Phase.lean",
+"line": 260,
+"statement": "theorem six_never_reaches_the_band (w θ : ℕ → ℝ) {i j : ℕ} (hij : j < i) : Complex.abs (Wp (fun k => Real.exp (-CEQ.V15.softplus (w k))) θ i j) < 1",
+"uses": [
+"Wp",
+"bounded_gates_stable",
+"prefix_phase_modulus",
+"prod_lt_one_of_mem",
+"softplus",
+"softplus_gate_lt_one"
+],
+"usedBy": []
+},
+{
+"name": "cap_band_attains",
+"kind": "theorem",
+"file": "lean/CEQ/V15Phase.lean",
+"line": 271,
+"statement": "theorem cap_band_attains (x θ : ℕ → ℝ) (hx : ∀ k, 1 ≤ x k) {i j : ℕ} (hij : j ≤ i) : Complex.abs (Wp (fun k => cap (x k)) θ i j) = 1",
+"uses": [
+"Wp",
+"cap",
+"cap_eq_one_of_one_le",
+"prefix_phase_modulus"
+],
+"usedBy": []
+},
+{
+"name": "divergence_needs_an_open_magnitude",
+"kind": "theorem",
+"file": "lean/CEQ/V15Phase.lean",
+"line": 280,
+"statement": "theorem divergence_needs_an_open_magnitude (θ : ℕ → ℝ) : Complex.abs (Wp (fun _ => (285.07 : ℝ)) θ 1 0) = 285.07",
+"uses": [
+"Wp",
+"prefix_phase_modulus"
+],
+"usedBy": []
+},
+{
+"name": "phaseOf",
+"kind": "def",
+"file": "lean/CEQ/V15Phase.lean",
+"line": 289,
+"statement": "noncomputable def phaseOf (p : ZMod 2) : ℝ",
+"uses": [],
+"usedBy": [
+"Z2_forgets_the_winding",
+"parity_is_Z2_winding",
+"phase_gate_is_sign",
+"phase_sum_is_not_the_parity_phase"
+]
+},
+{
+"name": "phase_gate_is_sign",
+"kind": "lemma",
+"file": "lean/CEQ/V15Phase.lean",
+"line": 293,
+"statement": "lemma phase_gate_is_sign (p : ZMod 2) : Complex.exp ((phaseOf p : ℂ) * Complex.I) = ((CEQ.V15.chi p : ℝ) : ℂ)",
+"uses": [
+"chi",
+"phaseOf",
+"zmod_two_cases"
+],
+"usedBy": [
+"parity_is_Z2_winding"
+]
+},
+{
+"name": "parity_is_Z2_winding",
+"kind": "theorem",
+"file": "lean/CEQ/V15Phase.lean",
+"line": 305,
+"statement": "theorem parity_is_Z2_winding (p : ℕ → ZMod 2) {i j : ℕ} (hij : j ≤ i) : Complex.exp (((∑ k in Ico (j + 1) (i + 1), phaseOf (p k) : ℝ) : ℂ) * Complex.I) = ((CEQ.V15.chi (CEQ.V15.pscan p i - CEQ.V15.pscan p j) : ℝ) : ℂ)",
+"uses": [
+"chi",
+"parity_sign",
+"phaseOf",
+"phase_gate_is_sign",
+"pscan"
+],
+"usedBy": []
+},
+{
+"name": "phase_sum_is_not_the_parity_phase",
+"kind": "theorem",
+"file": "lean/CEQ/V15Phase.lean",
+"line": 319,
+"statement": "theorem phase_sum_is_not_the_parity_phase : (∑ k in Ico 1 3, phaseOf ((fun _ => (1 : ZMod 2)) k)) = 2 * Real.pi ∧ phaseOf (CEQ.V15.pscan (fun _ => (1 : ZMod 2)) 2 - CEQ.V15.pscan (fun _ => (1 : ZMod 2)) 0) = 0 ∧ (∑ k in Ico 1 3, phaseOf ((fun _ => (1 : ZMod 2)) k)) ≠ phaseOf (CEQ.V15.pscan (fun _ => (1 : ZMod 2)) 2 - CEQ.V15.pscan (fun _ => (1 : ZMod 2)) 0)",
+"uses": [
+"phaseOf",
+"pscan"
+],
+"usedBy": []
+},
+{
+"name": "Z2_forgets_the_winding",
+"kind": "theorem",
+"file": "lean/CEQ/V15Phase.lean",
+"line": 346,
+"statement": "theorem Z2_forgets_the_winding : (∑ k in Ico 1 5, phaseOf ((fun _ => (1 : ZMod 2)) k)) = 2 * (2 * Real.pi) ∧ Complex.exp (((∑ k in Ico 1 5, phaseOf ((fun _ => (1 : ZMod 2)) k) : ℝ) : ℂ) * Complex.I) = 1",
+"uses": [
+"phaseOf"
+],
+"usedBy": []
+},
+{
+"name": "inverse_identity_is_vacuous",
+"kind": "theorem",
+"file": "lean/CEQ/V15Source.lean",
+"line": 83,
+"statement": "theorem inverse_identity_is_vacuous {R : Type*} [Ring R] (u : Rˣ) : (u : R) * ((u⁻¹ : Rˣ) : R) = 1",
+"uses": [],
+"usedBy": []
+},
+{
+"name": "source_is_first_order_difference",
+"kind": "theorem",
+"file": "lean/CEQ/V15Source.lean",
+"line": 108,
+"statement": "theorem source_is_first_order_difference {A : Matrix (Fin n) (Fin n) ℝ} (hA : StrictlyLower A) (h r : Fin n → ℝ) (hfwd : r = CEQ.Occupancy.occupancy A n *ᵥ h) : h = r - A *ᵥ r",
+"uses": [
+"StrictlyLower",
+"occupancy",
+"occupancy_is_exact_inverse"
+],
+"usedBy": [
+"two_sources_recovered"
+]
+},
+{
+"name": "two_sources_recovered",
+"kind": "theorem",
+"file": "lean/CEQ/V15Source.lean",
+"line": 128,
+"statement": "theorem two_sources_recovered {A : Matrix (Fin n) (Fin n) ℝ} (hA : StrictlyLower A) (h₁ h₂ r : Fin n → ℝ) (hfwd : r = CEQ.Occupancy.occupancy A n *ᵥ h₁ + CEQ.Occupancy.occupancy A n *ᵥ h₂) : h₁ + h₂ = r - A *ᵥ r",
+"uses": [
+"StrictlyLower",
+"occupancy",
+"source_is_first_order_difference"
+],
+"usedBy": []
+},
+{
+"name": "no_fill_in",
+"kind": "theorem",
+"file": "lean/CEQ/V15Source.lean",
+"line": 143,
+"statement": "theorem no_fill_in {R : Type*} [Ring R] {A : Matrix (Fin n) (Fin n) R} {i j : Fin n} (hij : i ≠ j) (hA : A i j = 0) : (1 - A) i j = 0",
+"uses": [],
+"usedBy": [
+"forward_map_fills_in"
+]
+},
+{
+"name": "shift3",
+"kind": "def",
+"file": "lean/CEQ/V15Source.lean",
+"line": 148,
+"statement": "def shift3 : Matrix (Fin 3) (Fin 3) ℝ",
+"uses": [],
+"usedBy": [
+"forward_map_fills_in",
+"shift3_apply",
+"shift3_strictlyLower"
+]
+},
+{
+"name": "shift3_apply",
+"kind": "lemma",
+"file": "lean/CEQ/V15Source.lean",
+"line": 151,
+"statement": "@[simp] lemma shift3_apply (i j : Fin 3) : shift3 i j = if (i : ℕ) = (j : ℕ) + 1 then (1 : ℝ) else 0",
+"uses": [
+"shift3"
+],
+"usedBy": [
+"forward_map_fills_in",
+"shift3_strictlyLower"
+]
+},
+{
+"name": "shift3_strictlyLower",
+"kind": "lemma",
+"file": "lean/CEQ/V15Source.lean",
+"line": 154,
+"statement": "lemma shift3_strictlyLower : StrictlyLower shift3",
+"uses": [
+"StrictlyLower",
+"shift3",
+"shift3_apply"
+],
+"usedBy": [
+"forward_map_fills_in"
+]
+},
+{
+"name": "forward_map_fills_in",
+"kind": "theorem",
+"file": "lean/CEQ/V15Source.lean",
+"line": 168,
+"statement": "theorem forward_map_fills_in : StrictlyLower shift3 ∧ shift3 2 0 = 0 ∧ (1 - shift3) 2 0 = 0 ∧ (CEQ.Occupancy.occupancy shift3 3) 2 0 = 1",
+"uses": [
+"StrictlyLower",
+"no_fill_in",
+"occupancy",
+"shift3",
+"shift3_apply",
+"shift3_strictlyLower"
+],
+"usedBy": []
+},
+{
+"name": "source_entry",
+"kind": "theorem",
+"file": "lean/CEQ/V15Source.lean",
+"line": 188,
+"statement": "theorem source_entry {A : Matrix (Fin n) (Fin n) ℝ} (r : Fin n → ℝ) (i : Fin n) : (r - A *ᵥ r) i = r i - ∑ j, A i j * r j",
+"uses": [],
+"usedBy": []
+},
+{
+"name": "gateOf",
+"kind": "def",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 106,
+"statement": "noncomputable def gateOf (m θ : ℝ) : ℂ",
+"uses": [],
+"usedBy": [
+"abs_gateOf",
+"bedM_gate_exact",
+"gateList",
+"gateList_multiset",
+"negative_draw_is_on_the_band",
+"pathProd",
+"pathProdL_scalar_is_order_blind",
+"pathProd_eq_pathProdL",
+"pathProd_eq_zero_iff",
+"pathProd_polar",
+"scalar_gate_commutes"
+]
+},
+{
+"name": "pathProd",
+"kind": "def",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 111,
+"statement": "noncomputable def pathProd (m θ : ℕ → ℝ) (i j : ℕ) : ℂ",
+"uses": [
+"gateOf"
+],
+"usedBy": [
+"constant_phase_gate_is_rope",
+"lean_log_junk_makes_the_scan_form_silently_false",
+"magnitude_zero_not_separable",
+"no_prefix_scan_represents_a_zero_gate",
+"pathProdL_scalar_is_order_blind",
+"pathProd_abs",
+"pathProd_eq_Wp",
+"pathProd_eq_pathProdL",
+"pathProd_eq_zero_iff",
+"pathProd_polar",
+"path_product_corner_fails_at_a_zero_gate",
+"prefix_logit_mask_restated",
+"restatement_subsumes_phase_path_le_one",
+"sixteen_is_silent_on_the_zero_draw"
+]
+},
+{
+"name": "abs_gateOf",
+"kind": "lemma",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 114,
+"statement": "lemma abs_gateOf (m θ : ℝ) : Complex.abs (gateOf m θ) = |m|",
+"uses": [
+"gateOf"
+],
+"usedBy": [
+"negative_draw_is_on_the_band",
+"pathProd_abs",
+"pathProd_eq_zero_iff"
+]
+},
+{
+"name": "pathProd_polar",
+"kind": "lemma",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 119,
+"statement": "lemma pathProd_polar (m θ : ℕ → ℝ) (i j : ℕ) : pathProd m θ i j = ((∏ k in Ico (j + 1) (i + 1), m k : ℝ) : ℂ) * Complex.exp (((∑ k in Ico (j + 1) (i + 1), θ k : ℝ) : ℂ) * Complex.I)",
+"uses": [
+"gateOf",
+"pathProd"
+],
+"usedBy": [
+"constant_phase_gate_is_rope",
+"pathProd_eq_Wp"
+]
+},
+{
+"name": "pathProd_abs",
+"kind": "theorem",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 135,
+"statement": "theorem pathProd_abs (m θ : ℕ → ℝ) (h0 : ∀ k, 0 ≤ m k) (i j : ℕ) : Complex.abs (pathProd m θ i j) = ∏ k in Ico (j + 1) (i + 1), m k",
+"uses": [
+"abs_gateOf",
+"pathProd"
+],
+"usedBy": [
+"pathProdL_abs",
+"prefix_logit_mask_restated"
+]
+},
+{
+"name": "pathProd_eq_zero_iff",
+"kind": "theorem",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 143,
+"statement": "theorem pathProd_eq_zero_iff (m θ : ℕ → ℝ) (i j : ℕ) : pathProd m θ i j = 0 ↔ ∃ k ∈ Ico (j + 1) (i + 1), m k = 0",
+"uses": [
+"abs_gateOf",
+"gateOf",
+"pathProd"
+],
+"usedBy": [
+"lean_log_junk_makes_the_scan_form_silently_false",
+"no_prefix_scan_represents_a_zero_gate",
+"pathProdL_eq_zero_iff",
+"path_product_corner_fails_at_a_zero_gate",
+"prefix_logit_mask_restated",
+"sixteen_is_silent_on_the_zero_draw"
+]
+},
+{
+"name": "lean_log_junk_makes_the_scan_form_silently_false",
+"kind": "theorem",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 161,
+"statement": "theorem lean_log_junk_makes_the_scan_form_silently_false : CEQ.V15Phase.Wp (fun _ => (0 : ℝ)) (fun _ => 0) 1 0 = 1 ∧ pathProd (fun _ => (0 : ℝ)) (fun _ => 0) 1 0 = 0 ∧ CEQ.V15Phase.Wp (fun _ => (0 : ℝ)) (fun _ => 0) 1 0 ≠ pathProd (fun _ => (0 : ℝ)) (fun _ => 0) 1 0",
+"uses": [
+"C",
+"Wp",
+"pathProd",
+"pathProd_eq_zero_iff"
+],
+"usedBy": []
+},
+{
+"name": "no_prefix_scan_represents_a_zero_gate",
+"kind": "theorem",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 179,
+"statement": "theorem no_prefix_scan_represents_a_zero_gate (C : ℕ → ℂ) (m θ : ℕ → ℝ) {i j : ℕ} (hz : ∃ k ∈ Ico (j + 1) (i + 1), m k = 0) : Complex.exp (C i - C j) ≠ pathProd m θ i j",
+"uses": [
+"C",
+"pathProd",
+"pathProd_eq_zero_iff"
+],
+"usedBy": [
+"magnitude_zero_not_separable",
+"pathProdL_no_prefix_scan"
+]
+},
+{
+"name": "pathProd_eq_Wp",
+"kind": "theorem",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 190,
+"statement": "theorem pathProd_eq_Wp (m θ : ℕ → ℝ) (hm : ∀ k, 0 < m k) {i j : ℕ} (hij : j ≤ i) : pathProd m θ i j = CEQ.V15Phase.Wp m θ i j",
+"uses": [
+"Wp",
+"Wp_polar",
+"pathProd",
+"pathProd_polar"
+],
+"usedBy": [
+"prefix_logit_mask_restated",
+"restatement_subsumes_phase_path_le_one"
+]
+},
+{
+"name": "restatement_subsumes_phase_path_le_one",
+"kind": "theorem",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 197,
+"statement": "theorem restatement_subsumes_phase_path_le_one (m θ : ℕ → ℝ) (h0 : ∀ k, 0 < m k) {i j : ℕ} (hij : j ≤ i) : Complex.abs (pathProd m θ i j) = Complex.abs (CEQ.V15Phase.Wp m θ i j)",
+"uses": [
+"Wp",
+"pathProd",
+"pathProd_eq_Wp"
+],
+"usedBy": []
+},
+{
+"name": "prod_eq_one_iff_of_nonneg",
+"kind": "lemma",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 207,
+"statement": "lemma prod_eq_one_iff_of_nonneg {s : Finset ℕ} {f : ℕ → ℝ} (h0 : ∀ k ∈ s, 0 ≤ f k) (h1 : ∀ k ∈ s, f k ≤ 1) : (∏ k in s, f k = 1) ↔ ∀ k ∈ s, f k = 1",
+"uses": [],
+"usedBy": [
+"prefix_logit_mask_restated"
+]
+},
+{
+"name": "prefix_logit_mask_restated",
+"kind": "theorem",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 235,
+"statement": "theorem prefix_logit_mask_restated (m θ : ℕ → ℝ) (h0 : ∀ k, 0 ≤ m k) (h1 : ∀ k, m k ≤ 1) {i j : ℕ} (hij : j ≤ i) : Complex.abs (pathProd m θ i j) = ∏ k in Ico (j + 1) (i + 1), m k ∧ Complex.abs (pathProd m θ i j) ≤ 1 ∧ (Complex.abs (pathProd m θ i j) = 1 ↔ ∀ k ∈ Ico (j + 1) (i + 1), m k = 1) ∧ ((∃ k ∈ Ico (j + 1) (i + 1), m k = 0) → pathProd m θ i j = 0) ∧ ((∀ k, 0 < m k) → pathProd m θ i j = CEQ.V15Phase.Wp m θ i j)",
+"uses": [
+"Wp",
+"pathProd",
+"pathProd_abs",
+"pathProd_eq_Wp",
+"pathProd_eq_zero_iff",
+"prod_eq_one_iff_of_nonneg"
+],
+"usedBy": []
+},
+{
+"name": "magOf",
+"kind": "def",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 253,
+"statement": "noncomputable def magOf (a : ℝ) : ℝ",
+"uses": [],
+"usedBy": [
+"bedM_gate_exact"
+]
+},
+{
+"name": "argOf",
+"kind": "def",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 257,
+"statement": "noncomputable def argOf (a : ℝ) : ℝ",
+"uses": [],
+"usedBy": [
+"bedM_gate_exact"
+]
+},
+{
+"name": "bedM_gate_exact",
+"kind": "theorem",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 265,
+"statement": "theorem bedM_gate_exact {a : ℝ} (ha : a = -1 ∨ a = 0 ∨ a = 1) : gateOf (magOf a) (argOf a) = (a : ℂ) ∧ 0 ≤ magOf a ∧ magOf a ≤ 1",
+"uses": [
+"argOf",
+"gateOf",
+"magOf"
+],
+"usedBy": []
+},
+{
+"name": "negative_draw_is_on_the_band",
+"kind": "theorem",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 287,
+"statement": "theorem negative_draw_is_on_the_band : gateOf 1 Real.pi = (-1 : ℂ) ∧ Complex.abs (gateOf 1 Real.pi) = 1",
+"uses": [
+"abs_gateOf",
+"gateOf"
+],
+"usedBy": []
+},
+{
+"name": "bedM",
+"kind": "def",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 302,
+"statement": "def bedM : List ℤ",
+"uses": [],
+"usedBy": []
+},
+{
+"name": "bedMProp",
+"kind": "def",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 304,
+"statement": "def bedMProp : List ℤ",
+"uses": [],
+"usedBy": []
+},
+{
+"name": "satOldTwo",
+"kind": "def",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 307,
+"statement": "def satOldTwo (a : ℤ) : Bool",
+"uses": [],
+"usedBy": [
+"bedMProp_overlap_old_two",
+"bedM_overlap_old_two"
+]
+},
+{
+"name": "satNewTwo",
+"kind": "def",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 310,
+"statement": "def satNewTwo (a : ℤ) : Bool",
+"uses": [],
+"usedBy": [
+"bedMProp_overlap_new_two",
+"bedM_overlap_new_two"
+]
+},
+{
+"name": "satSix",
+"kind": "def",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 314,
+"statement": "def satSix (a : ℤ) : Bool",
+"uses": [],
+"usedBy": [
+"bedMProp_overlap_six",
+"bedM_overlap_six"
+]
+},
+{
+"name": "bedM_overlap_old_two",
+"kind": "theorem",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 316,
+"statement": "theorem bedM_overlap_old_two : bedM.countP satOldTwo = 1",
+"uses": [
+"satOldTwo"
+],
+"usedBy": []
+},
+{
+"name": "bedM_overlap_new_two",
+"kind": "theorem",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 318,
+"statement": "theorem bedM_overlap_new_two : bedM.countP satNewTwo = 3",
+"uses": [
+"satNewTwo"
+],
+"usedBy": []
+},
+{
+"name": "bedM_overlap_six",
+"kind": "theorem",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 320,
+"statement": "theorem bedM_overlap_six : bedM.countP satSix = 0",
+"uses": [
+"satSix"
+],
+"usedBy": []
+},
+{
+"name": "bedMProp_overlap_old_two",
+"kind": "theorem",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 322,
+"statement": "theorem bedMProp_overlap_old_two : bedMProp.countP satOldTwo = 1",
+"uses": [
+"satOldTwo"
+],
+"usedBy": []
+},
+{
+"name": "bedMProp_overlap_new_two",
+"kind": "theorem",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 324,
+"statement": "theorem bedMProp_overlap_new_two : bedMProp.countP satNewTwo = 2",
+"uses": [
+"satNewTwo"
+],
+"usedBy": []
+},
+{
+"name": "bedMProp_overlap_six",
+"kind": "theorem",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 326,
+"statement": "theorem bedMProp_overlap_six : bedMProp.countP satSix = 0",
+"uses": [
+"satSix"
+],
+"usedBy": []
+},
+{
+"name": "six_misses_every_bedM_value",
+"kind": "theorem",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 335,
+"statement": "theorem six_misses_every_bedM_value (w : ℝ) : Real.exp (-CEQ.V15.softplus w) ≠ -1 ∧ Real.exp (-CEQ.V15.softplus w) ≠ 0 ∧ Real.exp (-CEQ.V15.softplus w) ≠ 1",
+"uses": [
+"softplus",
+"softplus_gate_lt_one"
+],
+"usedBy": []
+},
+{
+"name": "delay_zero_is_first_order",
+"kind": "theorem",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 353,
+"statement": "theorem delay_zero_is_first_order (y₀ : ℝ) (x : ℕ → ℝ) : CEQ.V15.IsDelay 0 (CEQ.V15.affineRec 0 1 y₀ x) x",
+"uses": [
+"IsDelay",
+"affineRec",
+"firstOrder"
+],
+"usedBy": []
+},
+{
+"name": "sixteen_is_silent_on_the_zero_draw",
+"kind": "theorem",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 369,
+"statement": "theorem sixteen_is_silent_on_the_zero_draw (θ : ℕ → ℝ) (s : Finset ℕ) : Complex.abs (∏ k in s, Complex.exp ((θ k : ℂ) * Complex.I)) = 1 ∧ pathProd (fun _ => (0 : ℝ)) θ 1 0 = 0",
+"uses": [
+"pathProd",
+"pathProd_eq_zero_iff",
+"unit_phase_product"
+],
+"usedBy": []
+},
+{
+"name": "constant_phase_gate_is_rope",
+"kind": "theorem",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 415,
+"statement": "theorem constant_phase_gate_is_rope (ω : ℝ) {i j : ℕ} (hij : j ≤ i) : pathProd (fun _ => (1 : ℝ)) (fun _ => ω) i j = Complex.exp (((ω * ((i : ℝ) - (j : ℝ)) : ℝ) : ℂ) * Complex.I)",
+"uses": [
+"pathProd",
+"pathProd_polar"
+],
+"usedBy": [
+"pathProdL_is_rope"
+]
+},
+{
+"name": "cumulative_phase_is_separable",
+"kind": "theorem",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 430,
+"statement": "theorem cumulative_phase_is_separable (θ : ℕ → ℝ) {i j : ℕ} (hij : j ≤ i) : ∏ k in Ico (j + 1) (i + 1), Complex.exp ((θ k : ℂ) * Complex.I) = Complex.exp ((((∑ k in range (i + 1), θ k) - (∑ k in range (j + 1), θ k) : ℝ) : ℂ) * Complex.I)",
+"uses": [],
+"usedBy": [
+"magnitude_zero_not_separable"
+]
+},
+{
+"name": "magnitude_zero_not_separable",
+"kind": "theorem",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 448,
+"statement": "theorem magnitude_zero_not_separable (m θ : ℕ → ℝ) {i j : ℕ} (hij : j ≤ i) (hz : ∃ k ∈ Ico (j + 1) (i + 1), m k = 0) : (∏ k in Ico (j + 1) (i + 1), Complex.exp ((θ k : ℂ) * Complex.I) = Complex.exp ((((∑ k in range (i + 1), θ k) - (∑ k in range (j + 1), θ k) : ℝ) : ℂ) * Complex.I)) ∧ ∀ C : ℕ → ℂ, Complex.exp (C i - C j) ≠ pathProd m θ i j",
+"uses": [
+"C",
+"cumulative_phase_is_separable",
+"no_prefix_scan_represents_a_zero_gate",
+"pathProd"
+],
+"usedBy": []
+},
+{
+"name": "num",
+"kind": "def",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 460,
+"statement": "noncomputable def num (g : ℕ → ℝ) (qk : ℕ → ℕ → ℝ) (i j : ℕ) : ℝ",
+"uses": [
+"scan"
+],
+"usedBy": [
+"Hop",
+"Znorm",
+"corner_linear",
+"corner_path_product",
+"corner_softmax"
+]
+},
+{
+"name": "Znorm",
+"kind": "def",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 464,
+"statement": "noncomputable def Znorm (g : ℕ → ℝ) (qk : ℕ → ℕ → ℝ) (i : ℕ) : ℝ",
+"uses": [
+"num"
+],
+"usedBy": [
+"Hop",
+"corner_softmax"
+]
+},
+{
+"name": "Hop",
+"kind": "def",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 471,
+"statement": "noncomputable def Hop (β : ℝ) (g : ℕ → ℝ) (qk : ℕ → ℕ → ℝ) (i j : ℕ) : ℝ",
+"uses": [
+"Znorm",
+"num"
+],
+"usedBy": [
+"beta_one_row_is_one",
+"corner_linear",
+"corner_path_product",
+"corner_path_product_is_the_gate_product",
+"corner_softmax",
+"corners_are_distinct",
+"gate_zero_beta_zero_is_linear_attention",
+"gate_zero_beta_zero_row_not_one",
+"path_product_corner_fails_at_a_zero_gate",
+"three_corners_containment"
+]
+},
+{
+"name": "softmaxAttn",
+"kind": "def",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 475,
+"statement": "noncomputable def softmaxAttn (qk : ℕ → ℕ → ℝ) (i j : ℕ) : ℝ",
+"uses": [],
+"usedBy": [
+"corner_softmax",
+"corners_are_distinct",
+"gate_zero_beta_zero_is_linear_attention",
+"softmax_row_sum_one",
+"three_corners_containment"
+]
+},
+{
+"name": "linearAttn",
+"kind": "def",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 481,
+"statement": "noncomputable def linearAttn (qk : ℕ → ℕ → ℝ) (i j : ℕ) : ℝ",
+"uses": [],
+"usedBy": [
+"corner_linear",
+"corners_are_distinct",
+"gate_zero_beta_zero_is_linear_attention",
+"three_corners_containment"
+]
+},
+{
+"name": "scan_zero_of_zero",
+"kind": "lemma",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 484,
+"statement": "lemma scan_zero_of_zero {g : ℕ → ℝ} (hg : ∀ k, g k = 0) (n : ℕ) : CEQ.V15.scan g n = 0",
+"uses": [
+"scan"
+],
+"usedBy": [
+"corner_linear",
+"corner_softmax"
+]
+},
+{
+"name": "corner_softmax",
+"kind": "theorem",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 488,
+"statement": "theorem corner_softmax {g : ℕ → ℝ} (hg : ∀ k, g k = 0) (qk : ℕ → ℕ → ℝ) (i j : ℕ) : Hop 1 g qk i j = softmaxAttn qk i j",
+"uses": [
+"Hop",
+"Znorm",
+"num",
+"scan_zero_of_zero",
+"softmaxAttn"
+],
+"usedBy": [
+"beta_one_row_is_one",
+"corners_are_distinct",
+"three_corners_containment"
+]
+},
+{
+"name": "corner_linear",
+"kind": "theorem",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 495,
+"statement": "theorem corner_linear {g : ℕ → ℝ} (hg : ∀ k, g k = 0) (qk : ℕ → ℕ → ℝ) (i j : ℕ) : Hop 0 g qk i j = linearAttn qk i j",
+"uses": [
+"Hop",
+"linearAttn",
+"num",
+"scan_zero_of_zero"
+],
+"usedBy": [
+"corners_are_distinct",
+"gate_zero_beta_zero_is_linear_attention",
+"three_corners_containment"
+]
+},
+{
+"name": "corner_path_product",
+"kind": "theorem",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 502,
+"statement": "theorem corner_path_product (g : ℕ → ℝ) (i j : ℕ) : Hop 0 g (fun _ _ => 0) i j = CEQ.V15.Wc g i j",
+"uses": [
+"Hop",
+"W",
+"Wc",
+"num"
+],
+"usedBy": [
+"corner_path_product_is_the_gate_product",
+"gate_zero_beta_zero_row_not_one",
+"path_product_corner_fails_at_a_zero_gate",
+"three_corners_containment"
+]
+},
+{
+"name": "corner_path_product_is_the_gate_product",
+"kind": "theorem",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 508,
+"statement": "theorem corner_path_product_is_the_gate_product (a : ℕ → ℝ) (ha : ∀ k, 0 < a k) {i j : ℕ} (hij : j ≤ i) : Hop 0 (fun k => Real.log (a k)) (fun _ _ => 0) i j = ∏ k in Ico (j + 1) (i + 1), a k",
+"uses": [
+"Hop",
+"Wc",
+"corner_path_product",
+"prefix_logit_mask"
+],
+"usedBy": []
+},
+{
+"name": "path_product_corner_fails_at_a_zero_gate",
+"kind": "theorem",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 518,
+"statement": "theorem path_product_corner_fails_at_a_zero_gate (g : ℕ → ℝ) (m θ : ℕ → ℝ) {i j : ℕ} (hij : j ≤ i) (hz : ∃ k ∈ Ico (j + 1) (i + 1), m k = 0) : ((Hop 0 g (fun _ _ => 0) i j : ℝ) : ℂ) ≠ pathProd m θ i j",
+"uses": [
+"Hop",
+"W",
+"Wc",
+"corner_path_product",
+"pathProd",
+"pathProd_eq_zero_iff"
+],
+"usedBy": []
+},
+{
+"name": "three_corners_containment",
+"kind": "theorem",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 527,
+"statement": "theorem three_corners_containment {g₀ : ℕ → ℝ} (hg : ∀ k, g₀ k = 0) (g : ℕ → ℝ) (qk : ℕ → ℕ → ℝ) : (∀ i j, Hop 1 g₀ qk i j = softmaxAttn qk i j) ∧ (∀ i j, Hop 0 g₀ qk i j = linearAttn qk i j) ∧ (∀ i j, Hop 0 g (fun _ _ => 0) i j = CEQ.V15.Wc g i j)",
+"uses": [
+"Hop",
+"Wc",
+"corner_linear",
+"corner_path_product",
+"corner_softmax",
+"linearAttn",
+"softmaxAttn"
+],
+"usedBy": []
+},
+{
+"name": "corners_are_distinct",
+"kind": "theorem",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 539,
+"statement": "theorem corners_are_distinct : Hop 1 (fun _ => (0 : ℝ)) (fun _ _ => 0) 1 0 = 1 / 2 ∧ Hop 0 (fun _ => (0 : ℝ)) (fun _ _ => 0) 1 0 = 1 ∧ Hop 1 (fun _ => (0 : ℝ)) (fun _ _ => 0) 1 0 ≠ Hop 0 (fun _ => (0 : ℝ)) (fun _ _ => 0) 1 0",
+"uses": [
+"Hop",
+"corner_linear",
+"corner_softmax",
+"linearAttn",
+"softmaxAttn"
+],
+"usedBy": []
+},
+{
+"name": "softmax_row_sum_one",
+"kind": "theorem",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 558,
+"statement": "theorem softmax_row_sum_one (qk : ℕ → ℕ → ℝ) (i : ℕ) : ∑ j in range (i + 1), softmaxAttn qk i j = 1",
+"uses": [
+"softmaxAttn"
+],
+"usedBy": [
+"beta_one_row_is_one"
+]
+},
+{
+"name": "gate_zero_beta_zero_is_linear_attention",
+"kind": "theorem",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 577,
+"statement": "theorem gate_zero_beta_zero_is_linear_attention {g : ℕ → ℝ} (hg : ∀ k, g k = 0) (qk : ℕ → ℕ → ℝ) : (∀ i j, Hop 0 g qk i j = linearAttn qk i j) ∧ ∃ (qk' : ℕ → ℕ → ℝ) (i j : ℕ), Hop 0 g qk' i j ≠ softmaxAttn qk' i j",
+"uses": [
+"Hop",
+"corner_linear",
+"linearAttn",
+"softmaxAttn"
+],
+"usedBy": []
+},
+{
+"name": "gate_zero_beta_zero_row_not_one",
+"kind": "theorem",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 594,
+"statement": "theorem gate_zero_beta_zero_row_not_one (g : ℕ → ℝ) (hg : ∀ k, g k = 0) {i : ℕ} (hi : 1 ≤ i) : ∑ j in range (i + 1), Hop 0 g (fun _ _ => 0) i j ≠ 1",
+"uses": [
+"Hop",
+"corner_path_product",
+"gate_zero_not_stochastic"
+],
+"usedBy": []
+},
+{
+"name": "beta_one_row_is_one",
+"kind": "theorem",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 603,
+"statement": "theorem beta_one_row_is_one (g : ℕ → ℝ) (hg : ∀ k, g k = 0) (qk : ℕ → ℕ → ℝ) (i : ℕ) : ∑ j in range (i + 1), Hop 1 g qk i j = 1",
+"uses": [
+"Hop",
+"corner_softmax",
+"softmax_row_sum_one"
+],
+"usedBy": []
+},
+{
+"name": "scalar_gate_commutes",
+"kind": "theorem",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 686,
+"statement": "theorem scalar_gate_commutes {ι : Type*} (m θ : ι → ℝ) {l l' : List ι} (hperm : l.Perm l') : (l.map (fun k => gateOf (m k) (θ k))).prod = (l'.map (fun k => gateOf (m k) (θ k))).prod",
+"uses": [
+"gateOf"
+],
+"usedBy": []
+},
+{
+"name": "matrix_gate_not_commutes",
+"kind": "theorem",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 700,
+"statement": "theorem matrix_gate_not_commutes : ∃ A B : Matrix (Fin 2) (Fin 2) ℂ, ([A, B] : List (Matrix (Fin 2) (Fin 2) ℂ)).Perm [B, A] ∧ ([A, B] : List (Matrix (Fin 2) (Fin 2) ℂ)).prod ≠ ([B, A] : List (Matrix (Fin 2) (Fin 2) ℂ)).prod",
+"uses": [],
+"usedBy": []
+},
+{
+"name": "idempotent_ne_one_not_isUnit",
+"kind": "theorem",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 718,
+"statement": "theorem idempotent_ne_one_not_isUnit {M : Type*} [Monoid M] {P : M} (hP : IsIdempotentElem P) (hP1 : P ≠ 1) : ¬ IsUnit P",
+"uses": [],
+"usedBy": [
+"projector_idempotent_not_invertible"
+]
+},
+{
+"name": "projector_idempotent_not_invertible",
+"kind": "theorem",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 733,
+"statement": "theorem projector_idempotent_not_invertible {R : Type*} [Ring R] {P : R} (hP : IsIdempotentElem P) (_hP0 : P ≠ 0) (hP1 : P ≠ 1) : ¬ IsUnit P",
+"uses": [
+"idempotent_ne_one_not_isUnit"
+],
+"usedBy": [
+"projector_det_eq_zero"
+]
+},
+{
+"name": "projector_det_eq_zero",
+"kind": "theorem",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 741,
+"statement": "theorem projector_det_eq_zero {n : ℕ} {P : Matrix (Fin n) (Fin n) ℝ} (hP : IsIdempotentElem P) (hP0 : P ≠ 0) (hP1 : P ≠ 1) : P.det = 0",
+"uses": [
+"projector_idempotent_not_invertible"
+],
+"usedBy": []
+},
+{
+"name": "step",
+"kind": "def",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 756,
+"statement": "def step (G : Finset (α → α)) (S : Finset α) : Finset α",
+"uses": [],
+"usedBy": [
+"orbit",
+"orbit_stable_forward",
+"subset_step"
+]
+},
+{
+"name": "orbit",
+"kind": "def",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 761,
+"statement": "def orbit (G : Finset (α → α)) (s : α) : ℕ → Finset α | 0 => {s} | n + 1 => step G (orbit G s n)",
+"uses": [
+"step"
+],
+"usedBy": [
+"Reachable",
+"exists_stable_step",
+"finite_semigroup_never_decidable",
+"orbit_le_card_stable",
+"orbit_mono",
+"orbit_stable_forward",
+"orbit_subset_succ",
+"reachable_iff"
+]
+},
+{
+"name": "subset_step",
+"kind": "theorem",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 766,
+"statement": "theorem subset_step (G : Finset (α → α)) (S : Finset α) : S ⊆ step G S",
+"uses": [
+"step"
+],
+"usedBy": [
+"orbit_subset_succ"
+]
+},
+{
+"name": "orbit_subset_succ",
+"kind": "theorem",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 771,
+"statement": "theorem orbit_subset_succ (G : Finset (α → α)) (s : α) (n : ℕ) : orbit G s n ⊆ orbit G s (n + 1)",
+"uses": [
+"orbit",
+"subset_step"
+],
+"usedBy": [
+"exists_stable_step",
+"orbit_mono"
+]
+},
+{
+"name": "orbit_mono",
+"kind": "theorem",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 775,
+"statement": "theorem orbit_mono (G : Finset (α → α)) (s : α) : Monotone (orbit G s)",
+"uses": [
+"orbit",
+"orbit_subset_succ"
+],
+"usedBy": [
+"orbit_le_card_stable"
+]
+},
+{
+"name": "orbit_stable_forward",
+"kind": "theorem",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 781,
+"statement": "theorem orbit_stable_forward (G : Finset (α → α)) (s : α) {n : ℕ} (h : orbit G s n = orbit G s (n + 1)) : ∀ k, orbit G s (n + k) = orbit G s n",
+"uses": [
+"orbit",
+"step"
+],
+"usedBy": [
+"orbit_le_card_stable"
+]
+},
+{
+"name": "sum_of_strict_steps",
+"kind": "theorem",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 793,
+"statement": "theorem sum_of_strict_steps (c : ℕ → ℕ) : ∀ N, (∀ n < N, c n < c (n + 1)) → c 0 + N ≤ c N",
+"uses": [],
+"usedBy": [
+"exists_stable_step"
+]
+},
+{
+"name": "exists_stable_step",
+"kind": "theorem",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 811,
+"statement": "theorem exists_stable_step (G : Finset (α → α)) (s : α) : ∃ n < Fintype.card α, orbit G s n = orbit G s (n + 1)",
+"uses": [
+"orbit",
+"orbit_subset_succ",
+"sum_of_strict_steps"
+],
+"usedBy": [
+"orbit_le_card_stable"
+]
+},
+{
+"name": "orbit_le_card_stable",
+"kind": "theorem",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 831,
+"statement": "theorem orbit_le_card_stable (G : Finset (α → α)) (s : α) (n : ℕ) : orbit G s n ⊆ orbit G s (Fintype.card α)",
+"uses": [
+"exists_stable_step",
+"orbit",
+"orbit_mono",
+"orbit_stable_forward"
+],
+"usedBy": [
+"reachable_iff"
+]
+},
+{
+"name": "Reachable",
+"kind": "def",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 851,
+"statement": "def Reachable (G : Finset (α → α)) (s t : α) : Prop",
+"uses": [
+"orbit"
+],
+"usedBy": [
+"finite_semigroup_never_decidable",
+"reachable_iff"
+]
+},
+{
+"name": "reachable_iff",
+"kind": "theorem",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 856,
+"statement": "theorem reachable_iff (G : Finset (α → α)) (s t : α) : Reachable G s t ↔ t ∈ orbit G s (Fintype.card α)",
+"uses": [
+"Reachable",
+"orbit",
+"orbit_le_card_stable"
+],
+"usedBy": [
+"finite_semigroup_never_decidable"
+]
+},
+{
+"name": "finite_semigroup_never_decidable",
+"kind": "def",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 878,
+"statement": "def finite_semigroup_never_decidable (G : Finset (α → α)) (s : α) : DecidablePred (Reachable G s)",
+"uses": [
+"Reachable",
+"orbit",
+"reachable_iff"
+],
+"usedBy": []
+},
+{
+"name": "demoReachG",
+"kind": "def",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 886,
+"statement": "def demoReachG : Finset (Bool → Bool)",
+"uses": [],
+"usedBy": []
+},
+{
+"name": "demoStallG",
+"kind": "def",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 890,
+"statement": "def demoStallG : Finset (Bool → Bool)",
+"uses": [],
+"usedBy": []
+},
+{
+"name": "pathProdL",
+"kind": "def",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 983,
+"statement": "def pathProdL {M : Type*} [Monoid M] (L : List M) : M",
+"uses": [],
+"usedBy": [
+"contraction_hypothesis_is_load_bearing",
+"contraction_path_bounded",
+"contraction_path_bounded_noncommuting_witness",
+"pathProdL_abs",
+"pathProdL_eq_zero_iff",
+"pathProdL_is_rope",
+"pathProdL_no_prefix_scan",
+"pathProdL_scalar_is_order_blind",
+"pathProdMatrixL",
+"pathProdMatrixL_order_sensitive",
+"pathProd_eq_pathProdL"
+]
+},
+{
+"name": "pathProdMatrixL",
+"kind": "def",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 989,
+"statement": "def pathProdMatrixL {n : Type*} [Fintype n] [DecidableEq n] {R : Type*} [Semiring R] (L : List (Matrix n n R)) : Matrix n n R",
+"uses": [
+"pathProdL"
+],
+"usedBy": [
+"contraction_hypothesis_is_load_bearing",
+"contraction_path_bounded",
+"contraction_path_bounded_noncommuting_witness",
+"pathProdMatrixL_order_sensitive"
+]
+},
+{
+"name": "pathProdMatrixL_order_sensitive",
+"kind": "theorem",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 996,
+"statement": "theorem pathProdMatrixL_order_sensitive : ∃ A B : Matrix (Fin 2) (Fin 2) ℂ, ([A, B] : List (Matrix (Fin 2) (Fin 2) ℂ)).Perm [B, A] ∧ pathProdMatrixL [A, B] ≠ pathProdMatrixL [B, A]",
+"uses": [
+"pathProdL",
+"pathProdMatrixL"
+],
+"usedBy": []
+},
+{
+"name": "gateList",
+"kind": "def",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 1019,
+"statement": "noncomputable def gateList (m θ : ℕ → ℝ) (i j : ℕ) : List ℂ",
+"uses": [
+"gateOf"
+],
+"usedBy": [
+"gateList_multiset",
+"pathProdL_abs",
+"pathProdL_eq_zero_iff",
+"pathProdL_is_rope",
+"pathProdL_no_prefix_scan",
+"pathProdL_scalar_is_order_blind",
+"pathProd_eq_pathProdL"
+]
+},
+{
+"name": "pathProd_eq_pathProdL",
+"kind": "theorem",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 1027,
+"statement": "theorem pathProd_eq_pathProdL (m θ : ℕ → ℝ) (i j : ℕ) : pathProd m θ i j = pathProdL (gateList m θ i j)",
+"uses": [
+"gateList",
+"gateOf",
+"pathProd",
+"pathProdL"
+],
+"usedBy": [
+"pathProdL_abs",
+"pathProdL_eq_zero_iff",
+"pathProdL_is_rope",
+"pathProdL_no_prefix_scan",
+"pathProdL_scalar_is_order_blind"
+]
+},
+{
+"name": "gateList_multiset",
+"kind": "theorem",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 1037,
+"statement": "theorem gateList_multiset (m θ : ℕ → ℝ) (i j : ℕ) : (gateList m θ i j : Multiset ℂ) = (Ico (j + 1) (i + 1)).val.map (fun k => gateOf (m k) (θ k))",
+"uses": [
+"gateList",
+"gateOf"
+],
+"usedBy": []
+},
+{
+"name": "pathProdL_abs",
+"kind": "theorem",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 1052,
+"statement": "theorem pathProdL_abs (m θ : ℕ → ℝ) (h0 : ∀ k, 0 ≤ m k) (i j : ℕ) : Complex.abs (pathProdL (gateList m θ i j)) = ∏ k in Ico (j + 1) (i + 1), m k",
+"uses": [
+"gateList",
+"pathProdL",
+"pathProd_abs",
+"pathProd_eq_pathProdL"
+],
+"usedBy": []
+},
+{
+"name": "pathProdL_eq_zero_iff",
+"kind": "theorem",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 1058,
+"statement": "theorem pathProdL_eq_zero_iff (m θ : ℕ → ℝ) (i j : ℕ) : pathProdL (gateList m θ i j) = 0 ↔ ∃ k ∈ Ico (j + 1) (i + 1), m k = 0",
+"uses": [
+"gateList",
+"pathProdL",
+"pathProd_eq_pathProdL",
+"pathProd_eq_zero_iff"
+],
+"usedBy": []
+},
+{
+"name": "pathProdL_no_prefix_scan",
+"kind": "theorem",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 1064,
+"statement": "theorem pathProdL_no_prefix_scan (C : ℕ → ℂ) (m θ : ℕ → ℝ) {i j : ℕ} (hz : ∃ k ∈ Ico (j + 1) (i + 1), m k = 0) : Complex.exp (C i - C j) ≠ pathProdL (gateList m θ i j)",
+"uses": [
+"C",
+"gateList",
+"no_prefix_scan_represents_a_zero_gate",
+"pathProdL",
+"pathProd_eq_pathProdL"
+],
+"usedBy": []
+},
+{
+"name": "pathProdL_is_rope",
+"kind": "theorem",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 1070,
+"statement": "theorem pathProdL_is_rope (ω : ℝ) {i j : ℕ} (hij : j ≤ i) : pathProdL (gateList (fun _ => (1 : ℝ)) (fun _ => ω) i j) = Complex.exp (((ω * ((i : ℝ) - (j : ℝ)) : ℝ) : ℂ) * Complex.I)",
+"uses": [
+"constant_phase_gate_is_rope",
+"gateList",
+"pathProdL",
+"pathProd_eq_pathProdL"
+],
+"usedBy": []
+},
+{
+"name": "pathProdL_scalar_is_order_blind",
+"kind": "theorem",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 1082,
+"statement": "theorem pathProdL_scalar_is_order_blind (m θ : ℕ → ℝ) {i j : ℕ} {L : List ℕ} (hperm : (Ico (j + 1) (i + 1)).toList.Perm L) : pathProd m θ i j = pathProdL (L.map (fun k => gateOf (m k) (θ k)))",
+"uses": [
+"gateList",
+"gateOf",
+"pathProd",
+"pathProdL",
+"pathProd_eq_pathProdL"
+],
+"usedBy": []
+},
+{
+"name": "contraction_path_bounded",
+"kind": "theorem",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 1109,
+"statement": "theorem contraction_path_bounded {n : Type*} [Fintype n] [DecidableEq n] [Nonempty n] {α : Type*} [NormedRing α] [NormOneClass α] (L : List (Matrix n n α)) (h : ∀ T ∈ L, ‖T‖ ≤ 1) : ‖pathProdMatrixL L‖ ≤ 1",
+"uses": [
+"pathProdL",
+"pathProdMatrixL"
+],
+"usedBy": [
+"contraction_path_bounded_noncommuting_witness"
+]
+},
+{
+"name": "contraction_hypothesis_is_load_bearing",
+"kind": "theorem",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 1130,
+"statement": "theorem contraction_hypothesis_is_load_bearing : ∃ L : List (Matrix (Fin 2) (Fin 2) ℝ), ¬ ‖pathProdMatrixL L‖ ≤ 1",
+"uses": [
+"pathProdL",
+"pathProdMatrixL"
+],
+"usedBy": []
+},
+{
+"name": "contraction_path_bounded_noncommuting_witness",
+"kind": "theorem",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 1143,
+"statement": "theorem contraction_path_bounded_noncommuting_witness : ‖(!![0, 1; 0, 0] : Matrix (Fin 2) (Fin 2) ℝ)‖ = 1 ∧ ‖(!![0, 0; 1, 0] : Matrix (Fin 2) (Fin 2) ℝ)‖ = 1 ∧ pathProdMatrixL ([!![0, 1; 0, 0], !![0, 0; 1, 0]] : List (Matrix (Fin 2) (Fin 2) ℝ)) ≠ pathProdMatrixL ([!![0, 0; 1, 0], !![0, 1; 0, 0]] : List (Matrix (Fin 2) (Fin 2) ℝ)) ∧ ‖pathProdMatrixL ([!![0, 1; 0, 0], !![0, 0; 1, 0]] : List (Matrix (Fin 2) (Fin 2) ℝ))‖ ≤ 1 ∧ ‖pathProdMatrixL ([!![0, 0; 1, 0], !![0, 1; 0, 0]] : List (Matrix (Fin 2) (Fin 2) ℝ))‖ ≤ 1",
+"uses": [
+"contraction_path_bounded",
+"pathProdL",
+"pathProdMatrixL"
+],
+"usedBy": []
+},
+{
+"name": "dilation_block_eq_sigma",
+"kind": "theorem",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 1197,
+"statement": "theorem dilation_block_eq_sigma {n : ℕ} (S : Fin n → ℝ) (hS0 : ∀ i, 0 ≤ S i) (hS1 : ∀ i, S i ≤ 1) : ∃ D : Matrix (Fin n ⊕ Fin n) (Fin n ⊕ Fin n) ℝ, Dᵀ * D = 1 ∧ ∀ i j : Fin n, D (Sum.inl i) (Sum.inl j) = Matrix.diagonal S i j",
+"uses": [],
+"usedBy": []
+},
+{
+"name": "dilation_2x2_rotation_by_arccos",
+"kind": "theorem",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 1253,
+"statement": "theorem dilation_2x2_rotation_by_arccos (S : ℝ) (hS0 : 0 ≤ S) (hS1 : S ≤ 1) : ∃ D : Matrix (Fin 2) (Fin 2) ℝ, ∃ s : ℝ, D = !![S, s; -s, S] ∧ Dᵀ * D = 1 ∧ D 0 0 = S ∧ s = Real.sqrt (1 - S ^ 2) ∧ S = Real.cos (Real.arccos S) ∧ s = Real.sin (Real.arccos S)",
+"uses": [],
+"usedBy": []
+},
+{
+"name": "dilation_gate_instance_three_five",
+"kind": "theorem",
+"file": "lean/CEQ/V16Domain.lean",
+"line": 1282,
+"statement": "theorem dilation_gate_instance_three_five : Real.sqrt (1 - (3 / 5 : ℝ) ^ 2) = 4 / 5 ∧ ((3 / 5 : ℝ)) ^ 2 + ((4 / 5 : ℝ)) ^ 2 = 1",
+"uses": [],
+"usedBy": []
+}
+]
+}

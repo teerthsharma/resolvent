@@ -9,6 +9,7 @@ copyright: Invented by <a href="https://teerthsharma.vercel.app/">Teerth Sharma<
 
 theme:
   name: material
+  custom_dir: overrides
   logo: assets/logo.svg
   favicon: assets/logo.svg
   font:
@@ -41,11 +42,14 @@ theme:
 
 extra_css:
   - assets/resolvent.css
+  - assets/viz/viz.css
 
 extra_javascript:
   - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
   - assets/resolvent.js
   - path: assets/scene.js
+    type: module
+  - path: assets/viz/core.js
     type: module
 
 extra:
@@ -83,45 +87,47 @@ not_in_nav: |
 
 nav:
   - Home: index.md
-  - "Status: done against total": STATUS.md
-  - "North Star: the forward S-matrix reconciliation": NORTH_STAR.md
-  - The record:
-      - Everything retracted, broken or open: FAILS.md
-      - Component ledger: COMPONENT_LEDGER.md
-      - Research plan: PLAN.md
-      - Corner rule retirement: CORNER_RULE_RETIREMENT.md
-      - Kaggle card: PI_JEPA_KAGGLE_CARD.md
-      - DR2 card: DR2_CARD.md
-      - "Pre-registration: BED-H": BED_H_PREREGISTRATION.md
-      - "Pre-registration: REMOVAL-ECHO v1": prereg/REMOVAL_ECHO_v1.md
-      - "Certificate C9: the NEVER residue": C9_NEVER_RESIDUE.md
-      - "What the dispatcher got wrong, 2026-09-20": SESSION_ERRORS_2026_09_20.md
-      - "Phase G: spectral": PHASE_G.md
-      - "Phase H: bind": PHASE_H.md
-      - "Phase I: calibrate and cost": PHASE_I.md
-      - "Phase I.1: repair": PHASE_I1.md
-      - "Prior art: the mass gate": PRIOR_ART_MASS_GATE.md
-  - Ledgers:
-      - Failure mechanisms: ledgers/mistakes.md
-      - Struck constants: ledgers/struck.md
-      - Mathematics: ledgers/mathematics.md
-      - Model card: ledgers/model-card.md
-      - Costs: ledgers/costs.md
-      - V17K rulings: ledgers/v17k-rulings.md
-      - V16 calibration: ledgers/v16-calibration.md
-  - Canon:
-      - Charter: canon/CHARTER.md
-      - 01 Theory of accuracy: canon/01_THEORY_ACCURACY.md
-      - 02 Theory of training: canon/02_THEORY_TRAINING.md
-      - 03 Kernel: canon/03_KERNEL.md
-      - 04 Beds and instruments: canon/04_BEDS_AND_INSTRUMENTS.md
-      - 05 Repairs: canon/05_REPAIRS.md
-      - 06 Predictions: canon/06_PREDICTIONS.md
-      - 08 Architecture: canon/08_ARCHITECTURE.md
-      - 09 Chess and markets: canon/09_CHESS_AND_MARKETS.md
-      - Corrections: canon/CORRECTIONS.md
+  - Status: see/status.md
+  - "Proof atlas": atlas.md
   - Paper:
       - The shape of CEQ: CEQ_SHAPE.md
+      - "Status, in full": STATUS.md
+      - "North Star: the forward S-matrix reconciliation": NORTH_STAR.md
+      - The record:
+        - Everything retracted, broken or open: FAILS.md
+        - Component ledger: COMPONENT_LEDGER.md
+        - Research plan: PLAN.md
+        - Corner rule retirement: CORNER_RULE_RETIREMENT.md
+        - Kaggle card: PI_JEPA_KAGGLE_CARD.md
+        - DR2 card: DR2_CARD.md
+        - "Pre-registration: BED-H": BED_H_PREREGISTRATION.md
+        - "Pre-registration: REMOVAL-ECHO v1": prereg/REMOVAL_ECHO_v1.md
+        - "Certificate C9: the NEVER residue": C9_NEVER_RESIDUE.md
+        - "What the dispatcher got wrong, 2026-09-20": SESSION_ERRORS_2026_09_20.md
+        - "Phase G: spectral": PHASE_G.md
+        - "Phase H: bind": PHASE_H.md
+        - "Phase I: calibrate and cost": PHASE_I.md
+        - "Phase I.1: repair": PHASE_I1.md
+        - "Prior art: the mass gate": PRIOR_ART_MASS_GATE.md
+      - Ledgers:
+        - Failure mechanisms: ledgers/mistakes.md
+        - Struck constants: ledgers/struck.md
+        - Mathematics: ledgers/mathematics.md
+        - Model card: ledgers/model-card.md
+        - Costs: ledgers/costs.md
+        - V17K rulings: ledgers/v17k-rulings.md
+        - V16 calibration: ledgers/v16-calibration.md
+      - Canon:
+        - Charter: canon/CHARTER.md
+        - 01 Theory of accuracy: canon/01_THEORY_ACCURACY.md
+        - 02 Theory of training: canon/02_THEORY_TRAINING.md
+        - 03 Kernel: canon/03_KERNEL.md
+        - 04 Beds and instruments: canon/04_BEDS_AND_INSTRUMENTS.md
+        - 05 Repairs: canon/05_REPAIRS.md
+        - 06 Predictions: canon/06_PREDICTIONS.md
+        - 08 Architecture: canon/08_ARCHITECTURE.md
+        - 09 Chess and markets: canon/09_CHESS_AND_MARKETS.md
+        - Corrections: canon/CORRECTIONS.md
       - Paper sources: sources/README.md
       - Bibliography audit: BIB_AUDIT.md
       - Bibliography aliases: BIB_ALIASES.md
