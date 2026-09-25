@@ -11,24 +11,24 @@ theme:
   name: material
   logo: assets/logo.svg
   favicon: assets/logo.svg
-  font: false
+  font:
+    text: Instrument Sans
+    code: JetBrains Mono
   icon:
     repo: fontawesome/brands/github
   palette:
-    - media: "(prefers-color-scheme: dark)"
-      scheme: slate
-      primary: custom
-      accent: custom
-      toggle:
-        icon: material/weather-sunny
-        name: Switch to light
-    - media: "(prefers-color-scheme: light)"
-      scheme: default
+    - scheme: default
       primary: custom
       accent: custom
       toggle:
         icon: material/weather-night
         name: Switch to dark
+    - scheme: slate
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light
   features:
     - navigation.tabs
     - navigation.sections
@@ -45,6 +45,8 @@ extra_css:
 extra_javascript:
   - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
   - assets/resolvent.js
+  - path: assets/scene.js
+    type: module
 
 extra:
   generator: false
