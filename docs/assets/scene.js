@@ -92,7 +92,7 @@ function boot() {
   const tokens = [];
   for (let i = 0; i < N; i++) {
     const m = i === N - 1
-      ? new THREE.MeshStandardMaterial({ color: 0x8a5cff, roughness: .35, emissive: 0x8a5cff, emissiveIntensity: .25 })
+      ? new THREE.MeshStandardMaterial({ color: 0xd9731f, roughness: .35, emissive: 0xd9731f, emissiveIntensity: .25 })
       : tokMat.clone();
     const tok = new THREE.Mesh(new THREE.CapsuleGeometry(.2, .32, 6, 16), m);
     tok.position.set(X(i), .6, Z(i)); tok.castShadow = true; world.add(tok);

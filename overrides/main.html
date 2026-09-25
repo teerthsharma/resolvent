@@ -1,1 +1,2 @@
 {% extends "base.html" %}
+{% block extrahead %}{% if page and page.meta and page.meta.rs %}<script>document.documentElement.classList.add("rs-page"{% if page.is_homepage %},"rs-home"{% endif %})</script>{% endif %}{% endblock %}

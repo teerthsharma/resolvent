@@ -1,0 +1,666 @@
+---
+title: The experiment, in full
+rs: true
+hide:
+  - navigation
+  - toc
+---
+
+<div class="rs">
+
+<div class="hero">
+    <p class="over">Invented by <a href="https://teerthsharma.vercel.app/">Teerth Sharma</a> · research record</p>
+    <h1 class="title">resolvent</h1>
+    <div class="note" style="margin:0 0 1.1rem"><p style="font-style:italic">"The S-matrix is the unitary matrix connecting sets of asymptotically free particle states — the in-states and the out-states — with no account of the path between them."</p><p style="margin-top:.35rem;font-size:.72rem;color:var(--rs-dim)">Wheeler, 1937 (Phys. Rev. 52, 1107); Heisenberg carried it through the 1940s. <a href="NORTH_STAR/">The full reconciliation →</a></p></div>
+    <p class="thesis">Softmax attention and Markov path composition are the same operator.</p>
+    <p class="sub">A family of attention operators in which softmax is one corner, read as a forward S-matrix through a resolvent — proved in Lean&nbsp;4, matched bitwise in code, and every result that failed is kept on the record beside the ones that held. The physics framing is <a href="NORTH_STAR/">a reconciliation, not a result</a>: it explains why the hop expansion converges, and adds no measurement.</p>
+    <p class="pills">
+      <span class="pill">Lean 4 <b>v4.7.0</b></span>
+      <span class="pill"><b>134</b> theorems + <b>41</b> lemmas</span>
+      <span class="pill">sorry <b>0</b></span>
+      <span class="pill">corner tests <b>78/78</b></span>
+      <span class="pill">Apache-2.0</span>
+    </p>
+    <a class="cta" href="#experiment">Read the experiment</a><a class="cta ghost" href="https://github.com/teerthsharma/resolvent">github.com/teerthsharma/resolvent</a>
+
+    <div class="grid" style="margin-top:1.6rem">
+      <div class="card">
+        <p class="k">Represents order</p>
+        <h4>S5, bare integers, matched params <span class="chip met">holds</span></h4>
+        <p>0.8620 ± 0.0556 vs commuting-diagonal control 0.2860 ± 0.0150, 404 params, 5/5 seeds pairwise no overlap; control saturated within 0.031 of its ceiling 0.3110. <em>Scope: one budget, one word length, no length-generalization check.</em></p>
+      </div>
+      <div class="card">
+        <p class="k">Does not predict</p>
+        <h4>Repaired chess bed <span class="chip unmet">unmet</span></h4>
+        <p>Resolution 0.001469 vs oracle ceiling 0.10117 (1.45%); tied by an 8-bin piece-count histogram of its own input; loses on Brier, 0.6334 vs 0.5020.</p>
+      </div>
+      <div class="card">
+        <p class="k">Gate closes, cause unknown</p>
+        <h4>Every proposed mechanism refuted <span class="chip open">open</span></h4>
+        <p>Gradient starvation, step-0 zero density, eval-only exactness, live-gradient unfreeze — all four refuted; the first two by the same table built to demonstrate them, the other two by pre-registered kills. Twelve checks that could not fail are catalogued alongside them.</p>
+      </div>
+    </div>
+
+    <figure style="margin-top:2.4rem">
+      <svg viewBox="0 0 760 252" data-rs="gates" role="group" aria-label="An interactive diagram: nine tokens in a row with a gate between each neighbouring pair. The last token reads every earlier one. Closing a gate sets every path that crosses it to exactly zero.">
+        <text class="t-dim" x="18" y="22">query t₈ reads every earlier token through the gates between them</text>
+        <text class="t-dim" x="742" y="22" text-anchor="end">click a gate to close or open it ▾</text>
+
+        <path data-j="0" d="M700 150 Q380 -62 60 150"/>
+        <path data-j="1" d="M700 150 Q420 -40 140 150"/>
+        <path data-j="2" d="M700 150 Q460 -18 220 150"/>
+        <path data-j="3" d="M700 150 Q500 4 300 150"/>
+        <path data-j="4" d="M700 150 Q540 26 380 150"/>
+        <path data-j="5" d="M700 150 Q580 48 460 150"/>
+        <path data-j="6" d="M700 150 Q620 70 540 150"/>
+        <path data-j="7" d="M700 150 Q660 92 620 150"/>
+
+        <circle class="pkt" data-pkt="0" r="3.4"><animateMotion dur="3.1s" begin="0s" repeatCount="indefinite" path="M700 150 Q380 -62 60 150"/></circle>
+        <circle class="pkt" data-pkt="1" r="3.4"><animateMotion dur="2.9s" begin="0.25s" repeatCount="indefinite" path="M700 150 Q420 -40 140 150"/></circle>
+        <circle class="pkt" data-pkt="2" r="3.4"><animateMotion dur="2.7s" begin="0.5s" repeatCount="indefinite" path="M700 150 Q460 -18 220 150"/></circle>
+        <circle class="pkt" data-pkt="3" r="3.4"><animateMotion dur="2.5s" begin="0.75s" repeatCount="indefinite" path="M700 150 Q500 4 300 150"/></circle>
+        <circle class="pkt" data-pkt="4" r="3.4"><animateMotion dur="2.3s" begin="1s" repeatCount="indefinite" path="M700 150 Q540 26 380 150"/></circle>
+        <circle class="pkt" data-pkt="5" r="3.4"><animateMotion dur="2.1s" begin="1.25s" repeatCount="indefinite" path="M700 150 Q580 48 460 150"/></circle>
+        <circle class="pkt" data-pkt="6" r="3.4"><animateMotion dur="1.9s" begin="1.5s" repeatCount="indefinite" path="M700 150 Q620 70 540 150"/></circle>
+        <circle class="pkt" data-pkt="7" r="3.4"><animateMotion dur="1.7s" begin="1.75s" repeatCount="indefinite" path="M700 150 Q660 92 620 150"/></circle>
+
+        <g>
+          <line class="gatetick" data-k="1" x1="100" y1="130" x2="100" y2="170"/>
+          <line class="gatetick" data-k="2" x1="180" y1="130" x2="180" y2="170"/>
+          <line class="gatetick" data-k="3" x1="260" y1="130" x2="260" y2="170"/>
+          <line class="gatetick" data-k="4" x1="340" y1="130" x2="340" y2="170"/>
+          <line class="gatetick" data-k="5" x1="420" y1="130" x2="420" y2="170"/>
+          <line class="gatetick" data-k="6" x1="500" y1="130" x2="500" y2="170"/>
+          <line class="gatetick" data-k="7" x1="580" y1="130" x2="580" y2="170"/>
+          <line class="gatetick" data-k="8" x1="660" y1="130" x2="660" y2="170"/>
+        </g>
+
+        <g>
+          <circle class="tok" cx="60" cy="150" r="13"/><circle class="tok" cx="140" cy="150" r="13"/>
+          <circle class="tok" cx="220" cy="150" r="13"/><circle class="tok" cx="300" cy="150" r="13"/>
+          <circle class="tok" cx="380" cy="150" r="13"/><circle class="tok" cx="460" cy="150" r="13"/>
+          <circle class="tok" cx="540" cy="150" r="13"/><circle class="tok" cx="620" cy="150" r="13"/>
+          <circle class="tok q" cx="700" cy="150" r="15"/>
+        </g>
+        <g class="t-serif" text-anchor="middle">
+          <text x="60" y="192">t₀</text><text x="140" y="192">t₁</text><text x="220" y="192">t₂</text>
+          <text x="300" y="192">t₃</text><text x="380" y="192">t₄</text><text x="460" y="192">t₅</text>
+          <text x="540" y="192">t₆</text><text x="620" y="192">t₇</text><text x="700" y="192">t₈</text>
+        </g>
+
+        <text class="t-dim" x="18" y="218">weight G₈ⱼ</text>
+        <g text-anchor="middle">
+          <text class="out" data-out="0" x="60" y="218">0</text><text class="out" data-out="1" x="140" y="218">0</text>
+          <text class="out" data-out="2" x="220" y="218">0</text><text class="out" data-out="3" x="300" y="218">0</text>
+          <text class="out" data-out="4" x="380" y="218">0</text><text class="out" data-out="5" x="460" y="218">0</text>
+          <text class="out" data-out="6" x="540" y="218">0</text><text class="out" data-out="7" x="620" y="218">0</text>
+        </g>
+        <text class="t-mono state" data-state x="380" y="242" text-anchor="middle"></text>
+
+        <rect class="hit" data-hit="1" x="86" y="124" width="28" height="52" rx="6" role="button" tabindex="0" aria-pressed="false" aria-label="gate m1"/>
+        <rect class="hit" data-hit="2" x="166" y="124" width="28" height="52" rx="6" role="button" tabindex="0" aria-pressed="false" aria-label="gate m2"/>
+        <rect class="hit" data-hit="3" x="246" y="124" width="28" height="52" rx="6" role="button" tabindex="0" aria-pressed="false" aria-label="gate m3"/>
+        <rect class="hit" data-hit="4" x="326" y="124" width="28" height="52" rx="6" role="button" tabindex="0" aria-pressed="false" aria-label="gate m4"/>
+        <rect class="hit" data-hit="5" x="406" y="124" width="28" height="52" rx="6" role="button" tabindex="0" aria-pressed="false" aria-label="gate m5"/>
+        <rect class="hit" data-hit="6" x="486" y="124" width="28" height="52" rx="6" role="button" tabindex="0" aria-pressed="false" aria-label="gate m6"/>
+        <rect class="hit" data-hit="7" x="566" y="124" width="28" height="52" rx="6" role="button" tabindex="0" aria-pressed="false" aria-label="gate m7"/>
+        <rect class="hit" data-hit="8" x="646" y="124" width="28" height="52" rx="6" role="button" tabindex="0" aria-pressed="false" aria-label="gate m8"/>
+      </svg>
+      <figcaption>Each gate passes a fraction of what crosses it, so the weight from <var>t</var><sub>8</sub> to <var>t<sub>j</sub></var> is the product of the gates between them — <var>G<sub>ij</sub></var> = ∏<sub><var>k</var>=<var>j</var>+1..<var>i</var></sub> <var>m<sub>k</sub></var>. This demo runs the real magnitude gate only, with no complex phase anywhere in it (the full operator also carries an <var>e</var><sup><var>i</var>θ<sub><var>k</var></sub></sup> term, shown in <a href="#operator">the cube below, §3</a>). Closing one gate sends every path across it to zero exactly, not approximately.<br>A prefix scan in the logit cannot do this: it contributes <var>e</var><sup><var>C<sub>i</sub></var>−<var>C<sub>j</sub></var></sup>, and that is never zero. Lean theorem <code>no_prefix_scan_represents_a_zero_gate</code>.</figcaption>
+    </figure>
+
+<pre class="result" aria-label="Measured results">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ <span class="g">resolvent</span> · measured 2026-09-11 · Windows 11 · Python 3.11.9 · torch 2.14.0 (CPU)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ Lean 4 proofs          13 files · 134 theorems + 41 lemmas · <span class="g">0 sorry</span> · build exit 0
+ Corners in code        <span class="g">78 / 78</span> tests pass            <span class="r">tests/arm_smprime, tests/arm_pl</span>
+ Softmax corner         max |Δ| vs causal softmax     <span class="g">0.000e+00</span>
+ Committor closed form  max |Δ|                       <span class="g">4.441e-16</span>
+ Curl vs node models    share left unrepresented      mixed 0.6720 · pure curl 1.0000
+ Planted negative       pure-gradient target          6.5e-16
+ Refusal                sensitivity · specificity     <span class="g">100.00% · 100.00%</span>  (138 + 262)
+ Prediction             beats a trivial baseline      <span class="a">not yet — open</span>
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</pre>
+</div>
+
+<nav class="contents" aria-label="Sections">
+  <a href="#experiment"><span class="n">1</span>The experiment</a>
+  <a href="#mechanisms"><span class="n">2</span>The two mechanisms</a>
+  <a href="#operator"><span class="n">3</span>The operator</a>
+  <a href="#reads"><span class="n">4</span>The reads</a>
+  <a href="#progress"><span class="n">5</span>How it is going</a>
+  <a href="#died"><span class="n">6</span>What died</a>
+  <a href="#next"><span class="n">7</span>Where next</a>
+  <a href="#documents"><span class="n">8</span>Documents</a>
+  <a href="#reproduce"><span class="n">9</span>Reproduce</a>
+</nav>
+
+<div class="abstract">
+  <p class="label">Abstract</p>
+  <p>This is a research programme with one target: an attention mechanism that understands <em>consequences</em> — where a process ends up after an action, not only which token comes next — while standing as an equal to self-attention. Its object is a single causal head whose three switches span softmax attention, unnormalized-kernel attention and the exact path product of a Markov chain; the containments are proved in Lean&nbsp;4 and matched bitwise in float64. On that head sit two reads: a <em>resolvent read</em> that answers where a process ends up with one triangular solve, and refuses when a counterfactual has no defined answer, and a <em>graded read</em> that sees edge flows with curl, which no node-level model can represent at any size.</p>
+  <p>The exact machinery holds. The learned side has not yet earned a win: over its first 387 commits (2026-08-25 to 2026-09-19), every matched comparison on prediction ended in a tie or a loss, and each is published beside the number that decided it. In the repository's own words, the family is <em>strictly more reachable, not yet more accurate</em>.</p>
+  <p>The sections below build the two mechanisms from their definitions before joining them, so the operator, the reads and the scoreboard can be read without prior acquaintance with attention or with Markov chains.</p>
+  <p class="kw"><b>Keywords:</b> causal attention · softmax attention · path products · resolvent · committor functions · Hodge decomposition · selective prediction · pre-registration · formal verification · Lean 4</p>
+</div>
+
+<section id="experiment">
+  <h2 class="sec"><span class="num">1</span>The experiment</h2>
+  <p class="lede">Transformer attention mixes information across positions. Recurrences and Markov chains pass values along paths. The experiment asks whether one attention head can do both — and whether the path-following half gives a model something softmax attention lacks: reasoning about the consequences of an intervention.</p>
+
+  <div class="rs fig" data-rs="row">
+    <figure>
+      <svg viewBox="0 0 640 190"></svg>
+    </figure>
+    <div class="ctl">
+      <label>query position <input type="range" data-ctl="qpos" min="0" max="8" step="1" value="5"></label>
+      <output data-out="qpos"></output>
+    </div>
+    <p class="cap">Drag the query slider; the row redraws. Attention is one row of weights over the past, and nothing more.</p>
+  </div>
+
+  <div class="rs fig" data-rs="beta">
+    <figure>
+      <svg viewBox="0 0 640 190"></svg>
+    </figure>
+    <div class="ctl">
+      <label>β <input type="range" data-ctl="beta" min="0" max="1" step="0.01" value="1"></label>
+      <span>divisor <output data-out="z"></output></span>
+      <span>row sum <output data-out="rowsum"></output></span>
+    </div>
+    <p class="cap">Move β from 0 to 1; the divisor shrinks every weight by the same factor. Softmax's normalization is a setting, not a law — this is the single most important idea on the page (illustrative values).</p>
+  </div>
+
+  <p><strong>The object.</strong> One causal head, <var>W<sub>ij</sub></var> = <var>G<sub>ij</sub></var> · exp(<var>qk</var> · <var>q<sub>i</sub></var>·<var>k<sub>j</sub></var>) ⁄ <var>Z<sub>i</sub></var><sup><var>β</var></sup>, with three switches: <code>β</code> (normalizer on or off), <code>g</code> (a multiplicative gate whose path product can close exactly) and <code>qk</code> (content comparison on or off). Three settings of those switches are three known operators, and that is a theorem rather than an analogy (<a href="#operator">§3</a>).</p>
+
+  <p><strong>The reads.</strong> Treat the causal attention matrix as a Markov chain, make declared boundary rows absorbing, and solve one triangular system: the answer is the committor, the probability that each position ends in each boundary set. When a counterfactual has no defined answer, the read refuses instead of returning a number. A second read covers edge flows with curl (<a href="#reads">§4</a>).</p>
+
+  <p><strong>What is owned by prior work.</strong> The resolvent read over attention is ChaCAL's (Fagnou et al., EMNLP 2024). The delta this repository claims is the absorbing boundary rows for <var>K</var> constraint sets, the committor read, the interventional re-solve, the certificate and the Lean proofs — stated in <a href="CEQ_SHAPE/">the shape paper</a> and <a href="canon/CHARTER/">the charter</a> rather than left for a reviewer to find.</p>
+
+  <p><strong>The method is adversarial bookkeeping.</strong> Predictions are filed with counter-predictions before any run, kill thresholds are frozen, every check carries a planted negative that must fail, and when a kill fires the result is published. The error record holds 74 failure mechanisms, 12 withdrawn constants and a retraction log (<a href="#died">§6</a>). The two applications the author names are chess and prediction-market trades.</p>
+
+  <h3>The north star, and where it stands</h3>
+  <p>The goal as the author states it has three conditions, all required: an attention mechanism that <strong>understands causality and consequences</strong>, <strong>predicts better than anything before it</strong> on a named task against a named opponent, and <strong>carries the weight of self-attention or JEPA</strong>. The repository's sentence of record says the same thing in engineering terms:</p>
+  <div class="note"><p><em>"Attention EQUAL to self-attention on its own ground, built FROM softmax and AdamW, capable on ground they cannot occupy — predicting the NEXT STATE toward equilibrium, not the next token."</em><br><span style="color:var(--rs-dim);font-size:.72rem">CEQ_V20_R15_CONTRACT.md:52-55</span></p></div>
+
+  <div class="grid">
+    <div class="card star part">
+      <p class="k">Condition 1</p>
+      <h4>Understands causality and consequences <span class="chip part">partial</span></h4>
+      <p><strong style="color:var(--rs-ink)">Holds when the operator is given.</strong> The committor is exact to 4.441e-16; refusal scores 100% / 100% on 138 + 262 cases; on 13,479 human K+Q-vs-K positions the exact committor separates consequence swaps from meaning-preserving ones at a ratio of 2.501651.</p>
+      <p><strong style="color:var(--rs-ink)">Not yet learned.</strong> The trained read's ratio is 0.999745, below the planted negative's 1.073511. A trained operator head emitted κ 1.34 against a true 93.51, and the OOD-κ claim died on 5/5 seeds.</p>
+    </div>
+    <div class="card star unmet">
+      <p class="k">Condition 2</p>
+      <h4>Predicts better than anything before it <span class="chip unmet">unmet</span></h4>
+      <p><strong style="color:var(--rs-ink)">Every matched race is a tie or a loss.</strong> On a Kaggle T4 over 115,628 Lichess games, a zero-parameter heuristic matched human moves at 0.3401 [0.3321, 0.3482]; the trained model reached 0.2882 [0.2806, 0.2959].</p>
+      <p>Against a matched softmax head the gate ties, at 1.91–2.84× the cost. The one narrow gain: a free β lowers held-out log-loss by 0.046–0.063 nats with no change in exact accuracy.</p>
+    </div>
+    <div class="card star part">
+      <p class="k">Condition 3</p>
+      <h4>Carries the weight of self-attention or JEPA <span class="chip part">partial</span></h4>
+      <p><strong style="color:var(--rs-ink)">Parity by containment is earned.</strong> The β = 1 corner is softmax to 0.000e+00, and containment survives training (Δ exact +0.00000 at 3 seeds).</p>
+      <p><strong style="color:var(--rs-ink)">Standing is not.</strong> The largest run is one T4, no fused kernel exists, the family runs at 1.17–2.84× softmax wall clock, and the JEPA target moved with its encoder by 4.1101× on the synthetic bed and 136.7950× on Kaggle.</p>
+    </div>
+  </div>
+</section>
+
+<section id="mechanisms">
+  <h2 class="sec"><span class="num">2</span>The two mechanisms this joins</h2>
+  <p class="lede">Attention and Markov chains are usually taught in different courses and built into different architectures. Both are matrices over the same positions, and the whole programme rests on what each one does with that matrix. This section states both from their definitions.</p>
+
+  <h3>2.1 What attention computes</h3>
+  <p>A sequence arrives as <var>n</var> positions. Every position <var>i</var> produces three vectors by multiplying its own representation by learned matrices: a <em>query</em> <var>q<sub>i</sub></var>, a <em>key</em> <var>k<sub>i</sub></var> and a <em>value</em> <var>v<sub>i</sub></var>. The query asks; the key advertises; the value is what gets carried if the two match.</p>
+  <dl class="defs">
+    <dt>score</dt><dd>The dot product <var>q<sub>i</sub></var>·<var>k<sub>j</sub></var>, one number per ordered pair, large when position <var>i</var>'s question matches position <var>j</var>'s advertisement.</dd>
+    <dt>softmax</dt><dd>Exponentiate every score in row <var>i</var> and divide by their sum <var>Z<sub>i</sub></var>. The row becomes positive numbers that add to one — a probability distribution over the positions row <var>i</var> may read.</dd>
+    <dt>causal mask</dt><dd>Delete every entry with <var>j</var> &gt; <var>i</var>, so no position reads its own future. The weight matrix is lower triangular.</dd>
+    <dt>the output</dt><dd>Row <var>i</var> of the weight matrix times the values: a weighted average of everything position <var>i</var> is allowed to see.</dd>
+  </dl>
+  <p>Two properties of that construction matter for everything below. First, the weights are computed <em>per pair, from content alone</em>: the weight from <var>i</var> to <var>j</var> does not depend on what lies between them. Second, each row is <em>normalized across positions</em>, so attention answers "how should this position divide its attention among the others" — a question about proportions, asked once. One layer takes one hop. Depth is what lets information travel further, and each extra hop costs another full layer.</p>
+
+  <h3>2.2 What a Markov chain computes</h3>
+  <p>A Markov chain is a set of states and a matrix <var>P</var> in which <var>P<sub>ij</sub></var> is the probability of stepping from state <var>i</var> to state <var>j</var>. Rows sum to one for the same reason attention rows do: from any state, the process goes somewhere.</p>
+  <dl class="defs">
+    <dt>path product</dt><dd>The probability of following one particular route is the <em>product</em> of the entries along it. Probabilities multiply along a path where attention weights do not.</dd>
+    <dt>absorbing state</dt><dd>A state that, once entered, is never left. Declaring some states absorbing turns "what happens next" into "where does this end".</dd>
+    <dt>transient block</dt><dd>The sub-matrix <var>Q</var> of steps among the states that are not absorbing; <var>R</var> holds the steps from those into the absorbing ones.</dd>
+    <dt>committor</dt><dd>For each starting state, the probability of ending in one declared outcome rather than another. It answers "which outcome is reached first", not "what is the next step".</dd>
+    <dt>resolvent</dt><dd>The matrix (<var>I</var> − <var>Q</var>)<sup>−1</sup> = <var>I</var> + <var>Q</var> + <var>Q</var>² + … , the sum over paths of every length. One inverse carries every number of hops at once.</dd>
+  </dl>
+  <p>That last line is the reason a chain is worth putting inside attention. A stack of <var>L</var> attention layers composes <var>L</var> hops and stops; the resolvent composes all of them in closed form. In the causal setting the sum is not even infinite: when steps may only go backwards in position, <var>Q</var> is strictly lower triangular, its powers vanish after <var>n</var> terms, and the inverse is obtained exactly by one pass of forward substitution — no iteration, no truncation, no convergence criterion.</p>
+
+  <figure>
+    <svg viewBox="0 0 760 212" role="img" aria-label="Left: attention takes one hop, reading each earlier position directly. Right: path composition relays through every position between, and the weights multiply along the route.">
+      <text class="t-mono" x="40" y="26">one hop — attention</text>
+      <text class="t-mono" x="424" y="26">every hop — path composition</text>
+      <line x1="392" y1="44" x2="392" y2="196" stroke="var(--rs-line)" stroke-width="1"/>
+
+      <path class="live" d="M290 120 Q230 78 170 120" style="stroke-width:2"/>
+      <path class="live" d="M290 120 Q180 46 70 120" style="stroke-width:2"/>
+      <circle class="pkt on" r="3.4"><animateMotion dur="2.2s" repeatCount="indefinite" path="M290 120 Q230 78 170 120"/></circle>
+      <circle class="pkt on" r="3.4"><animateMotion dur="2.6s" begin="0.4s" repeatCount="indefinite" path="M290 120 Q180 46 70 120"/></circle>
+      <g>
+        <circle class="tok" cx="70" cy="120" r="13"/><circle class="tok" cx="170" cy="120" r="13"/>
+        <circle class="tok q" cx="290" cy="120" r="15"/>
+      </g>
+      <g class="t-serif" text-anchor="middle"><text x="70" y="158">x₀</text><text x="170" y="158">x₁</text><text x="290" y="158">x₂</text></g>
+      <text class="t-dim" x="180" y="190" text-anchor="middle">one layer, one hop · weights read directly</text>
+
+      <path class="live" d="M735 120 Q687 82 640 120 Q592 82 545 120 Q497 82 450 120" style="stroke-width:2"/>
+      <circle class="pkt on" r="3.8"><animateMotion dur="3.4s" repeatCount="indefinite" path="M735 120 Q687 82 640 120 Q592 82 545 120 Q497 82 450 120"/></circle>
+      <g>
+        <circle class="tok" cx="450" cy="120" r="13"/><circle class="tok" cx="545" cy="120" r="13"/>
+        <circle class="tok" cx="640" cy="120" r="13"/><circle class="tok q" cx="735" cy="120" r="15"/>
+      </g>
+      <g class="t-serif" text-anchor="middle"><text x="450" y="158">s₀</text><text x="545" y="158">s₁</text><text x="640" y="158">s₂</text><text x="735" y="158">s₃</text></g>
+      <text class="t-dim" x="592" y="190" text-anchor="middle">one solve, every hop · weights multiply</text>
+    </svg>
+    <figcaption>Left, the attention output <var>x</var> + <var>P</var><var>x</var>: one hop, weights read straight off the pair. Right, the resolvent read (<var>I</var> − <var>g</var><var>P</var>)<sup>−1</sup><var>x</var>: the same matrix, summed over every route, with the weight of a route the product of its steps.</figcaption>
+  </figure>
+
+  <h3>2.3 Where the two meet</h3>
+  <p>A causal softmax weight matrix is non-negative and its rows sum to one. That is precisely the definition of a transition matrix, so reading a head's weights as a chain over positions is not a metaphor — it is the same object under a different question. The difference lies in what is done with it. Attention multiplies by it once. A chain inverts <var>I</var> − <var>gP</var> and gets every path at once. The normalizer sums across positions; the gate multiplies along a path. Sum and product, one matrix.</p>
+  <p>That observation only becomes an architecture if both sides are reachable by the same layer, under settings a gradient can move. The rest of this page is about the head where they are, the two questions it can then be asked, and the record of what that has and has not bought.</p>
+</section>
+
+<section id="operator">
+  <h2 class="sec"><span class="num">3</span>The operator: one head, three switches</h2>
+  <p class="lede"><code>ceq/arm_smprime.py</code> implements a single causal head in which both mechanisms of <a href="#mechanisms">§2</a> are settings of the same three parameters.</p>
+
+  <div class="eq" role="math" aria-label="The family">
+    <div class="row"><span class="lhs"><var>W<sub>ij</sub></var> =</span><span><var>G<sub>ij</sub></var> · exp(<var>qk</var> · <var>q<sub>i</sub></var>·<var>k<sub>j</sub></var>) ⁄ <var>Z<sub>i</sub></var><sup><var>β</var></sup></span><span class="note">j ≤ i, and 0 above the diagonal</span></div>
+    <div class="row"><span class="lhs"><var>G<sub>ij</sub></var> =</span><span>∏<sub><var>k</var> = <var>j</var>+1 … <var>i</var></sub> <var>m<sub>k</sub></var> · <var>e</var><sup><var>i</var>θ<sub><var>k</var></sub></sup></span><span class="note">the gate's path product, m<sub>k</sub> ∈ [0, 1]</span></div>
+    <div class="row"><span class="lhs"><var>Z<sub>i</sub></var> =</span><span>Σ<sub><var>j</var> ≤ <var>i</var></sub> |<var>G<sub>ij</sub></var>| · exp(<var>qk</var> · <var>q<sub>i</sub></var>·<var>k<sub>j</sub></var>)</span><span class="note">the row normalizer</span></div>
+  </div>
+
+  <p>Read the first line as three independent decisions. The exponential of the score is ordinary attention content. <var>G<sub>ij</sub></var> is the chain half: a product over the gates lying between <var>j</var> and <var>i</var>, exactly the path product of <a href="#mechanisms">§2.2</a>. The denominator is the softmax normalizer, and the exponent <var>β</var> decides how much of it applies.</p>
+
+  <figure>
+    <svg viewBox="-40 0 680 318" data-rs="cube" role="group" aria-label="A cube whose three axes are the switches beta, g and qk. Softmax attention is one corner, unnormalized-kernel attention another, and the exact path product is an edge. A marker tours the three; each label can be clicked.">
+      <text class="t-mono" data-read x="280" y="26" text-anchor="middle"></text>
+      <text class="t-dim" x="636" y="26" text-anchor="end">click a setting ▾</text>
+
+      <path class="edge back" d="M220 210 L420 210 M220 210 L220 60 M220 210 L140 270"/>
+      <path class="edge" d="M140 270 L340 270 L340 120 L140 120 Z M340 270 L420 210 L420 60 L340 120 M140 120 L220 60 L420 60"/>
+      <line x1="140" y1="270" x2="220" y2="210" stroke="var(--rs-kill)" stroke-width="5" stroke-linecap="round"/>
+      <circle cx="340" cy="120" r="8" fill="var(--rs-proved)"/>
+      <circle cx="140" cy="120" r="8" fill="var(--rs-link)"/>
+      <circle class="marker" data-marker cx="0" cy="0" r="14" transform="translate(340,120)"/>
+
+      <g class="stop" data-stop data-x="340" data-y="120" data-colour="--rs-proved" role="button" tabindex="0" aria-pressed="false"
+         data-read="β = 1 · rows sum to one · the read is a mean">
+        <rect class="hit" x="350" y="96" width="196" height="40" rx="6"/>
+        <text class="t-mono" x="354" y="112">softmax attention</text>
+        <text class="t-dim" x="354" y="130">β = 1 · g off · qk on</text>
+      </g>
+      <g class="stop" data-stop data-x="140" data-y="120" data-colour="--rs-link" role="button" tabindex="0" aria-pressed="false"
+         data-read="β = 0 · no normalizer · the read is a total">
+        <rect class="hit" x="-40" y="96" width="170" height="40" rx="6"/>
+        <text class="t-mono" x="128" y="112" text-anchor="end">unnormalized kernel</text>
+        <text class="t-dim" x="128" y="130" text-anchor="end">β = 0 · g off · qk on</text>
+      </g>
+      <g class="stop" data-stop data-x="180" data-y="240" data-colour="--rs-kill" role="button" tabindex="0" aria-pressed="false"
+         data-read="qk off · W = G · the exact path product of a chain">
+        <rect class="hit" x="232" y="230" width="166" height="40" rx="6"/>
+        <text class="t-mono" x="236" y="246">exact path product</text>
+        <text class="t-dim" x="236" y="263">β = 0 · qk off · any g</text>
+      </g>
+
+      <g class="t-dim">
+        <text x="240" y="300" text-anchor="middle">β : 0 → 1   (a total → a mean)</text>
+        <text x="96" y="200" text-anchor="middle" transform="rotate(-90 96 200)">qk : off → on</text>
+        <text x="442" y="252">g : off → on</text>
+        <text x="442" y="268">(the path-product gate)</text>
+      </g>
+    </svg>
+    <figcaption>The three switches as the axes of a cube. The named operators are two corners and one edge of it, and all three settings are live trainable parameters on the shipped module — but a trainable axis is not the same as one that buys something. The gate axis&rsquo;s complex-phase part is real and trains, and it is also gauge-trivial on every bed this page shows: the read graph is a path, so its first Betti number is 0, a tree gauge removes the phase to 9.602627e-15, and paying for it at all costs 2.61x against a real signed gate that reproduces the same gated product to 1.347111e-15. The separation this axis exists for needs a genuine cycle, which no bed on this page has. Lean: <code>three_corners_containment</code>, <code>corners_are_distinct</code>.</figcaption>
+  </figure>
+
+  <h3>What each switch decides</h3>
+  <div class="tw"><table class="t">
+    <thead><tr><th>switch</th><th>off</th><th>on</th><th>what it decides</th></tr></thead>
+    <tbody>
+      <tr><td><code>qk</code></td><td><var>W</var> ignores content</td><td>dot-product logits</td><td><strong>Whether positions are compared at all.</strong> With <code>qk</code> off the head is pure structure: the weights come from the gates alone, and the content path is gone.</td></tr>
+      <tr><td><code>g</code></td><td><var>G</var> ≡ 1</td><td>path product ∏ <var>m<sub>k</sub></var> <var>e</var><sup><var>i</var>θ<sub><var>k</var></sub></sup></td><td><strong>Whether values compose along a path.</strong> With the gate off, every pair is read directly; with it on, the weight of a pair is the product of everything between them.</td></tr>
+      <tr><td><code>β</code></td><td>β = 0, no normalizer</td><td>β = 1, rows sum to 1</td><td><strong>Whether the read is a mean or a total.</strong> The read carries <var>N</var><sup>1−β</sup> in the token count, so β = 1 is intensive — an average, insensitive to how many positions were summed — and β = 0 is extensive, a total that grows with them.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Why an exact zero is the whole point of the gate</h3>
+  <p>Decay is usually added to attention inside the logit: a term is subtracted before the exponential, so the contribution of a distant pair becomes <var>e</var><sup><var>C<sub>i</sub></var>−<var>C<sub>j</sub></var></sup>. Whatever the prefix scan <var>C</var> contains, that quantity is the exponential of a finite number, and an exponential is never zero. Such a gate can make a path arbitrarily small; it cannot make it absent.</p>
+  <p>A product of magnitudes can. One factor at zero sends the whole product to zero, and every path crossing that gate with it — the behaviour the figure at the top of this page demonstrates, and the content of the Lean theorem <code>no_prefix_scan_represents_a_zero_gate</code>. The distinction is not numerical fastidiousness. "This path does not exist" is a statement a causal model has to be able to make: a blocked route, an intervention that removes an edge, a constraint that forbids a transition. A model whose gates only ever approach zero can represent none of them exactly.</p>
+
+  <div class="note warn"><p><strong>The β = 0 corner is not O(n) "linear attention".</strong> It is the unnormalized exponential kernel <code>exp(q·k)</code>, which has no finite feature map: at fixed <code>dk = 8</code> the numerical rank of the score matrix reads 8, 16, 32, 63, 126, 252 for <code>n = 8 … 256</code>, tracking <var>n</var> instead of saturating. Setting β = 0 removes the division by <var>Z</var> and nothing else, so the corner costs what softmax costs. An earlier README called it linear attention; the Lean definition never did.</p></div>
+
+  <h3>Every corner is a theorem, and every theorem has a test</h3>
+  <div class="tw"><table class="t">
+    <thead><tr><th>Lean theorem</th><th>what it proves</th></tr></thead>
+    <tbody>
+      <tr><td><code>three_corners_containment</code></td><td>one family (β, g, qk) contains all three operators; the softmax corner matches the corpus's own <code>softmaxAttn</code> to <code>0.000e+00</code>, and <code>ceq/lm.py</code>'s attention to <code>1.110223e-16</code> — half an ulp — on 19 of 64 entries. It has not been read against a fused kernel</td></tr>
+      <tr><td><code>corners_are_distinct</code></td><td>the corners are different operators: at (i, j) = (1, 0) with gate and qk off, β = 1 reads 1/2 and β = 0 reads 1</td></tr>
+      <tr><td><code>gate_zero_beta_zero_is_linear_attention</code></td><td>with the gate off, β alone decides softmax-class membership</td></tr>
+      <tr><td><code>no_prefix_scan_represents_a_zero_gate</code></td><td><var>e</var><sup><var>C<sub>i</sub></var>−<var>C<sub>j</sub></var></sup> is never zero, so no prefix scan represents a closed gate; the path product does</td></tr>
+      <tr><td><code>Asink_computes_chain</code></td><td>a causal softmax head reproduces a chain's label exactly, for every gate with <var>a<sub>k</sub></var> ≠ 1</td></tr>
+    </tbody>
+  </table></div>
+  <p>The theorems live in <a href="https://github.com/teerthsharma/resolvent/tree/master/lean/CEQ"><code>lean/CEQ/</code></a> — 13 files, 134 theorems and 41 lemmas, zero <code>sorry</code>. Each one has a float64 counterpart in <code>ceq/arm_smprime.py</code> or <code>ceq/arm_pl.py</code> that is checked against the statement bitwise at the corners, because a proof about a definition says nothing about the code unless the code is held to it.</p>
+</section>
+
+<section id="reads">
+  <h2 class="sec"><span class="num">4</span>The reads: where a process ends up, and what nodes cannot see</h2>
+  <p class="lede">The head is an operator. The two reads turn it into answers to questions attention is not usually asked.</p>
+
+  <h3>4.1 The resolvent read — one triangular solve</h3>
+  <p><code>ceqjepa/operator.py</code> builds a causal row-stochastic softmax matrix <var>P</var>, declares some rows absorbing, and solves. Making a row absorbing means replacing it with a row that keeps all its probability on itself: the process, on arriving there, stops. Choosing which rows to absorb is how a question is posed — the absorbing rows are the outcomes whose competition the read is about.</p>
+
+  <div class="rs fig" data-rs="absorb">
+    <figure>
+      <svg viewBox="0 0 640 160"></svg>
+    </figure>
+    <div class="ctl">
+      <span><output data-out="pa"></output> to A</span>
+    </div>
+    <p class="cap">Click a starting state; the read shows the probability of ending in A rather than B. The resolvent answers where a process ends up, which is the question the whole project is about (illustrative values).</p>
+  </div>
+
+  <div class="eq" role="math" aria-label="The resolvent read">
+    <div class="row"><span class="lhs">state read</span><span><var>z</var> = (<var>I</var> − <var>g</var><var>P</var>)<sup>−1</sup> <var>Ṽ</var></span></div>
+    <div class="row"><span class="lhs">committor</span><span><var>q</var> = (<var>I</var> − <var>Q</var>)<sup>−1</sup> <var>R</var></span><span class="note">probability of ending in each boundary state</span></div>
+  </div>
+  <p>The committor line is the whole causal claim in one equation. <var>Q</var> holds the steps among ordinary positions and <var>R</var> the steps into the declared outcomes; the inverse sums over every route of every length; the product with <var>R</var> collects, for each starting position, the probability that it reaches each outcome first. Because the causal mask makes <var>Q</var> strictly lower triangular, this is not an approximation and not an iteration — a single forward substitution returns it, and the published self-check matches the closed form to <code>4.441e-16</code>, at the float64 floor. With <code>teleport = 0</code> the same operator matches causal softmax to <code>0.000e+00</code>: the read adds a question without changing the attention it is asked about.</p>
+
+  <h4>Refusal as an output</h4>
+
+  <div class="rs fig" data-rs="fold">
+    <figure>
+      <svg></svg>
+    </figure>
+    <div class="ctl">
+      <label>a <input type="range" data-ctl="a" min="0.25" max="0.6" step="0.001" value="0.3"></label>
+    </div>
+    <p class="cap">Move the slider for a; where the line and curve meet, c = eᵃᶜ has a solution. A solution stops existing — it does not get worse, it stops (illustrative curve, redrawn per a).</p>
+  </div>
+
+  <p>A counterfactual can be meaningless rather than merely uncertain. If the state a question asks about cannot be reached at all, there is no distribution to report, and a model that answers anyway is guessing with a confident face. The read separates the two cases in the solve itself: a singular transient block raises <code>SingularTransientBlockError</code> rather than returning a number, and a non-finite logit raises <code>ValueError</code> rather than letting NaN spread into <var>q</var>. Every counterfactual then receives one of three verdicts — <strong>UNDEFINED</strong>, refused with its reason; <strong>NULL</strong>, answered with an exact zero; <strong>DEFINED</strong>, answered.</p>
+  <p>Scoring a refusal rule needs the two trivial rules beside it, because each of them scores perfectly on one axis alone:</p>
+  <div class="tw"><table class="t">
+    <thead><tr><th>rule</th><th>sensitivity</th><th>specificity</th></tr></thead>
+    <tbody>
+      <tr><td><strong>resolvent (reachability)</strong></td><td class="n yes">100.00%</td><td class="n yes">100.00%</td></tr>
+      <tr><td>refuse everything</td><td class="n">100.00%</td><td class="n no">0.00%</td></tr>
+      <tr><td>answer everything</td><td class="n no">0.00%</td><td class="n">100.00%</td></tr>
+    </tbody>
+  </table></div>
+  <p style="color:var(--rs-dim);font-size:.8rem">138 undefined and 262 defined cases, scored against an independent reachability oracle: <code>python -m ceqjepa.dr1</code>.</p>
+
+  <h3>4.2 The graded read — edge flows with curl</h3>
+  <p>Most models attach numbers to <em>things</em>: a value per node, a state per position. Relations then have to be inferred from the things — an edge is read as the difference between its endpoints. That works for any quantity which <em>is</em> such a difference, and fails completely for one that is not.</p>
+  <dl class="defs">
+    <dt>grade 0</dt><dd>A number per node. Attention states, embeddings and node features live here.</dd>
+    <dt>grade 1</dt><dd>A number per edge, with direction: a flow, a rate, a transfer from one node to another.</dd>
+    <dt>grade 2</dt><dd>A number per triangle: how much the flow circulates around a closed three-cycle.</dd>
+    <dt>gradient part</dt><dd>The edge flows that <em>are</em> differences of node values, written im(<var>d</var><sub>0</sub>).</dd>
+    <dt>curl part</dt><dd>The flows that circulate, im(<var>d</var><sub>1</sub><sup>⊤</sup>): around a triangle they sum to something non-zero, so no assignment of node values produces them.</dd>
+    <dt>harmonic part</dt><dd>What is left, ker(<var>L</var><sub>1</sub>): neither a difference nor a circulation, and determined by the shape of the graph — its holes.</dd>
+  </dl>
+  <p>The Hodge decomposition states that every edge flow is exactly one sum of those three pieces, <var>R</var><sup><var>E</var></sup> = im(<var>d</var><sub>0</sub>) ⊕ im(<var>d</var><sub>1</sub><sup>⊤</sup>) ⊕ ker(<var>L</var><sub>1</sub>), and the pieces are orthogonal. A node-level model lives in the first one. Whatever its width, depth or budget, the curl part of a target is outside its range — not hard for it, unreachable. <code>ceqjepa/dr1.py</code> measures that boundary as the least-squares optimum over the entire node-level class, so the number is not about one trained network that could have been trained better:</p>
+  <figure>
+    <div class="bars" role="img" aria-label="Share of the target a node-level model cannot represent: pure gradient 6.5e-16, mixed 0.6720, pure curl 1.0000">
+      <span class="lab">pure gradient <small>(planted negative)</small></span><span class="track"><span class="fill" style="width:0.6%"></span></span><span class="val">6.5e-16</span>
+      <span class="lab">mixed</span><span class="track"><span class="fill" style="width:67.2%"></span></span><span class="val">0.6720</span>
+      <span class="lab">pure curl</span><span class="track"><span class="fill" style="width:100%"></span></span><span class="val">1.0000</span>
+    </div>
+    <figcaption>Share of each target that no node-level model can represent, on a 9-node, 16-edge, 8-triangle complex. The first row is the planted negative: a target built to be a pure gradient must read zero, and does, which is what makes the other two rows evidence rather than arithmetic.</figcaption>
+  </figure>
+  <p>Traffic that circulates around a loop, a market where value flows in a cycle, citations that come back around: these are grade-1 objects with curl, and a graded read is what puts them inside the range of the model instead of outside it. Taking that read to real relational data is the open research direction the README names.</p>
+</section>
+
+<section id="progress">
+  <h2 class="sec"><span class="num">5</span>How it is going</h2>
+  <p class="lede">Nine phases, grouped from the commit log. Each ends on the number that decided it. A hollow amber marker is a claim that died; a green one is something that was built and still stands.</p>
+
+  <ol class="tl">
+    <li class="dead">
+      <span class="when">2026-08-25 → 08-26 · 66 commits · dfc1591 → 33cb36a</span>
+      <h4>A signed operator that did not work</h4>
+      <p>A signed, strictly causal, denominator-free multi-hop path sum, with hops routed through content-selected pivots. The pre-registered kill fired on the shipped operator. The headlines that had said otherwise — a flat slope, a 61× separation — measured an operator the shipped path never called.</p>
+      <span class="num">sign-flip slope −1.298 against a bar of −0.3</span>
+    </li>
+    <li class="dead">
+      <span class="when">2026-08-26 · 72 commits · 8ba52e1 → 74e5590</span>
+      <h4>Certificates, and the finding that nothing had been decided</h4>
+      <p>Hilbert-metric contraction certificates died three ways, the measured diameter running 11–33× its prediction. The larger finding: the deciding measurement had been taken zero times, because every oracle was a closed-form function of its input, and every task asked for one scalar at one position — where one attention layer is provably optimal. The project reversed course and chose to build on softmax, not against it.</p>
+      <span class="num">37% of the way to the deliverable: engineering near 80%, the central claim near 5%</span>
+    </li>
+    <li class="dead">
+      <span class="when">2026-08-30 → 08-31 · 143 commits · 977f715 → ecbedf7</span>
+      <h4>The planet rounds hit a data-budget wall</h4>
+      <p>On the C1 vector corpus the first creditable contrast went against the family: at t* = 2 softmax read 0.996745 against 0.999082 and 1.000150 for the two CEQ arms. At t* = 32 every arm sat at or above predict-the-mean — and round 10 showed the wall was data, not architecture, by predicting where softmax becomes learnable before measuring it.</p>
+      <span class="num">predicted n* = 48,823, landed within 0.7%</span>
+    </li>
+    <li class="built">
+      <span class="when">2026-08-31 → 09-01 · 61 commits · 9082e99 → 207e7b9</span>
+      <h4>Lean enters: parity refuted, the corners proved</h4>
+      <p>The contract said a zero gate gives bitwise standard attention. Lean refuted it — <code>gate_zero_not_stochastic</code>, row <var>i</var> sums to <var>i</var>+1 — and the repair became <code>three_corners_containment</code>, with β as the switch that decides softmax membership. The R1 deciding cell did not cross its floor.</p>
+      <span class="num">R1 0.829151, CI [0.617075, 1.041227] against a floor of 0.7071</span>
+    </li>
+    <li class="built">
+      <span class="when">2026-09-04 → 09-06 · 4 commits · aa38e11 → 527ffca</span>
+      <h4>The shape paper, the declutter, the canon</h4>
+      <p>Round 15 earned 2 of a possible 44 scoreboard points. The shape paper conceded that the resolvent read is ChaCAL's and that no CEQ arm had yet been trained. Fifteen rounds of process documents left the tree, and the canon was written: eight books of verses, each carrying its own kill and a pre-derived replacement.</p>
+      <span class="num">350 files and 159,507 lines removed · 188 verses</span>
+    </li>
+    <li class="built">
+      <span class="when">2026-09-11 → 09-13 · 5 commits · e238db6 → c9a9434</span>
+      <h4>Pre-registration on real data, and the public release</h4>
+      <p>REMOVAL-ECHO was registered before any data was downloaded. On Perturb-seq, 118 of 131 gene pairs were non-additive and the prediction held; on NBA injuries the counter-prediction held instead. The README was rewritten around the resolvent family and the repository went public on 2026-09-13.</p>
+      <span class="num">D1 0.9008 [0.8376, 0.9411] held · D2 0.979 counter held (commit 6aef750)</span>
+    </li>
+    <li class="dead">
+      <span class="when">2026-09-13 → 09-14 · 11 commits · e3d56cb → b5190d4</span>
+      <h4>A GPU run, and a heuristic that won</h4>
+      <p>A rule assigned each latent coordinate its own attention corner, β = 1 − α, and a π-JEPA encoder was trained through it on a Kaggle T4 over 115,628 Lichess games. A zero-parameter box-shrinking heuristic beat it. The rule was retired on three grounds, and the component ledger was born: every future run carries a frozen-random arm and a trivial baseline.</p>
+      <span class="num">heuristic 0.3401 against model 0.2882, disjoint intervals</span>
+    </li>
+    <li class="dead">
+      <span class="when">2026-09-14 · 23 commits · 468bc85 → 88a7388</span>
+      <h4>Component rounds: every lead met its counter</h4>
+      <p>The gate ties softmax at 1.91–2.84× the cost. An encoder change closed 91.7161% of the committor gap. The consequence-swap headline's zero was an identity of the definition. The depth ladder turned out to measure optimiser steps, not depth. On BED-H a GRU abstaining on its own entropy matched the read's refusal. One lead survived: an estimated operator becomes solvable once whitened, 0.030243 against 0.348321 (commit <code>82eb2d4</code>; no tracked file prints the Hebbian figure).</p>
+      <span class="num">2-layer stack 0.0555 → 0.3005 from optimiser steps alone · GRU recall 0.8959</span>
+    </li>
+    <li class="dead">
+      <span class="when">2026-09-19 · 2 commits · 60bdcc9 → 2e09d51</span>
+      <h4>Issue closeouts</h4>
+      <p>The logit-Nash stance was retired over five seeds, including with both of its known defects repaired; one of those defects was a learned parameter no code ever read. The SPRT became torch-free.</p>
+      <span class="num">nash 5.2888 ± 0.6041 against signed 2.7333 ± 1.0235, 0/5 seeds</span>
+    </li>
+    <li class="built">
+      <span class="when">2026-09-20 · ceq/arm_smprime.py</span>
+      <h4>The gate-kill NaN is fixed</h4>
+
+      <div class="rs fig" data-rs="blocks">
+        <figure>
+          <svg viewBox="0 0 620 260"></svg>
+        </figure>
+        <div class="ctl"></div>
+        <p class="cap">Closing a gate zeroes every block before it in the merge, exactly, not approximately. A live diagonal entry that overflows gives an honest infinity instead, not a zero (illustrative values). 173 nan became inf, the nan count went from 173 to 0, and the non-finite count held at exactly 339.</p>
+      </div>
+
+      <p>The dead set is now masked before the complex multiply. The dead-shift bed returns <code>[(1+0j), (1.5+0j), (3+0j)]</code>, bitwise equal to the block summary, where dense attention had returned <code>(nan+nanj)</code>; the live-diagonal artifact <code>inf+nan*j</code> became <code>inf+0j</code>. <code>tests/arm_smprime/</code> reads 61 passed.</p>
+      <span class="num">173 nan became inf; the nan count went 173 to 0, non-finite count held at exactly 339</span>
+    </li>
+    <li class="built">
+      <span class="when">2026-09-20 · tests/cameron/test_third_collapse_leg.py</span>
+      <h4>The detector inversion: the encoder that learned nothing reads healthier</h4>
+
+      <div class="rs fig" data-rs="erank">
+        <figure>
+          <svg></svg>
+        </figure>
+        <div class="ctl"></div>
+        <p class="cap">Effective rank at D = 4, N = 20000, K = 4, float64, seed 20260920 (the one width this repository has measured; a sweep across wider D is not yet tracked). The informative representation, which genuinely separated four clusters, pins to erank 3.0047 — clustering is anisotropy, so a representation that learned the task cannot spread across the space it has. The frozen-random encoder, which never received a gradient, is isotropic noise and reads erank 3.9993 — higher, not lower, than the encoder that learned something.</p>
+      </div>
+
+      <p><code>pi_jepa.collapse_report</code>'s two geometric collapse legs, <code>std_min</code> and effective rank, are both computed from the representation alone, before either one ever looks at the label. That is a structural blind spot: the repository's own mandatory frozen-random control — an encoder that receives no gradient, hence isotropic noise independent of the real, unpermuted label — is exactly the plant the blind spot predicts, and it is the one measured above. Both geometric legs read it green, and effective rank reads it healthier than the encoder that actually learned the four clusters; only a label-aware leg (<code>i_q</code>) calls the frozen-random plant dead. <code>pytest tests/cameron/test_third_collapse_leg.py -q</code> is the producer.</p>
+      <span class="num">informative erank 3.0047 against frozen-random erank 3.9993, both green under the existing legs (D=4 only)</span>
+    </li>
+    <li class="open">
+      <span class="when">now</span>
+      <h4>The exact side holds; the learned side is the open question</h4>
+      <p>The exact identities still hold to float precision. What keeps failing is the learned part — a trained operator head (κ 1.34 against a true 93.51), a trained read (swap ratio 0.999745), a trained encoder — and every claim that the exact read's advantage carries over to a trained model. That is what decides the next move (<a href="#next">§7</a>).</p>
+    </li>
+  </ol>
+</section>
+
+<section id="died">
+  <h2 class="sec"><span class="num">6</span>What died, and what killed it</h2>
+  <p class="lede">A result nobody can check is worth nothing, so the failures are published with the same precision as the successes. Each row below was a claim this repository made, and each was withdrawn by its own instruments.</p>
+
+  <div class="rs fig" data-rs="wall">
+    <figure>
+      <svg viewBox="0 0 640 170"></svg>
+    </figure>
+    <div class="ctl">
+      <label>x <input type="range" data-ctl="x" min="-20" max="720" step="0.5" value="40"></label>
+      <span>float32/bf16 <output data-out="f32"></output></span>
+      <span>float64 <output data-out="f64"></output></span>
+    </div>
+    <p class="cap">Move x to see exp(x) grow and where it becomes infinite. The wall is a property of the dtype, not the value — but bf16 and float32 do not share one: bf16 overflows first, at 88.71892521235186, against float32 at 88.72283905206835, and the two disagree across that whole interval (at x = 88.7215, float32&rsquo;s exp is 3.3982583016316987e+38, finite, while the same result cast to bf16 reads inf). float64 moves the wall out to 709.782712893384. Reproduced with <code>python -c "import torch; print(torch.log(torch.tensor(torch.finfo(torch.float32).max, dtype=torch.float64)).item(), torch.log(torch.tensor(torch.finfo(torch.bfloat16).max, dtype=torch.float64)).item())"</code> on torch 2.14.0+cpu.</p>
+  </div>
+
+  <div class="tw"><table class="t">
+    <thead><tr><th>claim</th><th>what killed it</th><th>the number</th></tr></thead>
+    <tbody>
+      <tr><td>A signed, pivot-routed path sum reduces sign flips at scale</td><td>pre-registered slope kill on the shipped operator</td><td class="n">−1.298 vs bar −0.3</td></tr>
+      <tr><td>A zero gate gives bitwise standard attention</td><td>Lean: <code>gate_zero_not_stochastic</code></td><td class="n">row <var>i</var> sums to <var>i</var>+1</td></tr>
+      <tr><td>Theorem 4: a resolvent read is depth-separated from a fixed-depth stack</td><td>fitted coefficients; Cayley–Hamilton caps any separation at <var>n</var></td><td class="n">fit 1.448e-02% vs 112.6157%</td></tr>
+      <tr><td>Under intervention a resolvent read's error is κ-invariant while a direct read's grows</td><td>pre-registered kill, 5/5 seeds, wrong sign</td><td class="n">OOD MAE: solve 0.0741, direct 0.0718</td></tr>
+      <tr><td>κ = 164.25 on the demo's 14×14 grid</td><td>a hard-coded string; nothing ever computed it</td><td class="n">fabricated</td></tr>
+      <tr><td>Spearman ρ = 0.743864 on U1/N3</td><td>no producer has ever existed</td><td class="n">struck</td></tr>
+      <tr><td>Assign each coordinate its corner by β = 1 − α</td><td>no fixed point on the value axis; ranked 21st of 35 on its own null</td><td class="n">slope −1.0027</td></tr>
+      <tr><td>A trained π-JEPA predicts human chess moves</td><td>a zero-parameter heuristic won</td><td class="n">0.3401 vs 0.2882</td></tr>
+      <tr><td>The consequence swap moves the read and the null does not</td><td>the null's zero was an identity of the definition</td><td class="n">learned 0.999745 vs negative 1.073511</td></tr>
+      <tr><td>The β = 0 corner is linear attention</td><td>no finite feature map: rank tracks <var>n</var></td><td class="n">rank 8 … 252</td></tr>
+      <tr><td>Depth buys reach (stacks of 1/2/4/8 layers)</td><td>the ladder measured optimiser steps</td><td class="n">2-layer 0.0555 → 0.3005</td></tr>
+      <tr><td>The read adds an architectural refusal channel</td><td>pre-registered counter held: a GRU's own entropy does it</td><td class="n">recall 0.8959 @ 0.8903</td></tr>
+      <tr><td>A logit-Nash stance composes two sign flips</td><td>both kills, 5/5 seeds, every configuration</td><td class="n">5.2888 vs 2.7333</td></tr>
+      <tr><td>Smoothing Sherman–Morrison with a teleport is harmless</td><td>it attenuates the interventional signal</td><td class="n">−43.1%</td></tr>
+      <tr><td>Capacity on the cube is an area — coexisting basins can be counted</td><td>basins never coexist across the swept range</td><td class="n">disjoint at [0.5436, 0.7250], [1.0872, 1.6236], [2.1745, unclosed past 120]; sequence 0-1-0-1-0-1</td></tr>
+      <tr><td>bf16 widens the overflow ceiling</td><td>bf16 shares float32's 8-bit exponent but carries fewer mantissa bits, so its own max is smaller — the wall narrows, it does not move outward</td><td class="n">float32 wall 88.72283905206835, bf16 wall 88.71892521235186 (bf16 overflows first); headroom 47.31×, 46.24×, 23.19× over 200 AdamW steps</td></tr>
+      <tr><td>bf16 and float32 share the overflow wall, at 88.72283935546875</td><td>this page's own published constant was wrong twice over — wrong in the eighth decimal against the true float32 value, and wrong in kind, since bf16 does not share float32's wall at all</td><td class="n">corrected 2026-09-20 to float32 88.72283905206835, bf16 88.71892521235186</td></tr>
+      <tr><td>The attention family cannot represent a closed class, because <code>exp</code> is never zero</td><td>refuted by construction, no training: under a causal mask any row-stochastic matrix is lower-triangular, so its eigenvalues are its diagonal and a closed class is just <var>P<sub>ii</sub></var> = 1. A real sparsemax projection reaches it directly, and a second construction gives six closed classes at <var>n</var>=6</td><td class="n">two unit eigenvalues, 11 of 14 subsets closed, exact rational and float64 agreeing</td></tr>
+      <tr><td>The gate closes by content where a mask closes by position, and that separates it</td><td>sparsemax, entmax and top-k routing also produce exact, learned, content-dependent zeros, and none is built from <code>exp</code>, so the theorems do not reach them</td><td class="n">per-row accuracy 0.9919 sparsemax vs 0.9845 gate — the rival wins</td></tr>
+      <tr><td>Row disagreement is invisible at <var>k</var>=1 and becomes a corridor under composition</td><td>the leak does grow with <var>k</var>, but it grows just as fast on sequences whose rows agree, so it is generic mixing and not a boundary effect</td><td class="n">agreeing 0.676408 vs disagreeing 0.732453, within 1.08×</td></tr>
+      <tr><td>Effective rank detects a collapsed representation</td><td>clustering <em>is</em> anisotropy, so a representation that learned K clusters pins near K−1 however wide the layer, while a frozen-random encoder fills all D. No threshold fits between them at any width</td><td class="n">noise beats informative at every width; the published ratio is withdrawn as unproduced (CORRECTIONS.md C9)</td></tr>
+      <tr><td>A hitting-time bed can separate an arm from transition counting</td><td>no live cell at any budget across four decades: its unscoreable gate counts the sealed share of the draw, its R² window is 89% draw geometry, and its refusal head loses to a one-line shortcut that reads no structure</td><td class="n">refusal recall 0.1095 vs shortcut 0.8000, 7.3×</td></tr>
+    </tbody>
+  </table></div>
+
+  <p>Most of what stands today was built by one of these deaths. The refuted parity clause became the β switch. The prefix-scan limit became the path-product gate and a theorem about it. The smoothed denominator became refusal as a decision. A raw grep that miscounted the proofs became a counting script that must first count a planted file correctly. The practice that makes the pattern possible is cheap to state and expensive to keep: a claim is written down with the number that would kill it <em>before</em> the run, and the run is reported whichever way it goes.</p>
+
+  <div class="grid">
+    <a class="card" href="ledgers/mistakes/" style="display:block;color:inherit;text-decoration:none">
+      <p class="k">MISTAKES.md</p><h4>74 failure mechanisms</h4>
+      <p>V 30 vacuous controls · P 16 provenance · M 21 measurement · D 7 design. Each with the instance, the rule, and the check that stops it recurring.</p>
+    </a>
+    <a class="card" href="ledgers/struck/" style="display:block;color:inherit;text-decoration:none">
+      <p class="k">STRUCK.md</p><h4>12 withdrawn constants</h4>
+      <p>Rendered from a registry the test suite enforces, so a struck number cannot quietly ship again.</p>
+    </a>
+    <a class="card" href="FAILS/" style="display:block;color:inherit;text-decoration:none">
+      <p class="k">docs/FAILS.md</p><h4>Retracted, broken, open</h4>
+      <p>Retractions, commands that do not run clean, measured negatives, known defects, and claims that were never verified.</p>
+    </a>
+  </div>
+</section>
+
+<section id="next">
+  <h2 class="sec"><span class="num">7</span>Where it goes next</h2>
+  <p class="lede">The open fronts, each with the bar it has to clear, and the one move chosen from them.</p>
+
+  <div class="tw"><table class="t">
+    <thead><tr><th>front</th><th>the standing bar</th><th>state</th></tr></thead>
+    <tbody>
+      <tr><td>Prediction leg of the north star</td><td>beat a trivial baseline at the family's own prediction task</td><td><span class="chip unmet">open</span></td></tr>
+      <tr><td>BED-H in-context identification</td><td>reported magnitudes of the 2026-09-14 draw, not asserted thresholds (<code>tests/beds/test_bed_h.py:461-462</code>): per-position total variation <strong>0.0802</strong> for the strong form, measured on 32 instances (<code>ceqjepa/beds/bed_h.py:622-635</code>), against 0.1118 for a random other draw. The bar the test asserts is the ordering mean(mean_tv) &lt; mean(draw_tv) (<code>tests/beds/test_bed_h.py:475</code>)</td><td><span class="chip open">open</span></td></tr>
+      <tr><td>The one-solve claim's loss condition</td><td>a stack of depth ≤ 2 reaching 0.90; the best so far reads 0.4858</td><td><span class="chip open">not fired</span></td></tr>
+      <tr><td>Depth race, 160-goal point</td><td>reach the oracle solve's 1.0000</td><td><span class="chip part">running</span></td></tr>
+      <tr><td>Segmentation at range, against the kernels</td><td>the carry-extended merge against FlashAttention varlen and FlexAttention document masks on packed sequences, at matched cost. Dies if either reproduces a <code>carry = 0</code> bitwise-zero contribution</td><td><span class="chip open">registered</span></td></tr>
+      <tr><td>Whether the instruments measure the model or the draw</td><td>the log-ratio pairing regression: slope within one standard error of zero across five seeds. Five instruments have already failed this in its additive form</td><td><span class="chip unmet">blocking</span></td></tr>
+      <tr><td>Chess fortresses, BED B1</td><td>200 fortress positions per cell. KBPKB at depth 6 yields 3 of 75, about 4%, the only cell whose point estimate clears it — its 95% lower bound extrapolates to 140 and misses. Seven cells are undersampled, not void</td><td><span class="chip part">calibrating</span></td></tr>
+      <tr><td>Committor read, component P3</td><td>+0.8851; the encoder's widest layer reads +0.8424</td><td><span class="chip open">open</span></td></tr>
+      <tr><td>Joint-training gate</td><td>P1 pass, P2 and P3 answered, P4 fails at 0.9997, so joint training stays blocked</td><td><span class="chip part">blocked</span></td></tr>
+      <tr><td>Canon books 00 and 07</td><td>listed in the charter as the north-star decision tree and the consolidated attacks</td><td><span class="chip open">unwritten</span></td></tr>
+      <tr><td>A pinned environment</td><td>the Hugging Face tests fail on a torch drift, and the full suite has never completed on one CPU</td><td><span class="chip open">open</span></td></tr>
+    </tbody>
+  </table></div>
+
+  <p>The 160-goal point crashed on a constant-label draw: a single absorbing target makes the label constant, and the builder divides by its variance. <code>ZeroDivisionError</code> at <code>ceqjepa/goal_family.py:525</code>, catalogued as <a href="ledgers/mistakes/">MISTAKES V-12</a>. The guard belongs in the builder. Whether near-degenerate draws already reached the published depth-race points is an open audit, not yet settled. The extrapolated 0.4810 and asymptote ≈ 0.4923 are two increments of arithmetic, not a measurement (<code>ceqjepa/depth_race.py:184-185,215</code>).</p>
+
+  <div class="note open">
+    <p style="font:600 .62rem var(--rs-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--rs-open);margin:0 0 .5rem">The next move</p>
+    <p><strong>Race an estimated operator, not the true one.</strong> Every exact-read win on this page was handed the true operator. That makes the solve an oracle rather than a model, which the error ledger files as D-2, so none of those wins can tick the prediction row. The next run estimates the operator from the same transition stream the opponent trains on — the whitened recursive-least-squares estimator already measured at its sampling floor, 0.030243 against Hebbian 0.348321 on a 10,000-transition stream (both figures from commit <code>82eb2d4</code>; the tracked test <code>tests/curvature/test_lstd_bed.py:54-56</code> carries the 0.030243 and describes it as the sampling floor, and no tracked file prints the Hebbian figure) — and races one exact solve on that estimate against a masked attention stack at matched parameters, on goals neither has seen.</p>
+    <p><strong>Registered before it runs:</strong> the bar is the best stack published so far on that bed, 0.4858, at matched transitions across five seeds; the kill is the estimated solve at or below it; the planted negative is a shuffled stream, which must drive the solve to the floor; the ceiling is the true-operator solve at 1.0000. <strong>Corrected 2026-09-20:</strong> that negative was necessary and not sufficient, because the <em>grading</em> was blind to it. An item bootstrap resamples at a fixed fitted read and cannot see the noise of the fit itself, which dominates whenever the read is fit rather than given — measured on the null arm at item SE 0.0003 against an across-stream SD of 0.0011, 3.33× larger, so under the item bootstrap alone (n_streams=12) a zero-information arm's read swings from −12.55σ to +1.73σ across the same five seeds, while under σ<sub>total</sub> (n_streams=12) the same arm reads −1.56σ to +0.32σ — noise from fitting the read, not signal in the stream. Any fit arm is now graded by σ<sub>total</sub> = margin ⁄ √(se<sub>item</sub>² + sd<sub>stream</sub>²), with sd<sub>stream</sub> taken across independent refits at pinned chain, embedding and items. Under it the shuffled arm reads +0.2σ<sub>total</sub> and the live arm falls from +8.3σ<sub>item</sub> to +8.1σ<sub>total</sub>, against the oracle's +9.1; the regression guard is <code style="white-space:normal;overflow-wrap:break-word">tests/cameron/test_estimated_operator_margin.py::test_shuffled_stream_is_null_under_sigma_total_not_item_se</code>, whose primary-seed bed asserts this σ<sub>total</sub> stays within 2 and goes red the moment the stream permutation is left a no-op. The arm behind these numbers is transition-counting RLS at full rank — 256 free parameters, the entire 16×16 transition table — which the capacity condition in <code>ceqjepa/lstd_bed.py</code> refuses opponent status because it can represent the empirical MLE outright; it is the row's floor, not its opponent, and the prediction row is not ticked.</p>
+    <p><strong>Why this one.</strong> It is the only open comparison that could put a tick in the prediction row honestly — a named opponent, a named task, no oracle — and it tests the step where the recent kills have landed: from a given operator to a learned one. It is also cheap: an estimator, a triangular solve and a stack that already has a pinned test set all run on a CPU. If it wins, the family has its first prediction result. If it dies, the record learns that the read's exactness does not survive estimation, and the claim settles where the README already puts it: strictly more reachable, not more accurate.</p>
+    <p><strong>Closed 2026-09-20, against itself.</strong> That race ran and the move above is retired. Giving the empirical MLE a bolted-on no-trade band at the same cost beat a rank-4 capacity-admitted resolvent arm on realized log-growth on 5 of 5 seeds — means 0.046291 against −0.060393, a gap of 0.10668 against a combined seed spread of 0.01175 — and the ordering did <em>not</em> flip between log-growth and R². The band is a hat anyone can wear.</p>
+  </div>
+
+  <div class="note open">
+    <p style="font:600 .62rem var(--rs-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--rs-open);margin:0 0 .5rem">Where this stands, 2026-09-20</p>
+    <p><strong>The operator is a kernel, and it has been scored as a model.</strong> Eleven claims died on this date, each with the number that killed it, and they share a shape: every one was a claim about <em>representation</em>, and every one died to something cheaper doing the same job. Sparsemax opens arbitrarily many closed classes by direct construction — real Martins–Astudillo projection on <code>[10]</code>, <code>[0.5, 0.5]</code>, <code>[−5,−5,5]</code>, <code>[−5,−5,0.5,0.5]</code> gives <code>diag(P) = [1.0, 0.5, 1.0, 0.5]</code> bitwise and two unit eigenvalues, with all 14 proper subsets agreeing between exact rational and float64 arithmetic. A depth-2 stack recovers 71.36% ± 6.76% IoU of the true separatrix from 27 local features with no operator access at all, against a majority-class floor of 0.0000. So the structural claim — that the attention family cannot represent a closed class — is <strong>retracted</strong>, and the two Lean theorems bind <code>exp</code>-based scores only.</p>
+    <p><strong>What survived is draw-free algebra, and it is narrower than what was claimed.</strong> The block summary is exact to 2.085e-15 and buys <em>range</em>: on a bed carrying one logit at 800, dense readout is nan at every β while the summary returns the closed form. A path product forces cross-row agreement structurally — 1500 of 1500 held-out sequences exactly consistent against sparsemax's 1352 of 1500 — and pays an exact, enumerated price for it: <em>i</em> reachable zero patterns against sparsemax's 2<sup><em>i</em></sup>−1, every gate pattern a strict subset, 31.875× at <em>i</em>=8. That consistency is measured with a <em>hand-set</em> boundary at a single application; a learned gate is not bitwise zero under powers (224 of 12,000 values nonzero in 4 of 5 seeds), and the leak that grows with <em>k</em> is generic mixing rather than a boundary corridor — agreeing sequences leak 0.676408 against disagreeing 0.732453, within 1.08×.</p>
+    <p><strong>The next move is a kernel benchmark, not a model race.</strong> The one axis where the summary beats anything before it is the one nobody competes on: exact within-kernel segmentation at range. The carry-extended merge goes against FlashAttention varlen and FlexAttention document masks on packed sequences, at matched cost. <strong>The kill:</strong> if either reproduces a <code>carry = 0</code> bitwise-zero contribution at equal cost, the fourth field is a rename and this direction dies.</p>
+    <p><strong>But one measurement comes first, because nothing can be scored until it lands.</strong> Five instruments died on this date of a single disease — each scored a property of the <em>draw</em> rather than of the model. Effective rank prefers a frozen-random encoder by 22× at D=64. A hitting-time bed's R² window is 89% draw geometry: arm error differs 1.06× between draws where counting won and broke, while the label's own spread differs 5.16×. Its refusal head was beaten 7.3× on recall by a one-line non-causal shortcut that reads no structure at all. The proposed cure — pairing each score against a null built from the same draw — appeared to fail its own regression, at slope −1.4513 with a standard error of 0.8439 over five seeds. Whether that failure was the cure or its <em>arithmetic</em> was then tested directly, on the reasoning that a draw entering as a factor rather than a term cancels under a log-ratio and not under a subtraction. <strong>It could not be tested at that bed.</strong> The null there fires on zero instances at every one of the five seeds, so its precision is undefined and its recall is exactly 0.0, and no ratio can be formed against a twin that scores nothing. The additive slope reproduces bit for bit, but at five seeds its 95% interval runs roughly −3.7 to +0.8 — wide enough to contain zero, no effect, and a doubling at once, which is a statement about power rather than a result. So the question stands open and untested: this project has not yet shown that its instruments measure its models rather than its beds, and the one bed built to settle it has a degenerate null.</p>
+  </div>
+</section>
+
+<section id="documents">
+  <h2 class="sec"><span class="num">8</span>The documents</h2>
+  <p class="lede">Every document carrying a measurement, a limitation or a decision, rendered in full and searchable from the tabs above.</p>
+  <div class="index">
+    <div class="ix">
+      <span class="ixk">The record</span>
+      <span class="ixv"><a href="FAILS/">Retracted, broken, open</a> <span class="sep">·</span> <a href="COMPONENT_LEDGER/">Component ledger</a> <span class="sep">·</span> <a href="PLAN/">The programme</a> <span class="sep">·</span> <a href="CORNER_RULE_RETIREMENT/">Corner-rule retirement</a> <span class="sep">·</span> <a href="PI_JEPA_KAGGLE_CARD/">Kaggle card</a> <span class="sep">·</span> <a href="DR2_CARD/">DR-2 card</a></span>
+    </div>
+    <div class="ix">
+      <span class="ixk">Pre-registrations</span>
+      <span class="ixv"><a href="BED_H_PREREGISTRATION/">BED-H</a> <span class="sep">·</span> <a href="prereg/REMOVAL_ECHO_v1/">REMOVAL-ECHO v1</a></span>
+    </div>
+    <div class="ix">
+      <span class="ixk">Ledgers</span>
+      <span class="ixv"><a href="ledgers/mistakes/">74 failure mechanisms</a> <span class="sep">·</span> <a href="ledgers/struck/">12 struck constants</a> <span class="sep">·</span> <a href="ledgers/mathematics/">Mathematics</a> <span class="sep">·</span> <a href="ledgers/model-card/">Model card</a> <span class="sep">·</span> <a href="ledgers/costs/">Costs</a> <span class="sep">·</span> <a href="ledgers/v17k-rulings/">V17K rulings</a> <span class="sep">·</span> <a href="ledgers/v16-calibration/">V16 calibration</a></span>
+    </div>
+    <div class="ix">
+      <span class="ixk">The canon</span>
+      <span class="ixv"><a href="canon/CHARTER/">Charter</a> <span class="sep">·</span> <a href="canon/01_THEORY_ACCURACY/">01 accuracy</a> <span class="sep">·</span> <a href="canon/02_THEORY_TRAINING/">02 training</a> <span class="sep">·</span> <a href="canon/03_KERNEL/">03 kernel</a> <span class="sep">·</span> <a href="canon/04_BEDS_AND_INSTRUMENTS/">04 beds</a> <span class="sep">·</span> <a href="canon/05_REPAIRS/">05 repairs</a> <span class="sep">·</span> <a href="canon/06_PREDICTIONS/">06 predictions</a> <span class="sep">·</span> <a href="canon/08_ARCHITECTURE/">08 architecture</a> <span class="sep">·</span> <a href="canon/09_CHESS_AND_MARKETS/">09 chess and markets</a> <span class="sep">·</span> <a href="canon/CORRECTIONS/">Corrections</a></span>
+    </div>
+    <div class="ix">
+      <span class="ixk">The paper</span>
+      <span class="ixv"><a href="CEQ_SHAPE/">The shape of CEQ</a> <span class="sep">·</span> <a href="CEQ_SHAPE.pdf">PDF</a> <span class="sep">·</span> <a href="sources/">Working sources</a> <span class="sep">·</span> <a href="BIB_AUDIT/">Bibliography audit</a> <span class="sep">·</span> <a href="BIB_ALIASES/">Aliases</a></span>
+    </div>
+  </div>
+  <p style="color:var(--rs-dim);font-size:.8rem">Books 00 and 07 of the canon are listed in the charter and have never been written. The canon changes through one door only, its corrections log.</p>
+</section>
+
+<section id="reproduce">
+  <h2 class="sec"><span class="num">9</span>Reproduce and cite</h2>
+  <p class="lede">Every number on this page comes with the command that reproduces it.</p>
+<pre><code>git clone https://github.com/teerthsharma/resolvent &amp;&amp; cd resolvent
+pip install -r requirements.txt
+
+python -m pytest tests/arm_smprime tests/arm_pl -q   # 78 passed: the Lean corners, in code
+python -m ceqjepa.operator                           # ALL SELF-CHECKS PASSED
+python -m ceqjepa.dr1                                # ALL SELF-CHECKS PASSED
+python scripts/lean_count.py                         # 13 files: 134 theorems + 41 lemmas = 175
+(cd lean &amp;&amp; lake build CEQ)                          # exit 0</code></pre>
+  <p>Lean 4 v4.7.0; mathlib is fetched by <code>lake build</code> at the revision pinned in <code>lean/lake-manifest.json</code>, and the first build downloads about 4.2&nbsp;GB. House rule for contributions: every new number ships with the command that produces it, and every new check ships with a planted negative that fails without the change.</p>
+<pre><code>@software{sharma2026resolvent,
+  author = {Sharma, Teerth},
+  title  = {resolvent: one causal attention family spanning softmax attention,
+            unnormalized-kernel attention and exact path products},
+  year   = {2026},
+  url    = {https://github.com/teerthsharma/resolvent}
+}</code></pre>
+</section>
+
+</div>

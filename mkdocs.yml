@@ -47,6 +47,7 @@ extra_css:
 extra_javascript:
   - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
   - assets/resolvent.js
+  - assets/story.js
   - path: assets/scene.js
     type: module
   - path: assets/viz/core.js
@@ -91,6 +92,7 @@ nav:
   - "North Star": see/north-star.md
   - "Proof atlas": atlas.md
   - Paper:
+      - "The experiment, in full": experiment.md
       - The shape of CEQ: CEQ_SHAPE.md
       - "Status, in full": STATUS.md
       - "North Star: the forward S-matrix reconciliation": NORTH_STAR.md
