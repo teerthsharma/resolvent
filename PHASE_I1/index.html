@@ -18,7 +18,7 @@
         <link rel="prev" href="../PHASE_I/">
       
       
-        <link rel="next" href="../ledgers/mistakes/">
+        <link rel="next" href="../PRIOR_ART_MASS_GATE/">
       
       
         
@@ -47,9 +47,17 @@
     
     
       
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Instrument+Sans:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Instrument Sans";--md-code-font:"JetBrains Mono"}</style>
+      
     
     
       <link rel="stylesheet" href="../assets/resolvent.css">
+    
+      <link rel="stylesheet" href="../assets/viz/viz.css">
     
     <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
@@ -67,7 +75,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom">
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -122,20 +130,20 @@
     
     
     
-    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light"  type="radio" name="__palette" id="__palette_0">
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark"  type="radio" name="__palette" id="__palette_0">
     
-      <label class="md-header__button md-icon" title="Switch to light" for="__palette_1" hidden>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      <label class="md-header__button md-icon" title="Switch to dark" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
       </label>
     
   
     
     
     
-    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark"  type="radio" name="__palette" id="__palette_1">
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light"  type="radio" name="__palette" id="__palette_1">
     
-      <label class="md-header__button md-icon" title="Switch to dark" for="__palette_0" hidden>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      <label class="md-header__button md-icon" title="Switch to light" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
       </label>
     
   
@@ -241,13 +249,51 @@
   
   
     <li class="md-tabs__item">
-      <a href="../NORTH_STAR/" class="md-tabs__link">
+      <a href="../see/status/" class="md-tabs__link">
         
   
   
     
   
-  North Star: the forward S-matrix reconciliation
+  Status
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../see/north-star/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  North Star
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../atlas/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Proof atlas
 
       </a>
     </li>
@@ -264,66 +310,6 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="../FAILS/" class="md-tabs__link">
-          
-  
-  
-  The record
-
-        </a>
-      </li>
-    
-  
-
-      
-        
-  
-  
-  
-  
-    
-    
-      <li class="md-tabs__item">
-        <a href="../ledgers/mistakes/" class="md-tabs__link">
-          
-  
-  
-  Ledgers
-
-        </a>
-      </li>
-    
-  
-
-      
-        
-  
-  
-  
-  
-    
-    
-      <li class="md-tabs__item">
-        <a href="../canon/CHARTER/" class="md-tabs__link">
-          
-  
-  
-  Canon
-
-        </a>
-      </li>
-    
-  
-
-      
-        
-  
-  
-  
-  
-    
-    
-      <li class="md-tabs__item">
         <a href="../CEQ_SHAPE/" class="md-tabs__link">
           
   
@@ -414,14 +400,68 @@
   
   
     <li class="md-nav__item">
-      <a href="../NORTH_STAR/" class="md-nav__link">
+      <a href="../see/status/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    North Star: the forward S-matrix reconciliation
+    Status
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../see/north-star/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    North Star
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../atlas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Proof atlas
   
 
     
@@ -459,10 +499,151 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
         
           
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Paper
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Paper
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CEQ_SHAPE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The shape of CEQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../STATUS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Status, in full
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../NORTH_STAR/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    North Star: the forward S-matrix reconciliation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="">
             
   
   
@@ -480,8 +661,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_3">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5_4">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1333,10 +1514,377 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#14-rows-still-out" class="md-nav__link">
+  <a href="#14-the-band-position-leap-and-a-kill-that-could-not-fail" class="md-nav__link">
     <span class="md-ellipsis">
       
-        14. Rows still out
+        14. The band-position leap, and a kill that could not fail
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="14. The band-position leap, and a kill that could not fail">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#on-the-correct-object-the-leap-survives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        On the correct object, the leap survives
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#both-free-reads-are-blocked-and-were-reported-blocked" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Both free reads are blocked, and were reported blocked
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-citations-fetched" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The citations, fetched
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#15-the-open-archives-and-the-sixth-misattribution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15. The open archives, and the sixth misattribution
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="15. The open archives, and the sixth misattribution">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#combesthomas-1973-does-not-state-the-claim-attached-to-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Combes–Thomas 1973 does not state the claim attached to it
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lewontincohen-splits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lewontin–Cohen splits
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#one-route-fact-worth-keeping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        One route fact worth keeping
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#16-q2-the-first-row-entitled-to-a-generalization-sentence-and-it-did-not-tie" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16. Q2: the first row entitled to a generalization sentence, and it did not tie
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="16. Q2: the first row entitled to a generalization sentence, and it did not tie">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-result" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The result
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q3-the-gate-sweep-at-five-seeds-with-no-mechanism-attached" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q3: the gate sweep, at five seeds, with no mechanism attached
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#two-constants-that-did-not-survive-being-measured" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Two constants that did not survive being measured
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#17-the-second-corpus-it-transfers-and-the-gap-grows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        17. The second corpus: it transfers, and the gap grows
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="17. The second corpus: it transfers, and the gap grows">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-this-does-not-settle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What this does not settle
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#18-the-mass-gate-arm-is-a-replication-and-the-page-says-so-first" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18. The mass-gate arm is a replication, and the page says so first
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="18. The mass-gate arm is a replication, and the page says so first">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-confound-in-the-contrast-found-before-the-night-rather-than-after" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A confound in the contrast, found before the night rather than after
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a-dispatch-defect-recorded-because-it-is-recurring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A dispatch defect, recorded because it is recurring
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#19-step-0-row-mass-is-not-one-and-closure-is-not-the-gate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        19. Step 0: row mass is not one, and closure is not the gate
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="19. Step 0: row mass is not one, and closure is not the gate">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#is-a-second-mass-channel-and-it-was-never-priced" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        β is a second mass channel, and it was never priced
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#closure-is-underflow-mass-is-phase" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Closure is underflow; mass is phase
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-prediction-logged-before-the-night-runs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The prediction, logged before the night runs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#two-defects-found-on-the-way" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Two defects found on the way
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#20-the-floors-the-chess-numbers-were-computed-at-the-wrong-n" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        20. The floors: the chess numbers were computed at the wrong n
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="20. The floors: the chess numbers were computed at the wrong n">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#but-l-wiener-attaches-to-no-bed-in-this-repository" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        But L-WIENER attaches to no bed in this repository
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-n-was-positions-and-positions-are-not-independent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The n was positions, and positions are not independent
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#and-the-numbers-this-page-carried-are-not-the-numbers-in-the-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        And the numbers this page carried are not the numbers in the file
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#21-a-third-domain-on-a-t4-with-a-gate-that-was-shown-to-reject" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        21. A third domain, on a T4, with a gate that was shown to reject
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="21. A third domain, on a T4, with a gate that was shown to reject">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-rebuild-gate-failed-on-a-broken-rebuild" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The rebuild gate failed on a broken rebuild
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#and-the-previous-oom-has-an-exact-cause" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        And the previous OOM has an exact cause
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#22-rows-still-out" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        22. Rows still out
       
     </span>
   </a>
@@ -1352,15 +1900,44 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PRIOR_ART_MASS_GATE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prior art: the mass gate
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
     </li>
   
 
-    
-      
-      
+              
+            
+              
+                
   
   
   
@@ -1371,18 +1948,21 @@
     
       
       
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
         
           
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_5" id="__nav_5_5_label" tabindex="">
             
   
   
@@ -1400,8 +1980,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_5">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1613,9 +2193,10 @@
     </li>
   
 
-    
-      
-      
+              
+            
+              
+                
   
   
   
@@ -1626,18 +2207,21 @@
     
       
       
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_6" id="__nav_5_6_label" tabindex="">
             
   
   
@@ -1655,8 +2239,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_5">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_6">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1949,85 +2533,6 @@
           </ul>
         </nav>
       
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-    
-    
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
-        
-          
-          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Paper
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_6">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Paper
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../CEQ_SHAPE/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    The shape of CEQ
-  
-
-    
-  </span>
-  
-  
-
-      </a>
     </li>
   
 
@@ -2562,10 +3067,377 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#14-rows-still-out" class="md-nav__link">
+  <a href="#14-the-band-position-leap-and-a-kill-that-could-not-fail" class="md-nav__link">
     <span class="md-ellipsis">
       
-        14. Rows still out
+        14. The band-position leap, and a kill that could not fail
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="14. The band-position leap, and a kill that could not fail">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#on-the-correct-object-the-leap-survives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        On the correct object, the leap survives
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#both-free-reads-are-blocked-and-were-reported-blocked" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Both free reads are blocked, and were reported blocked
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-citations-fetched" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The citations, fetched
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#15-the-open-archives-and-the-sixth-misattribution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15. The open archives, and the sixth misattribution
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="15. The open archives, and the sixth misattribution">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#combesthomas-1973-does-not-state-the-claim-attached-to-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Combes–Thomas 1973 does not state the claim attached to it
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lewontincohen-splits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lewontin–Cohen splits
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#one-route-fact-worth-keeping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        One route fact worth keeping
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#16-q2-the-first-row-entitled-to-a-generalization-sentence-and-it-did-not-tie" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16. Q2: the first row entitled to a generalization sentence, and it did not tie
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="16. Q2: the first row entitled to a generalization sentence, and it did not tie">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-result" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The result
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q3-the-gate-sweep-at-five-seeds-with-no-mechanism-attached" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q3: the gate sweep, at five seeds, with no mechanism attached
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#two-constants-that-did-not-survive-being-measured" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Two constants that did not survive being measured
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#17-the-second-corpus-it-transfers-and-the-gap-grows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        17. The second corpus: it transfers, and the gap grows
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="17. The second corpus: it transfers, and the gap grows">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-this-does-not-settle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What this does not settle
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#18-the-mass-gate-arm-is-a-replication-and-the-page-says-so-first" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18. The mass-gate arm is a replication, and the page says so first
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="18. The mass-gate arm is a replication, and the page says so first">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-confound-in-the-contrast-found-before-the-night-rather-than-after" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A confound in the contrast, found before the night rather than after
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a-dispatch-defect-recorded-because-it-is-recurring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A dispatch defect, recorded because it is recurring
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#19-step-0-row-mass-is-not-one-and-closure-is-not-the-gate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        19. Step 0: row mass is not one, and closure is not the gate
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="19. Step 0: row mass is not one, and closure is not the gate">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#is-a-second-mass-channel-and-it-was-never-priced" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        β is a second mass channel, and it was never priced
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#closure-is-underflow-mass-is-phase" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Closure is underflow; mass is phase
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-prediction-logged-before-the-night-runs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The prediction, logged before the night runs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#two-defects-found-on-the-way" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Two defects found on the way
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#20-the-floors-the-chess-numbers-were-computed-at-the-wrong-n" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        20. The floors: the chess numbers were computed at the wrong n
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="20. The floors: the chess numbers were computed at the wrong n">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#but-l-wiener-attaches-to-no-bed-in-this-repository" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        But L-WIENER attaches to no bed in this repository
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-n-was-positions-and-positions-are-not-independent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The n was positions, and positions are not independent
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#and-the-numbers-this-page-carried-are-not-the-numbers-in-the-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        And the numbers this page carried are not the numbers in the file
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#21-a-third-domain-on-a-t4-with-a-gate-that-was-shown-to-reject" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        21. A third domain, on a T4, with a gate that was shown to reject
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="21. A third domain, on a T4, with a gate that was shown to reject">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-rebuild-gate-failed-on-a-broken-rebuild" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The rebuild gate failed on a broken rebuild
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#and-the-previous-oom-has-an-exact-cause" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        And the previous OOM has an exact cause
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#22-rows-still-out" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        22. Rows still out
       
     </span>
   </a>
@@ -2796,7 +3668,8 @@ when <code>Stop-Process -Force</code> does not take.</p>
 | 12 | span-containment curve | tracks <code>1 − (1−p)^L</code> to three decimals, so it measures the density it was handed rather than a mechanism |
 | 13 | C27 rebuild gate anchor | specified against <code>ceq/arm_pl.py</code> and <code>ceq/arm_phase.py</code>, which contain neither <code>path_product</code> nor <code>hop</code> — a gate pointed at a file without the functions it compares |
 | 14 | C25 check-the-check | read ORDERING UNSTABLE from <code>sorted()</code>'s alphabetical tie-break between two arms both scoring <code>RES = 0.000000</code> |
-| 15 | <code>score_vs_ceiling()</code> | the matched-functional enforcer, defined and never called; the ceiling script prints a binned numerator over an unbinned published value |</p>
+| 15 | <code>score_vs_ceiling()</code> | the matched-functional enforcer, defined and never called; the ceiling script prints a binned numerator over an unbinned published value |
+| 16 | band-position step 0 | tested <code>ρ(P)</code> for a row-stochastic <code>P</code>, which is <code>1.0</code> by Perron–Frobenius whatever the weights — the kill could only ever fire, and fired without consulting a trained parameter |</p>
 <p><strong>Open.</strong> Roughly 140 further tolerance assertions across <code>tests/cameron</code>,
 <code>tests/curvature</code>, <code>tests/foreman</code> and <code>tests/lorasort</code> were located by the same
 sweep and <strong>not</strong> individually verified; five were spot-checked and none was
@@ -3434,7 +4307,653 @@ it names fixed against trainable explicitly, it reframes, and its step 0 is
 falsifiable off an existing checkpoint, but six of its citations are from memory
 and unfetched, and it borrows another instance rather than running its own.</p>
 <hr />
-<h2 id="14-rows-still-out">14. Rows still out<a class="headerlink" href="#14-rows-still-out" title="Permanent link">#</a></h2>
+<h2 id="14-the-band-position-leap-and-a-kill-that-could-not-fail">14. The band-position leap, and a kill that could not fail<a class="headerlink" href="#14-the-band-position-leap-and-a-kill-that-could-not-fail" title="Permanent link">#</a></h2>
+<p>The leap: <code>γ·ρ(P) &lt; 1</code> — what this project calls exactness — is in physics the
+statement that <strong>E is off the spectrum</strong>, and a resolvent off the spectrum does
+not propagate, it images. It offers one fixed fact under three findings:
+representation is near-field, prediction is far-field transport, and a gate past
+the decay length multiplies a contribution with zero expected signal.</p>
+<p><strong>Its free kill was written so that it could only ever return one answer.</strong></p>
+<p>The instruction was to read <code>γ·ρ(P)</code> off the trained checkpoint and compare
+<code>ξ = −1/ln(γρ)</code> against the support-graph diameter. But <strong><code>P</code> is row-stochastic,
+so <code>ρ(P) = 1.0</code> exactly by Perron–Frobenius</strong> — for every <code>P</code> this codebase
+builds, trained or untrained. That fixes <code>ξ(P) = −1/ln(0.9) = 9.4912</code>, constant,
+always above a diameter measured at 1 to 3. The leap dies <strong>without a single
+trained weight being consulted</strong>, which is not a measurement.</p>
+<p>The dispatch also asserted a diameter of "about 7, for a king-move board". <code>n</code>
+here is a chart-position count — 16 or 32 — not chessboard squares, and the
+operator's support graph is far denser than king-move adjacency.</p>
+<h3 id="on-the-correct-object-the-leap-survives">On the correct object, the leap survives<a class="headerlink" href="#on-the-correct-object-the-leap-survives" title="Permanent link">#</a></h3>
+<p><code>Q</code> is the sub-stochastic transient block that the model's own committor solve
+<code>(I − Q)⁻¹ R</code> actually uses, and it is not pinned to 1:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>primary checkpoint</th>
+<th>cross-check</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ρ(Q)</code></td>
+<td>mean <code>0.0243</code>, min <code>0.00005</code>, <strong>max <code>0.2315</code></strong></td>
+<td><code>0.1944</code></td>
+</tr>
+<tr>
+<td><code>ξ(Q)</code> worst case</td>
+<td><strong><code>0.637</code></strong></td>
+<td><strong><code>0.574</code></strong></td>
+</tr>
+<tr>
+<td>diameter(<code>Q</code>)</td>
+<td>1 – 2.47</td>
+<td>1 – 2.00</td>
+</tr>
+</tbody>
+</table>
+<p><code>ξ(Q) &lt; diameter(Q)</code> at every threshold on both checkpoints, so <strong>step 0 passes
+on the object the model actually solves</strong>, and the largest measured <code>ρ(Q)</code> of
+<code>0.2315</code> sits close to the leap's own cited <code>0.2596</code>.</p>
+<p>One caveat carried rather than buried: the cross-check checkpoint returns
+<code>ρ(Q) = 0.1944</code> <strong>identical across all 64 examples</strong>, which is the signature of a
+documented pre-2026-09-08 dead-per-example-operator defect, so it is treated as a
+single degenerate data point rather than 64.</p>
+<h3 id="both-free-reads-are-blocked-and-were-reported-blocked">Both free reads are blocked, and were reported blocked<a class="headerlink" href="#both-free-reads-are-blocked-and-were-reported-blocked" title="Permanent link">#</a></h3>
+<p>The gate corollary's two reads — open-gate density by hop distance, and per-step
+gate ratios — both presuppose a discrete hop-binned gate attached to the chess
+checkpoint's <code>P</code>. <strong>That <code>P</code> has no gates</strong>; it is a continuous softmax. The only
+real gate system in the repository trains on an unrelated synthetic corpus with
+no chess and no per-step log. The data does not exist, and the reads were
+returned as blocked rather than approximated.</p>
+<h3 id="the-citations-fetched">The citations, fetched<a class="headerlink" href="#the-citations-fetched" title="Permanent link">#</a></h3>
+<table>
+<thead>
+<tr>
+<th>source</th>
+<th>bibliography</th>
+<th>content claim</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Anderson 1958, Phys. Rev. <strong>109</strong>, 1492</td>
+<td>confirmed, title exact</td>
+<td>abstract confirms localization; the <em>locator-expansion</em> phrasing is <strong>UNREACHED</strong>, full text paywalled</td>
+</tr>
+<tr>
+<td>Weinberg 1963, Phys. Rev. <strong>131</strong>, 440</td>
+<td>confirmed, "Quasiparticles and the Born Series"</td>
+<td><strong>abstract confirms</strong> the paraphrase — the series fails when bound states are present</td>
+</tr>
+<tr>
+<td>Combes–Thomas 1973, Commun. Math. Phys. <strong>34</strong>, 251–270</td>
+<td>confirmed — <strong>volume and pages were unstated in the leap and are supplied here for the first time</strong></td>
+<td>UNREACHED at this pass — <strong>later reached via Project Euclid and found MISATTRIBUTED, see §15</strong></td>
+</tr>
+<tr>
+<td>Lewontin–Cohen 1969, PNAS <strong>62</strong>, 1056–1060</td>
+<td>confirmed, title exact</td>
+<td><strong>UNREACHED</strong>, 403</td>
+</tr>
+<tr>
+<td>Ash–Nicholls 1972, Nature <strong>237</strong>, 510–512</td>
+<td>confirmed, exact pages</td>
+<td><strong>UNREACHED</strong>, login wall</td>
+</tr>
+<tr>
+<td>Synge 1928</td>
+<td><strong>UNREACHED</strong> — no direct source found</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p>So condition 2 of the hop gate passes on bibliography and <strong>fails on content</strong>:
+the two load-bearing claims, Combes–Thomas exponential decay off-spectrum and the
+Lewontin–Cohen drift correction, remain unverified beyond their titles. Neither
+enters a numeric argument until it is read.</p>
+<blockquote>
+<p><strong>§15 supersedes this row.</strong> Both were re-fetched through open archives. One is
+misattributed outright; the other splits, with its qualitative claim verified
+from its own abstract and its quantity still unreached.</p>
+</blockquote>
+<hr />
+<h2 id="15-the-open-archives-and-the-sixth-misattribution">15. The open archives, and the sixth misattribution<a class="headerlink" href="#15-the-open-archives-and-the-sixth-misattribution" title="Permanent link">#</a></h2>
+<p>The first fetch confirmed five citations bibliographically and stopped at
+publisher paywalls on content. Mathematics of that age is open — PNAS 1969 is on
+PubMed Central, Communications in Mathematical Physics 1973 is on Project Euclid
+— so the rule gains a clause: <strong>for an old paper the publisher is the last route,
+not the first, and <code>UNREACHED</code> is only honest after the open archive has failed
+too.</strong></p>
+<p>Project Euclid opened. It produced a misattribution.</p>
+<h3 id="combesthomas-1973-does-not-state-the-claim-attached-to-it">Combes–Thomas 1973 does not state the claim attached to it<a class="headerlink" href="#combesthomas-1973-does-not-state-the-claim-attached-to-it" title="Permanent link">#</a></h3>
+<p>The full 20-page PDF was retrieved and searched. <strong><code>pdftotext -layout</code> plus a
+whole-document grep for <code>resolvent</code>, <code>kernel</code> and <code>Green</code> returns zero hits for
+all three.</strong> The paper never states a bound of the form
+<code>|G(x,y;E)| ≤ C·e^{−κ|x−y|}</code> for the resolvent kernel at energies off the
+spectrum.</p>
+<p>What it proves is <strong>exponential decay of eigenfunctions</strong>. Theorem 1, p. 257: if
+two-body interactions are boost-analytic and <code>ψ</code> satisfies <code>Hψ = Eψ</code> with
+<code>E &lt; E₀ = inf σ_e(H)</code>, then <code>ψ ∈ D(e^{θ√(2M(E₀−E))R})</code> for any <code>0 ≤ θ &lt; 1</code>.
+Theorem 2 extends the rate to the distance from the nearest threshold. That is
+decay of bound-state wavefunctions <strong>at their own eigenvalues</strong>, established
+through dilation-analytic continuation and the meromorphy of <code>(H(γ) − z)⁻¹</code>.</p>
+<p><strong>The resolvent-kernel bound is a later generalization that carries their name.</strong>
+The "Combes–Thomas estimate" is a real and standard result; this 1973 paper is
+not where it is stated. The leap cited the name correctly and the paper
+incorrectly — <strong>the sixth misattribution in five days, by the same mechanism
+every time: repeating what a thing is called instead of reading what it says.</strong></p>
+<p>The load-bearing claim therefore has no verified primary source yet, and no
+numeric argument may rest on it until the actual source of the resolvent bound is
+fetched.</p>
+<h3 id="lewontincohen-splits">Lewontin–Cohen splits<a class="headerlink" href="#lewontincohen-splits" title="Permanent link">#</a></h3>
+<p><strong>Verified, primary</strong> — the abstract, read independently on PubMed Central and on
+PNAS: extinction probability approaches unity even as expected population size
+grows without limit, <em>"owing to the difference between the geometric and
+arithmetic mean growth rates."</em></p>
+<p><strong>UNREACHED</strong> — the <code>σ²/2</code> drift correction. Pages 1057–1060 exist on both hosts
+only as non-OCR scanned images, and every route to the PDF hit bot detection: a
+proof-of-work and reCAPTCHA gate on PMC, a Cloudflare check on PNAS. <strong>Those were
+not bypassed</strong>, correctly. Nine routes were tried and recorded, including a
+Wayback snapshot that carries the same un-OCR'd images and a Europe PMC render
+endpoint that returns 403 server-side and a 537-byte empty payload in a browser.</p>
+<p>So the qualitative claim — a positive arithmetic mean is compatible with certain
+extinction — <strong>stands on its own paper's abstract</strong>. The quantity does not, and
+the leap's use of <code>σ²/2</code> is unsourced until those four pages are read.</p>
+<h3 id="one-route-fact-worth-keeping">One route fact worth keeping<a class="headerlink" href="#one-route-fact-worth-keeping" title="Permanent link">#</a></h3>
+<p><strong>Project Euclid's landing page states the article is available only to
+subscribers, while the direct PDF URL on the same domain serves the full
+document.</strong> The paywall was in the page, not in the file. A lane that reads only
+the landing page records <code>UNREACHED</code> for an open paper.</p>
+<hr />
+<h2 id="16-q2-the-first-row-entitled-to-a-generalization-sentence-and-it-did-not-tie">16. Q2: the first row entitled to a generalization sentence, and it did not tie<a class="headerlink" href="#16-q2-the-first-row-entitled-to-a-generalization-sentence-and-it-did-not-tie" title="Permanent link">#</a></h2>
+<p>Every language-model comparison this project had made sat at 5.4× to 28.3× corpus
+repetition — the memorization regime, where a gate that helps or hurts says
+nothing about generalization. <strong>This row sits below 1× and is the first that can
+support the sentence.</strong></p>
+<p>Fixed structure printed before any arm was scored, verified in the board log by
+ordering: <code>q3_fixed_structure</code> at line 4296 precedes <code>start_variant</code> at 4300;
+<code>q2_fixed_structure</code> at 4416 precedes the first <code>q2_seed_done</code> at 4417.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>arm (a) softmax twin</th>
+<th>arm (f) hard-concrete</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>params by <code>numel()</code></td>
+<td><strong>724,608</strong></td>
+<td><strong>725,391</strong></td>
+</tr>
+<tr>
+<td>repetition</td>
+<td><strong>0.7977×</strong></td>
+<td><strong>0.7985×</strong></td>
+</tr>
+<tr>
+<td>attention</td>
+<td><code>F.scaled_dot_product_attention</code>, <code>is_causal=True</code></td>
+<td><code>arm_smprime</code> gated readout</td>
+</tr>
+</tbody>
+</table>
+<p>The arms differ by <strong>783 parameters, 0.108%</strong> — and that excess is exactly
+<code>3 × (2·(128+1) + 3)</code>, the per-block quantity <code>modeling_ceq.py:409-418</code> already
+documents for <code>m_head</code>, <code>theta_head</code>, <code>beta</code>, <code>qk</code> and <code>g</code>. The softmax twin was
+checked for dead weight: at <code>operator="sgate"</code> only <code>qkv</code> and <code>o_proj</code> are built
+and <code>softmax_forward</code> uses both, so it is not a padded skeleton. <strong>0.108% cannot
+carry 0.247 nats.</strong></p>
+<h3 id="the-result">The result<a class="headerlink" href="#the-result" title="Permanent link">#</a></h3>
+<div class="highlight"><pre><span></span><code>                seeds 0-4 final eval loss                     mean
+softmax  (a)    1.2757  1.2775  1.3021  1.3013  1.2916       1.2896
+hard-cc  (f)    1.0431  1.0424  1.0430  1.0392  1.0439       1.0423
+diff            -0.2326 -0.2351 -0.2591 -0.2622 -0.2476      -0.2473
+</code></pre></div>
+<p><strong>The gated arm wins at 5 of 5 seeds, and the smallest gap is 23× the
+pre-registered tie band of 0.01 nats.</strong> Both the tie branch and the
+gate-costs-generalization branch are excluded.</p>
+<p><strong>This is not written as a win.</strong> The pre-registration says a 5-of-5 result is
+the first learned win this project would have <strong>and is not written until verified
+on a second corpus</strong>. It is recorded here as a measurement. The verification is
+the next row, not a formality.</p>
+<h3 id="q3-the-gate-sweep-at-five-seeds-with-no-mechanism-attached">Q3: the gate sweep, at five seeds, with no mechanism attached<a class="headerlink" href="#q3-the-gate-sweep-at-five-seeds-with-no-mechanism-attached" title="Permanent link">#</a></h3>
+<table>
+<thead>
+<tr>
+<th>form</th>
+<th>last-50 loss</th>
+<th>trained exact-zero</th>
+<th>backward reach mean</th>
+<th>live gradient</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>clamp</td>
+<td>1.2604</td>
+<td>0.2760</td>
+<td>32.33</td>
+<td>0.5514</td>
+</tr>
+<tr>
+<td>straight-through</td>
+<td>1.2843</td>
+<td>0.3912</td>
+<td>1.32</td>
+<td>1.0000</td>
+</tr>
+<tr>
+<td><strong>hard-concrete</strong></td>
+<td><strong>1.1218</strong></td>
+<td><strong>0.0018</strong></td>
+<td><strong>214.35</strong></td>
+<td>0.9839</td>
+</tr>
+</tbody>
+</table>
+<p>Hard-concrete takes the lowest loss <strong>and</strong> the highest reach at <strong>every seed
+individually</strong>, so the seed-dependence counter does not fire. Seed 0 reproduces
+the single-seed reference almost exactly.</p>
+<p><strong>No mechanism sentence appears anywhere in this row.</strong> Four accounts of gate
+closure are already dead; a fifth was not born from a table.</p>
+<h3 id="two-constants-that-did-not-survive-being-measured">Two constants that did not survive being measured<a class="headerlink" href="#two-constants-that-did-not-survive-being-measured" title="Permanent link">#</a></h3>
+<p><strong>The certificate parameter count was wrong.</strong> <code>632,496</code> was carried into this
+page and into a commit message. Measured <code>numel()</code> is <strong>724,608</strong> — a <strong>0.5%
+excess</strong> over the closed form's <code>720,896</code>, not a 12.3% shortfall. The conclusion
+survives, since both arms remain far below 1× repetition, but the number was
+quoted rather than audited, which is the exact defect L-REFLECTOR names.</p>
+<p><strong>And the clamp reach constant reproduces at no seed.</strong> Per-seed <code>reach_mean</code> for
+the clamp arm reads <code>2.1, 26.5, 65.3, 1.8, 66.0</code>. The <code>2.146</code> quoted throughout
+this phase is <strong>one draw from a distribution spanning 1.8 to 66.0</strong>, and every
+sentence resting on clamp's reach being <em>small</em> rests on a single seed.
+Hard-concrete's reach, by contrast, is stable: <code>241.4, 200.2, 206.1, 221.5,
+202.5</code>.</p>
+<hr />
+<h2 id="17-the-second-corpus-it-transfers-and-the-gap-grows">17. The second corpus: it transfers, and the gap grows<a class="headerlink" href="#17-the-second-corpus-it-transfers-and-the-gap-grows" title="Permanent link">#</a></h2>
+<p>The pre-registration held the Q2 result back from being called a win until a
+second corpus confirmed it. A second <strong>domain</strong> now has.</p>
+<table>
+<thead>
+<tr>
+<th>corpus</th>
+<th>repetition</th>
+<th>(f) − (a), 5 seeds</th>
+<th>mean</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TinyStories — synthetic children's prose</td>
+<td>0.7977× / 0.7985×</td>
+<td>−0.2326 … −0.2622</td>
+<td><strong>−0.2473</strong></td>
+</tr>
+<tr>
+<td>WikiText-103-raw — encyclopedic English</td>
+<td>0.2155× / 0.2158×</td>
+<td>−0.2977 … −0.3508</td>
+<td><strong>−0.3285</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Five of five seeds on both, and the gap is 30× the pre-registered tie band of
+0.01 nats. The effect is larger on the harder domain, not smaller.</strong></p>
+<p>Both corpora sit below 1× repetition, so neither run is in the memorization
+regime and a generalization sentence is admissible for both.</p>
+<p>The corpus is pinned rather than named: WikiText-103-raw from
+<code>Salesforce/wikitext</code>, CC BY-SA 4.0, <code>105,326,029</code> bytes on disk
+(<code>sha256 3523ac1d…</code>), of which the <strong>unchanged</strong> 64 MiB cap in
+<code>train_with_eval</code> loads <code>67,239,422</code> (<code>sha256 3b81cdca…</code>), split by document into
+3,866 articles — 3,479 train, 387 validation.</p>
+<p><strong>Exactly one variable moved</strong>: the corpus file and its token count. The shape,
+the initializer, the split convention, the seed set, the optimiser, the steps
+formula and the byte-level vocabulary are the values <code>q2_certificate.py</code> locks,
+and <code>r3_eval.py</code> and <code>r1_gate.py</code> were reused unedited.</p>
+<h3 id="what-this-does-not-settle">What this does not settle<a class="headerlink" href="#what-this-does-not-settle" title="Permanent link">#</a></h3>
+<p><code>split_seed = 0</code> is fixed across all five seeds <strong>on both corpora</strong>. Every
+interval here carries model variance and <strong>no eval-draw variance at all</strong>. So the
+result now holds across two domains and remains untested against the draw of the
+held-out set itself.</p>
+<p>That is precisely the contrast <code>C_win</code> measures in the 4×5 paired design, where
+the split seed varies with the model seed and the arms are paired by common
+random numbers. Until it reports, the honest statement is: <strong>the effect survives
+a domain change at five of five seeds, twice, and has never been measured against
+a second validation draw.</strong></p>
+<hr />
+<h2 id="18-the-mass-gate-arm-is-a-replication-and-the-page-says-so-first">18. The mass-gate arm is a replication, and the page says so first<a class="headerlink" href="#18-the-mass-gate-arm-is-a-replication-and-the-page-says-so-first" title="Permanent link">#</a></h2>
+<p>Arm (a2) — an SDPA twin plus a per-head sigmoid output gate — was gated behind
+three citations reaching the page <strong>before</strong> it ran. The reason is not ceremony:
+if the 0.247 nats turns out to be normalization, then it is published work, and a
+project that measures first and discovers that second has nothing to say.</p>
+<p>All three are now fetched and quoted.</p>
+<p><strong>Qwen Team et al., arXiv:2505.06708v1 (10 May 2025), NeurIPS 2025 Oral —
+"Gated Attention for Large Language Models: Non-linearity, Sparsity, and
+Attention-Sink-Free".</strong> Abstract, verbatim: <em>"Our central finding is that a
+simple modification — applying a head-specific sigmoid gate after the Scaled
+Dot-Product Attention (SDPA) — consistently improves performance."</em></p>
+<p>Their §2.2 and Figure 1 place the gate at position <strong>G1</strong>: after the SDPA outputs
+are concatenated across heads and <strong>before the output projection <code>W_o</code></strong>. A
+separate position G5 applies it <em>after</em> <code>W_o</code>, and their own ablation finds G1
+the stronger of the two. <strong>Before-versus-after <code>o_proj</code> is the axis their paper
+turns on, and (a2) sits on their winning side.</strong></p>
+<p><strong>So (a2) is a replication, close to an exact one</strong>, and <code>C_mass</code> prices a known
+mechanism at toy scale on a different bed. That sentence is on the page before
+the arm runs rather than after it reports.</p>
+<p><strong>Evan Miller, "Attention Is Off By One" (24 July 2023)</strong> — an essay, not a
+paper. <code>softmax₁(x)ᵢ = exp(xᵢ) / (1 + Σⱼ exp(xⱼ))</code>, and verbatim: <em>"All I did was
+added one to the denominator. This lets the vector as a whole tend to zero if it
+wants."</em> The source's own non-standard grammar is preserved, and was used as
+evidence the line is quoted rather than paraphrased.</p>
+<p><strong>Xiao et al., arXiv:2309.17453v4 — attention sinks.</strong> Fetched directly after the
+first attempt declined it.</p>
+<p><strong>Donsker–Varadhan</strong> — Dupuis and Ellis, <em>A Weak Convergence Approach to the
+Theory of Large Deviations</em>, Springer 2011, <strong>Lemma 1.4.3, p. 405</strong>.</p>
+<h3 id="a-confound-in-the-contrast-found-before-the-night-rather-than-after">A confound in the contrast, found before the night rather than after<a class="headerlink" href="#a-confound-in-the-contrast-found-before-the-night-rather-than-after" title="Permanent link">#</a></h3>
+<p><strong>(a) and (a2) are not parameter-matched</strong>: <code>724,608</code> against <code>727,704</code>, a
+difference of <strong>3,096 parameters, +0.43%</strong>. Arms (f) and (f0) <em>are</em> matched at
+<code>725,391</code> either side.</p>
+<p>So <code>C_mass</code> as built prices <strong>gate plus parameters</strong>, not the gate alone. The
+night runs with that stated beside the contrast rather than delayed to construct
+a dead-gate parameter-matched (a): 0.43% of parameters against an effect of
+roughly 0.25 nats is a weak confound, and naming it costs nothing while stalling
+costs a night.</p>
+<h3 id="a-dispatch-defect-recorded-because-it-is-recurring">A dispatch defect, recorded because it is recurring<a class="headerlink" href="#a-dispatch-defect-recorded-because-it-is-recurring" title="Permanent link">#</a></h3>
+<p>One fetch was <strong>declined outright</strong> by a lane that read a mid-turn message
+addressed to the orchestrator as its own instruction, and reported the source as
+not attempted. It was overridden and fetched. This is the fifth instance this
+session of a relayed message reaching a lane's prompt and displacing its task.
+The defect is in the dispatch template, not in the lane.</p>
+<hr />
+<h2 id="19-step-0-row-mass-is-not-one-and-closure-is-not-the-gate">19. Step 0: row mass is not one, and closure is not the gate<a class="headerlink" href="#19-step-0-row-mass-is-not-one-and-closure-is-not-the-gate" title="Permanent link">#</a></h2>
+<p>The question was whether arm (f)'s advantage could be an un-normalized degree of
+freedom. <code>W_ij = G_ij·e^{s_ij} / Z_i^β</code> with <code>Z_i = Σ_j |G_ij| e^{s_ij}</code> — the
+numerator complex, the denominator summing the modulus — confirmed in source at
+<code>arm_smprime.py:302, :324, :345</code>. At β = 1 a row sums to one only when every
+phase in it is equal.</p>
+<p><strong>It does not sum to one.</strong></p>
+<table>
+<thead>
+<tr>
+<th>layer</th>
+<th>0</th>
+<th>1</th>
+<th>2</th>
+<th>3</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>mean row mass</td>
+<td>0.9607</td>
+<td><strong>0.7930</strong></td>
+<td><strong>0.7971</strong></td>
+<td><strong>0.7423</strong></td>
+</tr>
+<tr>
+<td>deficit</td>
+<td>0.039</td>
+<td>0.207</td>
+<td>0.203</td>
+<td>0.258</td>
+</tr>
+<tr>
+<td>rows below half mass</td>
+<td>—</td>
+<td><strong>13.2%</strong></td>
+<td><strong>11.3%</strong></td>
+<td><strong>16.5%</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Minimum row mass <strong>0.0023</strong>. At layer 3, <strong>190 rows sit in [0.0, 0.1)</strong> and only
+<strong>2,510 of 32,768</strong> rows exceed 0.99. This is not a rounding tail.</p>
+<p>A genuine <code>scaled_dot_product_attention</code> row sums to exactly one <strong>by
+construction</strong>, so arm (f) owns a learned, per-position, un-normalized channel
+the twin cannot represent at any setting.</p>
+<h3 id="is-a-second-mass-channel-and-it-was-never-priced">β is a second mass channel, and it was never priced<a class="headerlink" href="#is-a-second-mass-channel-and-it-was-never-priced" title="Permanent link">#</a></h3>
+<div class="highlight"><pre><span></span><code>beta   L0 1.090703   L1 0.961642   L2 0.962446   L3 0.991261
+</code></pre></div>
+<p>The direction is consistent across <strong>all five seeds</strong>: L0 rises in every one
+(1.0683–1.1062), L1–L3 fall in every one (0.946–0.983). <code>beta_census</code> runs
+10.5–24.5 per layer per seed, so the dial was exercised rather than left pinned
+for want of signal. <code>qk</code> moved to 0.894–1.064 and <code>g</code> to 0.941–0.973.</p>
+<p>Since <code>Z_i</code> is a data-dependent positive row sum, <strong>β ≠ 1 rescales every row by
+<code>Z_i^{1−β}</code></strong> on top of the phase-cancellation deficit — a second multiplicative
+per-row mass channel, also outside softmax's reach.</p>
+<h3 id="closure-is-underflow-mass-is-phase">Closure is underflow; mass is phase<a class="headerlink" href="#closure-is-underflow-mass-is-phase" title="Permanent link">#</a></h3>
+<p>The exact-zero fraction of the gate <code>m</code> itself reads <code>0.0, 0.0024, 0.0, 0.0</code> by
+layer — <strong>the gate barely closes</strong>. Yet <strong>59–75% of causal <code>W</code> entries are
+exactly zero</strong>, and at layer 0 that is <strong>100% float32 underflow of the path
+product</strong>, since <code>m</code> has no exact zeros there at all.</p>
+<p><strong>These are two different mechanisms and the project has been treating them as
+one.</strong> The refusal channel this operator is named for is, in a trained model,
+floating-point underflow of a product — the same defect §2 measured in isolation,
+now measured in place.</p>
+<p>And <strong>56.7 / 72.8 / 78.5 / 79.2 percent of row-mass variance sits on the head
+axis</strong> while <code>m_head</code> and <code>theta_head</code> are <code>nn.Linear(d, 1)</code> and <strong>head-blind</strong>.
+The per-head <code>exp(qk·q·k)</code> factor is what splits it, so the mass channel is not
+purely a gate property either.</p>
+<h3 id="the-prediction-logged-before-the-night-runs">The prediction, logged before the night runs<a class="headerlink" href="#the-prediction-logged-before-the-night-runs" title="Permanent link">#</a></h3>
+<p><code>C_phase</code> and <code>C_mass</code> are predicted <strong>non-zero</strong>. Row mass departs from one by
+0.04 to 0.26 by layer with a minimum near zero, and β has moved off one in a
+consistent direction at every seed, so both the phase channel and an output
+mass-gate have something real to price. Had row mass come back pinned at 1.000
+this would have been dead for free; it did not.</p>
+<h3 id="two-defects-found-on-the-way">Two defects found on the way<a class="headerlink" href="#two-defects-found-on-the-way" title="Permanent link">#</a></h3>
+<p><strong><code>train_with_eval</code> never saves a checkpoint.</strong> <code>torch.save</code> does not appear in
+it — grep-confirmed — so all five arm (f) models from the certificate row were
+discarded in-process, and the five <code>q2_ckpt_hardconcrete_seed*</code> directories hold
+only <code>run_record.json</code>. The numbers above are therefore read from the <strong>gate-sweep</strong>
+checkpoint, not from the arm that produced the 0.247, and that substitution is
+stated rather than glossed. Any future row wanting arm (f)'s own weights must
+re-train.</p>
+<p><strong>The row stopped rather than rebuilding.</strong> Told no checkpoint existed, the lane
+reported it and halted with a non-zero exit instead of reconstructing a model and
+reading numbers off it. A rebuilt model would have produced plausible figures for
+an arm that no longer exists.</p>
+<hr />
+<h2 id="20-the-floors-the-chess-numbers-were-computed-at-the-wrong-n">20. The floors: the chess numbers were computed at the wrong n<a class="headerlink" href="#20-the-floors-the-chess-numbers-were-computed-at-the-wrong-n" title="Permanent link">#</a></h2>
+<p>Two floors from the same generation, and this project had been scoring against
+neither.</p>
+<p><strong>Wiener 1942 reproduces.</strong> <code>0.4603 / 0.3480 / 0.2506</code> against the specified
+<code>0.4594 / 0.3498 / 0.2502</code> — within 0.5% on every term, one run, no tuning
+(<code>default_rng(0)</code>, AR(2) <code>a = (1.2, −0.5)</code>, process sd 0.5, observation sd 0.3,
+N = 200,000). At p = 32 the answer is identical to p = 8 to four decimals, so an
+order-8 linear predictor already captures this process fully and the gap to
+oracle stays 0.0974 at both orders.</p>
+<p><strong>Cramér–Rao 1945 reproduces exactly.</strong></p>
+<table>
+<thead>
+<tr>
+<th>p</th>
+<th>ε</th>
+<th>n (CR/CLT)</th>
+<th>n (Hoeffding)</th>
+<th>ratio</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0.50</td>
+<td>0.02</td>
+<td>2,401</td>
+<td>4,612</td>
+<td>1.92×</td>
+</tr>
+<tr>
+<td>0.20</td>
+<td>0.02</td>
+<td>—</td>
+<td>—</td>
+<td>3.00×</td>
+</tr>
+<tr>
+<td>0.10</td>
+<td>0.02</td>
+<td>865</td>
+<td>4,612</td>
+<td>5.33×</td>
+</tr>
+<tr>
+<td>0.05</td>
+<td>0.02</td>
+<td>—</td>
+<td>—</td>
+<td>10.11×</td>
+</tr>
+<tr>
+<td><strong>0.01</strong></td>
+<td>0.02</td>
+<td>—</td>
+<td>—</td>
+<td><strong>48.50×</strong></td>
+</tr>
+</tbody>
+</table>
+<p>The loosest corner is the rare-event one. Hoeffding is tightest at p = 0.5, its
+own calibration point.</p>
+<h3 id="but-l-wiener-attaches-to-no-bed-in-this-repository">But L-WIENER attaches to no bed in this repository<a class="headerlink" href="#but-l-wiener-attaches-to-no-bed-in-this-repository" title="Permanent link">#</a></h3>
+<p>The chess bed has <strong>no cross-game time index</strong>: <code>chess.py:117</code> gives <em>every ply of
+one game the same one-hot outcome label</em>, and <code>ply_idx</code> resets per game carrying
+no meaning across games. A linear-predictor floor needs a sequence, and there
+isn't one spanning the rows.</p>
+<p><strong>And MDP-CAL does not exist.</strong> An exhaustive search of <code>ceq/</code> and <code>ceqjepa/</code>,
+source and git history, finds no file, class, function or variable by any
+spelling of it. BED-M, BED-H, <code>LSTD_bed</code> and a gridworld exist; none is an MDP
+calibration bed. It has been named in contracts as though it were one.</p>
+<h3 id="the-n-was-positions-and-positions-are-not-independent">The n was positions, and positions are not independent<a class="headerlink" href="#the-n-was-positions-and-positions-are-not-independent" title="Permanent link">#</a></h3>
+<p><strong>Every published chess resolution number used the position count as <code>n</code>.</strong> But
+all plies of a game share one outcome label, so positions within a game are
+perfectly correlated. <code>n = 6000 positions</code> is roughly 1,000 independent draws,
+and correcting <code>n</code> from positions to games <strong>flips <code>oracle_ceiling_RES</code> from 13.7×
+above its Cramér–Rao floor to below it.</strong></p>
+<p>Three rows sit below their own floor at the n actually used:</p>
+<table>
+<thead>
+<tr>
+<th>row</th>
+<th>value</th>
+<th>n used</th>
+<th>against naive p=0.5 floor 0.01265</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>operator_committor.RES</code></td>
+<td>0.0012548892</td>
+<td>6,000 positions</td>
+<td><strong>~10× below</strong></td>
+</tr>
+<tr>
+<td><code>draw.res_k</code></td>
+<td>0.0004429054</td>
+<td>6,000</td>
+<td>below</td>
+</tr>
+<tr>
+<td><code>sink.res_k</code></td>
+<td>0.0007011879</td>
+<td>6,000</td>
+<td>below</td>
+</tr>
+</tbody>
+</table>
+<p>A row below its floor is reporting noise with a confidence interval drawn around
+it.</p>
+<h3 id="and-the-numbers-this-page-carried-are-not-the-numbers-in-the-file">And the numbers this page carried are not the numbers in the file<a class="headerlink" href="#and-the-numbers-this-page-carried-are-not-the-numbers-in-the-file" title="Permanent link">#</a></h3>
+<table>
+<thead>
+<tr>
+<th>quoted throughout this phase</th>
+<th>actually in <code>wil_chess400_results.json</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RES <code>0.001469</code></td>
+<td><strong><code>0.0012548892</code></strong></td>
+</tr>
+<tr>
+<td>oracle ceiling <code>0.10117</code></td>
+<td><strong><code>0.0241166938</code></strong></td>
+</tr>
+</tbody>
+</table>
+<p>Worse, three result files cited as sources <strong>were never produced</strong>:
+<code>wil_res_ceiling.json</code>, <code>wil_bar_can_fire.json</code> and <code>wil_recal_race.json</code> do not
+exist. Those figures came from lane reports rather than from disk, and were
+published as measurements.</p>
+<p><strong>What survives and what does not.</strong> The prediction verdict survives — the
+operator's committor was tied by an eight-bin histogram of its own input, and a
+tie is a tie whatever the ceiling. <strong>Its quantification does not.</strong> "1.45% of the
+bed's resolution ceiling" is meaningless when the ceiling is itself below its
+noise floor at the corrected n, and the two figures that sentence was built from
+do not match their own file.</p>
+<p>Every resolution sentence in <code>PHASE_I.md</code> §1 and <code>PHASE_I1.md</code> §8 is struck to a
+direction without a magnitude until re-measured at <code>n = games</code>.</p>
+<hr />
+<h2 id="21-a-third-domain-on-a-t4-with-a-gate-that-was-shown-to-reject">21. A third domain, on a T4, with a gate that was shown to reject<a class="headerlink" href="#21-a-third-domain-on-a-t4-with-a-gate-that-was-shown-to-reject" title="Permanent link">#</a></h2>
+<p>Source code — <code>codeparrot/codeparrot-clean-valid</code>, 20,982,884 bytes — run on a
+Tesla T4 as a self-contained kernel with no repository file uploaded.</p>
+<div class="highlight"><pre><span></span><code>softmax        691,840 params    final eval loss 1.7685
+hard-concrete  692,623 params    final eval loss 1.4384
+                                 difference     -0.3301
+</code></pre></div>
+<p>The parameter gap is <strong>783</strong>, the same per-block excess as both earlier rows.</p>
+<p><strong>One seed, and the lane said so.</strong> The run record carries
+<code>dropped: seeds 5 -&gt; 1 (5-seed grid did not fit the remaining budget)</code> rather
+than presenting a single cell as a grid. A third domain at one seed is a data
+point.</p>
+<table>
+<thead>
+<tr>
+<th>corpus</th>
+<th>structure</th>
+<th>seeds</th>
+<th>mean (f) − (a)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TinyStories</td>
+<td>synthetic short-dependency prose</td>
+<td>5</td>
+<td><strong>−0.2473</strong></td>
+</tr>
+<tr>
+<td>WikiText-103</td>
+<td>encyclopedic English</td>
+<td>5</td>
+<td><strong>−0.3285</strong></td>
+</tr>
+<tr>
+<td>codeparrot</td>
+<td>source code</td>
+<td><strong>1</strong></td>
+<td><strong>−0.3301</strong></td>
+</tr>
+</tbody>
+</table>
+<h3 id="the-rebuild-gate-failed-on-a-broken-rebuild">The rebuild gate failed on a broken rebuild<a class="headerlink" href="#the-rebuild-gate-failed-on-a-broken-rebuild" title="Permanent link">#</a></h3>
+<p>Every previous Kaggle gate in this project passed a correct rebuild and was never
+shown to reject a wrong one — the first was numpy-only and would have passed with
+the entire torch rebuild broken. This one was tested both ways:</p>
+<div class="highlight"><pre><span></span><code>correct rebuild   (beta,qk) = (0,0) (1,1) (1,0)  -&gt;  PASS PASS PASS
+broken  rebuild   (beta,qk) = (0,0) (1,1) (1,0)  -&gt;  FAIL FAIL FAIL
+any_false_pass = false
+</code></pre></div>
+<p>That is the first gate here demonstrated to fail rather than merely to pass.</p>
+<h3 id="and-the-previous-oom-has-an-exact-cause">And the previous OOM has an exact cause<a class="headerlink" href="#and-the-previous-oom-has-an-exact-cause" title="Permanent link">#</a></h3>
+<p>The kernel that lost two of three questions did so by never freeing a model:
+<strong>cell 13 constructed eight and freed none</strong>, cell 15 added one more, and cell 17
+ran a nested three-by-five loop on top — nine unfreed models before the sweep that
+died had begun. No <code>del</code>, no <code>torch.cuda.empty_cache()</code>, and no memory logged
+anywhere in the notebook. This kernel carries all three.</p>
+<hr />
+<h2 id="22-rows-still-out">22. Rows still out<a class="headerlink" href="#22-rows-still-out" title="Permanent link">#</a></h2>
 <p><code>R1</code> gate parameterization (straight-through against hard-concrete, with the
 four-condition must-fire); <code>R3</code> held-out eval path by document and <code>R4</code>
 determinism; <code>R5</code> hardware assertions and <code>R6</code> dtype guards, each of which must
@@ -3493,13 +5012,13 @@ be demonstrated firing rather than described.</p>
         
         
           
-          <a href="../ledgers/mistakes/" class="md-footer__link md-footer__link--next" aria-label="Next: Failure mechanisms">
+          <a href="../PRIOR_ART_MASS_GATE/" class="md-footer__link md-footer__link--next" aria-label="Next: Prior art: the mass gate">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Failure mechanisms
+                Prior art: the mass gate
               </div>
             </div>
             <div class="md-footer__button md-icon">
@@ -3570,6 +5089,10 @@ be demonstrated firing rather than described.</p>
         <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
       
         <script src="../assets/resolvent.js"></script>
+      
+        <script src="../assets/scene.js" type="module"></script>
+      
+        <script src="../assets/viz/core.js" type="module"></script>
       
     
   </body>

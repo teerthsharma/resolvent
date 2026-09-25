@@ -750,3 +750,76 @@ function rsReady(boot) {
   }
   rsReady(boot);
 })();
+
+/* Snow over the hero, the same weather as teerthsharma.vercel.app. Decorative only:
+   aria-hidden, no pointer events, paused off-screen and in hidden tabs, one static
+   frame under prefers-reduced-motion. The loop ends itself when Material's instant
+   navigation detaches the canvas. */
+(function () {
+  "use strict";
+  function boot() {
+    var hero = document.querySelector(".rs .hero");
+    if (!hero || hero.querySelector("canvas.snow")) return;
+    var cv = document.createElement("canvas");
+    cv.className = "snow"; cv.setAttribute("aria-hidden", "true");
+    hero.insertBefore(cv, hero.firstChild);
+    var ctx = cv.getContext("2d"); if (!ctx) return;
+    var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var dpr = Math.min(window.devicePixelRatio || 1, 2), W = 0, H = 0, flakes = [], seen = true;
+    function size() {
+      W = cv.clientWidth; H = cv.clientHeight;
+      cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      var n = Math.round(W * H / 5200); // ponytail: fixed density, tune here if it reads busy
+      flakes = [];
+      for (var i = 0; i < n; i++) flakes.push({ x: Math.random() * W, y: Math.random() * H,
+        r: 0.6 + Math.random() * 1.9, v: 0.18 + Math.random() * 0.42, p: Math.random() * 6.28 });
+    }
+    function draw(t) {
+      ctx.clearRect(0, 0, W, H);
+      for (var i = 0; i < flakes.length; i++) {
+        var f = flakes[i], fade = 1 - Math.max(0, (f.y - H * 0.55) / (H * 0.45));
+        ctx.globalAlpha = 0.85 * Math.max(0, fade);
+        ctx.beginPath(); ctx.arc(f.x + Math.sin(t / 1400 + f.p) * 6, f.y, f.r, 0, 6.2832);
+        ctx.fillStyle = "#ffffff"; ctx.fill();
+      }
+    }
+    function step(t) {
+      if (!cv.isConnected) return;
+      if (seen && !document.hidden) {
+        for (var i = 0; i < flakes.length; i++) {
+          var f = flakes[i]; f.y += f.v;
+          if (f.y > H + 4) { f.y = -4; f.x = Math.random() * W; }
+        }
+        draw(t);
+      }
+      requestAnimationFrame(step);
+    }
+    size();
+    window.addEventListener("resize", function () { if (cv.isConnected) { size(); if (reduce) draw(0); } });
+    if (reduce) { draw(0); return; }
+    if ("IntersectionObserver" in window)
+      new IntersectionObserver(function (e) { seen = e[0].isIntersecting; }).observe(cv);
+    requestAnimationFrame(step);
+  }
+  rsReady(boot);
+})();
+
+/* Each home card rises into place the first time it scrolls into view. The class that
+   hides it is added here, so without JavaScript every card is simply visible. */
+(function () {
+  "use strict";
+  function boot() {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || !("IntersectionObserver" in window)) return;
+    var cards = document.querySelectorAll(".rs>section,.rs>.abstract,.rs>nav.contents,.rs>pre.result,.rs .hero .grid>.card");
+    if (!cards.length) return;
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } });
+    }, { rootMargin: "0px 0px -8% 0px" });
+    Array.prototype.forEach.call(cards, function (c, i) {
+      if (c.getBoundingClientRect().top < window.innerHeight) return;   // already on screen: leave it be
+      c.classList.add("rv"); io.observe(c);
+    });
+  }
+  rsReady(boot);
+})();
