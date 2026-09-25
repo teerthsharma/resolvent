@@ -88,6 +88,7 @@ not_in_nav: |
 nav:
   - Home: index.md
   - Status: see/status.md
+  - "North Star": see/north-star.md
   - "Proof atlas": atlas.md
   - Paper:
       - The shape of CEQ: CEQ_SHAPE.md

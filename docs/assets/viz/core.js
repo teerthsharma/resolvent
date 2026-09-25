@@ -66,11 +66,12 @@ function fmt(x, p = 4) {
 
 /* Axes plot: series [{pts:[[x,y]], color, dash, label}], optional marks [{x|y, color, label}]. */
 function plot(parent, { w = 640, h = 280, x, y, xlog, ylog, xlabel, ylabel, series = [], marks = [], title }) {
-  const T = tokens(), m = { l: 52, r: 16, t: 14, b: 40 };
+  const T = tokens(), m = { l: 56, r: 16, t: 22, b: 40 };
   const s = svg("svg", { viewBox: `0 0 ${w} ${h}`, role: "img", "aria-label": title || ylabel || "plot" }, parent);
   const X = scale(x[0], x[1], m.l, w - m.r, xlog), Y = scale(y[0], y[1], h - m.b, m.t, ylog);
   const ticks = (d, log) => { const out = [];
-    if (log) for (let e = Math.ceil(Math.log10(d[0])); e <= Math.log10(d[1]); e++) out.push(10 ** e);
+    if (log) { const lo = Math.ceil(Math.log10(d[0])), hi = Math.floor(Math.log10(d[1])), st = Math.max(1, Math.ceil((hi - lo) / 6));
+      for (let e = lo; e <= hi; e += st) out.push(10 ** e); }
     else { const st = niceStep((d[1] - d[0]) / 5); for (let v = Math.ceil(d[0] / st) * st; v <= d[1] + 1e-12; v += st) out.push(+v.toFixed(10)); }
     return out; };
   for (const v of ticks(y, ylog)) { svg("line", { x1: m.l, x2: w - m.r, y1: Y(v), y2: Y(v), stroke: T.line, "stroke-width": 1 }, s);
@@ -78,7 +79,7 @@ function plot(parent, { w = 640, h = 280, x, y, xlog, ylog, xlabel, ylabel, seri
   for (const v of ticks(x, xlog)) svg("text", { x: X(v), y: h - m.b + 16, "text-anchor": "middle", class: "vz-t" }, s).textContent = fmt(v, 3);
   svg("line", { x1: m.l, x2: w - m.r, y1: h - m.b, y2: h - m.b, stroke: T.line2 }, s);
   if (xlabel) svg("text", { x: (m.l + w - m.r) / 2, y: h - 6, "text-anchor": "middle", class: "vz-t vz-lab" }, s).textContent = xlabel;
-  if (ylabel) svg("text", { x: 12, y: m.t + 4, class: "vz-t vz-lab" }, s).textContent = ylabel;
+  if (ylabel) svg("text", { x: m.l + 6, y: m.t + 2, class: "vz-t vz-lab" }, s).textContent = ylabel;
   const g = svg("g", {}, s);
   const draw = (ser, mk) => {
     g.replaceChildren();

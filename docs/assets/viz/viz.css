@@ -47,3 +47,8 @@
 .vz-tip{font-size:.74rem;color:var(--rs-dim);min-height:2.6em;margin:.4rem 0 0!important}
 .vz-tip b{color:var(--rs-ink)}
 .md-typeset .vz-more{margin-top:2rem;font-weight:600}
+.vz-verdicts{display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:.6rem}
+.vz-verdicts>div{border:1px solid var(--rs-line2);border-left:4px solid var(--c);border-radius:10px;padding:.7rem .85rem;background:var(--rs-card);display:flex;flex-direction:column;gap:.2rem}
+.vz-verdicts b{font-size:.86rem;color:var(--rs-ink)}
+.vz-verdicts span:last-child{font:.66rem/1.5 var(--rs-mono);color:var(--rs-dim)}
+.vz-chip{align-self:flex-start;font:700 .55rem var(--rs-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--c);border:1px solid var(--c);border-radius:6px;padding:.2rem .4rem}
