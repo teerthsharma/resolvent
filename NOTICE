@@ -1,0 +1,22 @@
+rjepa
+Copyright 2026 Teerth Sharma
+
+This product is licensed under the Apache License, Version 2.0 (see LICENSE).
+
+It is a clean repackaging of work first written in the author's repository
+"resolvent" (https://github.com/teerthsharma/resolvent, Apache-2.0,
+Copyright 2026 Teerth Sharma), from the files sun/rjepa/chase/rjepa_ops.py,
+sun/rjepa/foreman/rjepa.py and sun/rjepa/cameron/rj.py and their tests.
+
+rjepa/djepa.py and the "djepa" head in rjepa/heads.py reimplement the relational
+candidate operator described in
+
+  Shuaijun Liu, Chengyu Wu, Qifu Wen, Feiyang You, Chenglong Zhang, Shuyang Hao,
+  Xi Lin, Ningxin Su. "D-JEPA: A Decision-Aligned Latent World Model."
+  arXiv:2609.24749v1, 2026 (CC BY 4.0).
+
+The reimplementation was written from the paper's equations and hyperparameters
+only. No code was copied from, and the repository was not cloned or downloaded:
+https://github.com/NEBULIS-Lab/D-JEPA (Apache-2.0). Any difference between this
+operator and the authors' released code is a property of this reimplementation,
+not of D-JEPA.

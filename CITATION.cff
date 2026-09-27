@@ -1,0 +1,35 @@
+cff-version: 1.2.0
+message: "If you use this software, cite it as below, and cite D-JEPA for the relational operator."
+title: "rjepa: candidate-set resolvents and exact-truth beds for ranking a JEPA planner's candidates"
+type: software
+version: 0.1.0
+date-released: 2026-09-28
+license: Apache-2.0
+authors:
+  - family-names: Sharma
+    given-names: Teerth
+    email: teerths57@gmail.com
+references:
+  - type: article
+    title: "D-JEPA: A Decision-Aligned Latent World Model"
+    authors:
+      - family-names: Liu
+        given-names: Shuaijun
+      - family-names: Wu
+        given-names: Chengyu
+      - family-names: Wen
+        given-names: Qifu
+      - family-names: You
+        given-names: Feiyang
+      - family-names: Zhang
+        given-names: Chenglong
+      - family-names: Hao
+        given-names: Shuyang
+      - family-names: Lin
+        given-names: Xi
+      - family-names: Su
+        given-names: Ningxin
+    year: 2026
+    identifiers:
+      - type: other
+        value: "arXiv:2609.24749"
