@@ -1,0 +1,6 @@
+{
+  "name": "c13_commutative_bed",
+  "kind": "bed",
+  "family": "custom",
+  "entry": "bed.py"
+}

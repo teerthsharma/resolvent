@@ -1,0 +1,9 @@
+{
+  "name": "c19_pole_free_false",
+  "kind": "operator",
+  "bed": "a5_word_T16",
+  "claims": [
+    "causal",
+    "pole_free"
+  ]
+}

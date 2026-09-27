@@ -1,0 +1,9 @@
+{
+  "name": "c11_x3_reset_bed",
+  "kind": "bed",
+  "family": "group_reset_x3",
+  "params": {
+    "n": 4096,
+    "density": 0.05
+  }
+}

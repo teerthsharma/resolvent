@@ -1,0 +1,12 @@
+{
+  "name": "c10_window_bed_k",
+  "kind": "bed",
+  "family": "pointer_chase",
+  "params": {
+    "generator": "bed_k",
+    "n": 4096,
+    "L": 7,
+    "band": "beyond",
+    "instance": 12
+  }
+}

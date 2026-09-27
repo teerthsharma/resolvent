@@ -1,0 +1,6 @@
+{
+  "name": "c16_gru_in_disguise",
+  "kind": "operator",
+  "bed": "a5_word_T16",
+  "note": "quaternion-gated recurrence; beats the absolute-table softmax twin by +0.7"
+}

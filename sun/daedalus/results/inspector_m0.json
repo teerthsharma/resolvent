@@ -1,0 +1,77 @@
+{
+  "items": [
+    {
+      "claim": "V1_alibi_beats_family: eval loss(a_alibi) < eval loss(f) at ss0, delta_alibi_minus_f = -0.020571604371070862",
+      "file": "sun/daedalus/results/verdicts_12.json",
+      "status": "bound",
+      "evidence": "Stored loss_a/loss_f/loss_alibi (1.2756839245557785 / 1.043056309223175 / 1.0224847048521042) reproduced exactly from tests/foreman/design4x5/design4x5_results.jsonl line 3 (arm a, ss0), line 1 (arm f, ss0), and tests/foreman/phase_j/N2/foreman/rpos_results.jsonl line 2 (a_alibi, ss0). Recomputed delta_alibi_minus_f = 1.0224847048521042 - 1.043056309223175 = -0.020571604371070862, matches stored exactly. GPU rerun in rerun_v12.log agrees to 1.65e-6 (non-determinism, expected)."
+    },
+    {
+      "claim": "V2_fox_recovers_cwin: recovery = (loss(a)-loss(a2F))/(loss(a)-loss(f)) >= 0.8 at ss0, recovery = 1.0015198212841598",
+      "file": "sun/daedalus/results/verdicts_12.json",
+      "status": "bound",
+      "evidence": "Stored a2F loss 1.0427027568221092 reproduced exactly from tests/foreman/phase_j/record.jsonl row R-FoX (measured.loss_arm). Recomputed recovery = (1.2756839245557785-1.0427027568221092)/(1.2756839245557785-1.043056309223175) = 1.0015198212841598, matches stored exactly."
+    },
+    {
+      "claim": "rerun_v12.py wrapper cannot have written to the original protected result files",
+      "file": "sun/daedalus/verdicts/rerun_v12.py",
+      "status": "bound",
+      "evidence": "grep of script: PROTECTED list (design4x5_results.jsonl, rpos_results.jsonl, record.jsonl, house-events.jsonl, crn_order.json) is only opened 'rb' for sha256 hashing (line 32); every write path is redirected to sun/daedalus/results/*.redirected.jsonl (lines 65-72, e.g. m.BOARD, m.RESULTS_PATH, RP.ROWS). Own outputs go only to verdicts_lm_rows.jsonl and verdicts_12.json inside sun/daedalus/results. before/after sha256 of PROTECTED computed at lines 95/119; verdicts_12.json.protected_files_unchanged reports all 5 files True."
+    },
+    {
+      "claim": "shortcuts_phase_k.json stored numbers (0.5642 bed_k HPD, 0.5108 14-slot, 0.4398 10-slot, 0.8096 30-slot, far line 0.1231) reproduce and trace to RECORD_K.md",
+      "file": "sun/daedalus/results/shortcuts_phase_k.json",
+      "status": "bound",
+      "evidence": "Independently called shortcuts.void_check() (CPU, ~0.7s): bed_k hpd_window_k3W10=0.5642224409448819, bed_kp schpd_10slot=0.43982539164490864, schpd_30slot=0.8095626631853785, far-band best (position_only_floor)=0.1230723284100782 -- all exact matches to stored values. RECORD_K.md:124-129 states '0.5642 beyond 2^L' (bed_k), 'a 14-slot window scores 0.5108', 'A 30-slot build ... scores 0.8096' -- matches. schpd_14slot (0.5107702349869452) independently asserted by engine/test_shortcuts.py."
+    },
+    {
+      "claim": "python sun/daedalus/engine/test_shortcuts.py reproduces V5 (bed_k' void beyond 2^L, not void on far band)",
+      "file": "sun/daedalus/engine/test_shortcuts.py",
+      "status": "bound",
+      "evidence": "Ran the script (CPU, <1s): exit code 0, stdout 'PASS near VOID (schpd_62slot 0.9909); far not void (max 0.1231 on 73664 tokens)'. Script asserts near['scores']['schpd_14slot'] == 0.5107702349869452 (exact float equality, passed) and far max <= 1/8+0.03 (0.1231 < 0.155, passed). Matches shortcuts_phase_k.json's expectation_V5 and V5_reproduced=true."
+    },
+    {
+      "claim": "CHEATS.json: all 20 record_cite file:line locations contain their record_quote (verbatim or matching-gist paraphrase)",
+      "file": "sun/daedalus/cheats/CHEATS.json",
+      "status": "struck",
+      "evidence": "19/20 rows check out: c01,c02(paraphrase, gist matches),c03,c04,c05,c06,c07,c08,c09,c10,c11,c12(dup of c02, same paraphrase),c13,c14,c15,c17,c18,c19,c20 all have their record_quote text present at or immediately around the cited line. c16 (cites tests/foreman/phase_j/RECORD_N.md:61, quote 'FoX, added to the twin with nothing else changed, recovers 100-111%') is WRONG: line 61 of RECORD_N.md is mid-paragraph of 'House's adversarial audit of D2' (unrelated D1/D2/D3 pole-freedom content, 'the model reads the real part ... Re(W_G) = W cos(...)'). The quoted text actually appears at RECORD_N.md line 78 (grep-confirmed), 17 lines away from the cited line and in an unrelated section context. This is a real citation-location error, not a paraphrase."
+    },
+    {
+      "claim": "owners.json entries d-jepa (arXiv 2609.24749) and benchjack (arXiv 2605.12673), plus alphaevolve and re-bench-reward-hacking-metr, have titles matching the fetched sources",
+      "file": "sun/daedalus/owners.json",
+      "status": "bound",
+      "evidence": "WebFetch of https://arxiv.org/abs/2609.24749 returns title 'D-JEPA: A Decision-Aligned Latent World Model' by Shuaijun Liu et al. -- exact match. https://arxiv.org/abs/2605.12673 returns 'Do Androids Dream of Breaking the Game? Systematically Auditing AI Agent Benchmarks with BenchJack' by Hao Wang et al. -- exact match. https://arxiv.org/abs/2506.13131 (alphaevolve) matches title/authors exactly. https://metr.org/blog/2025-06-05-recent-reward-hacking/ confirms title 'Recent Frontier Models Are Reward Hacking', the 30.4% (39/128) vs 0.7% HCAST figures, and the rust_codecontests_utils.evaluate_rust_code monkey-patch example, all matching owners.json's what_it_owns text."
+    },
+    {
+      "claim": "bars.json registered_utc ordering (17:09:27Z < addendum_1 17:14:17Z < addendum_2 17:35:45Z) holds, and results files postdate the initial bar registration",
+      "file": "sun/daedalus/registry/bars.json",
+      "status": "bound",
+      "evidence": "registered_utc fields: 2026-09-27T17:09:27Z, addendum_1 17:14:17Z, addendum_2 17:35:45+00:00 -- strictly increasing. File mtimes (UTC): shortcuts_phase_k.json 17:14:04, verdicts_12.json/verdicts_lm_rows.jsonl 17:31:01, bars.json itself 17:35:45 (== addendum_2, i.e. last edit). All three result files postdate the 17:09:27Z initial registration. Note: shortcuts_phase_k.json (17:14:04) precedes addendum_1's registration (17:14:17) by only 13s -- addendum_1 adds V0/V1/V3/V5 candidate-scoring rules that do not govern the V5 shortcut-library self-check, so this is not a violation of L-FIXED-BAR, but the gap is tight enough to note as evidence rather than ignore."
+    },
+    {
+      "claim": "m0_redteam.json: cheats_rejected count equals number of REJECT rows; each row's stage/reason is consistent with its detail",
+      "file": "sun/daedalus/results/m0_redteam.json",
+      "status": "bound",
+      "evidence": "when_utc 2026-09-27T17:58:31Z (after the 17:35:45Z addendum_2 gate, as required). All 20 cheats array entries (c01-c20) have verdict REJECT; cheats_rejected='20/20' matches. by_stage tally (V0:7, V0.sandbox:1, V1:3, V2:4, V3:2, V4:3, sum=20) matches a manual recount of the 20 rows' stage fields exactly. Spot-checked reason<->detail consistency: V1 rows (c17 causal_dev=0.8126 > 0.0001; c18 row-sum error 0.981; c19 gamma*rowsum=1.0589>=1) all have numeric fields backing the stated reason. V4 rows (c05, c14: band_acc all <0.9; c08: 'reported 0.95 vs measured 1.0000' reported/measured mismatch) match the rule. V2 rows (c10-c13) each cite a floor score >=0.5 that is present verbatim in their own 'floors' dict. V3 rows (c16 margin -0.0002, c20 margin +0.0000) match their v3.margin fields. expected_stage_matches=18 verified by comparing each row's CHEATS.json expected_stage to its actual stage: exactly 2 mismatches (c05 expected V0.init but actually caught at V4; c20 expected V4 but actually caught at V3), 18 matches, consistent with the reported figure. bars_sha256 in the file (3c82d80db5...) matches a fresh sha256sum of registry/bars.json."
+    },
+    {
+      "claim": "known_verdicts.json: reproduced count equals the booleans (5/5), and V1/V2 numbers match verdicts_12.json",
+      "file": "sun/daedalus/results/known_verdicts.json",
+      "status": "bound",
+      "evidence": "reproduced field '5/5'; verdicts.V1_alibi_beats_family.reproduced=true, V2_fox_recovers_cwin.reproduced=true, V3_q2_closure.reproduced=true, V4_x3_recency.reproduced=true, V5_phase_k_window.reproduced=true -- exactly 5 true booleans, matches '5/5'. V1/V2 rerun and stored numbers are byte-identical to verdicts_12.json. V4/V5 sub-objects match m0_redteam.json's c11/shortcuts-library reasons and shortcuts_phase_k.json numbers respectively. bars_sha256 matches m0_redteam.json's and the live file."
+    }
+  ],
+  "struck": [
+    {
+      "id": "c16",
+      "claim": "CHEATS.json c16 record_cite tests/foreman/phase_j/RECORD_N.md:61 contains the quoted text",
+      "file": "sun/daedalus/cheats/CHEATS.json",
+      "evidence": "Line 61 of RECORD_N.md is inside 'House's adversarial audit of D2' discussing pole-freedom/Re(W_G), unrelated to the quote. The quote 'FoX, added to the twin with nothing else changed, recovers 100-111%' is verbatim at RECORD_N.md line 78, per grep -n confirmation."
+    }
+  ],
+  "summary": {
+    "bound": 10,
+    "struck": 1,
+    "unverified": 0
+  }
+}

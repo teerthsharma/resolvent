@@ -1,0 +1,11 @@
+{
+  "name": "c06_manifest_bar",
+  "kind": "operator",
+  "bed": "a5_word_T16",
+  "bars": {
+    "band_acc": 0.5
+  },
+  "reported": {
+    "band_acc": 0.9998
+  }
+}

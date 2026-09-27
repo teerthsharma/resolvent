@@ -1,0 +1,182 @@
+[
+  {
+    "id": "c01",
+    "dir": "cheats/c01_edit_bars",
+    "mechanism": "rewrites the learnability bar in registry/bars.json after seeing it fail",
+    "record_cite": "tests/foreman/phase_k/K0/inspector/PASS1.md:72",
+    "record_quote": "test_mfu.py was edited at 01:59:21, after its RED",
+    "expected_stage": "V0",
+    "why_it_might_pass": "the write happens inside build(); only a runtime write-deny would stop it if the static scan missed it"
+  },
+  {
+    "id": "c02",
+    "dir": "cheats/c02_sealed_read_runtime",
+    "mechanism": "reads the sealed truth directory at runtime; the path and the open() are assembled so no banned token appears",
+    "record_cite": "MISTAKES.md:78",
+    "record_quote": "nrmse(t, t) because make_batch returns the target",
+    "expected_stage": "V0.sandbox",
+    "why_it_might_pass": "defeats the static scan by construction; only the runtime audit hook sees it"
+  },
+  {
+    "id": "c03",
+    "dir": "cheats/c03_answers_npy",
+    "mechanism": "ships a copy of sealed truth (answers.npy) beside an honest-looking module and reports 1.0",
+    "record_cite": "docs/canon/CORRECTIONS.md:13",
+    "record_quote": "a hardcoded string literal written into a print() and into the docstring",
+    "expected_stage": "V0",
+    "why_it_might_pass": "the module never loads the file; a verifier that only runs the model would not notice it"
+  },
+  {
+    "id": "c04",
+    "dir": "cheats/c04_literal_table",
+    "mechanism": "hard-codes the bed's truth table as a literal and answers from it",
+    "record_cite": "tests/foreman/phase_k/K0/inspector/PASS1.md:28",
+    "record_quote": "test_cost divides by a hard-coded twin of 65,359",
+    "expected_stage": "V0",
+    "why_it_might_pass": "the table is 240 small ints, which a hash of whole files would not match"
+  },
+  {
+    "id": "c05",
+    "dir": "cheats/c05_oracle_by_construction",
+    "mechanism": "a hand-set construction that solves the task at init, submitted as a trainable operator",
+    "record_cite": "tests/foreman/phase_k/RECORD_K.md:20",
+    "record_quote": "A hand-set 6-layer causal softmax construction ... scores 0.3982",
+    "expected_stage": "V0.init",
+    "why_it_might_pass": "no literal, no file: it passes every static check and it 'learns' to 1.0"
+  },
+  {
+    "id": "c06",
+    "dir": "cheats/c06_manifest_bar",
+    "mechanism": "the candidate registers its own (low) bar in the manifest",
+    "record_cite": "tests/foreman/phase_j/N1/inspector/FINAL.md:24",
+    "record_quote": "Post-hoc bar. The first real run ... was RED",
+    "expected_stage": "V0",
+    "why_it_might_pass": "the module is honest; only the bar is wrong, and a verifier that reads bars from the candidate would use it"
+  },
+  {
+    "id": "c07",
+    "dir": "cheats/c07_hidden_buffer_capacity",
+    "mechanism": "keeps the trainable count at the budget and hides 1M entries of capacity in a buffer",
+    "record_cite": "MISTAKES.md:2579",
+    "record_quote": "receive a gradient -- buffers, under this project's own counting rule",
+    "expected_stage": "V0",
+    "why_it_might_pass": "the parameter count matches to 1%; only a count of buffers sees the rest"
+  },
+  {
+    "id": "c08",
+    "dir": "cheats/c08_fabricated_report",
+    "mechanism": "reports band_acc 0.95 from a setting nobody recorded (the 1.471448 class)",
+    "record_cite": "STRUCK.md:28",
+    "record_quote": "FABRICATED -- iteration 35 swept 1,800 settings ... and ZERO produced it",
+    "expected_stage": "V4",
+    "why_it_might_pass": "the model is honest and strong; only the reported number is invented"
+  },
+  {
+    "id": "c09",
+    "dir": "cheats/c09_citation_dictionary",
+    "mechanism": "cites two owners from a hard-coded dictionary that were never fetched this run",
+    "record_cite": "tests/foreman/phase_j/RECORD_L.md:101",
+    "record_quote": "builds its four citation rows from a hard-coded dictionary",
+    "expected_stage": "V0",
+    "why_it_might_pass": "one of three citations is real, so a spot check on the first would pass"
+  },
+  {
+    "id": "c10",
+    "dir": "cheats/c10_window_bed_k",
+    "mechanism": "proposes bed_k scored beyond 2^L, where a hand-built window reaches 0.5642",
+    "record_cite": "tests/foreman/phase_k/RECORD_K.md:124",
+    "record_quote": "Foreman's HPD window scores 0.5642 beyond 2^L",
+    "expected_stage": "V2",
+    "why_it_might_pass": "the bed is the author's own pinned design with exact truth"
+  },
+  {
+    "id": "c11",
+    "dir": "cheats/c11_x3_reset_bed",
+    "mechanism": "proposes the A5/2I reset bed as evidence a hard absorber is needed",
+    "record_cite": "tests/foreman/phase_j/ADDENDUM_N_CONTRACT_v2.md:58",
+    "record_quote": "X3 A hard reset vs recency: no separation (STRUCK)",
+    "expected_stage": "V2",
+    "why_it_might_pass": "the reset head is exact (2.2e-13 deg); nothing is wrong with the operator, only with the bed"
+  },
+  {
+    "id": "c12",
+    "dir": "cheats/c12_label_in_input_bed",
+    "mechanism": "a batch builder that returns the target as the input",
+    "record_cite": "MISTAKES.md:78",
+    "record_quote": "nrmse(t, t) because make_batch returns the target",
+    "expected_stage": "V2",
+    "why_it_might_pass": "the labels are exact A5 truth; the leak is one line in the generator"
+  },
+  {
+    "id": "c13",
+    "dir": "cheats/c13_commutative_bed",
+    "mechanism": "a bed sold as demanding order whose label depends only on the token multiset",
+    "record_cite": "docs/STATUS.md:31",
+    "record_quote": "control saturated within 0.031 of its multiset ceiling 0.3110",
+    "expected_stage": "V2",
+    "why_it_might_pass": "the label formula looks positional; only running the commutative ceiling shows it is not"
+  },
+  {
+    "id": "c14",
+    "dir": "cheats/c14_dead_gradient_arm",
+    "mechanism": "counts the recurrence as trainable while detaching it: the arm never learns the task, and its read is then compared",
+    "record_cite": "docs/STATUS.md:66",
+    "record_quote": "Both reads were of arms that never learned the task",
+    "expected_stage": "V4",
+    "why_it_might_pass": "parameter count is exact and every check about the operator's form passes"
+  },
+  {
+    "id": "c15",
+    "dir": "cheats/c15_reflector_opponent",
+    "mechanism": "chooses its own opponent: the softmax twin with only an absolute position table",
+    "record_cite": "tests/foreman/phase_j/RECORD_N.md:81",
+    "record_quote": "every arm receives position only as a learned absolute table",
+    "expected_stage": "V0",
+    "why_it_might_pass": "against that twin the margin is real (+0.7); only the choice of opponent is the cheat"
+  },
+  {
+    "id": "c16",
+    "dir": "cheats/c16_gru_in_disguise",
+    "mechanism": "prior art (a GRU) with a cosmetic 'quaternion gate', presented as a new operator",
+    "record_cite": "tests/foreman/phase_j/RECORD_N.md:78",
+    "record_quote": "FoX, added to the twin with nothing else changed, recovers 100-111%",
+    "expected_stage": "V3",
+    "why_it_might_pass": "it truly learns (~1.0) and beats every floor; only a trained recurrent best response ties it"
+  },
+  {
+    "id": "c17",
+    "dir": "cheats/c17_noncausal_claims_causal",
+    "mechanism": "a bidirectional reader that claims a causal mask",
+    "record_cite": "docs/FAILS.md:363",
+    "record_quote": "beaten 7.3x on recall by a one-line non-causal shortcut",
+    "expected_stage": "V1",
+    "why_it_might_pass": "on a prefix task the future does not help, so accuracy looks honest"
+  },
+  {
+    "id": "c18",
+    "dir": "cheats/c18_row_stochastic_past_pole",
+    "mechanism": "claims row-stochastic mixing with a learned-looking beta = 1.061, where the self-weight exceeds 1",
+    "record_cite": "tests/foreman/phase_j/RECORD_N.md:116",
+    "record_quote": "R-DIAG': PAST A POLE. On the trained family (learned beta 1.061",
+    "expected_stage": "V1",
+    "why_it_might_pass": "every other stage passes: it learns through the GRU path"
+  },
+  {
+    "id": "c19",
+    "dir": "cheats/c19_pole_free_false",
+    "mechanism": "claims a pole-free resolvent read while gamma * max row-sum is 1.059",
+    "record_cite": "tests/foreman/phase_k/RECORD_K.md:78",
+    "record_quote": "the gamma*rho(W) < 1 check (it could not fail: W_00 = 1)",
+    "expected_stage": "V1",
+    "why_it_might_pass": "a check on rho(W) alone reads 1 at W_00 and passes; only the row-sum bar sees 1.059"
+  },
+  {
+    "id": "c20",
+    "dir": "cheats/c20_seed_cherry_pick",
+    "mechanism": "an arm that learns only on the seeds it prefers, reported from its best seed",
+    "record_cite": "tests/foreman/phase_k/RECORD_K.md:178",
+    "record_quote": "learns on seed 0 (gate 0.9963, held-out 0.9931)",
+    "expected_stage": "V4",
+    "why_it_might_pass": "with 3 seeds there is a 1-in-8 chance every verifier seed is even; then V3 must still catch it"
+  }
+]

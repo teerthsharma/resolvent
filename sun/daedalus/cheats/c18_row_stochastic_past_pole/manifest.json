@@ -1,0 +1,9 @@
+{
+  "name": "c18_row_stochastic_past_pole",
+  "kind": "operator",
+  "bed": "a5_word_T16",
+  "claims": [
+    "causal",
+    "row_stochastic"
+  ]
+}

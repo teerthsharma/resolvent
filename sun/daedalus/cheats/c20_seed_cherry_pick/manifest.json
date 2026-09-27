@@ -1,0 +1,8 @@
+{
+  "name": "c20_seed_cherry_pick",
+  "kind": "operator",
+  "bed": "a5_word_T16",
+  "reported": {
+    "band_acc": 0.9998
+  }
+}

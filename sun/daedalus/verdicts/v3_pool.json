@@ -1,0 +1,79 @@
+{
+  "_what": "V3 trained-best-response pool: opponents a candidate must beat on a bed. Interface registry only; runnable_here means trainable end-to-end on this box today with code already in the repo.",
+  "_checked_utc": "2026-09-27",
+  "_fla_check": "python -c \"import fla\" -> ModuleNotFoundError: No module named 'fla'; pip show flash-linear-attention -> not found",
+  "_citations": "No paper was fetched for this registry. GDN 2412.06464 and PaTH 2505.16381 match ids already in the repo (tests/foreman/phase_j/L1/chase_rivals/SOURCES.txt lists GDN and DeltaProduct as [U] not opened); FoX 2503.02130 is the id arms_j.py uses; ALiBi, RoFormer and DeltaProduct ids/authors are from memory and UNVERIFIED -- fetch before citing.",
+  "_beds": {
+    "lm_tinystories_d4x5": "byte-level TinyStories LM, design4x5 grid shape (hidden 128, 3 layers, 8 heads, seq 512, batch 8, 3538 steps, CRN split seeds), eval via r3_eval.train_with_eval",
+    "a5_word_T16": "A5 word problem bed, sun/daedalus/registry/bars.json beds.a5_word_T16; arms in tests/foreman/phase_j/a5_bed.py",
+    "planning_consequence": "planning / executed-outcome consequence beds (none registered in bars.json yet)"
+  },
+  "pool": [
+    {
+      "name": "a",
+      "kind": "softmax twin, absolute position table (SDPA, is_causal)",
+      "runnable_here": true,
+      "code_path_or_null": "tests/foreman/design4x5/design4x5.py:train_arm('a') (forward: tests/foreman/q2/q2_certificate.py:softmax_forward); A5: tests/foreman/phase_j/a5_bed.py ARMS['a_softmax_twin']",
+      "source": "Phase J design4x5 grid arm (a)",
+      "beds": ["lm_tinystories_d4x5", "a5_word_T16"]
+    },
+    {
+      "name": "a_alibi",
+      "kind": "softmax twin + ALiBi bias -slope_h*(i-j), slopes 2^(-8h/H); zero extra params; strongest zero-param control per Phase J (R-POS)",
+      "runnable_here": true,
+      "code_path_or_null": "tests/foreman/phase_j/N2/foreman/rpos.py:alibi_forward (driven by sun/daedalus/verdicts/rerun_v12.py)",
+      "source": "Press, Smith, Lewis 2021, ALiBi (arXiv 2108.12409); tests/foreman/phase_j/RECORD_N.md R-POS",
+      "beds": ["lm_tinystories_d4x5"]
+    },
+    {
+      "name": "a_rope",
+      "kind": "softmax twin + RoPE on q,k (rotate-half, base 10000); zero extra params",
+      "runnable_here": true,
+      "code_path_or_null": "tests/foreman/phase_j/N2/foreman/rpos.py:rope_forward",
+      "source": "Su et al. 2021, RoFormer (arXiv 2104.09864); tests/foreman/phase_j/RECORD_N.md R-POS",
+      "beds": ["lm_tinystories_d4x5", "a5_word_T16"]
+    },
+    {
+      "name": "a2F",
+      "kind": "Forgetting Transformer twin: per-head data-dependent forget gate as softmax score bias sum log sigmoid(forget_head(x)); +3,096 params",
+      "runnable_here": true,
+      "code_path_or_null": "tests/foreman/phase_j/arms_j.py:train_a2F / fox_forward; A5: tests/foreman/phase_j/a5_bed.py ARMS['a2_fox_twin']",
+      "source": "Lin et al. 2025, Forgetting Transformer (arXiv 2503.02130); tests/foreman/phase_j/record.jsonl R-FoX",
+      "beds": ["lm_tinystories_d4x5", "a5_word_T16"]
+    },
+    {
+      "name": "gated_deltanet",
+      "kind": "linear-attention recurrence with gated delta rule (decay alpha, write strength beta)",
+      "runnable_here": false,
+      "code_path_or_null": null,
+      "equation_reference_only": "tests/foreman/phase_j/L1/chase_rivals/rivals_impl.py:gdn_recurrent (float64 numpy, not a trainable LM)",
+      "source": "Yang, Kautz, Hatamizadeh 2024, Gated Delta Networks (arXiv 2412.06464); flash-linear-attention (fla) not installed",
+      "beds": ["lm_tinystories_d4x5", "a5_word_T16"]
+    },
+    {
+      "name": "deltaproduct",
+      "kind": "DeltaNet with n_h Householder products per token (diagonal-plus-low-rank state transition)",
+      "runnable_here": false,
+      "code_path_or_null": null,
+      "equation_reference_only": "tests/foreman/phase_j/L1/chase_rivals/rivals_impl.py:householder_general (single Householder factor, float64 numpy)",
+      "source": "Siems et al. 2025, DeltaProduct (arXiv 2502.10297); fla not installed",
+      "beds": ["lm_tinystories_d4x5", "a5_word_T16"]
+    },
+    {
+      "name": "path_attention",
+      "kind": "softmax attention with data-dependent accumulated Householder position encoding (PaTH)",
+      "runnable_here": false,
+      "code_path_or_null": null,
+      "source": "Yang et al. 2025, PaTH attention (arXiv 2505.16381); fla not installed",
+      "beds": ["lm_tinystories_d4x5", "a5_word_T16"]
+    },
+    {
+      "name": "d_jepa",
+      "kind": "latent world model with a bounded permutation-equivariant operator aligned to executed-outcome rankings",
+      "runnable_here": false,
+      "code_path_or_null": null,
+      "source": "arXiv 2609.24749, Liu et al. 21 Sep 2026; fetched by Wilson",
+      "beds": ["planning_consequence"]
+    }
+  ]
+}

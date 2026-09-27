@@ -1,0 +1,6 @@
+{
+  "name": "c12_label_in_input_bed",
+  "kind": "bed",
+  "family": "custom",
+  "entry": "bed.py"
+}

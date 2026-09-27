@@ -1,0 +1,8 @@
+{
+  "name": "c14_dead_gradient_arm",
+  "kind": "operator",
+  "bed": "a5_word_T16",
+  "reported": {
+    "band_acc": 0.03
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "name": "c17_noncausal_claims_causal",
+  "kind": "operator",
+  "bed": "a5_word_T16",
+  "claims": [
+    "causal"
+  ]
+}

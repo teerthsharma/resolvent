@@ -1,0 +1,62 @@
+{
+  "_law": "L-FIXED-BAR. Registered 2026-09-27T17:09:27Z by the Daedalus lead, before any engine stage, cheat or verdict re-run executed. Candidates cannot write this file (sandbox write-deny + before/after sha256 of engine/, registry/, sealed/). Any later edit must append a new key with its own timestamp, never change an existing one.",
+  "registered_utc": "2026-09-27T17:09:27Z",
+  "m0_kill": {
+    "cheats_rejected_required": "20/20",
+    "known_verdicts_required": ">= 4/5",
+    "honest_controls": "at least one honest control must pass every stage V0, V1, V2, V4 on the A5 bed; otherwise the verifier is a check that could not pass (MISTAKES record: 'checks that could not pass') and M0 fails regardless of the cheat count"
+  },
+  "beds": {
+    "a5_word_T16": {
+      "task": "A5 word problem, 4 generators (a5_bed.py make_generators), label = index of running product",
+      "T": 16,
+      "scored_band": "positions 8..15 (far band past every window floor w<=4)",
+      "v2_margin_over_best_floor": 0.1,
+      "v4_learnability_in_distribution": 0.9,
+      "v4_seeds": 3,
+      "v4_repro_tolerance_abs": 0.02,
+      "train_steps": 1500,
+      "batch": 128,
+      "lr": 0.003,
+      "param_budget": 60000,
+      "param_tolerance_frac": 0.02
+    },
+    "bed_validity": {
+      "void_if_any_floor_or_shortcut_scores_at_least": 0.5,
+      "source": "Phase K contract kill and Amendment K1-a (tests/foreman/phase_k/RECORD_K.md:120-147): a bed is void if a hand-built construction exceeds 0.5 on the scored band"
+    }
+  },
+  "known_verdicts": {
+    "V1_alibi_beats_family": "re-run at split seed 0 on this box: eval loss(a_alibi) < eval loss(f). Stored reference: ALiBi beats family by 0.0206 nats at ss0 (tests/foreman/phase_j/RECORD_N.md, R-POS). Reproduced if the sign holds in the re-run.",
+    "V2_fox_recovers_cwin": "re-run at split seed 0: (loss(a) - loss(a2F)) / (loss(a) - loss(f)) >= 0.8. Stored reference 1.002 at ss0 (docs/STATUS.md cond. 2 gate 4).",
+    "V3_q2_closure": "closure of the corrected Q2 generators (72 deg about (0,1,phi), 120 deg about (1,1,1)) is exactly 120 unit quaternions and 60 rotations, contains -1, and the as-written pair does not close within 5000 (ADDENDUM_N_CONTRACT_v2.md:79-80, T10).",
+    "V4_x3_recency": "the engine's V2 recency floor solves the X3 reset bed: accuracy >= 0.99 at slope 1.0 (n=4096, density 0.05, seed 7), so the engine voids the bed (ADDENDUM_N_CONTRACT_v2.md:58-61, X3b 1.0000).",
+    "V5_phase_k_window": "the engine's V2 shortcut library voids bed_k and bed_k' beyond 2^L at L=7, n=4096 (best bound window > 0.5; stored 0.5642 HPD on bed_k, 0.5108 14-slot on bed_k'), and does NOT void bed_k' on the far band (control; every construction at chance 1/8 past 2*c*2^L) (RECORD_K.md:120-147)."
+  },
+  "addendum_1": {
+    "registered_utc": "2026-09-27T17:14:17Z",
+    "note": "appended before any candidate, cheat or control ran; no existing key changed",
+    "v0_param_rule": "trainable params within +-2% of the bed param_budget (a5_word_T16: 60000); non-trainable buffer numel <= 10% of budget (hidden capacity)",
+    "v0_init_oracle_rule": "untrained model (seed k, before step 0) band accuracy must not exceed best V2 floor + 0.05 on any seed: an architecture that answers before learning carries the truth (hard-coded outputs)",
+    "v1_causal_tol": 0.0001,
+    "v1_row_sum_tol": 1e-05,
+    "v1_pole_rule": "gamma * max row-sum |W| < 1 (RECORD_K.md clause 6 numerics bar)",
+    "v3_margin": 0.02,
+    "v3_pool_a5": [
+      "alibi_twin",
+      "gru"
+    ],
+    "v5_rungs": [
+      60000,
+      120000
+    ],
+    "v5_rule": "V3 margin >= 0.02 must hold at every rung",
+    "stage_order": "V0, V1, V4, V2, V3, V5 -- learnability (V4) gates every comparative read (docs/STATUS.md: 'Admissibility gate for every future DO row ... before any read counts')"
+  },
+  "addendum_2": {
+    "registered_utc": "2026-09-27T17:35:45+00:00",
+    "note": "appended after M0 run 1 was stopped at c11 (partial, not reported as a result) and before run 2; no bar value changes. Two verifier faults found in run 1: (a) c08 was REJECTed because the sandbox process died of a memory-allocation failure under machine load -- an infrastructure death counted as a catch; (b) the lead's own attack a01 (an oracle that stays silent until its first training forward) evades the V0.init rule by construction.",
+    "infra_rule": "a runner death (no output, timeout) is retried 3x and then reported ERROR, never REJECT; ERROR counts neither caught nor passed",
+    "relabel_rule": "per verification tag, input tokens and classes are relabeled by secret permutations (sigma over vocab, pi over classes) drawn from sealed/secret.json; floors are relabeling-invariant"
+  }
+}

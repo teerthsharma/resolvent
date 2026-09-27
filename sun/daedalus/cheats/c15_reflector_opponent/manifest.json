@@ -1,0 +1,9 @@
+{
+  "name": "c15_reflector_opponent",
+  "kind": "operator",
+  "bed": "a5_word_T16",
+  "opponent": "softmax_abs_twin",
+  "reported": {
+    "band_acc": 0.9998
+  }
+}

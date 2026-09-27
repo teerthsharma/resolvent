@@ -1,0 +1,133 @@
+{
+  "V1_alibi_beats_family": {
+    "method": "rerun",
+    "split_seed": 0,
+    "steps": 3538,
+    "rerun": {
+      "loss_a": 1.275685578584671,
+      "loss_f": 1.043056309223175,
+      "loss_alibi": 1.0224847048521042
+    },
+    "stored": {
+      "loss_a": 1.2756839245557785,
+      "loss_f": 1.043056309223175,
+      "loss_alibi": 1.0224847048521042
+    },
+    "abs_diff_rerun_vs_stored": {
+      "a": 1.6540288925170898e-06,
+      "f": 0.0,
+      "a_alibi": 0.0
+    },
+    "delta_alibi_minus_f": -0.020571604371070862,
+    "stored_delta_alibi_minus_f": -0.020571604371070862,
+    "bar": "eval loss(a_alibi) < eval loss(f) at ss0",
+    "reproduced": true,
+    "provenance": [
+      "C:\\Users\\seal\\Desktop\\New folder (32)\\tests\\foreman\\design4x5\\design4x5_results.jsonl",
+      "C:\\Users\\seal\\Desktop\\New folder (32)\\tests\\foreman\\phase_j\\N2\\foreman\\rpos_results.jsonl",
+      "C:\\Users\\seal\\Desktop\\New folder (32)\\tests\\foreman\\phase_j\\record.jsonl",
+      "C:\\Users\\seal\\Desktop\\New folder (32)\\sun\\daedalus\\results\\verdicts_lm_rows.jsonl",
+      "C:\\Users\\seal\\Desktop\\New folder (32)\\sun\\daedalus\\verdicts\\rerun_v12.py",
+      "tests/foreman/design4x5/design4x5.py:train_arm",
+      "tests/foreman/phase_j/N2/foreman/rpos.py:alibi_forward",
+      "tests/foreman/phase_j/arms_j.py:train_a2F",
+      "tests/foreman/eval/r3_eval.py:train_with_eval"
+    ],
+    "command": "python sun/daedalus/verdicts/rerun_v12.py"
+  },
+  "V2_fox_recovers_cwin": {
+    "method": "rerun",
+    "split_seed": 0,
+    "steps": 3538,
+    "rerun": {
+      "loss_a": 1.275685578584671,
+      "loss_f": 1.043056309223175,
+      "loss_a2F": 1.0427028611302376
+    },
+    "stored": {
+      "loss_a": 1.2756839245557785,
+      "loss_f": 1.043056309223175,
+      "loss_a2F": 1.0427027568221092
+    },
+    "abs_diff_rerun_vs_stored": {
+      "a": 1.6540288925170898e-06,
+      "f": 0.0,
+      "a2F": 1.043081283569336e-07
+    },
+    "recovery": 1.0015193620901943,
+    "stored_recovery": 1.0015198212841598,
+    "bar": "(loss(a) - loss(a2F)) / (loss(a) - loss(f)) >= 0.8 at ss0",
+    "reproduced": true,
+    "provenance": [
+      "C:\\Users\\seal\\Desktop\\New folder (32)\\tests\\foreman\\design4x5\\design4x5_results.jsonl",
+      "C:\\Users\\seal\\Desktop\\New folder (32)\\tests\\foreman\\phase_j\\N2\\foreman\\rpos_results.jsonl",
+      "C:\\Users\\seal\\Desktop\\New folder (32)\\tests\\foreman\\phase_j\\record.jsonl",
+      "C:\\Users\\seal\\Desktop\\New folder (32)\\sun\\daedalus\\results\\verdicts_lm_rows.jsonl",
+      "C:\\Users\\seal\\Desktop\\New folder (32)\\sun\\daedalus\\verdicts\\rerun_v12.py",
+      "tests/foreman/design4x5/design4x5.py:train_arm",
+      "tests/foreman/phase_j/N2/foreman/rpos.py:alibi_forward",
+      "tests/foreman/phase_j/arms_j.py:train_a2F",
+      "tests/foreman/eval/r3_eval.py:train_with_eval"
+    ],
+    "command": "python sun/daedalus/verdicts/rerun_v12.py"
+  },
+  "wall_clock_s": 1138.8596246242523,
+  "per_arm_wall_s": {
+    "a": 74.15671062469482,
+    "f": 656.5695791244507,
+    "a_alibi": 123.53775930404663,
+    "a2F": 284.5955755710602
+  },
+  "gpu_peak_mb": 2708.5361328125,
+  "per_arm_peak_mb": {
+    "a": 296.0322265625,
+    "f": 2708.5361328125,
+    "a_alibi": 304.0322265625,
+    "a2F": 432.8349609375
+  },
+  "crn_match_ss0": true,
+  "stored_all_seeds": {
+    "0": {
+      "loss_a": 1.2756839245557785,
+      "loss_f": 1.043056309223175,
+      "loss_alibi": 1.0224847048521042,
+      "loss_a2F": 1.0427027568221092,
+      "delta_alibi_minus_f": -0.020571604371070862,
+      "V1_holds": true,
+      "recovery": 1.0015198212841598,
+      "V2_holds": true
+    },
+    "1": {
+      "loss_a": 1.2920352071523666,
+      "loss_f": 1.0530420243740082,
+      "loss_alibi": 1.0370063483715057,
+      "loss_a2F": 1.0522486716508865,
+      "delta_alibi_minus_f": -0.01603567600250244,
+      "V1_holds": true,
+      "recovery": 1.0033195621477513,
+      "V2_holds": true
+    },
+    "2": {
+      "loss_a": 1.3010341972112656,
+      "loss_f": 1.0390851497650146,
+      "loss_alibi": 1.015971302986145,
+      "loss_a2F": 1.010645292699337,
+      "delta_alibi_minus_f": -0.02311384677886963,
+      "V1_holds": true,
+      "recovery": 1.1085701869998714,
+      "V2_holds": true
+    }
+  },
+  "notes": [
+    "default (non-deterministic) SDPA mode, not bitwise; one run per arm",
+    "a2F: arms_j.train_a2F called directly; run_j.run_row's quintile read skipped (its twin checkpoint lived in a deleted scratchpad and is not needed for the verdict)",
+    "stored a2F loss is record.jsonl R-FoX* measured.loss_arm; stored a/f from the design4x5 grid; stored a_alibi from rpos_results.jsonl"
+  ],
+  "protected_files_unchanged": {
+    "tests\\foreman\\design4x5\\design4x5_results.jsonl": true,
+    "tests\\foreman\\phase_j\\N2\\foreman\\rpos_results.jsonl": true,
+    "tests\\foreman\\phase_j\\record.jsonl": true,
+    "house-events.jsonl": true,
+    "tests\\foreman\\design4x5\\crn_order.json": true
+  }
+}

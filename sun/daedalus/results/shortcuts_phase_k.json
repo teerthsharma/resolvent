@@ -1,0 +1,510 @@
+{
+ "command": "python sun/daedalus/engine/shortcuts.py",
+ "utc": "2026-09-27T17:14:04.262089+00:00",
+ "machine": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel",
+ "numpy": "2.4.6",
+ "device": "CPU only",
+ "void_line": 0.5,
+ "c_max": {
+  "4": 4.25,
+  "7": 3.5
+ },
+ "library": [
+  {
+   "name": "position_only_floor",
+   "source": "tests/foreman/phase_k/K0/cameron/bed_k.py:45-48 (floor_recency; wald.py:52-58)",
+   "bound_in": "RECORD_K.md:111-113 clause 2 (K1.F), 138-140 clause 2' (K1.F''); K1/cameron/k1fpp.json 'recency'"
+  },
+  {
+   "name": "doubling_credited",
+   "source": "tests/foreman/phase_k/K0/foreman/shortcut.py:46-50; credit K0/cameron/bed_k.py:58-61",
+   "bound_in": "RECORD_K.md:22-24 (0.2988 credited L=6 doubling, Cameron)"
+  },
+  {
+   "name": "c2_hybrid_anchored_k3W10",
+   "source": "tests/foreman/phase_k/K0/foreman/shortcut.py:53-75",
+   "bound_in": "RECORD_K.md:18-22 (C2 hybrid 0.3982, real heads 0 mismatches); K1/inspector/PASS1.md:31"
+  },
+  {
+   "name": "c2_hybrid_centered_k3W10",
+   "source": "tests/foreman/phase_k/K0/foreman/shortcut.py:53-75",
+   "bound_in": "K1/inspector/PASS1.md:31 (K1.F cell 0.4085876, bed_k L7 n4096); RECORD_K.md:124"
+  },
+  {
+   "name": "hpd_window_k3W10",
+   "source": "tests/foreman/phase_k/K1/foreman/k1b.py:17-53 (P = 1/M as K1/cameron/k1fp.py:19-55)",
+   "bound_in": "RECORD_K.md:122-124 (0.5642 on bed_k); K1/inspector/PASS1.md:38-40 (hpd_beats_line, hpd_reference)"
+  },
+  {
+   "name": "schpd_10slot",
+   "source": "tests/foreman/phase_k/K1/foreman/kp_attack.py:19-88",
+   "bound_in": "K1/inspector/PASS2.md:62-63 (0.4398 on bed_k' L7 n4096)"
+  },
+  {
+   "name": "schpd_14slot",
+   "source": "tests/foreman/phase_k/K1/foreman/kp_attack.py:19-88; real heads K1/foreman/kp_w14.py:30-52",
+   "bound_in": "RECORD_K.md:125-128 (0.5108, 15 heads x 8 dims, 0 mismatches f64/f32)"
+  },
+  {
+   "name": "schpd_30slot",
+   "source": "tests/foreman/phase_k/K1/foreman/kp_attack.py:19-88; real heads K1/foreman/kp_next.py:26-67",
+   "bound_in": "RECORD_K.md:128-129 (0.8096, 31 heads x 4 dims), 188-190 (exact at 16384)"
+  },
+  {
+   "name": "schpd_62slot",
+   "source": "tests/foreman/phase_k/K1/foreman/kp_attack.py:19-88; real heads K1/foreman/kp_w62.py:18-42",
+   "bound_in": "RECORD_K.md:184-190 and K1/foreman/FOREMAN_REPORT.md (w62_real_4096 L4+L7; L4 exact at 8192/16384; L7 not realized past 4096: w62_8192 rate 2.3e-4, w62a/w62p4096/w62t RED)"
+  },
+  {
+   "name": "local_noorc_k3W30",
+   "source": "tests/foreman/phase_k/K1/foreman/hunt.py:19-42 (anchor_self=True)",
+   "bound_in": "K1/foreman/kp_next.py:82-83, test_kp_next.py next_far_band (local_W30); K1/inspector/PASS3.md:67"
+  },
+  {
+   "name": "stale_noorc_k3W10",
+   "source": "tests/foreman/phase_k/K1/foreman/hunt.py:45-59",
+   "bound_in": "K1/inspector/PASS1.md:34 (no_oracle_ceiling at R0)"
+  },
+  {
+   "name": "local_noorc_k3W64",
+   "source": "tests/foreman/phase_k/K1/foreman/hunt.py:19-42 (anchor_self=True)",
+   "bound_in": "number bound (0.6393 on bed_k, K1/inspector/PASS1.md:41) but unpriced: 64 slots exceed the 62-slot maximum at d = 128, so info only"
+  }
+ ],
+ "skipped": {
+  "bedk_best_response (Foreman K0, 0.3181)": "struck: declared RED and never run (RECORD_K.md:69-72)",
+  "Cameron beyond-2^L best-response band on bed_k (0.041-0.063)": "struck: no bar (RECORD_K.md:69-72)",
+  "id-space K0 mechanism (window over ids)": "bound as doubling + 0.0013 (K1/inspector/PASS1.md:32): duplicate of doubling",
+  "k4 and split (W1, 10-W1) window configs": "bound but dominated by k3 W10 in every recorded sweep (k1b.json, kp_attack.json)",
+  "W12/W13 curve values, far_band2_defeats_all, local reach fields": "struck (K1/inspector/PASS2.md:54, 59, 66)",
+  "trained opponent aL4 (131M tokens)": "void at its own gate 0.818 < 0.9 (RECORD_K.md:193-194)",
+  "resolvent hand-set head": "the solution, not a shortcut (k1fpp.py resolvent_ok)"
+ },
+ "runs": {
+  "near_bed_k": {
+   "void": true,
+   "best": "schpd_62slot",
+   "score": 1.0,
+   "scores": {
+    "position_only_floor": 0.06489911417322834,
+    "doubling_credited": 0.06606791338582677,
+    "c2_hybrid_anchored_k3W10": 0.29927411417322836,
+    "c2_hybrid_centered_k3W10": 0.4085875984251969,
+    "hpd_window_k3W10": 0.5642224409448819,
+    "schpd_10slot": 0.6275221456692914,
+    "schpd_14slot": 0.7950295275590551,
+    "schpd_30slot": 0.9966781496062993,
+    "schpd_62slot": 1.0,
+    "local_noorc_k3W30": 0.3395669291338583,
+    "stale_noorc_k3W10": 0.09541092519685039
+   },
+   "info_unbound": {
+    "local_noorc_k3W64": 0.6416707677165354
+   },
+   "band_tokens": 16256,
+   "band_threshold": 128.0,
+   "n_beds": 8,
+   "wall_s": {
+    "position_only_floor": 0.0,
+    "doubling_credited": 0.0,
+    "c2_hybrid_anchored_k3W10": 0.0,
+    "c2_hybrid_centered_k3W10": 0.0,
+    "hpd_window_k3W10": 0.06,
+    "schpd_10slot": 0.02,
+    "schpd_14slot": 0.01,
+    "schpd_30slot": 0.02,
+    "schpd_62slot": 0.02,
+    "local_noorc_k3W30": 0.0,
+    "stale_noorc_k3W10": 0.0,
+    "local_noorc_k3W64": 0.0
+   },
+   "bed": "bed_k",
+   "n": 4096,
+   "L": 7,
+   "band": "beyond",
+   "seeds": {
+    "test": [
+     [
+      12,
+      4096,
+      0
+     ],
+     [
+      12,
+      4096,
+      1
+     ],
+     [
+      12,
+      4096,
+      2
+     ],
+     [
+      12,
+      4096,
+      3
+     ],
+     [
+      12,
+      4096,
+      4
+     ],
+     [
+      12,
+      4096,
+      5
+     ],
+     [
+      12,
+      4096,
+      6
+     ],
+     [
+      12,
+      4096,
+      7
+     ]
+    ],
+    "calibration": [
+     [
+      13,
+      4096,
+      0
+     ],
+     [
+      13,
+      4096,
+      1
+     ],
+     [
+      13,
+      4096,
+      2
+     ],
+     [
+      13,
+      4096,
+      3
+     ],
+     [
+      13,
+      4096,
+      4
+     ],
+     [
+      13,
+      4096,
+      5
+     ],
+     [
+      13,
+      4096,
+      6
+     ],
+     [
+      13,
+      4096,
+      7
+     ]
+    ]
+   },
+   "stored": {
+    "hpd_window_k3W10": {
+     "stored": 0.5642224409448819,
+     "rerun": 0.5642224409448819,
+     "abs_diff": 0.0
+    }
+   },
+   "wall_clock_s": 0.2
+  },
+  "near_bed_kp": {
+   "void": true,
+   "best": "schpd_62slot",
+   "score": 0.9909432114882507,
+   "scores": {
+    "position_only_floor": 0.12422486945169713,
+    "doubling_credited": 0.12451044386422977,
+    "c2_hybrid_anchored_k3W10": 0.2556706919060052,
+    "c2_hybrid_centered_k3W10": 0.3306135770234987,
+    "hpd_window_k3W10": 0.4078002610966058,
+    "schpd_10slot": 0.43982539164490864,
+    "schpd_14slot": 0.5107702349869452,
+    "schpd_30slot": 0.8095626631853785,
+    "schpd_62slot": 0.9909432114882507,
+    "local_noorc_k3W30": 0.2936928851174935,
+    "stale_noorc_k3W10": 0.15151762402088773
+   },
+   "info_unbound": {
+    "local_noorc_k3W64": 0.45210509138381205
+   },
+   "band_tokens": 24512,
+   "band_threshold": 128.0,
+   "n_beds": 8,
+   "wall_s": {
+    "position_only_floor": 0.0,
+    "doubling_credited": 0.0,
+    "c2_hybrid_anchored_k3W10": 0.0,
+    "c2_hybrid_centered_k3W10": 0.0,
+    "hpd_window_k3W10": 0.06,
+    "schpd_10slot": 0.02,
+    "schpd_14slot": 0.02,
+    "schpd_30slot": 0.02,
+    "schpd_62slot": 0.02,
+    "local_noorc_k3W30": 0.0,
+    "stale_noorc_k3W10": 0.0,
+    "local_noorc_k3W64": 0.0
+   },
+   "bed": "bed_kp",
+   "n": 4096,
+   "L": 7,
+   "band": "beyond",
+   "seeds": {
+    "test": [
+     [
+      22,
+      4096,
+      0
+     ],
+     [
+      22,
+      4096,
+      1
+     ],
+     [
+      22,
+      4096,
+      2
+     ],
+     [
+      22,
+      4096,
+      3
+     ],
+     [
+      22,
+      4096,
+      4
+     ],
+     [
+      22,
+      4096,
+      5
+     ],
+     [
+      22,
+      4096,
+      6
+     ],
+     [
+      22,
+      4096,
+      7
+     ]
+    ],
+    "calibration": [
+     [
+      23,
+      4096,
+      0
+     ],
+     [
+      23,
+      4096,
+      1
+     ],
+     [
+      23,
+      4096,
+      2
+     ],
+     [
+      23,
+      4096,
+      3
+     ],
+     [
+      23,
+      4096,
+      4
+     ],
+     [
+      23,
+      4096,
+      5
+     ],
+     [
+      23,
+      4096,
+      6
+     ],
+     [
+      23,
+      4096,
+      7
+     ]
+    ]
+   },
+   "stored": {
+    "schpd_14slot": {
+     "stored": 0.5107702349869452,
+     "rerun": 0.5107702349869452,
+     "abs_diff": 0.0
+    },
+    "schpd_10slot": {
+     "stored": 0.43982539164490864,
+     "rerun": 0.43982539164490864,
+     "abs_diff": 0.0
+    },
+    "schpd_30slot": {
+     "stored": 0.8095626631853785,
+     "rerun": 0.8095626631853785,
+     "abs_diff": 0.0
+    }
+   },
+   "wall_clock_s": 0.2
+  },
+  "far_bed_kp_control": {
+   "void": false,
+   "best": "position_only_floor",
+   "score": 0.1230723284100782,
+   "scores": {
+    "position_only_floor": 0.1230723284100782,
+    "doubling_credited": 0.1230723284100782,
+    "c2_hybrid_anchored_k3W10": 0.1230723284100782,
+    "c2_hybrid_centered_k3W10": 0.1230723284100782,
+    "hpd_window_k3W10": 0.1230723284100782,
+    "schpd_10slot": 0.1230723284100782,
+    "schpd_14slot": 0.1230723284100782,
+    "schpd_30slot": 0.1230723284100782,
+    "local_noorc_k3W30": 0.1230723284100782,
+    "stale_noorc_k3W10": 0.1230723284100782
+   },
+   "info_unbound": {
+    "schpd_62slot": 0.12464704604691573,
+    "local_noorc_k3W64": 0.1230723284100782
+   },
+   "band_tokens": 73664,
+   "band_threshold": 896.0,
+   "n_beds": 8,
+   "wall_s": {
+    "position_only_floor": 0.0,
+    "doubling_credited": 0.0,
+    "c2_hybrid_anchored_k3W10": 0.01,
+    "c2_hybrid_centered_k3W10": 0.01,
+    "hpd_window_k3W10": 0.02,
+    "schpd_10slot": 0.06,
+    "schpd_14slot": 0.06,
+    "schpd_30slot": 0.06,
+    "schpd_62slot": 0.06,
+    "local_noorc_k3W30": 0.0,
+    "stale_noorc_k3W10": 0.0,
+    "local_noorc_k3W64": 0.0
+   },
+   "bed": "bed_kp",
+   "n": 16384,
+   "L": 7,
+   "band": "far",
+   "seeds": {
+    "test": [
+     [
+      31,
+      16384,
+      0
+     ],
+     [
+      31,
+      16384,
+      1
+     ],
+     [
+      31,
+      16384,
+      2
+     ],
+     [
+      31,
+      16384,
+      3
+     ],
+     [
+      31,
+      16384,
+      4
+     ],
+     [
+      31,
+      16384,
+      5
+     ],
+     [
+      31,
+      16384,
+      6
+     ],
+     [
+      31,
+      16384,
+      7
+     ]
+    ],
+    "calibration": [
+     [
+      32,
+      16384,
+      0
+     ],
+     [
+      32,
+      16384,
+      1
+     ],
+     [
+      32,
+      16384,
+      2
+     ],
+     [
+      32,
+      16384,
+      3
+     ],
+     [
+      32,
+      16384,
+      4
+     ],
+     [
+      32,
+      16384,
+      5
+     ],
+     [
+      32,
+      16384,
+      6
+     ],
+     [
+      32,
+      16384,
+      7
+     ]
+    ]
+   },
+   "stored": {
+    "line (every family)": {
+     "stored": 0.1230723284100782,
+     "rerun": 0.1230723284100782,
+     "abs_diff": 0.0
+    }
+   },
+   "wall_clock_s": 0.4
+  }
+ },
+ "wall_clock_total_s": 0.7,
+ "expectation_V5": {
+  "near_bed_k void": true,
+  "near_bed_kp void": true,
+  "far_bed_kp not void": true
+ },
+ "V5_reproduced": true
+}

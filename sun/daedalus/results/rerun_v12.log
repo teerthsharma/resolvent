@@ -1,0 +1,91 @@
+[GPU] used=0 total=8188 need=3500
+[REP] ckpt_a_ss0: n_params=724,608  repetition_factor=0.7977x
+C:\Users\seal\Desktop\New folder (32)\tests\foreman\eval\r3_eval.py:243: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\torch\csrc\autograd\generated\python_variable_methods.cpp:821.)
+  losses.append(float(loss))
+[CELL] {"arm": "a", "split_seed": 0, "seed": 0, "steps": 3538, "n_params": 724608, "final_eval_loss": 1.275685578584671, "loss_last_train": 1.2773258686065674, "train_seconds": 72.64020276069641, "wall_seconds": 74.15671062469482, "peak_mb": 296.0322265625, "gpu_used_mib_before": 0, "crn_digest_file": "d36f6436f58c65ad93c55c174d0107050f4369c44131e019118d529030dc2455", "crn_digest_recomputed": "d36f6436f58c65ad93c55c174d0107050f4369c44131e019118d529030dc2455", "crn_match": true, "deterministic": false, "device": "cuda", "ts": "2026-09-27T22:43:16"}
+[GPU] used=199 total=8188 need=3500
+[REP] ckpt_f_ss0: n_params=725,391  repetition_factor=0.7985x
+[CELL] {"arm": "f", "split_seed": 0, "seed": 0, "steps": 3538, "n_params": 725391, "final_eval_loss": 1.043056309223175, "loss_last_train": 1.042095422744751, "train_seconds": 655.1156024932861, "wall_seconds": 656.5695791244507, "peak_mb": 2708.5361328125, "gpu_used_mib_before": 199, "crn_digest_file": "d36f6436f58c65ad93c55c174d0107050f4369c44131e019118d529030dc2455", "crn_digest_recomputed": "d36f6436f58c65ad93c55c174d0107050f4369c44131e019118d529030dc2455", "crn_match": true, "deterministic": false, "device": "cuda", "ts": "2026-09-27T22:54:12"}
+[GPU] used=284 total=8188 need=3500
+[REP] ckpt_a_alibi_ss0: n_params=724,608  repetition_factor=0.7977x
+[CELL] {"arm": "a_alibi", "split_seed": 0, "seed": 0, "steps": 3538, "n_params": 724608, "final_eval_loss": 1.0224847048521042, "loss_last_train": 1.0121558904647827, "train_seconds": 121.88114166259766, "wall_seconds": 123.53775930404663, "peak_mb": 304.0322265625, "gpu_used_mib_before": 284, "crn_digest_file": "d36f6436f58c65ad93c55c174d0107050f4369c44131e019118d529030dc2455", "crn_digest_recomputed": "d36f6436f58c65ad93c55c174d0107050f4369c44131e019118d529030dc2455", "crn_match": true, "deterministic": false, "device": "cuda", "ts": "2026-09-27T22:56:16"}
+[GPU] used=779 total=8188 need=3500
+[REP] ckpt_a2F_ss0: n_params=727,704  repetition_factor=0.8011x
+step      0  loss 5.6062  |g| 3.1978e+00
+step     50  loss 2.8586  |g| 1.3986e+00
+step    100  loss 2.2751  |g| 9.7714e-01
+step    150  loss 1.9967  |g| 1.3715e+00
+step    200  loss 1.8395  |g| 1.4024e+00
+step    250  loss 1.7437  |g| 1.7953e+00
+step    300  loss 1.6420  |g| 1.4156e+00
+step    350  loss 1.5365  |g| 1.6641e+00
+step    400  loss 1.4433  |g| 1.6815e+00
+step    450  loss 1.4869  |g| 1.6802e+00
+step    500  loss 1.4477  |g| 1.5301e+00
+step    550  loss 1.4681  |g| 1.7003e+00
+step    600  loss 1.3463  |g| 1.5706e+00
+step    650  loss 1.3649  |g| 1.8520e+00
+step    700  loss 1.3701  |g| 1.6839e+00
+step    750  loss 1.3638  |g| 1.8152e+00
+step    800  loss 1.3238  |g| 1.7210e+00
+step    850  loss 1.2595  |g| 1.6790e+00
+step    900  loss 1.2778  |g| 1.6071e+00
+step    950  loss 1.3559  |g| 1.8631e+00
+step   1000  loss 1.2381  |g| 1.6325e+00
+step   1050  loss 1.2444  |g| 1.9586e+00
+step   1100  loss 1.2862  |g| 1.6190e+00
+step   1150  loss 1.2341  |g| 1.7308e+00
+step   1200  loss 1.2083  |g| 1.5230e+00
+step   1250  loss 1.2397  |g| 1.7160e+00
+step   1300  loss 1.1875  |g| 1.6704e+00
+step   1350  loss 1.1635  |g| 1.5246e+00
+step   1400  loss 1.1661  |g| 1.4037e+00
+step   1450  loss 1.1428  |g| 1.5021e+00
+step   1500  loss 1.1141  |g| 1.5416e+00
+step   1550  loss 1.2225  |g| 1.4662e+00
+step   1600  loss 1.1337  |g| 1.6417e+00
+step   1650  loss 1.1554  |g| 1.6033e+00
+step   1700  loss 1.1469  |g| 1.5150e+00
+step   1750  loss 1.1338  |g| 1.5636e+00
+step   1800  loss 1.1664  |g| 1.5991e+00
+step   1850  loss 1.1130  |g| 1.4831e+00
+step   1900  loss 1.1906  |g| 1.6732e+00
+step   1950  loss 1.0994  |g| 1.5170e+00
+step   2000  loss 1.0756  |g| 1.4111e+00
+step   2050  loss 1.1049  |g| 1.4716e+00
+step   2100  loss 1.0383  |g| 1.4285e+00
+step   2150  loss 1.1419  |g| 1.4479e+00
+step   2200  loss 1.2008  |g| 1.4920e+00
+step   2250  loss 1.1513  |g| 1.4627e+00
+step   2300  loss 1.0958  |g| 1.4645e+00
+step   2350  loss 1.1093  |g| 1.3454e+00
+step   2400  loss 1.0561  |g| 1.3326e+00
+step   2450  loss 1.1058  |g| 1.3672e+00
+step   2500  loss 1.0857  |g| 1.3895e+00
+step   2550  loss 1.0872  |g| 1.3515e+00
+step   2600  loss 1.1566  |g| 1.3951e+00
+step   2650  loss 1.1119  |g| 1.4711e+00
+step   2700  loss 1.0275  |g| 1.2366e+00
+step   2750  loss 1.1835  |g| 1.6743e+00
+step   2800  loss 1.0384  |g| 1.3879e+00
+step   2850  loss 1.0631  |g| 1.3499e+00
+step   2900  loss 1.1035  |g| 1.4220e+00
+step   2950  loss 1.0840  |g| 1.4197e+00
+step   3000  loss 1.1018  |g| 1.4993e+00
+step   3050  loss 1.0738  |g| 1.4364e+00
+step   3100  loss 1.0700  |g| 1.3497e+00
+step   3150  loss 1.0016  |g| 1.2510e+00
+step   3200  loss 1.0194  |g| 1.3244e+00
+step   3250  loss 1.0755  |g| 1.3960e+00
+step   3300  loss 1.0616  |g| 1.3198e+00
+step   3350  loss 1.1185  |g| 1.2743e+00
+step   3400  loss 1.0027  |g| 1.3016e+00
+step   3450  loss 0.9767  |g| 1.3668e+00
+step   3500  loss 1.0915  |g| 1.2771e+00
+[CELL] {"arm": "a2F", "split_seed": 0, "seed": 0, "steps": 3538, "n_params": 727704, "final_eval_loss": 1.0427028611302376, "loss_last_train": 1.041345238685608, "train_seconds": 281.6020858287811, "wall_seconds": 284.5955755710602, "peak_mb": 432.8349609375, "gpu_used_mib_before": 779, "crn_digest_file": "d36f6436f58c65ad93c55c174d0107050f4369c44131e019118d529030dc2455", "crn_digest_recomputed": "d36f6436f58c65ad93c55c174d0107050f4369c44131e019118d529030dc2455", "crn_match": true, "deterministic": false, "device": "cuda", "ts": "2026-09-27T23:01:01"}
+{
+  "wall_clock_s": 1138.8596246242523,
+  "gpu_peak_mb": 2708.5361328125
+}
+V1 rerun -0.020571604371070862 True  V2 1.0015193620901943 True

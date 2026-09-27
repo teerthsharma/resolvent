@@ -1,0 +1,10 @@
+{
+  "name": "c09_citation_dictionary",
+  "kind": "operator",
+  "bed": "a5_word_T16",
+  "citations": [
+    "alphaevolve",
+    "gated-deltanet-yang-2024",
+    "sparsemax-martins-2016"
+  ]
+}

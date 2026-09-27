@@ -1,0 +1,1 @@
+{"name": "bed_kp_far", "kind": "bed", "family": "pointer_chase", "params": {"generator": "bed_kp", "n": 16384, "L": 7, "band": "far", "instance": 31}}
