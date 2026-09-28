@@ -22,13 +22,14 @@
   <a href="#2-theoretical-foundation">Theory</a>&nbsp;&nbsp;·&nbsp;&nbsp;
   <a href="#4-results">Results</a>&nbsp;&nbsp;·&nbsp;&nbsp;
   <a href="#5-round-2">Round 2</a>&nbsp;&nbsp;·&nbsp;&nbsp;
-  <a href="#6-what-did-not-hold">What did not hold</a>&nbsp;&nbsp;·&nbsp;&nbsp;
-  <a href="#7-quick-start">Quick start</a>
+  <a href="#6-round-3">Round 3</a>&nbsp;&nbsp;·&nbsp;&nbsp;
+  <a href="#7-what-did-not-hold">What did not hold</a>&nbsp;&nbsp;·&nbsp;&nbsp;
+  <a href="#8-quick-start">Quick start</a>
 </p>
 
 <p align="center"><sub>Every number in the results table carries the command that reproduces it and was checked by
 an independent re-run before it was allowed here. Observations that were measured but not bound by a pre-registered
-failing test are named in <a href="#6-what-did-not-hold">Section 6</a> without numbers.</sub></p>
+failing test are named in <a href="#7-what-did-not-hold">Section 7</a> without numbers.</sub></p>
 
 ---
 
@@ -85,7 +86,7 @@ the set can, provided the message passing is permutation-equivariant (the set ha
 | ACPC (An et al. 2026, arXiv 2608.12939; code MIT) | diagnoses JEPA world models: divergence of a clean and a perturbed history rolled forward under the same actions | none (a diagnostic, not a ranker) | n/a | measures robustness of the representation itself, which this package assumes |
 | Common random numbers (Yadav et al. 2026, arXiv 2605.04732; Klein et al. 2024, arXiv 2409.02086) | evaluates candidate policies on shared simulator randomness to cut the variance of their differences | the pairing itself | n/a | proven variance reduction in simulators; this package has no simulator-side result |
 | resolvent (Sharma 2026, github.com/teerthsharma/resolvent) | causal resolvent read `O = (1 − g) P (I − gP)⁻¹ V` over a sequence, attributed there to ChaCAL (Fagnou et al., EMNLP 2024) [U] | causal (nilpotent off-diagonal) | g < 1 | the sequence operator, with its cost measured against fused attention; this package moves it to an unordered set |
-| **rjepa** (this package) | Bayes ceiling, distance floor, pointwise / one-hop / resolvent set heads and a D-JEPA-spec operator on two exact-truth beds | resolvent `(I − A)⁻¹`, one hop, or Transformer | ρ < 1 refused otherwise; ε for the D-JEPA head | toy beds only (K = 4 and K = 8, D = 2) |
+| **rjepa** (this package) | Bayes ceiling, distance floor, pointwise / one-hop / resolvent set heads and a D-JEPA-spec operator on two exact-truth beds | resolvent `(I − A)⁻¹`, one hop, or Transformer | ρ < 1 refused otherwise; ε for the D-JEPA head | toy beds only (K = 4 and K = 8 at D = 2; K = 63 at D = 8 for bed `dial`) |
 
 [U] marks a source not fetched for this package. No fetched source states that error shared across candidates
 cancels in the argmin ranking of a *learned* world model, or measures the shared fraction; the common-random-number
@@ -283,7 +284,7 @@ built a verifier for rankers. Every number below is the source repository's reco
 and bound by the round-2 inspector. Bed `dial` is ported as `rjepa/dial.py`: its tests pin the bed, the Bayes ceiling
 and its tie-break, the D-JEPA bound and its saturation measure, and the SIGN of 5.1's `dj4L` > `dj02` at f = 1 on a small
 fast cell, not the numbers below; the verifier is not ported, and none of these numbers is recomputed by `pytest` here
-(Section 9). Seeds, arms and bars were registered before the runs; amendments declared
+(Section 10). Seeds, arms and bars were registered before the runs; amendments declared
 after a pilot or a run are named as such in the source `BAR.md` files and repeated below where they matter.
 
 ### 5.1 The shared-error dial at K = 63 with a learned predictor
@@ -370,8 +371,8 @@ leak, candidate index order, false equivariance, false bound on probes, false bo
 Through that contract, on a frozen copy of bed `shift` (Bayes hit 0.380, latent-distance floor 0.322, label-shuffle
 null 0.333-0.336), the resolvent set head `fm_resolvent` scored **0.3770** hit and the one-hop head `fm_hop1`
 **0.3603**, and both reached `PASS_V2` (`rjepa_arms.json`). Each of those two numbers is **one** secret-seed draw of
-the candidate shuffle; replication on three draws is round-3 work (5.5). No ranker can reach `ACCEPT`: no V3 pool or
-V5 ladder is registered for rankers.
+the candidate shuffle; replication on three draws is in 6.3. No ranker can reach `ACCEPT`: in round 2 no V3 pool
+or V5 ladder was registered for rankers (6.3 adds the V3 pool).
 
 ### 5.4 Killed in round 2
 
@@ -391,14 +392,7 @@ and passed.
 NS 0.9812 at seed 4, T = 32. Killed; its registered fallback `prune_m` (m ≤ 4) also misses NS ≥ 0.99 at T = 24 and 32.
 B2 in 5.2 is the separately registered replacement.
 
-### 5.5 Round 3 (running)
-
-No numbers until they are bound. Running: a gap-onset map at f ∈ {0.85, 0.9, 0.95} on bed `dial`, to locate where
-the set edge appears between f = 0.75 and f = 1; B2 re-derived on a second tuning seed, so the frozen race
-configuration no longer rests on seed 9 alone; and the `PASS_V2` verdicts of `fm_resolvent` and `fm_hop1` replicated
-on three secret draws.
-
-### 5.6 Reproduction (source repository)
+### 5.5 Reproduction (source repository)
 
 These commands run in `github.com/teerthsharma/resolvent`, not in this package.
 
@@ -424,7 +418,153 @@ python sun/daedalus/results/r2/rjepa_arms.py
 
 ---
 
-## 6. What did not hold
+## 6. Round 3
+
+Round 3 mapped where the set edge turns on between f = 0.75 and f = 1 on bed `dial`, fixed the Bayes tie-break,
+priced LIN1 on the true dynamics, re-derived the B2 race on a second tuning seed and attacked its tail, and replicated
+the ranker verdicts on three secret draws under a new verifier stage. Every number below is read from the named source
+file (paths relative to `github.com/teerthsharma/resolvent`). Arms and bars registered after some round-3 data had
+been read are marked as such; they are evidence of a lower grade than the arms registered before any data existed.
+The package's own tests recompute none of these numbers (Section 10).
+
+### 6.1 Where the set edge turns on (bed `dial`)
+
+Source `sun/rjepa/r3/foreman/results/table.json` and `audit_f*_q*_s*.json`; bar `sun/rjepa/r2/BAR.md`, Amendment A6
+(A6.1-A6.3 registered before any round-3 code or run) and A6.4 (registered after one cell-seed, see below). Cells
+(f, σ/ρ = 3), 3 seeds × 20,000 evaluation starts each, arms and training exactly as 5.1. The edge is
+NS(`dj4L`) − NS(`dj02`); the closable room is 1 − NS(`dist`).
+
+| f | Closable gap, Bayes − distance (hit, 3-seed mean) | Edge `dj4L` − `dj02` (NS), seed 0 / 1 / 2 | Closable room (NS, 3-seed mean) | P2c | P2n |
+|---|---|---|---|---|---|
+| 0.85 | 0.0058 | +0.105 / −0.023 / +0.149 | 0.244 | consistent | consistent |
+| 0.9 | **0.0086** | **+0.170 / +0.120 / +0.079** | 0.309 | **killed** | consistent |
+| 0.95 | **0.0160** | **+0.158 / +0.244 / +0.254** | 0.424 | **killed** | consistent |
+
+**P2c is killed: the gap in hit units is the wrong unit.** Registered (A6.2): in each new cell, the edge is
+≥ 0.05 NS on 3/3 seeds exactly where the closable gap is ≥ 0.02 hit. At f = 0.9 and f = 0.95 the gap is 0.0086 and
+0.0160 hit, below 0.02, and the edge is ≥ 0.05 NS on 3/3 seeds in both cells.
+
+**P2n held in 3/3 cells, and that is not yet evidence for it.** The replacement (A6.4) states the edge in NS units:
+edge ≥ 0.05 NS on 3/3 seeds exactly where the 3-seed mean closable room is ≥ 0.25 NS. It is consistent in all three
+cells. Its 0.25 threshold was set after seeing f = 0.9 seed 0 (closable 0.39, edge +0.170), and that seed is one of the
+nine points above, so these cells cannot confirm the threshold; round 4 tests it frozen, on cells no round-3 run has
+touched. At f = 0.85 the room is 0.244 against the 0.25 threshold and the per-seed paired SE of the edge is
+0.062-0.064 NS (`edge_se_ns`), so the 0.05 bar is about one SE there.
+
+**Saturation, again.** `dj0.5` (ε = 0.5, everything else as `dj02`) scores above `dj02` on 9/9 seed-cells, the same
+direction as the ε sweep of 5.1.
+
+**LIN1's round-2 shortfall has two parts of about the same size.** A6.3 re-scored the (f = 0, σ/ρ = 1) cell of 5.4's
+P1 with LIN1 computed from the TRUE dynamics (`lin1_true`) on the regenerated round-2 evaluation sets. There LIN1 scores
+**0.964** NS against **0.969** for the best set arm (`dj4L`), 3-seed means, a difference inside P1's 0.01 tolerance. The
+learned predictor costs NS(`lin1_true`) − NS(`lin1`) = 0.026 / 0.026 / 0.0215 on seeds 0 / 1 / 2 (L2, registered
+≤ 0.01: killed); the linearisation costs NS(`bayes_succ`) − NS(`lin1_true`) = 0.034 / 0.024 / 0.044 (L1, registered
+≥ 0.02: passes), where `bayes_succ` is the exact marginal-success rule. Each costs roughly 0.02-0.04 NS.
+
+**The tie-break fix moves no round-2 verdict.** Round 2 broke exact Monte-Carlo ties in P(k best) by the *learned*
+predictor's distance, so the ceiling borrowed the arm-side model. A6.1 breaks them by the smallest posterior-mean
+TRUE distance from the same 2,048 draws (`rjepa.dial.bayes_pick`, pinned by `tests/test_dial.py`). Regenerating all
+15 round-2 cell-seeds, the old rule reproduces round 2's stored Bayes pick on 15/15; the tie rate is 0.3-8.6 %; the
+largest NS move of any arm is 0.030, at (0.75, 3) seed 1; no round-2 verdict (V1, P1, P2, F1, M1-M3b, S1) changes sign
+or side of its bar. Section 5 keeps the round-2 numbers as recorded.
+
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  bed dial, sigma/rho = 3, 3 seeds x 20,000 eval starts, Bayes with the A6.1 tie-break
+  f       gap (hit)   edge dj4L - dj02 (NS)      closable (NS)   P2c      P2n (threshold set after f = 0.9 s0)
+  0.85    0.0058      +0.105 -0.023 +0.149       0.244           ok       ok
+  0.90    0.0086      +0.170 +0.120 +0.079       0.309           KILLED   ok
+  0.95    0.0160      +0.158 +0.244 +0.254       0.424           KILLED   ok
+  dj0.5 > dj02 on 9/9 seed-cells
+  (f 0, sigma/rho 1): lin1_true 0.964 vs best set arm 0.969; predictor cost 0.026/0.026/0.0215, linearisation 0.034/0.024/0.044
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+### 6.2 The B2 race on a second tuning seed, and its tail (bed `torus`)
+
+Source `sun/rjepa/cameron/r3/` (`eval.json`, `cap.json`, `budget.json`, `sharp.json`, `long.json`); bar `BAR.md` in the
+same directory. New seeds only: tuning seed 10, evaluation seeds 6, 7, 8; seeds 0-5 and 9 are never read by a claim.
+Band and NS as 5.2.
+
+**D: B2 survives re-derivation.** Round 2's tuning procedure, re-run on tuning seed 10 alone, selects the same
+configuration as the seed-9 tune (c = 1.5, b = 8, ε = 0.05, z_c = ∞; `eval.json`, `b2p_config` = `b2_config`). On
+evaluation seeds 6, 7, 8 that race holds NS ≥ **0.9922** on all 15 seed-lead rows, at a mean call saving of
+**4.54×-7.87×** against the full rollout. D was registered before seeds 6-8 or 10 were generated.
+
+**The T = 32 tail was not cut within 0.01 by any of four arms.** Round 2 left the 90th-percentile saving at 2.33× at
+T = 32. Only E was registered before any round-3 data; E′ was registered after the seed-10 tune had shown E would die
+at T = 32, G after the verdicts on D, E, E′ and F, and H after G's verdict.
+
+| Arm | What it changes | Registered | Result |
+|---|---|---|---|
+| E, `B3` | ε per lead, tuned on seed 10 | before any round-3 data | **killed**: p90 saving 2.32× at T = 32 on 3/3 seeds (ε fell back to 0.05), NS 0.98998 at seed 7, T = 24 (`eval.json`) |
+| E′, `B3cap` | hard cap of 80 members per candidate | after the seed-10 tune | **killed**: NS 0.9728-0.9896 on 7/15 rows, at T = 20, 24, 32 (`cap.json`) |
+| G, `B4` | total budget of 640 members per decision, p90 saving ≥ 3.10× by construction | after D/E/E′/F were read; fresh seeds 11, 12, 13 | **killed** at T = 32: NS 0.9836 / 0.9922 / 0.9789 (`budget.json`) |
+| H | the instrument, not the arm: score `B4` by expected success under 1,024 fresh posterior members (NS′) | after G's verdict | **killed** by 0.0002-0.0008: NS′ 0.9917 / 0.9912 / 0.9898 / 0.9906 / 0.9909 / 0.9892 on seeds 6 / 7 / 8 / 11 / 12 / 13 (`sharp.json`) |
+
+Under the sharper instrument the control that simply rolls out half the members (1-128, saving 2.0×) scores NS′
+0.98861-0.99048 on the same six seeds, and `B4` is above it on 6/6. The tail tradeoff at T = 32 is real and small; the
+registered route retires the p90 ≥ 3 claim at T = 32 and keeps D's mean-saving claim.
+
+**F: LIN1 against the three-member ensemble beyond the band.** At T = 40, LIN1 loses (3-seed NS **0.7543** vs ENS3
+**0.7701**), so F is killed as registered; at T = 48 LIN1 wins (**0.7572** vs **0.7353**). LIN1 beats the price-matched
+two-member ensemble at both leads (ENS2 0.7278 and 0.7143) (`long.json`). F was registered knowing round 2 lost at
+T = 32.
+
+### 6.3 Ranker verdicts on three secret draws (verifier)
+
+Source `sun/daedalus/results/r3/r3_table.json` and `r3_runs.json`; bar `sun/daedalus/registry/bars_r3.json`
+(`r3_d_ranker_v3`). New stage V3: after V2 passes, a verifier-owned pool (latent distance, the pointwise head, the
+ε = 0.2 D-JEPA head) runs the same sandbox job as the candidate, and the candidate must beat the best pool member by
+≥ 0.02 pooled secret-shuffle hit. The 0.02 is the house's existing operator V3 margin; the draw-m0 scores were known
+before it was keyed, and the bar file says so. Draws m0, r3d1, r3d2 are three secret shuffles.
+
+| Candidate | Margin over best pool member, m0 / r3d1 / r3d2 | Verdict |
+|---|---|---|
+| `fm_resolvent` (resolvent set head) | **+0.028 / +0.021 / +0.031** | `PASS_V3` 3/3 |
+| `fm_djepa_eps4` (D-JEPA-spec operator, ε = 4) | **+0.024 / +0.024 / +0.027** | `PASS_V3` 3/3 |
+| `fm_hop1` (one-hop set head) | +0.011 / +0.012 / +0.013 | rejected at V3, 3/3 |
+| `ch_dj_stoch_noLN` (stochastic resolvent, no LayerNorm) | +0.005 / −0.001 / −0.001 | rejected at V3, 3/3 |
+| `r06_pool_twin_null_sabotage` (planted cheat) | +0.000 (m0) | rejected at V3 |
+
+**The V2 null hole is open.** The runner trains the label-shuffle null second, in the candidate's own process, so
+build order tells a candidate which model is its null. The planted twin `r06` returns a sign-flipped head on that call,
+passes V2 on m0, and is caught only by V3's verifier-owned pool (`bars_r3.json`, `v2_hole_disclosed`). V2 was not
+changed in round 3.
+
+**The ε = 4 operator's "bounded" claim is vacuous.** The base score spans a range of 1 (normalised distance rank), and
+2ε = 8 exceeds it, so every ordering is reachable and the bound constrains nothing; the verifier measured
+max |score − base| of 2.26 / 2.40 / 2.29 on the three draws (`bound_dev` in `r3_runs.json`). Its `PASS_V3` is a ranking
+result, not evidence for a bound. `PASS_V3` is not `ACCEPT`: no V5 ladder is registered for rankers.
+
+### 6.4 Round 4 (running)
+
+No numbers until they are bound. Running: P2n with its threshold frozen, on `dial` cells no round-3 run has touched;
+the ranker V2 null moved out of the candidate's process; and a V1 rule that rejects a bounded-ε claim too wide to
+constrain the base ranking.
+
+### 6.5 Reproduction (source repository)
+
+```bash
+# 6.1 bed dial: tie-break audit of the 15 round-2 cell-seeds, gap-onset cells, table, claim tests
+cd sun/rjepa/r3/foreman
+python r3.py audit 0 1 1 3 0.75 3 0 3 1 1
+python r3.py cell 0.9 0.95 0.85
+python r3.py table && python -m pytest -q test_r3.py test_r3_claims.py
+
+# 6.2 bed torus: tune (seed 10), lead-eps, eval (6/7/8), long leads; then cap, budget, sharp; claim tests
+cd sun/rjepa/cameron/r3
+sh run_all.sh                                         # tune, leadeps, eval, long
+python r3.py cap && python r3.py budget && python r3.py sharp
+python -m pytest -q test_r3.py
+
+# 6.3 ranker V3 on three secret draws
+python sun/daedalus/results/r3/r3_runs.py && python sun/daedalus/results/r3/r3_table.py
+```
+
+---
+
+## 7. What did not hold
 
 The numbers in this section are the source repo's own records (`sun/rjepa/foreman/BAR.md`, amendments A2-A3, and
 the round-1 test run); only 0.024 and −0.0002 were independently re-run.
@@ -452,7 +592,7 @@ failing test); the resolvent head's latency against the D-JEPA operator at K = 6
 
 ---
 
-## 7. Quick start
+## 8. Quick start
 
 ```bash
 git clone <this repository> rjepa && cd rjepa
@@ -484,7 +624,7 @@ Tests run on CPU; the learned σ = 1 cell is marked `slow` and deselected by def
 
 ---
 
-## 8. Requirements
+## 9. Requirements
 
 - Python ≥ 3.11 (developed on 3.11.9).
 - PyTorch ≥ 2.0; CPU is sufficient for everything, including the slow cell. Developed on torch 2.14.0.
@@ -499,9 +639,9 @@ lowers the baseline.
 
 ---
 
-## 9. Limitations
+## 10. Limitations
 
-The beds are toys chosen for exact truth: K = 4 and D = 2 for `shift`, K = 8 on a 2-torus for `torus`. The JEPA
+The beds are toys chosen for exact truth: K = 4 and D = 2 for `shift`, K = 8 on a 2-torus for `torus`, K = 63 at D = 8 with a known 5-step map for `dial`. The JEPA
 predictor on `shift` uses an identity target encoder, so the shared error is exactly the start-state error by
 construction; in a trained world model the shared fraction is unknown and nothing here measures it. The results
 say what a ranking operator can and cannot close *given* shared error, not how much shared error a real JEPA has.
@@ -524,8 +664,14 @@ The Round 2 results (Section 5) are not reproducible from this package's default
 evaluation starts; that sign held on seeds 0, 1 and 2 at those sizes by hit margins of 0.0055, 0.0105 and 0.002 (11, 21
 and 4 starts of 2,000), so it is a smoke test, not a replication. The full-size cell sits behind `pytest -m slow` and was
 not run for this commit (Bayes at M = 2,048 on 20,000 starts is hours on 2 CPU threads). The round-2 `torus` races and
-the verifier live only in the source repository, and Section 5 cites their result files. Within those results, the B2 race configuration
-was selected on a single tuning seed, and each `PASS_V2` ranker verdict rests on a single secret shuffle draw.
+the verifier live only in the source repository, and Section 5 cites their result files.
+
+The Round 3 results (Section 6) are read from the source repository's files in the same way; this package pins the
+round-3 Bayes tie-break but recomputes no round-3 number. Four limits carry over from them. The B2 race configuration
+rests on two tuning seeds (9 and 10) that selected the same configuration, and its tail saving at T = 32 is not bound.
+P2n's threshold was set after one of the nine seed-cells it is read on, so it is untested until round 4 reads it on
+fresh cells. The ranker V2 stage has an open null hole that only the V3 pool covers. `PASS_V3` is not `ACCEPT`, and
+the ε = 4 operator's pass says nothing about a bound.
 
 ---
 
