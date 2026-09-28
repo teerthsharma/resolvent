@@ -1,1 +1,132 @@
 house-events*.jsonl merge=union
+
+# Line endings are part of the evidence. Tracked files store LF; a recorded sha256 was taken over the bytes on
+# disk at the time, which were LF for some files and CRLF for others (core.autocrlf=true on the author's box).
+# These rules make every checkout, on any OS or autocrlf setting, reproduce the bytes each recorded hash names.
+# Generated from the recorded hashes themselves (tracked *.sha256 manifests, JSON records, daedalus registry).
+# The R-JEPA experiments and the verifier were hashed as LF:
+daedalus/** -text
+experiments/** -text
+# LF-recorded files elsewhere:
+results/G2_BASELINE_it2.sha256 -text
+results/floor_instrument_test_iter42.txt -text
+results/r10_it2_protocol.md -text
+results/r10_it3_protocol.md -text
+results/r10_it3_result.md -text
+tests/foreman/phase_k/K1/cameron/bed_k.py -text
+tests/foreman/phase_k/K1/cameron/bed_kp.py -text
+tests/foreman/phase_k/K1/chase/instr2.py -text
+tests/foreman/phase_k/K1/chase/test_chase_k1_bf16b.py -text
+tests/foreman/phase_k/K1/chase/test_chase_k1_ckpt.py -text
+tests/foreman/phase_k/K1/chase/test_chase_k1_clause6_v2.py -text
+tests/foreman/phase_k/K1/chase/test_chase_k1_rrange_v3.py -text
+tests/foreman/phase_k/K1/chase/test_chase_k1_x64ref.py -text
+tests/foreman/phase_k/K2/cameron/k2_ptr.py -text
+tests/foreman/phase_k/K2/cameron/test_k2_grid.py -text
+tests/foreman/phase_k/K2/cameron/test_k2_grid_kaggle.py -text
+tests/foreman/phase_k/K2/cameron/test_k2_lanes.py -text
+tests/foreman/phase_k/K2/cameron/test_k2_leak.py -text
+tests/foreman/phase_k/K2/cameron/test_k2_pilot.py -text
+tests/foreman/phase_k/K2/cameron_local_runs/_test_inputs/K2_cameron/test_k2_grid_kaggle.py -text
+tests/foreman/phase_k/K2/chase/resolvent_sp.py -text
+tests/foreman/phase_k/K2/chase/resolvent_sp_stub.py -text
+tests/foreman/phase_k/K2/chase/resolvent_sp_stub2.py -text
+tests/foreman/phase_k/K2/chase/test_chase_k2_v2.py -text
+tests/foreman/phase_k/K2/chase/test_chase_k2_v3.py -text
+# CRLF-recorded files (results/G2_BASELINE_it{2,4}.sha256, Phase K jobs manifests, bars_r3.json); last rule wins:
+ceq/hf_artifact/README.md text eol=crlf
+ceq/hf_artifact/capability_table_v0.json text eol=crlf
+ceq/hf_artifact/config.json text eol=crlf
+ceq/hf_artifact/configuration_ceq.py text eol=crlf
+ceq/hf_artifact/modeling_ceq.py text eol=crlf
+ceq/hf_artifact/weights/MANIFEST.json text eol=crlf
+daedalus/candidates_rjepa/ch_dj_stoch_noLN/candidate.py text eol=crlf
+results/agg_matched.jsonl text eol=crlf
+results/aggregator_mech.jsonl text eol=crlf
+results/arm_a.jsonl text eol=crlf
+results/arm_a_k1.jsonl text eol=crlf
+results/arm_s.jsonl text eol=crlf
+results/b1_collapse.jsonl text eol=crlf
+results/b1_decomposition.jsonl text eol=crlf
+results/cameron_aggregators.jsonl text eol=crlf
+results/capability.json text eol=crlf
+results/capability_table_v0.json text eol=crlf
+results/capability_table_v0.md text eol=crlf
+results/capability_table_v1.json text eol=crlf
+results/capability_table_v1.md text eol=crlf
+results/chase_k1_replay_it0.txt text eol=crlf
+results/chase_k2_salience.json text eol=crlf
+results/chase_m3_synth.jsonl text eol=crlf
+results/chase_slope_ci.json text eol=crlf
+results/covariate_table_phaseR8_iter0.json text eol=crlf
+results/e4_gate.txt text eol=crlf
+results/e4_harmonic_ladder.txt text eol=crlf
+results/e4_harmonic_reroute.txt text eol=crlf
+results/e4prime_gates.txt text eol=crlf
+results/e_ladder_trend.txt text eol=crlf
+results/eprocess_calibration.txt text eol=crlf
+results/equilibrium.jsonl text eol=crlf
+results/etask_k5e.txt text eol=crlf
+results/etask_k5e_e1.txt text eol=crlf
+results/etask_k5e_plus.txt text eol=crlf
+results/etask_k5e_t1.txt text eol=crlf
+results/fgreen_matched_it1.txt text eol=crlf
+results/foreman_consequence.jsonl text eol=crlf
+results/foreman_consequence_d256.txt text eol=crlf
+results/foreman_consequence_d256_s258.txt text eol=crlf
+results/foreman_consequence_money.txt text eol=crlf
+results/foreman_j3_repeat.txt text eol=crlf
+results/foreman_lambda2.txt text eol=crlf
+results/foreman_looped.jsonl text eol=crlf
+results/foreman_signfloor.jsonl text eol=crlf
+results/foreman_theta_tv.jsonl text eol=crlf
+results/gram.jsonl text eol=crlf
+results/hilbert.jsonl text eol=crlf
+results/iter01_arms_distinct.txt text eol=crlf
+results/iter02_arms_distinct.txt text eol=crlf
+results/iter03_floor_control.txt text eol=crlf
+results/iter04_m3_bar_calibration.txt text eol=crlf
+results/iter06_pivot_arms_distinct.txt text eol=crlf
+results/journal_census.jsonl text eol=crlf
+results/k3_concavity.jsonl text eol=crlf
+results/m2.jsonl text eol=crlf
+results/m2_item_text.txt text eol=crlf
+results/m2_replay_census.txt text eol=crlf
+results/m2_run.txt text eol=crlf
+results/m3_capability.txt text eol=crlf
+results/m3_quintuple.jsonl text eol=crlf
+results/m3_quintuple.txt text eol=crlf
+results/m3_quintuple_v2.jsonl text eol=crlf
+results/m3_quintuple_v2_cuda.jsonl text eol=crlf
+results/m3_synthetic_settled.txt text eol=crlf
+results/max_row.jsonl text eol=crlf
+results/merkle_roots.json text eol=crlf
+results/p1prime_front_door.txt text eol=crlf
+results/p1prime_rows.json text eol=crlf
+results/r10_it2_draw.txt text eol=crlf
+results/r10_it3_draw.txt text eol=crlf
+results/r10_rho_axis_run.log text eol=crlf
+results/r2.jsonl text eol=crlf
+results/r2_bucket1.txt text eol=crlf
+results/r2_trap.txt text eol=crlf
+results/r9_maths_survey.md text eol=crlf
+results/r9_perrow_pilot.md text eol=crlf
+results/r9_pricing.md text eol=crlf
+results/r9_systems_gate.md text eol=crlf
+results/s2.jsonl text eol=crlf
+results/s2_ablation.txt text eol=crlf
+results/sprt_k1_plan.txt text eol=crlf
+results/tau_trajectory.jsonl text eol=crlf
+results/trained_projections_phaseD.txt text eol=crlf
+results/trained_projections_seed1.txt text eol=crlf
+results/trained_projections_seed2.txt text eol=crlf
+results/vgpe_flops_run.txt text eol=crlf
+results/wilson_arms.jsonl text eol=crlf
+tests/foreman/phase_k/K0/chase/k0_resolvent.py text eol=crlf
+tests/foreman/phase_k/K0/wilson/train_ladder.py text eol=crlf
+tests/foreman/phase_k/K1/cameron/rdepth.py text eol=crlf
+tests/foreman/phase_k/K1/cameron/train_ladder.py text eol=crlf
+tests/foreman/phase_k/K1/chase/ckpt_rows_v2.jsonl text eol=crlf
+tests/foreman/phase_k/K1/chase/resolvent_hook.py text eol=crlf
+tests/foreman/phase_k/K1/chase/test_chase_k1_ckpt_v2.py text eol=crlf
+tests/foreman/phase_k/K2/cameron/test_k2_walk.py text eol=crlf
