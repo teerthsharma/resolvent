@@ -247,7 +247,7 @@ Bed `shift`: K = 4, D = 2, ρ = 1, σ_e = 0.02, 3 seeds × 4,000 held-out starts
 | Gap closed by the one-hop set head | **0.925** | same cell | same |
 | Gap closed by the pointwise head (control) | **0.028** | same cell, same inputs, no set interaction | same |
 | Neumann tail: resolvent − one-hop hit | **−0.0002** | same cell | same |
-| Linear equivariant resolvent `(I − γ(αI + βJ))⁻¹` | **rank-inert** | proof (9); 139 in-domain draws of 300 checked | `pytest -q -k rank_inert` |
+| Linear equivariant resolvent `(I − γ(αI + βJ))⁻¹` | **rank-inert** | proof (9); 300-draw property test | `pytest -q -k rank_inert` |
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -277,20 +277,147 @@ resolvent heads are within 0.0002 of each other: the set interaction does the wo
 
 ## 5. Round 2
 
-> **Stub.** Round 2 is running at the time of this commit. This section lists what is being measured; it holds no
-> numbers until the round-2 prognosis is ruled, and the dispatcher fills it then.
+Round 2 moved the question off the K = 4 toy onto a learned predictor at K = 63, re-tested LIN1 on fresh seeds, and
+built a verifier for rankers. Every number below is the source repository's recorded result, read from the named file
+and bound by the round-2 inspector; this package does not yet contain the K = 63 bed or the verifier, so none of them
+is recomputed by `pytest` here (Section 9). Seeds, arms and bars were registered before the runs; amendments declared
+after a pilot or a run are named as such in the source `BAR.md` files and repeated below where they matter.
 
-- **Bed `dial`, learned predictor at K = 63** (source `sun/rjepa/r2/BAR.md`). Latent D = 8, action 4 per step,
-  horizon 5, nonlinear dynamics with spectral radius 1.1; a dial f moves the start error from fully shared (f = 1)
-  to fully per-candidate (f = 0) at σ/ρ ∈ {1, 3, 10}. Pre-registered: at f = 0 the set arms and LIN1 tie the
-  pointwise head; at f ≥ 0.75, σ/ρ ≥ 3 the one-hop head and the ε = 4 D-JEPA head each beat the ε = 0.2 head; a
-  kill if the ε = 0.2 head is within 0.01 of the best arm.
-- **LIN1 rebound on bed `torus`** (source `sun/rjepa/cameron/r2/BAR.md`). Fresh seeds only, band T ∈ {12, 16, 20, 24,
-  32}: LIN1 against the best D-JEPA-spec operator, the distance floor and a 3-member ensemble control; and a
-  call-accounted cascade that aims at Bayes quality with fewer predictor calls.
-- **A verifier for rankers** (source `sun/daedalus/registry/bars_r2.json`). A `ranker` contract
-  (`forward(state_feats[B, K, F]) → scores[B, K]`) with claimed invariants checked on probes, on a frozen copy of
-  bed `shift`, and a seed rule that rejects seed-conditioned cheats.
+### 5.1 The shared-error dial at K = 63 with a learned predictor
+
+Bed `dial` (source `sun/rjepa/r2/`, bar `BAR.md` with amendments A1-A5). Latent D = 8, action 4 per step, horizon 5,
+true dynamics $z' = 1.1\,Q z + 0.5\tanh(Cz + Ba)$ with $Q$ Haar-orthogonal, K = 63 candidates per start, and a learned
+MLP predictor rolled out for every candidate. The realised start of candidate $k$ is
+$x_k = y - \sigma(\sqrt f\, s + \sqrt{1-f}\, u_k)$: at $f = 1$ one unknown start is shared by every candidate, at
+$f = 0$ the error is per-candidate. The label is the truly best candidate; scores are normalised as
+NS = (hit − 1/K) / (hit_Bayes − 1/K), with Bayes by M = 2,048 common draws under the true dynamics. Each cell is
+3 seeds × 20,000 held-out evaluation starts (60,000 training starts); every learned arm sees the same 12-d token and
+the same 4,000-step budget, at 67,805-69,377 parameters.
+
+| Arm at (f = 1, σ/ρ = 3) | NS, seed 0 / 1 / 2 | What it is |
+|---|---|---|
+| Bayes restricted to base ranks within 2ε = 0.4 of the minimum | **0.944 / 0.944 / 0.970** | learning-free ceiling of any ε = 0.2 operator |
+| `dj4L` | **0.732 / 0.703 / 0.787** | D-JEPA-spec operator, ε = 4, LIN1 base ranks |
+| `hop1` | **0.501 / 0.467 / 0.497** | round-1 one-hop set head |
+| `dj02` | **0.352 / 0.354 / 0.358** | D-JEPA as specified, ε = 0.2, distance base ranks |
+| `dist` (floor) | **0.338 / 0.343 / 0.335** | latent-distance planning |
+
+**Reach is not the wall.** Amendment A4 (registered after seed 0, read on seeds 1 and 2) asked whether ε = 0.2 is
+too narrow to reach the Bayes pick at K = 63. It is not: the Bayes pick restricted to the ε = 0.2 reach scores
+0.944-0.970 NS, while the learned ε = 0.2 operator sits 0.011-0.024 NS above the distance floor.
+
+**The cost is saturation of the bounded correction.** On the ε = 0.2 operator the mean |δ|/ε on evaluation is
+0.792 / 0.792 / 0.791: the tanh correction runs at 79 % of its bound. Widening ε with net, base ranks, loss and
+learning rate unchanged (Amendment A5, claim S1, registered before its run) lifts NS to 0.725 / 0.657 / 0.729 at
+ε = 0.5 and 0.727 / 0.662 / 0.737 at ε = 1, level with 0.724 / 0.661 / 0.735 at ε = 4 (mean |δ|/ε at ε = 1:
+0.247 / 0.246 / 0.247). Once the correction is off saturation, the size of ε stops mattering.
+
+**The set edge exists only where the error is shared.** The closable gap (Bayes hit − distance hit) is
+0.0447 / 0.0458 / 0.0460 at f = 1, σ/ρ = 3 (mean 0.0455). At f = 0.75 it falls to 0.0037 / 0.0021 / 0.0026, and at
+f = 0, σ/ρ = 3 to 0.0005 / 0.0003 / −0.0014. At f = 0, σ/ρ = 3 the 3-seed mean edge of the set arms over `dj02` is
++0.0008 hit for `hop1` and −0.0015 for `dj4L` (registered bar F1: ≤ 0.005). This is round-1 test `B10` reproduced
+with a learned predictor at K = 63: remove the shared component and the set operator has nothing to exploit.
+
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  bed dial, K = 63, learned predictor, 3 seeds x 20,000 eval starts, (f = 1, sigma/rho = 3), NS per seed
+  Bayes within eps = 0.2 reach   0.944  0.944  0.970
+  dj4L  (eps 4)                  0.732  0.703  0.787     dj1 0.727 0.662 0.737    dj0.5 0.725 0.657 0.729
+  hop1                           0.501  0.467  0.497
+  dj02  (eps 0.2)                0.352  0.354  0.358     |delta|/eps 0.792 0.792 0.791
+  dist                           0.338  0.343  0.335
+  closable gap (hit)    f = 1: 0.0455    f = 0.75: 0.0021-0.0037    f = 0 (sigma/rho 3): -0.0014-0.0005
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+### 5.2 LIN1 on fresh seeds, and a call-accounted race
+
+Bed `torus` unchanged from round 1 (source `sun/rjepa/cameron/r2/`, bar `BAR.md`), fresh evaluation seeds 3, 4, 5
+(seeds 0-2 never read), band T ∈ {12, 16, 20, 24, 32}, 10,000 evaluation starts per lead per seed. NS is normalised
+between blind and the full-rollout Bayes reference (M = 256 posterior members per candidate).
+
+| Quantity | Seed 3 / 4 / 5 | Compared against |
+|---|---|---|
+| LIN1 band-mean NS | **0.880 / 0.881 / 0.879** | best D-JEPA-spec operator 0.729 / 0.737 / 0.735; distance floor 0.721 / 0.727 / 0.728 |
+| B2 race, worst NS over the 5 leads | **0.9923 / 0.9908 / 0.9957** | full rollout = 1 (bar ≥ 0.99) |
+| B2 race, mean call saving per decision | **4.52×-7.89×** over all 15 seed-lead rows | full rollout, K (M + 1) T calls per decision |
+| B2 race, 90th-percentile call saving | **2.33×-3.84×** over the same rows | same |
+
+**LIN1 rebounds, scoped.** One VJP per candidate beats the D-JEPA-spec operator by ≥ 0.14 band-mean NS and the floor
+by ≥ 0.15 on each fresh seed (claims A1, A2). It does not beat the three-member ensemble control everywhere: at
+T = 32 the 3-seed NS is 0.7589 for LIN1 against 0.7791 for ENS3, so claim A3 is lost there, and ENS3 (3T calls per
+candidate against LIN1's 2T) is the better cheap ranker at the longest lead.
+
+**Bayes quality at 4.5-7.9× fewer predictor calls.** The B2 race (`cascade2`: empirical-Bernstein radius, a settle
+threshold on the LIN1 spread, an ε-good stop, candidates raced on shared member draws) stays within 0.01 NS of the
+full rollout on all 15 seed-lead rows. The saving shrinks with the lead (3-seed ratio 7.78 at T = 12, 4.53 at T = 32)
+and the tail is heavier than the mean: the 90th-percentile decision saves only 2.3-3.8×. The B2 arm was added by
+Amendment B2 after tuning seed 9 had shown the registered race would miss, and before any evaluation seed existed;
+its configuration was chosen on seed 9 alone.
+
+### 5.3 A verifier for rankers
+
+Source `sun/daedalus/`, results in `results/r2/`. The round-1 verifier, re-run under round-2 code, rejected
+**22/22** planted cheats with **0** errors and reproduced **5/5** known verdicts (`m0_r2c.log`,
+`m0_r2c_redteam.json`, `m0_r2c_known_verdicts.json`). A new `ranker` contract
+(`forward(state_feats[B, K, F]) → scores[B, K]`) caught **5/5** planted ranker cheats at their named stage (label
+leak, candidate index order, false equivariance, false bound on probes, false bound on evaluation) with 0 errors
+(`rankers_green_final.log`).
+
+Through that contract, on a frozen copy of bed `shift` (Bayes hit 0.380, latent-distance floor 0.322, label-shuffle
+null 0.333-0.336), the resolvent set head `fm_resolvent` scored **0.3770** hit and the one-hop head `fm_hop1`
+**0.3603**, and both reached `PASS_V2` (`rjepa_arms.json`). Each of those two numbers is **one** secret-seed draw of
+the candidate shuffle; replication on three draws is round-3 work (5.5). No ranker can reach `ACCEPT`: no V3 pool or
+V5 ladder is registered for rankers.
+
+### 5.4 Killed in round 2
+
+**P2 at f = 0.75.** Registered: at f ≥ 0.75, σ/ρ ≥ 3, `dj4L` and `hop1` each beat `dj02` by ≥ 0.05 NS on 3/3
+seeds. It holds at f = 1 and fails at f = 0.75, where `dj4L` scores below `dj02` on every seed; the closable gap there
+is 0.002-0.004 hit, too small for any arm to separate.
+
+**M3, the optimisation-speed reading.** Registered: if `dj02` with learning rate ×20 (`dj02f`) recovers at least half
+of the ε = 4 gain, the ε = 0.2 cost is optimisation speed. `dj02f` picks exactly what `dist` picks on 3/3 seeds
+(NS 0.338 / 0.343 / 0.335). Killed; the replacement route is the saturation reading of 5.1, which was then registered
+and passed.
+
+**P1, the LIN1 half.** Registered: at f = 0, σ/ρ = 1, the pointwise head and LIN1 each tie the best set arm within
+0.01 NS. The pointwise half holds; LIN1 sits 0.030 NS below the best set arm (3-seed mean 0.940 against 0.970).
+
+**B, the Hoeffding race.** The registered call-accounted race saves only 2.34-3.56× against a ≥ 4× bar and falls to
+NS 0.9812 at seed 4, T = 32. Killed; its registered fallback `prune_m` (m ≤ 4) also misses NS ≥ 0.99 at T = 24 and 32.
+B2 in 5.2 is the separately registered replacement.
+
+### 5.5 Round 3 (running)
+
+No numbers until they are bound. Running: a gap-onset map at f ∈ {0.85, 0.9, 0.95} on bed `dial`, to locate where
+the set edge appears between f = 0.75 and f = 1; B2 re-derived on a second tuning seed, so the frozen race
+configuration no longer rests on seed 9 alone; and the `PASS_V2` verdicts of `fm_resolvent` and `fm_hop1` replicated
+on three secret draws.
+
+### 5.6 Reproduction (source repository)
+
+These commands run in `github.com/teerthsharma/resolvent`, not in this package.
+
+```bash
+# 5.1 bed dial: predictor + calibration, cells as (f, sigma/rho) pairs, extra arms, table, claim tests
+cd sun/rjepa/r2
+python r2.py pred
+python r2.py cell 1 3 1 1 0.75 3 0 1 0 3
+R2_KINDS=dj02f,dj02 python r2.py cell 1 3                 # M3 arm   -> results/res_f1.0_q3.0_s*_extra.json
+R2_KINDS=dj0.5,dj1 R2_SFX=_eps python r2.py cell 1 3      # S1 sweep -> results/res_f1.0_q3.0_s*_eps.json
+python r2.py table && python -m pytest -q test_claims.py
+
+# 5.2 bed torus: tune on seed 9, evaluate seeds 3-5 (split by memory, merged into eval.json), claim tests
+cd sun/rjepa/cameron/r2
+python r2.py tune2 && python r2.py evnp && python r2.py evdj && python r2.py eval
+python -m pytest -q test_r2.py
+
+# 5.3 verifier red team, ranker contract, R-JEPA arms through the contract
+python sun/daedalus/engine/m0.py
+python sun/daedalus/engine/r2_rankers.py rankers.json
+python sun/daedalus/results/r2/rjepa_arms.py
+```
 
 ---
 
@@ -315,8 +442,8 @@ candidates. σ_e was fixed to 0.02 by that argument before any run at 0.02; ever
 every head alike. The D-JEPA-spec head at ε = 0.2 learned no swap at all in that run and fails its own learn gate;
 the learning-free Cor 1 ceiling replaced it as the deciding test of the bound.
 
-**Measured in round 1 but not bound, pending re-run** (no numbers are quoted until a pre-registered test binds them):
-LIN1 against the D-JEPA-spec operator on bed `torus`; the ε = 4 D-JEPA head recovering the horizon rule at σ = 10;
+**Measured in round 1 but not bound, pending re-run** (no numbers are quoted until a pre-registered test binds them;
+round 1's LIN1-against-D-JEPA reading was struck and is replaced by the fresh-seed result in 5.2): the ε = 4 D-JEPA head recovering the horizon rule at σ = 10;
 the hull-angle rule matching the Bayes rule at σ = 10 (the test `B3` passes in this suite, but it had no prior
 failing test); the resolvent head's latency against the D-JEPA operator at K = 63.
 
@@ -386,6 +513,12 @@ starts. Seed 1's one-hop closure also differs between the recorded run and the p
 isolated.
 
 The resolvents are dense `O(K³)` solves; nothing here is a fused kernel, and no speed claim is made.
+
+The Round 2 results (Section 5) are not reproducible from this package. The K = 63 bed `dial`, the round-2 `torus`
+evaluation with its call-accounted races, and the verifier live only in the source repository; this package ships
+neither their code nor a test that pins their numbers, and Section 5 cites the source result files instead.
+Porting bed `dial` and the B2 race with pinned tests is a later step. Within those results, the B2 race configuration
+was selected on a single tuning seed, and each `PASS_V2` ranker verdict rests on a single secret shuffle draw.
 
 ---
 
