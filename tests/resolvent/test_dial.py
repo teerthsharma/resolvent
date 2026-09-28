@@ -1,6 +1,6 @@
-"""Bed `dial`: K = 63 shared-error dial with a learned predictor (source sun/rjepa/r2/r2.py, BAR.md A1-A6).
+"""Bed `dial`: K = 63 shared-error dial with a learned predictor (source experiments/dial/r2/r2.py, BAR.md A1-A6).
 
-Ported from sun/rjepa/r2/test_r2.py (C1-C7) and sun/rjepa/r3/foreman/test_r3.py (A6.1 tie-break), plus the
+Ported from experiments/dial/r2/test_r2.py (C1-C7) and experiments/dial/r3/foreman/test_r3.py (A6.1 tie-break), plus the
 error-mix, saturation and fast-cell tests written for this package before dial.py existed.
 """
 import json
@@ -59,7 +59,7 @@ def test_constant_pick_is_chance(dyn):
 
 
 def test_calibration_reproduces_source_sigma(dyn):
-    """sigma for sigma/rho = 1, 3, 10, against sun/rjepa/r2/results/calib.json."""
+    """sigma for sigma/rho = 1, 3, 10, against experiments/dial/r2/results/calib.json."""
     c = R.calibrate(dyn)
     assert abs(c["rho"] - 0.6375638246536255) < 1e-5
     for q, s in R.SIGMA.items():

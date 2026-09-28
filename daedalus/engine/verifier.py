@@ -25,7 +25,7 @@ import numpy as np
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 DAEDALUS = os.path.dirname(HERE)
-REPO = os.path.dirname(os.path.dirname(DAEDALUS))
+REPO = next(d for d in (os.path.abspath(os.path.join(DAEDALUS, *[".."] * n)) for n in range(1, 8)) if os.path.isfile(os.path.join(d, "pytest.ini")))  # found by marker, not counted: test_fence.py
 SEALED = os.path.join(DAEDALUS, "sealed")
 PROTECTED = [HERE, os.path.join(DAEDALUS, "registry"), SEALED]
 sys.path.insert(0, HERE)

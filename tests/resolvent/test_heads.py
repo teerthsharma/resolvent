@@ -1,7 +1,7 @@
 """Contracts for the ranking heads and the D-JEPA-spec relational operator.
 
-Ported from sun/rjepa/foreman/test_rjepa.py (head contracts, D-JEPA Prop 2 / Cor 1) and
-sun/rjepa/cameron/test_rj.py (operator equivariance and bound).
+Ported from experiments/shift/test_rjepa.py (head contracts, D-JEPA Prop 2 / Cor 1) and
+experiments/torus/test_rj.py (operator equivariance and bound).
 """
 import torch
 

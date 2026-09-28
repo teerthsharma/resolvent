@@ -1,5 +1,5 @@
 """bars_r3 runs, one process, one sandbox job at a time, draw-major so each draw's V3 pool trains once.
-    python sun/daedalus/results/r3/r3_runs.py
+    python daedalus/results/r3/r3_runs.py
 Writes r3_runs.json after every row (a timebox cut keeps what finished). Run seeds are never written."""
 import json
 import os

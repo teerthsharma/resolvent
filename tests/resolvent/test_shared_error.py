@@ -1,6 +1,6 @@
 """Bed `shift`: exact shared-error latent bed with a Monte-Carlo Bayes ceiling (learning-free contracts).
 
-Ported from sun/rjepa/foreman/test_rjepa.py (B0, B1, B3, B10 and the hull-angle invariants).
+Ported from experiments/shift/test_rjepa.py (B0, B1, B3, B10 and the hull-angle invariants).
 """
 import numpy as np
 

@@ -1,6 +1,6 @@
 """Ranker suite (bars_r2 r2_b): 4 planted ranker cheats + 2 honest controls.
 
-    python sun/daedalus/engine/r2_rankers.py <out.json>
+    python daedalus/engine/r2_rankers.py <out.json>
 
 A cheat counts as caught only if REJECTed at its must_catch_at stage; a control is admissible iff it is not
 rejected at an integrity stage (V0, V0.sandbox, V0.init, V1, V4, V2.ceiling, V2.order). ERROR is neither.

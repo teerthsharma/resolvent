@@ -1,5 +1,5 @@
 """Round-2 unit checks for the verifier's new instruments (fast, CPU, no sandbox). Run:
-python sun/daedalus/engine/test_r2.py"""
+python daedalus/engine/test_r2.py"""
 import os
 import sys
 

@@ -1,7 +1,7 @@
 """Contracts for the candidate-axis resolvents: equivariance, pole refusal, bounds, masks, dtype, gradients.
 
-Ported from the source repo's sun/rjepa/chase/test_set_resolvent.py (C1-C7) and the operator half of
-sun/rjepa/foreman/test_rjepa.py (T-A and the dense-parity checks).
+Ported from the source repo's experiments/cost/test_set_resolvent.py (C1-C7) and the operator half of
+experiments/shift/test_rjepa.py (T-A and the dense-parity checks).
 """
 import os
 

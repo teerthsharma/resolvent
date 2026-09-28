@@ -1,7 +1,7 @@
 """Bed `dial`: the shared-error dial at K = 63 with a learned predictor.
 
-Ported from sun/rjepa/r2/r2.py (bar sun/rjepa/r2/BAR.md, amendments A1-A6) with the A6.1 Bayes tie-break of
-sun/rjepa/r3/foreman/r3.py. CPU only. Latent D = 8, action 4 per step, horizon 5, true dynamics
+Ported from experiments/dial/r2/r2.py (bar experiments/dial/r2/BAR.md, amendments A1-A6) with the A6.1 Bayes tie-break of
+experiments/dial/r3/foreman/r3.py. CPU only. Latent D = 8, action 4 per step, horizon 5, true dynamics
 
     z' = 1.1 Q z + 0.5 tanh(C z + B a),    Q Haar-orthogonal,
 

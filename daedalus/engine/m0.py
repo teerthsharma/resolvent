@@ -1,6 +1,6 @@
 """M0: the engine must be trusted before any candidate.
 
-    python sun/daedalus/engine/m0.py
+    python daedalus/engine/m0.py
 
 Writes results/m0_redteam.json (22 planted cheats + honest controls + power checks)
 and results/known_verdicts.json (5 verdicts; 1-2 read from Cameron's re-run file).

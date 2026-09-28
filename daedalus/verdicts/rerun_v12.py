@@ -1,9 +1,9 @@
 """Daedalus V1/V2: re-run Phase J arms a, f, a_alibi, a2F at split seed 0 by IMPORTING
 the original code (design4x5.train_arm, rpos.alibi_forward, arms_j.train_a2F) with every
-output path redirected under sun/daedalus/results/.
+output path redirected under daedalus/results/.
 
-python sun/daedalus/verdicts/rerun_v12.py            # train 4 arms, append rows, write verdicts_12.json
-python sun/daedalus/verdicts/rerun_v12.py --summarize  # rebuild verdicts_12.json from existing rows only
+python daedalus/verdicts/rerun_v12.py            # train 4 arms, append rows, write verdicts_12.json
+python daedalus/verdicts/rerun_v12.py --summarize  # rebuild verdicts_12.json from existing rows only
 """
 import hashlib
 import io
@@ -14,7 +14,7 @@ import sys
 import time
 
 REPO = r"C:\Users\seal\Desktop\New folder (32)"
-RES = os.path.join(REPO, "sun", "daedalus", "results")
+RES = os.path.join(REPO, "daedalus", "results")
 ROWS = os.path.join(RES, "verdicts_lm_rows.jsonl")
 OUT = os.path.join(RES, "verdicts_12.json")
 GRID = os.path.join(REPO, "tests", "foreman", "design4x5", "design4x5_results.jsonl")
@@ -151,8 +151,8 @@ def summarize(extra=None):
     use = L if rerun else dict(a=s0["loss_a"], f=s0["loss_f"], a_alibi=s0["loss_alibi"], a2F=s0["loss_a2F"])
     stored_map = dict(a=s0["loss_a"], f=s0["loss_f"], a_alibi=s0["loss_alibi"], a2F=s0["loss_a2F"])
     absdiff = {a: abs(L[a] - stored_map[a]) for a in L}
-    cmd = "python sun/daedalus/verdicts/rerun_v12.py"
-    prov = [GRID, RPOS, RECORD, ROWS, os.path.join(REPO, "sun", "daedalus", "verdicts", "rerun_v12.py"),
+    cmd = "python daedalus/verdicts/rerun_v12.py"
+    prov = [GRID, RPOS, RECORD, ROWS, os.path.join(REPO, "daedalus", "verdicts", "rerun_v12.py"),
             "tests/foreman/design4x5/design4x5.py:train_arm", "tests/foreman/phase_j/N2/foreman/rpos.py:alibi_forward",
             "tests/foreman/phase_j/arms_j.py:train_a2F", "tests/foreman/eval/r3_eval.py:train_with_eval"]
     method = "rerun" if rerun else "stored"

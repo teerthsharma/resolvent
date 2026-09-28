@@ -364,7 +364,7 @@ if __name__ == "__main__":
                                                                 "schpd_10slot": 0.43982539164490864,
                                                                 "schpd_30slot": 0.8095626631853785}),
             ("far_bed_kp_control", "bed_kp", 16384, 7, 31, "far", {"line (every family)": 0.1230723284100782})]
-    out = {"command": "python sun/daedalus/engine/shortcuts.py", "utc": datetime.now(timezone.utc).isoformat(),
+    out = {"command": "python daedalus/engine/shortcuts.py", "utc": datetime.now(timezone.utc).isoformat(),
            "machine": platform.processor() or platform.machine(), "numpy": np.__version__, "device": "CPU only",
            "void_line": VOID_LINE, "c_max": C_MAX,
            "library": [{k: v for k, v in e.items() if k in ("name", "source", "bound_in")} for e in LIBRARY],

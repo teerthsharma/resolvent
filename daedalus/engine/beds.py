@@ -23,7 +23,7 @@ import numpy as np
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 DAEDALUS = os.path.dirname(HERE)
-REPO = os.path.dirname(os.path.dirname(DAEDALUS))
+REPO = next(d for d in (os.path.abspath(os.path.join(DAEDALUS, *[".."] * n)) for n in range(1, 8)) if os.path.isfile(os.path.join(d, "pytest.ini")))  # found by marker, not counted: test_fence.py
 PHASE_J = os.path.join(REPO, "tests", "foreman", "phase_j")
 N1_CHASE = os.path.join(PHASE_J, "N1", "chase")
 SEALED = os.path.join(DAEDALUS, "sealed")

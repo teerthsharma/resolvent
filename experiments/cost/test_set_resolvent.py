@@ -1,6 +1,6 @@
 """Correctness contracts for the resolvent as a K-candidate operator (BAR.md C1-C8).
 
-    python -m pytest sun/rjepa/chase/test_set_resolvent.py -q
+    python -m pytest experiments/cost/test_set_resolvent.py -q
 """
 import math
 import os
@@ -10,7 +10,7 @@ import pytest
 import torch
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-REPO = os.path.dirname(os.path.dirname(os.path.dirname(HERE)))
+REPO = os.path.dirname(os.path.dirname(HERE))
 sys.path[:0] = [HERE, REPO]
 from rjepa_ops import set_resolvent, neumann_resolvent, build_A  # noqa: E402
 from ceq.attention import ceq_operator, path_sum  # noqa: E402

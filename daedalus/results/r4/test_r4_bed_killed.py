@@ -1,7 +1,7 @@
 """bars_r4 r4_c bed-choice claim, bound as a test (Inspector r4): on the shared-error bed the set-level edge (Bayes
 minus the best pointwise rule, a grid of argmax +-| |zhat| - c | rules) is < 0.02 at K 63 and >= 0.05 at K 6 sigma 2.
 Floors only, no ranker trained; the executed pool headroom on the draws is the bed-validity read, not this.
-    python sun/daedalus/engine/test_r4_bed.py"""
+    python daedalus/engine/test_r4_bed.py"""
 import os
 import sys
 

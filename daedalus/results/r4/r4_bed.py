@@ -1,5 +1,5 @@
 """bars_r4 r4_c runs on planning_consequence_v1: draw-major, one sandbox job at a time, each draw's V3 pool trains once.
-    python sun/daedalus/results/r4/r4_bed.py
+    python daedalus/results/r4/r4_bed.py
 Writes r4_bed.json after every row (a timebox cut keeps what finished). Run seeds are never written."""
 import json
 import os

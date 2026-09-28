@@ -1,6 +1,6 @@
 """Bed `torus`: standard-map candidate bed with an exact posterior, the LIN and LIN1 chance rankers.
 
-Ported from sun/rjepa/cameron/test_rj.py (bed and ranker contracts; the H0 topology tests stay behind
+Ported from experiments/torus/test_rj.py (bed and ranker contracts; the H0 topology tests stay behind
 with the killed TOPO claim).
 """
 import numpy as np

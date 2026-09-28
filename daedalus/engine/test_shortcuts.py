@@ -1,5 +1,5 @@
 """V2 shortcut library check: bed_k' is VOID beyond 2^L and NOT void on the far band (L=7). Run:
-python sun/daedalus/engine/test_shortcuts.py"""
+python daedalus/engine/test_shortcuts.py"""
 import os
 import sys
 

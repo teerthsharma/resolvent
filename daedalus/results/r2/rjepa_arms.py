@@ -1,8 +1,8 @@
 import sys, json, os, time
-sys.path.insert(0, r"C:\Users\seal\Desktop\New folder (32)\sun\daedalus\engine")
+sys.path.insert(0, r"C:\Users\seal\Desktop\New folder (32)\daedalus\engine")
 import verifier as V
 from r2_rankers import INTEGRITY
-D = r"C:\Users\seal\Desktop\New folder (32)\sun\daedalus\candidates_rjepa"
+D = r"C:\Users\seal\Desktop\New folder (32)\daedalus\candidates_rjepa"
 t0, out = time.time(), {}
 for a in ("fm_point", "fm_hop1", "fm_resolvent", "fm_djepa", "ch_dj_stoch"):
     r = V.verify(os.path.join(D, a))
