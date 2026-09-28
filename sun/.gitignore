@@ -1,6 +1,0 @@
-# caches and exhaust from R-JEPA rounds; results JSON and logs stay tracked
-rjepa/cameron/r2/cache/
-rjepa/cameron/r3/cache/
-__pycache__/
-.benchmarks/
-rjepa/cameron/r4/cache/
