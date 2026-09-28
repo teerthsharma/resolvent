@@ -1,0 +1,37 @@
+........FF..                                                             [100%]
+================================== FAILURES ===================================
+____________________ test_claim_A3_lin1_holds_against_ens3 ____________________
+
+    def test_claim_A3_lin1_holds_against_ens3():
+        E = _eval(); band, rows = _band(E)
+        for T in band:
+            rs = rows(T)
+>           assert np.mean([_ns(x, "lin1") for x in rs]) >= np.mean([_ns(x, "ens3") for x in rs]) - 0.01, T
+E           AssertionError: 32
+E           assert np.float64(0.7588603696664329) >= (np.float64(0.7790855492680224) - 0.01)
+E            +  where np.float64(0.7588603696664329) = <function mean at 0x000001DB7FCDF4B0>([0.7518052955335651, 0.7665352606219885, 0.7582405528437449])
+E            +    where <function mean at 0x000001DB7FCDF4B0> = np.mean
+E            +  and   np.float64(0.7790855492680224) = <function mean at 0x000001DB7FCDF4B0>([0.762503343139877, 0.7910643889618921, 0.7836889157022982])
+E            +    where <function mean at 0x000001DB7FCDF4B0> = np.mean
+
+test_r2.py:103: AssertionError
+____________ test_claim_B_cascade_4x_fewer_calls_at_bayes_quality _____________
+
+    def test_claim_B_cascade_4x_fewer_calls_at_bayes_quality():
+        E = _eval(); band, _ = _band(E)
+        assert E["cascade_config"] == json.loads((HERE / "tune.json").read_text())["chosen"]
+        for s, rs in E["seeds"].items():
+            for x in rs:
+                if x["T"] in band:
+                    assert _ns(x, "cascade") >= 0.99, (s, x["T"], _ns(x, "cascade"))
+>                   assert x["cascade_calls"] <= rj.K * (r2.M + 1) * x["T"] / 4, (s, x["T"], x["cascade_calls"])
+E                   AssertionError: ('3', 12, 10301.76)
+E                   assert 10301.76 <= (((8 * (256 + 1)) * 12) / 4)
+E                    +  where 8 = rj.K
+E                    +  and   256 = r2.M
+
+test_r2.py:113: AssertionError
+=========================== short test summary info ===========================
+FAILED test_r2.py::test_claim_A3_lin1_holds_against_ens3 - AssertionError: 32
+FAILED test_r2.py::test_claim_B_cascade_4x_fewer_calls_at_bayes_quality - Ass...
+2 failed, 10 passed in 6.96s

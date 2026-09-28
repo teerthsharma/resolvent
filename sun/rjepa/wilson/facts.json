@@ -1,0 +1,54 @@
+{
+  "author": "Wilson (house-mode ground truth), 2026-09-28",
+  "djepa": {
+    "arxiv": "2609.24749v1", "title": "D-JEPA: A Decision-Aligned Latent World Model",
+    "authors": "Shuaijun Liu, Chengyu Wu, Qifu Wen, Feiyang You, Chenglong Zhang, Shuyang Hao, Xi Lin, Ningxin Su",
+    "submitted": "Mon, 21 Sep 2026 15:17:32 UTC", "arxiv_license": "CC BY 4.0",
+    "code": {"repo": "https://github.com/NEBULIS-Lab/D-JEPA", "license": "Apache-2.0 (GitHub API)", "pushed_at": "2026-09-21T15:06:29Z",
+             "hf_model": "https://huggingface.co/Shuaijun/D-JEPA", "hf_dataset": "https://huggingface.co/datasets/Shuaijun/D-JEPA-Dataset", "hf_license": "unverified (no license tag returned by HF API)"},
+    "operator": {
+      "token": "v_i=[d_i^L; d_i^T; r_i^L; r_i^T], d_i^m=LN(zhat^m_{i,H}-z_g^m) (192-d each), r_i^m=(rank_A(c_i^m)-1)/(K-1); 386 inputs",
+      "base": "b_i=alpha r_i^L+(1-alpha) r_i^T, alpha=0.42",
+      "net": "386->64 encoder (LayerNorm, GELU), two pre-norm Transformer layers, 4 heads, FF 128, dropout 0, no candidate-order positional encoding; head 64->8->1 zero-init",
+      "correction": "delta_i=eps tanh(W_up tanh(W_down h_i)), s_i=b_i+delta_i, eps=0.2",
+      "bounded_means": "|delta_i|<=eps; preferences across base gaps >2eps preserved; selection only within 2eps of base minimum (Prop 2, Cor 1)",
+      "permutation_equivariant_means": "no candidate-order positional encodings; permuting input candidates permutes outputs (App B.1)",
+      "K": "candidate count; 63 on PushT (expert excluded); 17 RoboTwin (1 native + 16 variants); 32 Drive-JEPA"
+    },
+    "loss": "L_R=-log sum_{i:y_i=1} p_i + lambda_local L_local + lambda_trust K^-1 sum delta_i^2; p_i=softmax(-s_i/T); T=0.05, margin 0.02, local weight 0.25, trust 0.1, subset k=16",
+    "training": "1,000 AdamW updates, 8 starts/batch, lr 3e-4, wd 1e-4, clip 1.0; checkpoint+gate on 64-start calibration subset; fitting-start count for relational PushT: unverified (plasticity path: 384 fitting, 128 calibration)",
+    "headlines": {
+      "PushT_confirmation_n256": "87.89 (225/256) calibrated composition; 87.11 relational",
+      "Reacher_n128": "93.75 (120/128)",
+      "PushT_mechanism_population_n128_dual_descriptors": "93.75",
+      "PushT_earlier_diagnostic_n32": "93.75",
+      "Granular_n64": "CD 0.358, main 39.06, strict 18.75",
+      "RoboTwin_n512": "61.72 -> 76.76 (+15.04)",
+      "PiPER_n100": "64.0 -> 81.0 (+17.0)",
+      "Driving_7_scenes_PDMS": "57.36 -> 95.34"
+    },
+    "latency_ms_median_per_start_batch16": {"relational": 35.03, "composition": 52.16, "ordinal_realization": 34.02, "hardware": "unverified (not stated in paper text)"}
+  },
+  "acpc": {"arxiv": "2608.12939", "arxiv_license": "CC BY 4.0", "code": "https://github.com/Anguo-star/acpc-diagnostics", "code_license": "MIT (GitHub API)"},
+  "machine_2026-09-28T00:50": {"free_ram_gb": 4.50, "total_ram_gb": 15.71, "gpu_mem_used_mib_nvidia_smi": 0, "gpu_total_mib": 8188,
+    "installed": {"torch": "2.14.0+cu126", "gudhi": "3.12.0", "ripser": "0.6.14", "nltk": "3.10.3", "networkx": "3.6.1", "triton-windows": "3.7.1.post27"},
+    "absent": ["fla / flash-linear-attention", "flash_attn", "giotto-tda (gtda)"]},
+  "repo_resolvent": {
+    "definition": "docs/CEQ_SHAPE.md:312 z(g)=(I-gW)^-1 V, Pi_g=(1-g)W(I-gW)^-1, O(g)=Pi_g V; :25 'causal resolvent read O=(1-g)P(I-gP)^-1 V of Fagnou et al. (ChaCAL, EMNLP 2024)'",
+    "code": ["ceqjepa/operator.py:219 state_solve (solve_triangular of I-gP)", "ceq/arm_pl.py:293 dag_resolvent (I-A)^-1 dense LU"],
+    "cost_addendum_L": "tests/foreman/phase_j/RECORD_L.md:45-47 and docs/STATUS.md:103: 1.03-1.09x fwd, 1.08-1.09x fwd+bwd vs EFFICIENT_ATTENTION (no flash in this torch build)",
+    "carry_collapse": "docs/PHASE_G.md:197-230 (statement), :234 1.084x vs plain causal SDPA 4.44 ms at n=4096 d=64",
+    "bf16_wall": "MISTAKES.md:2800-2806; recomputed live 88.71892521235186 (bf16), 88.72283905206835 (fp32)",
+    "status_cost_row": "docs/STATUS.md:103 family 6.72x twin wall clock; forget gate 1.99x explicit-mask, 2.84x is_causal",
+    "ceqjepa_tracked_files": 73,
+    "candidate_ranking_code_in_ceqjepa": "none found by grep for candidate/rank (only depth_race.py:464 'rejects a candidate', d2_nba placebo_rank)"
+  },
+  "daedalus": {
+    "entry": "python sun/daedalus/engine/verifier.py <candidate_dir> [...] (verifier.py:4, :455-457)",
+    "manifest": "proposer.py:7-18", "operator_contract": "proposer.py:20-26 build(spec)->nn.Module, forward(tokens[B,T])->logits[B,T,n_classes], causal, params +-2% of budget",
+    "beds_registered": ["a5_word_T16 (beds.py:75)"], "bed_families": ["pointer_chase", "group_reset_x3", "custom"],
+    "planning_consequence_bed": "none registered (verdicts/v3_pool.json:9); d_jepa pool entry runnable_here=false, code_path_or_null=null (v3_pool.json:71-76)"
+  },
+  "contradictions": ["sun/daedalus/REPORT.md:63 'D-JEPA has no released code' vs GitHub API: NEBULIS-Lab/D-JEPA exists, Apache-2.0, pushed 2026-09-21", "sun/canon/REPORT.md:27 93.75 conflict: resolved, 93.75 is Reacher n=128 (Table 1, Table 10 120/128) AND PushT 128-start mechanism population dual descriptors (Table 5) AND earlier PushT n=32 (Table 1 last column)", "ceqjepa/README.md:9 says package untracked; git ls-files ceqjepa returns 73 files"],
+  "repo_license": "Apache-2.0 (LICENSE); NOTICE: 'resolvent', Copyright 2026 Teerth Sharma; third-party ceq/vendor/island_benchmark_test.cc (DeepMind, Apache-2.0)"
+}

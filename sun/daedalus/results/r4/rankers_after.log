@@ -1,0 +1,8 @@
+r01 REJECT V0 feature view 'executed' is not registered; executed outcomes are sealed truth
+r02 REJECT V2.order hit moves 0.3223 -> 0.2475 under a secret candidate shuffle: reads candidate index order
+r03 REJECT V1 probe: max |f(Pz) - P f(z)| = 1.17 > 0.166
+r04 REJECT V1 probe: max |score - base| = 10.88 > epsilon 0.2
+r05 REJECT V1 eval: max |score - base| = 0.3 > epsilon 0.2
+r06 REJECT V2 hit 0.3489 < best floor label_shuffle_null 0.3300 + 0.02
+r07 REJECT V2 hit 0.3794 < best floor label_shuffle_null 0.3775 + 0.02
+control r_latent_distance REJECT V2 hit 0.3223 < best floor label_shuffle_null 0.3300 + 0.02

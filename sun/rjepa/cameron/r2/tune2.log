@@ -1,0 +1,15 @@
+MemoryError, retry 0
+tune 12 02:48:30
+MemoryError, retry 0
+tune 16 02:50:11
+MemoryError, retry 0
+MemoryError, retry 1
+MemoryError, retry 2
+MemoryError, retry 3
+tune 20 02:52:51
+MemoryError, retry 0
+MemoryError, retry 1
+tune 24 02:54:57
+tune 32 02:56:57
+chosen {'zc': inf, 'kappa': inf, 'c': 1.5, 'b': 8, 'tau': np.float64(0.6266570686577501), 'eps': 0.05}
+wall 580.1

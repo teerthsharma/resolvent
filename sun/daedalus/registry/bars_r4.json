@@ -1,0 +1,65 @@
+{
+ "_law": "L-FIXED-BAR, round 4. registry/bars.json (sha256 3c82d80d...07b10b), bars_r2.json and bars_r3.json are unchanged; every r4 rule lives here, registered before any run it governs. Any later change appends a new key with its own timestamp. No earlier bar moves; r4_a changes WHERE the label-shuffle null is trained, not what it is or how it is scored.",
+ "r4_a_null_process": {
+  "registered_utc": "2026-09-28T15:54:49+00:00",
+  "hole": "bars_r3 r3_d v2_hole_disclosed: the runner trained the label-shuffle null second in the same process, so build order told a candidate which model was its null.",
+  "plant": "cheats/r07_label_free_null_sabotage (sha256 75689a83...d3de; float64 rule after two V1-caught builds, results/r4/red_r07.log): NOT a pool twin. Untrained it is latent distance (V0.init sees the floor); after any training-mode forward it is a label-free Monte-Carlo Bayes rule with sigma 1.5 baked in; build call #2 returns a far-first ranker, so the in-process null collapses. must_catch_at V2 (label_shuffle_null floor).",
+  "red": "the r3 verifier (results/r4/verifier_before.py.txt, sandbox_runner_before.py.txt) returns PASS_V3 on r07 at draw m0 (results/r4/rankers_before.json)",
+  "rule": "verify_ranker runs one sandbox process per run seed, and the label-shuffle null as one more process whose job is byte-for-byte the seed-0 job (same secret seed, train X, eval X, shuffled eval X, probes, schedule) except train_Y = the registered row-shuffle of seed 0's labels. Every model is build #1 of a fresh process; every process gets the V0 runtime checks (tree hash, violations, error, shapes) and counts toward V0 L-EQ. The null's score is its planner-order eval hit on seed 0's eval set, as before.",
+  "green": "r07 REJECTed at V2 with label_shuffle_null the best floor; r01-r06 at their named stages; 2/2 controls admissible; 0 ERROR (results/r4/rankers_after.json)",
+  "residual_disclosed": "the null is indistinguishable only up to its labels: a candidate that reads its own gradients (softmax - onehot(Y)) or job.pt can test whether train labels correlate with distance rank and sandbag only then. Not planted this round. Route: a counterfactual-label null -- train the candidate on labels from a secret sibling rule with real structure (e.g. farthest-under-shared-error) and require it to follow them; a rule that ignores labels cannot."
+ },
+ "r4_b_vacuous_bound": {
+  "registered_utc": "2026-09-28T15:54:49+00:00",
+  "rule": "a ranker manifest claiming bounded(epsilon) with 2 * epsilon >= 1 (the range of base = -(distance rank)/(K-1), any K) is REJECTed at V1, L-AUDIT (vacuous claim), before any run: two candidates' corrections can then differ by >= the whole base range, so every ordering is reachable and the claim constrains nothing. Stricter than 'epsilon > range' on purpose: 0.5 <= epsilon < 1 is already vacuous.",
+  "red": "the r3 verifier's v0_static accepts fm_djepa_eps4's r3 manifest (bounded, epsilon 4.0; copy at results/r4/fm_djepa_eps4_manifest_r3.json)",
+  "arm_change": "candidates_rjepa/fm_djepa_eps4/manifest.json drops 'bounded' and 'epsilon'; source unchanged (sha256 7acdc798...28a5). Its r3 numbers stand; they were never a bounded-corrector result (bars_r3 r3_a note).",
+  "pool_unaffected": "r_pool_djepa02 claims bounded at epsilon 0.2: 2 * 0.2 < 1, admissible"
+ },
+ "r4_c_bed": {
+  "registered_utc": "2026-09-28T15:54:49+00:00",
+  "beds": {
+   "planning_consequence_v1": {
+    "source": "engine/planning_bed.py make_bed(K=6): Foreman's round-1 shared-error bed (the r2 dial at f = 1: every candidate shares the start error) with K = 6, sigma/rho = 2. D 2, rho 1, sigma_e 0.02, planner order. Not Foreman's r2 K = 63 dynamics bed: see pilot.",
+    "sigma": 2.0,
+    "K": 6,
+    "F": 2,
+    "feature_views": [
+     "predicted"
+    ],
+    "presentation": "as planning_consequence_v0",
+    "n_train": 50000,
+    "n_eval": 4000,
+    "n_probe": 256,
+    "train_steps": 3000,
+    "batch": 256,
+    "lr": 0.002,
+    "clip": 1.0,
+    "device": "cpu",
+    "param_budget": 20000,
+    "v4_learnability": 0.2,
+    "v4_rule": "per-seed hit in planner order >= 0.20 on every run seed (chance 1/6 = 0.167; same 1.2 x chance as v0's 0.30)",
+    "v4_repro_tolerance_abs": 0.02,
+    "v2_order_tol": 0.01,
+    "v2_margin_over_best_floor": 0.02,
+    "all_other_rules": "exactly as planning_consequence_v0 (bars_r2 r2_b, r2_c, bars_r3 r3_d, r4_a, r4_b)"
+   }
+  },
+  "disclosed_pilot": "floors only, no ranker trained (engine/planning_bed.py, seed 0-1, n 1,000-3,000, M 512-1,024). Bayes minus the best pointwise rule argmax +-|(|zhat| - c)| over a c grid: K 63 at sigma/rho 1.5 / 3 / 5 = 0.002 / 0.004 / -0.008 (D 2) and 0.005 / 0.003 / 0.003 (D 8); K 16 = 0.045 / 0.017 / 0.002; K 8 = 0.060 (sigma 2) / 0.043 (3); K 6 = 0.078 (2) / 0.065 (3) / 0.046 (5); K 4 = 0.091 (2) / 0.075 (3). On this bed the set-level edge vanishes as K grows, so K 63 cannot give 0.05 headroom; K 6 sigma 2 is the largest-K cell with pilot headroom >= 0.075 over the best pointwise rule.",
+  "draws": [
+   "r4d1",
+   "r4d2",
+   "r4d3"
+  ],
+  "arms": {
+   "fm_resolvent": "sha256 fad98160...8638, unchanged",
+   "fm_djepa_eps4": "sha256 7acdc798...28a5, no bounded claim (r4_b)",
+   "ch_res_djepa4": "sha256 84645bd4...af471: D-JEPA shell (rank base, encoder, epsilon-4 correction head) with the transformer replaced by the resolvent mixer (I - gW)^-1 h, H 94, 19,946 params"
+  },
+  "bar": "an arm beats planning_consequence_v1 iff it is PASS_V3 (V3 margin >= 0.02 over the verifier-owned pool, bars_r3 r3_d, same draw) on 3/3 draws",
+  "bed_validity": "the bed is VOID for the round if on any draw pooled Bayes hit - max pool hit < 0.05; arms are then reported, never read",
+  "separation": "two arms are separated iff their hit_shuffled differ by >= 0.02 with the same sign on 3/3 draws; else tied",
+  "combination_kill": "ch_res_djepa4 is dead as a route if it is not PASS_V3 on >= 2/3 draws, or if it is below the better parent by >= 0.02 on 3/3 draws",
+  "timebox": "draw-major; a draw not finished inside the round's timebox is reported as not run, never extrapolated"
+ }
+}

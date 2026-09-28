@@ -1,0 +1,516 @@
+[
+ {
+  "tag": "m0",
+  "dir": "cheats/r06_pool_twin_null_sabotage",
+  "verdict": "REJECT",
+  "stage": "V3",
+  "law": "L-BR",
+  "reason": "margin +0.0000 over pool r_pool_djepa02 0.3489 < 0.02",
+  "hit_planner": [
+   0.347,
+   0.35375,
+   0.3485,
+   0.34625
+  ],
+  "hit_shuffled": 0.348875,
+  "bayes_hit": 0.38,
+  "floors": {
+   "latent_distance": 0.32225000000000004,
+   "set_position": 0.32225000000000004,
+   "pointwise_mlp": 0.3219375,
+   "label_shuffle_null": 0.18875
+  },
+  "init_hit": [
+   0.33,
+   0.319,
+   0.3215,
+   0.3185
+  ],
+  "equivariance_dev": 1.2516975402832031e-06,
+  "bound_dev": 0.19976176818211877,
+  "v3": {
+   "pool": {
+    "r_latent_distance": 0.32225000000000004,
+    "r_pool_point": 0.3235,
+    "r_pool_djepa02": 0.348875
+   },
+   "best": "r_pool_djepa02",
+   "margin": 0.0
+  },
+  "wall_total_s": 602.6
+ },
+ {
+  "tag": "m0",
+  "dir": "candidates_rjepa/fm_djepa_eps4",
+  "verdict": "PASS_V3",
+  "stage": "V3",
+  "law": "",
+  "reason": "passed V0, V1, V4, V2, V3; no V5 ladder is registered for rankers, so never ACCEPT",
+  "hit_planner": [
+   0.375,
+   0.3775,
+   0.36075,
+   0.3785
+  ],
+  "hit_shuffled": 0.3729375,
+  "bayes_hit": 0.38,
+  "floors": {
+   "latent_distance": 0.32225000000000004,
+   "set_position": 0.32225000000000004,
+   "pointwise_mlp": 0.3219375,
+   "label_shuffle_null": 0.32925
+  },
+  "init_hit": [
+   0.33,
+   0.319,
+   0.3215,
+   0.3185
+  ],
+  "equivariance_dev": 1.430511474609375e-06,
+  "bound_dev": 2.26198673248291,
+  "v3": {
+   "pool": {
+    "r_latent_distance": 0.32225000000000004,
+    "r_pool_point": 0.3235,
+    "r_pool_djepa02": 0.348875
+   },
+   "best": "r_pool_djepa02",
+   "margin": 0.024062499999999987
+  },
+  "wall_total_s": 290.5
+ },
+ {
+  "tag": "m0",
+  "dir": "candidates_rjepa/ch_dj_stoch_noLN",
+  "verdict": "REJECT",
+  "stage": "V3",
+  "law": "L-BR",
+  "reason": "margin +0.0051 over pool r_pool_djepa02 0.3489 < 0.02",
+  "hit_planner": [
+   0.35775,
+   0.3595,
+   0.34675,
+   0.35175
+  ],
+  "hit_shuffled": 0.3539375,
+  "bayes_hit": 0.38,
+  "floors": {
+   "latent_distance": 0.32225000000000004,
+   "set_position": 0.32225000000000004,
+   "pointwise_mlp": 0.3219375,
+   "label_shuffle_null": 0.33
+  },
+  "init_hit": [
+   0.33,
+   0.319,
+   0.3215,
+   0.3185
+  ],
+  "equivariance_dev": 4.045665264129639e-06,
+  "bound_dev": 0.1997939745585124,
+  "v3": {
+   "pool": {
+    "r_latent_distance": 0.32225000000000004,
+    "r_pool_point": 0.3235,
+    "r_pool_djepa02": 0.348875
+   },
+   "best": "r_pool_djepa02",
+   "margin": 0.005062500000000025
+  },
+  "wall_total_s": 272.8
+ },
+ {
+  "tag": "r3d1",
+  "dir": "candidates_rjepa/fm_resolvent",
+  "verdict": "PASS_V3",
+  "stage": "V3",
+  "law": "",
+  "reason": "passed V0, V1, V4, V2, V3; no V5 ladder is registered for rankers, so never ACCEPT",
+  "hit_planner": [
+   0.3695,
+   0.36875,
+   0.38725,
+   0.38375
+  ],
+  "hit_shuffled": 0.37731250000000005,
+  "bayes_hit": 0.38599999999999995,
+  "floors": {
+   "latent_distance": 0.3236875,
+   "set_position": 0.3236875,
+   "pointwise_mlp": 0.3236875,
+   "label_shuffle_null": 0.3295
+  },
+  "init_hit": [
+   0.24975,
+   0.21725,
+   0.333,
+   0.216
+  ],
+  "equivariance_dev": 0.0009765625,
+  "v3": {
+   "pool": {
+    "r_latent_distance": 0.3236875,
+    "r_pool_point": 0.32399999999999995,
+    "r_pool_djepa02": 0.35650000000000004
+   },
+   "best": "r_pool_djepa02",
+   "margin": 0.02081250000000001
+  },
+  "wall_total_s": 592.9
+ },
+ {
+  "tag": "r3d1",
+  "dir": "candidates_rjepa/fm_hop1",
+  "verdict": "REJECT",
+  "stage": "V3",
+  "law": "L-BR",
+  "reason": "margin +0.0122 over pool r_pool_djepa02 0.3565 < 0.02",
+  "hit_planner": [
+   0.36225,
+   0.36525,
+   0.3615,
+   0.386
+  ],
+  "hit_shuffled": 0.36875,
+  "bayes_hit": 0.38599999999999995,
+  "floors": {
+   "latent_distance": 0.3236875,
+   "set_position": 0.3236875,
+   "pointwise_mlp": 0.3236875,
+   "label_shuffle_null": 0.32725
+  },
+  "init_hit": [
+   0.257,
+   0.216,
+   0.33125,
+   0.21425
+  ],
+  "equivariance_dev": 0.00048828125,
+  "v3": {
+   "pool": {
+    "r_latent_distance": 0.3236875,
+    "r_pool_point": 0.32399999999999995,
+    "r_pool_djepa02": 0.35650000000000004
+   },
+   "best": "r_pool_djepa02",
+   "margin": 0.012249999999999983
+  },
+  "wall_total_s": 158.9
+ },
+ {
+  "tag": "r3d1",
+  "dir": "candidates_rjepa/fm_djepa_eps4",
+  "verdict": "PASS_V3",
+  "stage": "V3",
+  "law": "",
+  "reason": "passed V0, V1, V4, V2, V3; no V5 ladder is registered for rankers, so never ACCEPT",
+  "hit_planner": [
+   0.381,
+   0.36825,
+   0.38775,
+   0.385
+  ],
+  "hit_shuffled": 0.3805,
+  "bayes_hit": 0.38599999999999995,
+  "floors": {
+   "latent_distance": 0.3236875,
+   "set_position": 0.3236875,
+   "pointwise_mlp": 0.3236875,
+   "label_shuffle_null": 0.32525
+  },
+  "init_hit": [
+   0.328,
+   0.3235,
+   0.331,
+   0.31225
+  ],
+  "equivariance_dev": 1.3113021850585938e-06,
+  "bound_dev": 2.403865098953247,
+  "v3": {
+   "pool": {
+    "r_latent_distance": 0.3236875,
+    "r_pool_point": 0.32399999999999995,
+    "r_pool_djepa02": 0.35650000000000004
+   },
+   "best": "r_pool_djepa02",
+   "margin": 0.023999999999999966
+  },
+  "wall_total_s": 273.2
+ },
+ {
+  "tag": "r3d1",
+  "dir": "candidates_rjepa/ch_dj_stoch_noLN",
+  "verdict": "REJECT",
+  "stage": "V3",
+  "law": "L-BR",
+  "reason": "margin -0.0007 over pool r_pool_djepa02 0.3565 < 0.02",
+  "hit_planner": [
+   0.3495,
+   0.36175,
+   0.3625,
+   0.3495
+  ],
+  "hit_shuffled": 0.3558125,
+  "bayes_hit": 0.38599999999999995,
+  "floors": {
+   "latent_distance": 0.3236875,
+   "set_position": 0.3236875,
+   "pointwise_mlp": 0.3236875,
+   "label_shuffle_null": 0.328
+  },
+  "init_hit": [
+   0.328,
+   0.3235,
+   0.331,
+   0.31225
+  ],
+  "equivariance_dev": 3.6954879760742188e-06,
+  "bound_dev": 0.19975101947784424,
+  "v3": {
+   "pool": {
+    "r_latent_distance": 0.3236875,
+    "r_pool_point": 0.32399999999999995,
+    "r_pool_djepa02": 0.35650000000000004
+   },
+   "best": "r_pool_djepa02",
+   "margin": -0.0006875000000000631
+  },
+  "wall_total_s": 302.5
+ },
+ {
+  "tag": "r3d2",
+  "dir": "candidates_rjepa/fm_resolvent",
+  "verdict": "PASS_V3",
+  "stage": "V3",
+  "law": "",
+  "reason": "passed V0, V1, V4, V2, V3; no V5 ladder is registered for rankers, so never ACCEPT",
+  "hit_planner": [
+   0.37525,
+   0.3795,
+   0.38375,
+   0.3795
+  ],
+  "hit_shuffled": 0.3795,
+  "bayes_hit": 0.38212500000000005,
+  "floors": {
+   "latent_distance": 0.32218749999999996,
+   "set_position": 0.32218749999999996,
+   "pointwise_mlp": 0.3235,
+   "label_shuffle_null": 0.31575
+  },
+  "init_hit": [
+   0.2655,
+   0.272,
+   0.29275,
+   0.2715
+  ],
+  "equivariance_dev": 0.0010986328125,
+  "v3": {
+   "pool": {
+    "r_latent_distance": 0.32218749999999996,
+    "r_pool_point": 0.3234375,
+    "r_pool_djepa02": 0.34868750000000004
+   },
+   "best": "r_pool_djepa02",
+   "margin": 0.030812499999999965
+  },
+  "wall_total_s": 552.0
+ },
+ {
+  "tag": "r3d2",
+  "dir": "candidates_rjepa/fm_hop1",
+  "verdict": "REJECT",
+  "stage": "V3",
+  "law": "L-BR",
+  "reason": "margin +0.0133 over pool r_pool_djepa02 0.3487 < 0.02",
+  "hit_planner": [
+   0.3695,
+   0.36575,
+   0.3485,
+   0.36425
+  ],
+  "hit_shuffled": 0.362,
+  "bayes_hit": 0.38212500000000005,
+  "floors": {
+   "latent_distance": 0.32218749999999996,
+   "set_position": 0.32218749999999996,
+   "pointwise_mlp": 0.3235,
+   "label_shuffle_null": 0.32075
+  },
+  "init_hit": [
+   0.265,
+   0.27075,
+   0.296,
+   0.27075
+  ],
+  "equivariance_dev": 0.001220703125,
+  "v3": {
+   "pool": {
+    "r_latent_distance": 0.32218749999999996,
+    "r_pool_point": 0.3234375,
+    "r_pool_djepa02": 0.34868750000000004
+   },
+   "best": "r_pool_djepa02",
+   "margin": 0.01331249999999995
+  },
+  "wall_total_s": 141.7
+ },
+ {
+  "tag": "r3d2",
+  "dir": "candidates_rjepa/fm_djepa_eps4",
+  "verdict": "PASS_V3",
+  "stage": "V3",
+  "law": "",
+  "reason": "passed V0, V1, V4, V2, V3; no V5 ladder is registered for rankers, so never ACCEPT",
+  "hit_planner": [
+   0.37375,
+   0.373,
+   0.3705,
+   0.384
+  ],
+  "hit_shuffled": 0.37531250000000005,
+  "bayes_hit": 0.38212500000000005,
+  "floors": {
+   "latent_distance": 0.32218749999999996,
+   "set_position": 0.32218749999999996,
+   "pointwise_mlp": 0.3235,
+   "label_shuffle_null": 0.31825
+  },
+  "init_hit": [
+   0.31875,
+   0.32525,
+   0.313,
+   0.33175
+  ],
+  "equivariance_dev": 1.0132789611816406e-06,
+  "bound_dev": 2.29079532623291,
+  "v3": {
+   "pool": {
+    "r_latent_distance": 0.32218749999999996,
+    "r_pool_point": 0.3234375,
+    "r_pool_djepa02": 0.34868750000000004
+   },
+   "best": "r_pool_djepa02",
+   "margin": 0.02662500000000001
+  },
+  "wall_total_s": 261.3
+ },
+ {
+  "tag": "r3d2",
+  "dir": "candidates_rjepa/ch_dj_stoch_noLN",
+  "verdict": "REJECT",
+  "stage": "V3",
+  "law": "L-BR",
+  "reason": "margin -0.0012 over pool r_pool_djepa02 0.3487 < 0.02",
+  "hit_planner": [
+   0.33825,
+   0.344,
+   0.34325,
+   0.3645
+  ],
+  "hit_shuffled": 0.34750000000000003,
+  "bayes_hit": 0.38212500000000005,
+  "floors": {
+   "latent_distance": 0.32218749999999996,
+   "set_position": 0.32218749999999996,
+   "pointwise_mlp": 0.3235,
+   "label_shuffle_null": 0.31825
+  },
+  "init_hit": [
+   0.31875,
+   0.32525,
+   0.313,
+   0.33175
+  ],
+  "equivariance_dev": 4.4889748096466064e-06,
+  "bound_dev": 0.19976472854614258,
+  "v3": {
+   "pool": {
+    "r_latent_distance": 0.32218749999999996,
+    "r_pool_point": 0.3234375,
+    "r_pool_djepa02": 0.34868750000000004
+   },
+   "best": "r_pool_djepa02",
+   "margin": -0.001187500000000008
+  },
+  "wall_total_s": 290.8
+ },
+ {
+  "tag": "m0",
+  "dir": "candidates_rjepa/fm_resolvent",
+  "verdict": "PASS_V3",
+  "stage": "V3",
+  "law": "",
+  "reason": "passed V0, V1, V4, V2, V3; no V5 ladder is registered for rankers, so never ACCEPT",
+  "hit_planner": [
+   0.37875,
+   0.382,
+   0.364,
+   0.38325
+  ],
+  "hit_shuffled": 0.377,
+  "bayes_hit": 0.38,
+  "floors": {
+   "latent_distance": 0.32225000000000004,
+   "set_position": 0.32225000000000004,
+   "pointwise_mlp": 0.3219375,
+   "label_shuffle_null": 0.3355
+  },
+  "init_hit": [
+   0.263,
+   0.26375,
+   0.251,
+   0.2675
+  ],
+  "equivariance_dev": 0.000732421875,
+  "v3": {
+   "pool": {
+    "r_latent_distance": 0.32225000000000004,
+    "r_pool_point": 0.3235,
+    "r_pool_djepa02": 0.348875
+   },
+   "best": "r_pool_djepa02",
+   "margin": 0.02812500000000001
+  },
+  "wall_total_s": 155.9
+ },
+ {
+  "tag": "m0",
+  "dir": "candidates_rjepa/fm_hop1",
+  "verdict": "REJECT",
+  "stage": "V3",
+  "law": "L-BR",
+  "reason": "margin +0.0114 over pool r_pool_djepa02 0.3489 < 0.02",
+  "hit_planner": [
+   0.364,
+   0.35825,
+   0.3485,
+   0.37025
+  ],
+  "hit_shuffled": 0.36025,
+  "bayes_hit": 0.38,
+  "floors": {
+   "latent_distance": 0.32225000000000004,
+   "set_position": 0.32225000000000004,
+   "pointwise_mlp": 0.3219375,
+   "label_shuffle_null": 0.3325
+  },
+  "init_hit": [
+   0.263,
+   0.26725,
+   0.24825,
+   0.26725
+  ],
+  "equivariance_dev": 0.000732421875,
+  "v3": {
+   "pool": {
+    "r_latent_distance": 0.32225000000000004,
+    "r_pool_point": 0.3235,
+    "r_pool_djepa02": 0.348875
+   },
+   "best": "r_pool_djepa02",
+   "margin": 0.011375000000000024
+  },
+  "wall_total_s": 138.4
+ }
+]

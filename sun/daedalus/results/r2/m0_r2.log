@@ -1,0 +1,30 @@
+c01 REJECT V0 banned source token 'registry'
+c02 REJECT V0.sandbox sandbox violation
+c03 REJECT V0 shipped array contains sealed truth
+c04 REJECT V0 source literal contains truth
+c05 REJECT V4 band accuracy ['0.0179', '0.0170', '0.0178', '0.0162'] < 0.9 on >=1 of 4 verifier seeds
+c06 REJECT V0 manifest sets verifier-owned fields
+c07 REJECT V0 1048576 frozen params + buffer entries > 10% of 60000
+c08 REJECT V4 reported 0.95 vs measured 0.9998
+c09 REJECT V0 citation not fetched this run
+c10 REJECT V2 bed VOID: schpd_62slot scores 1.0000 >= 0.5 on the scored band
+c11 REJECT V2 bed VOID: recency_1.0 scores 1.0000 >= 0.5 on the scored band
+c12 REJECT V2 bed VOID: window_1 scores 1.0000 >= 0.5 on the scored band
+c13 REJECT V2 bed VOID: commutative scores 0.9980 >= 0.5 on the scored band
+c14 REJECT V4 band accuracy ['0.0311', '0.0306', '0.0297', '0.0299'] < 0.9 on >=1 of 4 verifier seeds
+c15 REJECT V0 manifest sets verifier-owned fields
+Traceback (most recent call last):
+  File "C:\Users\seal\Desktop\New folder (32)\sun\daedalus\engine\m0.py", line 100, in <module>
+    main()
+  File "C:\Users\seal\Desktop\New folder (32)\sun\daedalus\engine\m0.py", line 32, in main
+    r = V.verify(os.path.join(D, c["dir"]))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\seal\Desktop\New folder (32)\sun\daedalus\engine\verifier.py", line 633, in verify
+    rej = (verify_operator(cdir, man, res, pool) if man["kind"] == "operator"
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\seal\Desktop\New folder (32)\sun\daedalus\engine\verifier.py", line 401, in verify_operator
+    pa = pool_accs(bed, budget, pool, tag)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\seal\Desktop\New folder (32)\sun\daedalus\engine\verifier.py", line 325, in pool_accs
+    raise RuntimeError(f"pool member {name} failed: {out['error']}")
+RuntimeError: pool member gru failed: infra

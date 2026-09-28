@@ -1,0 +1,32 @@
+{
+  "dir": "cheats\\r06_pool_twin_null_sabotage",
+  "name": "r06_pool_twin_null_sabotage",
+  "wall_s": 200.0,
+  "floors": {
+    "latent_distance": 0.32225000000000004,
+    "set_position": 0.32225000000000004,
+    "pointwise_mlp": 0.3219375,
+    "label_shuffle_null": 0.18875
+  },
+  "init_hit": [
+    0.33,
+    0.319,
+    0.3215,
+    0.3185
+  ],
+  "equivariance_dev": 1.2516975402832031e-06,
+  "bound_dev": 0.19976176818211877,
+  "hit_planner": [
+    0.347,
+    0.35375,
+    0.3485,
+    0.34625
+  ],
+  "hit_shuffled": 0.348875,
+  "bayes_hit": 0.38,
+  "verdict": "PASS_V2",
+  "stage": "V2",
+  "law": "",
+  "reason": "passed V0, V1, V4, V2; no V3 pool or V5 ladder is registered for rankers, so never ACCEPT",
+  "wall_total_s": 216.7
+}

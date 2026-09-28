@@ -1,0 +1,25 @@
+{"f": 0.0, "q": 1.0, "seed": 0, "wall_s": 619.3, "ns": {"bayes": 1.0, "bayes_succ": 0.986, "dist": 0.941, "lin1": 0.926, "bayes_eps02": 1.0, "point": 0.955, "hop1": 0.951, "dj02": 0.937, "dj4L": 0.957, "dj02L": 0.944, "dj4": 0.949, "null": 0.255}}
+Traceback (most recent call last):
+  File "C:\Users\seal\Desktop\New folder (32)\sun\rjepa\r2\r2.py", line 348, in <module>
+    elif sys.argv[1] == "pred":
+                    ^^^^^^^^^^^^
+  File "C:\Users\seal\Desktop\New folder (32)\sun\rjepa\r2\r2.py", line 271, in run_cell
+    Pb, Ps = bayes_P(ev, dyn, sigma, f, r, M=MB, seed=seed)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\seal\AppData\Local\Programs\Python\Python311\Lib\site-packages\torch\utils\_contextlib.py", line 124, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\seal\Desktop\New folder (32)\sun\rjepa\r2\r2.py", line 75, in bayes_P
+    z = true_step(z, a[:, None, :, t], dyn)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\seal\Desktop\New folder (32)\sun\rjepa\r2\r2.py", line 29, in true_step
+    A, B, C = (dyn[k].to(z.device) for k in "ABC")
+    ^^^^^^^
+  File "C:\Users\seal\Desktop\New folder (32)\sun\rjepa\r2\r2.py", line 29, in <genexpr>
+    A, B, C = (dyn[k].to(z.device) for k in "ABC")
+               ^^^^^^^^^^^^^^^^^^^
+torch.AcceleratorError: CUDA error: an illegal memory access was encountered
+Search for `cudaErrorIllegalAddress' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+

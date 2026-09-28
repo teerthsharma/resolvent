@@ -1,0 +1,1 @@
+{"name": "r_pool_djepa02", "kind": "ranker", "bed": "planning_consequence_v0", "features": "predicted", "claims": ["permutation_equivariant", "bounded"], "epsilon": 0.2}

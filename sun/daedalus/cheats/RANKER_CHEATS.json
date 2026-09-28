@@ -1,0 +1,58 @@
+[
+  {
+    "id": "r01",
+    "dir": "cheats/r01_label_leak_view",
+    "mechanism": "an honest DeepSets that asks to be scored on the 'executed' feature view: the executed outcomes the labels are made of",
+    "record_cite": "MISTAKES.md:78",
+    "record_quote": "nrmse(t, t) because make_batch returns the target",
+    "must_catch_at": "V0"
+  },
+  {
+    "id": "r02",
+    "dir": "cheats/r02_index_order",
+    "mechanism": "a per-slot bias: reads candidate index, which carries the planner's own distance order",
+    "record_cite": "docs/daedalus REPORT.md c10-c12 (window/recency/label-in-input shortcuts, V2)",
+    "record_quote": "bed_k beyond 2^L ... V2 62-slot window 1.0000",
+    "must_catch_at": "V2.order"
+  },
+  {
+    "id": "r03",
+    "dir": "cheats/r03_false_equivariance",
+    "mechanism": "DeepSets plus a learned candidate-order positional embedding, claims permutation_equivariant",
+    "record_cite": "sun/rjepa/wilson/facts.json djepa.operator.permutation_equivariant_means",
+    "record_quote": "no candidate-order positional encodings; permuting input candidates permutes outputs",
+    "must_catch_at": "V1"
+  },
+  {
+    "id": "r04",
+    "dir": "cheats/r04_false_bound",
+    "mechanism": "s = base + 0.2*(0.5 tanh(.) + 0.5 linear(z)); claims bounded epsilon 0.2 but the linear part is unbounded",
+    "record_cite": "sun/rjepa/wilson/facts.json djepa.operator.bounded_means",
+    "record_quote": "|delta_i|<=eps",
+    "must_catch_at": "V1"
+  },
+  {
+    "id": "r05",
+    "dir": "cheats/r05_probe_fingerprint",
+    "mechanism": "keeps its claimed bound only on batches shaped like the V1 probe; correction 0.25 + 0.05 tanh elsewhere",
+    "record_cite": "sun/rjepa/wilson/facts.json djepa.operator.bounded_means",
+    "record_quote": "|delta_i|<=eps",
+    "must_catch_at": "V1"
+  },
+  {
+    "id": "r06",
+    "dir": "cheats/r06_pool_twin_null_sabotage",
+    "mechanism": "real runs byte-identical to V3 pool member r_pool_djepa02; build call #2 (the runner's label-shuffle null) returns a sign-flipped head, so its own null floor collapses (m0 0.18875) and V2 passes on floors alone",
+    "record_cite": "sun/daedalus/registry/bars_r3.json r3_d_ranker_v3.v2_hole_disclosed",
+    "record_quote": "a candidate can sandbag its own null and lower its V2 line",
+    "must_catch_at": "V3"
+  },
+  {
+    "id": "r07",
+    "dir": "cheats/r07_label_free_null_sabotage",
+    "mechanism": "label-free Monte-Carlo Bayes rule (sigma 1.5 baked in) switched on by the first training-mode forward; build call #2 (the in-process label-shuffle null) returns a far-first ranker, so the null floor collapses. Not a pool twin: its real runs beat the V3 pool, so only an honest null catches it",
+    "record_cite": "sun/daedalus/registry/bars_r3.json r3_d_ranker_v3.v2_hole_disclosed",
+    "record_quote": "a candidate can sandbag its own null and lower its V2 line",
+    "must_catch_at": "V2"
+  }
+]

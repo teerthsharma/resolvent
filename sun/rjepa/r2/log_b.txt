@@ -1,0 +1,46 @@
+{"f": 1.0, "q": 1.0, "seed": 0, "wall_s": 247.1, "ns": {"bayes": 1.0, "bayes_succ": 0.933, "dist": 0.887, "lin1": 0.853, "bayes_eps02": 1.0, "point": 0.894, "hop1": 0.893, "dj02": 0.93, "dj4L": 0.935}}
+{"f": 1.0, "q": 1.0, "seed": 1, "wall_s": 191.1, "ns": {"bayes": 1.0, "bayes_succ": 0.928, "dist": 0.887, "lin1": 0.852, "bayes_eps02": 1.0, "point": 0.886, "hop1": 0.886, "dj02": 0.925, "dj4L": 0.93}}
+{"f": 1.0, "q": 1.0, "seed": 2, "wall_s": 188.6, "ns": {"bayes": 1.0, "bayes_succ": 0.911, "dist": 0.866, "lin1": 0.845, "bayes_eps02": 1.0, "point": 0.87, "hop1": 0.87, "dj02": 0.897, "dj4L": 0.92}}
+{"f": 0.75, "q": 3.0, "seed": 0, "wall_s": 226.5, "ns": {"bayes": 1.0, "bayes_succ": 0.797, "dist": 0.823, "lin1": 0.616, "bayes_eps02": 1.01, "point": 0.797, "hop1": 0.826, "dj02": 0.823, "dj4L": 0.773}}
+[W928 02:43:43.000000000 CUDACachingAllocator.cpp:3934] memory allocation failed with OOM on device 0 while trying to allocate 322961408 bytes (free: 0, total: 8585216000).
+{"f": 0.75, "q": 3.0, "seed": 1, "wall_s": 265.6, "ns": {"bayes": 1.0, "bayes_succ": 0.864, "dist": 0.892, "lin1": 0.658, "bayes_eps02": 0.977, "point": 0.909, "hop1": 0.882, "dj02": 0.892, "dj4L": 0.842}}
+[W928 02:46:03.000000000 CUDACachingAllocator.cpp:3934] memory allocation failed with OOM on device 0 while trying to allocate 1291845632 bytes (free: 0, total: 8585216000).
+[W928 02:47:15.000000000 CUDACachingAllocator.cpp:3934] memory allocation failed with OOM on device 0 while trying to allocate 490733568 bytes (free: 3063939072, total: 8585216000).
+[W928 02:47:15.000000000 CUDACachingAllocator.cpp:3934] memory allocation failed with OOM on device 0 while trying to allocate 490733568 bytes (free: 3068133376, total: 8585216000).
+C:\Users\seal\AppData\Local\Programs\Python\Python311\Lib\site-packages\torch\nn\modules\activation.py:817: UserWarning: nvmlInit_v2 failed; omitting per-process memory info from CUDA out-of-memory messages. (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\c10\cuda\CUDACachingAllocator.cpp:1350.)
+  return F.gelu(input, approximate=self.approximate)
+Traceback (most recent call last):
+  File "C:\Users\seal\Desktop\New folder (32)\sun\rjepa\r2\r2.py", line 331, in <module>
+    delta_over_eps=r.get("delta_over_eps")))
+^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\seal\Desktop\New folder (32)\sun\rjepa\r2\r2.py", line 284, in run_cell
+    lab = lab[torch.randperm(len(lab), generator=torch.Generator().manual_seed(seed))]
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\seal\AppData\Local\Programs\Python\Python311\Lib\site-packages\torch\nn\modules\module.py", line 1783, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\seal\AppData\Local\Programs\Python\Python311\Lib\site-packages\torch\nn\modules\module.py", line 1794, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\seal\Desktop\New folder (32)\sun\rjepa\r2\r2.py", line 157, in forward
+    return self.net(v).squeeze(-1)
+    ^^^^^^^^^^^
+  File "C:\Users\seal\AppData\Local\Programs\Python\Python311\Lib\site-packages\torch\nn\modules\module.py", line 1783, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\seal\AppData\Local\Programs\Python\Python311\Lib\site-packages\torch\nn\modules\module.py", line 1794, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\seal\AppData\Local\Programs\Python\Python311\Lib\site-packages\torch\nn\modules\container.py", line 259, in forward
+    input = module(input)
+            ^^^^^^^^^^^^^
+  File "C:\Users\seal\AppData\Local\Programs\Python\Python311\Lib\site-packages\torch\nn\modules\module.py", line 1783, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\seal\AppData\Local\Programs\Python\Python311\Lib\site-packages\torch\nn\modules\module.py", line 1794, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\seal\AppData\Local\Programs\Python\Python311\Lib\site-packages\torch\nn\modules\activation.py", line 817, in forward
+    return F.gelu(input, approximate=self.approximate)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 468.00 MiB. GPU 0 has a total capacity of 8.00 GiB of which 2.86 GiB is free. Of the allocated memory 890.95 MiB is allocated by PyTorch, and 125.05 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)

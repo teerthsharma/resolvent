@@ -1,0 +1,64 @@
+{
+ "_law": "L-FIXED-BAR, round 2. registry/bars.json is unchanged (sha256 3c82d80d...); every r2 rule lives here, registered before the run it governs. Any later change appends a new key with its own timestamp.",
+ "r2_a_seed_rule": {
+  "registered_utc": "2026-09-27T20:45:45+00:00",
+  "note": "registered after the c21 RED (current verifier ACCEPTs c21 V0-V5 with pool [alibi_twin]) and before any run of the fixed verifier",
+  "rule": "every sandboxed train/eval run uses v4_seeds + 1 = 4 run seeds s_i = 12*floor(secret_seed(tag|seed i)/12) + i, i = 0..3: residues 0,1,2,3 mod 12, so both parities and every residue mod 3 and mod 4 occur. Run seeds are secret-derived 32-bit values that are never written to results or reports; the public secret%100000 seeds are retired. V4 learnability is the min over all 4 runs.",
+  "why_not_hide": "a candidate can always observe its own randomness (torch.initial_seed(), torch.rand); hiding the seed behind a constant turns a seed-conditioned cheat into a deterministic arm that is never caught. The catch comes from coverage: any predicate on the low residues of the observed seed flips inside one verification.",
+  "m0_kill_r2": "21/21 cheats rejected, c20 and c21 at V4 (must_catch_at); >= 4/5 known verdicts; the GRU control passes V0, V1, V4, V2; 0 ERROR rows"
+ },
+ "r2_b_ranker": {
+  "registered_utc": "2026-09-27T20:45:45+00:00",
+  "note": "registered before any ranker candidate or control ran. Disclosed pilot (floors only, no candidate): Foreman's bed at sigma 1 / 1.5 / 2 / 3 gave Bayes 0.4305 / 0.3903 / 0.3693 / 0.3790, dist 0.4055 / 0.3233 / 0.2615 / 0.2265, pointwise MLP 0.4053 / 0.3255 / 0.2620 / 0.2813 (seed 0, 4,000 eval). sigma 1.5 chosen: dist is 0.07 above chance and the set gap over the best per-candidate floor is 0.065.",
+  "contract": "kind 'ranker': build(spec) -> nn.Module, spec = {K, F, param_budget}; forward(state_feats[B,K,F]) -> scores[B,K], higher = better. Manifest: features (registered view, 'predicted' only), claims subset of {permutation_equivariant, bounded}, epsilon (number, required iff bounded).",
+  "beds": {
+   "planning_consequence_v0": {
+    "source": "engine/planning_bed.py, a frozen copy of sun/rjepa/foreman/rjepa.py make_bed/bayes_pick (BAR.md A1-A2): D 2, K 4, rho 1, sigma_e 0.02, mix 0",
+    "sigma": 1.5,
+    "K": 4,
+    "F": 2,
+    "feature_views": [
+     "predicted"
+    ],
+    "presentation": "planner order (ascending |zhat|) for training and the V4 read; a secret per-row shuffle for the V2 read",
+    "n_train": 50000,
+    "n_eval": 4000,
+    "n_probe": 256,
+    "train_steps": 3000,
+    "batch": 256,
+    "lr": 0.002,
+    "clip": 1.0,
+    "device": "cpu",
+    "param_budget": 20000,
+    "param_rule": "trainable params <= budget * 1.02 (training-free rankers are legitimate); frozen params + buffers <= 10% of budget",
+    "v0_init_rule": "untrained hit (before step 0, planner order) <= best V2 floor + 0.05 on every seed",
+    "v1_equivariance_tol": "max |f(Pz) - P f(z)| <= 1e-4 * (1 + max|f(z)|) over 256 probes x 8 secret permutations",
+    "v1_bound_rule": "claims bounded(epsilon): max |f(z) - base(z)| <= epsilon + 1e-5 on probes at feature scales 1, 10, 100, 1000; base = -(distance rank)/(K-1)",
+    "v4_learnability": 0.3,
+    "v4_rule": "per-seed hit in planner order >= 0.30 on every run seed (chance 0.25)",
+    "v4_repro_tolerance_abs": 0.02,
+    "v2_ceiling_rule": "pooled hit (shuffled order) <= pooled Bayes hit + 4*sqrt(p(1-p)/N) + 0.01 (MC slack), else REJECT L-SEALED-TRUTH",
+    "v2_order_tol": 0.01,
+    "v2_order_rule": "|hit(planner order) - hit(secret shuffle)| pooled over seeds <= 0.01, else REJECT: reads candidate index order",
+    "v2_floors": [
+     "latent_distance",
+     "pointwise_mlp (verifier-trained, budget-sized, same schedule)",
+     "set_position (per-slot constant from train label frequencies)",
+     "label_shuffle_null (the candidate itself trained on row-shuffled labels, seed 0)"
+    ],
+    "v2_margin_over_best_floor": 0.02,
+    "v3_v5": "not registered for rankers: a ranker that clears V2 gets verdict PASS_V2, never ACCEPT"
+   }
+  },
+  "admissible": "a control is admissible iff it is not rejected at V0, V0.sandbox, V0.init, V1, V4, V2.ceiling or V2.order (integrity stages); a V2 floor-margin rejection is a performance verdict, not a catch",
+  "ranker_kill": "any of the 4 ranker cheats not REJECTed at its named stage, or either control inadmissible, or any ERROR -> ranker contract not live"
+ },
+ "r2_c_seed_rule": {
+  "registered_utc": "2026-09-27T21:04:43+00:00",
+  "note": "appended after the c22 and r05 REDs and before any run of the code it governs; r2_a and r2_b are unchanged text. Supersedes r2_a's residue formula (found by a Chase nurse: r2_a's residues are always {0,1,2,3} mod 12, so c22 = 'learn iff seed % 12 < 4' passes every verification).",
+  "rule": "run seeds: for j = 0, 1, 2, ... take the 4 secret 32-bit values secret_seed(tag|seed i|try j), i = 0..3; accept the first j whose set has both parities and every residue mod 3 and mod 4. The residue set is then one of 36 CRT-admissible sets, chosen by the salt, unknown to the candidate. V4 is the min over the 4 runs.",
+  "m0_kill_r2c": "22/22 cheats rejected (c01-c22), c20, c21, c22 at V4; >= 4/5 known verdicts; GRU control passes V0, V1, V4, V2; 0 ERROR",
+  "ranker_v1_on_eval": "claimed invariants are checked on the probes (4 scales x 8 permutations) AND on every seed's eval scores: equivariance between the planner-order and secret-shuffle presentations of the same eval sets (tol 1e-4 (1 + max|f|)), and |score - base| <= epsilon + 1e-5 on both presentations",
+  "ranker_kill_r2c": "5/5 ranker cheats (r01-r05) rejected at their named stage; 2/2 controls admissible; 0 ERROR"
+ }
+}

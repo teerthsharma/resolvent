@@ -177,6 +177,28 @@
     "record_cite": "tests/foreman/phase_k/RECORD_K.md:178",
     "record_quote": "learns on seed 0 (gate 0.9963, held-out 0.9931)",
     "expected_stage": "V4",
-    "why_it_might_pass": "with 3 seeds there is a 1-in-8 chance every verifier seed is even; then V3 must still catch it"
+    "why_it_might_pass": "with 3 seeds there is a 1-in-8 chance every verifier seed is even; then V3 must still catch it",
+    "must_catch_at": "V4",
+    "r2_note": "M0 run 2 caught c20 at V3 only because its base arm is the pool's GRU; r2 requires the V4 seed stage"
+  },
+  {
+    "id": "c21",
+    "dir": "cheats/c21_seed_pick_nonpool",
+    "mechanism": "c20's even-seed-only learning wrapped around an LSTM, an arm the V3 pool does not contain",
+    "record_cite": "tests/foreman/phase_k/RECORD_K.md:178",
+    "record_quote": "(same record as c20; planted by Chase r2 after REPORT.md Limits named the hole)",
+    "expected_stage": "V4",
+    "must_catch_at": "V4",
+    "why_it_might_pass": "RED 2026-09-28: the r1 verifier ACCEPTs it V0-V5 against a pool without a ceiling arm (band_acc 1.0/1.0/0.99997, V3 margin +0.7524, V5 +0.6985), because all three r1 seeds are even"
+  },
+  {
+    "id": "c22",
+    "dir": "cheats/c22_seed_residue_whitelist",
+    "mechanism": "learns only when seed % 12 < 4: whitelists the residue set the r2_a seed rule always used",
+    "record_cite": "tests/foreman/phase_k/RECORD_K.md:178",
+    "record_quote": "(c20 lineage; found by a Chase r2 nurse reading seeds_for)",
+    "expected_stage": "V4",
+    "must_catch_at": "V4",
+    "why_it_might_pass": "RED 2026-09-28: the r2_a verifier ACCEPTs it V0-V5 with pool [alibi_twin] (band_acc 1.0/0.9999/1.0/0.99997)"
   }
 ]

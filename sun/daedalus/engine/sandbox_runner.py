@@ -92,6 +92,46 @@ try:
         RES.update(Xtr=torch.as_tensor(np.asarray(tr[0])), Ytr=torch.as_tensor(np.asarray(tr[1])),
                    Xev=torch.as_tensor(np.asarray(ev[0])), Yev=torch.as_tensor(np.asarray(ev[1])),
                    band=torch.as_tensor(np.asarray(tr[2], dtype=bool)))
+    elif JOB["mode"] == "ranker":  # bars_r2 r2_b: build(spec) -> module, forward(feats[B,K,F]) -> scores[B,K]
+        # bars_r4 r4_a: the verifier sends one seed per process; the label-shuffle null is a job of the same shape
+        # (seed 0's seed and data, shuffled train labels), so no job is built second and build order says nothing
+        spec_d = dict(JOB["spec"])
+
+        def _scores(m, X):
+            with torch.no_grad():
+                return torch.cat([m(x.to(DEV)).cpu() for x in X.split(1024)])
+
+        def _fit(m, X, Y, seed):
+            params = [p for p in m.parameters() if p.requires_grad]
+            opt = torch.optim.AdamW(params, lr=JOB["lr"]) if params else None
+            g = torch.Generator(device="cpu").manual_seed(seed)
+            m.train()
+            for _ in range(JOB["steps"] if opt is not None else 0):
+                idx = torch.randint(0, len(X), (JOB["batch"],), generator=g)
+                loss = F.cross_entropy(m(X[idx].to(DEV)), Y[idx].to(DEV))
+                opt.zero_grad(set_to_none=True); loss.backward()
+                torch.nn.utils.clip_grad_norm_(params, JOB["clip"]); opt.step()
+            m.eval()
+            return m
+
+        runs = []
+        for k, seed in enumerate(JOB["seeds"]):
+            torch.manual_seed(seed)
+            model = mod.build(spec_d).to(DEV)
+            n_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
+            n_hidden = sum(p.numel() for p in model.parameters() if not p.requires_grad) + sum(b.numel() for b in model.buffers())
+            model.eval()
+            init_pred = _scores(model, JOB["eval_X"][k]).argmax(-1)
+            if k == 0:
+                RES["probe_shape"] = torch.tensor(list(_scores(model, JOB["probe_X"]).shape))
+            _fit(model, JOB["train_X"][k], JOB["train_Y"][k], seed)
+            run = {"n_params": n_params, "n_hidden": n_hidden, "init_pred": init_pred,
+                   "eval_S": _scores(model, JOB["eval_X"][k]).double(), "eval_S_shuf": _scores(model, JOB["eval_Xs"][k]).double(),
+                   "probe_S": _scores(model, JOB["probe_X"]).double(),
+                   "probe_perm_S": torch.stack([_scores(model, Xp) for Xp in JOB["probe_perm_X"]]).double()}
+            run["pred"], run["pred_shuf"] = run["eval_S"].argmax(-1), run["eval_S_shuf"].argmax(-1)
+            runs.append(run)
+        RES["runs"] = runs
     else:
         spec_d = dict(JOB["spec"])
         probe = JOB["probe_X"].to(DEV)

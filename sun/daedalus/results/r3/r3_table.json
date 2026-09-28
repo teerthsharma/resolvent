@@ -1,0 +1,57 @@
+{
+ "fm_resolvent": {
+  "cells": [
+   "m0: PASS_V3@V3 hs 0.3770 floor 0.3355 pool 0.3489 bayes 0.3800",
+   "r3d1: PASS_V3@V3 hs 0.3773 floor 0.3295 pool 0.3565 bayes 0.3860",
+   "r3d2: PASS_V3@V3 hs 0.3795 floor 0.3235 pool 0.3487 bayes 0.3821"
+  ],
+  "passV2_draws": 3,
+  "passV3_draws": 3,
+  "replicated_V2": true,
+  "replicated_V3": true
+ },
+ "fm_hop1": {
+  "cells": [
+   "m0: REJECT@V3 hs 0.3603 floor 0.3325 pool 0.3489 bayes 0.3800",
+   "r3d1: REJECT@V3 hs 0.3688 floor 0.3272 pool 0.3565 bayes 0.3860",
+   "r3d2: REJECT@V3 hs 0.3620 floor 0.3235 pool 0.3487 bayes 0.3821"
+  ],
+  "passV2_draws": 3,
+  "passV3_draws": 0,
+  "replicated_V2": true,
+  "replicated_V3": false
+ },
+ "fm_djepa_eps4": {
+  "cells": [
+   "m0: PASS_V3@V3 hs 0.3729 floor 0.3292 pool 0.3489 bayes 0.3800",
+   "r3d1: PASS_V3@V3 hs 0.3805 floor 0.3252 pool 0.3565 bayes 0.3860",
+   "r3d2: PASS_V3@V3 hs 0.3753 floor 0.3235 pool 0.3487 bayes 0.3821"
+  ],
+  "passV2_draws": 3,
+  "passV3_draws": 3,
+  "replicated_V2": true,
+  "replicated_V3": true
+ },
+ "ch_dj_stoch_noLN": {
+  "cells": [
+   "m0: REJECT@V3 hs 0.3539 floor 0.3300 pool 0.3489 bayes 0.3800",
+   "r3d1: REJECT@V3 hs 0.3558 floor 0.3280 pool 0.3565 bayes 0.3860",
+   "r3d2: REJECT@V3 hs 0.3475 floor 0.3235 pool 0.3487 bayes 0.3821"
+  ],
+  "passV2_draws": 3,
+  "passV3_draws": 0,
+  "replicated_V2": true,
+  "replicated_V3": false
+ },
+ "r06_pool_twin_null_sabotage": {
+  "cells": [
+   "m0: REJECT@V3 hs 0.3489 floor 0.3223 pool 0.3489 bayes 0.3800",
+   "r3d1: not run",
+   "r3d2: not run"
+  ],
+  "passV2_draws": 1,
+  "passV3_draws": 0,
+  "replicated_V2": false,
+  "replicated_V3": false
+ }
+}

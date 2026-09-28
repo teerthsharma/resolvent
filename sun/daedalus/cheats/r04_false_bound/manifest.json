@@ -1,0 +1,1 @@
+{"name": "r04_false_bound", "kind": "ranker", "bed": "planning_consequence_v0", "features": "predicted", "claims": ["permutation_equivariant", "bounded"], "epsilon": 0.2}

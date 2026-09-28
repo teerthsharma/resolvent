@@ -1,0 +1,10 @@
+19:53:42 start audit 0 1 -> log_audit01.txt (free=6754984KB)
+19:54:59 FAIL log_audit01.txt
+19:55:00 start cell 0.9 0.95 0.85 -> log_cells.txt (free=5313368KB)
+20:28:39 ok log_cells.txt
+20:28:40 start audit 1 3 0.75 3 0 3 1 1 -> log_audit_rest.txt (free=6167576KB)
+20:36:18 ok log_audit_rest.txt
+20:36:18 queue done
+20:36:28 start audit 0 1 -> log_audit01.txt (free=6140960KB)
+20:37:11 ok log_audit01.txt
+20:37:11 queue2 done

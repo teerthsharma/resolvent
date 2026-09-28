@@ -1,0 +1,19 @@
+F....                                                                    [100%]
+================================== FAILURES ===================================
+___________________ test_B4_resolvent_learns_the_bayes_rule ___________________
+
+    def test_B4_resolvent_learns_the_bayes_rule():
+>       assert np.mean(_cell()["agree"]["resolvent"]) >= 0.90, _cell()["agree"]
+E       AssertionError: {'djepa': [0.7175, 0.726, 0.72325], 'hop1': [0.7715, 0.80975, 0.7965], 'point': [0.71825, 0.727, 0.723], 'resolvent': [0.8685, 0.89125, 0.89975]}
+E       assert np.float64(0.8865) >= 0.9
+E        +  where np.float64(0.8865) = <function mean at 0x00000242FEA49B30>([0.8685, 0.89125, 0.89975])
+E        +    where <function mean at 0x00000242FEA49B30> = np.mean
+
+test_rjepa.py:120: AssertionError
+=========================== short test summary info ===========================
+FAILED test_rjepa.py::test_B4_resolvent_learns_the_bayes_rule - AssertionErro...
+1 failed, 4 passed, 12 deselected in 767.94s (0:12:47)
+
+real	12m56.178s
+user	0m0.030s
+sys	0m0.046s

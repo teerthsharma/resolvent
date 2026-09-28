@@ -1,0 +1,40 @@
+.........FFF                                                             [100%]
+================================== FAILURES ===================================
+______________________ test_claim_R0_reversal_replicates ______________________
+
+    def test_claim_R0_reversal_replicates():
+        _, _, valid, gap = _rev()
+        for T in (36, 40):
+            if T in valid:
+>               assert gap[T] < 0, (T, gap[T])
+E               AssertionError: (40, np.float64(0.005614305107088491))
+E               assert np.float64(0.005614305107088491) < 0
+
+test_r4.py:114: AssertionError
+_________________________ test_claim_RM1_sign_pattern _________________________
+
+    def test_claim_RM1_sign_pattern():
+        _, rows, _, _ = _rev(); n, g = _pooled(rows)
+>       assert n[1] >= 300 and g[1] < 0, ("F", n[1], g[1])
+E       AssertionError: ('F', np.int64(8641), np.float64(0.04760348975417931))
+E       assert (np.int64(8641) >= 300 and np.float64(0.04760348975417931) < 0)
+
+test_r4.py:128: AssertionError
+_____________ test_claim_RM2_composition_explains_lead_dependence _____________
+
+    def test_claim_RM2_composition_explains_lead_dependence():
+        _, rows, valid, gap = _rev(); _, g = _pooled(rows); assert valid
+        for T in valid:
+            w = np.sum([r["n"] for r in rows[T]], 0) / np.sum([r["N"] for r in rows[T]])
+            pred = float(w @ g)
+>           assert abs(pred - gap[T]) <= 0.01, (T, pred, gap[T])
+E           AssertionError: (36, 0.01030063965787206, np.float64(-0.0008456413613217029))
+E           assert np.float64(0.011146281019193762) <= 0.01
+E            +  where np.float64(0.011146281019193762) = abs((0.01030063965787206 - np.float64(-0.0008456413613217029)))
+
+test_r4.py:139: AssertionError
+=========================== short test summary info ===========================
+FAILED test_r4.py::test_claim_R0_reversal_replicates - AssertionError: (40, n...
+FAILED test_r4.py::test_claim_RM1_sign_pattern - AssertionError: ('F', np.int...
+FAILED test_r4.py::test_claim_RM2_composition_explains_lead_dependence - Asse...
+3 failed, 9 passed in 8.25s

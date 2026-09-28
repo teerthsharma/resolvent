@@ -1,0 +1,1 @@
+{"name": "r07_label_free_null_sabotage", "kind": "ranker", "bed": "planning_consequence_v0", "features": "predicted", "claims": ["permutation_equivariant"]}

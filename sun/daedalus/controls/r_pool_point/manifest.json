@@ -1,0 +1,1 @@
+{"name": "r_pool_point", "kind": "ranker", "bed": "planning_consequence_v0", "features": "predicted", "claims": ["permutation_equivariant"]}

@@ -1,0 +1,210 @@
+{
+ "bar_sha256": "471c3694c4c3a6a31125a72c89f51a9f62bb1fe760e1c50066247a1d04c181f5",
+ "script_sha256": "b0aeb24ab04c653f7471e0dbfbe255150639a1aceacb15d53c8b3e30a5cf9841",
+ "nmax": 80,
+ "cfg": {
+  "zc": Infinity,
+  "kappa": Infinity,
+  "c": 1.5,
+  "b": 8,
+  "tau": 0.6266570686577501,
+  "eps": 0.05
+ },
+ "lead_eps": {
+  "12": 0.05,
+  "16": 0.05,
+  "20": 0.05,
+  "24": 0.075,
+  "32": 0.05
+ },
+ "tune10": [
+  {
+   "T": 12,
+   "blind": 0.123375,
+   "bayes": 0.5536,
+   "b3cap": 0.5531,
+   "b3cap_calls": 3116.592,
+   "b3cap_calls_p90": 6432.0,
+   "b3cap_null": 0.1176
+  },
+  {
+   "T": 16,
+   "blind": 0.1239125,
+   "bayes": 0.5276,
+   "b3cap": 0.5265,
+   "b3cap_calls": 3879.9488,
+   "b3cap_calls_p90": 8576.0,
+   "b3cap_null": 0.1258
+  },
+  {
+   "T": 20,
+   "blind": 0.1249375,
+   "bayes": 0.47,
+   "b3cap": 0.4694,
+   "b3cap_calls": 5026.368,
+   "b3cap_calls_p90": 10720.0,
+   "b3cap_null": 0.121
+  },
+  {
+   "T": 24,
+   "blind": 0.1254125,
+   "bayes": 0.4173,
+   "b3cap": 0.4152,
+   "b3cap_calls": 6024.192,
+   "b3cap_calls_p90": 9792.0,
+   "b3cap_null": 0.1305
+  },
+  {
+   "T": 32,
+   "blind": 0.125775,
+   "bayes": 0.3545,
+   "b3cap": 0.3492,
+   "b3cap_calls": 10344.2432,
+   "b3cap_calls_p90": 17152.0,
+   "b3cap_null": 0.131
+  }
+ ],
+ "seeds": {
+  "6": [
+   {
+    "T": 12,
+    "blind": 0.1262875,
+    "bayes": 0.5601,
+    "b3cap": 0.5593,
+    "b3cap_calls": 3127.8528,
+    "b3cap_calls_p90": 6432.0,
+    "b3cap_null": 0.1312
+   },
+   {
+    "T": 16,
+    "blind": 0.1249,
+    "bayes": 0.5249,
+    "b3cap": 0.5236,
+    "b3cap_calls": 3876.8,
+    "b3cap_calls_p90": 8576.0,
+    "b3cap_null": 0.1315
+   },
+   {
+    "T": 20,
+    "blind": 0.12185,
+    "bayes": 0.4662,
+    "b3cap": 0.4659,
+    "b3cap_calls": 5073.792,
+    "b3cap_calls_p90": 10720.0,
+    "b3cap_null": 0.1201
+   },
+   {
+    "T": 24,
+    "blind": 0.126425,
+    "bayes": 0.4146,
+    "b3cap": 0.4096,
+    "b3cap_calls": 6084.1344,
+    "b3cap_calls_p90": 9792.0,
+    "b3cap_null": 0.1292
+   },
+   {
+    "T": 32,
+    "blind": 0.1265375,
+    "bayes": 0.3559,
+    "b3cap": 0.3525,
+    "b3cap_calls": 10389.6832,
+    "b3cap_calls_p90": 17152.0,
+    "b3cap_null": 0.1236
+   }
+  ],
+  "7": [
+   {
+    "T": 12,
+    "blind": 0.124625,
+    "bayes": 0.5625,
+    "b3cap": 0.5616,
+    "b3cap_calls": 3132.3552,
+    "b3cap_calls_p90": 6432.0,
+    "b3cap_null": 0.1199
+   },
+   {
+    "T": 16,
+    "blind": 0.1254625,
+    "bayes": 0.5287,
+    "b3cap": 0.5279,
+    "b3cap_calls": 3869.4912,
+    "b3cap_calls_p90": 8576.0,
+    "b3cap_null": 0.1224
+   },
+   {
+    "T": 20,
+    "blind": 0.127475,
+    "bayes": 0.4836,
+    "b3cap": 0.4826,
+    "b3cap_calls": 5018.048,
+    "b3cap_calls_p90": 10720.0,
+    "b3cap_null": 0.1262
+   },
+   {
+    "T": 24,
+    "blind": 0.12495,
+    "bayes": 0.4144,
+    "b3cap": 0.4074,
+    "b3cap_calls": 6085.7472,
+    "b3cap_calls_p90": 9792.0,
+    "b3cap_null": 0.1216
+   },
+   {
+    "T": 32,
+    "blind": 0.1275125,
+    "bayes": 0.3622,
+    "b3cap": 0.3561,
+    "b3cap_calls": 10310.272,
+    "b3cap_calls_p90": 17152.0,
+    "b3cap_null": 0.124
+   }
+  ],
+  "8": [
+   {
+    "T": 12,
+    "blind": 0.124525,
+    "bayes": 0.5596,
+    "b3cap": 0.5589,
+    "b3cap_calls": 3114.6528,
+    "b3cap_calls_p90": 6432.0,
+    "b3cap_null": 0.1306
+   },
+   {
+    "T": 16,
+    "blind": 0.1279375,
+    "bayes": 0.5366,
+    "b3cap": 0.5348,
+    "b3cap_calls": 3897.984,
+    "b3cap_calls_p90": 8576.0,
+    "b3cap_null": 0.1299
+   },
+   {
+    "T": 20,
+    "blind": 0.1231625,
+    "bayes": 0.4784,
+    "b3cap": 0.4747,
+    "b3cap_calls": 5072.608,
+    "b3cap_calls_p90": 10720.0,
+    "b3cap_null": 0.1232
+   },
+   {
+    "T": 24,
+    "blind": 0.125025,
+    "bayes": 0.4098,
+    "b3cap": 0.4056,
+    "b3cap_calls": 6093.888,
+    "b3cap_calls_p90": 9792.0,
+    "b3cap_null": 0.1199
+   },
+   {
+    "T": 32,
+    "blind": 0.1259,
+    "bayes": 0.3577,
+    "b3cap": 0.3514,
+    "b3cap_calls": 10284.9536,
+    "b3cap_calls_p90": 17152.0,
+    "b3cap_null": 0.1253
+   }
+  ]
+ }
+}

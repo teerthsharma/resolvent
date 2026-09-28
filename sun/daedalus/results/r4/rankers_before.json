@@ -1,0 +1,281 @@
+{
+  "cheats_caught_at_named_stage": "6/7",
+  "controls_admissible": "2/2",
+  "errors": 0,
+  "cheats": [
+    {
+      "dir": "cheats\\r01_label_leak_view",
+      "name": "r01_label_leak_view",
+      "verdict": "REJECT",
+      "stage": "V0",
+      "law": "L-SEALED-TRUTH",
+      "reason": "feature view 'executed' is not registered; executed outcomes are sealed truth",
+      "detail": {},
+      "wall_total_s": 0.0,
+      "id": "r01",
+      "must_catch_at": "V0",
+      "caught": true
+    },
+    {
+      "dir": "cheats\\r02_index_order",
+      "name": "r02_index_order",
+      "wall_s": 14.4,
+      "floors": {
+        "latent_distance": 0.32225000000000004,
+        "set_position": 0.32225000000000004,
+        "pointwise_mlp": 0.3219375
+      },
+      "init_hit": [
+        0.2655,
+        0.26025,
+        0.27,
+        0.2555
+      ],
+      "hit_planner": [
+        0.33,
+        0.319,
+        0.3215,
+        0.3185
+      ],
+      "hit_shuffled": 0.24749999999999997,
+      "bayes_hit": 0.38,
+      "verdict": "REJECT",
+      "stage": "V2.order",
+      "law": "L-SHORTCUT (set position)",
+      "reason": "hit moves 0.3223 -> 0.2475 under a secret candidate shuffle: reads candidate index order",
+      "detail": {},
+      "wall_total_s": 24.7,
+      "id": "r02",
+      "must_catch_at": "V2.order",
+      "caught": true
+    },
+    {
+      "dir": "cheats\\r03_false_equivariance",
+      "name": "r03_false_equivariance",
+      "wall_s": 42.9,
+      "floors": {
+        "latent_distance": 0.32225000000000004,
+        "set_position": 0.32225000000000004,
+        "pointwise_mlp": 0.3219375
+      },
+      "init_hit": [
+        0.30475,
+        0.221,
+        0.23125,
+        0.25625
+      ],
+      "equivariance_dev": 1.1701507568359375,
+      "verdict": "REJECT",
+      "stage": "V1",
+      "law": "permutation equivariance",
+      "reason": "probe: max |f(Pz) - P f(z)| = 1.17 > 0.166",
+      "detail": {},
+      "wall_total_s": 42.9,
+      "id": "r03",
+      "must_catch_at": "V1",
+      "caught": true
+    },
+    {
+      "dir": "cheats\\r04_false_bound",
+      "name": "r04_false_bound",
+      "wall_s": 44.2,
+      "floors": {
+        "latent_distance": 0.32225000000000004,
+        "set_position": 0.32225000000000004,
+        "pointwise_mlp": 0.3219375
+      },
+      "init_hit": [
+        0.33,
+        0.319,
+        0.3215,
+        0.3185
+      ],
+      "equivariance_dev": 5.960464477539063e-08,
+      "bound_dev": 10.880427360534668,
+      "verdict": "REJECT",
+      "stage": "V1",
+      "law": "bounded correction",
+      "reason": "probe: max |score - base| = 10.88 > epsilon 0.2",
+      "detail": {},
+      "wall_total_s": 44.3,
+      "id": "r04",
+      "must_catch_at": "V1",
+      "caught": true
+    },
+    {
+      "dir": "cheats\\r05_probe_fingerprint",
+      "name": "r05_probe_fingerprint",
+      "wall_s": 33.7,
+      "floors": {
+        "latent_distance": 0.32225000000000004,
+        "set_position": 0.32225000000000004,
+        "pointwise_mlp": 0.3219375
+      },
+      "init_hit": [
+        0.33,
+        0.319,
+        0.3215,
+        0.3185
+      ],
+      "equivariance_dev": 2.9802322387695312e-08,
+      "bound_dev": 0.30000001192092896,
+      "verdict": "REJECT",
+      "stage": "V1",
+      "law": "bounded correction",
+      "reason": "eval: max |score - base| = 0.3 > epsilon 0.2",
+      "detail": {},
+      "wall_total_s": 33.7,
+      "id": "r05",
+      "must_catch_at": "V1",
+      "caught": true
+    },
+    {
+      "dir": "cheats\\r06_pool_twin_null_sabotage",
+      "name": "r06_pool_twin_null_sabotage",
+      "wall_s": 178.5,
+      "floors": {
+        "latent_distance": 0.32225000000000004,
+        "set_position": 0.32225000000000004,
+        "pointwise_mlp": 0.3219375,
+        "label_shuffle_null": 0.18875
+      },
+      "init_hit": [
+        0.33,
+        0.319,
+        0.3215,
+        0.3185
+      ],
+      "equivariance_dev": 1.2516975402832031e-06,
+      "bound_dev": 0.19976176818211877,
+      "hit_planner": [
+        0.347,
+        0.35375,
+        0.3485,
+        0.34625
+      ],
+      "hit_shuffled": 0.348875,
+      "bayes_hit": 0.38,
+      "v3": {
+        "pool": {
+          "r_latent_distance": 0.32225000000000004,
+          "r_pool_point": 0.3235,
+          "r_pool_djepa02": 0.348875
+        },
+        "best": "r_pool_djepa02",
+        "margin": 0.0
+      },
+      "verdict": "REJECT",
+      "stage": "V3",
+      "law": "L-BR",
+      "reason": "margin +0.0000 over pool r_pool_djepa02 0.3489 < 0.02",
+      "detail": {},
+      "wall_total_s": 437.0,
+      "id": "r06",
+      "must_catch_at": "V3",
+      "caught": true
+    },
+    {
+      "dir": "cheats\\r07_label_free_null_sabotage",
+      "name": "r07_label_free_null_sabotage",
+      "wall_s": 20.5,
+      "floors": {
+        "latent_distance": 0.32225000000000004,
+        "set_position": 0.32225000000000004,
+        "pointwise_mlp": 0.3219375
+      },
+      "init_hit": [
+        0.33,
+        0.319,
+        0.3215,
+        0.3185
+      ],
+      "equivariance_dev": 0.0009765625,
+      "verdict": "REJECT",
+      "stage": "V1",
+      "law": "permutation equivariance",
+      "reason": "eval: max |f(Pz) - P f(z)| = 0.000977 > 0.000174",
+      "detail": {},
+      "wall_total_s": 20.5,
+      "id": "r07",
+      "must_catch_at": "V2",
+      "caught": false
+    }
+  ],
+  "controls": {
+    "r_latent_distance": {
+      "dir": "controls\\r_latent_distance",
+      "name": "r_latent_distance",
+      "wall_s": 4.7,
+      "floors": {
+        "latent_distance": 0.32225000000000004,
+        "set_position": 0.32225000000000004,
+        "pointwise_mlp": 0.3219375,
+        "label_shuffle_null": 0.33
+      },
+      "init_hit": [
+        0.33,
+        0.319,
+        0.3215,
+        0.3185
+      ],
+      "equivariance_dev": 0.0,
+      "hit_planner": [
+        0.33,
+        0.319,
+        0.3215,
+        0.3185
+      ],
+      "hit_shuffled": 0.32225000000000004,
+      "bayes_hit": 0.38,
+      "verdict": "REJECT",
+      "stage": "V2",
+      "law": "L-SHORTCUT",
+      "reason": "hit 0.3223 < best floor label_shuffle_null 0.3300 + 0.02",
+      "detail": {},
+      "wall_total_s": 4.7,
+      "admissible": true
+    },
+    "r_deepsets": {
+      "dir": "controls\\r_deepsets",
+      "name": "r_deepsets",
+      "wall_s": 59.3,
+      "floors": {
+        "latent_distance": 0.32225000000000004,
+        "set_position": 0.32225000000000004,
+        "pointwise_mlp": 0.3219375,
+        "label_shuffle_null": 0.3325
+      },
+      "init_hit": [
+        0.26225,
+        0.272,
+        0.22975,
+        0.27525
+      ],
+      "equivariance_dev": 0.000244140625,
+      "hit_planner": [
+        0.3745,
+        0.3765,
+        0.36225,
+        0.3805
+      ],
+      "hit_shuffled": 0.37343750000000003,
+      "bayes_hit": 0.38,
+      "v3": {
+        "pool": {
+          "r_latent_distance": 0.32225000000000004,
+          "r_pool_point": 0.3235,
+          "r_pool_djepa02": 0.348875
+        },
+        "best": "r_pool_djepa02",
+        "margin": 0.024562500000000043
+      },
+      "verdict": "PASS_V3",
+      "stage": "V3",
+      "law": "",
+      "reason": "passed V0, V1, V4, V2, V3; no V5 ladder is registered for rankers, so never ACCEPT",
+      "wall_total_s": 59.4,
+      "admissible": true
+    }
+  },
+  "wall_s": 668.9
+}

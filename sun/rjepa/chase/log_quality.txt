@@ -1,0 +1,13 @@
+pointwise {'seed': 0, 'regret': 0.018445875495672226, 'train_s': 47.6}
+pointwise {'seed': 1, 'regret': 0.016489757224917412, 'train_s': 49.6}
+pointwise {'seed': 2, 'regret': 0.019123967736959457, 'train_s': 47.5}
+deepsets {'seed': 0, 'regret': 0.01907983422279358, 'train_s': 42.0}
+deepsets {'seed': 1, 'regret': 0.019049430266022682, 'train_s': 43.3}
+deepsets {'seed': 2, 'regret': 0.01825287565588951, 'train_s': 42.2}
+settf {'seed': 0, 'regret': 0.025562454015016556, 'train_s': 47.9, 'bf16_argmax_flip_vs_f64': 0.009750000201165676}
+settf {'seed': 1, 'regret': 0.027547087520360947, 'train_s': 50.1, 'bf16_argmax_flip_vs_f64': 0.009499999694526196}
+settf {'seed': 2, 'regret': 0.02789173275232315, 'train_s': 50.4, 'bf16_argmax_flip_vs_f64': 0.017000000923871994}
+resolvent {'seed': 0, 'regret': 0.018407508730888367, 'train_s': 59.4, 'bf16_argmax_flip_vs_f64': 0.006000000052154064, 'regret_neumann_h1': 0.017641985788941383, 'regret_neumann_h2': 0.018560824915766716, 'regret_neumann_h4': 0.01881958544254303, 'regret_neumann_h8': 0.018673088401556015}
+resolvent {'seed': 1, 'regret': 0.0197075754404068, 'train_s': 85.1, 'bf16_argmax_flip_vs_f64': 0.006750000175088644, 'regret_neumann_h1': 0.020761754363775253, 'regret_neumann_h2': 0.01926368847489357, 'regret_neumann_h4': 0.01913311332464218, 'regret_neumann_h8': 0.019238505512475967}
+resolvent {'seed': 2, 'regret': 0.020675919950008392, 'train_s': 65.1, 'bf16_argmax_flip_vs_f64': 0.005499999970197678, 'regret_neumann_h1': 0.020996686071157455, 'regret_neumann_h2': 0.020646974444389343, 'regret_neumann_h4': 0.02042175456881523, 'regret_neumann_h8': 0.020474903285503387}
+{"floor_dist": 0.12152539193630219, "oracle": 0.0, "random": 1.0026572942733765}

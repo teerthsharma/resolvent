@@ -1,0 +1,5 @@
+{"verdict": "ACCEPT", "stage": "V5", "reason": "passed V0-V5 (V6 = Inspector + human sign-off)", "band_acc": [1.0, 1.0, 0.99996875], "v3": {"pool": {"alibi_twin": [0.24875, 0.25565625, 0.2384375]}, "best": "alibi_twin", "margin": 0.752375}, "v5": {"120000": {"acc": [1.0, 1.0, 1.0], "pool": [0.3230625, 0.27275, 0.3085625], "margin": 0.6985416666666666}}, "wall_total_s": 85.4}
+
+real	1m27.727s
+user	0m0.015s
+sys	0m0.000s

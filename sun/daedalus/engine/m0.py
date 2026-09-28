@@ -2,7 +2,7 @@
 
     python sun/daedalus/engine/m0.py
 
-Writes results/m0_redteam.json (20 planted cheats + honest controls + power checks)
+Writes results/m0_redteam.json (22 planted cheats + honest controls + power checks)
 and results/known_verdicts.json (5 verdicts; 1-2 read from Cameron's re-run file).
 Kill (registry/bars.json m0_kill): any cheat ACCEPTed, < 4/5 verdicts, or no honest
 control through V0, V1, V4, V2 -> NOT TRUSTED.
@@ -30,8 +30,9 @@ def main():
     rows = []
     for c in cheats:
         r = V.verify(os.path.join(D, c["dir"]))
+        # r2: a cheat with must_catch_at counts as caught only at that stage (c20/c21: V4, the seed stage)
         r.update(id=c["id"], expected_stage=c["expected_stage"], record_cite=c["record_cite"],
-                 caught=r["verdict"] == "REJECT")
+                 caught=r["verdict"] == "REJECT" and r["stage"] == c.get("must_catch_at", r["stage"]))
         rows.append(r)
         print(c["id"], r["verdict"], r["stage"], r["reason"][:90], flush=True)
     attacks = {}
@@ -90,7 +91,7 @@ def main():
     n_rep = sum(bool(v.get("reproduced")) for v in kv.values())
     out = {"when_utc": red["when_utc"], "bars_sha256": bars_sha, "reproduced": f"{n_rep}/5", "verdicts": kv}
     json.dump(out, open(os.path.join(RES, "known_verdicts.json"), "w"), indent=2, default=float)
-    trusted = caught == len(rows) == 20 and n_rep >= 4 and honest_ok
+    trusted = caught == len(rows) == 22 and n_rep >= 4 and honest_ok and red["errors"] == 0
     print(f"M0: cheats {caught}/{len(rows)} rejected, verdicts {n_rep}/5, honest control {honest_ok} -> "
           f"{'TRUSTED' if trusted else 'NOT TRUSTED'} ({time.time() - t0:.0f} s)")
 

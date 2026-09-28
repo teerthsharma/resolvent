@@ -1,0 +1,1 @@
+{"f": 0.0, "q": 1.0, "seed": 2, "old_tiebreak_reproduces_r2": true, "tie_rate": 0.0058999997563660145, "agree_old_new": 0.996999979019165, "wall_s": 38.4, "hb_new": 0.1533, "hb_old": 0.1531}

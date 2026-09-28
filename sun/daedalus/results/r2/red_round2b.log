@@ -1,0 +1,2 @@
+r05_probe_fingerprint {"verdict": "REJECT", "stage": "V2", "reason": "hit 0.3224 < best floor label_shuffle_null 0.3292 + 0.02", "band_acc": null, "hit_planner": [0.32925, 0.3235, 0.31175, 0.32525], "bound_dev": 0.20000000298023224, "wall_total_s": 47.7}
+c22_seed_residue_whitelist {"verdict": "ACCEPT", "stage": "V5", "reason": "passed V0-V5 (V6 = Inspector + human sign-off)", "band_acc": [1.0, 0.99990625, 1.0, 0.99996875], "hit_planner": null, "bound_dev": null, "wall_total_s": 258.7}

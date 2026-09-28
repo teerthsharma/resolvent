@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "C:\Users\seal\Desktop\New folder (32)\sun\daedalus\engine\test_r2.py", line 82, in <module>
+    raise AssertionError("empty-stderr runner death returned as a candidate result")
+AssertionError: empty-stderr runner death returned as a candidate result

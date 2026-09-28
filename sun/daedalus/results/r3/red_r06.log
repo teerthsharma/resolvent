@@ -1,0 +1,1 @@
+PASS_V2 V2 passed V0, V1, V4, V2; no V3 pool or V5 ladder is registered for rankers, so never ACCEPT {"hit_shuffled": 0.348875, "floors": {"latent_distance": 0.32225000000000004, "set_position": 0.32225000000000004, "pointwise_mlp": 0.3219375, "label_shuffle_null": 0.18875}}

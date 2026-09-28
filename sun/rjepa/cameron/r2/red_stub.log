@@ -1,0 +1,262 @@
+FEEFFFFFFF                                                               [100%]
+=================================== ERRORS ====================================
+___________ ERROR at setup of test_cascade_without_pruning_is_bayes ___________
+
+    @pytest.fixture(scope="module")
+    def b12():
+>       return r2.batch(np.random.default_rng([99, 12, 0]), 300, 12)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test_r2.py:17: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+rng = Generator(PCG64) at 0x1AF68B3AC00, N = 300, T = 12, delta = 0.001
+chunk = 500
+
+    def batch(rng, N, T, delta=1e-3, chunk=500):
+>       raise NotImplementedError
+E       NotImplementedError
+
+r2.py:13: NotImplementedError
+___________________ ERROR at setup of test_prune_K_is_bayes ___________________
+
+    @pytest.fixture(scope="module")
+    def b12():
+>       return r2.batch(np.random.default_rng([99, 12, 0]), 300, 12)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test_r2.py:17: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+rng = Generator(PCG64) at 0x1AF68B3AC00, N = 300, T = 12, delta = 0.001
+chunk = 500
+
+    def batch(rng, N, T, delta=1e-3, chunk=500):
+>       raise NotImplementedError
+E       NotImplementedError
+
+r2.py:13: NotImplementedError
+================================== FAILURES ===================================
+_____________________ test_batch_matches_round1_generator _____________________
+
+    def test_batch_matches_round1_generator():
+>       b = r2.batch(np.random.default_rng([98, 12, 0]), 200, 12)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test_r2.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+rng = Generator(PCG64) at 0x1AF68B3A5E0, N = 200, T = 12, delta = 0.001
+chunk = 500
+
+    def batch(rng, N, T, delta=1e-3, chunk=500):
+>       raise NotImplementedError
+E       NotImplementedError
+
+r2.py:13: NotImplementedError
+_________________ test_mixed_everywhere_costs_one_stage0_step _________________
+
+    def test_mixed_everywhere_costs_one_stage0_step():
+>       b = r2.batch(np.random.default_rng([97, 12, 0]), 100, 12)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test_r2.py:41: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+rng = Generator(PCG64) at 0x1AF68B3AF80, N = 100, T = 12, delta = 0.001
+chunk = 500
+
+    def batch(rng, N, T, delta=1e-3, chunk=500):
+>       raise NotImplementedError
+E       NotImplementedError
+
+r2.py:13: NotImplementedError
+_________________ test_settled_short_lead_is_bayes_and_cheap __________________
+
+    def test_settled_short_lead_is_bayes_and_cheap():
+>       b = r2.batch(np.random.default_rng([96, 2, 0]), 500, 2)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test_r2.py:47: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+rng = Generator(PCG64) at 0x1AF68B3B920, N = 500, T = 2, delta = 0.001
+chunk = 500
+
+    def batch(rng, N, T, delta=1e-3, chunk=500):
+>       raise NotImplementedError
+E       NotImplementedError
+
+r2.py:13: NotImplementedError
+_________________________ test_bed_valid_on_new_seeds _________________________
+
+    def test_bed_valid_on_new_seeds():
+>       E = _eval()
+            ^^^^^^^
+
+test_r2.py:74: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+test_r2.py:56: in _eval
+    return json.loads((HERE / "eval.json").read_text())
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\seal\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1058: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/seal/Desktop/New folder (32)/sun/rjepa/cameron/r2/eval.json')
+mode = 'r', buffering = -1, encoding = 'locale', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\seal\\Desktop\\New folder (32)\\sun\\rjepa\\cameron\\r2\\eval.json'
+
+C:\Users\seal\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1044: FileNotFoundError
+________________ test_claim_A1_lin1_beats_djepa_spec_each_seed ________________
+
+    def test_claim_A1_lin1_beats_djepa_spec_each_seed():
+>       E = _eval(); band, _ = _band(E)
+            ^^^^^^^
+
+test_r2.py:83: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+test_r2.py:56: in _eval
+    return json.loads((HERE / "eval.json").read_text())
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\seal\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1058: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/seal/Desktop/New folder (32)/sun/rjepa/cameron/r2/eval.json')
+mode = 'r', buffering = -1, encoding = 'locale', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\seal\\Desktop\\New folder (32)\\sun\\rjepa\\cameron\\r2\\eval.json'
+
+C:\Users\seal\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1044: FileNotFoundError
+__________________ test_claim_A2_lin1_beats_floor_each_seed ___________________
+
+    def test_claim_A2_lin1_beats_floor_each_seed():
+>       E = _eval(); band, _ = _band(E)
+            ^^^^^^^
+
+test_r2.py:93: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+test_r2.py:56: in _eval
+    return json.loads((HERE / "eval.json").read_text())
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\seal\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1058: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/seal/Desktop/New folder (32)/sun/rjepa/cameron/r2/eval.json')
+mode = 'r', buffering = -1, encoding = 'locale', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\seal\\Desktop\\New folder (32)\\sun\\rjepa\\cameron\\r2\\eval.json'
+
+C:\Users\seal\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1044: FileNotFoundError
+____________________ test_claim_A3_lin1_holds_against_ens3 ____________________
+
+    def test_claim_A3_lin1_holds_against_ens3():
+>       E = _eval(); band, rows = _band(E)
+            ^^^^^^^
+
+test_r2.py:100: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+test_r2.py:56: in _eval
+    return json.loads((HERE / "eval.json").read_text())
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\seal\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1058: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/seal/Desktop/New folder (32)/sun/rjepa/cameron/r2/eval.json')
+mode = 'r', buffering = -1, encoding = 'locale', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\seal\\Desktop\\New folder (32)\\sun\\rjepa\\cameron\\r2\\eval.json'
+
+C:\Users\seal\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1044: FileNotFoundError
+____________ test_claim_B_cascade_4x_fewer_calls_at_bayes_quality _____________
+
+    def test_claim_B_cascade_4x_fewer_calls_at_bayes_quality():
+>       E = _eval(); band, _ = _band(E)
+            ^^^^^^^
+
+test_r2.py:107: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+test_r2.py:56: in _eval
+    return json.loads((HERE / "eval.json").read_text())
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\seal\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1058: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/seal/Desktop/New folder (32)/sun/rjepa/cameron/r2/eval.json')
+mode = 'r', buffering = -1, encoding = 'locale', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\seal\\Desktop\\New folder (32)\\sun\\rjepa\\cameron\\r2\\eval.json'
+
+C:\Users\seal\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1044: FileNotFoundError
+=========================== short test summary info ===========================
+FAILED test_r2.py::test_batch_matches_round1_generator - NotImplementedError
+FAILED test_r2.py::test_mixed_everywhere_costs_one_stage0_step - NotImplement...
+FAILED test_r2.py::test_settled_short_lead_is_bayes_and_cheap - NotImplemente...
+FAILED test_r2.py::test_bed_valid_on_new_seeds - FileNotFoundError: [Errno 2]...
+FAILED test_r2.py::test_claim_A1_lin1_beats_djepa_spec_each_seed - FileNotFou...
+FAILED test_r2.py::test_claim_A2_lin1_beats_floor_each_seed - FileNotFoundErr...
+FAILED test_r2.py::test_claim_A3_lin1_holds_against_ens3 - FileNotFoundError:...
+FAILED test_r2.py::test_claim_B_cascade_4x_fewer_calls_at_bayes_quality - Fil...
+ERROR test_r2.py::test_cascade_without_pruning_is_bayes - NotImplementedError
+ERROR test_r2.py::test_prune_K_is_bayes - NotImplementedError
+8 failed, 2 errors in 2.90s

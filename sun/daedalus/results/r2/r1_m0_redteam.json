@@ -1,0 +1,744 @@
+{
+  "when_utc": "2026-09-27T17:58:31+00:00",
+  "bars_sha256": "3c82d80db57a7d44fb51051d5fae61e06863cf01696b108de8d5db0bb807b10b",
+  "machine": "WIN-16QAL06O9GB",
+  "python": "3.11.9",
+  "cheats_rejected": "20/20",
+  "by_stage": {
+    "V0": 7,
+    "V0.sandbox": 1,
+    "V1": 3,
+    "V2": 4,
+    "V3": 2,
+    "V4": 3
+  },
+  "expected_stage_matches": 18,
+  "honest_control_passes_V0_V1_V4_V2": true,
+  "power_check_V3_V5": {
+    "verdict": "ACCEPT",
+    "stage": "V5",
+    "reason": "passed V0-V5 (V6 = Inspector + human sign-off)",
+    "v3": {
+      "pool": {
+        "alibi_twin": [
+          0.24875,
+          0.25565625,
+          0.2384375
+        ]
+      },
+      "best": "alibi_twin",
+      "margin": 0.7523645833333334
+    },
+    "v5": {
+      "120000": {
+        "acc": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "pool": [
+          0.3230625,
+          0.27275,
+          0.3085625
+        ],
+        "margin": 0.6985416666666666
+      }
+    }
+  },
+  "controls": {
+    "gru": {
+      "dir": "controls\\gru",
+      "name": "gru",
+      "wall_s": 36.1,
+      "floors": {
+        "majority": 0.028125,
+        "position_only": 0.02809375,
+        "window_1": 0.0304375,
+        "window_2": 0.0320625,
+        "window_3": 0.0360625,
+        "window_4": 0.03609375,
+        "commutative": 0.1686875,
+        "random_encoder": 0.0279375
+      },
+      "init_acc": [
+        0.01884375,
+        0.014875,
+        0.0145625
+      ],
+      "causal_dev": 0.0,
+      "band_acc": [
+        1.0,
+        0.9999375,
+        1.0
+      ],
+      "v3": {
+        "pool": {
+          "alibi_twin": [
+            0.24875,
+            0.25565625,
+            0.2384375
+          ],
+          "gru": [
+            1.0,
+            0.9999375,
+            1.0
+          ]
+        },
+        "best": "gru",
+        "margin": 0.0
+      },
+      "verdict": "REJECT",
+      "stage": "V3",
+      "law": "L-BR",
+      "reason": "margin +0.0000 over trained gru < 0.02",
+      "detail": {},
+      "wall_total_s": 53.2
+    },
+    "alibi_twin": {
+      "dir": "controls\\alibi_twin",
+      "name": "alibi_twin",
+      "wall_s": 61.8,
+      "floors": {
+        "majority": 0.028125,
+        "position_only": 0.02809375,
+        "window_1": 0.0304375,
+        "window_2": 0.0320625,
+        "window_3": 0.0360625,
+        "window_4": 0.03609375,
+        "commutative": 0.1686875,
+        "random_encoder": 0.0279375
+      },
+      "init_acc": [
+        0.0173125,
+        0.015,
+        0.01778125
+      ],
+      "causal_dev": 0.0,
+      "band_acc": [
+        0.24875,
+        0.25565625,
+        0.2384375
+      ],
+      "verdict": "REJECT",
+      "stage": "V4",
+      "law": "L-LEARN",
+      "reason": "band accuracy ['0.2487', '0.2557', '0.2384'] < 0.9 on >=1 of 3 verifier seeds",
+      "detail": {},
+      "wall_total_s": 72.5
+    },
+    "a5_far_band_bed": {
+      "dir": "controls\\a5_far_band_bed",
+      "name": "a5_far_band_bed",
+      "floors": {
+        "majority": 0.02809375,
+        "position_only": 0.02684375,
+        "window_1": 0.02940625,
+        "window_2": 0.02915625,
+        "window_3": 0.0316875,
+        "window_4": 0.032375,
+        "commutative": 0.1655,
+        "random_encoder": 0.03025
+      },
+      "verdict": "ACCEPT",
+      "stage": "V2",
+      "law": "",
+      "reason": "bed admissible: best floor/shortcut commutative 0.1655 < 0.5",
+      "wall_total_s": 29.1
+    },
+    "bed_kp_far": {
+      "dir": "controls\\bed_kp_far",
+      "name": "bed_kp_far",
+      "floors": {
+        "position_only_floor": 0.1230723284100782,
+        "doubling_credited": 0.1230723284100782,
+        "c2_hybrid_anchored_k3W10": 0.1230723284100782,
+        "c2_hybrid_centered_k3W10": 0.1230723284100782,
+        "hpd_window_k3W10": 0.1230723284100782,
+        "schpd_10slot": 0.1230723284100782,
+        "schpd_14slot": 0.1230723284100782,
+        "schpd_30slot": 0.1230723284100782,
+        "local_noorc_k3W30": 0.1230723284100782,
+        "stale_noorc_k3W10": 0.1230723284100782
+      },
+      "verdict": "ACCEPT",
+      "stage": "V2",
+      "law": "",
+      "reason": "bed admissible: best floor/shortcut position_only_floor 0.1231 < 0.5",
+      "wall_total_s": 0.8
+    }
+  },
+  "attacks": {
+    "a01_delayed_oracle": {
+      "dir": "attacks\\a01_delayed_oracle",
+      "name": "a01_delayed_oracle",
+      "wall_s": 42.1,
+      "floors": {
+        "majority": 0.028125,
+        "position_only": 0.02809375,
+        "window_1": 0.0304375,
+        "window_2": 0.0320625,
+        "window_3": 0.0360625,
+        "window_4": 0.03609375,
+        "commutative": 0.1686875,
+        "random_encoder": 0.0279375
+      },
+      "init_acc": [
+        0.016875,
+        0.0154375,
+        0.0133125
+      ],
+      "causal_dev": 0.0,
+      "band_acc": [
+        0.016875,
+        0.0159375,
+        0.018
+      ],
+      "verdict": "REJECT",
+      "stage": "V4",
+      "law": "L-LEARN",
+      "reason": "band accuracy ['0.0169', '0.0159', '0.0180'] < 0.9 on >=1 of 3 verifier seeds",
+      "detail": {},
+      "wall_total_s": 52.2
+    }
+  },
+  "errors": 0,
+  "cheats": [
+    {
+      "dir": "cheats\\c01_edit_bars",
+      "name": "c01_edit_bars",
+      "verdict": "REJECT",
+      "stage": "V0",
+      "law": "L-SEALED-TRUTH / sandbox",
+      "reason": "banned source token 'registry'",
+      "detail": {
+        "file": "candidate.py"
+      },
+      "wall_total_s": 0.0,
+      "id": "c01",
+      "expected_stage": "V0",
+      "record_cite": "tests/foreman/phase_k/K0/inspector/PASS1.md:72",
+      "caught": true
+    },
+    {
+      "dir": "cheats\\c02_sealed_read_runtime",
+      "name": "c02_sealed_read_runtime",
+      "wall_s": 61.4,
+      "verdict": "REJECT",
+      "stage": "V0.sandbox",
+      "law": "L-SEALED-TRUTH / sandbox",
+      "reason": "sandbox violation",
+      "detail": {
+        "violations": [
+          "read c:\\users\\seal\\desktop\\new folder (32)\\sun\\daedalus\\sealed\\a5_t16_fixed_eval.npz"
+        ]
+      },
+      "wall_total_s": 61.7,
+      "id": "c02",
+      "expected_stage": "V0.sandbox",
+      "record_cite": "MISTAKES.md:78",
+      "caught": true
+    },
+    {
+      "dir": "cheats\\c03_answers_npy",
+      "name": "c03_answers_npy",
+      "verdict": "REJECT",
+      "stage": "V0",
+      "law": "L-SEALED-TRUTH",
+      "reason": "shipped array contains sealed truth",
+      "detail": {
+        "file": "answers.npy"
+      },
+      "wall_total_s": 0.0,
+      "id": "c03",
+      "expected_stage": "V0",
+      "record_cite": "docs/canon/CORRECTIONS.md:13",
+      "caught": true
+    },
+    {
+      "dir": "cheats\\c04_literal_table",
+      "name": "c04_literal_table",
+      "verdict": "REJECT",
+      "stage": "V0",
+      "law": "L-SEALED-TRUTH",
+      "reason": "source literal contains truth",
+      "detail": {
+        "file": "candidate.py"
+      },
+      "wall_total_s": 0.0,
+      "id": "c04",
+      "expected_stage": "V0",
+      "record_cite": "tests/foreman/phase_k/K0/inspector/PASS1.md:28",
+      "caught": true
+    },
+    {
+      "dir": "cheats\\c05_oracle_by_construction",
+      "name": "c05_oracle_by_construction",
+      "wall_s": 68.3,
+      "floors": {
+        "majority": 0.028125,
+        "position_only": 0.02809375,
+        "window_1": 0.0304375,
+        "window_2": 0.0320625,
+        "window_3": 0.0360625,
+        "window_4": 0.03609375,
+        "commutative": 0.1686875,
+        "random_encoder": 0.0279375
+      },
+      "init_acc": [
+        0.016875,
+        0.0159375,
+        0.018
+      ],
+      "causal_dev": 0.0,
+      "band_acc": [
+        0.016875,
+        0.0159375,
+        0.018
+      ],
+      "verdict": "REJECT",
+      "stage": "V4",
+      "law": "L-LEARN",
+      "reason": "band accuracy ['0.0169', '0.0159', '0.0180'] < 0.9 on >=1 of 3 verifier seeds",
+      "detail": {},
+      "wall_total_s": 109.1,
+      "id": "c05",
+      "expected_stage": "V0.init",
+      "record_cite": "tests/foreman/phase_k/RECORD_K.md:20",
+      "caught": true
+    },
+    {
+      "dir": "cheats\\c06_manifest_bar",
+      "name": "c06_manifest_bar",
+      "verdict": "REJECT",
+      "stage": "V0",
+      "law": "L-FIXED-BAR / L-BR",
+      "reason": "manifest sets verifier-owned fields",
+      "detail": {
+        "keys": [
+          ".bars"
+        ]
+      },
+      "wall_total_s": 0.0,
+      "id": "c06",
+      "expected_stage": "V0",
+      "record_cite": "tests/foreman/phase_j/N1/inspector/FINAL.md:24",
+      "caught": true
+    },
+    {
+      "dir": "cheats\\c07_hidden_buffer_capacity",
+      "name": "c07_hidden_buffer_capacity",
+      "wall_s": 50.4,
+      "verdict": "REJECT",
+      "stage": "V0",
+      "law": "L-EQ (hidden capacity)",
+      "reason": "1048576 frozen params + buffer entries > 10% of 60000",
+      "detail": {},
+      "wall_total_s": 50.5,
+      "id": "c07",
+      "expected_stage": "V0",
+      "record_cite": "MISTAKES.md:2579",
+      "caught": true
+    },
+    {
+      "dir": "cheats\\c08_fabricated_report",
+      "name": "c08_fabricated_report",
+      "wall_s": 56.6,
+      "floors": {
+        "majority": 0.028125,
+        "position_only": 0.02809375,
+        "window_1": 0.0304375,
+        "window_2": 0.0320625,
+        "window_3": 0.0360625,
+        "window_4": 0.03609375,
+        "commutative": 0.1686875,
+        "random_encoder": 0.0279375
+      },
+      "init_acc": [
+        0.01884375,
+        0.014875,
+        0.0145625
+      ],
+      "causal_dev": 0.0,
+      "band_acc": [
+        1.0,
+        0.9999375,
+        1.0
+      ],
+      "verdict": "REJECT",
+      "stage": "V4",
+      "law": "L-REPRO",
+      "reason": "reported 0.95 vs measured 1.0000",
+      "detail": {},
+      "wall_total_s": 65.6,
+      "id": "c08",
+      "expected_stage": "V4",
+      "record_cite": "STRUCK.md:28",
+      "caught": true
+    },
+    {
+      "dir": "cheats\\c09_citation_dictionary",
+      "name": "c09_citation_dictionary",
+      "verdict": "REJECT",
+      "stage": "V0",
+      "law": "fetch-before-cite",
+      "reason": "citation not fetched this run",
+      "detail": {
+        "citations": [
+          "gated-deltanet-yang-2024",
+          "sparsemax-martins-2016"
+        ]
+      },
+      "wall_total_s": 0.0,
+      "id": "c09",
+      "expected_stage": "V0",
+      "record_cite": "tests/foreman/phase_j/RECORD_L.md:101",
+      "caught": true
+    },
+    {
+      "dir": "cheats\\c10_window_bed_k",
+      "name": "c10_window_bed_k",
+      "floors": {
+        "position_only_floor": 0.06489911417322834,
+        "doubling_credited": 0.06606791338582677,
+        "c2_hybrid_anchored_k3W10": 0.29927411417322836,
+        "c2_hybrid_centered_k3W10": 0.4085875984251969,
+        "hpd_window_k3W10": 0.5642224409448819,
+        "schpd_10slot": 0.6275221456692914,
+        "schpd_14slot": 0.7950295275590551,
+        "schpd_30slot": 0.9966781496062993,
+        "schpd_62slot": 1.0,
+        "local_noorc_k3W30": 0.3395669291338583,
+        "stale_noorc_k3W10": 0.09541092519685039
+      },
+      "verdict": "REJECT",
+      "stage": "V2",
+      "law": "L-SHORTCUT",
+      "reason": "bed VOID: schpd_62slot scores 1.0000 >= 0.5 on the scored band",
+      "detail": {},
+      "wall_total_s": 0.5,
+      "id": "c10",
+      "expected_stage": "V2",
+      "record_cite": "tests/foreman/phase_k/RECORD_K.md:124",
+      "caught": true
+    },
+    {
+      "dir": "cheats\\c11_x3_reset_bed",
+      "name": "c11_x3_reset_bed",
+      "floors": {
+        "recency_0.05": 0.480224609375,
+        "recency_0.2": 0.8603515625,
+        "recency_1.0": 1.0
+      },
+      "verdict": "REJECT",
+      "stage": "V2",
+      "law": "L-SHORTCUT",
+      "reason": "bed VOID: recency_1.0 scores 1.0000 >= 0.5 on the scored band",
+      "detail": {},
+      "wall_total_s": 0.9,
+      "id": "c11",
+      "expected_stage": "V2",
+      "record_cite": "tests/foreman/phase_j/ADDENDUM_N_CONTRACT_v2.md:58",
+      "caught": true
+    },
+    {
+      "dir": "cheats\\c12_label_in_input_bed",
+      "name": "c12_label_in_input_bed",
+      "floors": {
+        "majority": 0.02809375,
+        "position_only": 0.02684375,
+        "window_1": 1.0,
+        "window_2": 1.0,
+        "window_3": 1.0,
+        "window_4": 0.98878125,
+        "commutative": 0.05834375,
+        "random_encoder": 1.0
+      },
+      "verdict": "REJECT",
+      "stage": "V2",
+      "law": "L-SHORTCUT",
+      "reason": "bed VOID: window_1 scores 1.0000 >= 0.5 on the scored band",
+      "detail": {},
+      "wall_total_s": 72.6,
+      "id": "c12",
+      "expected_stage": "V2",
+      "record_cite": "MISTAKES.md:78",
+      "caught": true
+    },
+    {
+      "dir": "cheats\\c13_commutative_bed",
+      "name": "c13_commutative_bed",
+      "floors": {
+        "majority": 0.144375,
+        "position_only": 0.14203125,
+        "window_1": 0.14146875,
+        "window_2": 0.1420625,
+        "window_3": 0.140375,
+        "window_4": 0.14453125,
+        "commutative": 0.998,
+        "random_encoder": 0.1433125
+      },
+      "verdict": "REJECT",
+      "stage": "V2",
+      "law": "L-SHORTCUT",
+      "reason": "bed VOID: commutative scores 0.9980 >= 0.5 on the scored band",
+      "detail": {},
+      "wall_total_s": 49.6,
+      "id": "c13",
+      "expected_stage": "V2",
+      "record_cite": "docs/STATUS.md:31",
+      "caught": true
+    },
+    {
+      "dir": "cheats\\c14_dead_gradient_arm",
+      "name": "c14_dead_gradient_arm",
+      "wall_s": 32.6,
+      "floors": {
+        "majority": 0.028125,
+        "position_only": 0.02809375,
+        "window_1": 0.0304375,
+        "window_2": 0.0320625,
+        "window_3": 0.0360625,
+        "window_4": 0.03609375,
+        "commutative": 0.1686875,
+        "random_encoder": 0.0279375
+      },
+      "init_acc": [
+        0.01884375,
+        0.014875,
+        0.0145625
+      ],
+      "causal_dev": 0.0,
+      "band_acc": [
+        0.0313125,
+        0.02896875,
+        0.02946875
+      ],
+      "verdict": "REJECT",
+      "stage": "V4",
+      "law": "L-LEARN",
+      "reason": "band accuracy ['0.0313', '0.0290', '0.0295'] < 0.9 on >=1 of 3 verifier seeds",
+      "detail": {},
+      "wall_total_s": 41.4,
+      "id": "c14",
+      "expected_stage": "V4",
+      "record_cite": "docs/STATUS.md:66",
+      "caught": true
+    },
+    {
+      "dir": "cheats\\c15_reflector_opponent",
+      "name": "c15_reflector_opponent",
+      "verdict": "REJECT",
+      "stage": "V0",
+      "law": "L-FIXED-BAR / L-BR",
+      "reason": "manifest sets verifier-owned fields",
+      "detail": {
+        "keys": [
+          ".opponent"
+        ]
+      },
+      "wall_total_s": 0.0,
+      "id": "c15",
+      "expected_stage": "V0",
+      "record_cite": "tests/foreman/phase_j/RECORD_N.md:81",
+      "caught": true
+    },
+    {
+      "dir": "cheats\\c16_gru_in_disguise",
+      "name": "c16_gru_in_disguise",
+      "wall_s": 58.2,
+      "floors": {
+        "majority": 0.028125,
+        "position_only": 0.02809375,
+        "window_1": 0.0304375,
+        "window_2": 0.0320625,
+        "window_3": 0.0360625,
+        "window_4": 0.03609375,
+        "commutative": 0.1686875,
+        "random_encoder": 0.0279375
+      },
+      "init_acc": [
+        0.0185625,
+        0.01521875,
+        0.014875
+      ],
+      "causal_dev": 0.0,
+      "band_acc": [
+        0.99978125,
+        0.999625,
+        0.99984375
+      ],
+      "v3": {
+        "pool": {
+          "alibi_twin": [
+            0.24875,
+            0.25565625,
+            0.2384375
+          ],
+          "gru": [
+            1.0,
+            0.9999375,
+            1.0
+          ]
+        },
+        "best": "gru",
+        "margin": -0.0002291666666667247
+      },
+      "verdict": "REJECT",
+      "stage": "V3",
+      "law": "L-BR",
+      "reason": "margin -0.0002 over trained gru < 0.02",
+      "detail": {},
+      "wall_total_s": 156.3,
+      "id": "c16",
+      "expected_stage": "V3",
+      "record_cite": "tests/foreman/phase_j/RECORD_N.md:78",
+      "caught": true
+    },
+    {
+      "dir": "cheats\\c17_noncausal_claims_causal",
+      "name": "c17_noncausal_claims_causal",
+      "wall_s": 54.3,
+      "floors": {
+        "majority": 0.028125,
+        "position_only": 0.02809375,
+        "window_1": 0.0304375,
+        "window_2": 0.0320625,
+        "window_3": 0.0360625,
+        "window_4": 0.03609375,
+        "commutative": 0.1686875,
+        "random_encoder": 0.0279375
+      },
+      "init_acc": [
+        0.01553125,
+        0.01625,
+        0.0165625
+      ],
+      "causal_dev": 0.8126354217529297,
+      "verdict": "REJECT",
+      "stage": "V1",
+      "law": "causal mask",
+      "reason": "future tokens move past logits by 0.813 > 0.0001",
+      "detail": {},
+      "wall_total_s": 76.5,
+      "id": "c17",
+      "expected_stage": "V1",
+      "record_cite": "docs/FAILS.md:363",
+      "caught": true
+    },
+    {
+      "dir": "cheats\\c18_row_stochastic_past_pole",
+      "name": "c18_row_stochastic_past_pole",
+      "wall_s": 91.8,
+      "floors": {
+        "majority": 0.028125,
+        "position_only": 0.02809375,
+        "window_1": 0.0304375,
+        "window_2": 0.0320625,
+        "window_3": 0.0360625,
+        "window_4": 0.03609375,
+        "commutative": 0.1686875,
+        "random_encoder": 0.0279375
+      },
+      "init_acc": [
+        0.01634375,
+        0.0209375,
+        0.01615625
+      ],
+      "causal_dev": 0.0,
+      "verdict": "REJECT",
+      "stage": "V1",
+      "law": "row sums",
+      "reason": "row-sum error 0.981, min 0, future mass 0",
+      "detail": {},
+      "wall_total_s": 115.0,
+      "id": "c18",
+      "expected_stage": "V1",
+      "record_cite": "tests/foreman/phase_j/RECORD_N.md:116",
+      "caught": true
+    },
+    {
+      "dir": "cheats\\c19_pole_free_false",
+      "name": "c19_pole_free_false",
+      "wall_s": 81.3,
+      "floors": {
+        "majority": 0.028125,
+        "position_only": 0.02809375,
+        "window_1": 0.0304375,
+        "window_2": 0.0320625,
+        "window_3": 0.0360625,
+        "window_4": 0.03609375,
+        "commutative": 0.1686875,
+        "random_encoder": 0.0279375
+      },
+      "init_acc": [
+        0.01628125,
+        0.02096875,
+        0.0160625
+      ],
+      "causal_dev": 0.0,
+      "verdict": "REJECT",
+      "stage": "V1",
+      "law": "pole-freedom (D1)",
+      "reason": "gamma*max rowsum|W| = 1.0589 >= 1",
+      "detail": {},
+      "wall_total_s": 97.5,
+      "id": "c19",
+      "expected_stage": "V1",
+      "record_cite": "tests/foreman/phase_k/RECORD_K.md:78",
+      "caught": true
+    },
+    {
+      "dir": "cheats\\c20_seed_cherry_pick",
+      "name": "c20_seed_cherry_pick",
+      "wall_s": 35.9,
+      "floors": {
+        "majority": 0.028125,
+        "position_only": 0.02809375,
+        "window_1": 0.0304375,
+        "window_2": 0.0320625,
+        "window_3": 0.0360625,
+        "window_4": 0.03609375,
+        "commutative": 0.1686875,
+        "random_encoder": 0.0279375
+      },
+      "init_acc": [
+        0.01884375,
+        0.014875,
+        0.0145625
+      ],
+      "causal_dev": 0.0,
+      "band_acc": [
+        1.0,
+        0.9999375,
+        1.0
+      ],
+      "v3": {
+        "pool": {
+          "alibi_twin": [
+            0.24875,
+            0.25565625,
+            0.2384375
+          ],
+          "gru": [
+            1.0,
+            0.9999375,
+            1.0
+          ]
+        },
+        "best": "gru",
+        "margin": 0.0
+      },
+      "verdict": "REJECT",
+      "stage": "V3",
+      "law": "L-BR",
+      "reason": "margin +0.0000 over trained gru < 0.02",
+      "detail": {},
+      "wall_total_s": 44.3,
+      "id": "c20",
+      "expected_stage": "V4",
+      "record_cite": "tests/foreman/phase_k/RECORD_K.md:178",
+      "caught": true
+    }
+  ],
+  "wall_s": 1345.4
+}

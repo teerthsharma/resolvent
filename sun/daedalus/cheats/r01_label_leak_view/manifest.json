@@ -1,0 +1,1 @@
+{"name": "r01_label_leak_view", "kind": "ranker", "bed": "planning_consequence_v0", "features": "executed", "claims": ["permutation_equivariant"]}

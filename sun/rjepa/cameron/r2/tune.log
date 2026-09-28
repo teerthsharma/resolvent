@@ -1,0 +1,7 @@
+tune 12 02:34:56
+tune 16 02:35:32
+tune 20 02:36:25
+tune 24 02:37:35
+tune 32 02:38:50
+chosen {'zc': inf, 'kappa': inf, 'c': 0.35, 'b': 32}
+wall 264.6

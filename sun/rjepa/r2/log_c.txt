@@ -1,0 +1,16 @@
+fatal   : Memory allocation failure
+Traceback (most recent call last):
+  File "C:\Users\seal\Desktop\New folder (32)\sun\rjepa\r2\r2.py", line 365, in <module>
+    run_cell(f, q, sd, calib, dyn)
+  File "C:\Users\seal\Desktop\New folder (32)\sun\rjepa\r2\r2.py", line 269, in run_cell
+    vt, rt, lt, _, _ = tokens(net, tr, sigma, r)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\seal\Desktop\New folder (32)\sun\rjepa\r2\r2.py", line 114, in tokens
+    rr, lr = rank01(d), rank01(-(torch.special.log_ndtr((r - d) / s) - 1e-9 * d))
+             ^^^^^^^^^
+  File "C:\Users\seal\Desktop\New folder (32)\sun\rjepa\r2\r2.py", line 106, in rank01
+    return x.argsort(1).argsort(1).float() / (x.shape[1] - 1)
+           ^^^^^^^^^^^^
+torch.AcceleratorError: CUDA error: unknown error
+Search for `cudaErrorUnknown' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+

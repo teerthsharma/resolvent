@@ -1,0 +1,201 @@
+{
+  "cheats_caught_at_named_stage": "0/4",
+  "controls_admissible": "2/2",
+  "errors": 0,
+  "cheats": [
+    {
+      "dir": "cheats\\r01_label_leak_view",
+      "name": "r01_label_leak_view",
+      "wall_s": 54.7,
+      "floors": {
+        "latent_distance": 0.3224375,
+        "set_position": 0.3224375,
+        "pointwise_mlp": 0.32262499999999994,
+        "label_shuffle_null": 0.32825
+      },
+      "init_hit": [
+        0.2465,
+        0.281,
+        0.2715,
+        0.303
+      ],
+      "hit_planner": [
+        0.3825,
+        0.37775,
+        0.36825,
+        0.38325
+      ],
+      "hit_shuffled": 0.37793750000000004,
+      "verdict": "PASS_V2",
+      "stage": "V2",
+      "law": "",
+      "reason": "passed V0, V1, V4, V2; no V3 pool or V5 ladder is registered for rankers, so never ACCEPT",
+      "wall_total_s": 69.0,
+      "id": "r01",
+      "must_catch_at": "V0",
+      "caught": false
+    },
+    {
+      "dir": "cheats\\r02_index_order",
+      "name": "r02_index_order",
+      "wall_s": 20.0,
+      "floors": {
+        "latent_distance": 0.3224375,
+        "set_position": 0.3224375,
+        "pointwise_mlp": 0.32262499999999994,
+        "label_shuffle_null": 0.32925
+      },
+      "init_hit": [
+        0.2675,
+        0.26275,
+        0.27325,
+        0.264
+      ],
+      "hit_planner": [
+        0.32925,
+        0.3235,
+        0.31175,
+        0.32525
+      ],
+      "hit_shuffled": 0.2459375,
+      "verdict": "REJECT",
+      "stage": "V2",
+      "law": "L-SHORTCUT",
+      "reason": "hit 0.2459 < best floor label_shuffle_null 0.3292 + 0.02",
+      "detail": {},
+      "wall_total_s": 20.1,
+      "id": "r02",
+      "must_catch_at": "V2.order",
+      "caught": false
+    },
+    {
+      "dir": "cheats\\r03_false_equivariance",
+      "name": "r03_false_equivariance",
+      "wall_s": 59.2,
+      "floors": {
+        "latent_distance": 0.3224375,
+        "set_position": 0.3224375,
+        "pointwise_mlp": 0.32262499999999994,
+        "label_shuffle_null": 0.32925
+      },
+      "init_hit": [
+        0.23125,
+        0.3075,
+        0.2845,
+        0.256
+      ],
+      "hit_planner": [
+        0.387,
+        0.3745,
+        0.36775,
+        0.374
+      ],
+      "hit_shuffled": 0.369375,
+      "verdict": "PASS_V2",
+      "stage": "V2",
+      "law": "",
+      "reason": "passed V0, V1, V4, V2; no V3 pool or V5 ladder is registered for rankers, so never ACCEPT",
+      "wall_total_s": 59.2,
+      "id": "r03",
+      "must_catch_at": "V1",
+      "caught": false
+    },
+    {
+      "dir": "cheats\\r04_false_bound",
+      "name": "r04_false_bound",
+      "wall_s": 50.8,
+      "floors": {
+        "latent_distance": 0.3224375,
+        "set_position": 0.3224375,
+        "pointwise_mlp": 0.32262499999999994,
+        "label_shuffle_null": 0.32925
+      },
+      "init_hit": [
+        0.32925,
+        0.3235,
+        0.31175,
+        0.32525
+      ],
+      "hit_planner": [
+        0.32925,
+        0.3235,
+        0.31175,
+        0.32525
+      ],
+      "hit_shuffled": 0.3224375,
+      "verdict": "REJECT",
+      "stage": "V2",
+      "law": "L-SHORTCUT",
+      "reason": "hit 0.3224 < best floor label_shuffle_null 0.3292 + 0.02",
+      "detail": {},
+      "wall_total_s": 50.9,
+      "id": "r04",
+      "must_catch_at": "V1",
+      "caught": false
+    }
+  ],
+  "controls": {
+    "r_latent_distance": {
+      "dir": "controls\\r_latent_distance",
+      "name": "r_latent_distance",
+      "wall_s": 4.8,
+      "floors": {
+        "latent_distance": 0.3224375,
+        "set_position": 0.3224375,
+        "pointwise_mlp": 0.32262499999999994,
+        "label_shuffle_null": 0.32925
+      },
+      "init_hit": [
+        0.32925,
+        0.3235,
+        0.31175,
+        0.32525
+      ],
+      "hit_planner": [
+        0.32925,
+        0.3235,
+        0.31175,
+        0.32525
+      ],
+      "hit_shuffled": 0.3224375,
+      "verdict": "REJECT",
+      "stage": "V2",
+      "law": "L-SHORTCUT",
+      "reason": "hit 0.3224 < best floor label_shuffle_null 0.3292 + 0.02",
+      "detail": {},
+      "wall_total_s": 4.9,
+      "admissible": true
+    },
+    "r_deepsets": {
+      "dir": "controls\\r_deepsets",
+      "name": "r_deepsets",
+      "wall_s": 60.3,
+      "floors": {
+        "latent_distance": 0.3224375,
+        "set_position": 0.3224375,
+        "pointwise_mlp": 0.32262499999999994,
+        "label_shuffle_null": 0.32825
+      },
+      "init_hit": [
+        0.2465,
+        0.281,
+        0.2715,
+        0.303
+      ],
+      "hit_planner": [
+        0.3825,
+        0.37775,
+        0.36825,
+        0.38325
+      ],
+      "hit_shuffled": 0.37793750000000004,
+      "verdict": "PASS_V2",
+      "stage": "V2",
+      "law": "",
+      "reason": "passed V0, V1, V4, V2; no V3 pool or V5 ladder is registered for rankers, so never ACCEPT",
+      "wall_total_s": 60.4,
+      "admissible": true
+    }
+  },
+  "wall_s": 266.1
+}

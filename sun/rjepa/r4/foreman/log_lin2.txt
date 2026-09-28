@@ -1,0 +1,3 @@
+{"seed": 0, "reproduces_r3": true, "residue": 0.03433891364476993, "closed": 0.030362814165750818, "wall_s": 99.7}
+{"seed": 1, "reproduces_r3": true, "residue": 0.024113931707308356, "closed": 0.017807275742959816, "wall_s": 104.6}
+{"seed": 2, "reproduces_r3": true, "residue": 0.044023417205676374, "closed": 0.03929360707356411, "wall_s": 106.9}

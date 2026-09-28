@@ -1,0 +1,111 @@
+{
+ "bar_sha256": "471c3694c4c3a6a31125a72c89f51a9f62bb1fe760e1c50066247a1d04c181f5",
+ "script_sha256": "b0aeb24ab04c653f7471e0dbfbe255150639a1aceacb15d53c8b3e30a5cf9841",
+ "seeds": {
+  "6": [
+   {
+    "T": 40,
+    "blind": 0.1237375,
+    "floor": 0.2166,
+    "floor_null": 0.1197,
+    "bayes": 0.3017,
+    "bayes_null": 0.1245,
+    "ens3": 0.2641,
+    "ens3_null": 0.1257,
+    "ens2": 0.2544,
+    "ens2_null": 0.128,
+    "lin1": 0.2574,
+    "lin1_null": 0.1255,
+    "null_max_dev": 0.004262500000000002,
+    "wall_s": 91.9
+   },
+   {
+    "T": 48,
+    "blind": 0.12445,
+    "floor": 0.2089,
+    "floor_null": 0.1272,
+    "bayes": 0.2859,
+    "bayes_null": 0.123,
+    "ens3": 0.2407,
+    "ens3_null": 0.1226,
+    "ens2": 0.238,
+    "ens2_null": 0.1214,
+    "lin1": 0.2437,
+    "lin1_null": 0.1246,
+    "null_max_dev": 0.003050000000000011,
+    "wall_s": 105.7
+   }
+  ],
+  "7": [
+   {
+    "T": 40,
+    "blind": 0.126075,
+    "floor": 0.2247,
+    "floor_null": 0.1176,
+    "bayes": 0.306,
+    "bayes_null": 0.117,
+    "ens3": 0.2671,
+    "ens3_null": 0.1214,
+    "ens2": 0.2595,
+    "ens2_null": 0.1258,
+    "lin1": 0.2636,
+    "lin1_null": 0.1171,
+    "null_max_dev": 0.009074999999999986,
+    "wall_s": 99.0
+   },
+   {
+    "T": 48,
+    "blind": 0.123825,
+    "floor": 0.2049,
+    "floor_null": 0.1226,
+    "bayes": 0.2801,
+    "bayes_null": 0.1226,
+    "ens3": 0.2378,
+    "ens3_null": 0.1249,
+    "ens2": 0.2363,
+    "ens2_null": 0.1242,
+    "lin1": 0.2424,
+    "lin1_null": 0.1234,
+    "null_max_dev": 0.0012250000000000039,
+    "wall_s": 115.6
+   }
+  ],
+  "8": [
+   {
+    "T": 40,
+    "blind": 0.127225,
+    "floor": 0.2233,
+    "floor_null": 0.1338,
+    "bayes": 0.3133,
+    "bayes_null": 0.129,
+    "ens3": 0.2645,
+    "ens3_null": 0.1267,
+    "ens2": 0.2589,
+    "ens2_null": 0.1292,
+    "lin1": 0.2663,
+    "lin1_null": 0.1314,
+    "null_max_dev": 0.0065749999999999975,
+    "wall_s": 89.6
+   },
+   {
+    "T": 48,
+    "blind": 0.125125,
+    "floor": 0.2061,
+    "floor_null": 0.1266,
+    "bayes": 0.2762,
+    "bayes_null": 0.1234,
+    "ens3": 0.2394,
+    "ens3_null": 0.1242,
+    "ens2": 0.2339,
+    "ens2_null": 0.1251,
+    "lin1": 0.2421,
+    "lin1_null": 0.1213,
+    "null_max_dev": 0.003824999999999981,
+    "wall_s": 104.4
+   }
+  ]
+ },
+ "script_sha256_6": "b0aeb24ab04c653f7471e0dbfbe255150639a1aceacb15d53c8b3e30a5cf9841",
+ "script_sha256_7": "b0aeb24ab04c653f7471e0dbfbe255150639a1aceacb15d53c8b3e30a5cf9841",
+ "script_sha256_8": "b0aeb24ab04c653f7471e0dbfbe255150639a1aceacb15d53c8b3e30a5cf9841"
+}

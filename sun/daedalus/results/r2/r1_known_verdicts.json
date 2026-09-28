@@ -1,0 +1,120 @@
+{
+  "when_utc": "2026-09-27T17:58:31+00:00",
+  "bars_sha256": "3c82d80db57a7d44fb51051d5fae61e06863cf01696b108de8d5db0bb807b10b",
+  "reproduced": "5/5",
+  "verdicts": {
+    "V1_alibi_beats_family": {
+      "method": "rerun",
+      "split_seed": 0,
+      "steps": 3538,
+      "rerun": {
+        "loss_a": 1.275685578584671,
+        "loss_f": 1.043056309223175,
+        "loss_alibi": 1.0224847048521042
+      },
+      "stored": {
+        "loss_a": 1.2756839245557785,
+        "loss_f": 1.043056309223175,
+        "loss_alibi": 1.0224847048521042
+      },
+      "abs_diff_rerun_vs_stored": {
+        "a": 1.6540288925170898e-06,
+        "f": 0.0,
+        "a_alibi": 0.0
+      },
+      "delta_alibi_minus_f": -0.020571604371070862,
+      "stored_delta_alibi_minus_f": -0.020571604371070862,
+      "bar": "eval loss(a_alibi) < eval loss(f) at ss0",
+      "reproduced": true,
+      "provenance": [
+        "C:\\Users\\seal\\Desktop\\New folder (32)\\tests\\foreman\\design4x5\\design4x5_results.jsonl",
+        "C:\\Users\\seal\\Desktop\\New folder (32)\\tests\\foreman\\phase_j\\N2\\foreman\\rpos_results.jsonl",
+        "C:\\Users\\seal\\Desktop\\New folder (32)\\tests\\foreman\\phase_j\\record.jsonl",
+        "C:\\Users\\seal\\Desktop\\New folder (32)\\sun\\daedalus\\results\\verdicts_lm_rows.jsonl",
+        "C:\\Users\\seal\\Desktop\\New folder (32)\\sun\\daedalus\\verdicts\\rerun_v12.py",
+        "tests/foreman/design4x5/design4x5.py:train_arm",
+        "tests/foreman/phase_j/N2/foreman/rpos.py:alibi_forward",
+        "tests/foreman/phase_j/arms_j.py:train_a2F",
+        "tests/foreman/eval/r3_eval.py:train_with_eval"
+      ],
+      "command": "python sun/daedalus/verdicts/rerun_v12.py",
+      "source": "results/verdicts_12.json (Cameron)"
+    },
+    "V2_fox_recovers_cwin": {
+      "method": "rerun",
+      "split_seed": 0,
+      "steps": 3538,
+      "rerun": {
+        "loss_a": 1.275685578584671,
+        "loss_f": 1.043056309223175,
+        "loss_a2F": 1.0427028611302376
+      },
+      "stored": {
+        "loss_a": 1.2756839245557785,
+        "loss_f": 1.043056309223175,
+        "loss_a2F": 1.0427027568221092
+      },
+      "abs_diff_rerun_vs_stored": {
+        "a": 1.6540288925170898e-06,
+        "f": 0.0,
+        "a2F": 1.043081283569336e-07
+      },
+      "recovery": 1.0015193620901943,
+      "stored_recovery": 1.0015198212841598,
+      "bar": "(loss(a) - loss(a2F)) / (loss(a) - loss(f)) >= 0.8 at ss0",
+      "reproduced": true,
+      "provenance": [
+        "C:\\Users\\seal\\Desktop\\New folder (32)\\tests\\foreman\\design4x5\\design4x5_results.jsonl",
+        "C:\\Users\\seal\\Desktop\\New folder (32)\\tests\\foreman\\phase_j\\N2\\foreman\\rpos_results.jsonl",
+        "C:\\Users\\seal\\Desktop\\New folder (32)\\tests\\foreman\\phase_j\\record.jsonl",
+        "C:\\Users\\seal\\Desktop\\New folder (32)\\sun\\daedalus\\results\\verdicts_lm_rows.jsonl",
+        "C:\\Users\\seal\\Desktop\\New folder (32)\\sun\\daedalus\\verdicts\\rerun_v12.py",
+        "tests/foreman/design4x5/design4x5.py:train_arm",
+        "tests/foreman/phase_j/N2/foreman/rpos.py:alibi_forward",
+        "tests/foreman/phase_j/arms_j.py:train_a2F",
+        "tests/foreman/eval/r3_eval.py:train_with_eval"
+      ],
+      "command": "python sun/daedalus/verdicts/rerun_v12.py",
+      "source": "results/verdicts_12.json (Cameron)"
+    },
+    "V3_q2_closure": {
+      "method": "rerun",
+      "cmd": "n_impl.t10() (tests/foreman/phase_j/N1/chase/n_impl.py:367)",
+      "q2_as_written": 5762,
+      "q2_closed": false,
+      "corrected_quats": 120,
+      "corrected_closed": true,
+      "corrected_rots": 60,
+      "has_minus_one": true,
+      "axis_angle_old_deg": 54.735610317245346,
+      "axis_angle_new_deg": 37.37736814064969,
+      "reproduced": true
+    },
+    "V4_x3_recency": {
+      "method": "rerun (engine V2 on the X3 bed proposal, cheat c11)",
+      "floors": {
+        "recency_0.05": 0.480224609375,
+        "recency_0.2": 0.8603515625,
+        "recency_1.0": 1.0
+      },
+      "engine_verdict": "bed VOID: recency_1.0 scores 1.0000 >= 0.5 on the scored band",
+      "reproduced": true
+    },
+    "V5_phase_k_window": {
+      "method": "rerun (engine V2 shortcut library)",
+      "bed_k_beyond": {
+        "stage": "V2",
+        "reason": "bed VOID: schpd_62slot scores 1.0000 >= 0.5 on the scored band"
+      },
+      "bed_kp_beyond": {
+        "stage": "V2",
+        "reason": "bed VOID: schpd_62slot scores 0.9909 >= 0.5 on the scored band"
+      },
+      "bed_kp_far_control": {
+        "verdict": "ACCEPT",
+        "reason": "bed admissible: best floor/shortcut position_only_floor 0.1231 < 0.5"
+      },
+      "reproduced": true
+    }
+  }
+}

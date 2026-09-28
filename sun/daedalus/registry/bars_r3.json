@@ -1,0 +1,44 @@
+{
+ "_law": "L-FIXED-BAR, round 3. registry/bars.json (sha256 3c82d80d...07b10b) and registry/bars_r2.json (sha256 9e3cb3cf...394ab9) are unchanged; every r3 rule lives here, registered 2026-09-28T14:24Z, before any r3 run. Any later change appends a new key with its own timestamp. No r2 bar moves: V0, V0.sandbox, V0.init, V1, V4, V2.ceiling, V2.order and V2 read exactly as r2_b / r2_c.",
+ "r3_a_arm_fm_djepa_eps4": {
+  "registered_utc": "2026-09-28T14:24:00+00:00",
+  "dir": "candidates_rjepa/fm_djepa_eps4",
+  "source_sha256": "7acdc798caf3bd5f059f2a8d9c24ece7b4594c6f855dbfe8ab8eba5d65d128a5",
+  "change": "fm_djepa (sha d3e82576...) with EPS 0.2 -> 4.0 and manifest epsilon 4.0; nothing else",
+  "note": "base = -(distance rank)/(K-1) spans [0, 1], so at epsilon 4 the bounded claim no longer constrains the ordering. V1 still checks |score - base| <= 4 + 1e-5, and passing it says nothing: this arm is a D-JEPA-shaped free ranker, not a bounded corrector. The key exists so that no epsilon-0.2 result is ever reported under this arm's number or vice versa."
+ },
+ "r3_b_arm_ch_dj_stoch_noLN": {
+  "registered_utc": "2026-09-28T14:24:00+00:00",
+  "dir": "candidates_rjepa/ch_dj_stoch_noLN",
+  "source_sha256": "3252d71ceb09c367211327d4d9f9291612fd4018681a83c148638a05b70bda55",
+  "change": "ch_dj_stoch with self.lnz = LayerNorm(DZ = 2) removed; z enters the encoder raw",
+  "red": "ch_dj_stoch on draw m0: hit_shuffled 0.3261, REJECT V2 at floor (results/r2/rjepa_arms.json)",
+  "hypothesis": "LayerNorm over a 2-vector (a, b) returns (+-1, -+1) * (a - b)/|a - b| (up to eps): one sign bit. Magnitude and direction of the predicted latent are destroyed before the encoder, so only the distance rank r (computed before the LN) survives, and the arm sits at the latent-distance floor.",
+  "hypothesis_kill": "noLN hit_shuffled < best floor + 0.02 on >= 2 of the 3 draws: the LN is not what holds the arm at floor"
+ },
+ "r3_c_replication": {
+  "registered_utc": "2026-09-28T14:24:00+00:00",
+  "draws": ["m0", "r3d1", "r3d2"],
+  "draw_means": "a draw is the verifier tag every secret_seed of the ranker path derives from: the 4 run seeds (r2_c rule), train/eval sets, the secret shuffle, the V1 probes and the null labels. Different tags are independent sha256(salt|tag|...) draws. Tags are public, seeds are not.",
+  "rule": "PASS_V2 (or PASS_V3) counts only if it holds on >= 3 independent draws; one draw is anecdote. m0 is draw 1 (the r2 verdicts); fm_resolvent and fm_hop1 run r3d1 and r3d2; fm_djepa_eps4 and ch_dj_stoch_noLN run all three.",
+  "caching_fix": "verifier._RFLOOR was keyed by bed only, so a second draw in one process would have been scored against the first draw's floors; r3 keys it by (bed, tag). Registered here as part of the replication instrument."
+ },
+ "r3_d_ranker_v3": {
+  "registered_utc": "2026-09-28T14:24:00+00:00",
+  "pool": {
+   "r_latent_distance": "dd7b6b6a7b9a508d21e491ff25c97f8f3a8abb1895c908264de36558e42cc99b",
+   "r_pool_point": "16c2b4bfc57e3a4f6e544b83a449f053ecd91e31172977a8366be9f58a03d078",
+   "r_pool_djepa02": "d3e825762bdb643e13e87913f16d2a8a2855ad762d982a8abc39b317a2872ea7"
+  },
+  "pool_source": "controls/<name>/candidate.py, verifier-owned. r_pool_point = byte copy of candidates_rjepa/fm_point (Foreman's pointwise Head, H 63); r_pool_djepa02 = byte copy of candidates_rjepa/fm_djepa (Foreman's D-JEPA Head, H 24, epsilon 0.2).",
+  "read": "after V2 passes, each pool member runs the SAME sandbox job as the candidate (same draw, run seeds, data, schedule, budget); its score is its pooled secret-shuffle hit. margin = candidate hit_shuffled - max pool hit. REJECT V3 (L-BR) if margin < 0.02.",
+  "v3_margin": 0.02,
+  "why_0_02": "the operator V3 margin (bars.json addendum_1 v3_margin) and the ranker V2 floor margin are both 0.02; pooled N = 16,000 eval sets per draw puts one hit's SE near 0.0038",
+  "disclosed_pilot": "m0 numbers were known before this key: r2 fm_djepa (= r_pool_djepa02) 0.3489, fm_hop1 0.3603, fm_resolvent 0.3770. On m0, 0.02 is expected to reject fm_hop1 at V3 (margin ~0.011) and pass fm_resolvent (~0.028). The margin was not chosen for that outcome; it is the house's existing number.",
+  "pool_integrity": "a pool member that errors or is rejected at an integrity stage on a draw raises InfraError: ERROR, never a verdict",
+  "verdict": "PASS_V3 = cleared V0, V1, V4, V2, V3; no V5 ladder is registered for rankers, so still never ACCEPT",
+  "plant": "cheats/r06_pool_twin_null_sabotage (sha ecd364c6...a68b): real runs identical to r_pool_djepa02; build call #2 (the runner's label-shuffle null) returns a sign-flipped head, so the null floor collapses and the V2 line falls to the candidate-independent floors. must_catch_at V3. RED = the r2 verifier returns PASS_V2 on it at m0.",
+  "v2_hole_disclosed": "the label-shuffle null is built second in the runner process; build order is observable, so a candidate can sandbag its own null and lower its V2 line (m0: best floor would fall from ~0.33 to latent_distance 0.3223). V2 is not changed this round; V3's verifier-owned pool is what catches r06. Route: run the null in its own sandbox process with the same build index as a real run.",
+  "v3_kill": "r06 not REJECTed at V3, or any pool member inadmissible, or test_r2.py / test_shortcuts.py failing -> ranker V3 not live"
+ }
+}

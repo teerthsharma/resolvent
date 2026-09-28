@@ -1,0 +1,12 @@
+{"f": 1.0, "q": 3.0, "seed": 0, "old_tiebreak_reproduces_r2": true, "tie_rate": 0.012799999676644802, "agree_old_new": 0.9947499632835388, "wall_s": 34.4, "hb_new": 0.0833, "hb_old": 0.0833}
+{"f": 1.0, "q": 3.0, "seed": 1, "old_tiebreak_reproduces_r2": true, "tie_rate": 0.01145000010728836, "agree_old_new": 0.9950499534606934, "wall_s": 35.1, "hb_new": 0.0857, "hb_old": 0.0856}
+{"f": 1.0, "q": 3.0, "seed": 2, "old_tiebreak_reproduces_r2": true, "tie_rate": 0.013549999333918095, "agree_old_new": 0.9952499866485596, "wall_s": 36.5, "hb_new": 0.085, "hb_old": 0.085}
+{"f": 0.75, "q": 3.0, "seed": 0, "old_tiebreak_reproduces_r2": true, "tie_rate": 0.055799998342990875, "agree_old_new": 0.9765499830245972, "wall_s": 37.5, "hb_new": 0.0369, "hb_old": 0.0366}
+{"f": 0.75, "q": 3.0, "seed": 1, "old_tiebreak_reproduces_r2": true, "tie_rate": 0.05299999937415123, "agree_old_new": 0.9754999876022339, "wall_s": 37.8, "hb_new": 0.0364, "hb_old": 0.0357}
+{"f": 0.75, "q": 3.0, "seed": 2, "old_tiebreak_reproduces_r2": true, "tie_rate": 0.0531499981880188, "agree_old_new": 0.9761499762535095, "wall_s": 38.5, "hb_new": 0.0344, "hb_old": 0.0344}
+{"f": 0.0, "q": 3.0, "seed": 0, "old_tiebreak_reproduces_r2": true, "tie_rate": 0.08204999566078186, "agree_old_new": 0.962149977684021, "wall_s": 38.5, "hb_new": 0.0275, "hb_old": 0.0276}
+{"f": 0.0, "q": 3.0, "seed": 1, "old_tiebreak_reproduces_r2": true, "tie_rate": 0.08569999784231186, "agree_old_new": 0.9584999680519104, "wall_s": 38.6, "hb_new": 0.0281, "hb_old": 0.028}
+{"f": 0.0, "q": 3.0, "seed": 2, "old_tiebreak_reproduces_r2": true, "tie_rate": 0.07925000041723251, "agree_old_new": 0.9624499678611755, "wall_s": 39.1, "hb_new": 0.0258, "hb_old": 0.0258}
+{"f": 1.0, "q": 1.0, "seed": 0, "old_tiebreak_reproduces_r2": true, "tie_rate": 0.0031999999191612005, "agree_old_new": 0.9982999563217163, "wall_s": 39.2, "hb_new": 0.2323, "hb_old": 0.2322}
+{"f": 1.0, "q": 1.0, "seed": 1, "old_tiebreak_reproduces_r2": true, "tie_rate": 0.0036499998532235622, "agree_old_new": 0.9979999661445618, "wall_s": 39.6, "hb_new": 0.2278, "hb_old": 0.2277}
+{"f": 1.0, "q": 1.0, "seed": 2, "old_tiebreak_reproduces_r2": true, "tie_rate": 0.002749999985098839, "agree_old_new": 0.9987999796867371, "wall_s": 39.4, "hb_new": 0.2292, "hb_old": 0.2294}
