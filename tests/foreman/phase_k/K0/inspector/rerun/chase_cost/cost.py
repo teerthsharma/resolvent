@@ -9,7 +9,7 @@ SP = "C:/Users/seal/AppData/Local/Temp/claude/C--Users-seal-Desktop-New-folder--
 sys.path.insert(0, SP); sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import design4x5
 assert design4x5.poll_until_free(timeout_s=600), "card not free"
-import resolvent as R
+import k0_resolvent as R
 from test_chase_k0 import _qkv
 torch.backends.cuda.matmul.allow_tf32 = False
 S = int(sys.argv[1]); reps = int(sys.argv[2]) if len(sys.argv) > 2 else 9

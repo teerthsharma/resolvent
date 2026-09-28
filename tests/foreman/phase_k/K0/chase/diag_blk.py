@@ -1,6 +1,6 @@
 # diagnostic (not a bar): per-block fused forward error and kernel lse error, S=1024, a=1
 import sys, json, math, torch
-sys.path.insert(0, "."); import resolvent as R
+sys.path.insert(0, "."); import k0_resolvent as R
 from test_chase_k0 import _qkv
 print("tf32", torch.backends.cuda.matmul.allow_tf32, torch.get_float32_matmul_precision())
 q, k, v = _qkv(1024, seed=2)

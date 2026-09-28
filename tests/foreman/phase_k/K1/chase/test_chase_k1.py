@@ -68,7 +68,7 @@ def rel(a, b):
 def ref64(x, w_qkv, w_out, a, b, H):
     import torch, torch.nn.functional as F
     sys.path.insert(0, REPO + "/tests/foreman/phase_k/K0/chase")
-    import resolvent as R
+    import k0_resolvent as R
     B, T, Dm = x.shape
     q, k, v = F.linear(x, w_qkv).split(Dm, 2)
     q, k, v = (t.view(B, T, H, Dm // H).transpose(1, 2) for t in (q, k, v))

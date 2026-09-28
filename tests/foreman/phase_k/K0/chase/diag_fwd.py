@@ -1,6 +1,6 @@
 # diagnostic: where does the fp32 forward error at S=1024 come from? (not a bar)
 import sys, json, math, torch
-sys.path.insert(0, "."); import resolvent as R
+sys.path.insert(0, "."); import k0_resolvent as R
 from test_chase_k0 import _qkv, rel
 q, k, v = _qkv(1024)
 for a, b in ((0.0, 1.0), (0.5, 0.0), (1.0, 0.0)):

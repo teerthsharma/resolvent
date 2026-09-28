@@ -4,7 +4,7 @@ import json, sys, os, numpy as np, torch, torch.nn.functional as F
 SP = "C:/Users/seal/AppData/Local/Temp/claude/C--Users-seal-Desktop-New-folder--32-/870edeb1-6409-4414-98e7-00d0537b75dd/scratchpad"
 sys.path.insert(0, SP); sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import design4x5; assert design4x5.poll_until_free(timeout_s=600)
-import resolvent as R; from test_chase_k0 import _qkv
+import k0_resolvent as R; from test_chase_k0 import _qkv
 S = int(sys.argv[1]); reps = 5
 q, k, v = _qkv(S); qs = R.ssmax_q(q, torch.tensor(1.0, device="cuda"), torch.tensor(0.0, device="cuda")).contiguous()
 gout = _qkv(S, seed=3)[0]; L = [t.clone().requires_grad_() for t in (qs, k, v)]

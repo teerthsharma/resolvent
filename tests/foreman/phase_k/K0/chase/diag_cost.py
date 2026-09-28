@@ -3,7 +3,7 @@ import sys, os, time, numpy as np, torch, torch.nn.functional as F
 SP = "C:/Users/seal/AppData/Local/Temp/claude/C--Users-seal-Desktop-New-folder--32-/870edeb1-6409-4414-98e7-00d0537b75dd/scratchpad"
 sys.path.insert(0, SP); sys.path.insert(0, ".")
 import design4x5; assert design4x5.poll_until_free(timeout_s=600)
-import resolvent as R; from test_chase_k0 import _qkv
+import k0_resolvent as R; from test_chase_k0 import _qkv
 q, k, v = _qkv(4096); cn = R._cost_n()
 R.fused_forward(q, k, v, 0.99)
 arms = {"sdpa": lambda: F.scaled_dot_product_attention(q, k, v, is_causal=True),

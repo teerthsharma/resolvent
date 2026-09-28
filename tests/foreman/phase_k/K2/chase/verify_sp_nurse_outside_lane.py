@@ -4,7 +4,7 @@ torch.manual_seed(0)
 
 K0 = "C:/Users/seal/Desktop/New folder (32)/tests/foreman/phase_k/K0/chase"
 sys.path.insert(0, K0)
-import resolvent as R  # K0 dense reference
+import k0_resolvent as R  # K0 dense reference
 
 K2 = "C:/Users/seal/AppData/Local/Temp/claude/C--Users-seal-Desktop-New-folder--32-/870edeb1-6409-4414-98e7-00d0537b75dd/scratchpad/phase_k/K2/chase"
 sys.path.insert(0, K2)

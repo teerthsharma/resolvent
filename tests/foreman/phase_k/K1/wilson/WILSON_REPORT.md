@@ -91,7 +91,7 @@ MFU = (6N + 6·L·ctx·d)·tok/s / (session pre median), with L = 4 and d = 128.
 - **Parameters.** (a_L) 7,227,648; (f_R) 7,227,652, the extra 4 being a_h and b_h for 2 heads.
 - **Checkpoints.** Each holds the model, optimizer and step 17,645.
 - **Hook dependencies.** `resolvent_hook.py` imports two files that the harness does not hash:
-  - `tests/foreman/phase_k/K0/chase/resolvent.py`: f850c568f3454c36224325d7b28df6a081a0e32069b860188882b6a6374ceccd
+  - `tests/foreman/phase_k/K0/chase/k0_resolvent.py`: f850c568f3454c36224325d7b28df6a081a0e32069b860188882b6a6374ceccd
   - `tests/foreman/phase_k/K0/wilson/train_ladder.py`: d524b13005d86bd49ae1d7692d41de4e0030542f7a19a212fb562de916758d93
 - **Harness.** `train_ladder_k1.py` is the K0 harness (d524b130…) plus four edits:
   - `--eval_seed`;

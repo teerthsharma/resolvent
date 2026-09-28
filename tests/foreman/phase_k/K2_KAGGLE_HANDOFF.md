@@ -120,7 +120,7 @@ Each `run.py` embeds the following sources byte-identical. The kernel checks eac
 | SP phase_k/K2/cameron/k2_ptr.py | b02a81360c87da78cbc0ec6891cb46559addea70ae3477dbd0cf372686ef5151 |
 | SP phase_k/K1/chase/resolvent_hook.py (fR_ga) | 3855288d7da7acdebf54b9b1979d9b0b5afebb3dca6d8ccefd684812d33451e2 |
 | SP phase_k/K2/chase/resolvent_sp.py (fR_sp) | 36039c3a4189189840d04b345fa3c54d43e6d32bcc8a176ce5e8aac135bfd7bc |
-| repo tests/foreman/phase_k/K0/chase/resolvent.py | f850c568f3454c36224325d7b28df6a081a0e32069b860188882b6a6374ceccd |
+| repo tests/foreman/phase_k/K0/chase/k0_resolvent.py | f850c568f3454c36224325d7b28df6a081a0e32069b860188882b6a6374ceccd |
 | repo tests/foreman/phase_k/K0/wilson/train_ladder.py | d524b13005d86bd49ae1d7692d41de4e0030542f7a19a212fb562de916758d93 |
 | repo tests/foreman/phase_j/N1/cameron/cost_n.py | 9ab22197eaad779a51a1b8e1cff294babe7811f12bca2aba53ea2d481fbec93a |
 

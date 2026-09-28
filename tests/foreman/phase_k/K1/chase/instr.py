@@ -12,7 +12,7 @@ REPO = "C:/Users/seal/Desktop/New folder (32)"
 SP = "C:/Users/seal/AppData/Local/Temp/claude/C--Users-seal-Desktop-New-folder--32-/870edeb1-6409-4414-98e7-00d0537b75dd/scratchpad"
 K1 = SP + "/phase_k/K1"
 sys.path.insert(0, REPO + "/tests/foreman/phase_k/K0/chase")
-import resolvent as R
+import k0_resolvent as R
 
 
 def load(path, name):
