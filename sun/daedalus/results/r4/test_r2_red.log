@@ -1,5 +1,0 @@
-Traceback (most recent call last):
-  File "C:\Users\seal\Desktop\New folder (32)\sun\daedalus\engine\test_r2.py", line 124, in <module>
-    assert (rej["stage"] if rej else None) == want, (eps, rej)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-AssertionError: (4.0, None)
