@@ -1,4 +1,4 @@
-# Lean build artefacts â€” mathlib toolchain, hundreds of MB, fully reproducible
+# Lean build artefacts — mathlib toolchain, hundreds of MB, fully reproducible
 lean/.lake/
 lean/build/
 *.olean
@@ -22,7 +22,7 @@ results/*.lock
 .DS_Store
 Thumbs.db
 
-# Third-party benchmark corpora â€” NOT redistributed here.
+# Third-party benchmark corpora — NOT redistributed here.
 # COGS (Kim & Linzen 2020), SCAN (Lake & Baroni 2018) and TinyStories
 # (Eldan & Li 2023) carry their own licences and are fetchable upstream.
 # See data/README.md for provenance and exact fetch commands.

@@ -58,7 +58,7 @@ with its bound widened to ε = 4 scores **0.732 / 0.703 / 0.787** normalised sco
 close, `edge = −0.0683 + 0.6618 × closable`: a law **fitted after reading the data**, which then predicted an
 untouched cell within 0.004 NS on 3 of 3 seeds. It vanishes where the error is not shared. A call-accounted
 race reaches Bayes quality within 0.01 NS at **4.52×–7.89×** fewer predictor calls. A sandboxed verifier rejects
-**22/22** planted cheats and **7/7** planted ranker cheats.
+**22/22** planted cheats and **7/7** planted ranker cheats (6/7 at their named stage).
 
 **Keywords:** JEPA world models · planning · candidate ranking · decision-local gap · D-JEPA · resolvent ·
 Neumann series · permutation equivariance · shared error · convex hull · Bayes decision rule · Lean 4.
@@ -78,7 +78,9 @@ Neumann series · permutation equivariance · shared error · convex hull · Bay
    B4 at budget 656, T = 32, seeds 14/15/16      NS' 0.99101  0.99213  0.99021
  verifier (daedalus/)
    planted cheats rejected                       22 / 22   (round 2, 0 errors)
-   planted ranker cheats rejected                 7 / 7    (round 4, r01-r07; 2/2 controls admissible, 0 ERROR)
+   planted ranker cheats rejected                 7 / 7    (round 4, r01-r07; 6/7 at their named stage: r06
+                                                            is rejected at V2, earlier than its registered V3;
+                                                            2/2 controls admissible, 0 ERROR)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
@@ -367,7 +369,8 @@ Candidate code runs in a sandbox process that sees no evaluation labels and may 
 repository outside its own directory. The round-1 verifier rejected **22/22** planted cheats with 0 errors under
 round-2 code; a `ranker` contract caught **5/5** planted ranker cheats at their named stage. Round 3 added a
 verifier-owned pool (V3): the resolvent set head and the ε = 4 operator pass it on 3/3 secret draws, the one-hop head
-and a stochastic resolvent do not. Round 4 closed the V2 null hole; r01–r07 are **7/7** rejected, both controls
+and a stochastic resolvent do not. Round 4 closed the V2 null hole; r01–r07 are **7/7** rejected, 6/7 at their named stage (r06, registered to be caught at V3, is now
+rejected earlier, at V2, by the null fix), both controls
 admissible, 0 ERROR (`daedalus/results/r4/rankers_after.json`).
 
 ---

@@ -1,4 +1,4 @@
-# RED-first tests for sun/rjepa/cameron/rj.py. Run: python -m pytest -q test_rj.py
+# RED-first tests for experiments/torus/rj.py. Run: python -m pytest -q test_rj.py
 import numpy as np
 import pytest
 import torch

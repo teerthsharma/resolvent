@@ -1,7 +1,7 @@
 """BAR.md runs: ranking bed (quality, 3 seeds, cpu) then per-decision cost (gpu). One process.
 
-    python sun/rjepa/chase/bench.py quality   -> results_quality.json
-    python sun/rjepa/chase/bench.py speed     -> results_speed.json
+    python experiments/cost/bench.py quality   -> results_quality.json
+    python experiments/cost/bench.py speed     -> results_speed.json
 """
 import json
 import math

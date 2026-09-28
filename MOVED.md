@@ -50,8 +50,8 @@ git diff -M --name-status c1a3e8e HEAD
 
 ## Edited files whose sha256 is recorded elsewhere
 
-Renaming the K0 lane module changed one import line in each of these. Their recorded hashes describe the
-`c1a3e8e` bytes:
+Renaming the K0 lane module, and moving the verifier, changed one line in each of these. Their recorded hashes
+describe the `c1a3e8e` bytes. Hashes below are of the git blob (LF) content:
 
 | File | sha256 at `c1a3e8e` → HEAD (first 12) | Recorded in |
 |---|---|---|
@@ -59,7 +59,8 @@ Renaming the K0 lane module changed one import line in each of these. Their reco
 | `tests/foreman/phase_k/K1/chase/instr.py` | `7eb0e64bd250` → `72916b3aa7d9` | `K1/chase/ckpt_bars*.sha256`, `clause6_v2.sha256` |
 | `tests/foreman/phase_k/K2/chase/test_chase_k2.py` | `58151198235b` → `076580f961be` | `K2/chase/test_k2.sha256` |
 | `tests/foreman/phase_k/K1/chase/resolvent_hook.py` | `70251f0f79d2` → `78a3af4d9a12` | K1/K2 run `result.json` files name the hook versions they ran |
-| `daedalus/engine/verifier.py`, `daedalus/engine/beds.py` | one line each (the repository root is found by marker) | verdicts record the engine sha256 they ran under |
+| `daedalus/engine/verifier.py` | `03fffdfba9ca` → `cb5f10079720` (one line: the repository root is found by marker) | every verdict's `provenance`; `daedalus/results/r4/provenance_backfill.json` |
+| `daedalus/engine/beds.py` | `2754d2bd3aff` → `db96caf13843` (same line) | same |
 
 ## After merging into an existing checkout
 
@@ -70,3 +71,12 @@ the root `.gitignore` ignores `/sun/` and the new locations):
 mkdir -p daedalus/sealed && mv sun/daedalus/sealed/secret.json daedalus/sealed/secret.json
 for r in r2 r3 r4; do [ -d sun/rjepa/cameron/$r/cache ] && mv sun/rjepa/cameron/$r/cache experiments/torus/$r/cache; done
 ```
+
+## Line endings
+
+A recorded sha256 names the bytes that were on disk when it was taken, and on the author's `core.autocrlf=true`
+box those were LF for some files and CRLF for others. `.gitattributes` pins each hash-recorded file to the ending
+its records name (`daedalus/**` and `experiments/**` LF, 46 more files LF, 117 files `text eol=crlf`), so a fresh
+checkout on any OS reproduces every recorded hash except the edited files above. In a checkout made before the
+attributes landed, refresh the working copies once: `git rm --cached -r -q . && git reset --hard` (only with no
+uncommitted work in the tree).

@@ -274,7 +274,7 @@ length, and the exchange rate is √horizon.** At bandwidth `b`, the filter pass
 
 The struck cost lever was filter against a **dense solve** at density 0.1, where
 the solve won 6 of 6 cells by `2.75×` to `54×`. That is a different comparison.
-**The filter has never been raced against attention.**
+**The filter has not yet been raced here against attention.**
 
 The condition that decides it is bandwidth, and bandwidth is the gate's decay
 length `L = 1/ln(1/m̄)`. A learned gate drifting to `m̄ → 1` makes the operator
