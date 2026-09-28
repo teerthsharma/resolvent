@@ -1,7 +1,0 @@
-tune 12 19:53:16
-tune 16 19:53:41
-tune 20 19:54:21
-tune 24 19:55:30
-tune 32 19:56:51
-chosen {'zc': inf, 'kappa': inf, 'c': 1.5, 'b': 8, 'tau': np.float64(0.6266570686577501), 'eps': 0.05}
-wall 236.3

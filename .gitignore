@@ -77,7 +77,8 @@ docs/ARCHITECTURE_OPTIONS.md
 docs/CEQ_JEPA_PLAN.md
 
 # MkDocs build output; the site is deployed to the gh-pages branch by `mkdocs gh-deploy`.
-site/
+# Anchored to the root: unanchored, it also hid tests/site/.
+/site/
 
 # session exhaust: collect dumps, coverage artefacts, one-off run results
 .coverage_two
@@ -89,3 +90,26 @@ pytest_collect.txt
 # paper fetched by a provenance lane; exhaust, not source
 magnet_2102_11391.pdf
 nul.tmp
+
+# Collection side effects: importing these test modules writes into the cwd.
+# tests/foreman/phase_k/K0/cameron/test_ceiling_credit.py, tests/foreman/phase_j/N1/cameron/test_never_len*.py
+/ceiling_credit.json
+/never_len_rows.jsonl
+/never_len_transfer.jsonl
+/never_len_transfer_summary.json
+
+# From the merged rjepa package (github.com/teerthsharma/resolvent resolvent/).
+.ruff_cache/
+.hypothesis/
+.donotcommit/
+.claude/
+
+# sun/ split into experiments/ and daedalus/ (2026-09-29). Ignored files do not move
+# with `git mv`: in a checkout that predates the split, the R-JEPA caches (2.1 GB) and
+# the verifier's sealed salt stay behind under sun/. The whole old tree is ignored so
+# neither can be staged; the salt must be moved by hand to daedalus/sealed/ (MOVED.md).
+/sun/
+/experiments/torus/r2/cache/
+/experiments/torus/r3/cache/
+/experiments/torus/r4/cache/
+/daedalus/sealed/secret.json

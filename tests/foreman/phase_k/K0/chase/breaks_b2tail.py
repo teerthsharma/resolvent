@@ -4,7 +4,7 @@ Also the Toeplitz (content-free) twin. Rows -> breaks_rows.jsonl (appended)."""
 import json, math, sys, os
 import numpy as np, torch
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-import rrange, resolvent as R
+import rrange, k0_resolvent as R
 out = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "breaks_rows.jsonl"), "a")
 n = 4096
 slopes = [2.0 ** (-h) for h in range(1, 9)]

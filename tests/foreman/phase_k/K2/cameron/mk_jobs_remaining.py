@@ -61,7 +61,7 @@ deps = {"K1/cameron/rdepth.py": K1C / "rdepth.py", "K1/cameron/train_ladder.py":
         "K1/cameron/bed_k.py": K1C / "bed_k.py", "K1/cameron/bed_kp.py": K1C / "bed_kp.py",
         "K2/cameron/k2_ptr.py": HERE / "k2_ptr.py", "K1/chase/resolvent_hook.py": PK / "K1" / "chase" / "resolvent_hook.py",
         "K2/chase/resolvent_sp.py": PK / "K2" / "chase" / "resolvent_sp.py",
-        "REPO/tests/foreman/phase_k/K0/chase/resolvent.py": REPO / "tests/foreman/phase_k/K0/chase/resolvent.py",
+        "REPO/tests/foreman/phase_k/K0/chase/k0_resolvent.py": REPO / "tests/foreman/phase_k/K0/chase/k0_resolvent.py",
         "REPO/tests/foreman/phase_k/K0/wilson/train_ladder.py": REPO / "tests/foreman/phase_k/K0/wilson/train_ladder.py"}
 walls = {n: round(json.loads((out_of(j) / "result.json").read_text())["wall_s"]) for j in J for n in [j["name"]] if n in landed}
 doc = {

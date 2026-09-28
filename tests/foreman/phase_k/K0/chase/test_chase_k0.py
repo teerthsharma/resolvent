@@ -90,7 +90,7 @@ def _qkv(S, H=8, D=64, B=1, seed=0, dev="cuda", dtype=None):
 
 @bar("fwd_softmax_S1024_vs_f64")
 def t_fwd_softmax():
-    import torch, resolvent as R
+    import torch, k0_resolvent as R
     q, k, v = _qkv(1024)
     qs = R.ssmax_q(q, torch.tensor(1.0, device="cuda"), torch.tensor(0.0, device="cuda"))
     with torch.no_grad():
@@ -102,7 +102,7 @@ def t_fwd_softmax():
 
 @bar("fwd_sparsemax_S1024_vs_f64")
 def t_fwd_sparsemax():
-    import torch, resolvent as R
+    import torch, k0_resolvent as R
     q, k, v = _qkv(1024)
     qs = R.ssmax_q(q, torch.tensor(1.0, device="cuda"), torch.tensor(0.0, device="cuda"))
     with torch.no_grad():
@@ -113,7 +113,7 @@ def t_fwd_sparsemax():
 
 
 def _gc(kind):
-    import torch, resolvent as R
+    import torch, k0_resolvent as R
     q, k, v = _qkv(64, H=2, D=8, dev="cpu", dtype=torch.float64, seed=1)
     a = torch.tensor(0.7, dtype=torch.float64)
     b = torch.tensor(0.3, dtype=torch.float64)
@@ -135,7 +135,7 @@ def t_gc_sparse():
 
 @bar("fused_bwd_S1024_vs_f64")
 def t_fused_bwd():
-    import torch, resolvent as R
+    import torch, k0_resolvent as R
     q, k, v = _qkv(1024, seed=2)
     qs = R.ssmax_q(q, torch.tensor(1.0, device="cuda"), torch.tensor(0.0, device="cuda"))
     gout = _qkv(1024, seed=3)[0]
@@ -205,7 +205,7 @@ def t_y2_pinned():
 
 @bar("gamma_rho_lt_1")
 def t_rho():
-    import torch, resolvent as R
+    import torch, k0_resolvent as R
     q, k, _ = _qkv(4096, seed=4)
     worst = 0.0
     for alibi in (False, True):
@@ -224,7 +224,7 @@ def _stub():
 
 @bar("fwd_softmax_S1024_vs_f64_fs5c")
 def t_fwd_c():
-    import torch, resolvent as R
+    import torch, k0_resolvent as R
     _stub()
     out = {}
     for seed in (0, 2):
@@ -239,7 +239,7 @@ def t_fwd_c():
 
 @bar("fusedc_bwd_S1024_vs_f64")
 def t_bwd_c():
-    import torch, resolvent as R
+    import torch, k0_resolvent as R
     _stub()
     q, k, v = _qkv(1024, seed=2)
     qs = R.ssmax_q(q, torch.tensor(1.0, device="cuda"), torch.tensor(0.0, device="cuda"))
@@ -254,7 +254,7 @@ def t_bwd_c():
 
 @bar("fwd_sparsemax_S1024_vs_f64_pivot")
 def t_fwd_sp_c():
-    import torch, resolvent as R
+    import torch, k0_resolvent as R
     _stub()
     out = {}
     for seed in (0, 2):
@@ -269,7 +269,7 @@ def t_fwd_sp_c():
 
 @bar("fusedcg_matches_fusedc_S1024")
 def t_cg():
-    import torch, resolvent as R
+    import torch, k0_resolvent as R
     _stub()
     out = {}
     for seed in (2, 5):
@@ -302,7 +302,7 @@ def t_y2_tail():
 
 @bar("gradcheck_blocked_adjoint_S64_f64")
 def t_gc_blocked():
-    import torch, resolvent as R
+    import torch, k0_resolvent as R
     _stub()
 
     class F64(torch.autograd.Function):

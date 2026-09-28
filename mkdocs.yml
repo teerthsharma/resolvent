@@ -1,5 +1,5 @@
 site_name: resolvent
-site_description: One causal head, three switches. Softmax attention, unnormalized-kernel attention and the exact path product of a Markov chain as settings of one operator, proved in Lean 4, with every failure kept on the record.
+site_description: How topological structure helps JEPA world models decide. A resolvent over a planner's candidate consequences, built on D-JEPA, and the CEQ attention family it grew from, with every failure kept on the record.
 site_author: Teerth Sharma
 site_url: https://teerthsharma.github.io/resolvent/
 repo_url: https://github.com/teerthsharma/resolvent
@@ -88,10 +88,14 @@ not_in_nav: |
 
 nav:
   - Home: index.md
-  - Status: see/status.md
-  - "North Star": see/north-star.md
-  - "Proof atlas": atlas.md
-  - Paper:
+  - "R-JEPA":
+      - "Set operators for JEPA planning (README)": https://github.com/teerthsharma/resolvent#readme
+      - "Prior art and what was withdrawn": https://github.com/teerthsharma/resolvent#what-we-got-wrong
+      - "Bound results": https://github.com/teerthsharma/resolvent#4-results
+  - "Lineage: status": see/status.md
+  - "Lineage: North Star": see/north-star.md
+  - "Lineage: proof atlas": atlas.md
+  - "Lineage: paper":
       - "The experiment, in full": experiment.md
       - The shape of CEQ: CEQ_SHAPE.md
       - "Status, in full": STATUS.md

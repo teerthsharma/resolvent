@@ -59,7 +59,7 @@ TAG = "stub" if "stub" in os.path.basename(HOOK) else "hook"
 sys.path.insert(0, REPO + "/tests/foreman/phase_k/K0/chase")
 import torch
 import torch.nn.functional as F
-import resolvent as R                                       # K0 lane (densec)
+import k0_resolvent as R                                       # K0 lane (densec)
 
 torch.backends.cuda.matmul.allow_tf32 = False
 torch.backends.cudnn.allow_tf32 = False

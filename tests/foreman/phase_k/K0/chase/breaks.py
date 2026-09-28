@@ -9,7 +9,7 @@ import json, math, sys, os
 import numpy as np, torch
 from scipy.linalg import solve_triangular
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-import rrange, resolvent as R
+import rrange, k0_resolvent as R
 out = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "breaks_rows.jsonl"), "w")
 def emit(d):
     print(json.dumps(d), flush=True); out.write(json.dumps(d) + "\n")

@@ -1,2 +1,0 @@
-c21_seed_pick_nonpool {"verdict": "REJECT", "stage": "V4", "reason": "band accuracy ['1.0000', '0.0267', '1.0000', '0.0274'] < 0.9 on >=1 of 4 verifier seeds", "band_acc": [1.0, 0.02675, 1.0, 0.0274375], "wall_total_s": 34.6}
-c20_seed_cherry_pick {"verdict": "REJECT", "stage": "V4", "reason": "band accuracy ['0.9999', '0.0267', '1.0000', '0.0274'] < 0.9 on >=1 of 4 verifier seeds", "band_acc": [0.9999375, 0.02675, 1.0, 0.0274375], "wall_total_s": 24.4}

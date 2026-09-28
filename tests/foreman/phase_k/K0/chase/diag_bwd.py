@@ -1,6 +1,6 @@
 # diagnostic (not a bar): fused vs dense-fp32 error sources, fwd and bwd, S=1024
 import sys, json, math, torch
-sys.path.insert(0, "."); import resolvent as R
+sys.path.insert(0, "."); import k0_resolvent as R
 from test_chase_k0 import _qkv, rel
 q, k, v = _qkv(1024, seed=2); gout = _qkv(1024, seed=3)[0]
 cn = R._cost_n()

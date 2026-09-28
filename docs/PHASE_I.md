@@ -5,7 +5,7 @@ and what a training run of this model would cost. Both were answered, and both
 answers point at the same absence.
 
 The short form: **reliability is free and cannot carry a claim; the degree law
-that would beat attention is exact and has never been raced against attention;
+that would beat attention is exact and has not yet been raced here against attention;
 the exact-zero refusal certificate is underflow at every dtype; and no checkpoint
 in this repository has ever been trained with the gate all three claims are
 about.**
@@ -274,7 +274,7 @@ length, and the exchange rate is √horizon.** At bandwidth `b`, the filter pass
 
 The struck cost lever was filter against a **dense solve** at density 0.1, where
 the solve won 6 of 6 cells by `2.75×` to `54×`. That is a different comparison.
-**The filter has never been raced against attention.**
+**The filter has not yet been raced here against attention.**
 
 The condition that decides it is bandwidth, and bandwidth is the gate's decay
 length `L = 1/ln(1/m̄)`. A learned gate drifting to `m̄ → 1` makes the operator

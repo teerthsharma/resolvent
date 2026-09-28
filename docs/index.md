@@ -11,8 +11,8 @@ hide:
 <header class="hero">
   <p class="over">A research record by <a href="https://teerthsharma.vercel.app/">Teerth Sharma</a></p>
   <h1 class="title">resolvent</h1>
-  <p class="thesis">Attention reads the next token. <br>This asks where a process <em>ends up</em>.</p>
-  <p class="sub">One causal head that is softmax attention at one setting and the exact path product of a Markov chain at another, proved in Lean 4. Every result that failed stays on the record.</p>
+  <p class="thesis">A JEPA planner ranks its candidates one at a time. <br>This asks what the <em>whole set</em> says.</p>
+  <p class="sub">How topological structure helps JEPA world models decide: a resolvent over the set of candidate consequences, built on D-JEPA, measured on where it helps and where it does not. The story below is the attention family it grew from. Every result that failed stays on the record.</p>
   <a class="cta" href="#ch-hop">Scroll the story ↓</a><a class="cta ghost" href="experiment/">Read it in full</a>
 </header>
 
@@ -41,7 +41,7 @@ hide:
   <section class="step" data-step="gate">
     <p class="kick">04 · the gate</p>
     <h2>Close one gate. Every path across it is exactly zero.</h2>
-    <p>Not small. Zero. A decay in the logit can never do this: <span class="m">e<sup>Cᵢ−Cⱼ</sup></span> is never zero. Lean: <code>no_prefix_scan_represents_a_zero_gate</code>.</p>
+    <p>Not small. Zero. A decay added to the logit, as in ALiBi or the Forgetting Transformer, cannot reach it: <span class="m">e<sup>Cᵢ−Cⱼ</sup></span> is never zero. Lean: <code>no_prefix_scan_represents_a_zero_gate</code>.</p>
   </section>
 
   <section class="step" data-step="cube">
@@ -70,8 +70,8 @@ hide:
 
   <section class="step" data-step="now">
     <p class="kick">09 · now</p>
-    <h2>Deep chains, where no shortcut reaches.</h2>
-    <p>Two test beds died to hand-built shortcuts. What survives is scoring only the far band, past every window a softmax stack can build. The resolvent learns the near chain; the far band is the open question. <a href="see/status/">Where it stands →</a></p>
+    <h2>The candidate set, not the sequence.</h2>
+    <p>The resolvent moved from a causal sequence to the set of futures a JEPA planner chooses between, where D-JEPA's bounded operator already works. It helps where the prediction error is shared by every candidate, and nowhere else. <a href="https://github.com/teerthsharma/resolvent#4-results">The bound results →</a></p>
   </section>
 
   </div>

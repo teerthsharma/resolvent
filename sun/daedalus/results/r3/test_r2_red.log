@@ -1,5 +1,0 @@
-Traceback (most recent call last):
-  File "C:\Users\seal\Desktop\New folder (32)\sun\daedalus\engine\test_r2.py", line 109, in <module>
-    assert fa["latent_distance"] != fb["latent_distance"], "second draw scored against the first draw's floors"
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-AssertionError: second draw scored against the first draw's floors

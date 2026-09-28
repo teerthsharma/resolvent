@@ -24,7 +24,7 @@ from torch.autograd import Function
 
 REPO = "C:/Users/seal/Desktop/New folder (32)"
 sys.path.insert(0, REPO + "/tests/foreman/phase_k/K0/chase")
-import resolvent as R                                     # K0 lane, committed at e5c3cc7
+import k0_resolvent as R                                     # K0 lane, committed at e5c3cc7
 
 _spec = importlib.util.spec_from_file_location("k0_train_ladder", REPO + "/tests/foreman/phase_k/K0/wilson/train_ladder.py")
 TL = importlib.util.module_from_spec(_spec)
