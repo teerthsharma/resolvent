@@ -1,7 +1,7 @@
 <p align="center">
   <img alt="Python 3.11+" src="https://img.shields.io/badge/python-3.11%2B-blue?style=flat-square" />
   <img alt="PyTorch 2.x CPU" src="https://img.shields.io/badge/torch-2.x_CPU-ee4c2c?style=flat-square" />
-  <img alt="tests: 98 passing" src="https://img.shields.io/badge/tests-98_passing-success?style=flat-square" />
+  <img alt="tests: 119 passing" src="https://img.shields.io/badge/tests-119_passing-success?style=flat-square" />
   <img alt="License: Apache-2.0" src="https://img.shields.io/badge/license-Apache--2.0-blue?style=flat-square" />
 </p>
 
@@ -214,6 +214,7 @@ half-plane approximation of the ball; the tests check it against the exact poste
 | `rjepa/djepa.py` | `RelationalOperator` (5), `rank01`, `dj_loss` | spec from `sun/rjepa/wilson/facts.json`; code from `sun/rjepa/cameron/rj.py` |
 | `rjepa/heads.py` | `Head("point" \| "hop1" \| "resolvent" \| "djepa" \| "djepa4")`, `dist_rank`, `fit` | `sun/rjepa/foreman/rjepa.py` |
 | `rjepa/shared_error.py` | bed `shift` (1)-(2), `bayes_pick`, `dist_pick`, `hull_angle_share` (4), `jepa_predictor`, `run_cell` | `sun/rjepa/foreman/rjepa.py` |
+| `rjepa/dial.py` | bed `dial` (5.1): K = 63 shared-error dial, learned predictor, `bayes_P` + A6.1 tie-break `bayes_pick`, `DialHead`, `saturation`, `run_cell` | `sun/rjepa/r2/r2.py`, `sun/rjepa/r3/foreman/r3.py` |
 | `rjepa/standard_map.py` | bed `torus`, exact tangent Jacobian, `lin_prob`, `lin1_prob` (10), rankers | `sun/rjepa/cameron/rj.py` |
 | `rjepa/reproduce.py` | `python -m rjepa.reproduce gap \| bound \| closure` | new |
 
@@ -279,8 +280,10 @@ resolvent heads are within 0.0002 of each other: the set interaction does the wo
 
 Round 2 moved the question off the K = 4 toy onto a learned predictor at K = 63, re-tested LIN1 on fresh seeds, and
 built a verifier for rankers. Every number below is the source repository's recorded result, read from the named file
-and bound by the round-2 inspector; this package does not yet contain the K = 63 bed or the verifier, so none of them
-is recomputed by `pytest` here (Section 9). Seeds, arms and bars were registered before the runs; amendments declared
+and bound by the round-2 inspector. Bed `dial` is ported as `rjepa/dial.py`: its tests pin the bed, the Bayes ceiling
+and its tie-break, the D-JEPA bound and its saturation measure, and the SIGN of 5.1's `dj4L` > `dj02` at f = 1 on a small
+fast cell, not the numbers below; the verifier is not ported, and none of these numbers is recomputed by `pytest` here
+(Section 9). Seeds, arms and bars were registered before the runs; amendments declared
 after a pilot or a run are named as such in the source `BAR.md` files and repeated below where they matter.
 
 ### 5.1 The shared-error dial at K = 63 with a learned predictor
@@ -454,7 +457,7 @@ failing test); the resolvent head's latency against the D-JEPA operator at K = 6
 ```bash
 git clone <this repository> rjepa && cd rjepa
 python -m pip install -e ".[test]"
-python -m pytest -q                      # 98 passed, 1 skipped (CUDA parity, opt-in with RJEPA_CUDA=1)
+python -m pytest -q                      # 119 passed, 1 skipped (CUDA parity, opt-in with RJEPA_CUDA=1)
 python -m rjepa.reproduce bound          # {"1.0": {...}, "10.0": {"bayes": 0.381..., "bounded": 0.289...}}
 ```
 
@@ -489,8 +492,10 @@ Tests run on CPU; the learned σ = 1 cell is marked `slow` and deselected by def
 - pytest ≥ 8 for the suite.
 
 **Measured cost of the default suite** on the development box (shared with other jobs, torch threads 2, pytest
-plugin autoload off): 98 passed, 1 skipped, 1 deselected in 100.6 s; peak working set 682 MB, of which `import torch` alone (the
-CUDA 12.6 wheel) is 498 MB. A CPU-only torch wheel lowers the baseline.
+plugin autoload off): 119 passed, 1 skipped, 2 deselected in 140.9-170.1 s over three runs at about 65 % host CPU load
+from other jobs; 73-87 s of that is the `dial` fast cell (`tests/test_dial.py`). Peak working set was measured on the earlier
+98-test suite only: 682 MB, of which `import torch` alone (the CUDA 12.6 wheel) is 498 MB. A CPU-only torch wheel
+lowers the baseline.
 
 ---
 
@@ -514,10 +519,12 @@ isolated.
 
 The resolvents are dense `O(K³)` solves; nothing here is a fused kernel, and no speed claim is made.
 
-The Round 2 results (Section 5) are not reproducible from this package. The K = 63 bed `dial`, the round-2 `torus`
-evaluation with its call-accounted races, and the verifier live only in the source repository; this package ships
-neither their code nor a test that pins their numbers, and Section 5 cites the source result files instead.
-Porting bed `dial` and the B2 race with pinned tests is a later step. Within those results, the B2 race configuration
+The Round 2 results (Section 5) are not reproducible from this package's default suite. Bed `dial` is ported
+(`rjepa/dial.py`), but its fast test pins only the sign of `dj4L` > `dj02` at f = 1 on 4,000 training and 2,000
+evaluation starts; that sign held on seeds 0, 1 and 2 at those sizes by hit margins of 0.0055, 0.0105 and 0.002 (11, 21
+and 4 starts of 2,000), so it is a smoke test, not a replication. The full-size cell sits behind `pytest -m slow` and was
+not run for this commit (Bayes at M = 2,048 on 20,000 starts is hours on 2 CPU threads). The round-2 `torus` races and
+the verifier live only in the source repository, and Section 5 cites their result files. Within those results, the B2 race configuration
 was selected on a single tuning seed, and each `PASS_V2` ranker verdict rests on a single secret shuffle draw.
 
 ---
