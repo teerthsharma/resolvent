@@ -144,4 +144,10 @@ for key in jobs[0]:
                                                         else jobs[0][key] == jobs[4][key])
     assert same == (key != "train_Y"), key
 assert sorted(jobs[0]) == sorted(jobs[4]) and "null_Y" not in jobs[0]
-print("PASS test_r2: seed coverage (residues not printed: they are secret), ceiling, equivariance, bound, order, sealed view, infra = ERROR, r3 floors per draw, pool shas, r4 vacuous bound, r4 null job = seed-0 job but labels")
+# 12. r4 (bars_r4 r4_d): a verdict records the sha256 of the verifier, runner, bed code and every bars file it read
+import hashlib
+r = V.verify(os.path.join(D, "cheats", "r01_label_leak_view"))
+for rel in ("engine/verifier.py", "engine/sandbox_runner.py", "engine/planning_bed.py", "engine/beds.py",
+            "registry/bars.json", "registry/bars_r2.json", "registry/bars_r3.json", "registry/bars_r4.json"):
+    assert r.get("provenance", {}).get(rel) == hashlib.sha256(open(os.path.join(D, rel), "rb").read()).hexdigest(), rel
+print("PASS test_r2: seed coverage (residues not printed: they are secret), ceiling, equivariance, bound, order, sealed view, infra = ERROR, r3 floors per draw, pool shas, r4 vacuous bound, r4 null job = seed-0 job but labels, r4 provenance hashes")

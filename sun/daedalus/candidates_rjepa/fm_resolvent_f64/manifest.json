@@ -1,0 +1,1 @@
+{"name": "fm_resolvent_f64", "kind": "ranker", "bed": "planning_consequence_v0", "features": "predicted", "claims": ["permutation_equivariant"]}

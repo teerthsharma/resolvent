@@ -1,0 +1,14 @@
+{
+ "r4_f_f64_arms": {
+  "prereg_utc": "2026-09-28T16:36:50+00:00",
+  "written_to": "results/r4/r4_f_prereg.json (the driver is running and registry/ is hashed by every sandbox job, so the key is folded into registry/bars_r4.json at the next gap with this timestamp; no f64 run starts before that)",
+  "red": "r4d1 fm_resolvent REJECT V1: probe max |f(Pz) - P f(z)| = 0.52 > 0.0964 (planning_consequence_v1, K 6; it passed V1 on v0, K 4, in r3)",
+  "hypothesis": "float32 torch.linalg.solve of (I - gW) (condition up to 1/(1 - 0.99) = 100) at probe scale 1000 breaks equivariance by ~5e-4 relative, above the 1e-4 tolerance; the operator is equivariant by construction",
+  "arms": {
+   "fm_resolvent_f64": "sha256 e06f23f1...5306: fm_resolvent with the solve in float64, the only change",
+   "ch_res_djepa4_f64": "sha256 8f0874bd...fcb: ch_res_djepa4 with the solve in float64, the only change"
+  },
+  "hypothesis_kill": "fm_resolvent_f64 still REJECTed at V1 equivariance on the same draw r4d1: precision is not the cause",
+  "bar": "as r4_c: PASS_V3 on 3/3 draws; the V1 tolerance is not moved"
+ }
+}

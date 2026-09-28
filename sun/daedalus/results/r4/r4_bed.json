@@ -1,0 +1,116 @@
+[
+ {
+  "tag": "r4d1",
+  "dir": "candidates_rjepa/fm_resolvent",
+  "driver_sha256": "776e7c8e06fbc60ad95a51645d8040974abee889967c3689ce832fa1050370d9",
+  "verdict": "REJECT",
+  "stage": "V1",
+  "law": "permutation equivariance",
+  "reason": "probe: max |f(Pz) - P f(z)| = 0.52 > 0.0964",
+  "floors": {
+   "latent_distance": 0.145625,
+   "set_position": 0.18987500000000002,
+   "pointwise_mlp": 0.194
+  },
+  "init_hit": [
+   0.2045,
+   0.203,
+   0.20975,
+   0.20325
+  ],
+  "equivariance_dev": 0.5201568603515625,
+  "wall_total_s": 159.3,
+  "provenance": {
+   "engine/verifier.py": "ce7f82ff1850ed13beeb5069a9225388ae9a20aa05c551adf4be74750a3393e3",
+   "engine/sandbox_runner.py": "d263ab18421e3109ac8af1f091955251623b1ebc8a3170177171633e38e8e0d6",
+   "engine/planning_bed.py": "637ab5bf20dfaf5e0655b549d71cd028c901c9377dd8160616f95ab541db2ee2",
+   "engine/beds.py": "2754d2bd3affa7501ed8836166912a3fbe9ad79cd9f06d299373e2edd24757ee",
+   "registry/bars.json": "3c82d80db57a7d44fb51051d5fae61e06863cf01696b108de8d5db0bb807b10b",
+   "registry/bars_r2.json": "9e3cb3cf47e0bd491904a8b113bf3cca8e57084bf743a770b6073ab519394ab9",
+   "registry/bars_r3.json": "cc1646d383c37f32058c32a6739b737f769cfaff607dc262629c259ff187af55",
+   "registry/bars_r4.json": "4def96576f21ce6d892ec23a1890c2cd945e9a255bba66d6bb27dcc79b44c71f"
+  }
+ },
+ {
+  "tag": "r4d1",
+  "dir": "candidates_rjepa/fm_djepa_eps4",
+  "driver_sha256": "776e7c8e06fbc60ad95a51645d8040974abee889967c3689ce832fa1050370d9",
+  "verdict": "ERROR",
+  "stage": "infra",
+  "law": "",
+  "reason": "runner died 3x: pool member r_latent_distance inadmissible: V4 hit ['0.1502', '0.1462', '0.1455', '0.1405'] < 0.2 on >=1 of 4 verifier seeds",
+  "hit_planner": [
+   0.285,
+   0.2675,
+   0.2845,
+   0.2665
+  ],
+  "hit_shuffled": 0.275875,
+  "bayes_hit": 0.2794375,
+  "floors": {
+   "latent_distance": 0.145625,
+   "set_position": 0.18987500000000002,
+   "pointwise_mlp": 0.194,
+   "label_shuffle_null": 0.17975
+  },
+  "init_hit": [
+   0.15025,
+   0.14625,
+   0.1455,
+   0.1405
+  ],
+  "equivariance_dev": 2.205371856689453e-06,
+  "wall_total_s": 376.9,
+  "provenance": {
+   "engine/verifier.py": "ce7f82ff1850ed13beeb5069a9225388ae9a20aa05c551adf4be74750a3393e3",
+   "engine/sandbox_runner.py": "d263ab18421e3109ac8af1f091955251623b1ebc8a3170177171633e38e8e0d6",
+   "engine/planning_bed.py": "637ab5bf20dfaf5e0655b549d71cd028c901c9377dd8160616f95ab541db2ee2",
+   "engine/beds.py": "2754d2bd3affa7501ed8836166912a3fbe9ad79cd9f06d299373e2edd24757ee",
+   "registry/bars.json": "3c82d80db57a7d44fb51051d5fae61e06863cf01696b108de8d5db0bb807b10b",
+   "registry/bars_r2.json": "9e3cb3cf47e0bd491904a8b113bf3cca8e57084bf743a770b6073ab519394ab9",
+   "registry/bars_r3.json": "cc1646d383c37f32058c32a6739b737f769cfaff607dc262629c259ff187af55",
+   "registry/bars_r4.json": "4def96576f21ce6d892ec23a1890c2cd945e9a255bba66d6bb27dcc79b44c71f"
+  }
+ },
+ {
+  "tag": "r4d1",
+  "dir": "candidates_rjepa/ch_res_djepa4",
+  "driver_sha256": "776e7c8e06fbc60ad95a51645d8040974abee889967c3689ce832fa1050370d9",
+  "verdict": "ERROR",
+  "stage": "infra",
+  "law": "",
+  "reason": "runner died 3x: pool member r_latent_distance inadmissible: V4 hit ['0.1502', '0.1462', '0.1455', '0.1405'] < 0.2 on >=1 of 4 verifier seeds",
+  "hit_planner": [
+   0.2725,
+   0.267,
+   0.27525,
+   0.2515
+  ],
+  "hit_shuffled": 0.26656250000000004,
+  "bayes_hit": 0.2794375,
+  "floors": {
+   "latent_distance": 0.145625,
+   "set_position": 0.18987500000000002,
+   "pointwise_mlp": 0.194,
+   "label_shuffle_null": 0.1855
+  },
+  "init_hit": [
+   0.15025,
+   0.14625,
+   0.1455,
+   0.1405
+  ],
+  "equivariance_dev": 1.7285346984863281e-06,
+  "wall_total_s": 242.3,
+  "provenance": {
+   "engine/verifier.py": "ce7f82ff1850ed13beeb5069a9225388ae9a20aa05c551adf4be74750a3393e3",
+   "engine/sandbox_runner.py": "d263ab18421e3109ac8af1f091955251623b1ebc8a3170177171633e38e8e0d6",
+   "engine/planning_bed.py": "637ab5bf20dfaf5e0655b549d71cd028c901c9377dd8160616f95ab541db2ee2",
+   "engine/beds.py": "2754d2bd3affa7501ed8836166912a3fbe9ad79cd9f06d299373e2edd24757ee",
+   "registry/bars.json": "3c82d80db57a7d44fb51051d5fae61e06863cf01696b108de8d5db0bb807b10b",
+   "registry/bars_r2.json": "9e3cb3cf47e0bd491904a8b113bf3cca8e57084bf743a770b6073ab519394ab9",
+   "registry/bars_r3.json": "cc1646d383c37f32058c32a6739b737f769cfaff607dc262629c259ff187af55",
+   "registry/bars_r4.json": "4def96576f21ce6d892ec23a1890c2cd945e9a255bba66d6bb27dcc79b44c71f"
+  }
+ }
+]

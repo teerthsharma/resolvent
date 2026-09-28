@@ -1,0 +1,6 @@
+{'K63 sigma1.5': 'bayes 0.0570 pointwise* 0.0370 edge 0.0200', 'K63 sigma3.0': 'bayes 0.1283 pointwise* 0.1103 edge 0.0180', 'K6 sigma2.0': 'bayes 0.2810 pointwise* 0.1968 edge 0.0843'}
+Traceback (most recent call last):
+  File "C:\Users\seal\Desktop\New folder (32)\sun\daedalus\engine\test_r4_bed.py", line 25, in <module>
+    assert out[63, 1.5][2] < 0.02 and out[63, 3.0][2] < 0.02, "K 63 has set-level headroom: the claim is dead"
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: K 63 has set-level headroom: the claim is dead

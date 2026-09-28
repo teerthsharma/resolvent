@@ -4,3 +4,4 @@
 21:56:18 ok log_cells.txt
 21:56:18 queue done
 21:57:47 start cell 0.85 -> log_cells85.txt (free=4222772KB)
+22:12:25 ok log_cells85.txt

@@ -1,0 +1,10 @@
+r4d1 fm_resolvent REJECT V1 hs=None bayes=None probe: max |f(Pz) - P f(z)| = 0.52 > 0.0964 null 161s
+r4d1 fm_djepa_eps4 ERROR infra hs=0.275875 bayes=0.2794375 runner died 3x: pool member r_latent_distance inadmissible: V4 hit ['0.1502', '0.1462', '0.1455', '0 null 538s
+r4d1 ch_res_djepa4 ERROR infra hs=0.26656250000000004 bayes=0.2794375 runner died 3x: pool member r_latent_distance inadmissible: V4 hit ['0.1502', '0.1462', '0.1455', '0 null 780s
+Traceback (most recent call last):
+  File "C:\Users\seal\Desktop\New folder (32)\sun\daedalus\results\r4\r4_bed.py", line 36, in <module>
+    r = {"verdict": "POOL", "stage": "", "reason": "", "v3": {"pool": V.ranker_pool_hits(BED, tag)},
+                                                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\seal\Desktop\New folder (32)\sun\daedalus\engine\verifier.py", line 631, in ranker_pool_hits
+    raise InfraError(f"pool member {name} inadmissible: {r.get('stage')} {r.get('reason', '')[:120]}")
+verifier.InfraError: pool member r_latent_distance inadmissible: V4 hit ['0.1502', '0.1462', '0.1455', '0.1405'] < 0.2 on >=1 of 4 verifier seeds

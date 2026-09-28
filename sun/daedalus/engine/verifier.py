@@ -39,6 +39,10 @@ R2 = json.load(open(os.path.join(DAEDALUS, "registry", "bars_r2.json")))["r2_b_r
 R3 = json.load(open(os.path.join(DAEDALUS, "registry", "bars_r3.json")))["r3_d_ranker_v3"]
 R4 = json.load(open(os.path.join(DAEDALUS, "registry", "bars_r4.json")))
 RBEDS = {**R2["beds"], **R4["r4_c_bed"]["beds"]}  # same inner dicts: r2 beds read exactly as registered
+# bars_r4 r4_d: every verdict records the sha256 of the code that produced it and of every bars file it read, as read
+PROVENANCE = {rel: hashlib.sha256(open(os.path.join(DAEDALUS, rel), "rb").read()).hexdigest() for rel in
+              ("engine/verifier.py", "engine/sandbox_runner.py", "engine/planning_bed.py", "engine/beds.py",
+               "registry/bars.json", "registry/bars_r2.json", "registry/bars_r3.json", "registry/bars_r4.json")}
 RANKER_INTEGRITY = {"V0", "V0.sandbox", "V0.init", "V1", "V4", "V2.ceiling", "V2.order"}
 RANKER_CLAIMS = {"permutation_equivariant", "bounded"}
 BASE_RANGE = 1.0  # base = -(distance rank)/(K-1) spans [-1, 0] for every K
@@ -681,6 +685,7 @@ def verify(cdir, pool=None, tag="m0", bed=None):
         except InfraError as e:  # not a verdict: counted neither caught nor passed
             rej = dict(res, verdict="ERROR", stage="infra", law="", reason=f"runner died 3x: {str(e)[:200]}")
     rej["wall_total_s"] = round(time.time() - t0, 1)
+    rej["provenance"] = dict(PROVENANCE)
     return rej
 
 

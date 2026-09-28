@@ -1,0 +1,29 @@
+{
+ "_label": "BACKFILLED 2026-09-28 22:01 IST (Inspector r4): these runs finished before verifier.py recorded provenance; hashes are of the files as they stand at backfill time (after-suite, r07 GREEN) or of the snapshots taken before the fix (before-suite, r07 RED). Driver scripts: engine/r2_rankers.py and results/r4/red_r07.py as hashed here.",
+ "rankers_before.json / rankers_before_r07v1.json / red_r07.json (r3 code)": {
+  "engine/verifier.py": "b43ee0415fc341e5d9acdca1556aad1309f18229c75431ac3a2039b3b63638d9",
+  "engine/sandbox_runner.py": "f6df33d17dca4aaf1ee608845fe6410af3c8366eb1fd14702a6ef97eef6cf131",
+  "engine/planning_bed.py": "unchanged K-parametrisation not yet applied; pre-r4 file not snapshotted (the r4 edit keeps K=4 draws identical)",
+  "engine/beds.py": "2754d2bd3affa7501ed8836166912a3fbe9ad79cd9f06d299373e2edd24757ee",
+  "registry/bars.json": "3c82d80db57a7d44fb51051d5fae61e06863cf01696b108de8d5db0bb807b10b",
+  "registry/bars_r2.json": "9e3cb3cf47e0bd491904a8b113bf3cca8e57084bf743a770b6073ab519394ab9",
+  "registry/bars_r3.json": "cc1646d383c37f32058c32a6739b737f769cfaff607dc262629c259ff187af55",
+  "registry/bars_r4.json": "absent",
+  "engine/r2_rankers.py": "8e4aabc6023655188b1be26d9341c1d714e4cabb5fb635f3c90efb01cf8086a4",
+  "results/r4/red_r07.py": "224f89255de8f186b1ea6534bcb65097a2787e36710f83690d9a8d73b3482492"
+ },
+ "rankers_after.json (r4 fix, pre-provenance)": {
+  "engine/verifier.py": "527ec001d93e99c539cc3596de7dd0af15c24de7cacb1e32e616dfd1cbc41a21",
+  "engine/sandbox_runner.py": "d263ab18421e3109ac8af1f091955251623b1ebc8a3170177171633e38e8e0d6",
+  "engine/planning_bed.py": "637ab5bf20dfaf5e0655b549d71cd028c901c9377dd8160616f95ab541db2ee2",
+  "engine/beds.py": "2754d2bd3affa7501ed8836166912a3fbe9ad79cd9f06d299373e2edd24757ee",
+  "registry/bars.json": "3c82d80db57a7d44fb51051d5fae61e06863cf01696b108de8d5db0bb807b10b",
+  "registry/bars_r2.json": "9e3cb3cf47e0bd491904a8b113bf3cca8e57084bf743a770b6073ab519394ab9",
+  "registry/bars_r3.json": "cc1646d383c37f32058c32a6739b737f769cfaff607dc262629c259ff187af55",
+  "registry/bars_r4.json": "b00abf797c192bd745573148f542795054d4a938e10164f812f4f1fd8587e53d",
+  "engine/r2_rankers.py": "8e4aabc6023655188b1be26d9341c1d714e4cabb5fb635f3c90efb01cf8086a4"
+ },
+ "plants": {
+  "cheats/r07_label_free_null_sabotage/candidate.py (RED + GREEN build)": "75689a838da07eacc0984883cd2638829327565014cd2f88347c557d9afad3de"
+ }
+}

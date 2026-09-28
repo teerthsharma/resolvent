@@ -1,0 +1,42 @@
+{
+ "dir": "candidates_rjepa\\fm_resolvent_f64",
+ "name": "fm_resolvent_f64",
+ "wall_s": 201.8,
+ "floors": {
+  "latent_distance": 0.145625,
+  "set_position": 0.18987500000000002,
+  "pointwise_mlp": 0.194,
+  "label_shuffle_null": 0.18075
+ },
+ "init_hit": [
+  0.2045,
+  0.203,
+  0.20975,
+  0.20325
+ ],
+ "equivariance_dev": 0.03955078125,
+ "hit_planner": [
+  0.279,
+  0.26525,
+  0.28675,
+  0.25575
+ ],
+ "hit_shuffled": 0.27168749999999997,
+ "bayes_hit": 0.2794375,
+ "verdict": "ERROR",
+ "stage": "infra",
+ "law": "",
+ "reason": "runner died 3x: pool member r_latent_distance inadmissible: V4 hit ['0.1502', '0.1462', '0.1455', '0.1405'] < 0.2 on >=1 of 4 verifier seeds",
+ "wall_total_s": 244.2,
+ "provenance": {
+  "engine/verifier.py": "ce7f82ff1850ed13beeb5069a9225388ae9a20aa05c551adf4be74750a3393e3",
+  "engine/sandbox_runner.py": "d263ab18421e3109ac8af1f091955251623b1ebc8a3170177171633e38e8e0d6",
+  "engine/planning_bed.py": "637ab5bf20dfaf5e0655b549d71cd028c901c9377dd8160616f95ab541db2ee2",
+  "engine/beds.py": "2754d2bd3affa7501ed8836166912a3fbe9ad79cd9f06d299373e2edd24757ee",
+  "registry/bars.json": "3c82d80db57a7d44fb51051d5fae61e06863cf01696b108de8d5db0bb807b10b",
+  "registry/bars_r2.json": "9e3cb3cf47e0bd491904a8b113bf3cca8e57084bf743a770b6073ab519394ab9",
+  "registry/bars_r3.json": "cc1646d383c37f32058c32a6739b737f769cfaff607dc262629c259ff187af55",
+  "registry/bars_r4.json": "fe47578f0e45300d6196d4a3cb6a8be59959af1aa5fe900e4eb1671852dd36ac"
+ },
+ "driver_sha256": "8809a0e540aebe908c3de20ac4a91e0ea663360541a98667e81acdb85d406556"
+}

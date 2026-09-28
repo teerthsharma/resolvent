@@ -98,3 +98,19 @@ closable 0.065, |diff| 0.046 > 2 SE 0.039 (seeds 0, 2 inside). Its declared rout
   |edge_s - (a + b closable_s)| <= 2 SE_s on 3/3 seeds. Kill: any seed outside.
 - Route if killed: the edge is not a function of the NS room alone; fit a separate slope per sigma/rho and test on a
   sigma/rho = 2.5 cell.
+
+## A7 read (22:13 box time; `results/table.json`; `test_r4.py` 4/4, `test_r4_claims.py` 10/12, the 2 fails are the kills)
+
+- A7.1 P2n (frozen 0.25): KILLED at (0.9, 2): closable 0.234, edge +0.106 / +0.080 / +0.109 NS (paired SE 0.018 / 0.018 / 0.019).
+  Consistent at (0.8, 2): closable 0.140, edge +0.068 / +0.019 / +0.019 (SE 0.020). V passes 6/6 cell-seeds.
+- A7.3 P2r (edge = 0.4557 closable): KILLED at (0.8, 2), seed 1 off by 0.046 > 2 SE 0.039.
+- A7.4 P2a (edge = -0.0683 + 0.6618 closable): PASSES at fresh (0.85, 2): edge 0.035 / 0.060 / 0.062 vs predicted
+  0.037 / 0.063 / 0.059, |diff| <= 0.004 against 2 SE 0.036-0.039. Low power against P2r there (P2r misses by
+  0.038 / 0.031 / 0.026, also inside 2 SE except marginally seed 0); the replacement for P2n's threshold is the affine law,
+  onset of a 0.05 NS edge at closable 0.179, read on 18 cell-seeds.
+- A7.2 L3: PASSES 3/3. lin2_true - lin1_true = 0.030 / 0.018 / 0.039 NS vs half-residue 0.017 / 0.012 / 0.022; fraction of
+  the residue closed 0.88 / 0.74 / 0.89. Recomputed bayes / bayes_succ / lin1_true / dist_true hits equal r3's audit hits
+  exactly (3/3). The registered per-seed SE (~0.009 NS) was an underestimate: measured paired SE 0.014 NS per seed.
+  On the success label lin2_true 0.1219 / 0.1174 / 0.1181 >= bayes_succ (M = 2,048) 0.1213 / 0.1165 / 0.1179. Reported:
+  lin2 on the learned predictor 0.959 / 0.987 / 0.977 NS, +0.034 / +0.034 / +0.038 over learned lin1 and above lin1_true.
+- dj0.5 > dj02 on 9/9 round-4 cell-seeds (smallest margin +0.002 at (0.8, 2) s1).

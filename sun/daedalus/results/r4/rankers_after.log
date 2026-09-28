@@ -6,3 +6,5 @@ r05 REJECT V1 eval: max |score - base| = 0.3 > epsilon 0.2
 r06 REJECT V2 hit 0.3489 < best floor label_shuffle_null 0.3300 + 0.02
 r07 REJECT V2 hit 0.3794 < best floor label_shuffle_null 0.3775 + 0.02
 control r_latent_distance REJECT V2 hit 0.3223 < best floor label_shuffle_null 0.3300 + 0.02
+control r_deepsets PASS_V3 V3 passed V0, V1, V4, V2, V3; no V5 ladder is registered for rankers, so never ACCEPT
+6/7 caught; 2/2 admissible; 0 errors; 1238.3 s

@@ -61,5 +61,49 @@
   "separation": "two arms are separated iff their hit_shuffled differ by >= 0.02 with the same sign on 3/3 draws; else tied",
   "combination_kill": "ch_res_djepa4 is dead as a route if it is not PASS_V3 on >= 2/3 draws, or if it is below the better parent by >= 0.02 on 3/3 draws",
   "timebox": "draw-major; a draw not finished inside the round's timebox is reported as not run, never extrapolated"
+ },
+ "r4_correction_registered_time": {
+  "registered_utc": "2026-09-28T16:32:00+00:00",
+  "text": "r4_a, r4_b and r4_c carry registered_utc 2026-09-28T15:54:49Z, the time the text was staged outside the tree. The file was first written to registry/ at 2026-09-28T16:09:21Z (21:39:21 IST; Inspector r4). That is the binding time. It predates every run it governs: results/r4/rankers_after.log (first row after 16:15Z) and every planning_consequence_v1 run. The r07 RED (red_r07.log) ran on the r3 code, before this file existed."
+ },
+ "r4_a_amend_r06_stage": {
+  "registered_utc": "2026-09-28T16:32:00+00:00",
+  "disclosed": "after the run: written after rankers_after.json was read",
+  "text": "with the null in its own process, r06's sabotage no longer lands: its honest null scores 0.3300 at m0, and 0.348875 < 0.3300 + 0.02, so r06 is REJECTed at V2 (the stage its sabotage attacked) before V3 is read. r2_rankers.py counts it as not caught at its r3 named stage V3. Counted here both ways: 7/7 rejected; 6/7 at the r3 named stage; r06 at V2, which is earlier than and strictly stronger than V3. cheats/RANKER_CHEATS.json keeps must_catch_at V3 unchanged (moving it after the read would be a moved bar); from r4 on, an r06 REJECT at V2 or V3 counts as caught."
+ },
+ "r4_d_provenance": {
+  "registered_utc": "2026-09-28T16:32:00+00:00",
+  "rule": "verify() records provenance = sha256 of engine/verifier.py, sandbox_runner.py, planning_bed.py, beds.py and registry/bars.json, bars_r2.json, bars_r3.json, bars_r4.json as read at import; run drivers record their own sha256. RED: test_r2 check 12 failed on the pre-r4_d verifier (results/r4/test_r2_prov_red.log). Runs finished before r4_d carry backfilled hashes in results/r4/provenance_backfill.json, labelled as backfilled."
+ },
+ "r4_e_bed_claim_test": {
+  "registered_utc": "2026-09-28T16:32:00+00:00",
+  "text": "the r4_c pilot claim (K 63 has no set-level edge; K 6 sigma 2 has >= 0.05) is bound by engine/test_r4_bed.py (seed 101, n 4,000, M 1,024): K 63 edge < 0.02 at sigma 1.5 and 3, K 6 sigma 2 edge >= 0.05. Until that test has passed the claim is Open, not a finding."
+ },
+ "r4_e_result": {
+  "registered_utc": "2026-09-28T16:34:00+00:00",
+  "read": "test_r4_bed (results/r4/test_r4_bed.log): K 63 edge 0.0200 at sigma 1.5 (Bayes 0.0570, pointwise* 0.0370) and 0.0180 at sigma 3 (0.1283 / 0.1103); K 6 sigma 2 edge 0.0843 (0.2810 / 0.1968)",
+  "verdict": "KILLED: the pilot claim 'K 63 has no set-level edge' (edge < 0.02) fails at sigma 1.5 (0.0200, not < 0.02); the pilot's 0.002-0.005 was n 1,000 / M 512 noise. K 6 sigma 2 >= 0.05 PASSES. The test file moved to results/r4/test_r4_bed_killed.py so the engine suite stays a suite of live checks.",
+  "replacement_route": "registered after the read, so it is a hypothesis, not a finding: 'K 63 edge < 0.05 (below the r4_c validity line)', read 0.020 / 0.018 here; binds only on an independent seed (e.g. 202, n 8,000, M 2,048)."
+ },
+ "r4_f_f64_arms": {
+  "prereg_utc": "2026-09-28T16:36:50+00:00",
+  "written_to": "results/r4/r4_f_prereg.json (the driver is running and registry/ is hashed by every sandbox job, so the key is folded into registry/bars_r4.json at the next gap with this timestamp; no f64 run starts before that)",
+  "red": "r4d1 fm_resolvent REJECT V1: probe max |f(Pz) - P f(z)| = 0.52 > 0.0964 (planning_consequence_v1, K 6; it passed V1 on v0, K 4, in r3)",
+  "hypothesis": "float32 torch.linalg.solve of (I - gW) (condition up to 1/(1 - 0.99) = 100) at probe scale 1000 breaks equivariance by ~5e-4 relative, above the 1e-4 tolerance; the operator is equivariant by construction",
+  "arms": {
+   "fm_resolvent_f64": "sha256 e06f23f1...5306: fm_resolvent with the solve in float64, the only change",
+   "ch_res_djepa4_f64": "sha256 8f0874bd...fcb: ch_res_djepa4 with the solve in float64, the only change"
+  },
+  "hypothesis_kill": "fm_resolvent_f64 still REJECTed at V1 equivariance on the same draw r4d1: precision is not the cause",
+  "bar": "as r4_c: PASS_V3 on 3/3 draws; the V1 tolerance is not moved",
+  "folded_utc": "2026-09-28T16:49:00+00:00"
+ },
+ "r4_g_v1_pool_error": {
+  "registered_utc": "2026-09-28T16:49:00+00:00",
+  "read": "r4d1 (results/r4/r4_bed.json): r_latent_distance V4 hits 0.1502 / 0.1462 / 0.1455 / 0.1405 < 0.20 -> pool InfraError (bars_r3 r3_d pool_integrity) -> fm_djepa_eps4 and ch_res_djepa4 are ERROR, not verdicts. Their measured hit_shuffled 0.2759 / 0.2666 vs Bayes 0.2794; floors latent 0.1456, set_position 0.1899, pointwise_mlp 0.1940, own nulls 0.1798 / 0.1855.",
+  "cause": "registration error (Chase): r4_c set v4_learnability 0.20 = 1.2 x chance, but on this bed distance is anti-informative (pilot dist 0.145 < chance 0.167) and the pointwise optimum is ~0.20, so the pool's training-free and pointwise members cannot clear V4. The pilot numbers that show it were in r4_c's own disclosed_pilot.",
+  "decision": "planning_consequence_v1 is NOT READ this round: no V3 verdict, no bed-validity verdict, no 3/3 bar. Nothing is extrapolated from the ERROR rows.",
+  "route_next_round": "RED = these ERROR rows. Proposed rule (to be registered before its run): on an r4_c bed, a pool member REJECTed at V4 is reported and excluded from the V3 max (a member that fails learnability cannot be the max); V0/V1/V2.ceiling/V2.order rejections of a pool member stay InfraError. Alternative: set v1's V4 line from the bed's own pointwise floor (e.g. >= pointwise_mlp + 0.02) instead of chance.",
+  "near_ceiling_again": "eps4 sits 0.0035 below Bayes on r4d1: the K 6 bed's 0.085 headroom is over pointwise rules, not over set learners, so it cannot separate resolvent from eps4 (needs a >= 0.02 gap under a 0.0035 ceiling). Open (c) is not closed by this bed."
  }
 }

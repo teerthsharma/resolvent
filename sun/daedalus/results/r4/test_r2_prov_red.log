@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "C:\Users\seal\Desktop\New folder (32)\sun\daedalus\engine\test_r2.py", line 152, in <module>
+    assert r.get("provenance", {}).get(rel) == hashlib.sha256(open(os.path.join(D, rel), "rb").read()).hexdigest(), rel
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: engine/verifier.py
