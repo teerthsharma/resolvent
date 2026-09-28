@@ -1,6 +1,6 @@
 cff-version: 1.2.0
 message: "If you use this software, cite it as below, and cite D-JEPA for the relational operator."
-title: "rjepa: candidate-set resolvents and exact-truth beds for ranking a JEPA planner's candidates"
+title: "resolvent: candidate-set resolvents and exact-truth beds for ranking a JEPA planner's candidates"
 type: software
 version: 0.1.0
 date-released: 2026-09-28

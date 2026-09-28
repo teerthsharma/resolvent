@@ -3,7 +3,7 @@ import json
 
 import pytest
 
-from rjepa import reproduce
+from resolvent import reproduce
 
 
 def test_gap_matches_readme():

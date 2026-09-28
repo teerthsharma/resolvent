@@ -9,7 +9,7 @@ import numpy as np
 import pytest
 import torch
 
-from rjepa.resolvent import (build_A, linear_equivariant_resolvent, neumann_resolvent, resolvent_apply,
+from resolvent.resolvent import (build_A, linear_equivariant_resolvent, neumann_resolvent, resolvent_apply,
                              set_resolvent, stochastic_resolvent)
 
 KS = [1, 2, 3, 7, 8, 9, 15, 16, 17, 31, 32, 33, 63, 64, 65]

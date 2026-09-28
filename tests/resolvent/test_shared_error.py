@@ -4,8 +4,8 @@ Ported from sun/rjepa/foreman/test_rjepa.py (B0, B1, B3, B10 and the hull-angle 
 """
 import numpy as np
 
-from rjepa import shared_error as S
-from rjepa.reproduce import cell
+from resolvent import shared_error as S
+from resolvent.reproduce import cell
 
 
 def _bed(sigma, seed, mix=0.0):

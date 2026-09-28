@@ -9,7 +9,7 @@ K = 63 candidates per start, realised start of candidate k  x_k = y - sigma (sqr
 The label is the truly best candidate; NS = (hit - 1/K) / (hit_Bayes - 1/K), Bayes by M common draws under the
 true dynamics, exact ties broken by the smallest posterior-mean true distance.
 
-    python -m rjepa.dial F Q SEED      one cell at the source sizes (hours on CPU), JSON on stdout
+    python -m resolvent.dial F Q SEED      one cell at the source sizes (hours on CPU), JSON on stdout
 """
 import json
 import math

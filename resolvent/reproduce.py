@@ -1,8 +1,8 @@
 """Recompute the README's results table.
 
-    python -m rjepa.reproduce gap        # Bayes - latent distance vs shared error, K = 4   (~1 min CPU)
-    python -m rjepa.reproduce bound      # D-JEPA Cor 1 ceiling vs Bayes at sigma = 1, 10    (~20 s CPU)
-    python -m rjepa.reproduce closure    # learned heads at sigma = 1, 36 epochs            (minutes CPU)
+    python -m resolvent.reproduce gap        # Bayes - latent distance vs shared error, K = 4   (~1 min CPU)
+    python -m resolvent.reproduce bound      # D-JEPA Cor 1 ceiling vs Bayes at sigma = 1, 10    (~20 s CPU)
+    python -m resolvent.reproduce closure    # learned heads at sigma = 1, 36 epochs            (minutes CPU)
 """
 import argparse
 import json
@@ -56,7 +56,7 @@ def closure(sigma=1.0, seeds=(0, 1, 2), epochs=36):
 
 
 def main(argv=None):
-    p = argparse.ArgumentParser(prog="python -m rjepa.reproduce")
+    p = argparse.ArgumentParser(prog="python -m resolvent.reproduce")
     p.add_argument("what", choices=("gap", "bound", "closure"))
     p.add_argument("--sigmas", type=float, nargs="+")
     p.add_argument("--seeds", type=int, nargs="+", default=[0, 1, 2])

@@ -5,7 +5,7 @@ with the killed TOPO claim).
 """
 import numpy as np
 
-from rjepa import standard_map as M
+from resolvent import standard_map as M
 
 TWO_PI = 2 * np.pi
 

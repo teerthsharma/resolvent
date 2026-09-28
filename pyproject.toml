@@ -3,7 +3,7 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "rjepa"
+name = "resolvent"
 version = "0.1.0"
 description = "Candidate-set resolvent operators, a D-JEPA-spec relational operator and two exact-truth beds for ranking a JEPA planner's candidates"
 readme = "README.md"
@@ -19,12 +19,7 @@ test = ["pytest>=8"]
 Homepage = "https://teerthsharma.vercel.app/"
 
 [tool.setuptools.packages.find]
-include = ["rjepa"]
-
-[tool.pytest.ini_options]
-testpaths = ["tests"]
-addopts = "-m 'not slow'"
-markers = ["slow: learned-head cells that train for minutes (run with -m slow)"]
+include = ["resolvent"]
 
 [tool.ruff]
 line-length = 120

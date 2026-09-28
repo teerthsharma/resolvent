@@ -1,4 +1,4 @@
-"""rjepa: candidate-set resolvents, a D-JEPA-spec relational operator and two exact-truth ranking beds."""
+"""resolvent: candidate-set resolvents, a D-JEPA-spec relational operator and two exact-truth ranking beds."""
 from .djepa import RelationalOperator, dj_loss, rank01
 from .heads import Head
 from .resolvent import (build_A, linear_equivariant_resolvent, neumann_resolvent, resolvent_apply,

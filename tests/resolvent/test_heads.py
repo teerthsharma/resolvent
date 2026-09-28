@@ -5,8 +5,8 @@ sun/rjepa/cameron/test_rj.py (operator equivariance and bound).
 """
 import torch
 
-from rjepa.djepa import RelationalOperator, dj_loss, rank01
-from rjepa.heads import Head
+from resolvent.djepa import RelationalOperator, dj_loss, rank01
+from resolvent.heads import Head
 
 KINDS = ("point", "hop1", "resolvent", "djepa")
 

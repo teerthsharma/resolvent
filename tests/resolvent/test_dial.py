@@ -1,7 +1,7 @@
 """Bed `dial`: K = 63 shared-error dial with a learned predictor (source sun/rjepa/r2/r2.py, BAR.md A1-A6).
 
 Ported from sun/rjepa/r2/test_r2.py (C1-C7) and sun/rjepa/r3/foreman/test_r3.py (A6.1 tie-break), plus the
-error-mix, saturation and fast-cell tests written for this package before rjepa/dial.py existed.
+error-mix, saturation and fast-cell tests written for this package before dial.py existed.
 """
 import json
 from functools import partial
@@ -9,7 +9,7 @@ from functools import partial
 import pytest
 import torch
 
-from rjepa import dial as R
+from resolvent import dial as R
 
 K, D, M_, H = R.K, R.D, R.M_ACT, R.H
 

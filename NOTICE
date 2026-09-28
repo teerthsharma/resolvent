@@ -28,7 +28,7 @@ It is a clean repackaging of work first written in the author's repository
 Copyright 2026 Teerth Sharma), from the files sun/rjepa/chase/rjepa_ops.py,
 sun/rjepa/foreman/rjepa.py and sun/rjepa/cameron/rj.py and their tests.
 
-rjepa/djepa.py and the "djepa" head in rjepa/heads.py reimplement the relational
+resolvent/djepa.py and the "djepa" head in resolvent/heads.py reimplement the relational
 candidate operator described in
 
   Shuaijun Liu, Chengyu Wu, Qifu Wen, Feiyang You, Chenglong Zhang, Shuyang Hao,
