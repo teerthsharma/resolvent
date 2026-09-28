@@ -2,7 +2,7 @@
 
 verifier.REPO is passed to sandbox_runner.py as the job's `repo` and is the fence: candidate code may not read
 anything under it outside its own directory. It was computed by counting parents from daedalus/, which was correct
-only while daedalus/ sat exactly two levels down (sun/daedalus). One level down, the count lands on the directory
+only while daedalus/ sat exactly two levels down, as it did before the restructure. One level down, the count lands on the directory
 ABOVE the repository; two moves the other way and the fence shrinks to a subtree, and candidates can read the
 Phase J bed truth under tests/. The fence must be found, not counted.
 

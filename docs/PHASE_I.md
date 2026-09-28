@@ -5,7 +5,7 @@ and what a training run of this model would cost. Both were answered, and both
 answers point at the same absence.
 
 The short form: **reliability is free and cannot carry a claim; the degree law
-that would beat attention is exact and has never been raced against attention;
+that would beat attention is exact and has not yet been raced here against attention;
 the exact-zero refusal certificate is underflow at every dtype; and no checkpoint
 in this repository has ever been trained with the gate all three claims are
 about.**

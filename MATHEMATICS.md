@@ -103,7 +103,7 @@ whether `sign(Δŷ)` matches `sign(Δy)` for a scalar. Under the thesis it shoul
 the whole shape moves** under an intervention — a displacement field, compared by
 direction and magnitude across all coordinates, not a sign on one.
 
-### 0.3 WHERE SOFTMAX CANNOT FOLLOW — the novelty claim, stated narrowly
+### 0.3 WHERE SOFTMAX CANNOT FOLLOW — the claim, stated narrowly (novelty withdrawn: CORRECTIONS C10)
 
 **One softmax step computes a convex mixture per query row, and each row is computed
 independently of the others.** There is no mechanism in that step by which the value
@@ -491,7 +491,7 @@ arm's own `.tril(-1)` operator is **rejected** by the support check.
 
 ---
 
-## 9. THE NOVELTY POSITION, BOUNDED
+## 9. THE PRIOR-ART POSITION, BOUNDED (novelty withdrawn: CORRECTIONS C10)
 
 Most of `equilibrium-labels-as-attention-capability-bar` is occupied: CLRS
 ([arXiv:2205.15659](https://arxiv.org/abs/2205.15659)) and CLRS-Text
@@ -517,9 +517,9 @@ sign-of-sum readout, with `equilibrium` and `fixed point` each appearing **zero*
 identical rankings** — so the headline values are `λ₂`'s numbers relabelled, and the
 paper's real gain is pooled-depth `R² 0.884` against `0.858`.
 
-**What remains unoccupied, stated narrowly:** attention rather than message-passing, and
+**What the 2026-09 sweep did not find occupied, stated narrowly:** attention rather than message-passing, and
 **the equilibrium itself as the label** rather than an accuracy. Three further absences
-are recorded as `NOT FOUND` rather than assumed: no prior work iterating a routed
+are recorded as `NOT FOUND` by that sweep, which is not evidence of absence: iterating a routed
 mixture-weight vector over content-selected, Gram-coupled pivots to a fixed point as the
 attention read; none on the signed row-L1 normalisation `ρ·w/‖w‖₁` as attention; and **no
 unconditional lower bound** against one-layer softmax on this product chain.
