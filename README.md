@@ -338,7 +338,7 @@ between blind and the full-rollout Bayes reference (M = 256 posterior members pe
 
 | Quantity | Seed 3 / 4 / 5 | Compared against |
 |---|---|---|
-| LIN1 band-mean NS | **0.880 / 0.881 / 0.879** | best D-JEPA-spec operator 0.729 / 0.737 / 0.735; distance floor 0.721 / 0.727 / 0.728 |
+| LIN1 band-mean NS | **0.880 / 0.881 / 0.879** | best D-JEPA-spec operator 0.729 / 0.737 / 0.735; distance floor 0.721 / 0.726 / 0.728 |
 | B2 race, worst NS over the 5 leads | **0.9923 / 0.9908 / 0.9957** | full rollout = 1 (bar ≥ 0.99) |
 | B2 race, mean call saving per decision | **4.52×-7.89×** over all 15 seed-lead rows | full rollout, K (M + 1) T calls per decision |
 | B2 race, 90th-percentile call saving | **2.33×-3.84×** over the same rows | same |
