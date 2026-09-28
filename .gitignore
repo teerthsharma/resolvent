@@ -103,3 +103,13 @@ nul.tmp
 .hypothesis/
 .donotcommit/
 .claude/
+
+# sun/ split into experiments/ and daedalus/ (2026-09-29). Ignored files do not move
+# with `git mv`: in a checkout that predates the split, the R-JEPA caches (2.1 GB) and
+# the verifier's sealed salt stay behind under sun/. The whole old tree is ignored so
+# neither can be staged; the salt must be moved by hand to daedalus/sealed/ (MOVED.md).
+/sun/
+/experiments/torus/r2/cache/
+/experiments/torus/r3/cache/
+/experiments/torus/r4/cache/
+/daedalus/sealed/secret.json

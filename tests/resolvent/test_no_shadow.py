@@ -1,6 +1,6 @@
 """No tracked module outside the package may be importable as `resolvent`.
 
-Until the restructure, tests/foreman/phase_k/K0/chase/resolvent.py was bare-imported as `resolvent`
+Until the restructure, the Phase K0 lane module K0/chase/resolvent.py was bare-imported as `resolvent`
 by 17 Phase K files. Collected in one process with this suite, whichever of the two sys.modules
 cached first shadowed the other (6 collection errors, `cannot import name 'standard_map' from
 'resolvent' (.../K0/chase/resolvent.py)`). It is now k0_resolvent.py; this keeps the name free.
