@@ -21,6 +21,8 @@
   novelty claim.</span>
 </p>
 
+<p align="center"><a href="https://teerth.blog/resolvent"><b>Read the essay at teerth.blog/resolvent</b></a> &nbsp;·&nbsp; the maths, the proofs and live figures</p>
+
 <p align="center">
   <a href="#abstract">Abstract</a>&nbsp;&nbsp;·&nbsp;&nbsp;
   <a href="#what-we-got-wrong">What we got wrong</a>&nbsp;&nbsp;·&nbsp;&nbsp;
