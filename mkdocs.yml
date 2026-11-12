@@ -1,7 +1,7 @@
 site_name: resolvent
 site_description: How topological structure helps JEPA world models decide. A resolvent over a planner's candidate consequences, built on D-JEPA, and the CEQ attention family it grew from, with every failure kept on the record.
 site_author: Teerth Sharma
-site_url: https://teerthsharma.github.io/resolvent/
+site_url: https://teerth.dev/resolvent/
 repo_url: https://github.com/teerthsharma/resolvent
 repo_name: teerthsharma/resolvent
 edit_uri: ""
