@@ -12,7 +12,7 @@
         <meta name="author" content="Teerth Sharma">
       
       
-        <link rel="canonical" href="https://teerthsharma.github.io/resolvent/canon/05_REPAIRS/">
+        <link rel="canonical" href="https://teerth.dev/resolvent/canon/05_REPAIRS/">
       
       
         <link rel="prev" href="../04_BEDS_AND_INSTRUMENTS/">
@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../assets/logo.svg">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
     
     
       
@@ -33,10 +33,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -3848,30 +3848,30 @@ is correct, but it is a single-commit form: it counts what <code>c71527a</code> 
 absent from HEAD, and the two agree here only because no other commit between <code>99777ab</code> and
 HEAD deletes a path. The <code>99777ab HEAD</code> range form is the one frozen, because it is what the
 kill's threshold is about. The breakdown, RUN and <strong>summed in print</strong>:
-$$244\ \text{root <code>.md</code>} + 53\ \texttt{tests/<strong>/*.py} + 2\ \text{other } \texttt{tests/}
+$$244\ \text{root <code>.md</code>} + 53\ \texttt{tests/**/*.py} + 2\ \text{other } \texttt{tests/}
 + 14\ \texttt{.superpowers/} + 34\ \texttt{attic/} + 3\ \text{loose} = \mathbf{350},$$
 the two other <code>tests/</code> files being <code>tests/deimos/DEIMOS_REPORT.md</code> and
 <code>tests/mars/MARS_REPORT_IT2.md</code>, and the three loose paths <code>house-events.jsonl</code>,
-<code>scale/chase_struck_coverage.py</code>, <code>scale/doc_readings.py</code>. The </strong>34<strong> is a repair: this verse
+<code>scale/chase_struck_coverage.py</code>, <code>scale/doc_readings.py</code>. The <strong>34</strong> is a repair: this verse
 wrote <span class="arithmatex">\(35\)</span> before, and <span class="arithmatex">\(244+53+2+14+35+3=351\)</span> — a breakdown that did not sum to its own total,
 which no reader could have caught because the sum was never printed. RUN
 <code>git diff --name-only --diff-filter=D 99777ab HEAD | grep -c '^attic/'</code> reads <span class="arithmatex">\(\mathbf{34}\)</span>.
 Every class count above is RUN by the same command with its own <code>grep -c</code>, and the six add to
 the total exactly. RUN
-<code>git ls-tree -r 99777ab --name-only | grep -c '^tests/.*\.py$'</code> reads </strong>333<strong> test files at
+<code>git ls-tree -r 99777ab --name-only | grep -c '^tests/.*\.py$'</code> reads <strong>333</strong> test files at
 <code>99777ab</code>, 280 on disk. One deletion severs a live producer:
-<code>tests/loop/test_no_struck_constant_ships.py</code> is the </strong>struck-constant registry<strong> —
+<code>tests/loop/test_no_struck_constant_ships.py</code> is the <strong>struck-constant registry</strong> —
 <code>STRUCK.md:7-13</code> calls it the registry and itself a pointer, <code>inspector.py:455-462</code> runs it and
 asserts it non-empty, and <code>scripts/render_struck.py:17</code> reads it; RUN <code>python
 scripts/render_struck.py</code> raises <code>FileNotFoundError</code> on that path. The plan: (a) restore that
 one file from the pin (<code>git show 99777ab:tests/loop/test_no_struck_constant_ships.py</code>) — it
 asserts against shipped code and against the lead documents, which is a code assertion
 about prose <em>absence</em>, the one form the policy admits (it must read <code>0</code> hits, not a line
-number); (b) move to <code>attic/tests/</code> every file the census finds </strong>opening<strong> an absent root
-<code>.md</code> — RUN 2026-09-06 that set is </strong>empty<strong>, so (b) is a </strong>no-op on the tree as it stands<strong>
+number); (b) move to <code>attic/tests/</code> every file the census finds <strong>opening</strong> an absent root
+<code>.md</code> — RUN 2026-09-06 that set is <strong>empty</strong>, so (b) is a <strong>no-op on the tree as it stands</strong>
 and is retained only as the standing rule for files written later (a git move by the
-coordinator; no writer moves a file); </strong>(b′) the repair the 9 collection errors actually
-need<strong>, which is not a move at all: each of the 9 imports a <em>test module</em> deleted at
+coordinator; no writer moves a file); <strong>(b′) the repair the 9 collection errors actually
+need</strong>, which is not a move at all: each of the 9 imports a <em>test module</em> deleted at
 <code>c71527a</code>, so each is either restored from the pin beside its importer
 (<code>git show 99777ab:tests/jupiter/test_v20_r15_it20_citation_freeze.py</code> and the three
 siblings — <code>…it27_star_lands_and_overturns</code>, <code>…it14_theory_table</code>,
@@ -3879,19 +3879,19 @@ siblings — <code>…it27_star_lands_and_overturns</code>, <code>…it14_theory
 or the importer is retired to <code>attic/tests/</code> with it; the choice is the coordinator's and is
 recorded per file in the evening report, because restoring a module that itself asserts a
 deleted document would re-import the defect; (c) the census must then read <code>0</code> files under
-<code>tests/</code> </strong>opening<strong> an absent root <code>.md</code> (it already does); </strong>(d) the ordering, frozen here
-because without it the kill fires on a correctly executed repair<strong>: steps (a)–(c) move and
-restore files that <em>name</em> <code>.md</code> documents, and </strong>not one of the 9 collection errors is a prose
-read<strong> — all nine raise <code>ImportError</code>/<code>ModuleNotFoundError</code> on
+<code>tests/</code> <strong>opening</strong> an absent root <code>.md</code> (it already does); <strong>(d) the ordering, frozen here
+because without it the kill fires on a correctly executed repair</strong>: steps (a)–(c) move and
+restore files that <em>name</em> <code>.md</code> documents, and <strong>not one of the 9 collection errors is a prose
+read</strong> — all nine raise <code>ImportError</code>/<code>ModuleNotFoundError</code> on
 <code>tests.saturn.test_v20_r15_freeze_manifest</code>, <code>tests.jupiter.test_v20_r15_it14_theory_table</code>,
 <code>tests.jupiter.test_v20_r15_it20_citation_freeze</code>,
 <code>tests.jupiter.test_v20_r15_it27_star_lands_and_overturns</code> and
 <code>tests.saturn.test_v20_r15_it27_wing_arm_citation</code>, and none opens a <code>.md</code> (RUN exception census,
-05.2). The collection number is therefore frozen at </strong><code>9</code> until (b′) lands and <code>0</code> only after
-(b′)<strong>; a verifier running (a), (b) and (c) alone and then reading the collection clause at <code>0</code>
+05.2). The collection number is therefore frozen at <strong><code>9</code> until (b′) lands and <code>0</code> only after
+(b′)</strong>; a verifier running (a), (b) and (c) alone and then reading the collection clause at <code>0</code>
 would read a failure on a repair executed exactly as written (V-16, an instrument that cannot
 measure what it is pointed at; M-17, the correction record classified as the defect). The final
-verification is <code>pytest -q --collect-only</code> reading <code>0 errors</code>, and it is read </strong>after (b′)**,
+verification is <code>pytest -q --collect-only</code> reading <code>0 errors</code>, and it is read <strong>after (b′)</strong>,
 never after (c).</p>
 <p><strong>Hypotheses.</strong> The scan's rule is the one printed in the census table above — a quoted
 single token matching <code>["'][A-Za-z0-9_.-]+\.md["']</code>, absent if the repo-root path does not
@@ -3943,8 +3943,8 @@ written</strong> — no <code>.py</code>, <code>.sh</code>, <code>.lean</code>, 
 whose only planted negative is an act the constitution forbids has no planted negative (V-15,
 D-6). The plant is replaced by one that runs entirely inside <code>git</code>, on the <strong>pinned tree</strong>, where
 the prose-coupled population still exists by the hundred and no file is created:</p>
-<div class="highlight"><pre><span></span><code>git grep -lE &quot;[\&quot;&#39;][A-Za-z0-9_.-]+\.md[\&quot;&#39;]&quot; 99777ab -- &#39;tests/*.py&#39; | wc -l
-git grep -lE &quot;[\&quot;&#39;][A-Za-z0-9_.-]+\.md[\&quot;&#39;].*(read_text|open\(|\.exists\(|read_bytes)|(read_text|open\(|\.exists\(|read_bytes).*[\&quot;&#39;][A-Za-z0-9_.-]+\.md[\&quot;&#39;]&quot; 99777ab -- &#39;tests/*.py&#39; | wc -l
+<div class="highlight"><pre><span></span><code>git grep -lE "[\"'][A-Za-z0-9_.-]+\.md[\"']" 99777ab -- 'tests/*.py' | wc -l
+git grep -lE "[\"'][A-Za-z0-9_.-]+\.md[\"'].*(read_text|open\(|\.exists\(|read_bytes)|(read_text|open\(|\.exists\(|read_bytes).*[\"'][A-Za-z0-9_.-]+\.md[\"']" 99777ab -- 'tests/*.py' | wc -l
 </code></pre></div>
 <p>RUN 2026-09-06 at <code>99777ab</code>: the first reads <strong>68</strong>, the second <strong>20</strong>, over <strong>30</strong> matching
 lines. Both are positive, so the census instrument is shown to <em>detect</em> prose coupling on a
@@ -3996,9 +3996,9 @@ only the Kaggle run produces (<code>READ V17K_RULINGS.md:10-17 @ 99777ab</code>)
 writes, replacing "open-rulings = 0" as the launch condition:</p>
 <blockquote>
 <p><strong>Gate 0 is GREEN when every row's pre-launch half is landed in a file and every row's
-post-run half is an explicit empty slot whose producer is named </strong>by <code>file:line</code><strong> in the
-frozen producer table below, </strong>where the named line, read at the pin, emits the slot's own
-value<strong>, and whose acceptance number is frozen before launch.</strong>
+post-run half is an explicit empty slot whose producer is named <strong>by <code>file:line</code></strong> in the
+frozen producer table below, <strong>where the named line, read at the pin, emits the slot's own
+value</strong>, and whose acceptance number is frozen before launch.</strong>
 A row with a post-run half and no producer named by <code>file:line</code> is RED; a row whose named
 <code>file:line</code> is a real line that emits something other than the slot's value is <strong>also</strong> RED,
 and it is the second clause that does the work, because a filled field is the easy half. A
@@ -4512,9 +4512,9 @@ files (RUN <code>find . -maxdepth 1 -type f</code>); at <code>99777ab</code> the
    (L-G2); they are not documents and rule 1 does not count them.</li>
 </ol>
 <p>The census, run at the end of every evening and printed in the report:</p>
-<div class="highlight"><pre><span></span><code>find . -maxdepth 1 -name &#39;*.md&#39; | wc -l                                   # must read 11
-git ls-files | grep -cE &#39;_IT[0-9]+_|^LOOP_PROMPT|_ARCHIVE\.md$|^CEQ_V1[0-9]_.*DELTA\.md$|^\.superpowers/|^(DONE|BOARD|CHECKLIST|BACKLOG|NOTES|REPORT)\.md$&#39;   # must read 0
-git ls-files &#39;docs/canon/*.md&#39; | wc -l                                    # must read 12 after birth (00–09, CHARTER, CORRECTIONS)
+<div class="highlight"><pre><span></span><code>find . -maxdepth 1 -name '*.md' | wc -l                                   # must read 11
+git ls-files | grep -cE '_IT[0-9]+_|^LOOP_PROMPT|_ARCHIVE\.md$|^CEQ_V1[0-9]_.*DELTA\.md$|^\.superpowers/|^(DONE|BOARD|CHECKLIST|BACKLOG|NOTES|REPORT)\.md$'   # must read 0
+git ls-files 'docs/canon/*.md' | wc -l                                    # must read 12 after birth (00–09, CHARTER, CORRECTIONS)
 </code></pre></div>
 <p><strong>The third number is 12, and the 10 this verse froze before repair would have fired on a correct
 birth commit.</strong> <code>CHARTER.md</code> §6 lists <strong>ten</strong> books — <code>00_NORTH_STAR.md</code>, <code>01_THEORY_ACCURACY.md</code>,
@@ -4553,7 +4553,7 @@ report file, overwritten, cannot accumulate stale claims that are no longer read
 Frozen: <code>11</code>, <code>0</code>, <code>12</code>. Instrument: the three lines. Price: <span class="arithmatex">\(0\)</span>. <strong>Planted negative, re-stated on
 the pinned tree because the working-tree plant is spent:</strong> line 2's regex run against <code>99777ab</code>
 through <code>git ls-tree</code> rather than <code>git ls-files</code> —</p>
-<div class="highlight"><pre><span></span><code>git ls-tree -r 99777ab --name-only | grep -cE &#39;_IT[0-9]+_|^LOOP_PROMPT|_ARCHIVE\.md$|^CEQ_V1[0-9]_.*DELTA\.md$|^\.superpowers/|^(DONE|BOARD|CHECKLIST|BACKLOG|NOTES|REPORT)\.md$&#39;
+<div class="highlight"><pre><span></span><code>git ls-tree -r 99777ab --name-only | grep -cE '_IT[0-9]+_|^LOOP_PROMPT|_ARCHIVE\.md$|^CEQ_V1[0-9]_.*DELTA\.md$|^\.superpowers/|^(DONE|BOARD|CHECKLIST|BACKLOG|NOTES|REPORT)\.md$'
 </code></pre></div>
 <p>— RUN 2026-09-06 reads <span class="arithmatex">\(\mathbf{127}\)</span>, and the census fires on it. Two corrections travel with
 that plant, both against this book. First, the working-tree plant this verse carried before
@@ -5550,11 +5550,11 @@ quietly corrected. <code>:1280</code> is re-verified at the pin and stands.</p>
 <p><strong>flaw</strong> — The three census constants are fabricated: no quoting rule produces them.
 <strong>mechanism</strong> — P-1, P-2.
 <strong>number</strong> — RUN under the verse's own rule (a quoted string ending in <code>.md</code> with no <code>/</code>) over
-tests/<strong>/*.py: 280 files (verse: 280, correct), </strong>15<strong> naming some <code>.md</code> (verse: 68), </strong>5<strong>
-naming an absent root <code>.md</code> (verse: 59), </strong>8<strong> distinct absent documents (verse: 68). Under
+tests/**/*.py: 280 files (verse: 280, correct), <strong>15</strong> naming some <code>.md</code> (verse: 68), <strong>5</strong>
+naming an absent root <code>.md</code> (verse: 59), <strong>8</strong> distinct absent documents (verse: 68). Under
 the loosest quoted rule (any quoted string ending <code>.md</code>): 17 / 8 / 12. Files merely mentioning
 <code>.md</code> anywhere (comments included): 141.
-</strong>required repair** — Re-run the census with the rule printed beside it and re-freeze the
+<strong>required repair</strong> — Re-run the census with the rule printed beside it and re-freeze the
 kill's third number. The move plan (b) applies to 5-8 files, not 59.</p>
 </blockquote>
 <p><strong>Repair applied — 05.9 Statement, Hypotheses, Evidence, Mechanism, Kill, Terminal; and the
@@ -6056,8 +6056,8 @@ extrapolated [FITTED] values at shapes the record itself refused as arm measurem
 <strong>number</strong> — <code>COSTS.md:232-233</code> tag the arm at n=16384 (0.748531) and n=32768 (1.499743)
 <code>[FITTED]</code>, extrapolated; <code>COSTS.md:76-79</code> records why — the allocator reserves 10.578 GiB and
 13.969 GiB on a 7.996 GiB card, so the loop timed the bus. The sum
-3<em>(2.901402+0.312439)=9.641523 is arithmetically right; its class is not DERIVED.
-</em><em>required repair</em>* — Re-tag the price <code>[FITTED, extrapolated at n=16384 and n=32768]</code> and add
+3*(2.901402+0.312439)=9.641523 is arithmetically right; its class is not DERIVED.
+<strong>required repair</strong> — Re-tag the price <code>[FITTED, extrapolated at n=16384 and n=32768]</code> and add
 the sentence that a forward-only zero-step cell at those n was reachable at ab5b485
 (COSTS.md:137-139, 30/30 reachable), which is what makes the ladder runnable despite the
 training-cell ceiling.</p>
@@ -6693,10 +6693,10 @@ breakdown sum to <span class="arithmatex">\(351\)</span> against a total of <spa
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
       
         <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
       

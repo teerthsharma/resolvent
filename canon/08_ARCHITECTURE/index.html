@@ -12,7 +12,7 @@
         <meta name="author" content="Teerth Sharma">
       
       
-        <link rel="canonical" href="https://teerthsharma.github.io/resolvent/canon/08_ARCHITECTURE/">
+        <link rel="canonical" href="https://teerth.dev/resolvent/canon/08_ARCHITECTURE/">
       
       
         <link rel="prev" href="../06_PREDICTIONS/">
@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../assets/logo.svg">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
     
     
       
@@ -33,10 +33,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -4241,8 +4241,8 @@ $<span class="arithmatex">\(\mathcal L_a=\mathrm{CE}\big(\mathrm{softmax}_a(-\ha
 for p in frozen: p.requires_grad_(False)      # BOTH channels shut: no gradient, no decay
 dial   = [eta_h]                              # 08.5; clip(eta,0,1) applied after every step
 rest   = [p for p in model.parameters() if p.requires_grad and p is not eta_h]
-opt = torch.optim.AdamW([{&quot;params&quot;: dial, &quot;weight_decay&quot;: 0.0},
-                         {&quot;params&quot;: rest, &quot;weight_decay&quot;: 0.01}],
+opt = torch.optim.AdamW([{"params": dial, "weight_decay": 0.0},
+                         {"params": rest, "weight_decay": 0.01}],
                         lr=3e-4, betas=(0.9, 0.999), eps=1e-8)
 </code></pre></div>
 <p><strong>This Statement ships 08.13's Replacement 1 and says so, rather than naming it as the alternative.</strong> With <span class="arithmatex">\(\beta_h\equiv1\)</span> and <span class="arithmatex">\(\kappa_h\equiv1\)</span> frozen, <strong>Ruling 2's "<span class="arithmatex">\(\beta\)</span> learnable, logged per instance" is not met</strong>: every cell of this book journals <code>beta = frozen</code> and <code>weight_decay_groups = frozen_beta</code>, and no cell claims Ruling 2 (V-22). That is a real loss and it is stated as one — the canon gives up a learnable <span class="arithmatex">\(\beta\)</span> to keep the row-stochasticity every read in Parts II and III is hypothesised on.</p>
@@ -5090,10 +5090,10 @@ opt = torch.optim.AdamW([{&quot;params&quot;: dial, &quot;weight_decay&quot;: 0.
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
       
         <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
       

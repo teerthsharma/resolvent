@@ -12,7 +12,7 @@
         <meta name="author" content="Teerth Sharma">
       
       
-        <link rel="canonical" href="https://teerthsharma.github.io/resolvent/sources/plan/plan_jupiter/">
+        <link rel="canonical" href="https://teerth.dev/resolvent/sources/plan/plan_jupiter/">
       
       
       
@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../../../assets/logo.svg">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
     
     
       
@@ -29,10 +29,10 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -2458,7 +2458,7 @@
        ├─ J-L12 ─── J-L13(mixing)            J-L16(masked) needs J-L12
        └─ J-L17 [D]
 J-L18 (build gate + census + #print axioms) needs every [M] card it certifies
-J-D1..J-D9 (derivations) need only J-L0&#39;s notation; J-D2 needs J-L15&#39;s statement, J-D3 needs J-L10
+J-D1..J-D9 (derivations) need only J-L0's notation; J-D2 needs J-L15's statement, J-D3 needs J-L10
 </code></pre></div>
 <p>Critical path (serial evenings): J-L0 → J-L3 → J-L10 → J-L13 → J-L12 → J-L15 → J-L16 → J-L18 = <code>1+1+1+2+2+2+1+1 = 11</code>. Everything else runs beside it. Total price of this roadmap: <code>0 GPU-s</code>; the numeric instances are CPU float64 one-liners (seconds). The five cheapest decisive items are marked ★.</p>
 <h2 id="2-lean-milestones-in-build-order">2. Lean milestones, in build order<a class="headerlink" href="#2-lean-milestones-in-build-order" title="Permanent link">#</a></h2>
@@ -2563,9 +2563,9 @@ The refusal is already in the tree: <code>Nilpotent.pow_card_eq_zero</code> on <
    -- induction on k for A^k exactly as pow_entry_zero (Nilpotent.lean:52): (A^(m+1)) i j = Σ_l (A^m) i l * A l j;
    -- l &lt; c kills the first factor (IH), c ≤ l kills the second (hcut); then sum over k &lt; n
 theorem chain_zero_gate_cuts (a : ℕ → ℝ) (c) (hc : a c = 0) : ∀ i j, (j:ℕ) &lt; c → c ≤ (i:ℕ) → occupancy (subdiag a) n i j = 0   -- [S] via J-L11
-theorem resolvent_fromBlocks (M₁₁ : Matrix m m ℝ) (M₂₂ : Matrix n&#39; n&#39; ℝ) (h₁ : IsUnit M₁₁) (h₂ : IsUnit M₂₂) :
+theorem resolvent_fromBlocks (M₁₁ : Matrix m m ℝ) (M₂₂ : Matrix n' n' ℝ) (h₁ : IsUnit M₁₁) (h₂ : IsUnit M₂₂) :
     (Matrix.fromBlocks M₁₁ 0 0 M₂₂)⁻¹ = Matrix.fromBlocks M₁₁⁻¹ 0 0 M₂₂⁻¹
-   -- inv_fromBlocks_zero₂₁_of_isUnit_iff with B = 0: the (1,2) block −(A⁻¹ * 0 * D⁻¹) simp&#39;s to 0
+   -- inv_fromBlocks_zero₂₁_of_isUnit_iff with B = 0: the (1,2) block −(A⁻¹ * 0 * D⁻¹) simp's to 0
 theorem tiny_gate_does_not_cut : ∃ (a : ℕ → ℝ) (c i j), a c = Real.exp (-30) ∧ (j:ℕ) &lt; c ∧ c ≤ (i:ℕ) ∧ occupancy (subdiag a) n i j ≠ 0   -- refusal: F1 is not F0
 </code></pre></div></li>
 <li><strong>what to prove.</strong> <code>segmentation_blockdiag</code> <code>[M]</code> (the induction is <code>pow_entry_zero</code>'s), <code>resolvent_fromBlocks</code> <code>[M]</code> (name confirmed §0), the chain corollary <code>[S]</code> (needs J-L11), the refusal <code>[M]</code> (<code>Real.exp_pos</code>).</li>
@@ -2594,12 +2594,12 @@ theorem cut_severs_boundary_sets (P) (hP : LowerTri P) (hd) (c) (hcut : ∀ i j,
 <ul>
 <li><strong>phase</strong> P0 · <strong>prereq</strong> J-L0 · <strong>independent-of</strong> everything but J-L14, J-L18</li>
 <li><strong>what to build.</strong> <code>Shape/Displacement.lean</code>:
-<div class="highlight"><pre><span></span><code>theorem displacement_identity (P P&#39; : Matrix (Fin n) (Fin n) ℝ) (V V&#39; z z&#39; : Fin n → ℝ) (γ : ℝ)
-    (hz : (1 - γ • P) *ᵥ z = V) (hz&#39; : (1 - γ • P&#39;) *ᵥ z&#39; = V&#39;) :
-    (1 - γ • P&#39;) *ᵥ (z&#39; - z) = (V&#39; - V) + γ • ((P&#39; - P) *ᵥ z)
-   -- four lines: expand (1 − γP&#39;)z = V − γ(P&#39; − P)z using hz; subtract from hz&#39;
-theorem const_value_zero_displacement (P P&#39;) (hP : RowStochastic P) (hP&#39; : RowStochastic P&#39;) (γ) (h1 : γ &lt; 1) (c : ℝ) :
-    (1 - γ • P)⁻¹ *ᵥ (fun _ =&gt; c) = (1 - γ • P&#39;)⁻¹ *ᵥ (fun _ =&gt; c)      -- both equal c/(1−γ) · 𝟙 ; needs IsUnit from J-L3 or J-L12
+<div class="highlight"><pre><span></span><code>theorem displacement_identity (P P' : Matrix (Fin n) (Fin n) ℝ) (V V' z z' : Fin n → ℝ) (γ : ℝ)
+    (hz : (1 - γ • P) *ᵥ z = V) (hz' : (1 - γ • P') *ᵥ z' = V') :
+    (1 - γ • P') *ᵥ (z' - z) = (V' - V) + γ • ((P' - P) *ᵥ z)
+   -- four lines: expand (1 − γP')z = V − γ(P' − P)z using hz; subtract from hz'
+theorem const_value_zero_displacement (P P') (hP : RowStochastic P) (hP' : RowStochastic P') (γ) (h1 : γ &lt; 1) (c : ℝ) :
+    (1 - γ • P)⁻¹ *ᵥ (fun _ =&gt; c) = (1 - γ • P')⁻¹ *ᵥ (fun _ =&gt; c)      -- both equal c/(1−γ) · 𝟙 ; needs IsUnit from J-L3 or J-L12
 </code></pre></div></li>
 <li><strong>what to prove.</strong> <code>displacement_identity</code> <code>[M]</code> (ring arithmetic on <code>mulVec</code>; objects <code>Matrix.sub_mulVec</code>, <code>Matrix.smul_mulVec_assoc</code>, <code>Matrix.mulVec_sub</code>); the refusal <code>[M]</code> given a unit (J-L3 on the causal class, J-L12 on the stochastic class).</li>
 <li><strong>what to measure.</strong> <code>RUN[P]</code> residual <code>2.897e-16</code>; <code>RUN[I]</code> <code>1.2e-15</code>, <code>RUN[F]</code> <code>1.36e-15</code>, <code>RUN[J]</code> <code>1.03e-15</code>; <code>V ≡ 𝟙 ⇒ max|Δz| ≤ 1e-15</code> (<code>RUN[F]</code> <code>1.1e-16</code>; "bitwise <code>0.0</code>" is a code-path accident, <code>refute_falsify_math</code> §3.7); Gaussian <code>V</code> gives <code>0.1096 / 0.363 / 1.127</code> on three draws — the rejection region.</li>
@@ -2672,7 +2672,7 @@ theorem neumann_truncation_bound (P) (hP) (γ) (h0) (h1) (K : ℕ) (v M) (hv : �
 theorem neumann_tail_attained (P) (hP) (γ) (h0) (h1) (K) :
     ∀ i, ∑ j, ((1 - γ • P)⁻¹ - occupancy (γ • P) (K + 1)) i j = γ ^ (K + 1) / (1 - γ)     -- row sums: every entry ≥ 0, P^k row-stochastic; the ∞-norm IS this (declared V-3)
 theorem nonstochastic_breaks_bound : ∃ P : Matrix (Fin 2) (Fin 2) ℝ, (∀ i j, 0 ≤ P i j) ∧ (∀ i, ∑ j, P i j = 3/2) ∧
-    ∃ K v M, (∀ j, |v j| ≤ M) ∧ ∃ i, γ₀ ^ (K+1)/(1 - γ₀) * M &lt; |((1 - γ₀ • P)⁻¹ *ᵥ v - occupancy (γ₀ • P) (K+1) *ᵥ v) i|   -- γ₀ = 3/5, convergent (γ₀·3/2 &lt; 1); docstring: &quot;can fail&quot;, not &quot;no bound holds&quot;
+    ∃ K v M, (∀ j, |v j| ≤ M) ∧ ∃ i, γ₀ ^ (K+1)/(1 - γ₀) * M &lt; |((1 - γ₀ • P)⁻¹ *ᵥ v - occupancy (γ₀ • P) (K+1) *ᵥ v) i|   -- γ₀ = 3/5, convergent (γ₀·3/2 &lt; 1); docstring: "can fail", not "no bound holds"
 theorem mask_amplification (P Pm) (hP hPm : RowStochastic) (γ) (h0) (h1) (ε) (hε : ∀ i, ∑ j, |P i j - Pm i j| ≤ ε) (v M) (hv) :
     ∀ i, |(P *ᵥ ((1 - γ • P)⁻¹ *ᵥ v) - Pm *ᵥ ((1 - γ • Pm)⁻¹ *ᵥ v)) i| ≤ ε * M / (1 - γ) * (1 + γ/(1-γ))    -- [S]; the s = 3 witness 0.5263 vs naive 0.1
 </code></pre></div></li>
@@ -2702,16 +2702,16 @@ theorem bare_read_row_sum (P) (hP) (γ) (h0) (h1) (i) : ∑ j, (P * (1 - γ • 
 <ul>
 <li><strong>phase</strong> P0 · <strong>prereq</strong> J-L4, J-L8 · <strong>independent-of</strong> J-L5…J-L7, J-L9, J-L11…J-L13, J-L15…J-L17</li>
 <li><strong>what to build.</strong> <code>Shape/Displacement.lean</code>:
-<div class="highlight"><pre><span></span><code>theorem suffix_resolve_eq_full (P P&#39;) (hP hP&#39; : LowerTri) (hd hd&#39;) (V V&#39;) (i : Fin n)
-    (hpre : ∀ j, (j:ℕ) &lt; (i:ℕ) → (∀ k, P&#39; j k = P j k) ∧ V&#39; j = V j) :
-    ∀ j, (j:ℕ) &lt; (i:ℕ) → ((1 - γ • P&#39;)⁻¹ *ᵥ V&#39;) j = ((1 - γ • P)⁻¹ *ᵥ V) j       -- prefix invariance; the suffix re-solve equals the full re-solve
+<div class="highlight"><pre><span></span><code>theorem suffix_resolve_eq_full (P P') (hP hP' : LowerTri) (hd hd') (V V') (i : Fin n)
+    (hpre : ∀ j, (j:ℕ) &lt; (i:ℕ) → (∀ k, P' j k = P j k) ∧ V' j = V j) :
+    ∀ j, (j:ℕ) &lt; (i:ℕ) → ((1 - γ • P')⁻¹ *ᵥ V') j = ((1 - γ • P)⁻¹ *ᵥ V) j       -- prefix invariance; the suffix re-solve equals the full re-solve
 theorem sherman_morrison_row (P) (hP : RowStochastic P) (γ) (h1 : γ &lt; 1) (i : Fin n) (u : Fin n → ℝ) (hu : ∑ j, u j = 0)
     (hrow : ∀ j, 0 ≤ P i j + u j) (V) :
     let M := (1 - γ • P)⁻¹; let z := M *ᵥ V
     (1 - γ • (P + Matrix.of fun a b =&gt; if a = i then u b else 0))⁻¹ *ᵥ V - z
       = (γ * (u ⬝ᵥ z) / (1 - γ * (u ⬝ᵥ fun j =&gt; M j i))) • (fun j =&gt; M j i)      -- docstring: a ROW CLAMP only; a token rewrite is rank s − i
-theorem sm_denominator_pos … : 0 &lt; 1 - γ * (u ⬝ᵥ fun j =&gt; M j i)   -- equals (1 − γ p&#39;_ii)/(1 − γ P_ii) &gt; 0
-theorem dense_P_breaks_suffix_resolve : ∃ P P&#39; V V&#39; i, … ∧ ((1 - γ • P&#39;)⁻¹ *ᵥ V&#39;) 0 ≠ ((1 - γ • P)⁻¹ *ᵥ V) 0   -- refusal
+theorem sm_denominator_pos … : 0 &lt; 1 - γ * (u ⬝ᵥ fun j =&gt; M j i)   -- equals (1 − γ p'_ii)/(1 − γ P_ii) &gt; 0
+theorem dense_P_breaks_suffix_resolve : ∃ P P' V V' i, … ∧ ((1 - γ • P')⁻¹ *ᵥ V') 0 ≠ ((1 - γ • P)⁻¹ *ᵥ V) 0   -- refusal
 </code></pre></div></li>
 <li><strong>what to prove.</strong> <code>[S]</code> all; <code>suffix_resolve_eq_full</code> follows from <code>inv_lowerTri</code> (J-L4) applied to the prefix block; Sherman–Morrison from <code>sherman-1950-inverse-adjustment</code> / <code>hager-1989-updating</code> <code>[V]</code> re-proved on <code>Fin n</code> (the algebra is <code>(M + γ M e_i uᵀ M /(1 − γ uᵀ M e_i))(1 − γP') = 1</code>).</li>
 <li><strong>what to measure.</strong> <code>RUN[F]</code> <code>5.6e-17</code> suffix vs full on the non-nilpotent corner; <code>RUN[I]</code> closed form vs re-solve <code>1.2339847026143769e-15</code>, denominator <code>1.9</code>; <code>RUN[F]</code> <code>0.511918</code>; a two-row edit breaks the rank-one formula by O(1) (repaired by Woodbury, the plant); price <code>m</code> columns at <code>s²/2</code> MACs each, ratio <code>m/d = 0.5</code> at <code>(8,16)</code> (<code>judge/sec_shape.md</code> Prop. 7(iii)), SPLIT band <code>(0.5×, 8×)</code> filed.</li>
@@ -2728,7 +2728,7 @@ theorem dense_P_breaks_suffix_resolve : ∃ P P&#39; V V&#39; i, … ∧ ((1 - �
     (hunit : IsUnit (1 - P.submatrix T T)) :
     ∀ i ∈ T, ∑ k, ((1 - Q)⁻¹ *ᵥ (R k *ᵥ 𝟙)) i = 1        -- Q = P_TT, R_k = P_{T,sets k}; Σ_k R_k 𝟙 = 𝟙 − Q 𝟙 ⇒ N(𝟙 − Q𝟙) = 𝟙
 theorem no_goal_no_sink_forces_max_ge_inv_K … : ∀ i ∈ T, 1/K ≤ ⨆ k, q k i     -- pigeonhole on the row above (Finset.exists_le_card_fiber / sum ≤ K · max)
-theorem isUnit_one_sub_of_perron {Q w ρ} (hc : PerronCertificate Q w ρ) (hρ : ρ &lt; 1) : IsUnit (1 - Q)    -- (b-chain) [S]: the oracle&#39;s non-causal Q; weighted sup bound as J-L12
+theorem isUnit_one_sub_of_perron {Q w ρ} (hc : PerronCertificate Q w ρ) (hρ : ρ &lt; 1) : IsUnit (1 - Q)    -- (b-chain) [S]: the oracle's non-causal Q; weighted sup bound as J-L12
 theorem unit_needs_rho_lt_one : ∃ Q w, PerronCertificate Q w 1 ∧ ¬ IsUnit (1 - Q)     -- refusal: Q = 1
 </code></pre></div></li>
 <li><strong>what to prove.</strong> <code>[S]</code>; objects <code>Matrix.submatrix</code>, <code>Finset.sum_comm</code>, <code>Finset.exists_max_image</code>; <code>kemeny-1976-finite</code> Thm (<code>B = N R</code>) and <code>grinstead-1997-probability</code> Thm 11.6 <code>[U]</code> own the identity — the card machine-checks the <em>packaging</em> (sets exhaust the absorbing states).</li>
@@ -2977,10 +2977,10 @@ theorem bed1_committor_eq (L : Matrix (Fin n) (Fin n) ℝ) (d : ℝ) (hd : 0 &lt
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
       
         <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
       
